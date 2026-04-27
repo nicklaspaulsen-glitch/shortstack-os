@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, Suspense, useEffect } from "react";
-import Image from "next/image";
+import { useState, Suspense, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ArrowRight, Mail, Lock, User, Loader, ArrowLeft, Zap } from "lucide-react";
 import toast from "react-hot-toast";
 import { PLAN_TIERS, PlanTier } from "@/lib/plan-config";
-import { BRAND } from "@/lib/brand-config";
+import LoginHero from "@/components/brand/login-hero";
 
 export default function LoginPage() {
   return (
@@ -46,6 +45,32 @@ function LoginForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
   const supabase = createClient();
+
+  // Magnetic submit-button effect — slight cursor-follow (CSS-only outside,
+  // pointer math here). Disabled under prefers-reduced-motion.
+  const submitBtnRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (mq.matches) return;
+    const btn = submitBtnRef.current;
+    if (!btn) return;
+    const handleMove = (e: PointerEvent) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - (rect.left + rect.width / 2);
+      const y = e.clientY - (rect.top + rect.height / 2);
+      btn.style.transform = `translate(${x * 0.08}px, ${y * 0.12}px)`;
+    };
+    const handleLeave = () => {
+      btn.style.transform = "";
+    };
+    btn.addEventListener("pointermove", handleMove);
+    btn.addEventListener("pointerleave", handleLeave);
+    return () => {
+      btn.removeEventListener("pointermove", handleMove);
+      btn.removeEventListener("pointerleave", handleLeave);
+    };
+  }, [showReset, isSignUp, loading]);
 
   // Persist ?ref= code across navigations (e.g. Stripe Checkout round-trip).
   // First-touch attribution: only write the cookie if none exists yet.
@@ -206,166 +231,255 @@ function LoginForm() {
     setLoading(false);
   };
 
+  const inputClass =
+    "w-full text-[14px] pl-10 pr-3 py-3 rounded-lg bg-bg-base border border-border-subtle text-text-primary placeholder:text-text-muted/70 outline-none transition-all duration-220 ease-out-expo-foundation focus:border-brand-lime/60 focus:ring-2 focus:ring-brand-lime/30 focus:bg-bg-base/80";
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-[380px]">
-        {/* Logo */}
-        <div className="text-center mb-8 flex flex-col items-center">
-          <Image src={BRAND.logo_svg} alt={BRAND.product_name} width={56} height={56} />
-          <h1 className="text-lg font-bold text-foreground tracking-tight mt-4">{BRAND.product_name}</h1>
-          <p className="text-[10px] text-gold/80 font-medium mt-0.5 tracking-wide">by {BRAND.company_name}</p>
-          <p className="text-[11px] text-muted mt-1 tracking-wide">Agency Operating System</p>
-        </div>
+    <div className="relative min-h-screen w-full bg-bg-base text-text-primary overflow-hidden">
+      {/* Faint corner gradient that anchors the OLED feel */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-90"
+        style={{
+          backgroundImage:
+            "radial-gradient(900px 600px at 0% 0%, rgba(212,255,0,0.04), transparent 60%), radial-gradient(900px 600px at 100% 100%, rgba(63,13,45,0.20), transparent 60%)",
+        }}
+      />
 
-        {/* Selected plan banner */}
-        {planConfig && selectedPlan && (
-          <div className="mb-4 px-4 py-3 rounded-xl border text-center" style={{ borderColor: `${planConfig.color}30`, background: `${planConfig.color}08` }}>
-            <div className="flex items-center justify-center gap-2 text-sm font-semibold" style={{ color: planConfig.color }}>
-              <Zap size={14} />
-              {selectedPlan} Plan — ${planConfig.price_monthly.toLocaleString("en-US")}/mo
+      <div className="relative z-10 flex flex-col md:flex-row min-h-screen">
+        {/* LEFT — editorial hero */}
+        <section className="md:flex-[3] md:basis-[60%] md:max-w-[60%] hidden md:block border-r border-border-subtle">
+          <LoginHero />
+        </section>
+
+        {/* RIGHT — auth card */}
+        <section className="flex-1 md:flex-[2] md:basis-[40%] md:max-w-[40%] flex items-center justify-center px-5 py-10 md:p-10">
+          <div
+            className="w-full max-w-[420px] animate-slide-in-up"
+            style={{ animationDelay: "200ms" }}
+          >
+            {/* Mobile-only: small Stack 3D + product label, since hero column is hidden */}
+            <div className="md:hidden flex items-center gap-3 mb-8">
+              <div className="font-display text-[20px] tracking-tight text-text-primary">
+                ShortStack
+              </div>
             </div>
-            <p className="text-[10px] text-muted mt-1">
-              {isSignUp ? "Create your account to get started" : "Sign in to complete checkout"}
-            </p>
-          </div>
-        )}
 
-        {/* Password Reset View */}
-        {showReset ? (
-          <div className="card space-y-4">
-            <button onClick={() => { setShowReset(false); setResetSent(false); }}
-              className="flex items-center gap-1 text-xs text-muted hover:text-foreground transition-colors">
-              <ArrowLeft size={12} /> Back to login
-            </button>
-
-            {resetSent ? (
-              <div className="text-center py-4">
-                <div className="w-12 h-12 bg-success/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                  <Mail size={20} className="text-success" />
+            {/* Selected plan banner */}
+            {planConfig && selectedPlan && (
+              <div
+                className="mb-5 px-4 py-3 rounded-xl border text-center backdrop-blur-md"
+                style={{ borderColor: `${planConfig.color}30`, background: `${planConfig.color}0D` }}
+              >
+                <div className="flex items-center justify-center gap-2 text-sm font-semibold" style={{ color: planConfig.color }}>
+                  <Zap size={14} />
+                  {selectedPlan} Plan — ${planConfig.price_monthly.toLocaleString("en-US")}/mo
                 </div>
-                <h2 className="text-sm font-semibold text-foreground mb-1">Check your email</h2>
-                <p className="text-xs text-muted">
-                  We sent a password reset link to <span className="text-foreground font-medium">{email}</span>
+                <p className="text-[11px] text-text-muted mt-1">
+                  {isSignUp ? "Create your account to get started" : "Sign in to complete checkout"}
                 </p>
               </div>
-            ) : (
-              <form onSubmit={handleReset} className="space-y-3">
-                <div className="text-center mb-2">
-                  <h2 className="text-sm font-semibold">Reset Password</h2>
-                  <p className="text-[10px] text-muted mt-0.5">Enter your email to receive a reset link</p>
-                </div>
-                <div className="relative">
-                  <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                  <input
-                    type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                    className="input w-full text-sm pl-9" placeholder="you@company.com" required
-                  />
-                </div>
-                <button type="submit" disabled={loading} className="btn-primary w-full text-sm disabled:opacity-50 flex items-center justify-center gap-2">
-                  {loading ? <Loader size={14} className="animate-spin" /> : <Mail size={14} />}
-                  {loading ? "Sending..." : "Send Reset Link"}
-                </button>
-              </form>
-            )}
-          </div>
-        ) : (
-          /* Login / Signup Form */
-          <form onSubmit={handleAuth} className="card space-y-3">
-            {isSignUp && (
-              <div>
-                <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-medium">Full Name</label>
-                <div className="relative">
-                  <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                  <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)}
-                    className="input w-full text-sm pl-9" placeholder="Your name" required={isSignUp} />
-                </div>
-              </div>
             )}
 
-            <div>
-              <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-medium">Email</label>
-              <div className="relative">
-                <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                  className="input w-full text-sm pl-9" placeholder="you@company.com" required />
-              </div>
-            </div>
+            {/* Glass card */}
+            <div className="relative rounded-2xl border border-border-subtle bg-bg-surface-2/80 backdrop-blur-md p-7 shadow-stack-2">
+              {/* Top edge highlight to make the card feel layered */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-brand-lime/20 to-transparent"
+              />
 
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-[10px] text-muted uppercase tracking-wider font-medium">Password</label>
-                {!isSignUp && (
-                  <button type="button" onClick={() => setShowReset(true)} className="text-[10px] text-gold hover:text-gold-light transition-colors">
-                    Forgot password?
+              {showReset ? (
+                <div className="space-y-5">
+                  <button
+                    onClick={() => { setShowReset(false); setResetSent(false); }}
+                    className="flex items-center gap-1.5 text-[12px] text-text-muted hover:text-text-primary transition-colors duration-220"
+                    type="button"
+                  >
+                    <ArrowLeft size={12} /> Back to login
                   </button>
-                )}
-              </div>
-              <div className="relative">
-                <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                <input
-                  type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)}
-                  className="input w-full text-sm pl-9 pr-10" placeholder="Enter password" required minLength={6}
-                />
-                <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors">
-                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                </button>
-              </div>
+
+                  {resetSent ? (
+                    <div className="text-center py-2">
+                      <div className="w-12 h-12 bg-status-success/10 rounded-2xl flex items-center justify-center mx-auto mb-3 ring-1 ring-status-success/30">
+                        <Mail size={20} className="text-status-success" />
+                      </div>
+                      <h2 className="font-display text-[18px] text-text-primary mb-1">Check your email</h2>
+                      <p className="text-[13px] text-text-secondary">
+                        We sent a password reset link to{" "}
+                        <span className="text-text-primary font-medium">{email}</span>
+                      </p>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleReset} className="space-y-4">
+                      <div>
+                        <h2 className="font-display text-[22px] text-text-primary tracking-tight">Reset password</h2>
+                        <p className="text-[12px] text-text-muted mt-1">Enter your email to receive a reset link.</p>
+                      </div>
+                      <div className="relative">
+                        <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                        <input
+                          type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                          className={inputClass} placeholder="you@company.com" required
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        ref={submitBtnRef}
+                        className="w-full text-[14px] font-medium py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(212,255,0,0.3),0_0_24px_-6px_rgba(212,255,0,0.45)]"
+                      >
+                        {loading ? <Loader size={14} className="animate-spin" /> : <Mail size={14} />}
+                        {loading ? "Sending..." : "Send reset link"}
+                      </button>
+                    </form>
+                  )}
+                </div>
+              ) : (
+                /* Login / Signup Form */
+                <form onSubmit={handleAuth} className="space-y-4">
+                  <div className="mb-1">
+                    <h2 className="font-display text-[24px] md:text-[28px] tracking-tight text-text-primary">
+                      {isSignUp ? "Create your account." : "Sign in."}
+                    </h2>
+                    <p className="text-[12.5px] text-text-muted mt-1">
+                      {isSignUp
+                        ? "A few seconds and your operating system is live."
+                        : "Welcome back. Pick up where you left off."}
+                    </p>
+                  </div>
+
+                  {isSignUp && (
+                    <div>
+                      <label className="block text-[10px] text-text-muted mb-1.5 uppercase tracking-[0.18em] font-medium">Full Name</label>
+                      <div className="relative">
+                        <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                        <input
+                          type="text"
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          className={inputClass}
+                          placeholder="Your name"
+                          required={isSignUp}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-[10px] text-text-muted mb-1.5 uppercase tracking-[0.18em] font-medium">Email</label>
+                    <div className="relative">
+                      <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={inputClass}
+                        placeholder="you@company.com"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-[10px] text-text-muted uppercase tracking-[0.18em] font-medium">Password</label>
+                      {!isSignUp && (
+                        <button
+                          type="button"
+                          onClick={() => setShowReset(true)}
+                          className="text-[11px] text-brand-indigo hover:text-brand-lime transition-colors duration-220"
+                        >
+                          Forgot password?
+                        </button>
+                      )}
+                    </div>
+                    <div className="relative">
+                      <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className={`${inputClass} pr-10`}
+                        placeholder="Enter password"
+                        required
+                        minLength={6}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors duration-220"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                      >
+                        {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {isSignUp && (
+                    <div>
+                      <label className="block text-[10px] text-text-muted mb-1.5 uppercase tracking-[0.18em] font-medium">Confirm Password</label>
+                      <div className="relative">
+                        <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className={`${inputClass} pr-10`}
+                          placeholder="Re-enter password"
+                          required={isSignUp}
+                          minLength={6}
+                        />
+                      </div>
+                      {confirmPassword && password !== confirmPassword && (
+                        <p className="mt-1.5 text-[11px] text-status-error">Passwords don&apos;t match</p>
+                      )}
+                      {confirmPassword && password === confirmPassword && password.length >= 6 && (
+                        <p className="mt-1.5 text-[11px] text-status-success">Passwords match</p>
+                      )}
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    ref={submitBtnRef}
+                    className="w-full text-[14px] font-semibold py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(212,255,0,0.3),0_0_24px_-6px_rgba(212,255,0,0.45)] hover:shadow-[0_0_0_1px_rgba(212,255,0,0.45),0_0_32px_-4px_rgba(212,255,0,0.6)]"
+                    style={{ willChange: "transform" }}
+                  >
+                    {loading ? <Loader size={14} className="animate-spin" /> : <ArrowRight size={14} />}
+                    {loading ? "Loading..." : isSignUp ? "Create account" : "Sign in"}
+                  </button>
+                </form>
+              )}
             </div>
 
-            {/* Confirm password — signup only */}
-            {isSignUp && (
-              <div>
-                <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-medium">Confirm Password</label>
-                <div className="relative">
-                  <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="input w-full text-sm pl-9 pr-10"
-                    placeholder="Re-enter password"
-                    required={isSignUp}
-                    minLength={6}
-                  />
-                </div>
-                {confirmPassword && password !== confirmPassword && (
-                  <p className="mt-1 text-[10px] text-red-400">Passwords don&apos;t match</p>
-                )}
-                {confirmPassword && password === confirmPassword && password.length >= 6 && (
-                  <p className="mt-1 text-[10px] text-emerald-400">✓ Passwords match</p>
-                )}
-              </div>
+            {!showReset && (
+              <p className="text-center text-[12px] text-text-muted mt-6">
+                {isSignUp ? "Already have an account?" : "Need an account?"}{" "}
+                <button
+                  onClick={() => setIsSignUp(!isSignUp)}
+                  className="text-brand-lime hover:text-brand-lime-soft transition-colors duration-220 font-medium"
+                  type="button"
+                >
+                  {isSignUp ? "Sign in" : "Sign up"}
+                </button>
+              </p>
             )}
 
-            <button type="submit" disabled={loading}
-              className="btn-primary w-full text-sm disabled:opacity-50 flex items-center justify-center gap-2">
-              {loading ? <Loader size={14} className="animate-spin" /> : <ArrowRight size={14} />}
-              {loading ? "Loading..." : isSignUp ? "Create Account" : "Sign In"}
-            </button>
-          </form>
-        )}
-
-        {!showReset && (
-          <p className="text-center text-[11px] text-muted mt-6">
-            {isSignUp ? "Already have an account?" : "Need an account?"}{" "}
-            <button onClick={() => setIsSignUp(!isSignUp)} className="text-gold hover:text-gold-dark transition-colors font-medium">
-              {isSignUp ? "Sign In" : "Sign Up"}
-            </button>
-          </p>
-        )}
-
-        {/* Footer */}
-        <div className="text-center mt-10 space-y-1">
-          <div className="flex items-center justify-center gap-3 text-[10px] text-muted">
-            <a href="/terms" className="hover:text-foreground transition-colors">Terms</a>
-            <span className="text-border">·</span>
-            <a href="/privacy" className="hover:text-foreground transition-colors">Privacy</a>
-            <span className="text-border">·</span>
-            <a href="/changelog" className="hover:text-foreground transition-colors">Changelog</a>
+            {/* Footer */}
+            <div className="text-center mt-10 space-y-1">
+              <div className="flex items-center justify-center gap-3 text-[11px] text-text-muted">
+                <a href="/terms" className="hover:text-text-primary transition-colors duration-220">Terms</a>
+                <span className="text-text-muted/40">·</span>
+                <a href="/privacy" className="hover:text-text-primary transition-colors duration-220">Privacy</a>
+                <span className="text-text-muted/40">·</span>
+                <a href="/changelog" className="hover:text-text-primary transition-colors duration-220">Changelog</a>
+              </div>
+              <p className="text-[10px] text-text-muted/70 tracking-wide">Powered by ShortStack</p>
+            </div>
           </div>
-          <p className="text-[10px] text-muted-light">Powered by ShortStack</p>
-        </div>
+        </section>
       </div>
     </div>
   );

@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, LayoutGroup } from "framer-motion";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { useWhiteLabel } from "@/lib/white-label-context";
 import { getPlanConfig } from "@/lib/plan-config";
 import { BRAND } from "@/lib/brand-config";
 import DesktopIndicator from "@/components/desktop-indicator";
+import Stack3D from "@/components/brand/stack-3d";
 import type { LucideIcon } from "lucide-react";
 import {
   Pin,
@@ -548,15 +549,15 @@ export default function Sidebar() {
           href={item.href}
           onMouseEnter={() => setHoveredItem(item.href)}
           onMouseLeave={() => setHoveredItem(null)}
-          className={`nav-item-hover flex items-center gap-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-100 ${
-            indented ? "px-3.5" : "px-2.5"
+          className={`nav-item-hover flex items-center gap-2.5 py-1.5 my-[1px] rounded-lg text-[12.5px] transition-all duration-220 ease-out-expo-foundation ${
+            indented ? "px-3.5" : "px-3"
           } ${
             isActive
-              ? "active text-gold font-semibold bg-gradient-to-r from-gold/[0.14] to-gold/[0.06] border border-gold/20 shadow-[0_0_14px_rgba(201,168,76,0.1),0_1px_0_rgba(255,255,255,0.04)_inset]"
-              : "text-muted hover:text-foreground hover:bg-surface-light hover:shadow-[0_1px_0_rgba(255,255,255,0.03)_inset] border border-transparent"
+              ? "active text-brand-lime font-medium bg-[rgba(212,255,0,0.06)] shadow-[0_0_14px_rgba(212,255,0,0.08)]"
+              : "text-text-secondary hover:text-text-primary hover:bg-white/[0.02]"
           }`}
         >
-          <span className={`shrink-0 transition-colors nav-icon-alive ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
+          <span className={`shrink-0 transition-colors duration-220 ease-out-expo-foundation nav-icon-alive ${isActive ? "text-brand-lime drop-shadow-[0_0_4px_rgba(212,255,0,0.55)]" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
             {customIcon || item.icon}
           </span>
           <span className="truncate flex-1">{label}</span>
@@ -564,7 +565,7 @@ export default function Sidebar() {
           {isActive && (
             <motion.div
               layoutId="sidebar-active-accent"
-              className="absolute -left-px top-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]"
+              className="absolute -left-px top-1/2 w-[2px] h-[68%] rounded-r bg-brand-lime shadow-[0_0_10px_rgba(212,255,0,0.65)]"
               style={{ y: "-50%" }}
               transition={{ type: "spring", stiffness: 380, damping: 32 }}
             />
@@ -586,21 +587,21 @@ export default function Sidebar() {
           href={item.href}
           onMouseEnter={() => setHoveredItem(item.href)}
           onMouseLeave={() => setHoveredItem(null)}
-          className={`nav-item-hover flex items-center gap-2.5 px-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-100 ${
+          className={`nav-item-hover flex items-center justify-center px-2.5 py-1.5 my-[1px] rounded-lg text-[12.5px] transition-all duration-220 ease-out-expo-foundation ${
             isActive
-              ? "active text-gold font-semibold bg-gradient-to-r from-gold/[0.14] to-gold/[0.06] border border-gold/20 shadow-[0_0_14px_rgba(201,168,76,0.1),0_1px_0_rgba(255,255,255,0.04)_inset]"
-              : "text-muted hover:text-foreground hover:bg-surface-light hover:shadow-[0_1px_0_rgba(255,255,255,0.03)_inset] border border-transparent"
+              ? "active text-brand-lime bg-[rgba(212,255,0,0.06)] shadow-[0_0_14px_rgba(212,255,0,0.08)]"
+              : "text-text-secondary hover:text-text-primary hover:bg-white/[0.02]"
           }`}
           title={unreadCount > 0 ? `${label} (${unreadCount})` : label}
         >
-          <span className={`relative shrink-0 transition-colors nav-icon-alive ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
+          <span className={`relative shrink-0 transition-colors duration-220 ease-out-expo-foundation nav-icon-alive ${isActive ? "text-brand-lime drop-shadow-[0_0_4px_rgba(212,255,0,0.55)]" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
             {customIcon || item.icon}
             {unreadCount > 0 && <UnreadDotMini />}
           </span>
           {isActive && (
             <motion.div
               layoutId="sidebar-active-accent"
-              className="absolute -left-px top-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]"
+              className="absolute -left-px top-1/2 w-[2px] h-[68%] rounded-r bg-brand-lime shadow-[0_0_10px_rgba(212,255,0,0.65)]"
               style={{ y: "-50%" }}
               transition={{ type: "spring", stiffness: 380, damping: 32 }}
             />
@@ -608,9 +609,9 @@ export default function Sidebar() {
         </Link>
         {hoveredItem === item.href && (
           <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">
-            <div className="bg-surface border border-border rounded-xl px-2.5 py-1.5 shadow-elevated text-xs font-medium text-foreground">
+            <div className="bg-bg-surface-2 border border-border-subtle rounded-lg px-2.5 py-1.5 shadow-stack-2 text-xs font-medium text-text-primary">
               {label}
-              {unreadCount > 0 && <span className="ml-1.5 text-[10px] text-red-500 font-bold">{unreadCount > 9 ? "9+" : unreadCount}</span>}
+              {unreadCount > 0 && <span className="ml-1.5 text-[10px] text-status-error font-bold">{unreadCount > 9 ? "9+" : unreadCount}</span>}
             </div>
           </div>
         )}
@@ -620,12 +621,12 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`sidebar-fade-in fixed inset-y-0 left-0 z-40 flex flex-col transition-all duration-300 ${
-        collapsed ? "w-[56px]" : "w-56"
+      className={`sidebar-fade-in fixed inset-y-0 left-0 z-40 flex flex-col transition-all duration-220 ease-out-expo-foundation ${
+        collapsed ? "w-[56px]" : "w-60"
       }`}
       style={{
-        background: "var(--color-surface, #FFFFFF)",
-        borderRight: "1px solid var(--color-border, #E8E5E0)",
+        background: "var(--bg-surface-1, #15141A)",
+        borderRight: "1px solid var(--border-subtle, rgba(212,255,0,0.08))",
       }}
     >
       {/* LED light strip — lives on the sidebar's right edge, theme-colored */}
@@ -633,41 +634,57 @@ export default function Sidebar() {
       {/* Logo — uses white label config when available; otherwise falls back to
           the Trinity product brand (by ShortStack). If an agency white-labels
           the product they can override company_name/logo_url via settings. */}
-      <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} px-3 h-14 shrink-0`}>
+      <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} px-3 h-16 shrink-0 border-b border-[var(--border-subtle)]`}>
         {(() => {
           // A white-label override is active when the tenant set their own
           // company_name (anything other than the ShortStack parent default).
           const wlOverride = !!wl.company_name && wl.company_name !== BRAND.company_name;
           const displayName = wlOverride ? wl.company_name! : BRAND.product_name;
           const subtext = wlOverride ? null : `by ${BRAND.company_name}`;
-          const logoSrc = wlOverride
-            ? (wl.logo_url || "/icons/shortstack-logo.svg")
-            : BRAND.logo_svg;
 
           if (collapsed) {
+            // White-label tenants keep their own logo. Default tenants get
+            // the canonical Stack 3D mark for brand cohesion.
+            if (wlOverride) {
+              return (
+                <Link href="/dashboard">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={wl.logo_url || "/icons/shortstack-logo.svg"} alt={displayName} width={22} height={22} className="rounded object-contain" />
+                </Link>
+              );
+            }
             return (
-              <Link href="/dashboard">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={logoSrc} alt={displayName} width={22} height={22} className="rounded object-contain" />
+              <Link href="/dashboard" className="flex items-center justify-center" aria-label={displayName}>
+                <Stack3D size="sm" rotating />
               </Link>
             );
           }
 
           return (
-            <Link href="/dashboard" className="flex items-center gap-2 min-w-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logoSrc} alt={displayName} width={26} height={26} className="shrink-0 object-contain" />
+            <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0 group">
+              {wlOverride ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={wl.logo_url || "/icons/shortstack-logo.svg"} alt={displayName} width={28} height={28} className="shrink-0 object-contain" />
+              ) : (
+                <div className="shrink-0 transition-transform duration-220 ease-out-expo-foundation group-hover:scale-105">
+                  <Stack3D size="sm" rotating />
+                </div>
+              )}
               <div className="min-w-0 leading-tight">
-                <div className="text-foreground font-bold text-[13px] tracking-tight truncate">{displayName}</div>
+                <div className="font-display text-[15px] tracking-tight text-text-primary truncate">{displayName}</div>
                 {subtext && (
-                  <div className="text-[9px] text-gold/80 font-medium tracking-wide truncate">{subtext}</div>
+                  <div className="text-[10px] text-text-muted font-medium tracking-wide truncate">{subtext}</div>
                 )}
               </div>
             </Link>
           );
         })()}
         {!collapsed && (
-          <button onClick={() => setCollapsed(!collapsed)} className="p-1 rounded-md text-muted hover:text-foreground hover:bg-surface-light transition-colors shrink-0">
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="p-1 rounded-md text-text-muted hover:text-brand-lime hover:bg-white/[0.02] transition-colors duration-220 ease-out-expo-foundation shrink-0"
+            aria-label="Collapse sidebar"
+          >
             <ChevronLeft size={14} />
           </button>
         )}
@@ -678,19 +695,19 @@ export default function Sidebar() {
 
       {/* Chrome Extension banner — admin only, dismissible */}
       {!collapsed && userRole === "admin" && !extDismissed && (
-        <div className="mx-2 mb-1">
-          <div className="flex items-center gap-1.5 h-[34px] px-2.5 rounded-lg bg-gold/[0.07] border border-gold/15">
-            <Puzzle size={13} className="shrink-0 text-gold" />
+        <div className="mx-2 mb-1 mt-2">
+          <div className="flex items-center gap-1.5 h-[34px] px-2.5 rounded-lg bg-[rgba(212,255,0,0.05)] border border-border-subtle">
+            <Puzzle size={13} className="shrink-0 text-brand-lime" />
             <a href="/downloads/shortstack-extension.zip" download
-              className="text-[11px] text-gold/90 hover:text-gold font-medium transition-colors"
+              className="text-[11px] text-brand-lime/90 hover:text-brand-lime font-medium transition-colors duration-220"
               title="Download → Unzip → chrome://extensions → Load unpacked">
               Install Extension
             </a>
-            <span className="text-muted/30">|</span>
+            <span className="text-text-muted/40">|</span>
             <ExtInstallTooltip />
             <button
               onClick={() => { setExtDismissed(true); localStorage.setItem("sidebar_ext_dismissed", "1"); }}
-              className="ml-auto shrink-0 p-0.5 rounded text-muted hover:text-foreground transition-colors"
+              className="ml-auto shrink-0 p-0.5 rounded text-text-muted hover:text-text-primary transition-colors duration-220"
               aria-label="Dismiss"
             >
               <X size={12} />
@@ -712,10 +729,10 @@ export default function Sidebar() {
           if (pinnedNavItems.length === 0) return null;
           return (
             <div>
-              <div className="w-full flex items-center gap-2 px-2 pt-1 pb-1">
-                <Pin size={8} className="text-gold" />
-                <span className="text-[8px] text-gold uppercase tracking-[0.2em] font-semibold">Pinned</span>
-                <div className="flex-1 h-px bg-gold/15" />
+              <div className="w-full flex items-center gap-2 px-3 pt-3 pb-1.5">
+                <Pin size={9} className="text-brand-lime" />
+                <span className="font-editorial text-[11px] text-brand-lime uppercase tracking-[0.18em]">Pinned</span>
+                <div className="flex-1 h-px bg-border-subtle" />
               </div>
               {pinnedNavItems.map(item => renderNavLink(item))}
             </div>
@@ -749,21 +766,21 @@ export default function Sidebar() {
                 if (directItems.length === 0 && subs.length === 0) return null;
                 return (
                   <div key={`cg-${cg.id}`}>
-                    <div className="w-full flex items-center gap-2 px-2 pt-3 pb-1">
+                    <div className="w-full flex items-center gap-2 px-3 pt-4 pb-1.5">
                       {groupIconNode ? (
-                        <span className="shrink-0" style={{ color: cg.color || "#C9A84C" }}>{groupIconNode}</span>
+                        <span className="shrink-0" style={{ color: cg.color || "var(--brand-lime)" }}>{groupIconNode}</span>
                       ) : null}
-                      <span className="text-[8px] uppercase tracking-[0.2em] font-semibold" style={{ color: cg.color || "#C9A84C" }}>
+                      <span className="font-editorial text-[11px] uppercase tracking-[0.18em]" style={{ color: cg.color || "var(--text-muted)" }}>
                         {groupName}
                       </span>
-                      <div className="flex-1 h-px" style={{ backgroundColor: `${cg.color || "#C9A84C"}33` }} />
+                      <div className="flex-1 h-px" style={{ backgroundColor: cg.color ? `${cg.color}26` : "var(--border-subtle)" }} />
                     </div>
                     {directItems.map(item => renderNavLink(item))}
                     {subs.map(sg => (
                       <div key={`sg-${sg.id}`}>
-                        <div className="w-full flex items-center gap-1.5 pl-3 pr-2 pt-1 pb-0.5">
-                          <span className="text-[7px] text-muted/60">&bull;</span>
-                          <span className="text-[10px] text-muted/70 font-medium select-none">{sg.name}</span>
+                        <div className="w-full flex items-center gap-1.5 pl-3.5 pr-2 pt-1.5 pb-0.5">
+                          <span className="text-[7px] text-text-muted/60">&bull;</span>
+                          <span className="text-[10.5px] text-text-muted font-medium select-none tracking-wide">{sg.name}</span>
                         </div>
                         {sg.items.map(item => renderNavLink(item, true))}
                       </div>
@@ -787,15 +804,15 @@ export default function Sidebar() {
                 <div>
                   <button
                     onClick={() => setExpandedSections(p => ({ ...p, _other: !otherExpanded }))}
-                    className="w-full flex items-center gap-2 px-2 pt-3 pb-1 group/sec cursor-pointer"
+                    className="w-full flex items-center gap-2 px-3 pt-4 pb-1.5 group/sec cursor-pointer"
                   >
-                    <span className="text-[8px] text-muted uppercase tracking-[0.2em] font-semibold group-hover/sec:text-foreground transition-colors">
+                    <span className="font-editorial text-[11px] text-text-muted uppercase tracking-[0.18em] group-hover/sec:text-text-primary transition-colors duration-220">
                       Other
                     </span>
-                    <div className="flex-1 h-px bg-border" />
+                    <div className="flex-1 h-px bg-border-subtle" />
                     <ChevronDown
                       size={10}
-                      className={`text-muted group-hover/sec:text-foreground transition-transform duration-200 ${otherExpanded ? "" : "-rotate-90"}`}
+                      className={`text-text-muted group-hover/sec:text-text-primary transition-transform duration-220 ${otherExpanded ? "" : "-rotate-90"}`}
                     />
                   </button>
                   {otherExpanded && otherItems.map(item => renderNavLink(item))}
@@ -820,37 +837,36 @@ export default function Sidebar() {
                   const hubActive = hubHref ? pathname === hubHref : false;
                   if (hubHref) {
                     // Hub-bearing section: label is a clickable Link that
-                    // routes to /dashboard/<section>. A tiny arrow icon +
-                    // gold accent makes it visibly distinct from plain
-                    // non-hub section headers, so users learn they can
-                    // click it to see the full section dashboard.
+                    // routes to /dashboard/<section>. Editorial Bodoni Moda
+                    // italic treatment with a tiny arrow makes it visibly
+                    // distinct as both a label AND a navigable hub link.
                     return (
-                      <div className="w-full flex items-center gap-1.5 px-2 pt-3 pb-1 group/sec">
+                      <div className="w-full flex items-center gap-1.5 px-3 pt-4 pb-1.5 group/sec">
                         <Link
                           href={hubHref}
-                          className={`group/hub flex items-center gap-1 rounded px-1 py-0.5 text-[9px] uppercase tracking-[0.2em] font-bold transition-colors ${
+                          className={`group/hub flex items-center gap-1 rounded px-1 py-0.5 font-editorial text-[11px] uppercase tracking-[0.18em] transition-colors duration-220 ease-out-expo-foundation ${
                             hubActive
-                              ? "text-gold bg-gold/10"
-                              : "text-gold/70 hover:text-gold hover:bg-gold/5"
+                              ? "text-brand-lime bg-[rgba(212,255,0,0.08)]"
+                              : "text-text-muted hover:text-brand-lime hover:bg-[rgba(212,255,0,0.04)]"
                           }`}
                           title={`Open ${group.section} hub →`}
                         >
                           <span>{group.section}</span>
                           <ArrowUpRight
                             size={9}
-                            className="opacity-60 transition-all group-hover/hub:opacity-100 group-hover/hub:-translate-y-0.5 group-hover/hub:translate-x-0.5"
+                            className="opacity-60 transition-all duration-220 ease-out-expo-foundation group-hover/hub:opacity-100 group-hover/hub:-translate-y-0.5 group-hover/hub:translate-x-0.5"
                           />
                         </Link>
-                        <div className="flex-1 h-px bg-border" />
+                        <div className="flex-1 h-px bg-border-subtle" />
                         <button
                           type="button"
                           onClick={() => toggleSection(group.section!)}
-                          className="p-0.5 rounded text-muted hover:text-foreground transition-colors cursor-pointer"
+                          className="p-0.5 rounded text-text-muted hover:text-text-primary transition-colors duration-220 cursor-pointer"
                           aria-label={expanded ? `Collapse ${group.section}` : `Expand ${group.section}`}
                         >
                           <ChevronDown
                             size={10}
-                            className={`transition-transform duration-200 ${expanded ? "" : "-rotate-90"}`}
+                            className={`transition-transform duration-220 ${expanded ? "" : "-rotate-90"}`}
                           />
                         </button>
                       </div>
@@ -859,15 +875,15 @@ export default function Sidebar() {
                   return (
                     <button
                       onClick={() => toggleSection(group.section!)}
-                      className="w-full flex items-center gap-2 px-2 pt-3 pb-1 group/sec cursor-pointer"
+                      className="w-full flex items-center gap-2 px-3 pt-4 pb-1.5 group/sec cursor-pointer"
                     >
-                      <span className="text-[8px] text-muted uppercase tracking-[0.2em] font-semibold group-hover/sec:text-foreground transition-colors">
+                      <span className="font-editorial text-[11px] text-text-muted uppercase tracking-[0.18em] group-hover/sec:text-text-primary transition-colors duration-220">
                         {group.section}
                       </span>
-                      <div className="flex-1 h-px bg-border" />
+                      <div className="flex-1 h-px bg-border-subtle" />
                       <ChevronDown
                         size={10}
-                        className={`text-muted group-hover/sec:text-foreground transition-transform duration-200 ${expanded ? "" : "-rotate-90"}`}
+                        className={`text-text-muted group-hover/sec:text-text-primary transition-transform duration-220 ${expanded ? "" : "-rotate-90"}`}
                       />
                     </button>
                   );
@@ -894,15 +910,15 @@ export default function Sidebar() {
                           <div key={subKey}>
                             <button
                               onClick={() => toggleSub(subKey, sg.items)}
-                              className="w-full flex items-center gap-1.5 pl-3 pr-2 pt-2 pb-0.5 group/sub cursor-pointer"
+                              className="w-full flex items-center gap-1.5 pl-3.5 pr-2 pt-2 pb-0.5 group/sub cursor-pointer"
                             >
-                              <span className="text-[7px] text-muted/60 group-hover/sub:text-muted transition-colors select-none">&bull;</span>
-                              <span className="text-[10px] text-muted/70 font-medium group-hover/sub:text-foreground transition-colors select-none">
+                              <span className="text-[7px] text-text-muted/60 group-hover/sub:text-text-muted transition-colors duration-220 select-none">&bull;</span>
+                              <span className="text-[10.5px] text-text-muted font-medium group-hover/sub:text-text-primary transition-colors duration-220 select-none tracking-wide">
                                 {sg.sub}
                               </span>
                               <ChevronDown
                                 size={8}
-                                className={`ml-auto text-muted/40 group-hover/sub:text-muted transition-transform duration-150 ${subOpen ? "" : "-rotate-90"}`}
+                                className={`ml-auto text-text-muted/50 group-hover/sub:text-text-muted transition-transform duration-220 ${subOpen ? "" : "-rotate-90"}`}
                               />
                             </button>
                             <div
@@ -936,54 +952,87 @@ export default function Sidebar() {
       {/* Collapse button when collapsed */}
       {collapsed && (
         <div className="px-1.5 py-1">
-          <button onClick={() => setCollapsed(false)} className="w-full p-2 rounded-xl text-muted hover:text-foreground hover:bg-surface-light flex items-center justify-center transition-colors">
+          <button onClick={() => setCollapsed(false)} className="w-full p-2 rounded-lg text-text-muted hover:text-brand-lime hover:bg-white/[0.02] flex items-center justify-center transition-colors duration-220 ease-out-expo-foundation">
             <ChevronRight size={14} />
           </button>
         </div>
       )}
 
-      {/* User — cleaner profile section (click to open settings) */}
-      <div className="px-1.5 py-2 border-t border-border">
+      {/* User — refined profile footer with email + actions */}
+      <div className="px-2 py-2.5 border-t border-border-subtle bg-[rgba(212,255,0,0.015)]">
         {!collapsed ? (
-          <Link href="/dashboard/settings" className="block px-2.5 py-2 rounded-xl hover:bg-surface-light transition-colors cursor-pointer" title="Open settings">
-            <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard/settings"
+              className="flex-1 min-w-0 flex items-center gap-2.5 px-1 py-1.5 rounded-lg hover:bg-white/[0.02] transition-colors duration-220 ease-out-expo-foundation cursor-pointer"
+              title="Open settings"
+            >
               {(() => {
                 const plan = getPlanConfig(profile?.plan_tier);
                 const glow = profile?.plan_tier ? `0 0 8px ${plan.glow}` : undefined;
                 return profile?.avatar_url ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={profile.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover" style={{ boxShadow: glow }} />
+                  <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover ring-1 ring-border-subtle" style={{ boxShadow: glow }} />
                 ) : (
-                  <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center" style={{ boxShadow: glow }}>
-                    <span className="text-gold text-[10px] font-bold">{(profile?.nickname || profile?.full_name)?.charAt(0) || "?"}</span>
+                  <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.08)] ring-1 ring-border-subtle flex items-center justify-center" style={{ boxShadow: glow }}>
+                    <span className="text-brand-lime text-[11px] font-bold font-display">{(profile?.nickname || profile?.full_name)?.charAt(0).toUpperCase() || "?"}</span>
                   </div>
                 );
               })()}
               <div className="min-w-0 flex-1">
-                <p className="text-[11px] font-medium text-foreground truncate">{profile?.nickname || profile?.full_name || "Loading..."}</p>
-                <RoleBadge role={profile?.role} planTier={profile?.plan_tier || undefined} />
+                <p className="text-[13px] font-medium text-text-primary truncate leading-tight">{profile?.nickname || profile?.full_name || "Loading..."}</p>
+                <p className="text-[11px] text-text-muted truncate leading-tight mt-0.5">
+                  {profile?.email || ""}
+                </p>
               </div>
+            </Link>
+            <div className="flex items-center gap-0.5 shrink-0">
+              <Link
+                href="/dashboard/settings"
+                className="p-1.5 rounded-md text-text-muted hover:text-brand-lime hover:bg-white/[0.02] transition-colors duration-220 ease-out-expo-foundation"
+                title="Settings"
+                aria-label="Settings"
+              >
+                <Settings size={14} />
+              </Link>
+              <button
+                onClick={signOut}
+                className="p-1.5 rounded-md text-text-muted hover:text-status-error hover:bg-[rgba(242,96,99,0.06)] transition-colors duration-220 ease-out-expo-foundation"
+                title="Sign Out"
+                aria-label="Sign Out"
+              >
+                <LogOut size={14} />
+              </button>
             </div>
-          </Link>
+          </div>
         ) : (
-          <Link href="/dashboard/settings" className="flex justify-center py-1" title="Open settings">
-            <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center">
-              <span className="text-gold text-[9px] font-bold">{profile?.full_name?.charAt(0) || "?"}</span>
-            </div>
-          </Link>
+          <div className="flex flex-col items-center gap-1.5">
+            <Link href="/dashboard/settings" className="flex justify-center" title="Open settings">
+              <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.08)] ring-1 ring-border-subtle flex items-center justify-center">
+                <span className="text-brand-lime text-[10px] font-bold font-display">{profile?.full_name?.charAt(0).toUpperCase() || "?"}</span>
+              </div>
+            </Link>
+            <button
+              onClick={signOut}
+              className="w-full flex items-center justify-center px-2.5 py-1.5 rounded-lg text-[11px] text-text-muted hover:text-status-error hover:bg-[rgba(242,96,99,0.06)] transition-colors duration-220"
+              title="Sign Out"
+              aria-label="Sign Out"
+            >
+              <LogOut size={14} />
+            </button>
+          </div>
         )}
-        <button onClick={signOut}
-          className={`w-full flex items-center gap-2.5 px-2.5 py-[6px] my-[1px] rounded-xl text-[11px] text-muted hover:text-danger hover:bg-danger/5 transition-colors ${collapsed ? "justify-center" : ""}`}
-          title={collapsed ? "Sign Out" : undefined}>
-          <LogOut size={14} />
-          {!collapsed && <span>Sign Out</span>}
-        </button>
+        {!collapsed && (
+          <div className="px-1 mt-1">
+            <RoleBadge role={profile?.role} planTier={profile?.plan_tier || undefined} />
+          </div>
+        )}
         {/* Desktop-app indicator — only renders inside the Electron shell */}
         <DesktopIndicator collapsed={collapsed} />
         {/* White label: Powered by footer */}
         {wl.show_powered_by && !collapsed && (wl.company_name && wl.company_name !== "ShortStack") && (
-          <div className="text-center pt-1">
-            <span className="text-[8px] text-muted">Powered by ShortStack</span>
+          <div className="text-center pt-1.5">
+            <span className="text-[9px] text-text-muted tracking-wide">Powered by ShortStack</span>
           </div>
         )}
       </div>
@@ -998,7 +1047,7 @@ function ExtInstallTooltip() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="text-[10px] text-muted hover:text-gold transition-colors"
+        className="text-[10px] text-text-muted hover:text-brand-lime transition-colors duration-220"
         title="How to install the Chrome extension"
       >
         How to install
@@ -1006,12 +1055,12 @@ function ExtInstallTooltip() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-full mt-2 z-50 w-56 bg-surface border border-border rounded-xl shadow-elevated p-3">
-            <p className="text-[11px] font-semibold text-foreground mb-1.5">Install Steps</p>
-            <ol className="text-[10px] text-muted space-y-1 list-decimal list-inside leading-relaxed">
+          <div className="absolute left-0 top-full mt-2 z-50 w-56 bg-bg-surface-2 border border-border-subtle rounded-xl shadow-stack-2 p-3">
+            <p className="text-[11px] font-semibold text-text-primary mb-1.5">Install Steps</p>
+            <ol className="text-[10px] text-text-secondary space-y-1 list-decimal list-inside leading-relaxed">
               <li>Download the .zip file</li>
               <li>Unzip to a folder</li>
-              <li>Open <span className="font-mono text-[9px] text-gold/80">chrome://extensions</span> in your browser</li>
+              <li>Open <span className="font-mono text-[9px] text-brand-lime/80">chrome://extensions</span> in your browser</li>
               <li>Enable Developer mode</li>
               <li>Click &quot;Load unpacked&quot; and select the folder</li>
               <li>Pin the extension to your toolbar</li>
@@ -1028,7 +1077,7 @@ function UnreadBadge({ count }: { count: number }) {
   const display = count > 9 ? "9+" : String(count);
   return (
     <span
-      className="ml-auto shrink-0 inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none unread-pulse"
+      className="ml-auto shrink-0 inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full bg-status-error text-white text-[10px] font-bold leading-none unread-pulse"
       aria-label={`${count} unread`}
     >
       {display}
@@ -1040,7 +1089,7 @@ function UnreadBadge({ count }: { count: number }) {
 function UnreadDotMini() {
   return (
     <span
-      className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-500 ring-1 ring-surface unread-pulse"
+      className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-status-error ring-1 ring-bg-surface-1 unread-pulse"
       aria-hidden
     />
   );
@@ -1052,10 +1101,10 @@ function RoleBadge({ role, planTier }: { role?: string; planTier?: string }) {
     const plan = getPlanConfig(planTier);
     return (
       <div className="flex items-center gap-1.5">
-        <span className="text-[9px] text-muted">Founder</span>
+        <span className="text-[10px] text-text-muted tracking-wide">Founder</span>
         {planTier && (
           <span
-            className="text-[7px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider"
+            className="text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider"
             style={{
               background: `${plan.color}18`,
               color: plan.color,
@@ -1074,10 +1123,10 @@ function RoleBadge({ role, planTier }: { role?: string; planTier?: string }) {
     const plan = getPlanConfig(planTier);
     return (
       <div className="flex items-center gap-1.5">
-        <span className="text-[9px] text-muted">Member</span>
+        <span className="text-[10px] text-text-muted tracking-wide">Member</span>
         {planTier && (
           <span
-            className="text-[7px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider"
+            className="text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider"
             style={{
               background: `${plan.color}18`,
               color: plan.color,
@@ -1092,5 +1141,5 @@ function RoleBadge({ role, planTier }: { role?: string; planTier?: string }) {
   }
 
   // team_member
-  return <span className="text-[9px] text-muted capitalize">{role?.replace("_", " ") || "..."}</span>;
+  return <span className="text-[10px] text-text-muted capitalize tracking-wide">{role?.replace("_", " ") || "..."}</span>;
 }
