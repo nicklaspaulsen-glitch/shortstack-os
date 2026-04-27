@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import Modal from "@/components/ui/modal";
@@ -52,6 +53,8 @@ const NODE_TYPES: Record<string, { icon: React.ReactNode; color: string; bg: str
 };
 
 export default function WorkflowsPage() {
+  const { profile } = useAuth();
+  const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
   const [workflows, setWorkflows] = useState<Array<{ id: string; workflow: Workflow; client_name?: string; created_at: string; status: string }>>([]);
   const [workflowsLoading, setWorkflowsLoading] = useState(true);
   const [clients, setClients] = useState<Pick<Client, "id" | "business_name">[]>([]);
@@ -779,7 +782,9 @@ export default function WorkflowsPage() {
             <div className="card text-center py-8">
               <Zap size={20} className="mx-auto mb-2 text-gold/30" />
               <p className="text-xs text-muted">No n8n workflows found. Create one in the Builder tab or via Agent Mode.</p>
-              <p className="text-[9px] text-muted mt-1">Make sure N8N_API_KEY is set in your environment variables.</p>
+              {isPlatformAdmin && (
+                <p className="text-[9px] text-muted mt-1">Make sure N8N_API_KEY is set in your environment variables.</p>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

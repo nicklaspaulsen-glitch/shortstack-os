@@ -71,7 +71,8 @@ function StatusBadge({ status }: { status: WhatsAppCampaign["status"] }) {
 type Tab = "campaigns" | "numbers" | "inbox";
 
 export default function WhatsAppPage() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
   const [activeTab, setActiveTab] = useState<Tab>("campaigns");
   const [campaigns, setCampaigns] = useState<WhatsAppCampaign[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
@@ -416,8 +417,9 @@ export default function WhatsAppPage() {
               <Phone className="w-8 h-8 text-white/20" />
               <p className="text-white/40 text-sm">No WhatsApp numbers yet</p>
               <p className="text-white/30 text-xs max-w-md">
-                Configure WHATSAPP_ACCESS_TOKEN + WHATSAPP_PHONE_NUMBER_ID (Meta Cloud) or
-                provision a Twilio number per client to enable WhatsApp sends.
+                {isPlatformAdmin
+                  ? "Configure WHATSAPP_ACCESS_TOKEN + WHATSAPP_PHONE_NUMBER_ID (Meta Cloud) or provision a Twilio number per client to enable WhatsApp sends."
+                  : "WhatsApp isn't enabled on this workspace yet. Reach out to your platform admin to switch it on, or connect a Twilio number per client from the Phone Setup page."}
               </p>
             </div>
           ) : (

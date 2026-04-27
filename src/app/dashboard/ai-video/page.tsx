@@ -86,6 +86,7 @@ function ProgressRing({ progress, size = 20 }: { progress: number; size?: number
 
 export default function AIVideoPage() {
   const { profile } = useAuth();
+  const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const [handoffingId, setHandoffingId] = useState<string | null>(null);
@@ -847,8 +848,8 @@ export default function AIVideoPage() {
         </div>
       )}
 
-      {/* Setup / GPU env note — small, at the bottom, easy to miss */}
-      {advancedMode && (
+      {/* Setup / GPU env note — admin-only; clients should never see env-var names */}
+      {advancedMode && isPlatformAdmin && (
         <div className="flex items-center gap-2 text-[9px] text-white/25 px-1">
           <Zap size={10} />
           <span>

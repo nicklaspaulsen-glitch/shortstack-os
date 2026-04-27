@@ -111,7 +111,8 @@ export default function DialerTab() {
         if (!tokenRes.ok || !tokenData.configured) {
           if (!cancelled) {
             setTokenError(
-              tokenData.error || "Twilio Voice not configured. Calls disabled until env is set.",
+              tokenData.error ||
+                "Calls aren't available yet on this workspace. Reach out to your platform admin to enable Twilio voice.",
             );
           }
           return;

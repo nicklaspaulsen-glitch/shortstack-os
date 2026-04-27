@@ -124,7 +124,8 @@ function extractVars(body: string): string[] {
 // ─── Page ───────────────────────────────────────────────────────────────────
 
 export default function TelegramPresetsPage() {
-  useAuth();
+  const { profile } = useAuth();
+  const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
 
   const [presets, setPresets] = useState<Preset[]>([]);
   const [loading, setLoading] = useState(true);
@@ -842,7 +843,9 @@ export default function TelegramPresetsPage() {
                 <label className="text-xs text-muted mb-1 block">
                   Chat ID{" "}
                   <span className="text-muted/70">
-                    (leave blank to use TELEGRAM_CHAT_ID env)
+                    {isPlatformAdmin
+                      ? "(leave blank to use TELEGRAM_CHAT_ID env)"
+                      : "(leave blank to use the workspace default chat)"}
                   </span>
                 </label>
                 <input

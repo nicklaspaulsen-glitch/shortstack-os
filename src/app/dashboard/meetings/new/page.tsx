@@ -6,8 +6,11 @@ import Link from "next/link";
 import { ArrowLeft, Upload, Loader2, Mic, FileAudio } from "lucide-react";
 import toast from "react-hot-toast";
 import { ALLOWED_VOICE_SAMPLE, buildAccept, validateFile } from "@/lib/file-types";
+import { useAuth } from "@/lib/auth-context";
 
 export default function NewMeetingPage() {
+  const { profile } = useAuth();
+  const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
@@ -83,10 +86,15 @@ export default function NewMeetingPage() {
         method: "POST",
       });
       if (transRes.status === 501) {
-        toast("Transcription disabled — configure OPENAI_API_KEY to enable.", {
-          icon: "⚙️",
-          duration: 7000,
-        });
+        toast(
+          isPlatformAdmin
+            ? "Transcription disabled — configure OPENAI_API_KEY to enable."
+            : "Transcription isn't enabled on this workspace yet. Reach out to your platform admin to switch it on.",
+          {
+            icon: "⚙️",
+            duration: 7000,
+          }
+        );
       } else if (!transRes.ok) {
         const err = await transRes.json().catch(() => ({}));
         toast.error(err.error || "Transcription failed — you can retry on the meeting page.");
