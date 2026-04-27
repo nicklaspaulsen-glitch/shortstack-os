@@ -16,7 +16,8 @@
  * Output is a single JSON object — see `CoachAnalysis` below.
  */
 
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
+import { preHumanize } from "@/lib/ai/humanizer";
 import {
   computeCallMetrics,
   scoreMetrics,
@@ -151,7 +152,7 @@ function sanitizeInsights(items: Array<Partial<CoachInsight>> | undefined): Coac
       if (!item || typeof item.text !== "string" || !item.text.trim()) return null;
       return {
         category: sanitizeCategory(item.category),
-        text: item.text.trim().slice(0, 500),
+        text: preHumanize(item.text.trim()).slice(0, 500),
         timestamp_secs:
           typeof item.timestamp_secs === "number" && Number.isFinite(item.timestamp_secs)
             ? Math.max(0, Math.round(item.timestamp_secs))
@@ -175,7 +176,7 @@ function sanitizeNextActions(items: Array<Partial<CoachNextAction>> | undefined)
         typeof item.due === "string" && /^\d{4}-\d{2}-\d{2}$/.test(item.due)
           ? item.due
           : null;
-      return { text: item.text.trim().slice(0, 280), due };
+      return { text: preHumanize(item.text.trim()).slice(0, 280), due };
     })
     .filter((x): x is CoachNextAction => x !== null)
     .slice(0, 8);
@@ -239,7 +240,10 @@ export async function analyzeCall(args: AnalyzeCallArgs): Promise<CoachAnalysis>
   let parsed: RawLLMOutput | null = null;
   let costUsd = 0;
   try {
-    const response = await callLLM({
+    // Coach output is strict JSON — humanize=false to preserve JSON shape.
+    // Voice profile is still injected into the system prompt so feedback
+    // text inside the JSON sounds like a teammate, not a generic assistant.
+    const response = await callLLMHumanized({
       taskType: "complex_analysis",
       systemPrompt: SYSTEM_PROMPT,
       userPrompt,
@@ -247,6 +251,10 @@ export async function analyzeCall(args: AnalyzeCallArgs): Promise<CoachAnalysis>
       temperature: 0.2,
       userId: args.userId,
       context: args.context ?? "lib/coach/analyzeCall",
+      voiceProfile: args.userId
+        ? { subjectKind: "user", subjectId: args.userId }
+        : undefined,
+      humanize: false,
     });
     costUsd = clampCost(response.costUsd);
     parsed = safeJsonParse<RawLLMOutput>(response.text);

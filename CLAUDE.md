@@ -154,6 +154,35 @@ Co-author tag at the bottom of every commit:
 Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 ```
 
+## Voice profiles + humanizer (Apr 27)
+
+Per-user (and per-client) writing voice learning + AI-output humanization:
+
+- **Use `callLLMHumanized`** (`src/lib/ai/call-llm-humanized.ts`) instead of
+  `callLLM` whenever the model produces user-visible text. It auto-injects
+  the caller's voice snippet into the system prompt and runs the output
+  through the humanizer to strip AI tells.
+- **Defaults:** `humanize: true` for content surfaces (briefs, follow-ups,
+  proposals). Pass `humanize: false` for analysis surfaces returning JSON
+  (coach insights, classifiers) — voice still injects via the system
+  prompt, but the JSON skeleton stays intact.
+- **Voice gate:** profiles need ≥200 words of corpus before they kick in
+  (`VOICE_MIN_CORPUS_WORDS`). Below that we don't inject anything — avoids
+  overfitting tiny samples.
+- **Capture is fire-and-forget.** Sent emails, inbound SMS / DM / email,
+  meeting transcripts all feed `captureVoiceSample()` via `.catch()`-only
+  paths. Storage failures NEVER break the user-facing send.
+- **Cron:** `*/30 * * * *` → `/api/cron/recompute-voice-profiles` rebuilds
+  profiles for subjects with new corpus rows since their last computation.
+  Hard cap of 50 profiles per tick.
+- **Tables:** `writing_voice_corpus` (samples) + `writing_voice_profiles`
+  (computed stats + prompt snippet). Note: distinct from the existing
+  `voice_profiles` table which holds AUDIO voice-clone embeddings.
+- **Settings UI:** `/dashboard/settings/voice-profile` — stats, signature
+  phrases / openings / closings, manual bootstrap textarea.
+- **Client UI:** `/dashboard/clients/[id]` → "Voice" tab — same view scoped
+  to a specific client + a "Generate copy in their voice" modal.
+
 ## Conventions worth knowing
 
 - **No `console.log` in production code.** Use `console.error/warn` with

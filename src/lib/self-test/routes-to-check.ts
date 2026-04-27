@@ -985,6 +985,51 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [400, 401],
     note: "Missing required filter (agent_key or since) must 400.",
   },
+
+  // ── Humanizer + Voice Profiles (Apr 27) ─────────────────────────────────
+  {
+    path: "/api/voice-profile/me",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["profile", "minCorpusWords", "active"],
+    note: "Voice profile self-view — 200 with profile=null is fine for new users.",
+  },
+  {
+    path: "/api/voice-profile/bootstrap",
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [400, 401],
+    note: "Bootstrap with empty body must reject (samples array required).",
+  },
+  {
+    path: "/api/voice-profile/recompute",
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [200, 401],
+    note: "Recompute with empty body defaults to caller's user profile. 200 ok=false reason=empty_corpus is fine.",
+    timeout_ms: 25_000,
+  },
+  {
+    path: `/api/voice-profile/client/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [401, 404],
+    note: "Voice profile for a non-existent client must 404 (or 401 unauth'd).",
+  },
+  {
+    path: "/api/voice-profile/generate",
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [400, 401],
+    note: "Generate with empty body must reject (subjectKind/subjectId/prompt required).",
+  },
+  {
+    path: "/api/cron/recompute-voice-profiles",
+    expected_status: [200, 401, 503],
+    note: "Voice-profile cron — auth-gated; 401 without bearer, 503 if CRON_SECRET unset.",
+  },
 ];
 
 /** Total count helper for the dashboard. */

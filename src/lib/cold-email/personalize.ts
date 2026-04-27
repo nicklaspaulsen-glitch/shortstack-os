@@ -13,7 +13,8 @@
  *   {{location}}        - "City, State"
  *   {{personal_hook}}   - LLM-generated, 1-2 sentence personal observation
  */
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
+import { preHumanize } from "@/lib/ai/humanizer";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
 import type { ResearchResult } from "./researcher";
 
@@ -93,7 +94,10 @@ export async function personalizeEmail(
     "Generate the JSON now.",
   ].join("\n");
 
-  const result = await callLLM({
+  // The LLM returns strict JSON — humanize=false avoids reshaping the JSON
+  // skeleton. Voice profile injection still applies via the system prompt,
+  // so the body field already comes back in the user's voice.
+  const result = await callLLMHumanized({
     taskType: "generation_short",
     systemPrompt: SYSTEM_PROMPT,
     userPrompt,
@@ -101,6 +105,10 @@ export async function personalizeEmail(
     temperature: 0.7,
     userId: input.userId,
     context: "/api/cold-email/personalize",
+    voiceProfile: input.userId
+      ? { subjectKind: "user", subjectId: input.userId }
+      : undefined,
+    humanize: false,
   });
 
   type LLMShape = { subject?: string; opener?: string; body?: string };
@@ -111,7 +119,7 @@ export async function personalizeEmail(
     );
   }
 
-  const opener = (parsed.opener ?? "").trim();
+  const opener = preHumanize((parsed.opener ?? "").trim());
   // Apply deterministic tokens to the LLM body too (in case the model echoed
   // the template structure).
   let finalBody = parsed.body.trim();
@@ -122,9 +130,13 @@ export async function personalizeEmail(
     location,
   });
   finalBody = finalBody.replace(/\{\{\s*personal_hook\s*\}\}/gi, opener);
+  // Run the deterministic AI-tell pass on the assembled body. The LLM call
+  // is JSON-mode so we can't humanize the whole response, but a regex pass
+  // on the final body still strips "delve into", "leverage", etc.
+  finalBody = preHumanize(finalBody);
 
   return {
-    subject: parsed.subject.trim().slice(0, 200),
+    subject: preHumanize(parsed.subject.trim()).slice(0, 200),
     opener,
     body: finalBody,
     costUsd: result.costUsd,

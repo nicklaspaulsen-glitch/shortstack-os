@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 import SocialConnect from "@/components/social-connect";
 import ClientBillingPanel from "@/components/clients/client-billing-panel";
 import SmartManageOverlay from "@/components/clients/smart-manage-overlay";
+import ClientVoiceProfile from "@/components/clients/client-voice-profile";
 
 export default function ClientDetailPage() {
   const params = useParams();
@@ -35,7 +36,7 @@ export default function ClientDetailPage() {
   const [aiActions, setAiActions] = useState<Array<Record<string, unknown>>>([]);
   const [loading, setLoading] = useState(true);
   const [smartManageOpen, setSmartManageOpen] = useState(false);
-  const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing" | "payments" | "access">("overview");
+  const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing" | "payments" | "access" | "voice">("overview");
   const [pageAccess, setPageAccess] = useState<Record<string, boolean>>({
     portal: true, content: true, billing: true, reports: true, socials: true,
     workflows: false, analytics: false, ads: false, websites: false,
@@ -95,6 +96,7 @@ export default function ClientDetailPage() {
     { key: "billing" as const, label: `Billing (${invoices.length})` },
     { key: "payments" as const, label: "Payments" },
     { key: "access" as const, label: "Access" },
+    { key: "voice" as const, label: "Voice" },
   ];
 
   return (
@@ -417,6 +419,16 @@ export default function ClientDetailPage() {
           {/* Telegram Bot */}
           <TelegramBotSetup clientId={id as string} client={client} onUpdate={fetchAll} />
 
+        </div>
+      )}
+
+      {/* Voice Profile (Apr 27 — humanizer + voice profiles feature) */}
+      {tab === "voice" && (
+        <div className="card">
+          <ClientVoiceProfile
+            clientId={client.id}
+            clientName={client.business_name}
+          />
         </div>
       )}
     </div>
