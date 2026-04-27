@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   MessageCircle, Send, Sparkles, Loader2, AlertTriangle, CheckCircle,
-  Plus, Trash2, Zap,
+  Plus, Trash2, Zap, Mic,
 } from "lucide-react";
 import StatCard from "@/components/ui/stat-card";
+import VoicePicker from "@/components/voice/VoicePicker";
 
 interface SMSTemplate {
   id: string;
@@ -82,6 +83,10 @@ export default function SMSConsoleTab() {
   const [polishing, setPolishing] = useState(false);
   const [resultBanner, setResultBanner] = useState<SendResult | null>(null);
   const [stats, setStats] = useState({ sent: 0, failed: 0 });
+
+  // Voice MMS toggle
+  const [voiceMode, setVoiceMode] = useState(false);
+  const [voiceCloneId, setVoiceCloneId] = useState<string | null>(null);
 
   // ── Load templates ────────────────────────────────────────────────
   const loadTemplates = useCallback(async () => {
@@ -173,19 +178,33 @@ export default function SMSConsoleTab() {
     setSending(true);
     setResultBanner(null);
     try {
-      const res = await fetch("/api/sms/send-manual", {
+      const endpoint = voiceMode ? "/api/sms/send-voice" : "/api/sms/send-manual";
+      const payload = voiceMode
+        ? {
+            to: singleTo,
+            text: body,
+            clone_id: voiceCloneId === "__none__" ? null : voiceCloneId,
+            fallback_text: body,
+          }
+        : {
+            to: singleTo,
+            body: body,
+            contact_name: singleName || undefined,
+          };
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: singleTo,
-          body: body,
-          contact_name: singleName || undefined,
-        }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (res.ok && data.success) {
         setStats((s) => ({ ...s, sent: s.sent + 1 }));
-        setResultBanner({ ok: true, text: `Sent to ${data.to}` });
+        setResultBanner({
+          ok: true,
+          text: voiceMode
+            ? `Voice MMS sent to ${data.to}`
+            : `Sent to ${data.to}`,
+        });
         setBody("");
       } else {
         setStats((s) => ({ ...s, failed: s.failed + 1 }));
@@ -196,7 +215,7 @@ export default function SMSConsoleTab() {
       setResultBanner({ ok: false, text: String(err).slice(0, 200) });
     }
     setSending(false);
-  }, [singleTo, singleName, body, sending]);
+  }, [singleTo, singleName, body, sending, voiceMode, voiceCloneId]);
 
   // ── Send bulk SMS ─────────────────────────────────────────────────
   const sendBulk = useCallback(async () => {
@@ -356,6 +375,37 @@ export default function SMSConsoleTab() {
                   {body.length <= 160 ? "1 segment" : `${Math.ceil(body.length / 153)} segments`}
                 </span>
               </div>
+
+              {/* Voice MMS toggle — synthesises body via voice clone + sends MMS audio. */}
+              {mode === "single" && (
+                <div className="mt-3 rounded-lg border border-amber-500/20 bg-amber-950/15 p-3">
+                  <label className="flex items-center gap-2 text-xs font-medium text-amber-200">
+                    <input
+                      type="checkbox"
+                      checked={voiceMode}
+                      onChange={(e) => setVoiceMode(e.target.checked)}
+                      className="h-3 w-3 rounded border border-white/20 bg-black/30 text-amber-500 focus:ring-amber-400"
+                    />
+                    <Mic size={12} />
+                    Send as voice MMS (carrier-dependent)
+                  </label>
+                  {voiceMode && (
+                    <div className="mt-2">
+                      <VoicePicker
+                        value={voiceCloneId}
+                        onChange={setVoiceCloneId}
+                        surface="sms"
+                        compact
+                      />
+                      <p className="mt-2 text-[11px] text-amber-200/80">
+                        We&apos;ll synthesise the message above with the chosen voice
+                        and send it as an audio MMS. Some carriers reject MMS audio
+                        — when that happens we send the text as a fallback.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-2">

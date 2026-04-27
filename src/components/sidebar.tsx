@@ -89,6 +89,7 @@ import {
   ArrowUpRight,
   SlidersHorizontal,
   FlaskConical,
+  Mic,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -122,6 +123,7 @@ const navItems: NavItem[] = [
   { label: "Dialer", href: "/dashboard/dialer", icon: <Phone size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },
   { label: "Voice AI", href: "/dashboard/voice-receptionist", icon: <Headphones size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Voicemail Drop", href: "/dashboard/voicemail-drop", icon: <Phone size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
+  { label: "Voice Studio", href: "/dashboard/voice-studio", icon: <Mic size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },
   { label: "DM Controller", href: "/dashboard/dm-controller", icon: <Send size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Conversations", href: "/dashboard/conversations", icon: <MessagesSquare size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Outreach Feed", href: "/dashboard/outreach-feed", icon: <MessagesSquare size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },

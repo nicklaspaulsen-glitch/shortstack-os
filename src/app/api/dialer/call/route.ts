@@ -14,6 +14,14 @@ interface CallRequest {
   client_id?: string;
   /** Self-test marker — skip validation lookup to avoid burning quota. */
   _self_test?: boolean;
+  /**
+   * Voice Studio integration. When supplied, the dialer pre-rendered the
+   * opening line with this clone and we attach the audio URL to the row so
+   * downstream playback (e.g. answer-bridge TwiML) can <Play> it.
+   */
+  voice_clone_id?: string | null;
+  opening_line_audio_url?: string | null;
+  tcpa_accepted?: boolean;
 }
 
 // E.164 normaliser — defaults to +1 (US) when caller forgets the prefix.
@@ -200,6 +208,9 @@ export async function POST(request: NextRequest) {
         via: "dialer",
         contact_name: body.contact_name || null,
         contact_id: body.contact_id || null,
+        voice_clone_id: body.voice_clone_id || null,
+        opening_line_audio_url: body.opening_line_audio_url || null,
+        tcpa_accepted: Boolean(body.tcpa_accepted),
       },
     })
     .select("id")

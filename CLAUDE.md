@@ -314,18 +314,22 @@ the legacy `gold`/`amber`/`purple` shade names.
 ## Transcription pipeline
 
 Transcription routes through `src/lib/transcription/router.ts`. Provider order:
+WhisperX (with diarization) → faster-whisper → OpenAI Whisper. Soft-fails to
+existing `OPENAI_API_KEY` path when RunPod endpoints unset.
 
-1. **WhisperX** (`runpod_whisperx`) — used when caller passes `diarize: true`
-   AND `RUNPOD_WHISPERX_ENDPOINT` is set. Produces `SPEAKER_00`/`SPEAKER_01`
-   labels via pyannote 3.1; AI Sales Coach uses these for diarized metrics.
-2. **faster-whisper** (`runpod_faster_whisper`) — 4x faster than stock
-   Whisper at the same accuracy.
-3. **OpenAI Whisper API** (`openai_whisper`) — fallback, $0.006/min.
+## Voice Studio
 
-With no transcription env vars set, the router falls back to OpenAI via the
-existing `OPENAI_API_KEY` — behaviour unchanged. Long-running RunPod jobs
-return a `job_id`; `/api/cron/poll-transcription-jobs` finishes them every
-minute. See `docs/TRANSCRIPTION_SETUP.md` for setup.
+`/dashboard/voice-studio` — voice cloning + preset library powering the
+dialer / voicemail drops / SMS MMS / DM voice notes. See
+`docs/VOICE_CLONING_SETUP.md` for endpoint deployment details.
+
+- Provider order: F5-TTS (RunPod, free) → OpenVoice (RunPod, free) → XTTS
+  (RunPod, free) → ElevenLabs (paid, also powers presets).
+- Consent gates: `self` | `team_member_signed` | `client_signed`.
+- 10 ElevenLabs presets are seeded per-owner on first dashboard mount.
+- Audio cache: hash of (text, format, speed) → R2 key.
+- Cron polling RunPod async jobs: `*/2 * * * *` → `/api/cron/voice-clone-poll`.
+- TCPA disclosure toggle is in the dialer voice picker.
 
 ## Tomorrow's todo file
 
