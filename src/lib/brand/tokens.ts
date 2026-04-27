@@ -4,7 +4,9 @@
 // Tailwind reads from the same hex values via tailwind.config.ts.
 //
 // Direction: "Editorial Bento × OLED Dark × 3D Depth × Liquid-Glass Accents"
-// Brand color: ACID LIME (#D4FF00) — deliberately not gold. Do not introduce
+// Brand color: LIME (#B8E000) — deliberately not gold. Slightly softer than
+// the original full-saturation neon (#D4FF00) so the brand identity stays
+// distinctive without going acid against OLED dark surfaces. Do not introduce
 // new gold/amber accents in new pages; the existing aliases remap to lime.
 
 export const tokens = {
@@ -15,8 +17,8 @@ export const tokens = {
     surface3: "#2A2832",
   },
   border: {
-    subtle: "rgba(212, 255, 0, 0.08)",
-    strong: "rgba(212, 255, 0, 0.18)",
+    subtle: "rgba(184, 224, 0, 0.07)",
+    strong: "rgba(184, 224, 0, 0.16)",
   },
   text: {
     primary: "#F5F4F1",
@@ -24,10 +26,10 @@ export const tokens = {
     muted: "#6F6D7A",
   },
   brand: {
-    lime: "#D4FF00",
-    limeSoft: "#E8FF66",
-    limeDim: "#8A9F00",
-    limeGlow: "rgba(212, 255, 0, 0.4)",
+    lime: "#B8E000",
+    limeSoft: "#D4FF33",
+    limeDim: "#6F8A00",
+    limeGlow: "rgba(184, 224, 0, 0.4)",
     plum: "#3F0D2D",
     plumHover: "#5A1B41",
     indigo: "#5E5BFF",
@@ -55,9 +57,9 @@ export const tokenRgb = {
   textPrimary: "245 244 241",
   textSecondary: "159 157 170",
   textMuted: "111 109 122",
-  brandLime: "212 255 0",
-  brandLimeSoft: "232 255 102",
-  brandLimeDim: "138 159 0",
+  brandLime: "184 224 0",
+  brandLimeSoft: "212 255 51",
+  brandLimeDim: "111 138 0",
   brandPlum: "63 13 45",
   brandPlumHover: "90 27 65",
   brandIndigo: "94 91 255",

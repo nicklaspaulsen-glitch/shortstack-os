@@ -148,10 +148,11 @@ export class Scene {
       autoDensity: true,
       preference: "webgl",
     });
-    // Ensure pixel-perfect rendering (no smoothing on scale).
-    if ("roundPixels" in app.renderer) {
-      (app.renderer as { roundPixels?: boolean }).roundPixels = true;
-    }
+    // Pixel-perfect rendering: PixiJS v8 made `roundPixels` a read-only
+    // getter on the renderer (assigning crashes with "Cannot set property
+    // roundPixels of #<t> which has only a getter"). With antialias=false
+    // and `image-rendering: pixelated` on the canvas, output is already
+    // crisp without the flag.
     host.appendChild(app.canvas);
     app.canvas.style.imageRendering = "pixelated";
     app.canvas.style.width = "100%";

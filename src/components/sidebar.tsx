@@ -111,9 +111,15 @@ const navItems: NavItem[] = [
   { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={16} />, roles: ["admin"] },
   { label: "Reports", href: "/dashboard/reports", icon: <FileText size={16} />, roles: ["admin"] },
 
-  // ── Workspace (team collaboration) ──
+  // ── Workspace (team collaboration: shared boards, whiteboard, files) ──
+  // All Workspace items must share section + sub strings so the renderer
+  // groups them under ONE header (otherwise each new section: "Workspace"
+  // entry creates a duplicate "WORKSPACE" group block).
+  // Only the FIRST item carries `section`; the renderer starts a new group
+  // on every `section` flag, so subsequent siblings just keep `sub`.
   { label: "Board", href: "/dashboard/workspace/board", icon: <Kanban size={16} />, roles: ["admin", "team_member"], section: "Workspace", sub: "Team" },
-  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <LayoutGrid size={16} />, roles: ["admin", "team_member"], section: "Workspace", sub: "Team" },
+  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <LayoutGrid size={16} />, roles: ["admin", "team_member"], sub: "Team" },
+  { label: "Files", href: "/dashboard/workspace/files", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"], sub: "Team" },
 
   // ── Sales (full revenue pipeline) ──
   { label: "Outreach", href: "/dashboard/outreach-hub", icon: <Send size={16} />, roles: ["admin"], section: "Sales", sub: "Leads & Outreach" },
@@ -193,9 +199,6 @@ const navItems: NavItem[] = [
   { label: "API Webhooks", href: "/dashboard/api/webhooks", icon: <Webhook size={16} />, roles: ["admin"], sub: "Channels" },
   { label: "API Docs", href: "/dashboard/api-docs", icon: <FileText size={16} />, roles: ["admin"], sub: "Channels" },
   { label: "Activity Log", href: "/dashboard/activity-log", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Channels" },
-
-  // ── Workspace (shared agency files / boards / whiteboard) ──
-  { label: "Files", href: "/dashboard/workspace/files", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"], section: "Workspace" },
 
   // ── Manage (operations & finance) ──
   { label: "Workspaces", href: "/dashboard/workspaces", icon: <Building2 size={16} />, roles: ["admin"], section: "Manage", sub: "Business" },
