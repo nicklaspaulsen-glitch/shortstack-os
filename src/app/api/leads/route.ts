@@ -88,5 +88,29 @@ export async function POST(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  // Queue a trigger event for the `new-lead-ai-research` template (and any
+  // other workflow trigger_type='lead.created' the user has installed).
+  // Best-effort — failures are logged but don't break the create response.
+  if (data?.id) {
+    const { error: trigErr } = await supabase.from("trigger_events").insert({
+      user_id: ownerId,
+      trigger_type: "lead.created",
+      source_table: "leads",
+      source_id: data.id,
+      payload: {
+        lead_id: data.id,
+        lead_name: data.business_name,
+        email: data.email,
+        phone: data.phone,
+        source: data.source,
+        industry: data.industry,
+      },
+      status: "pending",
+    });
+    if (trigErr) {
+      console.error("[leads/route] trigger_event insert failed:", trigErr.message);
+    }
+  }
+
   return NextResponse.json({ lead: data });
 }

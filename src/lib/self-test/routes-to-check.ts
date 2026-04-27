@@ -1030,6 +1030,40 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [200, 401, 503],
     note: "Voice-profile cron — auth-gated; 401 without bearer, 503 if CRON_SECRET unset.",
   },
+
+  // ── Workflow Library (template gallery + install) ─────────────────────────
+  // Read-only gallery returns the template list; auth-gated. The install
+  // POST without a template_id must validation-fail (400) or auth-fail (401);
+  // POST with a bogus id must 404 (or 401 unauth'd).
+  {
+    path: "/api/workflows/templates",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["templates"],
+    note: "Workflow template gallery — list of all available templates.",
+  },
+  {
+    path: "/api/workflows/templates/failed-payment-recovery",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+    note: "Single template detail — failed-payment-recovery is shipped.",
+  },
+  {
+    path: "/api/workflows/templates/install",
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [400, 401],
+    note: "Install without template_id must 400 (validation) or 401 (no auth).",
+  },
+  {
+    path: "/api/workflows/templates/install",
+    method: "POST",
+    auth_bearer: true,
+    body: { template_id: "this-template-does-not-exist" },
+    expected_status: [401, 404],
+    note: "Install with bogus template_id must 404 (not found) or 401 (no auth).",
+  },
 ];
 
 /** Total count helper for the dashboard. */
