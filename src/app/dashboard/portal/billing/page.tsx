@@ -11,18 +11,59 @@ import DataTable from "@/components/ui/data-table";
 import { PageLoading } from "@/components/ui/loading";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { CreditCard, FileText, DollarSign } from "lucide-react";
+import CurrencyDisplay from "@/components/integrations/currency-display";
+
+// Map ISO country code → likely local currency. Used to default the
+// "show alongside USD" display when geo-IP gives us a country but no
+// explicit per-client preference is set. Not exhaustive — covers the
+// agency's biggest expected markets. Unknown countries fall back to USD
+// (i.e. no conversion display).
+const COUNTRY_TO_CURRENCY: Record<string, string> = {
+  US: "USD", CA: "CAD", MX: "MXN",
+  GB: "GBP", IE: "EUR", FR: "EUR", DE: "EUR", ES: "EUR", IT: "EUR",
+  NL: "EUR", BE: "EUR", AT: "EUR", PT: "EUR", FI: "EUR", GR: "EUR",
+  DK: "DKK", SE: "SEK", NO: "NOK", IS: "ISK", CH: "CHF",
+  PL: "PLN", CZ: "CZK", HU: "HUF", RO: "RON",
+  AU: "AUD", NZ: "NZD", JP: "JPY", CN: "CNY", HK: "HKD", SG: "SGD",
+  KR: "KRW", IN: "INR", AE: "AED", SA: "SAR", IL: "ILS",
+  BR: "BRL", AR: "ARS", CL: "CLP", CO: "COP",
+  ZA: "ZAR", NG: "NGN", EG: "EGP",
+};
 
 export default function ClientBillingPage() {
   const { profile } = useAuth();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
+  // Optional second-currency display — derived from the caller's geo-IP.
+  // Empty string means "no conversion display" (agency reports in its own
+  // currency only). Free-tier providers occasionally fail; that's fine.
+  const [displayCurrency, setDisplayCurrency] = useState<string>("");
   const supabase = createClient();
 
   useEffect(() => {
     if (profile) fetchBilling();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
+
+  // Auto-detect the client's local currency from their IP. Fire-and-forget;
+  // failure is silent (we just don't show the parenthetical conversion).
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/integrations/geo-ip/me")
+      .then((res) => res.json())
+      .then((data: { success: boolean; lookup?: { country_code?: string } | null }) => {
+        if (cancelled || !data.success || !data.lookup?.country_code) return;
+        const cur = COUNTRY_TO_CURRENCY[data.lookup.country_code.toUpperCase()];
+        if (cur) setDisplayCurrency(cur);
+      })
+      .catch(() => {
+        // Soft-fail — leave displayCurrency empty
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function fetchBilling() {
     if (!profile?.id) { setLoading(false); return; }
@@ -62,12 +103,22 @@ export default function ClientBillingPage() {
         <StatCard label="Contracts" value={contracts.filter(c => c.status === "signed").length} icon={<FileText size={14} />} />
       </div>
 
+      {displayCurrency && (
+        <div className="text-[10px] text-muted -mt-2">
+          Amounts shown in invoice currency, with local equivalent in <span className="font-mono">{displayCurrency}</span>.
+        </div>
+      )}
+
       <div className="card">
         <h2 className="section-header">Invoices</h2>
         <DataTable
           columns={[
             { key: "description", label: "Description", render: (i: Invoice) => <span className="text-xs">{i.description || "Invoice"}</span> },
-            { key: "amount", label: "Amount", render: (i: Invoice) => <span className="text-xs font-mono">{formatCurrency(i.amount)}</span> },
+            { key: "amount", label: "Amount", render: (i: Invoice) => (
+              <span className="text-xs font-mono">
+                <CurrencyDisplay amount={i.amount} currency={i.currency || "USD"} displayIn={displayCurrency || undefined} />
+              </span>
+            ) },
             { key: "status", label: "Status", render: (i: Invoice) => <StatusBadge status={i.status} /> },
             { key: "due_date", label: "Due", render: (i: Invoice) => <span className="text-xs text-muted">{i.due_date ? formatDate(i.due_date) : "-"}</span> },
             { key: "paid_at", label: "Paid", render: (i: Invoice) => <span className="text-xs text-muted">{i.paid_at ? formatDate(i.paid_at) : "-"}</span> },
@@ -99,7 +150,13 @@ export default function ClientBillingPage() {
           <DataTable
             columns={[
               { key: "title", label: "Contract", render: (c: Contract) => <span className="text-xs font-medium">{c.title}</span> },
-              { key: "value", label: "Value", render: (c: Contract) => <span className="text-xs font-mono">{c.value ? formatCurrency(c.value) : "-"}</span> },
+              { key: "value", label: "Value", render: (c: Contract) => (
+                <span className="text-xs font-mono">
+                  {c.value ? (
+                    <CurrencyDisplay amount={c.value} currency="USD" displayIn={displayCurrency || undefined} />
+                  ) : "-"}
+                </span>
+              ) },
               { key: "status", label: "Status", render: (c: Contract) => <StatusBadge status={c.status} /> },
               { key: "start_date", label: "Period", render: (c: Contract) => <span className="text-[10px] text-muted">{c.start_date ? formatDate(c.start_date) : "?"} - {c.end_date ? formatDate(c.end_date) : "Ongoing"}</span> },
             ]}

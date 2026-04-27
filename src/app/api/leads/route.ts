@@ -1,6 +1,51 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { requireOwnedClient, getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { extractClientIp, lookupIp } from "@/lib/integrations/geo-ip";
+
+// Fire-and-forget geo enrichment for newly-created leads. Pulls the
+// submitter's IP from request headers, looks up the country/city/timezone,
+// and patches the lead row's metadata.geo. Never blocks the POST response;
+// failures are logged and swallowed.
+async function enrichLeadGeo(leadId: string, ip: string): Promise<void> {
+  try {
+    if (!ip || ip === "unknown") return;
+    const geo = await lookupIp(ip);
+    if (!geo) return;
+    const svc = createServiceClient();
+    // Read current metadata so we don't clobber existing fields.
+    const { data: row } = await svc
+      .from("leads")
+      .select("metadata, country, city")
+      .eq("id", leadId)
+      .maybeSingle();
+    const existingMetadata = (row?.metadata ?? {}) as Record<string, unknown>;
+    await svc
+      .from("leads")
+      .update({
+        // Only fill country/city if they're empty — don't overwrite manually-entered data.
+        country: row?.country || geo.country_name,
+        city: row?.city || geo.city,
+        metadata: {
+          ...existingMetadata,
+          geo: {
+            country_code: geo.country_code,
+            country_name: geo.country_name,
+            region: geo.region,
+            city: geo.city,
+            timezone: geo.timezone,
+            isp: geo.isp,
+            latitude: geo.latitude,
+            longitude: geo.longitude,
+            looked_up_at: new Date().toISOString(),
+          },
+        },
+      })
+      .eq("id", leadId);
+  } catch (err) {
+    console.warn("[leads] geo enrichment failed:", err instanceof Error ? err.message : String(err));
+  }
+}
 
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -88,6 +133,7 @@ export async function POST(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+<<<<<<< HEAD
   // Queue a trigger event for the `new-lead-ai-research` template (and any
   // other workflow trigger_type='lead.created' the user has installed).
   // Best-effort — failures are logged but don't break the create response.
@@ -110,6 +156,13 @@ export async function POST(request: NextRequest) {
     if (trigErr) {
       console.error("[leads/route] trigger_event insert failed:", trigErr.message);
     }
+=======
+  // Fire-and-forget geo enrichment so the lead detail page can show
+  // country flag + local time without an extra UI lookup later.
+  if (data?.id) {
+    const ip = extractClientIp(request.headers);
+    void enrichLeadGeo(data.id, ip);
+>>>>>>> 8bfeac7a (feat(integrations): stock photos + currency + geo-IP)
   }
 
   return NextResponse.json({ lead: data });

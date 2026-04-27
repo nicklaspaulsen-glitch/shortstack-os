@@ -43,6 +43,8 @@ import TopBar from "@/components/thumbnail-editor/top-bar";
 import AIFillDialog from "@/components/thumbnail-editor/ai-fill-dialog";
 import HistoryPanel from "@/components/thumbnail-editor/history-panel";
 import AiFirstStarter from "@/components/thumbnail-editor/ai-first-starter";
+import StockPhotosPanel from "@/components/thumbnail-editor/stock-photos-panel";
+import type { StockPhoto } from "@/lib/integrations/stock-photos";
 
 // Electron hint — the preload script sets window.electron. We check for
 // truthy at runtime to decide whether to show the native picker.
@@ -64,6 +66,7 @@ export default function ThumbnailEditorProPage() {
   const renderGetter = useRef<(() => HTMLCanvasElement | null) | null>(null);
   const [aiFillOpen, setAIFillOpen] = useState(false);
   const [textToLayerOpen, setTextToLayerOpen] = useState(false);
+  const [stockPhotosOpen, setStockPhotosOpen] = useState(false);
   const [aiBusy, setAIBusy] = useState(false);
   const [hasElectron, setHasElectron] = useState(false);
   // AI-first starter — overlay shown when canvas is empty and user hasn't
@@ -512,6 +515,44 @@ export default function ThumbnailEditorProPage() {
     [state.canvasWidth, state.canvasHeight, commit],
   );
 
+  // ── Stock photos ───────────────────────────────────────────────────────
+  // Pexels/Unsplash backdrops — inserts as a new layer fitted to canvas.
+  // The src_full URL goes straight onto the layer; CORS is handled by the
+  // browser since both providers serve images with permissive headers.
+  const onInsertStockPhoto = useCallback(
+    (photo: StockPhoto) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const ratio = Math.min(
+          state.canvasWidth / img.width,
+          state.canvasHeight / img.height,
+          1,
+        );
+        const w = img.width * ratio;
+        const h = img.height * ratio;
+        const layer = createImageLayer(photo.src_full, {
+          x: (state.canvasWidth - w) / 2,
+          y: (state.canvasHeight - h) / 2,
+          width: w,
+          height: h,
+          name: `Stock: ${photo.photographer}`,
+        });
+        commit(
+          { type: "ADD_LAYER", layer },
+          `Add stock photo (${photo.source})`,
+        );
+        toast.success(`Added stock photo by ${photo.photographer}`);
+        setStockPhotosOpen(false);
+      };
+      img.onerror = () => {
+        toast.error("Failed to load stock photo");
+      };
+      img.src = photo.src_full;
+    },
+    [state.canvasWidth, state.canvasHeight, commit],
+  );
+
   // ── Export ─────────────────────────────────────────────────────────────
   const onExport = useCallback(
     async (format: ExportFormat, quality: number) => {
@@ -621,6 +662,7 @@ export default function ThumbnailEditorProPage() {
         onAIRemove={runAIRemove}
         onAIUpscale={runAIUpscale}
         onTextToLayer={() => setTextToLayerOpen(true)}
+        onStockPhotos={() => setStockPhotosOpen(true)}
         onExport={onExport}
       />
 
@@ -691,6 +733,19 @@ export default function ThumbnailEditorProPage() {
           "bold colorful pop-art style, extreme contrast",
           "tutorial thumbnail, clean flat lay, bright lighting",
         ]}
+      />
+
+      <StockPhotosPanel
+        open={stockPhotosOpen}
+        onClose={() => setStockPhotosOpen(false)}
+        onInsert={onInsertStockPhoto}
+        defaultOrientation={
+          state.canvasWidth > state.canvasHeight
+            ? "landscape"
+            : state.canvasWidth < state.canvasHeight
+              ? "portrait"
+              : "square"
+        }
       />
 
       {/* HistoryState is consumed by HistoryPanel, no extra surface */}
