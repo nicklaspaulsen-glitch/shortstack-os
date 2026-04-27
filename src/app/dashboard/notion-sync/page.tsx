@@ -258,16 +258,24 @@ export default function NotionSyncPage() {
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <a
-              href="/api/oauth/notion/start"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold bg-white text-black hover:bg-white/90 transition-all"
+            <button
+              type="button"
+              aria-disabled
+              onClick={() =>
+                toast(
+                  "Notion OAuth is coming soon — we'll email you when it goes live.",
+                  { icon: "🛠️" },
+                )
+              }
+              title="Notion OAuth is coming soon"
+              className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold bg-white/10 text-white/40 border border-white/10 cursor-not-allowed"
             >
               <NotionIcon />
               Connect Notion Workspace
               <ExternalLink className="w-4 h-4 ml-1 opacity-60" />
-            </a>
+            </button>
             <p className="text-xs text-white/30">
-              You&apos;ll be redirected to Notion to authorise access
+              Coming soon — you&apos;ll be able to sync clients, leads, and content.
             </p>
           </div>
 

@@ -19,15 +19,19 @@ interface SocialAccount {
   created_at: string;
 }
 
+// Zernio supports: Facebook, Instagram, TikTok, LinkedIn, YouTube, X/Twitter,
+// Pinterest. Google Business / Snapchat / Reddit / Tumblr are not yet wired
+// — flag them as comingSoon so the buttons render disabled with a clear
+// "Coming soon" toast instead of bouncing through Zernio and 500-ing.
 const PLATFORMS = [
-  { id: "facebook", name: "Facebook", color: "#1877F2", dm: true, desc: "Pages, posts, ads, and Messenger" },
-  { id: "instagram", name: "Instagram", color: "#E4405F", dm: true, desc: "Posts, reels, stories, and DMs" },
-  { id: "tiktok", name: "TikTok", color: "#ffffff", dm: true, desc: "Videos, analytics, and engagement" },
-  { id: "linkedin", name: "LinkedIn", color: "#0A66C2", dm: true, desc: "Company page, posts, and InMail" },
-  { id: "youtube", name: "YouTube", color: "#FF0000", dm: false, desc: "Videos, shorts, and channel analytics" },
-  { id: "x_twitter", name: "X / Twitter", color: "#000000", dm: true, desc: "Tweets, analytics, and DMs" },
-  { id: "google_business", name: "Google Business", color: "#4285F4", dm: false, desc: "Listings, reviews, and local SEO" },
-  { id: "pinterest", name: "Pinterest", color: "#E60023", dm: false, desc: "Pins, boards, and traffic analytics" },
+  { id: "facebook", name: "Facebook", color: "#1877F2", dm: true, desc: "Pages, posts, ads, and Messenger", comingSoon: false },
+  { id: "instagram", name: "Instagram", color: "#E4405F", dm: true, desc: "Posts, reels, stories, and DMs", comingSoon: false },
+  { id: "tiktok", name: "TikTok", color: "#ffffff", dm: true, desc: "Videos, analytics, and engagement", comingSoon: false },
+  { id: "linkedin", name: "LinkedIn", color: "#0A66C2", dm: true, desc: "Company page, posts, and InMail", comingSoon: false },
+  { id: "youtube", name: "YouTube", color: "#FF0000", dm: false, desc: "Videos, shorts, and channel analytics", comingSoon: false },
+  { id: "x_twitter", name: "X / Twitter", color: "#000000", dm: true, desc: "Tweets, analytics, and DMs", comingSoon: false },
+  { id: "google_business", name: "Google Business", color: "#4285F4", dm: false, desc: "Listings, reviews, and local SEO", comingSoon: true },
+  { id: "pinterest", name: "Pinterest", color: "#E60023", dm: false, desc: "Pins, boards, and traffic analytics", comingSoon: false },
 ];
 
 export default function ClientSocialsPage() {
@@ -92,6 +96,14 @@ export default function ClientSocialsPage() {
       return;
     }
 
+    // Coming-soon platforms: short-circuit with a friendly toast so the
+    // button never silently fails or bounces through a 500 from Zernio.
+    const platform = PLATFORMS.find((p) => p.id === platformId);
+    if (platform?.comingSoon) {
+      toast(`${platform.name} support is coming soon.`, { icon: "🛠️" });
+      return;
+    }
+
     setConnecting(platformId);
     try {
       const res = await fetch("/api/social/zernio", {
@@ -106,9 +118,10 @@ export default function ClientSocialsPage() {
 
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      if (data.auth_url) {
-        window.location.href = data.auth_url;
+      if (!data.auth_url && !data.oauth_url) {
+        throw new Error("Couldn't start connection — please try again or contact support.");
       }
+      window.location.href = data.auth_url || data.oauth_url;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Connection failed");
     } finally {
@@ -264,10 +277,20 @@ export default function ClientSocialsPage() {
                 >
                   <Unlink size={10} /> Disconnect
                 </button>
+              ) : platform.comingSoon ? (
+                <button
+                  onClick={() => connectPlatform(platform.id)}
+                  aria-disabled
+                  title={`${platform.name} support is coming soon`}
+                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted bg-surface-light/50 hover:bg-surface-light flex items-center gap-1.5 cursor-not-allowed"
+                >
+                  <Link2 size={10} /> Coming soon
+                </button>
               ) : (
                 <button
                   onClick={() => connectPlatform(platform.id)}
                   disabled={connecting === platform.id}
+                  aria-label={`Connect ${platform.name}`}
                   className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1.5"
                 >
                   {connecting === platform.id ? (

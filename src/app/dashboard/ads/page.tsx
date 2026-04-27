@@ -127,12 +127,22 @@ export default function AdsPage() {
 
   function connectAdPlatform(clientId: string, platform: string) {
     const baseUrl = window.location.origin;
+    let url: string | null = null;
     if (platform === "meta_ads") {
-      window.location.href = `${baseUrl}/api/oauth/meta?client_id=${clientId}`;
+      url = `${baseUrl}/api/oauth/meta?client_id=${clientId}`;
     } else if (platform === "google_ads") {
-      window.location.href = `${baseUrl}/api/oauth/google?client_id=${clientId}&platform=google_ads`;
+      url = `${baseUrl}/api/oauth/google?client_id=${clientId}&platform=google_ads`;
     } else if (platform === "tiktok_ads") {
-      window.location.href = `${baseUrl}/api/oauth/tiktok-ads?client_id=${clientId}`;
+      url = `${baseUrl}/api/oauth/tiktok-ads?client_id=${clientId}`;
+    }
+
+    if (url) {
+      window.location.href = url;
+    } else {
+      // Surface a visible toast so the click never silently fails.
+      toast.error(
+        `${platform.replace(/_/g, " ")} OAuth isn't wired up yet — coming soon.`,
+      );
     }
   }
 
