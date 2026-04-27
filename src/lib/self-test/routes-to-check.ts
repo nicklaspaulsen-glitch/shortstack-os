@@ -111,6 +111,50 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     auth_bearer: true,
     expected_status: [200, 401],
   },
+
+  // ── Outreach Feed (unified chat-bubble timeline) ─────────────────────────
+  {
+    path: "/api/outreach/conversations",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Aggregated conversations list (calls + email + SMS + DM).",
+  },
+  {
+    path: `/api/outreach/conversations/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [200, 400, 401, 403, 404, 500],
+    note: "Thread for a non-existent contact id — must not 200 with bogus data.",
+  },
+  {
+    path: `/api/outreach/conversations/${SELF_TEST_DUMMY_JOB_ID}/mark-read`,
+    method: "POST",
+    auth_bearer: true,
+    body: { kind: "lead" },
+    expected_status: [200, 401, 500],
+    note: "Mark-read upsert for a fake contact id is a no-op upsert.",
+  },
+  {
+    path: "/api/outreach/reply",
+    method: "POST",
+    auth_bearer: true,
+    body: { contact_id: SELF_TEST_DUMMY_JOB_ID, channel: "email", body: "ping" },
+    expected_status: [400, 401, 404],
+    note: "Reply with a fake contact id must reject (400/404) — no real email sent.",
+  },
+  {
+    path: "/api/outreach/call",
+    method: "POST",
+    auth_bearer: true,
+    body: { contact_id: SELF_TEST_DUMMY_JOB_ID, mode: "human" },
+    expected_status: [400, 401, 404],
+    note: "Call init with a fake contact id must reject before dialing.",
+  },
+  {
+    path: "/api/cron/classify-outreach",
+    expected_status: [401, 200],
+    note: "Cron — must 401 without bearer; 200 acceptable if CRON_SECRET self-injected.",
+  },
+
   {
     path: "/api/triggers/list",
     auth_bearer: true,

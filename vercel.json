@@ -194,6 +194,10 @@
     {
       "path": "/api/cron/prune-presence",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/classify-outreach",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
