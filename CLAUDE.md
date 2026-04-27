@@ -55,6 +55,36 @@ true` in next.config). TypeScript errors DO fail the build —
 `typescript.ignoreBuildErrors` stays at default `false`. So `tsc --noEmit`
 green is the deploy gate.
 
+## Pixel Agent Office
+
+Live, animated, top-down pixel-art office at `/dashboard/agent-office`
+that replaces the old `/dashboard/agent-room` (the sidebar entry was
+relabelled "Agent Office" but the underlying route is the new one). 10
+agents are rendered as 32×32 pixel characters in a 24×14 grid; every
+animation is driven by **real Supabase realtime events** — never canned.
+
+- Renderer: **PixiJS v8** dynamically imported, mounted client-side only.
+  60fps when focused, 30fps unfocused, fully suspended when the tab is
+  hidden.
+- All sprites are drawn procedurally in `src/lib/pixel-office/sprite-atlas.ts`
+  (no binary assets shipped — see `extensions/pixel-office/ASSET_CREDITS.md`).
+  Original art, CC0-licensed by the project.
+- Realtime channel partition by `agency_owner_id` resolved server-side via
+  `getEffectiveOwnerId()`. Watched tables: `voice_calls`, `coach_analyses`,
+  `lead_scores`, `lead_score_history`, `contact_validations`,
+  `cold_email_jobs`, `outreach_log`, `news_triggers`, `scheduled_posts`,
+  `content_calendar`, `thumbnail_jobs`, `ad_optimization_runs`,
+  `trinity_actions`, `trinity_proposals`, plus the dedicated
+  `agent_activity_events` log.
+- Producers can write directly to `agent_activity_events` (RLS-scoped) for
+  bespoke event types — see migration `20260427_pixel_office_events.sql`.
+  The pixel office subscribes to the table and trusts the `agent_key` +
+  `summary` columns verbatim.
+- Two server routes: `GET /api/agent-office/snapshot` (initial hydration —
+  recent events, per-agent history, hero stat counters) and
+  `GET /api/agent-office/events?agent_key=...` (paginated panel feed).
+  Both auth-gated with `getEffectiveOwnerId`.
+
 ## Sidebar / page architecture
 
 - All admin/agency pages live under `src/app/dashboard/*/page.tsx`.
