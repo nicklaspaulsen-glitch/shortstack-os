@@ -143,16 +143,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 async function fetchCampaigns(conn: {
-  platform: AdsAdsPlatform;
+  platform: AdsPlatform;
   access_token: string;
   account_id: string;
 }) {
-  switch (conn.platform) {
-    case "meta_ads":
-      return metaAds.getCampaigns(conn.access_token, conn.account_id);
-    case "google_ads":
-      return googleAds.getCampaigns(conn.access_token, conn.account_id);
-    case "tiktok_ads":
-      return tiktokAds.getCampaigns(conn.access_token, conn.account_id);
+  if (conn.platform === "meta_ads") {
+    return metaAds.getCampaigns(conn.access_token, conn.account_id);
   }
+  if (conn.platform === "google_ads") {
+    return googleAds.getCampaigns(conn.access_token, conn.account_id);
+  }
+  return tiktokAds.getCampaigns(conn.access_token, conn.account_id);
 }
