@@ -555,6 +555,45 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [401, 404],
     note: "Meeting CRM sync — unauth or 404 on dummy id.",
   },
+
+  // ── AI Sales Coach ───────────────────────────────────────────────────────
+  {
+    path: "/api/coach/analyses",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Coach: list analyses for the caller's agency. 401 acceptable when SELF_TEST_USER_ID unset.",
+  },
+  {
+    path: "/api/coach/leaderboard?period=week",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Coach: rep leaderboard. Empty array is fine if no analyses yet.",
+  },
+  {
+    path: "/api/coach/analyze",
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [400, 401],
+    note: "Coach: analyze endpoint — empty body must 400 (zod), not 500.",
+  },
+  {
+    path: `/api/coach/analyses/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [404, 401],
+    note: "Coach: detail with dummy id — must 404 (not found) or 401 (unauthed).",
+  },
+  {
+    path: `/api/coach/insights/rep/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [403, 401, 404],
+    note: "Coach: rep aggregate with dummy id — must reject (403/404) when rep doesn't belong to caller.",
+  },
+  {
+    path: "/api/cron/auto-analyze-calls",
+    expected_status: [200, 401],
+    note: "Coach: auto-analyze cron — 401 without bearer is correct.",
+  },
 ];
 
 /** Total count helper for the dashboard. */

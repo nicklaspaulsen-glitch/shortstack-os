@@ -117,6 +117,7 @@ const navItems: NavItem[] = [
   { label: "Voicemail Drop", href: "/dashboard/voicemail-drop", icon: <Phone size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "DM Controller", href: "/dashboard/dm-controller", icon: <Send size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Conversations", href: "/dashboard/conversations", icon: <MessagesSquare size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
+  { label: "Sales Coach", href: "/dashboard/coach", icon: <Award size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },
   { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Sequences", href: "/dashboard/sequences", icon: <ListOrdered size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Lead Sources", href: "/dashboard/lead-sources", icon: <GitBranch size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
