@@ -342,3 +342,27 @@ For `/health` skill auto-detection:
 - lint: `npx eslint .`
 - test: `npx vitest run`
 - (no knip, no shellcheck — not installed)
+
+## Browser Worker (AI agent → real browser)
+
+`src/lib/browser-worker/` houses the autonomous browser agent: Claude
+calls Playwright tools (click/type/navigate/extract/done) until the goal
+is met. Each step screenshot uploads to R2; the trace plays back in
+`/dashboard/automations/browser-tasks/[id]`.
+
+- **Default mode:** local-headless Chromium on the Vercel function
+  (`maxDuration = 300`). Free, but capped at ~5 min per task.
+- **Long-running:** set `BROWSERBASE_API_KEY` + `BROWSERBASE_PROJECT_ID`
+  to route to Browserbase (not yet wired — env vars are reserved; deferred
+  to v2 along with self-hosted Playwright on RunPod / Hetzner).
+- **Safety rails:** 30-step default cap (max 100), $1 USD cost cap per
+  task (kills the loop if exceeded), domain allowlist optional, password
+  fields blocked unless `allow_passwords` flag set on the task.
+- **Storage:** every step screenshot uploads to R2 under
+  `browser-worker/{taskId}/step-NNN.png` via the existing `uploadToR2`
+  helper. Public URLs assembled with `NEXT_PUBLIC_R2_PUBLIC_URL`.
+- **Cron:** `/api/cron/run-browser-tasks` runs every minute, picks up
+  3 queued tasks per tick, fail-closed 503 when `CRON_SECRET` is unset.
+- **Tool-calling:** uses the shared `anthropic` singleton from
+  `claude-helpers.ts` directly because the LLM router doesn't support
+  tools yet. Sonnet 4.6 (vision + tool use).

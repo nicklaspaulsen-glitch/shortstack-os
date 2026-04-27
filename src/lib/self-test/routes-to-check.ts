@@ -1147,6 +1147,26 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_shape: ["success"],
     note: "Self geo-IP lookup. lookup=null in dev is acceptable.",
   },
+
+  // ── Browser Worker (auth-gated; should 401 unauth, 200 with valid token) ─
+  {
+    path: "/api/browser-tasks",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Browser worker task list — empty array OK, 401 if SELF_TEST_USER_ID unset.",
+  },
+  {
+    path: "/api/browser-task-templates",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Browser worker templates — auto-seeds starter templates on first call.",
+  },
+  {
+    path: `/api/browser-tasks/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [401, 404],
+    note: "Detail for non-existent browser task — must 404 (or 401 unauth). Never 200.",
+  },
 ];
 
 /** Total count helper for the dashboard. */
