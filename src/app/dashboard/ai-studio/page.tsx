@@ -19,6 +19,7 @@ import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard"
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import SafeThumb from "@/components/safe-thumb";
 import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/lib/auth-context";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
 
 // Static AI-generated-style image previews (Unsplash wide crops) shown in
@@ -598,6 +599,8 @@ interface ImageGenInit {
 
 function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { initial?: ImageGenInit }) {
   const router = useRouter();
+  const { profile } = useAuth();
+  const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
   const supabase = useMemo(() => createClient(), []);
   const [handoffingIdx, setHandoffingIdx] = useState<number | null>(null);
   const [prompt, setPrompt] = useState(initial?.prompt || "");
@@ -706,7 +709,9 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
           <div>
             <p className="text-xs font-medium text-yellow-400">Setup Required</p>
             <p className="text-[10px] text-muted mt-0.5">
-              Configure REPLICATE_API_TOKEN, RUNPOD_API_KEY, or OPENAI_API_KEY in your environment to enable image generation.
+              {isPlatformAdmin
+                ? "Configure REPLICATE_API_TOKEN, RUNPOD_API_KEY, or OPENAI_API_KEY in your environment to enable image generation."
+                : "Image generation isn't enabled on this workspace yet. Reach out to your platform admin to switch it on."}
             </p>
           </div>
         </div>

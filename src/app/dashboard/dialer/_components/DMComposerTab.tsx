@@ -6,6 +6,7 @@ import {
   AtSign, Hash, Globe, MessageCircle, Share2,
 } from "lucide-react";
 import StatCard from "@/components/ui/stat-card";
+import { useAuth } from "@/lib/auth-context";
 
 // Platform metadata — kept inline so we don't pull in an entire
 // integration registry just for the icon + label. Lucide doesn't ship
@@ -26,6 +27,8 @@ interface SendResult {
 }
 
 export default function DMComposerTab() {
+  const { profile } = useAuth();
+  const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
   const [platform, setPlatform] = useState<PlatformValue>("instagram");
   const [handle, setHandle] = useState("");
   const [message, setMessage] = useState("");
@@ -114,8 +117,9 @@ export default function DMComposerTab() {
       <div className="rounded-xl border border-white/10 bg-white/5 p-5">
         <h3 className="text-sm font-semibold text-white">Compose direct message</h3>
         <p className="mt-1 text-xs text-white/50">
-          Sends via Zernio. When ZERNIO_API_KEY is missing the DM is queued in
-          outreach_log so you can replay it later.
+          {isPlatformAdmin
+            ? "Sends via Zernio. When ZERNIO_API_KEY is missing the DM is queued in outreach_log so you can replay it later."
+            : "Sends via your connected social accounts. If a platform isn't connected yet, the DM is saved so you can replay it once you reconnect."}
         </p>
 
         <div className="mt-4">

@@ -129,7 +129,7 @@ export default function DiscordPage() {
       if (data.install_url) {
         window.location.href = data.install_url;
       } else {
-        toast.error(data.error || "Discord bot not configured yet. Ask your admin to set DISCORD_CLIENT_ID.");
+        toast.error(data.error || "Discord isn't enabled on this workspace yet. Reach out to your platform admin to switch it on.");
       }
     } catch (err) {
       console.error("[discord] install-url failed:", err);

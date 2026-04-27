@@ -232,7 +232,8 @@ function colorForType(type: string): string {
 // ─── Component ──────────────────────────────────────────────────────────────
 
 export default function TelegramBotPage() {
-  useAuth();
+  const { profile } = useAuth();
+  const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
 
   const [tab, setTab] = useState<Tab>("routines");
 
@@ -769,7 +770,11 @@ export default function TelegramBotPage() {
                   <p className="text-sm font-medium text-foreground">
                     {botConnected === null ? "Checking..." : botConnected ? `Connected${botUsername ? ` as @${botUsername}` : ""}` : "Bot token missing or invalid"}
                   </p>
-                  <p className="text-xs text-muted">Uses <code className="text-gold">TELEGRAM_BOT_TOKEN</code> env var</p>
+                  {isPlatformAdmin ? (
+                    <p className="text-xs text-muted">Uses <code className="text-gold">TELEGRAM_BOT_TOKEN</code> env var</p>
+                  ) : (
+                    <p className="text-xs text-muted">Telegram bot connection status</p>
+                  )}
                 </div>
               </div>
               <button
@@ -786,7 +791,11 @@ export default function TelegramBotPage() {
               <MessageCircle size={14} className="text-gold" />
               Default Chat ID
             </h3>
-            <p className="text-xs text-muted mt-1">Where all routines send messages. Configured via <code className="text-gold">TELEGRAM_CHAT_ID</code> env var.</p>
+            <p className="text-xs text-muted mt-1">
+              {isPlatformAdmin
+                ? <>Where all routines send messages. Configured via <code className="text-gold">TELEGRAM_CHAT_ID</code> env var.</>
+                : "Where all routines send messages."}
+            </p>
             <div className="mt-3 bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm font-mono text-muted">
               {process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID || "Configured server-side"}
             </div>

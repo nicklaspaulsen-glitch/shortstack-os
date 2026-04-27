@@ -94,14 +94,27 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
   }
 
   async function startOAuth(platform: typeof PLATFORMS[0]) {
+    // Map platform → OAuth start route. Surface a visible toast if the
+    // platform reaches this function but has no route wired (e.g. a future
+    // maintainer adds it to OAUTH_PLATFORMS without adding a branch here)
+    // so the click never silently fails.
+    let url: string | null = null;
     if (["instagram", "facebook", "meta_ads"].includes(platform.id)) {
-      window.location.href = `/api/oauth/meta?client_id=${clientId}&platform=${platform.id}`;
+      url = `/api/oauth/meta?client_id=${clientId}&platform=${platform.id}`;
     } else if (["youtube", "google_ads"].includes(platform.id)) {
-      window.location.href = `/api/oauth/google?client_id=${clientId}&platform=${platform.id}`;
+      url = `/api/oauth/google?client_id=${clientId}&platform=${platform.id}`;
     } else if (platform.id === "tiktok") {
-      window.location.href = `/api/oauth/tiktok?client_id=${clientId}`;
+      url = `/api/oauth/tiktok?client_id=${clientId}`;
     } else if (platform.id === "linkedin") {
-      window.location.href = `/api/oauth/linkedin?client_id=${clientId}`;
+      url = `/api/oauth/linkedin?client_id=${clientId}`;
+    }
+
+    if (url) {
+      window.location.href = url;
+    } else {
+      toast.error(
+        `${platform.name} OAuth isn't wired yet — please use manual link above.`,
+      );
     }
   }
 

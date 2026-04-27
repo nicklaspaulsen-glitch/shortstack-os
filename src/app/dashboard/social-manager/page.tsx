@@ -69,7 +69,8 @@ interface SocialAccount {
 }
 
 export default function SocialManagerPage() {
-  useAuth();
+  const { profile } = useAuth();
+  const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
   const { clientId: managedClientId } = useManagedClient();
   const [clients, setClients] = useState<Array<Client & { accounts: string[] }>>([]);
   const [selectedClient, setSelectedClient] = useState<string>("");
@@ -208,7 +209,11 @@ export default function SocialManagerPage() {
       const data = await res.json();
 
       if (data.zernio_not_configured) {
-        toast.error("Zernio API key not configured. Add ZERNIO_API_KEY in Settings.");
+        toast.error(
+          isPlatformAdmin
+            ? "Zernio API key not configured. Add ZERNIO_API_KEY in Settings."
+            : "Social account connections aren't enabled on this workspace yet. Reach out to your platform admin to switch them on."
+        );
         setZernioConfigured(false);
         setConnectingPlatform(null);
         setConfirmPlatform(null);
@@ -468,7 +473,11 @@ export default function SocialManagerPage() {
               <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 mb-4 max-w-sm mx-auto">
                 <div className="flex items-center gap-2 text-warning text-xs">
                   <AlertCircle size={14} />
-                  <span>Zernio API key not configured. Add <code className="bg-surface px-1 rounded text-[10px]">ZERNIO_API_KEY</code> to your environment.</span>
+                  {isPlatformAdmin ? (
+                    <span>Zernio API key not configured. Add <code className="bg-surface px-1 rounded text-[10px]">ZERNIO_API_KEY</code> to your environment.</span>
+                  ) : (
+                    <span>Social account connections aren&apos;t enabled on this workspace yet. Reach out to your platform admin to switch them on.</span>
+                  )}
                 </div>
               </div>
             )}
@@ -500,24 +509,37 @@ export default function SocialManagerPage() {
               <div className="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <AlertCircle size={22} className="text-warning" />
               </div>
-              <h3 className="text-sm font-semibold mb-2">Zernio Setup Required</h3>
-              <p className="text-xs text-muted mb-3">
-                Social account connections are powered by Zernio. To get started:
-              </p>
-              <ol className="text-xs text-muted text-left max-w-sm mx-auto space-y-2 mb-4">
-                <li className="flex items-start gap-2">
-                  <span className="text-gold font-bold">1.</span>
-                  <span>Sign up at <span className="text-gold">zernio.com</span> and get your API key</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-gold font-bold">2.</span>
-                  <span>Add <code className="bg-surface px-1 rounded text-[10px]">ZERNIO_API_KEY</code> to your environment variables</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-gold font-bold">3.</span>
-                  <span>Restart the application and connect your accounts</span>
-                </li>
-              </ol>
+              {isPlatformAdmin ? (
+                <>
+                  <h3 className="text-sm font-semibold mb-2">Zernio Setup Required</h3>
+                  <p className="text-xs text-muted mb-3">
+                    Social account connections are powered by Zernio. To get started:
+                  </p>
+                  <ol className="text-xs text-muted text-left max-w-sm mx-auto space-y-2 mb-4">
+                    <li className="flex items-start gap-2">
+                      <span className="text-gold font-bold">1.</span>
+                      <span>Sign up at <span className="text-gold">zernio.com</span> and get your API key</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-gold font-bold">2.</span>
+                      <span>Add <code className="bg-surface px-1 rounded text-[10px]">ZERNIO_API_KEY</code> to your environment variables</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-gold font-bold">3.</span>
+                      <span>Restart the application and connect your accounts</span>
+                    </li>
+                  </ol>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-sm font-semibold mb-2">Social connections not enabled</h3>
+                  <p className="text-xs text-muted mb-4 max-w-sm mx-auto">
+                    Social account connections aren&apos;t enabled on this workspace yet. Reach out
+                    to your platform admin to switch them on, then you can connect Instagram,
+                    Facebook, TikTok, and more from this page.
+                  </p>
+                </>
+              )}
               <button onClick={() => setConnectModalOpen(false)}
                 className="btn-primary text-xs">
                 Got it

@@ -240,10 +240,16 @@ export default function IntegrationsMarketplacePage() {
                 ) : (
                   <button
                     onClick={() => handleConnect(integration)}
+                    aria-disabled={!integration.implemented}
+                    aria-label={
+                      integration.implemented
+                        ? `Connect ${integration.name}`
+                        : `${integration.name} — coming soon`
+                    }
                     className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                       integration.implemented
                         ? "bg-[#C9A84C]/15 hover:bg-[#C9A84C]/25 text-[#C9A84C] border border-[#C9A84C]/25"
-                        : "bg-white/5 hover:bg-white/10 text-white/40 border border-white/8"
+                        : "bg-white/5 hover:bg-white/10 text-white/40 border border-white/8 cursor-not-allowed"
                     }`}
                   >
                     {integration.implemented ? (
