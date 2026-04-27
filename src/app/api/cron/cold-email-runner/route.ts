@@ -18,6 +18,10 @@ import { sendEmail } from "@/lib/email";
 import { fireWebhookEvent } from "@/lib/api/webhook-events";
 import { researchLead, type LeadInput, type ResearchDepth } from "@/lib/cold-email/researcher";
 import { personalizeEmail } from "@/lib/cold-email/personalize";
+import {
+  validateEmail,
+  type EmailValidationResult,
+} from "@/lib/integrations/email-validator";
 
 export const maxDuration = 300;
 
@@ -283,6 +287,11 @@ async function runSendBatch(
   let sent = 0;
   let failed = 0;
 
+  // Strict mode: when EMAIL_VALIDATION_STRICT=true we also drop "risky"
+  // addresses, not just "invalid". Default = lenient (only drop "invalid").
+  const strict =
+    (process.env.EMAIL_VALIDATION_STRICT || "").toLowerCase() === "true";
+
   for (const c of candidates) {
     const lead = c.lead_id ? leadMap.get(c.lead_id) : undefined;
     if (!lead?.email || !c.generated_subject || !c.generated_body) {
@@ -291,6 +300,37 @@ async function runSendBatch(
         .update({
           status: "skipped",
           error_message: "missing email or content",
+        })
+        .eq("id", c.id);
+      failed++;
+      continue;
+    }
+
+    // Pre-send email validation. Cached in contact_validations so the same
+    // address isn't re-burned across job ticks. Soft-fails to "skipped" when
+    // no provider key is set — caller can still send.
+    const validation = await getOrCacheEmailValidation(
+      supabase,
+      job.user_id,
+      lead.email,
+    );
+    if (validation.status === "invalid") {
+      await supabase
+        .from("cold_email_personalizations")
+        .update({
+          status: "skipped",
+          error_message: `validation: ${validation.deliverability} via ${validation.provider}`,
+        })
+        .eq("id", c.id);
+      failed++;
+      continue;
+    }
+    if (strict && validation.status === "risky") {
+      await supabase
+        .from("cold_email_personalizations")
+        .update({
+          status: "skipped",
+          error_message: `validation: risky (strict mode) via ${validation.provider}`,
         })
         .eq("id", c.id);
       failed++;
@@ -358,6 +398,81 @@ async function runSendBatch(
     failed,
     completedAll: (outstanding ?? 0) === 0,
   };
+}
+
+const VALIDATION_CACHE_DAYS = 14;
+
+interface CachedValidationRow {
+  status: EmailValidationResult["status"];
+  raw_response: unknown;
+  provider: string;
+}
+
+/**
+ * Look up a cached email validation, falling back to a live call when the
+ * cache miss is older than 14 days. Result is upserted so subsequent ticks
+ * within the window are instant.
+ */
+async function getOrCacheEmailValidation(
+  supabase: ReturnType<typeof createServiceClient>,
+  agencyOwnerId: string,
+  email: string,
+): Promise<EmailValidationResult> {
+  const lower = email.trim().toLowerCase();
+  const cutoffIso = new Date(
+    Date.now() - VALIDATION_CACHE_DAYS * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  const { data: cached } = await supabase
+    .from("contact_validations")
+    .select("status, raw_response, provider")
+    .eq("agency_owner_id", agencyOwnerId)
+    .eq("channel", "email")
+    .eq("target", lower)
+    .gte("validated_at", cutoffIso)
+    .maybeSingle();
+
+  if (cached) {
+    const row = cached as CachedValidationRow;
+    const raw = row.raw_response as EmailValidationResult | null;
+    return {
+      email: lower,
+      is_valid: row.status === "valid",
+      is_disposable: raw?.is_disposable ?? false,
+      is_role_email: raw?.is_role_email ?? false,
+      is_free_email: raw?.is_free_email ?? false,
+      deliverability: raw?.deliverability ?? "unknown",
+      raw_score: raw?.raw_score ?? 0,
+      provider:
+        (row.provider as EmailValidationResult["provider"]) ?? "skipped",
+      status: row.status,
+    };
+  }
+
+  const fresh = await validateEmail(lower);
+  // Best-effort cache write — don't block the send if upsert fails.
+  try {
+    await supabase
+      .from("contact_validations")
+      .upsert(
+        {
+          agency_owner_id: agencyOwnerId,
+          channel: "email",
+          target: lower,
+          status: fresh.status,
+          raw_response: fresh as unknown as Record<string, unknown>,
+          provider: fresh.provider,
+          validated_at: new Date().toISOString(),
+        },
+        { onConflict: "agency_owner_id,channel,target" },
+      );
+  } catch (err) {
+    console.warn(
+      "[cold-email-runner] validation cache upsert failed",
+      err instanceof Error ? err.message : String(err),
+    );
+  }
+  return fresh;
 }
 
 function htmlEscapeBody(plain: string): string {

@@ -69,6 +69,8 @@ export interface LeadSignals {
   }>;
   /** Whether the lead is already a paying customer (forces grade=customer). */
   isCustomer: boolean;
+  /** Count of news-trigger hits inside the last 7 days. Drives a fixed bonus. */
+  recentNewsTriggerCount?: number;
 }
 
 export interface SignalBreakdown {
@@ -82,6 +84,8 @@ export interface SignalBreakdown {
   demo_booked: number;
   social_engagement: number;
   recency_multiplier: number;
+  /** Bonus from `news_triggers` rows in the last 7 days. Capped at +10. */
+  news_trigger_bonus: number;
 }
 
 export interface ScoreComputation {
@@ -108,12 +112,16 @@ export const SCORING_CONFIG = {
     pricing_view: 10,
     demo_booked: 25,
     social_engagement: 5,
+    /** Fixed bonus when ≥1 news_triggers row exists in the last 7 days. */
+    news_trigger: 10,
   },
   caps: {
     email_opens: 15,
     email_clicks: 20,
     page_views: 10,
     social_engagement: 15,
+    /** Cap on the news-trigger bonus regardless of hit count. */
+    news_trigger: 10,
   },
   /** Lookback windows in days. */
   windows: {
@@ -229,6 +237,13 @@ export function computeBaseScore(signals: LeadSignals): {
   pageViews = Math.min(pageViews, caps.page_views);
   socialEngagement = Math.min(socialEngagement, caps.social_engagement);
 
+  // News-trigger bonus: fixed +10 (capped) when at least one fresh news hit
+  // exists in the last 7 days. The recency multiplier does NOT apply — fresh
+  // news IS the recency signal. Caller is responsible for populating the
+  // count via `loadSignals`.
+  const newsBonus =
+    (signals.recentNewsTriggerCount ?? 0) > 0 ? caps.news_trigger : 0;
+
   // Recency decay: 0.95 per week of inactivity, floor at min_multiplier
   const weeksOfInactivity = Number.isFinite(mostRecentEventDays)
     ? Math.floor(mostRecentEventDays / 7)
@@ -253,7 +268,9 @@ export function computeBaseScore(signals: LeadSignals): {
     demoBooked +
     socialEngagement;
 
-  const decayed = subtotal * recencyMultiplier;
+  // Apply decay to engagement-based signals, then add the (non-decayed) news
+  // bonus on top. Clamp to 50.
+  const decayed = subtotal * recencyMultiplier + newsBonus;
   const base = Math.max(0, Math.min(50, Math.round(decayed)));
 
   return {
@@ -269,6 +286,7 @@ export function computeBaseScore(signals: LeadSignals): {
       demo_booked: demoBooked,
       social_engagement: socialEngagement,
       recency_multiplier: Number(recencyMultiplier.toFixed(3)),
+      news_trigger_bonus: newsBonus,
     },
   };
 }

@@ -210,11 +210,33 @@ export async function loadSignals(
     (a, b) => Date.parse(b.occurred_at) - Date.parse(a.occurred_at),
   );
 
+  // 5) News-trigger bonus signal — count fresh hits in the last 7 days. Drives
+  // the `news_trigger_bonus` field in `SignalBreakdown`. Best-effort: if the
+  // table doesn't exist yet (pre-migration) we just default to 0 hits.
+  const sevenDaysAgo = new Date(
+    Date.now() - 7 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+  let recentNewsTriggerCount = 0;
+  try {
+    const { count: newsCount } = await supabase
+      .from("news_triggers")
+      .select("*", { count: "exact", head: true })
+      .eq("lead_id", leadId)
+      .gte("created_at", sevenDaysAgo);
+    recentNewsTriggerCount = newsCount ?? 0;
+  } catch (err) {
+    console.warn(
+      "[score-recompute] news_triggers count failed",
+      err instanceof Error ? err.message : String(err),
+    );
+  }
+
   return {
     profile,
     events,
     recentInteractions: recentInteractions.slice(0, 5),
     isCustomer: isLeadCustomer(profile),
+    recentNewsTriggerCount,
   };
 }
 
