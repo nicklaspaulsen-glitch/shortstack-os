@@ -24,6 +24,8 @@ import { callAnthropic, ANTHROPIC_MODEL_IDS } from "./providers/anthropic";
 import { callOpenRouter, OPENROUTER_MODELS } from "./providers/openrouter";
 import { callOpenAI, OPENAI_MODELS } from "./providers/openai";
 import { callRunpodLLM } from "./providers/runpod-llm";
+import { reportError } from "@/lib/observability/error-reporter";
+import { structuredLog } from "@/lib/observability/structured-log";
 import type {
   LLMAttachment,
   ProviderInvokeArgs,
@@ -218,10 +220,12 @@ export async function callLLM(req: LLMRequest): Promise<LLMResponse> {
     if (!fallbackSpec) {
       throw primaryErr;
     }
-    console.error(
-      `[llm-router] primary ${primarySpec} failed, falling back to ${fallbackSpec}`,
-      primaryErr,
-    );
+    structuredLog.warn("[llm-router]", "primary provider failed, falling back", {
+      primarySpec,
+      fallbackSpec,
+      taskType: req.taskType,
+      error: primaryErr instanceof Error ? primaryErr.message : String(primaryErr),
+    });
     chosenSpec = fallbackSpec;
     try {
       result = await invokeProvider(fallbackSpec, args);
@@ -230,6 +234,18 @@ export async function callLLM(req: LLMRequest): Promise<LLMResponse> {
         `[llm-router] fallback ${fallbackSpec} also failed`,
         fallbackErr,
       );
+      // Both primary and fallback exhausted — page on this. Either we
+      // hit a billing/auth issue with multiple providers, or the model
+      // ids drifted out of sync with what they accept.
+      reportError(fallbackErr, {
+        route: "llm-router",
+        component: "callLLM",
+        taskType: req.taskType,
+        primarySpec,
+        fallbackSpec,
+        userId: req.userId,
+        context: req.context,
+      });
       throw fallbackErr;
     }
   }

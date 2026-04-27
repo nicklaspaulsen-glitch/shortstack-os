@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
+import { reportError } from "@/lib/observability/error-reporter";
 // IDEMPOTENCY: ElevenLabs retries on non-2xx. Without dedup, retries cause
 // duplicate outreach_log updates, duplicate lead-status flips, and duplicate
 // trinity_log inserts. We use conversation_id as the stable per-event key.
@@ -240,6 +241,10 @@ export async function POST(request: NextRequest) {
     // Do NOT call completeEvent — leave row as 'processing' so the provider
     // retry can reclaim it after the 5-min stale window and re-run.
     console.error("[webhooks/elevenlabs] error:", err);
+    reportError(err, {
+      route: "/api/webhooks/elevenlabs",
+      component: "conversation-handler",
+    });
     throw err;
   }
 }

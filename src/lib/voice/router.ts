@@ -9,6 +9,8 @@ import {
   VoiceProviderError,
 } from "./provider";
 import { createServiceClient } from "@/lib/supabase/server";
+import { reportError } from "@/lib/observability/error-reporter";
+import { structuredLog } from "@/lib/observability/structured-log";
 
 /**
  * Voice provider router — picks the cheapest available provider for free
@@ -172,13 +174,27 @@ export async function synthesizeVoice(
       // Hard not_configured shouldn't keep retrying the same provider next
       // request — but we still drop through to the next provider this
       // request, which is the entire point of the router.
-      console.warn(`[voice/router] ${name} failed (${reason}), trying next`);
+      structuredLog.warn("[voice-router]", `${name} failed, trying next`, {
+        provider: name,
+        reason,
+        userId: req.userId,
+      });
     }
   }
 
   const summary = attempts
     .map((a) => `${a.provider}=${a.reason}`)
     .join(", ");
+  // All providers exhausted — page on this. Voice synthesis being down
+  // means receptionist calls and outbound dialer drops fail outright,
+  // which is a customer-visible outage.
+  reportError(new Error(`All voice providers failed: ${summary || "no providers configured"}`), {
+    route: "voice-router",
+    component: "synthesizeVoice",
+    attempts,
+    userId: req.userId,
+    context: req.context,
+  });
   throw new Error(`All voice providers failed: ${summary || "no providers configured"}`);
 }
 
