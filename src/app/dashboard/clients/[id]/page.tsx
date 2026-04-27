@@ -22,6 +22,7 @@ import SocialConnect from "@/components/social-connect";
 import ClientBillingPanel from "@/components/clients/client-billing-panel";
 import SmartManageOverlay from "@/components/clients/smart-manage-overlay";
 import ClientVoiceProfile from "@/components/clients/client-voice-profile";
+import AgentMemoryPanel from "@/components/agent-memory/agent-memory-panel";
 
 export default function ClientDetailPage() {
   const params = useParams();
@@ -36,7 +37,7 @@ export default function ClientDetailPage() {
   const [aiActions, setAiActions] = useState<Array<Record<string, unknown>>>([]);
   const [loading, setLoading] = useState(true);
   const [smartManageOpen, setSmartManageOpen] = useState(false);
-  const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing" | "payments" | "access" | "voice">("overview");
+  const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing" | "payments" | "access" | "voice" | "memories">("overview");
   const [pageAccess, setPageAccess] = useState<Record<string, boolean>>({
     portal: true, content: true, billing: true, reports: true, socials: true,
     workflows: false, analytics: false, ads: false, websites: false,
@@ -95,6 +96,7 @@ export default function ClientDetailPage() {
     { key: "tasks" as const, label: `Tasks (${tasks.length})` },
     { key: "billing" as const, label: `Billing (${invoices.length})` },
     { key: "payments" as const, label: "Payments" },
+    { key: "memories" as const, label: "Memories" },
     { key: "access" as const, label: "Access" },
     { key: "voice" as const, label: "Voice" },
   ];
@@ -382,6 +384,17 @@ export default function ClientDetailPage() {
           caller hasn't connected their Stripe yet; otherwise renders the
           payment-link + invoice tools backed by the agency's connected account. */}
       {tab === "payments" && <ClientBillingPanel clientId={client.id} />}
+
+      {/* Memories — long-term agent memory the AI has accumulated about this
+          client across cold-email runs, sales-coach calls, Trinity proposals.
+          Powered by Mem0; soft-fails to empty state when MEM0_API_KEY unset. */}
+      {tab === "memories" && (
+        <AgentMemoryPanel
+          subjectKind="client"
+          subjectId={client.id}
+          title="What ShortStack remembers about this client"
+        />
+      )}
 
       {/* Access Control */}
       {tab === "access" && (

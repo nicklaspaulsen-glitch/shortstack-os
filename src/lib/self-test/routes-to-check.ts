@@ -155,6 +155,36 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     note: "Cron — must 401 without bearer; 200 acceptable if CRON_SECRET self-injected.",
   },
 
+  // ── Agent memory + LLM trace observability (Mem0 + Langfuse) ─────────────
+  // Both backends soft-fail when their env vars are unset, so the routes
+  // ALWAYS work — they just return empty data when keys aren't configured.
+  {
+    path: `/api/agent-memory/lead/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["success", "data", "meta"],
+    note: "Agent memories for a fake lead id — must 200 with empty data, never leak across owners.",
+  },
+  {
+    path: `/api/agent-memory/client/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Agent memories for a fake client id — must 200 with empty data.",
+  },
+  {
+    path: `/api/agent-memory/badkind/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [400, 401],
+    note: "Invalid subject_kind must be rejected before any DB hit.",
+  },
+  {
+    path: "/api/agent-traces?since=1h&limit=10",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["success", "data", "meta"],
+    note: "Trace index — empty list is acceptable (Langfuse may be unconfigured in self-test env).",
+  },
+
   {
     path: "/api/triggers/list",
     auth_bearer: true,

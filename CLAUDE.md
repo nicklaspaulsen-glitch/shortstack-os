@@ -164,24 +164,36 @@ Per-user (and per-client) writing voice learning + AI-output humanization:
   through the humanizer to strip AI tells.
 - **Defaults:** `humanize: true` for content surfaces (briefs, follow-ups,
   proposals). Pass `humanize: false` for analysis surfaces returning JSON
-  (coach insights, classifiers) — voice still injects via the system
-  prompt, but the JSON skeleton stays intact.
+  (coach insights, classifiers).
 - **Voice gate:** profiles need ≥200 words of corpus before they kick in
-  (`VOICE_MIN_CORPUS_WORDS`). Below that we don't inject anything — avoids
-  overfitting tiny samples.
-- **Capture is fire-and-forget.** Sent emails, inbound SMS / DM / email,
-  meeting transcripts all feed `captureVoiceSample()` via `.catch()`-only
-  paths. Storage failures NEVER break the user-facing send.
-- **Cron:** `*/30 * * * *` → `/api/cron/recompute-voice-profiles` rebuilds
-  profiles for subjects with new corpus rows since their last computation.
-  Hard cap of 50 profiles per tick.
-- **Tables:** `writing_voice_corpus` (samples) + `writing_voice_profiles`
-  (computed stats + prompt snippet). Note: distinct from the existing
-  `voice_profiles` table which holds AUDIO voice-clone embeddings.
-- **Settings UI:** `/dashboard/settings/voice-profile` — stats, signature
-  phrases / openings / closings, manual bootstrap textarea.
-- **Client UI:** `/dashboard/clients/[id]` → "Voice" tab — same view scoped
-  to a specific client + a "Generate copy in their voice" modal.
+  (`VOICE_MIN_CORPUS_WORDS`). Capture is fire-and-forget.
+- **Cron:** `*/30 * * * *` → `/api/cron/recompute-voice-profiles`.
+- **Tables:** `writing_voice_corpus` + `writing_voice_profiles` (distinct
+  from the audio `voice_profiles`).
+- **UIs:** `/dashboard/settings/voice-profile` and the "Voice" tab on
+  `/dashboard/clients/[id]`.
+
+## Agent memory + tracing
+
+ShortStack ships with two opt-in observability layers wired into the LLM
+router (`src/lib/ai/llm-router.ts`):
+
+- **Mem0** (`src/lib/ai/mem0-client.ts`) — long-term agent memory. Memories
+  are stored in Mem0's backend and mirrored into the local `agent_memories`
+  audit table. Scoped per `(agency_owner_id, subject_kind, subject_id)`
+  tuple. Memories require ~200 words of subject context to bootstrap.
+- **Langfuse** (`src/lib/ai/langfuse-client.ts`) — every `callLLMTraced`
+  invocation produces a Langfuse trace with input/output/latency/tokens/cost.
+  Mirrored into `agent_trace_index`. Visible at
+  `/dashboard/admin/agent-traces` (admin/founder only).
+
+**Both soft-fail.** With `MEM0_API_KEY` / `LANGFUSE_*_KEY` unset, the system
+runs unchanged — `callLLMTraced` reduces to `callLLM`, no rows written.
+
+To opt in on a new AI surface, switch from `callLLM` to `callLLMTraced` and
+pass `surface`, optional `subject`, `withMemory: true`, `storeMemory: true`.
+**Follow-up:** `callLLMTraced` should internally wrap `callLLMHumanized`
+(not raw `callLLM`) so both layers compose. Tracked in PR #56 follow-up.
 
 ## Conventions worth knowing
 

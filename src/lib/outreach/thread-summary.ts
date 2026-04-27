@@ -7,7 +7,7 @@
  */
 
 import { SupabaseClient } from "@supabase/supabase-js";
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 import { reportError } from "@/lib/observability/error-reporter";
 import type { ContactKind, OutreachEvent, OutreachThreadSummary } from "./types";
 
@@ -113,7 +113,7 @@ Return ONLY a JSON object on a single line, no markdown:
 {"summary":"<2 short sentences: prospect temperature, last touch, key signal>","suggested_action":"<one short next-step recommendation>"}`;
 
   try {
-    const llm = await callLLM({
+    const llm = await callLLMTraced({
       taskType: "complex_analysis",
       systemPrompt:
         "You are a senior outbound-sales analyst. Read a multi-channel outreach timeline and produce a concise, actionable summary for the agency owner. Be specific; reference the actual messages. No fluff.",
@@ -122,6 +122,17 @@ Return ONLY a JSON object on a single line, no markdown:
       temperature: 0.2,
       userId: agencyOwnerId,
       context: "/api/outreach/thread-summary",
+      surface: "outreach_thread_summary",
+      subject: {
+        // ContactKind is "lead" | "client" — both are valid SubjectKind values
+        // so we pass through directly.
+        kind: contactKind,
+        id: contactId,
+        agencyOwnerId,
+      },
+      withMemory: true,
+      storeMemory: true,
+      agentKey: "aria",
     });
 
     const parsed = safeParseSummary(llm.text);

@@ -18,6 +18,7 @@
 
 import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
 import { preHumanize } from "@/lib/ai/humanizer";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 import {
   computeCallMetrics,
   scoreMetrics,
@@ -25,6 +26,7 @@ import {
   type TranscriptSegment,
 } from "@/lib/coach/metrics";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
+import type { SubjectKind } from "@/lib/ai/mem0-client";
 
 export type CoachInsightCategory =
   | "objection"
@@ -67,6 +69,10 @@ export interface AnalyzeCallArgs {
   userId?: string;
   /** Optional source label for the usage tracking row. */
   context?: string;
+  /** Optional subject context — when supplied, enables memory + tracing. */
+  subjectKind?: SubjectKind;
+  /** Subject id (lead.id, contact.id, etc.) — pairs with subjectKind. */
+  subjectId?: string;
 }
 
 const SYSTEM_PROMPT = `You are an elite sales coach analysing a sales call transcript. Your job is to surface concrete, decision-useful coaching feedback for the rep — NOT a generic conversation summary.
@@ -240,10 +246,15 @@ export async function analyzeCall(args: AnalyzeCallArgs): Promise<CoachAnalysis>
   let parsed: RawLLMOutput | null = null;
   let costUsd = 0;
   try {
-    // Coach output is strict JSON — humanize=false to preserve JSON shape.
-    // Voice profile is still injected into the system prompt so feedback
-    // text inside the JSON sounds like a teammate, not a generic assistant.
-    const response = await callLLMHumanized({
+    const subject =
+      args.userId && args.subjectKind && args.subjectId
+        ? {
+            kind: args.subjectKind,
+            id: args.subjectId,
+            agencyOwnerId: args.userId,
+          }
+        : undefined;
+    const response = await callLLMTraced({
       taskType: "complex_analysis",
       systemPrompt: SYSTEM_PROMPT,
       userPrompt,
@@ -251,10 +262,11 @@ export async function analyzeCall(args: AnalyzeCallArgs): Promise<CoachAnalysis>
       temperature: 0.2,
       userId: args.userId,
       context: args.context ?? "lib/coach/analyzeCall",
-      voiceProfile: args.userId
-        ? { subjectKind: "user", subjectId: args.userId }
-        : undefined,
-      humanize: false,
+      surface: "sales_coach",
+      subject,
+      withMemory: Boolean(subject),
+      storeMemory: Boolean(subject),
+      agentKey: "sage",
     });
     costUsd = clampCost(response.costUsd);
     parsed = safeJsonParse<RawLLMOutput>(response.text);

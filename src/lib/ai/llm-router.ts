@@ -293,3 +293,180 @@ export {
 export function getTaskRouting(): Readonly<Record<LLMTaskType, RouteRule>> {
   return TASK_ROUTING;
 }
+
+// ────────────────────────────────────────────────────────────────────────
+// callLLMTraced — Mem0 + Langfuse decorator over callLLM
+// ────────────────────────────────────────────────────────────────────────
+//
+// This is an additive layer that wraps `callLLM` with two opt-in features:
+//
+//   1. `withMemory: true` — recall facts about the subject from Mem0 and
+//      prepend them to the system prompt so the model has long-term context.
+//   2. `storeMemory: true` — after the call, ask Haiku to extract any
+//      durable facts from the prompt+response and persist them to Mem0.
+//
+// Tracing is automatic when `LANGFUSE_*` env vars are present. Both Mem0
+// and Langfuse soft-fail when env vars are unset; in that case
+// `callLLMTraced` reduces to `callLLM` (one extra await, no behavior change).
+//
+// If the codebase later adds `callLLMHumanized` (humanizer voice layer in
+// PR 1F), update `runLLM` below to prefer that wrapper. Until then we
+// wrap the raw `callLLM`.
+
+import { recallFacts, rememberFact, type SubjectKind } from "./mem0-client";
+import { traceLLMCall } from "./langfuse-client";
+
+export interface SubjectContext {
+  kind: SubjectKind;
+  id: string;
+  agencyOwnerId: string;
+}
+
+export interface CallLLMTracedOptions extends LLMRequest {
+  /** Surface name for the trace ('cold_email' / 'sales_coach' / etc.) */
+  surface: string;
+  /** Optional subject context — drives memory + trace tagging. */
+  subject?: SubjectContext;
+  /** If true, recalls memory for the subject and prepends to systemPrompt. */
+  withMemory?: boolean;
+  /** If true, extracts new facts post-call and writes them to Mem0. */
+  storeMemory?: boolean;
+  /** Optional agent key for memory writes ('lyra' | 'sage' | etc.). */
+  agentKey?: string;
+}
+
+const MEMORY_PREFIX = "PREVIOUSLY KNOWN ABOUT THIS SUBJECT (from past interactions):";
+
+/**
+ * Build a system-prompt addendum from recalled memories. Returns "" when
+ * no memories exist so callers can blindly prepend.
+ */
+function memoriesToSystemAddendum(
+  facts: Array<{ fact: string }>,
+): string {
+  if (!Array.isArray(facts) || facts.length === 0) return "";
+  const bullets = facts
+    .slice(0, 8)
+    .map((f) => `- ${f.fact}`)
+    .filter((line) => line.length > 4);
+  if (bullets.length === 0) return "";
+  return `${MEMORY_PREFIX}\n${bullets.join("\n")}\n\n`;
+}
+
+/**
+ * Extract one short factual statement from the LLM response so it can be
+ * persisted as a memory. Uses Haiku (cheapest path) to keep cost negligible.
+ * Returns null when nothing memorable was identified.
+ */
+async function extractFactFromResponse(args: {
+  surface: string;
+  systemPrompt?: string;
+  userPrompt: string;
+  response: string;
+  userId?: string;
+}): Promise<string | null> {
+  // Skip extraction for trivially short responses — nothing meaningful to remember.
+  if (!args.response || args.response.trim().length < 80) return null;
+  try {
+    const extraction = await callLLM({
+      taskType: "extraction",
+      systemPrompt:
+        "You read an AI agent's response and extract ONE single short fact (under 200 characters) about the subject of the conversation that future runs of this agent should remember. The fact must be specific and durable — not transient state. If no durable fact exists, output exactly the literal token NO_FACT and nothing else.",
+      userPrompt: [
+        `Surface: ${args.surface}`,
+        "",
+        "AI response to analyze:",
+        args.response.slice(0, 4000),
+        "",
+        "Output the single fact OR exactly NO_FACT.",
+      ].join("\n"),
+      maxTokens: 120,
+      temperature: 0,
+      userId: args.userId,
+      context: "/lib/ai/llm-router#extractFactFromResponse",
+    });
+    const text = (extraction.text ?? "").trim();
+    if (!text || text === "NO_FACT" || /^NO[_ ]FACT/i.test(text)) return null;
+    // Strip lead-in markers if the model can't help itself.
+    return text.replace(/^["'\-\*\s]+/, "").slice(0, 280);
+  } catch (err) {
+    console.error("[llm-router] fact extraction failed", err);
+    return null;
+  }
+}
+
+/**
+ * Wraps `callLLM` with Mem0 memory retrieval (pre-call), Langfuse tracing,
+ * and Mem0 fact storage (post-call). Both Mem0 and Langfuse soft-fail when
+ * env vars are unset — `callLLMTraced` always behaves at minimum like a
+ * pass-through to `callLLM`.
+ */
+export async function callLLMTraced(
+  opts: CallLLMTracedOptions,
+): Promise<LLMResponse> {
+  const { surface, subject, withMemory, storeMemory, agentKey, ...llmRequest } = opts;
+
+  // ── Memory retrieval ────────────────────────────────────────────────────
+  let systemPrompt = llmRequest.systemPrompt ?? "";
+  if (withMemory && subject) {
+    const facts = await recallFacts({
+      agencyOwnerId: subject.agencyOwnerId,
+      subjectKind: subject.kind,
+      subjectId: subject.id,
+      query: llmRequest.userPrompt.slice(0, 200),
+      limit: 8,
+    });
+    const addendum = memoriesToSystemAddendum(facts);
+    if (addendum) {
+      systemPrompt = systemPrompt ? `${addendum}${systemPrompt}` : addendum;
+    }
+  }
+
+  // ── LLM call (traced) ──────────────────────────────────────────────────
+  // We only invoke the trace wrapper when we have an agency context. Without
+  // it, RLS for `agent_trace_index` would reject the row anyway.
+  const enrichedRequest: LLMRequest = { ...llmRequest, systemPrompt };
+  const runner = (): Promise<LLMResponse> => callLLM(enrichedRequest);
+
+  const result =
+    subject && surface
+      ? await traceLLMCall<LLMResponse>({
+          agencyOwnerId: subject.agencyOwnerId,
+          surface,
+          taskType: llmRequest.taskType,
+          subject: { kind: subject.kind, id: subject.id },
+          inputForTrace: {
+            taskType: llmRequest.taskType,
+            systemPromptPreview: systemPrompt.slice(0, 500),
+            userPromptPreview: llmRequest.userPrompt.slice(0, 500),
+          },
+          run: runner,
+        })
+      : await runner();
+
+  // ── Memory storage ─────────────────────────────────────────────────────
+  if (storeMemory && subject) {
+    // Don't await — fact extraction is best-effort and shouldn't add
+    // latency to the caller's response.
+    void (async () => {
+      const fact = await extractFactFromResponse({
+        surface,
+        systemPrompt: enrichedRequest.systemPrompt,
+        userPrompt: enrichedRequest.userPrompt,
+        response: result.text,
+        userId: enrichedRequest.userId,
+      });
+      if (!fact) return;
+      await rememberFact({
+        agencyOwnerId: subject.agencyOwnerId,
+        subjectKind: subject.kind,
+        subjectId: subject.id,
+        fact,
+        agentKey,
+        source: surface,
+      });
+    })();
+  }
+
+  return result;
+}

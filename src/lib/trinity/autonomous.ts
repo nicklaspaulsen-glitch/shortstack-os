@@ -20,7 +20,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createServiceClient } from "@/lib/supabase/server";
-import { callLLM, type LLMRequest } from "@/lib/ai/llm-router";
+import { callLLM, callLLMTraced, type LLMRequest } from "@/lib/ai/llm-router";
 import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
 
@@ -507,7 +507,14 @@ async function runReasoning(
     maxTokens: 600,
   };
 
-  const result = await callLLM(req);
+  const result = await callLLMTraced({
+    ...req,
+    surface: "trinity_autonomous",
+    subject: { kind: "user", id: userId, agencyOwnerId: userId },
+    withMemory: true,
+    storeMemory: true,
+    agentKey: "trinity",
+  });
   const parsed = safeJsonParse<{ actions?: unknown }>(result.text);
   const actions = sanitizeReasoningResponse(parsed, candidates);
   return { actions, costUsd: result.costUsd };
