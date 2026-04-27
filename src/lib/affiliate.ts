@@ -72,3 +72,127 @@ export async function hashIp(ip: string): Promise<string> {
 /** Cookie name used by the public tracking redirect to attribute later signups. */
 export const AFFILIATE_COOKIE_NAME = "ssoa_ref";
 export const AFFILIATE_COOKIE_DEFAULT_DAYS = 30;
+
+/**
+ * Result returned to the public click endpoint. Lives here (not in the
+ * route file) because Next.js App Router only allows HTTP-method exports
+ * from `route.ts` files — any non-method exports break the build with
+ * "X is not a valid Route export field". The /go/[refCode] redirect
+ * route also imports `trackClick` to share attribution semantics.
+ */
+export interface AffiliateTrackResult {
+  ok: boolean;
+  ref_code?: string;
+  affiliate_id?: string;
+  cookie_days?: number;
+  error?: string;
+}
+
+export interface AffiliateTrackOptions {
+  rawRefCode: string | null;
+  source: string | null;
+  ip: string | null;
+  userAgent: string | null;
+  referer: string | null;
+}
+
+export interface AffiliateTrackOutcome {
+  result: AffiliateTrackResult;
+  cookieValue: string | null;
+  cookieMaxAgeSeconds: number | null;
+}
+
+/**
+ * Internal helper used both by /api/affiliate/track and the /go/[refCode]
+ * redirect. Returns the JSON-serializable result and the Set-Cookie value
+ * to apply on the response. Uses the service-role client so it works for
+ * unauthenticated visitors (RLS would otherwise block the insert).
+ *
+ * Click failures NEVER block the redirect — DB errors are logged and
+ * swallowed; the caller still gets a usable response.
+ */
+export async function trackClick(opts: AffiliateTrackOptions): Promise<AffiliateTrackOutcome> {
+  // Lazy import to keep this lib usable from edge contexts that don't need
+  // Supabase (e.g. type-only imports). The service client itself is also
+  // lazy-initialised under the hood.
+  const { createServiceClient } = await import("@/lib/supabase/server");
+
+  const ref_code = normalizeAffiliateRefCode(opts.rawRefCode);
+  if (!ref_code) {
+    return {
+      result: { ok: false, error: "Missing or invalid ref code" },
+      cookieValue: null,
+      cookieMaxAgeSeconds: null,
+    };
+  }
+
+  const supabase = createServiceClient();
+
+  const { data: affiliate } = await supabase
+    .from("affiliates")
+    .select(`
+      id,
+      program_id,
+      status,
+      affiliate_programs ( cookie_days, status )
+    `)
+    .eq("ref_code", ref_code)
+    .maybeSingle();
+
+  if (!affiliate) {
+    return {
+      result: { ok: false, error: "Unknown ref code" },
+      cookieValue: null,
+      cookieMaxAgeSeconds: null,
+    };
+  }
+
+  // Program may surface as object or array depending on PostgREST inference;
+  // normalise to a single record for the cookie-window read.
+  const programRel = affiliate.affiliate_programs;
+  const program = Array.isArray(programRel) ? programRel[0] : programRel;
+  const programStatus = program?.status ?? "active";
+  if (
+    affiliate.status === "suspended" ||
+    affiliate.status === "rejected" ||
+    programStatus === "closed"
+  ) {
+    return {
+      result: { ok: false, error: "Affiliate or program inactive" },
+      cookieValue: null,
+      cookieMaxAgeSeconds: null,
+    };
+  }
+
+  const ipHash = opts.ip ? await hashIp(opts.ip) : null;
+
+  const { error: insertErr } = await supabase.from("affiliate_referrals").insert({
+    affiliate_id: affiliate.id,
+    referred_email: null,
+    click_id: crypto.randomUUID(),
+    source: opts.source ?? null,
+    ip_hash: ipHash,
+    status: "clicked",
+    metadata: {
+      user_agent: opts.userAgent ?? null,
+      referer: opts.referer ?? null,
+    },
+  });
+  if (insertErr) {
+    console.warn("[affiliate/track] click insert failed:", insertErr.message);
+  }
+
+  const cookieDays = program?.cookie_days ?? AFFILIATE_COOKIE_DEFAULT_DAYS;
+  const cookieMaxAgeSeconds = cookieDays * 24 * 60 * 60;
+
+  return {
+    result: {
+      ok: true,
+      ref_code,
+      affiliate_id: affiliate.id,
+      cookie_days: cookieDays,
+    },
+    cookieValue: ref_code,
+    cookieMaxAgeSeconds,
+  };
+}

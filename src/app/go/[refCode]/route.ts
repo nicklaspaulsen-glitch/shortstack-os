@@ -9,8 +9,7 @@
  * phishing on our domain.
  */
 import { NextRequest, NextResponse } from "next/server";
-import { trackClick } from "@/app/api/affiliate/track/route";
-import { AFFILIATE_COOKIE_NAME } from "@/lib/affiliate";
+import { AFFILIATE_COOKIE_NAME, trackClick } from "@/lib/affiliate";
 
 export const dynamic = "force-dynamic";
 
