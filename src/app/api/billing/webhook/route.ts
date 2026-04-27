@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       // Find the client by stripe_customer_id
       const { data: client } = await supabase
         .from("clients")
-        .select("id, business_name")
+        .select("id, business_name, profile_id")
         .eq("stripe_customer_id", customerId)
         .single();
 
@@ -144,6 +144,26 @@ export async function POST(request: NextRequest) {
             stripe_invoice_id: invoice.id,
           },
         });
+
+        // Queue trigger event so workflow templates can fire on
+        // payment_succeeded (e.g., a thank-you / receipt drip).
+        if (client.profile_id) {
+          await supabase.from("trigger_events").insert({
+            user_id: client.profile_id,
+            trigger_type: "stripe.payment_succeeded",
+            source_table: "invoices",
+            source_id: null,
+            payload: {
+              client_id: client.id,
+              client_name: client.business_name,
+              amount_paid: invoice.amount_paid,
+              currency: invoice.currency,
+              invoice_id: invoice.id,
+              stripe_customer_id: customerId,
+            },
+            status: "pending",
+          });
+        }
 
         // Notify on Telegram
         const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -207,7 +227,7 @@ export async function POST(request: NextRequest) {
 
       const { data: client } = await supabase
         .from("clients")
-        .select("id, business_name")
+        .select("id, business_name, profile_id")
         .eq("stripe_customer_id", customerId)
         .single();
 
@@ -228,6 +248,28 @@ export async function POST(request: NextRequest) {
           status: "failed",
           result: { type: "payment_failed", stripe_invoice_id: invoice.id },
         });
+
+        // Queue a workflow trigger event for the failed-payment-recovery template.
+        // The cron `/api/cron/process-trigger-events` picks this up within 1 min
+        // and fans out to any installed workflows whose trigger_type matches.
+        if (client.profile_id) {
+          await supabase.from("trigger_events").insert({
+            user_id: client.profile_id,
+            trigger_type: "stripe.payment_failed",
+            source_table: "invoices",
+            source_id: null,
+            payload: {
+              client_id: client.id,
+              client_name: client.business_name,
+              stripe_invoice_id: invoice.id,
+              stripe_customer_id: customerId,
+              amount_due: invoice.amount_due,
+              currency: invoice.currency,
+              invoice_id: invoice.id,
+            },
+            status: "pending",
+          });
+        }
 
         const chatId = process.env.TELEGRAM_CHAT_ID;
         const botToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -348,7 +390,7 @@ export async function POST(request: NextRequest) {
       // Otherwise check if it's a client subscription
       const { data: client } = await supabase
         .from("clients")
-        .select("id, business_name")
+        .select("id, business_name, profile_id")
         .eq("stripe_customer_id", customerId)
         .single();
 
@@ -365,6 +407,23 @@ export async function POST(request: NextRequest) {
           status: "completed",
           result: { type: "subscription_cancelled", stripe_sub_id: sub.id },
         });
+
+        // Queue trigger event for the subscription-canceled-winback template.
+        if (client.profile_id) {
+          await supabase.from("trigger_events").insert({
+            user_id: client.profile_id,
+            trigger_type: "stripe.subscription_canceled",
+            source_table: "clients",
+            source_id: client.id,
+            payload: {
+              client_id: client.id,
+              client_name: client.business_name,
+              stripe_sub_id: sub.id,
+              stripe_customer_id: customerId,
+            },
+            status: "pending",
+          });
+        }
 
         const chatId = process.env.TELEGRAM_CHAT_ID;
         const botToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -607,6 +666,49 @@ export async function POST(request: NextRequest) {
             },
           });
         }
+      }
+      break;
+    }
+
+    // ── Charge Refunded ──
+    // Used by the `refund-acknowledgment` workflow template. Stripe fires
+    // charge.refunded after a refund posts; we map customer → client to know
+    // which agency owner gets the trigger event.
+    case "charge.refunded": {
+      const charge = event.data.object as Stripe.Charge;
+      const customerId =
+        typeof charge.customer === "string"
+          ? charge.customer
+          : (charge.customer?.id ?? null);
+      if (!customerId) break;
+
+      const { data: client } = await supabase
+        .from("clients")
+        .select("id, business_name, profile_id")
+        .eq("stripe_customer_id", customerId)
+        .maybeSingle();
+      if (client?.profile_id) {
+        await supabase.from("trigger_events").insert({
+          user_id: client.profile_id,
+          trigger_type: "stripe.refund_issued",
+          source_table: "charges",
+          source_id: null,
+          payload: {
+            client_id: client.id,
+            client_name: client.business_name,
+            stripe_charge_id: charge.id,
+            stripe_customer_id: customerId,
+            refund_amount:
+              typeof charge.amount_refunded === "number"
+                ? charge.amount_refunded / 100
+                : null,
+            currency: charge.currency,
+            refund_date: new Date().toISOString(),
+            refund_reason:
+              charge.refunds?.data?.[0]?.reason ?? "requested_by_customer",
+          },
+          status: "pending",
+        });
       }
       break;
     }

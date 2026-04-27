@@ -23,6 +23,11 @@ import { SupabaseClient } from "@supabase/supabase-js";
 /**
  * The full catalog of trigger types. Keep this in sync with the UI's trigger
  * node picker and with docs/automations-triggers.md.
+ *
+ * The dotted names ("stripe.payment_failed" etc.) are emitted by the
+ * workflow-library templates introduced Apr 27 — keep them flat in this
+ * union but namespace at the string level so it's clear at a glance which
+ * subsystem owns which event.
  */
 export type TriggerType =
   | "form_submitted"
@@ -38,7 +43,26 @@ export type TriggerType =
   | "webhook_received"
   | "voice_call_completed"
   | "schedule"
-  | "manual";
+  | "manual"
+  // Workflow library triggers (Apr 27)
+  | "stripe.payment_succeeded"
+  | "stripe.payment_failed"
+  | "stripe.subscription_canceled"
+  | "stripe.refund_issued"
+  | "lead.created"
+  | "lead.score_crossed"
+  | "deal.stage_changed"
+  | "deal.won"
+  | "deal.lost"
+  | "client.created"
+  | "content.published"
+  | "review.received"
+  | "invoice.overdue"
+  | "sms.reply_received"
+  | "dm.reply_received"
+  | "news.trigger_fired"
+  | "coach.score_below"
+  | "workflow.manual";
 
 export interface TriggerRow {
   id: string;

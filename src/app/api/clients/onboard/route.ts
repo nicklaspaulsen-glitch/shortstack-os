@@ -163,5 +163,24 @@ export async function POST(request: NextRequest) {
     completed_at: new Date().toISOString(),
   });
 
+  // 9. Queue trigger event so the `client-onboarding-5day` template (and any
+  // other client.created workflow) fires. Cron picks this up within 1 min.
+  const { error: trigErr } = await supabase.from("trigger_events").insert({
+    user_id: ownerId,
+    trigger_type: "client.created",
+    source_table: "clients",
+    source_id: client.id,
+    payload: {
+      client_id: client.id,
+      client_name: business_name,
+      package_tier,
+      mrr,
+    },
+    status: "pending",
+  });
+  if (trigErr) {
+    console.error("[clients/onboard] trigger_event insert failed:", trigErr.message);
+  }
+
   return NextResponse.json({ success: true, client_id: client.id, results });
 }

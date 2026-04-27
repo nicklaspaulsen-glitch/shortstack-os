@@ -156,6 +156,25 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 - DO NOT modify `vercel.json` cron schedule or paths without checking
   the cron-handler route exists. Phantom crons fire silently in prod.
 
+## Workflow Library (Apr 27)
+
+12 production-ready, tested automation templates ship out of the box.
+
+- **Registry:** `src/lib/workflows/templates.ts` (TEMPLATES + helpers)
+- **Copy:** `src/lib/workflows/template-copy.ts` (email/SMS/Slack/note bodies)
+- **Action handlers:** `src/lib/workflows/library-actions.ts` (`LIBRARY_ACTIONS`)
+- **Install API:** `POST /api/workflows/templates/install`
+- **List API:** `GET /api/workflows/templates`
+- **UI:** `/dashboard/automations/library`
+- **Tests:** `src/__tests__/workflow-library.test.ts` — 35 integration cases
+- **Migration:** `supabase/migrations/20260427_workflow_library.sql`
+  (adds `workflows.installed_from_template_id`, `workflow_waits`, `email_drafts`)
+
+Each handler in `LIBRARY_ACTIONS` actually calls its provider — no
+"would_send_email" stubs. Handlers always return `{ ok, ref_id?, error? }`
+and never throw, so workflow execution stays robust against partial
+provider outages.
+
 ## Tomorrow's todo file
 
 The active context lives at:
