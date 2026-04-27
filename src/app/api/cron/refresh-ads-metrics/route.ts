@@ -139,7 +139,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 async function fetchCampaigns(conn: {
-  platform: Platform;
+  platform: AdsPlatform;
   access_token: string;
   account_id: string;
 }) {
