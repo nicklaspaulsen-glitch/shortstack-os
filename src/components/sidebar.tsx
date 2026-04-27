@@ -189,6 +189,9 @@ const navItems: NavItem[] = [
   { label: "API Docs", href: "/dashboard/api-docs", icon: <FileText size={16} />, roles: ["admin"], sub: "Channels" },
   { label: "Activity Log", href: "/dashboard/activity-log", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Channels" },
 
+  // ── Workspace (shared agency files / boards / whiteboard) ──
+  { label: "Files", href: "/dashboard/workspace/files", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"], section: "Workspace" },
+
   // ── Manage (operations & finance) ──
   { label: "Workspaces", href: "/dashboard/workspaces", icon: <Building2 size={16} />, roles: ["admin"], section: "Manage", sub: "Business" },
   { label: "Team", href: "/dashboard/team", icon: <UsersRound size={16} />, roles: ["admin"], sub: "Business" },
