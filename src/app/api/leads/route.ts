@@ -133,10 +133,8 @@ export async function POST(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-<<<<<<< HEAD
   // Queue a trigger event for the `new-lead-ai-research` template (and any
   // other workflow trigger_type='lead.created' the user has installed).
-  // Best-effort — failures are logged but don't break the create response.
   if (data?.id) {
     const { error: trigErr } = await supabase.from("trigger_events").insert({
       user_id: ownerId,
@@ -156,13 +154,11 @@ export async function POST(request: NextRequest) {
     if (trigErr) {
       console.error("[leads/route] trigger_event insert failed:", trigErr.message);
     }
-=======
-  // Fire-and-forget geo enrichment so the lead detail page can show
-  // country flag + local time without an extra UI lookup later.
-  if (data?.id) {
+
+    // Fire-and-forget geo enrichment so the lead detail page can show
+    // country flag + local time without an extra UI lookup later.
     const ip = extractClientIp(request.headers);
     void enrichLeadGeo(data.id, ip);
->>>>>>> 8bfeac7a (feat(integrations): stock photos + currency + geo-IP)
   }
 
   return NextResponse.json({ lead: data });
