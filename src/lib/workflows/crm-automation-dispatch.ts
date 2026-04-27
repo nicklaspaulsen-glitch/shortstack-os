@@ -15,6 +15,7 @@
  * but never thrown.
  */
 import { SupabaseClient } from "@supabase/supabase-js";
+import { sendEmail } from "@/lib/email";
 
 export type CrmAutomationEvent =
   | "new_lead"
@@ -28,7 +29,8 @@ export type CrmAutomationEvent =
   | "email_clicked"
   | "email_replied"
   | "pipeline_stage_changed"
-  | "appointment_booked";
+  | "appointment_booked"
+  | "appointment_completed";
 
 export interface CrmAutomationAction {
   type: string;
@@ -137,6 +139,37 @@ export async function fireCrmAutomations(
   return { matched: matched.length, automation_ids: matched.map((m) => m.id) };
 }
 
+/**
+ * Replace `{{first_name}}`, `{{review_url}}`, `{{business_name}}`, etc. tokens
+ * in a string with values from the event payload (and a few canonical
+ * fallbacks). Tokens not present in payload are left as the empty string,
+ * which is closer to user expectation than leaving the literal `{{x}}` mark.
+ */
+function renderTemplate(
+  template: string,
+  payload: Record<string, unknown>,
+  extra: Record<string, string | undefined> = {},
+): string {
+  const merged: Record<string, string> = {};
+  for (const [k, v] of Object.entries(payload)) {
+    if (v != null) merged[k] = String(v);
+  }
+  // Common aliases. The trigger-dispatch payload uses `guest_name` etc., but
+  // automation authors expect first_name + email + phone — wire both spellings.
+  const guestName = (payload.guest_name as string | undefined) ?? "";
+  if (guestName && !merged.first_name) {
+    const [first, ...rest] = guestName.split(" ");
+    merged.first_name = first || "";
+    merged.last_name = rest.join(" ");
+  }
+  if (!merged.email && payload.guest_email) merged.email = String(payload.guest_email);
+  if (!merged.phone && payload.guest_phone) merged.phone = String(payload.guest_phone);
+  for (const [k, v] of Object.entries(extra)) {
+    if (v != null && v !== "") merged[k] = v;
+  }
+  return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, key) => merged[key] ?? "");
+}
+
 async function executeActions(
   supabase: SupabaseClient,
   ownerId: string,
@@ -145,6 +178,16 @@ async function executeActions(
   payload: Record<string, unknown>,
 ): Promise<void> {
   const leadId = (payload.lead_id as string | undefined) ?? null;
+  const bookingId = (payload.booking_id as string | undefined) ?? null;
+
+  // Resolve owner business_name once for templating.
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("business_name, full_name")
+    .eq("id", ownerId)
+    .maybeSingle();
+  const businessName = profile?.business_name || profile?.full_name || "us";
+
   for (const action of actions) {
     try {
       switch (action.type) {
@@ -174,9 +217,113 @@ async function executeActions(
           });
           break;
         }
-        // send_sms / send_email / ai_call all go through existing endpoints.
-        // They require real delivery infra, so we just log the intent here
-        // and let the caller follow up via the real endpoint in a later pass.
+        case "create_note": {
+          // Note attaches to a lead via lead_notes (matches /api/crm/notes shape).
+          // If there's no lead_id but a booking_id, log into trinity_log instead
+          // so the audit trail still picks up the note.
+          const noteBody = renderTemplate(
+            String(action.body || action.text || ""),
+            payload,
+            { business_name: businessName },
+          ) || `Auto-note from "${automation.name}"`;
+          if (leadId) {
+            await supabase.from("lead_notes").insert({
+              profile_id: ownerId,
+              lead_id: leadId,
+              body: noteBody,
+            });
+          } else {
+            await supabase.from("trinity_log").insert({
+              user_id: ownerId,
+              action: "automation_note",
+              details: {
+                automation_id: automation.id,
+                automation_name: automation.name,
+                booking_id: bookingId,
+                body: noteBody,
+              },
+            });
+          }
+          break;
+        }
+        case "send_review_request":
+        case "send_email":
+        case "send_followup_email": {
+          const to = (action.to as string | undefined)
+            || (payload.guest_email as string | undefined)
+            || (payload.email as string | undefined);
+          if (!to) {
+            console.warn(`[crm-automation-dispatch] ${action.type}: no recipient`);
+            break;
+          }
+          const reviewUrl = action.review_url
+            || action.url
+            || `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/review`;
+          const subject = renderTemplate(
+            String(action.subject || (action.type === "send_review_request"
+              ? `Thanks for your visit to ${businessName} — leave us a review!`
+              : `A note from ${businessName}`)),
+            payload,
+            { business_name: businessName, review_url: String(reviewUrl) },
+          );
+          const bodyTemplate = String(action.body || action.message || (action.type === "send_review_request"
+            ? `Hi {{first_name}},\n\nThanks again for choosing ${businessName}. If you have a moment, we'd love a quick review:\n\n{{review_url}}\n\nIt makes a real difference for us.`
+            : `Hi {{first_name}},\n\nWe wanted to follow up on your recent appointment with ${businessName}.`));
+          const body = renderTemplate(bodyTemplate, payload, {
+            business_name: businessName,
+            review_url: String(reviewUrl),
+          });
+          const html = `<div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#222;">
+            <p style="font-size:15px;line-height:1.6;">${body.replace(/\n/g, "<br/>")}</p>
+            ${action.type === "send_review_request"
+              ? `<p style="margin-top:20px;"><a href="${reviewUrl}" style="background:#c8a855;color:#000;padding:10px 22px;border-radius:6px;font-weight:600;text-decoration:none;font-size:14px;">Leave a Review</a></p>`
+              : ""}
+          </div>`;
+          const ok = await sendEmail({ to, subject, html, text: body });
+          await supabase.from("trinity_log").insert({
+            user_id: ownerId,
+            action: "automation_email_sent",
+            details: {
+              automation_id: automation.id,
+              automation_name: automation.name,
+              kind: action.type,
+              to,
+              subject,
+              ok,
+            },
+          });
+          break;
+        }
+        case "send_sms": {
+          const to = (action.to as string | undefined)
+            || (payload.guest_phone as string | undefined)
+            || (payload.phone as string | undefined);
+          const message = renderTemplate(
+            String(action.message || action.body || ""),
+            payload,
+            { business_name: businessName },
+          );
+          if (!to || !message) {
+            console.warn(`[crm-automation-dispatch] send_sms: missing to/message`);
+            break;
+          }
+          const sid = process.env.TWILIO_ACCOUNT_SID;
+          const token = process.env.TWILIO_AUTH_TOKEN;
+          const from = process.env.TWILIO_PHONE_NUMBER || process.env.TWILIO_DEFAULT_NUMBER;
+          if (!sid || !token || !from) {
+            console.warn(`[crm-automation-dispatch] send_sms: Twilio not configured`);
+            break;
+          }
+          await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
+            method: "POST",
+            headers: {
+              Authorization: `Basic ${Buffer.from(`${sid}:${token}`).toString("base64")}`,
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({ To: to, From: from, Body: message }).toString(),
+          });
+          break;
+        }
         default:
           // no-op for unknown action types (future expansion)
           break;

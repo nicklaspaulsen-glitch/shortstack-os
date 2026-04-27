@@ -1,6 +1,8 @@
 // Custom AI Workflow Engine — Replaces Make.com/Zapier
 // Claude designs and executes multi-step workflows for client-specific needs
 
+import { sendEmail } from "@/lib/email";
+
 export interface WorkflowStep {
   id: string;
   name: string;
@@ -28,10 +30,74 @@ const WORKFLOW_ACTIONS: Record<string, {
 }> = {
   send_email: {
     name: "Send Email",
-    description: "Send an email via client's email service",
+    description: "Send an email via the configured email provider (Resend / Postal / SMTP)",
     execute: async (params) => {
-      // Integration with email service
-      return { sent: true, to: params.to, subject: params.subject };
+      const to = params.to || params.guest_email;
+      const subject = params.subject || "A note from your team";
+      const html = params.html || `<p>${(params.body || params.message || "").replace(/\n/g, "<br/>")}</p>`;
+      const text = params.text || params.body || params.message;
+      if (!to) return { sent: false, error: "missing recipient (set params.to)" };
+      const ok = await sendEmail({ to, subject, html, text });
+      return { sent: ok, to, subject };
+    },
+  },
+  send_review_request: {
+    name: "Send Review Request",
+    description: "Send a review-request email after an appointment is completed",
+    execute: async (params, context) => {
+      const to = params.to || params.guest_email || context.triggerData?.guest_email as string;
+      if (!to) return { sent: false, error: "no recipient — set params.to or trigger payload guest_email" };
+      const reviewUrl = params.review_url || params.url
+        || `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/review`;
+      const businessName = params.business_name || "us";
+      const firstName = params.first_name || (typeof context.triggerData?.guest_name === "string"
+        ? (context.triggerData.guest_name as string).split(" ")[0]
+        : "there");
+      const subject = params.subject || `Thanks for visiting — would you leave a review?`;
+      const body = params.body || `Hi ${firstName},\n\nThanks again for choosing ${businessName}. If you have a moment, we'd love a quick review:\n\n${reviewUrl}\n\nIt makes a real difference for us.`;
+      const html = `<div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#222;">
+        <p style="font-size:15px;line-height:1.6;">${body.replace(/\n/g, "<br/>")}</p>
+        <p style="margin-top:20px;"><a href="${reviewUrl}" style="background:#c8a855;color:#000;padding:10px 22px;border-radius:6px;font-weight:600;text-decoration:none;font-size:14px;">Leave a Review</a></p>
+      </div>`;
+      const ok = await sendEmail({ to, subject, html, text: body });
+      return { sent: ok, to, review_url: reviewUrl };
+    },
+  },
+  add_tag: {
+    name: "Add Tag",
+    description: "Add a tag to a lead in the CRM",
+    execute: async (params, context) => {
+      const leadId = params.lead_id || (context.triggerData?.lead_id as string | undefined);
+      const ownerId = params.profile_id || (context.triggerData?.user_id as string | undefined) || context.clientId;
+      if (!leadId || !params.tag || !ownerId) {
+        return { added: false, error: "lead_id, tag, and profile_id required" };
+      }
+      const { error } = await context.supabase
+        .from("lead_tags")
+        .insert({ profile_id: ownerId, lead_id: leadId, tag: String(params.tag) });
+      return { added: !error, error: error?.message };
+    },
+  },
+  create_note: {
+    name: "Create CRM Note",
+    description: "Add a note to a lead or to the audit log",
+    execute: async (params, context) => {
+      const leadId = params.lead_id || (context.triggerData?.lead_id as string | undefined);
+      const ownerId = params.profile_id || (context.triggerData?.user_id as string | undefined) || context.clientId;
+      const body = params.body || params.text || "(empty note)";
+      if (leadId && ownerId) {
+        const { error } = await context.supabase
+          .from("lead_notes")
+          .insert({ profile_id: ownerId, lead_id: leadId, body });
+        return { created: !error, lead_id: leadId, error: error?.message };
+      }
+      // Fallback: trinity_log so audit trail still picks it up.
+      await context.supabase.from("trinity_log").insert({
+        user_id: ownerId,
+        action: "workflow_note",
+        details: { body },
+      });
+      return { created: true, fallback: "trinity_log" };
     },
   },
   send_sms: {
