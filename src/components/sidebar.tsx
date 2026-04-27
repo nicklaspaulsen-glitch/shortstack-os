@@ -222,6 +222,7 @@ const navItems: NavItem[] = [
   { label: "Telegram Presets", href: "/dashboard/telegram-presets", icon: <MessageSquare size={16} />, roles: ["admin"] },
   { label: "Notifications", href: "/dashboard/notifications", icon: <Bell size={16} />, roles: ["admin", "team_member"] },
   { label: "System Status", href: "/dashboard/system-status", icon: <ShieldCheck size={16} />, roles: ["admin"] },
+  { label: "Public Status", href: "/dashboard/admin/status", icon: <Activity size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
 
   // ── Client Portal ──

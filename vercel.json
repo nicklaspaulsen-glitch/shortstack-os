@@ -186,6 +186,10 @@
     {
       "path": "/api/cron/trinity-autonomous",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/snapshot-health",
+      "schedule": "0,15,30,45 * * * *"
     }
   ]
 }
