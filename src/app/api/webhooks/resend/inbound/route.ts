@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 import { upsertInboundMessage, findContactByIdentifier, resolveUserIdForChannel } from "@/lib/conversations";
+import { exitRunsForContact } from "@/lib/sequences/engine";
 
 // Inbound email → Conversations.
 //
@@ -155,6 +156,14 @@ export async function POST(request: NextRequest) {
     })),
     contactId,
   });
+
+  // Multi-channel sequences: a reply on email exits all active/paused runs
+  // for this contact. Soft-fail — never block the inbound message pipeline.
+  if (contactId) {
+    await exitRunsForContact(supabase, contactId, "replied_email").catch((err) => {
+      console.warn("[resend/inbound] exitRunsForContact failed:", err);
+    });
+  }
 
   return NextResponse.json({ ok: true });
 }

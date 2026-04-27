@@ -127,6 +127,23 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [200, 401, 404],
   },
   {
+    path: "/api/sequences/runs",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Multi-channel sequence runs list (engine v2). Empty when no enrolments.",
+  },
+  {
+    path: "/api/sequences/runs?status=active",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Filter by status (covers the LIKE/index path for next_action_at).",
+  },
+  {
+    path: "/api/cron/sequence-runner",
+    expected_status: [200, 401],
+    note: "Multi-channel sequence runner cron. 401 expected without bearer; cron header sets it in prod.",
+  },
+  {
     path: "/api/crm",
     auth_bearer: true,
     expected_status: [200, 401, 404],

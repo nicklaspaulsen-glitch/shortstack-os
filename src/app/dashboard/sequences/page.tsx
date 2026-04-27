@@ -13,7 +13,20 @@ import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { ListOrdered } from "lucide-react";
 
-type MainTab = "builder" | "templates" | "analytics" | "enrollment" | "settings";
+type MainTab = "builder" | "templates" | "analytics" | "enrollment" | "runs" | "settings";
+
+// Multi-channel sequence run row from /api/sequences/runs.
+interface SequenceRunListItem {
+  id: string;
+  sequence_id: string;
+  contact_id: string | null;
+  current_step: number;
+  next_action_at: string | null;
+  status: "active" | "paused" | "completed" | "exited" | "failed";
+  enrolled_at: string;
+  completed_at: string | null;
+  exit_reason: string | null;
+}
 
 // Local step type — supports the extra "social" + "condition" UI affordances
 // that don't map 1:1 to server channels. When we save to the API we collapse
@@ -174,6 +187,9 @@ export default function SequencesPage() {
   const [abEnabled, setAbEnabled] = useState(false);
   const [activity, setActivity] = useState<ActivityItem[]>([]);
   const [saving, setSaving] = useState(false);
+  const [runs, setRuns] = useState<SequenceRunListItem[]>([]);
+  const [runsLoading, setRunsLoading] = useState(false);
+  const [runsStatusFilter, setRunsStatusFilter] = useState<string>("active");
 
   /* AI generator state */
   const [showAiModal, setShowAiModal] = useState(false);
@@ -189,6 +205,11 @@ export default function SequencesPage() {
     void loadSequences();
     void loadActivity();
   }, []);
+
+  useEffect(() => {
+    if (activeTab === "runs") void loadRuns();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   async function loadSequences() {
     setLoading(true);
@@ -226,6 +247,46 @@ export default function SequencesPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function loadRuns(status: string = runsStatusFilter) {
+    setRunsLoading(true);
+    try {
+      const qs = status === "all" ? "" : `?status=${encodeURIComponent(status)}`;
+      const res = await fetch(`/api/sequences/runs${qs}`);
+      if (!res.ok) {
+        if (res.status !== 401) toast.error("Failed to load runs");
+        return;
+      }
+      const data = await res.json();
+      setRuns((data.runs || []) as SequenceRunListItem[]);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to load runs");
+    } finally {
+      setRunsLoading(false);
+    }
+  }
+
+  async function pauseRun(runId: string) {
+    const res = await fetch(`/api/sequences/runs/${runId}/pause`, { method: "POST" });
+    if (!res.ok) { toast.error("Failed to pause"); return; }
+    toast.success("Paused"); void loadRuns();
+  }
+
+  async function resumeRun(runId: string) {
+    const res = await fetch(`/api/sequences/runs/${runId}/resume`, { method: "POST" });
+    if (!res.ok) { toast.error("Failed to resume"); return; }
+    toast.success("Resumed"); void loadRuns();
+  }
+
+  async function exitRunCall(runId: string) {
+    const res = await fetch(`/api/sequences/runs/${runId}/exit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reason: "manual_exit" }),
+    });
+    if (!res.ok) { toast.error("Failed to exit"); return; }
+    toast.success("Exited"); void loadRuns();
   }
 
   async function loadActivity() {
@@ -520,6 +581,7 @@ export default function SequencesPage() {
     { key: "templates", label: "Templates", icon: <Copy size={14} /> },
     { key: "analytics", label: "Performance", icon: <BarChart3 size={14} /> },
     { key: "enrollment", label: "Enrollment Rules", icon: <Users size={14} /> },
+    { key: "runs", label: "Active Runs", icon: <Activity size={14} /> },
     { key: "settings", label: "Settings", icon: <Settings size={14} /> },
   ];
 
@@ -1007,6 +1069,85 @@ export default function SequencesPage() {
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ===== ACTIVE RUNS ===== */}
+      {activeTab === "runs" && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <Activity size={14} className="text-gold" /> Multi-channel runs
+            </h3>
+            <div className="flex items-center gap-2">
+              <select
+                value={runsStatusFilter}
+                onChange={(e) => { setRunsStatusFilter(e.target.value); void loadRuns(e.target.value); }}
+                className="input text-[10px]"
+              >
+                <option value="active">Active</option>
+                <option value="paused">Paused</option>
+                <option value="completed">Completed</option>
+                <option value="exited">Exited</option>
+                <option value="failed">Failed</option>
+                <option value="all">All</option>
+              </select>
+              <button onClick={() => void loadRuns()} className="btn-ghost text-[10px]">Refresh</button>
+            </div>
+          </div>
+          <div className="card p-3">
+            {runsLoading ? (
+              <div className="text-center py-6">
+                <Loader2 size={16} className="animate-spin mx-auto text-gold mb-2" />
+                <p className="text-[10px] text-muted">Loading runs...</p>
+              </div>
+            ) : runs.length === 0 ? (
+              <p className="text-[10px] text-muted text-center py-4">
+                No multi-channel runs yet. Enroll contacts via POST /api/sequences/enroll
+                with {"{"}sequence_id, contact_ids[]{"}"} to create runs.
+              </p>
+            ) : (
+              <ul className="space-y-1.5">
+                {runs.map(r => (
+                  <li key={r.id} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
+                    <div className="flex items-center gap-2">
+                      <span className={`px-1.5 py-0.5 rounded text-[9px] ${
+                        r.status === "active" ? "bg-green-500/10 text-green-400"
+                        : r.status === "paused" ? "bg-yellow-500/10 text-yellow-400"
+                        : r.status === "exited" ? "bg-purple-500/10 text-purple-400"
+                        : r.status === "completed" ? "bg-blue-500/10 text-blue-400"
+                        : "bg-red-500/10 text-red-400"}`}>
+                        {r.status}
+                      </span>
+                      <span>step {r.current_step + 1}</span>
+                      <span className="text-muted">·</span>
+                      <span className="text-muted">contact {r.contact_id ? r.contact_id.slice(0, 8) : "—"}</span>
+                      {r.next_action_at && (
+                        <span className="text-muted">· next {new Date(r.next_action_at).toLocaleString()}</span>
+                      )}
+                      {r.exit_reason && <span className="text-muted">· {r.exit_reason}</span>}
+                    </div>
+                    <div className="flex gap-1">
+                      {r.status === "active" && (
+                        <button onClick={() => void pauseRun(r.id)} className="btn-ghost text-[9px] py-0.5 px-1.5">Pause</button>
+                      )}
+                      {r.status === "paused" && (
+                        <button onClick={() => void resumeRun(r.id)} className="btn-ghost text-[9px] py-0.5 px-1.5">Resume</button>
+                      )}
+                      {(r.status === "active" || r.status === "paused") && (
+                        <button onClick={() => void exitRunCall(r.id)} className="btn-ghost text-[9px] py-0.5 px-1.5 text-red-400">Exit</button>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <p className="text-[9px] text-muted px-2">
+            The cron runner ticks every minute and advances active runs. Reply on
+            email/SMS/DM auto-exits the contact's runs (`exit_reason` will read
+            replied_email / replied_sms / replied_dm).
+          </p>
         </div>
       )}
 
