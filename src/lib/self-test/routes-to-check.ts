@@ -517,26 +517,43 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [404, 400],
     note: "Public funnel-event endpoint — unknown slug must 404, not 500.",
   },
-  // ── Meeting Notetaker ────────────────────────────────────────────────────
+  // ── Affiliate program ────────────────────────────────────────────────────
   {
-    path: "/api/meetings/from-url",
-    method: "POST",
-    body: {},
-    expected_status: [400, 401],
-    note: "Meeting URL ingest — required-field validation; auth-gated.",
+    path: "/api/affiliate/programs",
+    auth_bearer: true,
+    expected_status: [200, 401, 403],
+    note: "Affiliate programs list — owner-scoped.",
   },
   {
-    path: `/api/meetings/${SELF_TEST_DUMMY_JOB_ID}/status`,
-    method: "GET",
-    expected_status: [401, 404],
-    note: "Meeting status polling — unauth or 404 on dummy id.",
+    path: "/api/affiliate/affiliates",
+    auth_bearer: true,
+    expected_status: [200, 401, 403],
+    note: "Affiliates list — owner-scoped via inner-join.",
   },
   {
-    path: `/api/meetings/${SELF_TEST_DUMMY_JOB_ID}/sync-to-crm`,
+    path: "/api/affiliate/referrals",
+    auth_bearer: true,
+    expected_status: [200, 401, 403],
+    note: "Affiliate referrals list — owner-scoped via inner-join.",
+  },
+  {
+    path: "/api/affiliate/me",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Affiliate self-view (returns empty list when caller is not an affiliate).",
+  },
+  {
+    path: "/api/affiliate/track?ref=__nope__",
+    expected_status: [400, 404],
+    note: "Public click tracker — invalid ref returns 4xx (no DB write).",
+  },
+  {
+    path: "/api/affiliate/programs",
     method: "POST",
+    auth_bearer: true,
     body: {},
-    expected_status: [401, 404],
-    note: "Meeting CRM sync — unauth or 404 on dummy id.",
+    expected_status: [400, 401, 403],
+    note: "Affiliate program create — required-field validation.",
   },
 ];
 

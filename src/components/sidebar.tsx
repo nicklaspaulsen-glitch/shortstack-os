@@ -126,6 +126,7 @@ const navItems: NavItem[] = [
   { label: "Proposals", href: "/dashboard/proposals", icon: <FileCheck size={16} />, roles: ["admin", "team_member"], sub: "Pipeline" },
   { label: "Forecast", href: "/dashboard/forecast", icon: <TrendingUp size={16} />, roles: ["admin"], sub: "Pipeline" },
   { label: "Commissions", href: "/dashboard/commission-tracker", icon: <Award size={16} />, roles: ["admin"], sub: "Pipeline" },
+  { label: "Affiliates", href: "/dashboard/affiliates", icon: <Award size={16} />, roles: ["admin"], sub: "Pipeline" },
   { label: "Ads Manager", href: "/dashboard/ads-manager", icon: <Target size={16} />, roles: ["admin"], sub: "Pipeline" },
   { label: "Calendar", href: "/dashboard/calendar", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Scheduling", href: "/dashboard/scheduling", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
