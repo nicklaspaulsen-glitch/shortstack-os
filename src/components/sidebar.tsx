@@ -185,6 +185,7 @@ const navItems: NavItem[] = [
   { label: "Financials", href: "/dashboard/financials", icon: <BarChart3 size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Invoices", href: "/dashboard/invoices", icon: <Receipt size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Invoice Templates", href: "/dashboard/invoice-templates", icon: <FileText size={16} />, roles: ["admin"], sub: "Business" },
+  { label: "Subaccounts", href: "/dashboard/subaccounts", icon: <Building2 size={16} />, roles: ["admin"], sub: "Business" },
   { label: "White Label", href: "/dashboard/white-label", icon: <Palette size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Billing", href: "/dashboard/billing", icon: <CreditCard size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
   { label: "Pricing", href: "/dashboard/pricing", icon: <CreditCard size={16} />, roles: ["admin"], sub: "Business" },
