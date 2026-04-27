@@ -132,6 +132,10 @@
     {
       "path": "/api/cron/personal-brand",
       "schedule": "0 8 * * 0"
+    },
+    {
+      "path": "/api/cron/refresh-ads-metrics",
+      "schedule": "0 3 * * *"
     }
   ]
 }
