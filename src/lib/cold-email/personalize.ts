@@ -15,6 +15,7 @@
  */
 import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
 import { preHumanize } from "@/lib/ai/humanizer";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
 import type { ResearchResult } from "./researcher";
 
@@ -25,6 +26,8 @@ export interface PersonalizeInput {
   leadContactName?: string | null;
   /** Owner's user id (for usage tracking). Optional. */
   userId?: string;
+  /** Lead UUID — when present, enables per-lead memory + traces. */
+  leadId?: string;
 }
 
 export interface PersonalizeOutput {
@@ -94,10 +97,17 @@ export async function personalizeEmail(
     "Generate the JSON now.",
   ].join("\n");
 
-  // The LLM returns strict JSON — humanize=false avoids reshaping the JSON
-  // skeleton. Voice profile injection still applies via the system prompt,
-  // so the body field already comes back in the user's voice.
-  const result = await callLLMHumanized({
+  // Memory + trace are enabled per-call. Both soft-fail when env keys are
+  // unset, so this stays a drop-in replacement for the previous callLLM.
+  const subject =
+    input.userId && input.leadId
+      ? {
+          kind: "lead" as const,
+          id: input.leadId,
+          agencyOwnerId: input.userId,
+        }
+      : undefined;
+  const result = await callLLMTraced({
     taskType: "generation_short",
     systemPrompt: SYSTEM_PROMPT,
     userPrompt,
@@ -105,10 +115,11 @@ export async function personalizeEmail(
     temperature: 0.7,
     userId: input.userId,
     context: "/api/cold-email/personalize",
-    voiceProfile: input.userId
-      ? { subjectKind: "user", subjectId: input.userId }
-      : undefined,
-    humanize: false,
+    surface: "cold_email",
+    subject,
+    withMemory: Boolean(subject),
+    storeMemory: Boolean(subject),
+    agentKey: "lyra",
   });
 
   type LLMShape = { subject?: string; opener?: string; body?: string };
