@@ -166,6 +166,14 @@
     {
       "path": "/api/cron/auto-analyze-calls",
       "schedule": "30 * * * *"
+    },
+    {
+      "path": "/api/cron/process-trigger-events",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/cron/booking-reminders",
+      "schedule": "*/15 * * * *"
     }
   ]
 }

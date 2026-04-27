@@ -594,6 +594,52 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [200, 401],
     note: "Coach: auto-analyze cron — 401 without bearer is correct.",
   },
+
+  // ── Calendly polish + Reputation auto-trigger (Apr 27) ────────────────────
+  {
+    path: "/api/scheduling/availability?meeting_type_id=00000000-0000-0000-0000-000000000000&date=2026-04-28",
+    method: "GET",
+    expected_status: [200, 404],
+    note: "Slot availability lookup — public, returns 404 for nonexistent meeting type.",
+  },
+  {
+    path: `/api/scheduling/embed?meeting_type_id=${SELF_TEST_DUMMY_JOB_ID}`,
+    method: "GET",
+    auth_bearer: true,
+    expected_status: [401, 403, 404],
+    note: "Embed snippet generator — owner-scoped; dummy id returns 404 when authed.",
+  },
+  {
+    path: "/api/scheduling/bookings/by-token/0000000000000000000000000000000000000000",
+    method: "GET",
+    expected_status: [404],
+    note: "Public booking-by-token lookup — invalid token returns 404.",
+  },
+  {
+    path: "/api/scheduling/bookings/by-token/0000000000000000000000000000000000000000",
+    method: "DELETE",
+    expected_status: [404],
+    note: "Public cancel-by-token — invalid token returns 404.",
+  },
+  {
+    path: `/api/scheduling/bookings/${SELF_TEST_DUMMY_JOB_ID}/no-show`,
+    method: "POST",
+    auth_bearer: true,
+    expected_status: [401, 404],
+    note: "No-show flag — auth-gated; dummy booking id returns 404.",
+  },
+  {
+    path: "/api/cron/booking-reminders",
+    method: "GET",
+    expected_status: [401],
+    note: "SMS reminder cron — unauth (no Bearer) returns 401.",
+  },
+  {
+    path: "/api/cron/process-trigger-events",
+    method: "GET",
+    expected_status: [401],
+    note: "Trigger event processor cron — unauth returns 401.",
+  },
 ];
 
 /** Total count helper for the dashboard. */

@@ -181,8 +181,10 @@ export async function PATCH(request: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   // When status flips to "completed", fire the appointment_completed trigger
-  // so workflows like "send review request" can run. Fire-and-forget — do not
-  // block the booking response on workflow execution.
+  // so workflows like "send review request" can run. Two paths fire in parallel:
+  //   1. In-process fireTrigger() — fast, for users not running the cron
+  //   2. trigger_events queue — durable, picked up by /api/cron/process-trigger-events
+  // Fire-and-forget — do not block the booking response on workflow execution.
   if (
     safeUpdates.status === "completed" &&
     data &&
@@ -197,20 +199,39 @@ export async function PATCH(request: NextRequest) {
       date: string;
       time: string;
     };
+    const triggerPayload = {
+      booking_id: booking.id,
+      meeting_type_id: booking.meeting_type_id,
+      guest_name: booking.guest_name,
+      guest_email: booking.guest_email,
+      guest_phone: booking.guest_phone,
+      date: booking.date,
+      time: booking.time,
+    };
+    const service = createServiceClient();
+    // Path 1: in-process
     fireTrigger({
-      supabase: createServiceClient(),
+      supabase: service,
       userId: user.id,
       triggerType: "appointment_completed",
-      payload: {
-        booking_id: booking.id,
-        meeting_type_id: booking.meeting_type_id,
-        guest_name: booking.guest_name,
-        guest_email: booking.guest_email,
-        guest_phone: booking.guest_phone,
-        date: booking.date,
-        time: booking.time,
-      },
+      payload: triggerPayload,
     }).catch((err) => console.error("[scheduling/bookings] fireTrigger failed:", err));
+    // Path 2: durable queue
+    service
+      .from("trigger_events")
+      .insert({
+        user_id: user.id,
+        trigger_type: "appointment_completed",
+        source_table: "bookings",
+        source_id: booking.id,
+        payload: triggerPayload,
+        status: "pending",
+      })
+      .then(({ error: queueErr }) => {
+        if (queueErr) {
+          console.error("[scheduling/bookings] trigger_events queue insert failed:", queueErr.message);
+        }
+      });
   }
 
   return NextResponse.json({ booking: data });
