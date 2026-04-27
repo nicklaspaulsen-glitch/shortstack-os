@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { fireTrigger } from "@/lib/workflows/trigger-dispatch";
 import { rateLimit } from "@/lib/rate-limit";
+import { lookupIp } from "@/lib/integrations/geo-ip";
 
 function clientIp(request: NextRequest): string {
   return (
@@ -9,6 +10,45 @@ function clientIp(request: NextRequest): string {
     || request.headers.get("x-real-ip")
     || "unknown"
   );
+}
+
+// Fire-and-forget geo enrichment. Looks up the submitter's IP, then writes
+// country/city/timezone into the lead's metadata.geo so the agency UI can
+// show "Copenhagen, DK · 09:42 local time" without an extra round-trip.
+// Never throws into the request path — failures are logged and swallowed.
+async function enrichLeadGeo(
+  supabase: ReturnType<typeof createServiceClient>,
+  leadId: string,
+  ip: string,
+  baseMetadata: Record<string, unknown>,
+): Promise<void> {
+  try {
+    const geo = await lookupIp(ip);
+    if (!geo) return;
+    await supabase
+      .from("leads")
+      .update({
+        country: geo.country_name,
+        city: geo.city,
+        metadata: {
+          ...baseMetadata,
+          geo: {
+            country_code: geo.country_code,
+            country_name: geo.country_name,
+            region: geo.region,
+            city: geo.city,
+            timezone: geo.timezone,
+            isp: geo.isp,
+            latitude: geo.latitude,
+            longitude: geo.longitude,
+            looked_up_at: new Date().toISOString(),
+          },
+        },
+      })
+      .eq("id", leadId);
+  } catch (err) {
+    console.warn("[forms/submit] geo enrichment failed:", err instanceof Error ? err.message : String(err));
+  }
 }
 
 // POST — receive form submissions from embedded forms and create leads
@@ -65,16 +105,26 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Create lead in database (attributed to the form owner so their tenant sees it)
-  await supabase.from("leads").insert({
-    user_id: formOwnerId,
-    business_name: name,
-    email,
-    phone,
-    source: `form:${formId}`,
-    status: "new",
-    metadata: data,
-  });
+  // Create lead in database (attributed to the form owner so their tenant sees it).
+  // We capture the inserted row so we can fire-and-forget enrich it with
+  // geo data — the form-submit response shouldn't block on a third-party IP API.
+  const { data: insertedLead } = await supabase
+    .from("leads")
+    .insert({
+      user_id: formOwnerId,
+      business_name: name,
+      email,
+      phone,
+      source: `form:${formId}`,
+      status: "new",
+      metadata: data,
+    })
+    .select("id")
+    .maybeSingle();
+
+  if (insertedLead?.id && ip !== "unknown") {
+    void enrichLeadGeo(supabase, insertedLead.id, ip, data);
+  }
 
   // Log the submission
   await supabase.from("trinity_log").insert({

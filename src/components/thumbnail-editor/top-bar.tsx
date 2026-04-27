@@ -22,6 +22,7 @@ import {
   Shapes,
   Image as ImageIcon,
   Upload,
+  ImagePlus,
 } from "lucide-react";
 import type { CanvasPreset } from "@/lib/thumbnail-editor/types";
 import type { ExportFormat } from "@/lib/thumbnail-editor/export";
@@ -50,6 +51,7 @@ interface TopBarProps {
   onAIRemove: () => void;
   onAIUpscale: () => void;
   onTextToLayer: () => void;
+  onStockPhotos?: () => void;
   onExport: (format: ExportFormat, quality: number) => void;
 }
 
@@ -144,6 +146,16 @@ export default function TopBar(props: TopBarProps) {
       >
         <Wand2 className="w-4 h-4" /> Text → Layer
       </button>
+      {props.onStockPhotos && (
+        <button
+          type="button"
+          onClick={props.onStockPhotos}
+          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-neutral-800 hover:bg-neutral-700"
+          title="Insert stock photo (Pexels / Unsplash)"
+        >
+          <ImagePlus className="w-4 h-4" /> Stock
+        </button>
+      )}
 
       <span className="flex-1" />
 

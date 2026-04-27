@@ -1014,9 +1014,6 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
   },
 
   // ── Pixel Agent Office ────────────────────────────────────────────────
-  // Live pixel-art office at /dashboard/agent-office. The snapshot route
-  // returns hydration data (recent events, per-agent history, stat
-  // counters); the events route powers the side-panel pagination.
   {
     path: "/api/agent-office/snapshot",
     auth_bearer: true,
@@ -1038,7 +1035,7 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     note: "Missing required filter (agent_key or since) must 400.",
   },
 
-  // ── Humanizer + Voice Profiles (Apr 27) ─────────────────────────────────
+  // ── Humanizer + Voice Profiles ──────────────────────────────────────────
   {
     path: "/api/voice-profile/me",
     auth_bearer: true,
@@ -1060,7 +1057,7 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     auth_bearer: true,
     body: {},
     expected_status: [200, 401],
-    note: "Recompute with empty body defaults to caller's user profile. 200 ok=false reason=empty_corpus is fine.",
+    note: "Recompute with empty body defaults to caller's user profile.",
     timeout_ms: 25_000,
   },
   {
@@ -1075,7 +1072,7 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     auth_bearer: true,
     body: {},
     expected_status: [400, 401],
-    note: "Generate with empty body must reject (subjectKind/subjectId/prompt required).",
+    note: "Generate with empty body must reject.",
   },
   {
     path: "/api/cron/recompute-voice-profiles",
@@ -1084,9 +1081,6 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
   },
 
   // ── Workflow Library (template gallery + install) ─────────────────────────
-  // Read-only gallery returns the template list; auth-gated. The install
-  // POST without a template_id must validation-fail (400) or auth-fail (401);
-  // POST with a bogus id must 404 (or 401 unauth'd).
   {
     path: "/api/workflows/templates",
     auth_bearer: true,
@@ -1115,6 +1109,43 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     body: { template_id: "this-template-does-not-exist" },
     expected_status: [401, 404],
     note: "Install with bogus template_id must 404 (not found) or 401 (no auth).",
+  },
+
+  // ── Polish integrations (Pexels/Unsplash, Frankfurter, ipapi.co) ────────
+  {
+    path: "/api/integrations/stock-photos?q=mountain",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["success", "photos", "configured"],
+    note: "Stock-photo search proxy. Returns empty photos[] when no PEXELS_API_KEY/UNSPLASH_ACCESS_KEY set.",
+  },
+  {
+    path: "/api/integrations/exchange-rate?from=USD&to=EUR",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["success", "rate"],
+    note: "Single exchange rate via Frankfurter (no key needed).",
+  },
+  {
+    path: "/api/integrations/exchange-rates?from=USD&to=EUR,GBP,DKK",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["success", "from", "rates"],
+    note: "Bulk exchange rates. Returns map of code -> rate.",
+  },
+  {
+    path: "/api/integrations/geo-ip?ip=8.8.8.8",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["success"],
+    note: "Geo lookup for a public IP.",
+  },
+  {
+    path: "/api/integrations/geo-ip/me",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["success"],
+    note: "Self geo-IP lookup. lookup=null in dev is acceptable.",
   },
 ];
 
