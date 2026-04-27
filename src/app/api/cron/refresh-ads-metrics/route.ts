@@ -23,10 +23,10 @@ interface RefreshSummary {
   errors: string[];
 }
 
-type Platform = "meta_ads" | "google_ads" | "tiktok_ads";
+type AdsPlatform = "meta_ads" | "google_ads" | "tiktok_ads";
 type CacheKey = "meta" | "google" | "tiktok";
 
-const PLATFORM_TO_CACHE_KEY: Record<Platform, CacheKey> = {
+const PLATFORM_TO_CACHE_KEY: Record<AdsPlatform, CacheKey> = {
   meta_ads: "meta",
   google_ads: "google",
   tiktok_ads: "tiktok",
@@ -71,21 +71,25 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const byUser = new Map<string, Array<{ platform: Platform; access_token: string; account_id: string }>>();
+  function isAdsPlatform(p: string): p is AdsPlatform {
+    return p === "meta_ads" || p === "google_ads" || p === "tiktok_ads";
+  }
+
+  const byUser = new Map<string, Array<{ platform: AdsPlatform; access_token: string; account_id: string }>>();
   for (const c of connections || []) {
     if (!c.user_id || !c.access_token || !c.account_id) continue;
-    const platform = c.platform as Platform;
-    if (!(platform in PLATFORM_TO_CACHE_KEY)) continue;
+    const platformStr = String(c.platform);
+    if (!isAdsPlatform(platformStr)) continue;
     const list = byUser.get(c.user_id) || [];
     list.push({
-      platform,
+      platform: platformStr,
       access_token: String(c.access_token),
       account_id: String(c.account_id),
     });
     byUser.set(c.user_id, list);
   }
 
-  for (const [userId, conns] of byUser.entries()) {
+  for (const [userId, conns] of Array.from(byUser.entries())) {
     summary.usersProcessed += 1;
     for (const conn of conns) {
       try {
@@ -139,7 +143,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 async function fetchCampaigns(conn: {
-  platform: AdsPlatform;
+  platform: AdsAdsPlatform;
   access_token: string;
   account_id: string;
 }) {
