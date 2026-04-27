@@ -53,7 +53,17 @@ export async function POST(
     const analysis = await analyzeTranscript(meeting.transcript_raw, {
       meetingDate,
       segments,
+      userId: user.id,
     });
+
+    // Accumulate cost: existing transcribe cost + this analysis cost.
+    const { data: existing } = await supabase
+      .from("meetings")
+      .select("cost_usd")
+      .eq("id", params.id)
+      .eq("created_by", user.id)
+      .maybeSingle();
+    const totalCost = Number(existing?.cost_usd ?? 0) + analysis.cost_usd;
 
     const { data: updated, error: updErr } = await supabase
       .from("meetings")
@@ -63,6 +73,8 @@ export async function POST(
         decisions: analysis.decisions,
         key_moments: analysis.key_moments,
         status: "ready",
+        cost_usd: totalCost,
+        completed_at: new Date().toISOString(),
       })
       .eq("id", params.id)
       .eq("created_by", user.id)

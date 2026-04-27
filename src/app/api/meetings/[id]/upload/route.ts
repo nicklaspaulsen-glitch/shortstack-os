@@ -73,6 +73,8 @@ export async function POST(
     .from("meetings")
     .update({
       audio_url: audioUrl,
+      audio_r2_key: path,
+      source_type: "upload",
       status: "processing",
     })
     .eq("id", params.id)

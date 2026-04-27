@@ -517,6 +517,27 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [404, 400],
     note: "Public funnel-event endpoint — unknown slug must 404, not 500.",
   },
+  // ── Meeting Notetaker ────────────────────────────────────────────────────
+  {
+    path: "/api/meetings/from-url",
+    method: "POST",
+    body: {},
+    expected_status: [400, 401],
+    note: "Meeting URL ingest — required-field validation; auth-gated.",
+  },
+  {
+    path: `/api/meetings/${SELF_TEST_DUMMY_JOB_ID}/status`,
+    method: "GET",
+    expected_status: [401, 404],
+    note: "Meeting status polling — unauth or 404 on dummy id.",
+  },
+  {
+    path: `/api/meetings/${SELF_TEST_DUMMY_JOB_ID}/sync-to-crm`,
+    method: "POST",
+    body: {},
+    expected_status: [401, 404],
+    note: "Meeting CRM sync — unauth or 404 on dummy id.",
+  },
 ];
 
 /** Total count helper for the dashboard. */

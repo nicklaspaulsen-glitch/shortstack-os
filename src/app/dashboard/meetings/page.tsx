@@ -2,7 +2,17 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Mic, Plus, Clock, CheckCircle2, AlertTriangle, Upload, Loader2 } from "lucide-react";
+import {
+  Mic,
+  Plus,
+  Clock,
+  CheckCircle2,
+  AlertTriangle,
+  Upload,
+  Loader2,
+  Link2,
+  Sparkles,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
@@ -51,6 +61,9 @@ export default function MeetingsPage() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [newTitle, setNewTitle] = useState("");
+  const [urlMode, setUrlMode] = useState(false);
+  const [urlValue, setUrlValue] = useState("");
+  const [urlBusy, setUrlBusy] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -98,6 +111,36 @@ export default function MeetingsPage() {
     }
   }
 
+  async function ingestFromUrl() {
+    const trimmed = urlValue.trim();
+    const title = newTitle.trim();
+    if (!trimmed) { toast.error("Paste a Zoom or Loom URL first"); return; }
+    if (!title) { toast.error("Add a title for the meeting"); return; }
+    setUrlBusy(true);
+    try {
+      const res = await fetch("/api/meetings/from-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, source_url: trimmed }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Could not ingest URL");
+      }
+      const { meeting } = await res.json();
+      setMeetings((cur) => [meeting, ...cur]);
+      setUrlValue("");
+      setNewTitle("");
+      setUrlMode(false);
+      toast.success("Recording downloaded — kick off transcription on the detail page.");
+    } catch (err) {
+      console.error("[meetings] from-url error:", err);
+      toast.error(err instanceof Error ? err.message : "Couldn't ingest URL");
+    } finally {
+      setUrlBusy(false);
+    }
+  }
+
   return (
     <div className="fade-in space-y-5">
       <PageHero
@@ -115,22 +158,72 @@ export default function MeetingsPage() {
         }
       />
 
+      {/* Killer-feature banner */}
+      <div className="card p-4 border-gold/20 bg-gradient-to-r from-gold/5 to-transparent">
+        <div className="flex items-center gap-2 text-[11px] font-semibold mb-1">
+          <Sparkles size={11} className="text-gold" /> AI Notetaker
+        </div>
+        <p className="text-[10px] text-muted leading-relaxed">
+          Drop in a recording or paste a Zoom/Loom share URL — Whisper transcribes,
+          Claude extracts action items, decisions, and key moments, and you can
+          push the summary into the linked contact&apos;s CRM activity feed in one click.
+          Replaces Otter ($16/mo) + Fathom ($24/mo).
+        </p>
+      </div>
+
       {/* Quick-create */}
-      <div className="card p-4 flex gap-3 items-center">
-        <input
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && quickCreate()}
-          placeholder="Quick add — e.g., 'Client strategy call, Acme Co'"
-          className="input flex-1 text-xs"
-        />
-        <button
-          onClick={quickCreate}
-          disabled={creating || !newTitle.trim()}
-          className="btn-primary text-xs flex items-center gap-1.5 px-4 disabled:opacity-50"
-        >
-          {creating ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} New
-        </button>
+      <div className="card p-4 space-y-3">
+        <div className="flex gap-3 items-center">
+          <input
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && (urlMode ? ingestFromUrl() : quickCreate())}
+            placeholder="Title — e.g., 'Strategy kickoff, Acme Co'"
+            className="input flex-1 text-xs"
+          />
+          {urlMode ? (
+            <button
+              onClick={ingestFromUrl}
+              disabled={urlBusy || !newTitle.trim() || !urlValue.trim()}
+              className="btn-primary text-xs flex items-center gap-1.5 px-4 disabled:opacity-50"
+            >
+              {urlBusy ? <Loader2 size={12} className="animate-spin" /> : <Link2 size={12} />}
+              Ingest URL
+            </button>
+          ) : (
+            <button
+              onClick={quickCreate}
+              disabled={creating || !newTitle.trim()}
+              className="btn-primary text-xs flex items-center gap-1.5 px-4 disabled:opacity-50"
+            >
+              {creating ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} New
+            </button>
+          )}
+        </div>
+        {urlMode && (
+          <input
+            value={urlValue}
+            onChange={(e) => setUrlValue(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && ingestFromUrl()}
+            placeholder="Paste a Zoom share URL or Loom share link..."
+            className="input w-full text-xs"
+          />
+        )}
+        <div className="flex items-center gap-3 text-[10px] text-muted">
+          <button
+            onClick={() => setUrlMode((v) => !v)}
+            className="hover:text-gold transition-colors flex items-center gap-1"
+          >
+            <Link2 size={9} /> {urlMode ? "Switch to manual entry" : "Or ingest from URL"}
+          </button>
+          <span>·</span>
+          <Link
+            href="/dashboard/meetings/new"
+            className="hover:text-gold transition-colors flex items-center gap-1"
+          >
+            <Upload size={9} /> Upload audio file
+          </Link>
+        </div>
       </div>
 
       {loading ? (

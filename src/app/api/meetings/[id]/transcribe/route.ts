@@ -5,11 +5,23 @@
  * `transcript_raw` + `transcript_speaker_labeled` + `duration_seconds` onto
  * the row. Sets status to 'ready' on success, 'failed' on error.
  *
- * Returns 501 if OPENAI_API_KEY is missing (non-fatal, UI shows a hint).
+ * Provider order: RunPod Whisper Large-V3 first (cheaper for the agency
+ * call volume + better accuracy on accents/jargon), OpenAI Whisper as a
+ * fallback when RunPod isn't configured. Returns 501 if neither is
+ * available so the UI can show a "configure provider" hint.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { hasOpenAIKey, transcribeAudio } from "@/lib/meetings/whisper";
+import { hasOpenAIKey } from "@/lib/meetings/whisper";
+import {
+  hasRunpodWhisper,
+  transcribeAudio,
+  estimateTranscriptionCost,
+} from "@/lib/meetings/whisper-runpod";
+
+// Whisper transcription on a 60-min recording can run ~90s on cold start.
+// Vercel default is 10s — bump to 5 min so we can wait for the worker.
+export const maxDuration = 300;
 
 export async function POST(
   _request: NextRequest,
@@ -19,9 +31,12 @@ export async function POST(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!hasOpenAIKey()) {
+  if (!hasRunpodWhisper() && !hasOpenAIKey()) {
     return NextResponse.json(
-      { error: "transcription disabled, configure OPENAI_API_KEY" },
+      {
+        error:
+          "transcription disabled, configure RUNPOD_WHISPER_URL + RUNPOD_API_KEY (preferred) or OPENAI_API_KEY",
+      },
       { status: 501 },
     );
   }
@@ -50,6 +65,12 @@ export async function POST(
 
     const result = await transcribeAudio(blob, { filename: filenameGuess });
 
+    const provider: "runpod" | "openai" = hasRunpodWhisper() ? "runpod" : "openai";
+    const transcribeCost = estimateTranscriptionCost(
+      result.duration_seconds ?? 0,
+      provider,
+    );
+
     const { data: updated, error: updErr } = await supabase
       .from("meetings")
       .update({
@@ -57,6 +78,7 @@ export async function POST(
         transcript_speaker_labeled: result.segments,
         duration_seconds: result.duration_seconds ?? null,
         status: "ready",
+        cost_usd: transcribeCost,
       })
       .eq("id", params.id)
       .eq("created_by", user.id)
