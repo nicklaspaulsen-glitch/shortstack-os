@@ -182,6 +182,10 @@
     {
       "path": "/api/cron/deliver-webhooks",
       "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/cron/trinity-autonomous",
+      "schedule": "0 * * * *"
     }
   ]
 }

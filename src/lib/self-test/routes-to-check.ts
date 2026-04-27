@@ -752,6 +752,83 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [200, 401],
     note: "Webhook delivery cron — auth-gated.",
   },
+
+  // ── Service Marketplace (Wave 3) ─────────────────────────────────────────
+  {
+    path: "/api/marketplace/services?limit=5",
+    expected_status: 200,
+    expected_shape: ["services", "total"],
+    note: "Public browse — no auth required, returns active listings only (RLS).",
+  },
+  {
+    path: "/api/marketplace/services",
+    method: "POST",
+    auth_bearer: true,
+    body: {}, // missing title — must reject
+    expected_status: [400, 401],
+    note: "Service create — empty body must reject (title/description required).",
+  },
+  {
+    path: `/api/marketplace/services/${SELF_TEST_DUMMY_JOB_ID}`,
+    expected_status: [400, 404],
+    note: "Service detail with all-zero UUID — must 404 (or 400 if invalid id).",
+  },
+  {
+    path: `/api/marketplace/services/__not_a_uuid__/order`,
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [400, 401],
+    note: "Order with invalid id — 400 expected.",
+  },
+  {
+    path: "/api/marketplace/orders",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Order list — auth-gated; 200 with empty array when no orders.",
+  },
+  {
+    path: `/api/marketplace/orders/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [400, 401, 404],
+    note: "Order detail with dummy id — 404 expected when authed.",
+  },
+
+  // ── Trinity autonomous (Wave 3) ──────────────────────────────────────────
+  {
+    path: "/api/trinity/settings",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["settings", "action_types"],
+    note: "Returns default shadow-mode shell when no row exists.",
+  },
+  {
+    path: "/api/trinity/settings",
+    method: "PUT",
+    auth_bearer: true,
+    body: { mode: "not-a-real-mode" },
+    expected_status: [400, 401],
+    note: "Invalid mode must reject.",
+  },
+  {
+    path: "/api/trinity/proposals",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Proposals list — auth-gated.",
+  },
+  {
+    path: `/api/trinity/proposals/${SELF_TEST_DUMMY_JOB_ID}`,
+    method: "POST",
+    auth_bearer: true,
+    body: { action: "approve" },
+    expected_status: [400, 401, 404],
+    note: "Approve a non-existent proposal — must 404 (or 400 invalid id).",
+  },
+  {
+    path: "/api/cron/trinity-autonomous",
+    expected_status: [401, 200],
+    note: "Cron — must 401 without bearer; 200 acceptable if CRON_SECRET self-injected.",
+  },
 ];
 
 /** Total count helper for the dashboard. */
