@@ -214,6 +214,34 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [200, 401, 403],
     note: "Admin-only; test user isn't always admin. 401 (no token) and 403 (not admin) both fine.",
   },
+  {
+    path: "/api/verticals",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["verticals"],
+    note: "Lists vertical SaaS templates with previews. Read-only, no side effects.",
+  },
+  {
+    path: "/api/verticals/real_estate",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["template", "counts"],
+    note: "Real Estate vertical detail. Read-only.",
+  },
+  {
+    path: "/api/verticals/coaches",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["template", "counts"],
+    note: "Coaches vertical detail. Read-only.",
+  },
+  {
+    path: "/api/verticals/ecommerce",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["template", "counts"],
+    note: "E-commerce vertical detail. Read-only.",
+  },
 
   // ── POST endpoints with benign / sentinel payloads ───────────────────────
   {

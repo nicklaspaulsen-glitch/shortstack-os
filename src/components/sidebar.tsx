@@ -134,6 +134,7 @@ const navItems: NavItem[] = [
   { label: "Meetings", href: "/dashboard/meetings", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Courses", href: "/dashboard/courses", icon: <BookOpen size={16} />, roles: ["admin"], sub: "Membership" },
+  { label: "Vertical Templates", href: "/dashboard/verticals", icon: <Briefcase size={16} />, roles: ["admin"], sub: "Membership" },
 
   // ── Create (content production) ──
   { label: "AI Copywriter", href: "/dashboard/copywriter", icon: <Pen size={16} />, roles: ["admin", "team_member"], section: "Create", sub: "Writing" },
