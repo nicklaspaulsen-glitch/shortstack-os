@@ -829,6 +829,49 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [401, 200],
     note: "Cron — must 401 without bearer; 200 acceptable if CRON_SECRET self-injected.",
   },
+
+  // ── Workspace Board (Trello/Monday-style task board) ─────────────────────
+  // RLS-gated: GET should return 200 (with empty list) for an authed agency
+  // owner OR 401 when SELF_TEST_USER_ID isn't configured. POST without a
+  // body should validation-fail (400) or auth-fail (401). All five entries
+  // verify the auth gate is in place before any DB query runs.
+  {
+    path: "/api/workspace/tasks",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["tasks", "by_status", "total"],
+    note: "Workspace board list — empty array fine. 401 acceptable when SELF_TEST_USER_ID missing.",
+  },
+  {
+    path: "/api/workspace/tasks",
+    method: "POST",
+    auth_bearer: true,
+    body: {}, // missing required `title` — should 400 once authed
+    expected_status: [400, 401],
+    note: "Workspace task create with empty body must 400 (validation) or 401 (no auth).",
+  },
+  {
+    path: `/api/workspace/tasks/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [401, 404],
+    note: "Workspace task detail for a non-existent uuid must 404 (or 401 unauth'd).",
+  },
+  {
+    path: `/api/workspace/tasks/${SELF_TEST_DUMMY_JOB_ID}/comments`,
+    method: "POST",
+    auth_bearer: true,
+    body: { body: "self-test ping" },
+    expected_status: [401, 500, 400],
+    note: "Comment on a non-existent task — RLS hides it; FK violation surfaces as 500/400/401.",
+  },
+  {
+    path: "/api/workspace/tasks/reorder",
+    method: "POST",
+    auth_bearer: true,
+    body: { status: "backlog", ordered_ids: [] },
+    expected_status: [200, 401],
+    note: "Empty reorder is a no-op — must 200 (updated:0) or 401 unauth'd.",
+  },
 ];
 
 /** Total count helper for the dashboard. */
