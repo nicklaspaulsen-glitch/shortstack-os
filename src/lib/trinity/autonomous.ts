@@ -21,7 +21,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createServiceClient } from "@/lib/supabase/server";
 import { callLLM, callLLMTraced, type LLMRequest } from "@/lib/ai/llm-router";
-import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
 
 export type TrinityActionType =
@@ -514,6 +513,10 @@ async function runReasoning(
     withMemory: true,
     storeMemory: true,
     agentKey: "trinity",
+    voiceProfile: { subjectKind: "user", subjectId: userId },
+    // JSON output — humanizer would mangle the action_type / proposed_action
+    // shape. The reasoning step doesn't surface text to the user directly.
+    humanize: false,
   });
   const parsed = safeJsonParse<{ actions?: unknown }>(result.text);
   const actions = sanitizeReasoningResponse(parsed, candidates);
@@ -582,7 +585,9 @@ async function handleMorningBrief(
   const metrics = await loadMetrics(supabase, userId);
   // Morning brief is read by the agency owner — humanize is on so the
   // language matches their voice instead of sounding like canned output.
-  const result = await callLLMHumanized({
+  // Routed through callLLMTraced so memory + tracing compose with the
+  // humanizer in a single call.
+  const result = await callLLMTraced({
     taskType: "summarization",
     systemPrompt:
       "You are Trinity producing a 1-paragraph morning brief for the agency owner. Be concise and action-oriented.",
@@ -601,7 +606,13 @@ async function handleMorningBrief(
     userId,
     context: "/lib/trinity/autonomous#morning_brief",
     maxTokens: 400,
+    surface: "trinity_morning_brief",
+    subject: { kind: "user", id: userId, agencyOwnerId: userId },
+    withMemory: true,
+    storeMemory: true,
+    agentKey: "trinity",
     voiceProfile: { subjectKind: "user", subjectId: userId },
+    humanize: true,
     channel: "doc",
   });
   return { brief_text: result.text, metrics };
@@ -633,7 +644,9 @@ async function handleFollowupEmail(
     typeof proposed.cohort === "string" ? proposed.cohort : "stalled_leads";
   // JSON output — humanize is off so we don't reshape the JSON skeleton,
   // but voice profile is injected so the body sounds like the user.
-  const result = await callLLMHumanized({
+  // Routed through callLLMTraced so memory + tracing compose with the
+  // humanizer in a single call.
+  const result = await callLLMTraced({
     taskType: "generation_short",
     systemPrompt:
       "You are Trinity drafting a short follow-up email to a stalled lead cohort. Output JSON: { subject, body }.",
@@ -641,6 +654,11 @@ async function handleFollowupEmail(
     userId,
     context: "/lib/trinity/autonomous#followup_email",
     maxTokens: 350,
+    surface: "trinity_followup_email",
+    subject: { kind: "user", id: userId, agencyOwnerId: userId },
+    withMemory: true,
+    storeMemory: false,
+    agentKey: "trinity",
     voiceProfile: { subjectKind: "user", subjectId: userId },
     humanize: false,
   });

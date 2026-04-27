@@ -16,7 +16,6 @@
  * Output is a single JSON object — see `CoachAnalysis` below.
  */
 
-import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
 import { preHumanize } from "@/lib/ai/humanizer";
 import { callLLMTraced } from "@/lib/ai/llm-router";
 import {
@@ -267,6 +266,13 @@ export async function analyzeCall(args: AnalyzeCallArgs): Promise<CoachAnalysis>
       withMemory: Boolean(subject),
       storeMemory: Boolean(subject),
       agentKey: "sage",
+      voiceProfile: args.userId
+        ? { subjectKind: "user", subjectId: args.userId }
+        : undefined,
+      // Coach insights are returned as strict JSON — leave the structure
+      // intact and let `sanitizeInsights`/`sanitizeNextActions` run their
+      // own preHumanize on the leaf fields after parse.
+      humanize: false,
     });
     costUsd = clampCost(response.costUsd);
     parsed = safeJsonParse<RawLLMOutput>(response.text);

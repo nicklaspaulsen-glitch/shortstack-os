@@ -133,6 +133,12 @@ Return ONLY a JSON object on a single line, no markdown:
       withMemory: true,
       storeMemory: true,
       agentKey: "aria",
+      // Voice the summary like the agency owner — they'll be reading it
+      // first thing every day; tone consistency matters. The prompt
+      // returns strict JSON so the post-rewrite humanizer is off; the
+      // voice snippet still gets injected into the system prompt.
+      voiceProfile: { subjectKind: "user", subjectId: agencyOwnerId },
+      humanize: false,
     });
 
     const parsed = safeParseSummary(llm.text);

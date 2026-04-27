@@ -192,8 +192,9 @@ runs unchanged — `callLLMTraced` reduces to `callLLM`, no rows written.
 
 To opt in on a new AI surface, switch from `callLLM` to `callLLMTraced` and
 pass `surface`, optional `subject`, `withMemory: true`, `storeMemory: true`.
-**Follow-up:** `callLLMTraced` should internally wrap `callLLMHumanized`
-(not raw `callLLM`) so both layers compose. Tracked in PR #56 follow-up.
+`callLLMTraced` internally wraps `callLLMHumanized`, so the same call also
+accepts `voiceProfile`, `humanize` (default true), and `channel` for
+voice-injection + AI-tell stripping. Pass `humanize: false` for JSON outputs.
 
 ## Conventions worth knowing
 

@@ -295,26 +295,33 @@ export function getTaskRouting(): Readonly<Record<LLMTaskType, RouteRule>> {
 }
 
 // ────────────────────────────────────────────────────────────────────────
-// callLLMTraced — Mem0 + Langfuse decorator over callLLM
+// callLLMTraced — Mem0 + Langfuse + humanizer decorator over callLLM
 // ────────────────────────────────────────────────────────────────────────
 //
-// This is an additive layer that wraps `callLLM` with two opt-in features:
+// This is an additive layer that wraps `callLLMHumanized` (which itself
+// wraps `callLLM`) so memory + tracing + voice-injection + AI-tell stripping
+// all compose in a single call. Opt-in features:
 //
 //   1. `withMemory: true` — recall facts about the subject from Mem0 and
 //      prepend them to the system prompt so the model has long-term context.
 //   2. `storeMemory: true` — after the call, ask Haiku to extract any
 //      durable facts from the prompt+response and persist them to Mem0.
+//   3. `voiceProfile` — passthrough to the humanizer for per-subject voice
+//      injection into the system prompt.
+//   4. `humanize` (default true) — passthrough to the humanizer for the
+//      post-rewrite "strip-AI-tells" step. Pass `false` for JSON outputs.
+//   5. `channel` — passthrough to the humanizer for tone-tuned rewrites.
 //
 // Tracing is automatic when `LANGFUSE_*` env vars are present. Both Mem0
 // and Langfuse soft-fail when env vars are unset; in that case
-// `callLLMTraced` reduces to `callLLM` (one extra await, no behavior change).
-//
-// If the codebase later adds `callLLMHumanized` (humanizer voice layer in
-// PR 1F), update `runLLM` below to prefer that wrapper. Until then we
-// wrap the raw `callLLM`.
+// `callLLMTraced` reduces to `callLLMHumanized` (one extra await, no
+// behavior change). Likewise the humanizer soft-fails on its own errors.
 
 import { recallFacts, rememberFact, type SubjectKind } from "./mem0-client";
 import { traceLLMCall } from "./langfuse-client";
+import { callLLMHumanized } from "./call-llm-humanized";
+import type { HumanizeOptions } from "./humanizer";
+import type { VoiceSubjectKind } from "./voice-profile";
 
 export interface SubjectContext {
   kind: SubjectKind;
@@ -333,6 +340,12 @@ export interface CallLLMTracedOptions extends LLMRequest {
   storeMemory?: boolean;
   /** Optional agent key for memory writes ('lyra' | 'sage' | etc.). */
   agentKey?: string;
+  /** Voice profile passthrough — injects the writer's voice into the system prompt. */
+  voiceProfile?: { subjectKind: VoiceSubjectKind; subjectId: string };
+  /** Run the humanizer post-rewrite. Default true; pass false for JSON outputs. */
+  humanize?: boolean;
+  /** Channel hint passed to the humanizer for tone tuning. */
+  channel?: HumanizeOptions["channel"];
 }
 
 const MEMORY_PREFIX = "PREVIOUSLY KNOWN ABOUT THIS SUBJECT (from past interactions):";
@@ -396,15 +409,26 @@ async function extractFactFromResponse(args: {
 }
 
 /**
- * Wraps `callLLM` with Mem0 memory retrieval (pre-call), Langfuse tracing,
- * and Mem0 fact storage (post-call). Both Mem0 and Langfuse soft-fail when
- * env vars are unset — `callLLMTraced` always behaves at minimum like a
- * pass-through to `callLLM`.
+ * Wraps `callLLMHumanized` with Mem0 memory retrieval (pre-call), Langfuse
+ * tracing, voice-profile injection, AI-tell stripping, and Mem0 fact storage
+ * (post-call). Mem0, Langfuse, and the humanizer all soft-fail when their
+ * env vars / config are unset — `callLLMTraced` always behaves at minimum
+ * like a pass-through to `callLLM`.
  */
 export async function callLLMTraced(
   opts: CallLLMTracedOptions,
 ): Promise<LLMResponse> {
-  const { surface, subject, withMemory, storeMemory, agentKey, ...llmRequest } = opts;
+  const {
+    surface,
+    subject,
+    withMemory,
+    storeMemory,
+    agentKey,
+    voiceProfile,
+    humanize,
+    channel,
+    ...llmRequest
+  } = opts;
 
   // ── Memory retrieval ────────────────────────────────────────────────────
   let systemPrompt = llmRequest.systemPrompt ?? "";
@@ -422,11 +446,21 @@ export async function callLLMTraced(
     }
   }
 
-  // ── LLM call (traced) ──────────────────────────────────────────────────
+  // ── LLM call (traced + humanized) ──────────────────────────────────────
   // We only invoke the trace wrapper when we have an agency context. Without
   // it, RLS for `agent_trace_index` would reject the row anyway.
+  // The inner runner goes through `callLLMHumanized` so voice-profile
+  // injection and AI-tell stripping compose with memory + tracing in a
+  // single call. The humanizer soft-fails on its own errors so callers see
+  // at minimum the raw LLM output.
   const enrichedRequest: LLMRequest = { ...llmRequest, systemPrompt };
-  const runner = (): Promise<LLMResponse> => callLLM(enrichedRequest);
+  const runner = (): Promise<LLMResponse> =>
+    callLLMHumanized({
+      ...enrichedRequest,
+      voiceProfile,
+      humanize,
+      channel,
+    });
 
   const result =
     subject && surface

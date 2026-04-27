@@ -9,6 +9,7 @@ import SFXProvider from "@/components/sfx-provider";
 import ThemeProvider from "@/components/theme-provider";
 import { CookieConsent } from "@/components/cookie-consent";
 import FeedbackButton from "@/components/feedback-button";
+import GrainOverlay from "@/components/brand/grain-overlay";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 const OG_IMAGE = "/og-image.png";
@@ -100,6 +101,7 @@ export default function RootLayout({
           />
           </WhiteLabelProvider>
         </AuthProvider>
+        <GrainOverlay />
       </body>
     </html>
   );
