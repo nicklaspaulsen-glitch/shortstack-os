@@ -8,13 +8,21 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Belt-and-suspenders against electron (~300MB) sneaking into serverless
-  // function bundles. The browser-worker imports `playwright-core` (lean,
-  // no electron dep) — but if any other transitive path touches electron,
-  // these excludes keep the function under Vercel's 250MB ceiling.
-  // Affected functions (per Apr 27 build log): api/cron/run-browser-tasks
-  // and 2 others. Globs match all routes so we're safe across the whole tree.
+  // Two Vercel build issues to dodge:
+  //
+  // 1) webpack can't parse playwright-core's internal Vite recorder dir
+  //    (.ttf and .html assets). Marking these packages as server-external
+  //    tells Next to leave them as runtime require()s instead of bundling.
+  //    Note: this option is `experimental.serverComponentsExternalPackages`
+  //    in Next.js 14 — the top-level `serverExternalPackages` form is Next 15.
+  //
+  // 2) Belt-and-suspenders against electron (~300MB) sneaking into
+  //    serverless function bundles via desktop app transitive deps.
+  //    outputFileTracingExcludes drops these directories from every
+  //    function bundle regardless of import chain, keeping us under
+  //    Vercel's 250MB function ceiling.
   experimental: {
+    serverComponentsExternalPackages: ["playwright-core", "puppeteer-core"],
     outputFileTracingExcludes: {
       "*": [
         "node_modules/electron/**",
