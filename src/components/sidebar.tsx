@@ -9,6 +9,7 @@ import { getPlanConfig } from "@/lib/plan-config";
 import { BRAND } from "@/lib/brand-config";
 import DesktopIndicator from "@/components/desktop-indicator";
 import Stack3D from "@/components/brand/stack-3d";
+import MandalaMark from "@/components/brand/mandala-mark";
 import type { LucideIcon } from "lucide-react";
 import {
   Pin,
@@ -678,7 +679,7 @@ export default function Sidebar() {
             }
             return (
               <Link href="/dashboard" className="flex items-center justify-center" aria-label={displayName}>
-                <Stack3D size="sm" rotating />
+                <MandalaMark size="sm" />
               </Link>
             );
           }
@@ -690,7 +691,7 @@ export default function Sidebar() {
                 <img src={wl.logo_url || "/icons/shortstack-logo.svg"} alt={displayName} width={28} height={28} className="shrink-0 object-contain" />
               ) : (
                 <div className="shrink-0 transition-transform duration-220 ease-out-expo-foundation group-hover:scale-105">
-                  <Stack3D size="sm" rotating />
+                  <MandalaMark size="sm" />
                 </div>
               )}
               <div className="min-w-0 leading-tight">
