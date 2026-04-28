@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { isAtTeamMemberLimit, getTeamMemberLimit } from "@/lib/plan-config";
 
 /**
  * GET — List all team members for the authenticated agency
@@ -47,6 +48,38 @@ export async function POST(request: NextRequest) {
   }
 
   const service = createServiceClient();
+
+  // Plan-tier seat enforcement (Apr 28 audit). Each plan caps the
+  // number of team_members slots an agency owner gets:
+  //   Starter $497  →  1 seat
+  //   Growth  $997  →  3 seats
+  //   Pro     $2497 → 10 seats
+  //   Business $4997 → 25 seats
+  //   Unlimited $9997 → unlimited
+  // Previously the POST handler had no count check, so a Starter could
+  // invite 50 team members for free. Block + nudge to upgrade.
+  const { data: planProfile } = await service
+    .from("profiles")
+    .select("plan_tier")
+    .eq("id", user.id)
+    .maybeSingle();
+  const planTier = planProfile?.plan_tier || "Starter";
+  const { count: activeMemberCount } = await service
+    .from("team_members")
+    .select("id", { count: "exact", head: true })
+    .eq("agency_owner_id", user.id)
+    .neq("status", "removed");
+  if (isAtTeamMemberLimit(planTier, activeMemberCount ?? 0)) {
+    return NextResponse.json(
+      {
+        error: `Your ${planTier} plan includes ${getTeamMemberLimit(planTier)} team member seat${getTeamMemberLimit(planTier) === 1 ? "" : "s"}. Upgrade to invite more.`,
+        upgrade_needed: true,
+        seat_count: activeMemberCount ?? 0,
+        seat_limit: getTeamMemberLimit(planTier),
+      },
+      { status: 403 }
+    );
+  }
 
   // Check if team member already exists for this agency
   const { data: existing } = await service

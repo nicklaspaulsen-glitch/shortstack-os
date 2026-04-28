@@ -14,63 +14,62 @@
  * runtime overrides for the active theme — these :root values are just
  * the SSR pre-paint defaults so the page doesn't flash before hydration.
  *
- * Apr 28: lime accent retired. Replaced with disciplined pure-monochrome
- * (black/white) base + indigo accent (#5E5BFF) that works in both themes.
- * Legacy --brand-lime-* aliases now resolve to the indigo accent so the
- * 100+ pages still using `bg-gold/10` / `text-amber-*` keep working
+ * Apr 28: default theme is LIGHT. Pure white base + indigo accent.
+ * Dark theme available via ThemeToggle, picked up via [data-theme=dark]
+ * override below. Legacy --brand-lime-* aliases redirect to indigo so
+ * the 100+ pages still using `text-gold-*` / `bg-amber-*` keep working
  * without a sweeping refactor. */
 :root {
-  /* Surfaces — pure-leaning black for OLED contrast */
-  --bg-base: #070708;
-  --bg-surface-1: #101012;
-  --bg-surface-2: #17171A;
-  --bg-surface-3: #26262B;
-  --bg-base-rgb: 7 7 8;
-  --bg-surface-1-rgb: 16 16 18;
-  --bg-surface-2-rgb: 23 23 26;
-  --bg-surface-3-rgb: 38 38 43;
+  /* Surfaces — pure white base */
+  --bg-base: #FFFFFF;
+  --bg-surface-1: #FAFAFB;
+  --bg-surface-2: #F2F2F4;
+  --bg-surface-3: #E4E4E7;
+  --bg-base-rgb: 255 255 255;
+  --bg-surface-1-rgb: 250 250 251;
+  --bg-surface-2-rgb: 242 242 244;
+  --bg-surface-3-rgb: 228 228 231;
 
   /* Borders — neutral monochrome with faint indigo undertone for cohesion */
-  --border-subtle: rgba(94, 91, 255, 0.07);
-  --border-strong: rgba(94, 91, 255, 0.16);
+  --border-subtle: rgba(79, 70, 229, 0.08);
+  --border-strong: rgba(79, 70, 229, 0.20);
 
-  /* Text — softened off-white, deliberately not pure #FFFFFF */
-  --text-primary: #F5F5F7;
-  --text-secondary: #A8A8B2;
-  --text-muted: #6F6F7A;
-  --text-primary-rgb: 245 245 247;
-  --text-secondary-rgb: 168 168 178;
-  --text-muted-rgb: 111 111 122;
+  /* Text — pure black for body on white, softer scale for subtitles */
+  --text-primary: #0A0A0B;
+  --text-secondary: #52525B;
+  --text-muted: #71717A;
+  --text-primary-rgb: 10 10 11;
+  --text-secondary-rgb: 82 82 91;
+  --text-muted-rgb: 113 113 122;
 
-  /* Brand accent — INDIGO. One accent that works on both pure black + pure
-     white themes. Replaces the lime that previously lived here. */
-  --brand-accent: #5E5BFF;
-  --brand-accent-soft: #7B79FF;
-  --brand-accent-dim: #3D3CB3;
-  --brand-accent-glow: rgba(94, 91, 255, 0.4);
-  --brand-accent-rgb: 94 91 255;
-  --brand-accent-soft-rgb: 123 121 255;
-  --brand-accent-dim-rgb: 61 60 179;
+  /* Brand accent — INDIGO (slightly darker for AA contrast on white). */
+  --brand-accent: #4F46E5;
+  --brand-accent-soft: #6366F1;
+  --brand-accent-dim: #A5A4F0;
+  --brand-accent-glow: rgba(79, 70, 229, 0.3);
+  --brand-accent-rgb: 79 70 229;
+  --brand-accent-soft-rgb: 99 102 241;
+  --brand-accent-dim-rgb: 165 164 240;
 
   /* Legacy lime aliases — kept so existing pages work but redirected to
      the indigo accent. Do NOT introduce new uses of these vars in new code. */
-  --brand-lime: #5E5BFF;
-  --brand-lime-soft: #7B79FF;
-  --brand-lime-dim: #3D3CB3;
-  --brand-lime-glow: rgba(94, 91, 255, 0.4);
-  --brand-lime-rgb: 94 91 255;
-  --brand-lime-soft-rgb: 123 121 255;
-  --brand-lime-dim-rgb: 61 60 179;
+  --brand-lime: #4F46E5;
+  --brand-lime-soft: #6366F1;
+  --brand-lime-dim: #A5A4F0;
+  --brand-lime-glow: rgba(79, 70, 229, 0.3);
+  --brand-lime-rgb: 79 70 229;
+  --brand-lime-soft-rgb: 99 102 241;
+  --brand-lime-dim-rgb: 165 164 240;
 
   /* Editorial complement — neutral charcoal (replaces deep plum) */
-  --brand-plum: #1F1F23;
-  --brand-plum-hover: #2C2C32;
-  --brand-plum-rgb: 31 31 35;
-  --brand-plum-hover-rgb: 44 44 50;
+  --brand-plum: #E4E4E7;
+  --brand-plum-hover: #D4D4D8;
+  --brand-plum-rgb: 228 228 231;
+  --brand-plum-hover-rgb: 212 212 216;
 
   /* Indigo (now equal to the brand accent — kept as alias for back-compat) */
-  --brand-indigo: #5E5BFF;
-  --brand-indigo-rgb: 94 91 255;
+  --brand-indigo: #4F46E5;
+  --brand-indigo-rgb: 79 70 229;
 
   /* Functional */
   --status-success: #7FE5B8;
@@ -107,10 +106,38 @@
   --wl-primary: initial;
   --wl-accent: initial;
 
-  /* Dark theme baseline — pure-leaning black + indigo accent.
-   * Set at :root so SSR'd HTML doesn't flash white before hydration.
-   * ThemeProvider overrides these at runtime when the user picks
-   * the light theme. */
+  /* Light theme baseline — pure white + indigo accent.
+   * Apr 28: default flipped from dark to light per user feedback.
+   * ThemeProvider overrides these at runtime when the user (or their
+   * OS) picks dark — see :root[data-theme="dark"] block below. */
+  --color-background: #FFFFFF;
+  --color-surface: #FAFAFB;
+  --color-surface-light: #F2F2F4;
+  --color-border: #E4E4E7;
+  --color-accent: #4F46E5;
+  --color-text: #0A0A0B;
+  --color-muted: #52525B;
+  --color-foreground: #0A0A0B;
+  --color-background-rgb: 255 255 255;
+  --color-surface-rgb: 250 250 251;
+  --color-surface-light-rgb: 242 242 244;
+  --color-border-rgb: 228 228 231;
+  --color-accent-rgb: 79 70 229;
+  --color-text-rgb: 10 10 11;
+  --color-muted-rgb: 82 82 91;
+}
+
+/* ═══════════ DARK THEME OVERRIDES ═══════════
+ * Active when ThemeProvider sets data-theme="dark" (or .theme-dark).
+ * Flips every --color-* + --bg-* + --border-* + --text-* var to the
+ * pure-leaning black palette. Indigo accent shifts slightly brighter
+ * (from #4F46E5 to #5E5BFF) for contrast on dark surfaces.
+ *
+ * NOTE: this block lives next to the [data-theme="light"] block at
+ * the bottom of the file. The user is in light mode by default so
+ * this :root selector is the dark override, not the dark default. */
+:root[data-theme="dark"],
+.theme-dark {
   --color-background: #070708;
   --color-surface: #101012;
   --color-surface-light: #17171A;
@@ -126,14 +153,46 @@
   --color-accent-rgb: 94 91 255;
   --color-text-rgb: 245 245 247;
   --color-muted-rgb: 168 168 178;
+
+  --bg-base: #070708;
+  --bg-surface-1: #101012;
+  --bg-surface-2: #17171A;
+  --bg-surface-3: #26262B;
+  --bg-base-rgb: 7 7 8;
+  --bg-surface-1-rgb: 16 16 18;
+  --bg-surface-2-rgb: 23 23 26;
+  --bg-surface-3-rgb: 38 38 43;
+
+  --border-subtle: rgba(94, 91, 255, 0.07);
+  --border-strong: rgba(94, 91, 255, 0.16);
+
+  --text-primary: #F5F5F7;
+  --text-secondary: #A8A8B2;
+  --text-muted: #6F6F7A;
+  --text-primary-rgb: 245 245 247;
+  --text-secondary-rgb: 168 168 178;
+  --text-muted-rgb: 111 111 122;
+
+  --brand-accent: #5E5BFF;
+  --brand-accent-soft: #7B79FF;
+  --brand-accent-dim: #3D3CB3;
+  --brand-accent-glow: rgba(94, 91, 255, 0.4);
+  --brand-accent-rgb: 94 91 255;
+
+  --brand-lime: #5E5BFF;
+  --brand-lime-soft: #7B79FF;
+  --brand-lime-dim: #3D3CB3;
+  --brand-lime-glow: rgba(94, 91, 255, 0.4);
+  --brand-lime-rgb: 94 91 255;
+  --brand-indigo: #5E5BFF;
+  --brand-indigo-rgb: 94 91 255;
 }
 
-/* ═══════════ LIGHT THEME OVERRIDES ═══════════
- * When ThemeProvider sets data-theme="light" (or .theme-light), every
- * --color-* + --bg-* + --border-* + --text-* var swaps to the white
- * theme. The accent stays indigo (slightly darker for AA contrast on
- * white). Hard-coded hex values across the codebase still resolve via
- * these vars, so no per-component refactor is needed. */
+/* ═══════════ LIGHT THEME OVERRIDES (kept for parity / explicit selector) ═══════════
+ * The :root values ARE the light theme now, so this selector is mostly
+ * redundant — but keeping it explicit means components that render
+ * inside a `.theme-light` container override correctly even if some
+ * ancestor was forced to dark. */
 :root[data-theme="light"],
 .theme-light {
   --color-background: #FFFFFF;
@@ -259,7 +318,13 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--color-muted, #B8B4AC); }
 
 @layer components {
-  /* ═══════════ CARDS ═══════════ */
+  /* ═══════════ CARDS ═══════════
+   * Apr 28: less flat. Default cards now layer 4 shadows for real
+   * z-depth (top highlight, ambient occlusion, mid drop, far drop) +
+   * a 1px inner highlight on the top edge that reads as a beveled
+   * surface. Hover lifts 2px with a wider, softer shadow + an indigo
+   * accent ring. Gives every card the "sitting on the page" feel
+   * instead of the "painted on" flat look. */
   .card {
     @apply rounded-2xl p-5;
     position: relative;
@@ -267,20 +332,25 @@ body {
     background: var(--color-surface, #FFFFFF);
     border: 1px solid var(--color-border, #E8E5E0);
     box-shadow:
-      0 1px 0 rgba(255,255,255,0.02) inset,
-      0 1px 3px rgba(0,0,0,0.08),
-      0 2px 8px -2px rgba(0,0,0,0.25);
-    transition: box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-                border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      0 1px 0 0 rgba(255,255,255,0.04) inset,
+      0 -1px 0 0 rgba(0,0,0,0.04) inset,
+      0 1px 2px rgba(0,0,0,0.04),
+      0 4px 12px -4px rgba(0,0,0,0.10),
+      0 14px 32px -12px rgba(0,0,0,0.18);
+    transition: box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .card:hover {
     box-shadow:
-      0 1px 0 rgba(255,255,255,0.04) inset,
-      0 6px 20px -6px rgba(0,0,0,0.5),
-      0 0 0 1px rgba(201, 168, 76, 0.06);
-    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 55%, var(--color-accent, #C9A84C));
-    transform: translateY(-1px);
+      0 1px 0 0 rgba(255,255,255,0.06) inset,
+      0 -1px 0 0 rgba(0,0,0,0.06) inset,
+      0 2px 4px rgba(0,0,0,0.05),
+      0 8px 22px -6px rgba(0,0,0,0.16),
+      0 24px 48px -16px rgba(79,70,229,0.12),
+      0 0 0 1px rgba(var(--color-accent-rgb, 79 70 229) / 0.10);
+    border-color: color-mix(in srgb, var(--color-border, #E4E4E7) 50%, var(--color-accent, #4F46E5));
+    transform: translateY(-2px);
   }
 
   .card-hover {
@@ -288,11 +358,14 @@ body {
   }
   .card-hover:hover {
     box-shadow:
-      0 1px 0 rgba(255,255,255,0.05) inset,
-      0 10px 30px -8px rgba(0,0,0,0.55),
-      0 0 0 1px rgba(201, 168, 76, 0.1);
-    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 35%, var(--color-accent, #C9A84C));
-    transform: translateY(-2px);
+      0 1px 0 0 rgba(255,255,255,0.08) inset,
+      0 -1px 0 0 rgba(0,0,0,0.08) inset,
+      0 2px 6px rgba(0,0,0,0.06),
+      0 12px 28px -6px rgba(0,0,0,0.20),
+      0 32px 64px -20px rgba(79,70,229,0.18),
+      0 0 0 1px rgba(var(--color-accent-rgb, 79 70 229) / 0.16);
+    border-color: color-mix(in srgb, var(--color-border, #E4E4E7) 35%, var(--color-accent, #4F46E5));
+    transform: translateY(-3px) scale(1.005);
   }
 
   .card-gradient {
@@ -1215,26 +1288,9 @@ body {
   --color-muted-rgb: 107 114 128;
 }
 
-/* ═══════════ DARK MODE (data-attribute driven) ═══════════
- * Pure-leaning black + indigo accent — Apr 28 monochrome direction.
- * ThemeProvider can still inject runtime overrides on top of these. */
-[data-theme="dark"] {
-  --color-background: #070708;
-  --color-surface: #101012;
-  --color-surface-light: #17171A;
-  --color-border: #26262B;
-  --color-accent: #5E5BFF;
-  --color-text: #F5F5F7;
-  --color-muted: #A8A8B2;
-  --color-foreground: #F5F5F7;
-  --color-background-rgb: 7 7 8;
-  --color-surface-rgb: 16 16 18;
-  --color-surface-light-rgb: 23 23 26;
-  --color-border-rgb: 38 38 43;
-  --color-accent-rgb: 94 91 255;
-  --color-text-rgb: 245 245 247;
-  --color-muted-rgb: 168 168 178;
-}
+/* Dark theme overrides moved up next to the light defaults
+ * (see :root[data-theme="dark"] near the top of this file).
+ * This stub stays so search results pointing here still resolve. */
 
 /* ═══════════ PREMIUM ANIMATION POLISH ═══════════
    Utility classes for subtle, classy interactions across the app.

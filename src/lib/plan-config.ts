@@ -185,6 +185,18 @@ export function isAtClientLimit(tier: string | null | undefined, currentCount: n
   return currentCount >= limit;
 }
 
+/** Get the team-member seat limit for a plan. -1 = unlimited. */
+export function getTeamMemberLimit(tier: string | null | undefined): number {
+  return getPlanConfig(tier).team_members;
+}
+
+/** True when the agency has hit / exceeded their team-member seat cap. */
+export function isAtTeamMemberLimit(tier: string | null | undefined, currentCount: number): boolean {
+  const limit = getTeamMemberLimit(tier);
+  if (limit === -1) return false; // unlimited
+  return currentCount >= limit;
+}
+
 /** Get the max reference file size in bytes for the video editor */
 export function getMaxReferenceFile(tier: string | null | undefined): number {
   return getPlanConfig(tier).max_reference_file;

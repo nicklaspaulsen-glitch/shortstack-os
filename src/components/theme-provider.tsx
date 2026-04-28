@@ -59,11 +59,14 @@ const STORAGE_KEY = "ss-theme";
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Resolve initial theme: explicit user choice → system preference → dark.
+    // Resolve initial theme: explicit user choice → system preference → light.
+    // Apr 28 — default flipped to LIGHT per user request. Dark stays one
+    // click away via the ThemeToggle in the topbar; only users who explicitly
+    // pick (or whose OS asks for) dark see it.
     const saved = (localStorage.getItem(STORAGE_KEY) as ThemeId | null);
-    const systemPrefersLight =
-      typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: light)").matches;
-    const initial: ThemeId = saved ?? (systemPrefersLight ? "light" : "dark");
+    const systemPrefersDark =
+      typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initial: ThemeId = saved ?? (systemPrefersDark ? "dark" : "light");
     applyTheme(initial);
 
     // Apply saved zoom + reduced-motion if previously set.

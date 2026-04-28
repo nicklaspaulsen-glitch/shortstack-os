@@ -112,17 +112,12 @@ const navItems: NavItem[] = [
   { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={16} />, roles: ["admin"] },
   { label: "Reports", href: "/dashboard/reports", icon: <FileText size={16} />, roles: ["admin"] },
 
-  // ── Workspace (team collaboration: shared boards, whiteboard, files) ──
-  // All Workspace items must share section + sub strings so the renderer
-  // groups them under ONE header (otherwise each new section: "Workspace"
-  // entry creates a duplicate "WORKSPACE" group block).
-  // Only the FIRST item carries `section`; the renderer starts a new group
-  // on every `section` flag, so subsequent siblings just keep `sub`.
-  { label: "Board", href: "/dashboard/workspace/board", icon: <Kanban size={16} />, roles: ["admin", "team_member"], section: "Workspace", sub: "Team" },
-  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <LayoutGrid size={16} />, roles: ["admin", "team_member"], sub: "Team" },
-  { label: "Files", href: "/dashboard/workspace/files", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"], sub: "Team" },
-
   // ── Sales (full revenue pipeline) ──
+  // Workspace section moved to the BOTTOM (search for `section: "Workspace"`
+  // — Apr 28: kept it out of the top so the Sales/Create/Manage business
+  // sections come first, since those are the daily-use surfaces. Workspace
+  // (team collab — Board/Whiteboard/Files) is internal team tooling, less
+  // frequently used than client-facing flows.
   { label: "Outreach", href: "/dashboard/outreach-hub", icon: <Send size={16} />, roles: ["admin"], section: "Sales", sub: "Leads & Outreach" },
   { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },
   { label: "AI Caller", href: "/dashboard/eleven-agents", icon: <Phone size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
@@ -242,6 +237,15 @@ const navItems: NavItem[] = [
   { label: "System Status", href: "/dashboard/system-status", icon: <ShieldCheck size={16} />, roles: ["admin"] },
   { label: "Public Status", href: "/dashboard/admin/status", icon: <Activity size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
+
+  // ── Workspace (team collaboration — internal team tools) ──
+  // Sits AFTER the business sections so daily-use surfaces come first.
+  // Only the FIRST item carries `section`; subsequent siblings keep `sub`
+  // so the renderer collects them under one header instead of starting a
+  // new group on each flag.
+  { label: "Board", href: "/dashboard/workspace/board", icon: <Kanban size={16} />, roles: ["admin", "team_member"], section: "Workspace", sub: "Team" },
+  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <LayoutGrid size={16} />, roles: ["admin", "team_member"], sub: "Team" },
+  { label: "Files", href: "/dashboard/workspace/files", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"], sub: "Team" },
 
   // ── Client Portal ──
   { label: "Overview", href: "/dashboard/portal", icon: <LayoutDashboard size={16} />, roles: ["client"] },
