@@ -124,41 +124,42 @@ export default function PageHero3D({
   const reduce = usePrefersReducedMotion();
   const shouldAnimate = animate && !reduce;
 
+  // Apr 28 v10: dropped the constant 12s Y-spin. The Fluent emojis are
+  // flat 2D rasters of 3D renders — they don't have a real back face,
+  // so spinning them around Y showed mirrored ugly profiles. The spin
+  // also made them feel "boxed in" rather than tactile.
+  //
+  // New behavior:
+  //   • Idle: static, slight forward tilt (rotateX ~6°) so they read
+  //     as 3D objects sitting on a surface, not flat stickers.
+  //   • Hover: subtle lift + 5° tilt — clearly responsive but tiny.
+  //   • Theme-aware drop-shadow: teal-tinted in dark mode, neutral in
+  //     light mode, so the icon feels cohesive with the rest of the
+  //     surface instead of a colorful sticker out of place.
   return (
     <span
       className={`hero-3d-icon inline-flex items-center justify-center ${className}`}
       style={{
         width: px,
         height: px,
-        perspective: `${px * 6}px`,
       }}
       aria-hidden="true"
     >
-      <span
-        className={shouldAnimate ? "hero-3d-icon-spin" : ""}
+      <Image
+        src={`/icons/3d/${theme}.png`}
+        alt=""
+        width={px}
+        height={px}
+        unoptimized
+        priority={false}
+        className={shouldAnimate ? "hero-3d-icon-img" : ""}
         style={{
+          display: "block",
           width: "100%",
           height: "100%",
-          transformStyle: "preserve-3d",
-          willChange: shouldAnimate ? "transform" : undefined,
+          objectFit: "contain",
         }}
-      >
-        <Image
-          src={`/icons/3d/${theme}.png`}
-          alt=""
-          width={px}
-          height={px}
-          unoptimized
-          priority={false}
-          style={{
-            display: "block",
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            filter: "drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25)) drop-shadow(0 4px 8px rgba(13, 148, 136, 0.18))",
-          }}
-        />
-      </span>
+      />
     </span>
   );
 }

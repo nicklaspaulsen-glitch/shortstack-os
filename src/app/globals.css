@@ -1216,28 +1216,54 @@ body {
   animation: mandalaSpin 9.5s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 
-/* Apr 28 v8 — page-hero 3D icon idle motion. The Fluent emoji PNGs
- * already read as 3D thanks to their PBR-rendered source. The spin
- * keeps them feeling "alive" without being distracting:
- *   - Slow Y rotation, full 360° loop every 12s.
- *   - Subtle X tilt on top so the icon isn't perfectly flat to camera.
- *   - Pause on hover so the user can read details if they're curious.
+/* Apr 28 v10 — page-hero 3D icon styling.
+ *
+ * Killed the v8 360° Y spin: the Fluent emojis are flat raster 3D
+ * renders, not actual 3D meshes, so rotating them around Y showed
+ * mirrored ugly back faces. The spin also made them feel like
+ * decoration "boxed in" instead of tactile objects.
+ *
+ * New treatment:
+ *   • Idle: static, with a subtle forward tilt (rotateX 6°) + a soft
+ *     drop shadow so the icon reads as a 3D object sitting on a
+ *     virtual surface, not a flat sticker.
+ *   • Hover: tiny 5° tilt response + scale-up by 5%. Smooth enough
+ *     that it feels responsive without being noisy.
+ *   • Theme tinting via drop-shadow filter chains: teal-leaning in
+ *     dark mode (cohesive with the brand glow), neutral-warm in
+ *     light mode (so the icon doesn't overpower a white surface).
+ *
+ * The .hero-3d-icon-img class is applied only when motion is allowed
+ * (prefers-reduced-motion: no-preference), so reduced-motion users
+ * see the icon perfectly static with no transform.
  */
-.hero-3d-icon-spin {
-  animation: hero3dIconSpin 12s linear infinite;
+.hero-3d-icon-img {
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: rotateX(6deg);
+  /* Default (dark theme) — teal-tinted shadow grounding */
+  filter:
+    drop-shadow(0 6px 12px rgba(0, 0, 0, 0.40))
+    drop-shadow(0 2px 6px rgba(45, 212, 191, 0.30));
 }
-.hero-3d-icon:hover .hero-3d-icon-spin {
-  animation-play-state: paused;
+[data-theme="light"] .hero-3d-icon-img {
+  /* Light theme — soft neutral shadow + lighter teal accent so the
+   * colorful PNG doesn't overwhelm the bright surface. */
+  filter:
+    drop-shadow(0 6px 14px rgba(15, 23, 42, 0.18))
+    drop-shadow(0 2px 6px rgba(13, 148, 136, 0.22));
 }
-@keyframes hero3dIconSpin {
-  0%   { transform: rotateY(0deg)   rotateX(8deg); }
-  50%  { transform: rotateY(180deg) rotateX(-6deg); }
-  100% { transform: rotateY(360deg) rotateX(8deg); }
+.hero-3d-icon:hover .hero-3d-icon-img {
+  transform: rotateX(0deg) translateY(-2px) scale(1.05);
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-3d-icon-spin {
-    animation: none;
-    transform: rotateY(0deg) rotateX(0deg);
+  .hero-3d-icon-img {
+    transform: none;
+    transition: none;
+  }
+  .hero-3d-icon:hover .hero-3d-icon-img {
+    transform: none;
   }
 }
 @keyframes mandalaSpin {
