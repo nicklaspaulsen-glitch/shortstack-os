@@ -5,6 +5,7 @@ import { type Stripe } from "stripe";
 import { getStripe } from "@/lib/stripe/client";
 import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
 import { reportError } from "@/lib/observability/error-reporter";
+import { notifyOps } from "@/lib/telegram";
 
 // Unified Stripe Webhook — handles client billing events
 // Register this at: https://dashboard.stripe.com/webhooks
@@ -97,18 +98,9 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        const chatId = process.env.TELEGRAM_CHAT_ID;
-        const botToken = process.env.TELEGRAM_BOT_TOKEN;
-        if (chatId && botToken) {
-          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text: `💰 Agency Renewal!\n\n${agencyOwner.full_name || agencyOwner.email}: $${((invoice.amount_paid || 0) / 100).toFixed(2)}\nPlan: ${agencyOwner.plan_tier}`,
-            }),
-          }).catch(() => {});
-        }
+        await notifyOps(
+          `💰 Agency Renewal!\n\n${agencyOwner.full_name || agencyOwner.email}: $${((invoice.amount_paid || 0) / 100).toFixed(2)}\nPlan: ${agencyOwner.plan_tier}`,
+        );
         // Don't break — also check clients table in case they manage client billing too
       }
 
@@ -165,19 +157,9 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        // Notify on Telegram
-        const chatId = process.env.TELEGRAM_CHAT_ID;
-        const botToken = process.env.TELEGRAM_BOT_TOKEN;
-        if (chatId && botToken) {
-          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text: `💰 Payment Received!\n\n${client.business_name}: $${((invoice.amount_paid || 0) / 100).toFixed(2)}\nInvoice: ${invoice.number || invoice.id}`,
-            }),
-          }).catch(() => {});
-        }
+        await notifyOps(
+          `💰 Payment Received!\n\n${client.business_name}: $${((invoice.amount_paid || 0) / 100).toFixed(2)}\nInvoice: ${invoice.number || invoice.id}`,
+        );
       }
       break;
     }
@@ -203,18 +185,9 @@ export async function POST(request: NextRequest) {
           result: { type: "agency_payment_failed", stripe_invoice_id: invoice.id },
         });
 
-        const chatId = process.env.TELEGRAM_CHAT_ID;
-        const botToken = process.env.TELEGRAM_BOT_TOKEN;
-        if (chatId && botToken) {
-          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text: `🚨 Agency Payment Failed!\n\n${failedAgency.full_name || failedAgency.email}\nPlan: ${failedAgency.plan_tier}\nAmount: $${((invoice.amount_due || 0) / 100).toFixed(2)}\nACTION NEEDED`,
-            }),
-          }).catch(() => {});
-        }
+        await notifyOps(
+          `🚨 Agency Payment Failed!\n\n${failedAgency.full_name || failedAgency.email}\nPlan: ${failedAgency.plan_tier}\nAmount: $${((invoice.amount_due || 0) / 100).toFixed(2)}\nACTION NEEDED`,
+        );
 
         // Send payment failed email to the agency owner
         if (failedAgency.email) {
@@ -271,18 +244,9 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        const chatId = process.env.TELEGRAM_CHAT_ID;
-        const botToken = process.env.TELEGRAM_BOT_TOKEN;
-        if (chatId && botToken) {
-          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text: `⚠️ Payment Failed!\n\n${client.business_name}: $${((invoice.amount_due || 0) / 100).toFixed(2)}\nFollow up ASAP.`,
-            }),
-          }).catch(() => {});
-        }
+        await notifyOps(
+          `⚠️ Payment Failed!\n\n${client.business_name}: $${((invoice.amount_due || 0) / 100).toFixed(2)}\nFollow up ASAP.`,
+        );
       }
       break;
     }
@@ -372,18 +336,9 @@ export async function POST(request: NextRequest) {
           result: { type: "agency_subscription_cancelled", user_id: agencyProfile.id, stripe_sub_id: sub.id },
         });
 
-        const chatId = process.env.TELEGRAM_CHAT_ID;
-        const botToken = process.env.TELEGRAM_BOT_TOKEN;
-        if (chatId && botToken) {
-          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text: `🚨 Agency Subscription Cancelled!\n\n${agencyProfile.full_name || "Unknown"} (${agencyProfile.email || ""})\nSub: ${sub.id}\nTrigger retention!`,
-            }),
-          }).catch(() => {});
-        }
+        await notifyOps(
+          `🚨 Agency Subscription Cancelled!\n\n${agencyProfile.full_name || "Unknown"} (${agencyProfile.email || ""})\nSub: ${sub.id}\nTrigger retention!`,
+        );
         break;
       }
 

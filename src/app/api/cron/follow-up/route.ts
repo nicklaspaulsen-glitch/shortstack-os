@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       const settings = settingsRow.metadata as Record<string, Record<string, unknown>>;
       messageStyle = (settings.outreach?.message_style as string) || "friendly";
     }
-  } catch {}
+  } catch (err) { console.warn("[cron/follow-up] send failed:", err instanceof Error ? err.message : String(err)); }
 
   // ═══════════════════════════════════════
   // 2ND TOUCH — 3 days after first outreach
@@ -102,12 +102,12 @@ export async function GET(request: NextRequest) {
         try {
           const sent = await sendEmail({ to: lead.recipient_handle, subject, html: emailBody });
           if (sent) followUpsSent++;
-        } catch {}
+        } catch (err) { console.warn("[cron/follow-up] send failed:", err instanceof Error ? err.message : String(err)); }
       } else if (lead.platform === "sms" && lead.recipient_handle) {
         try {
           const sent = await sendSms(lead.recipient_handle, smsBody);
           if (sent) followUpsSent++;
-        } catch {}
+        } catch (err) { console.warn("[cron/follow-up] send failed:", err instanceof Error ? err.message : String(err)); }
       }
 
       // Log the follow-up
@@ -167,12 +167,12 @@ export async function GET(request: NextRequest) {
         try {
           const sent = await sendEmail({ to: lead.recipient_handle, subject, html: emailBody });
           if (sent) finalTouchSent++;
-        } catch {}
+        } catch (err) { console.warn("[cron/follow-up] send failed:", err instanceof Error ? err.message : String(err)); }
       } else if (lead.platform === "sms") {
         try {
           const sent = await sendSms(lead.recipient_handle, smsBody);
           if (sent) finalTouchSent++;
-        } catch {}
+        } catch (err) { console.warn("[cron/follow-up] send failed:", err instanceof Error ? err.message : String(err)); }
       }
 
       await supabase.from("outreach_log").insert({
@@ -200,7 +200,7 @@ export async function GET(request: NextRequest) {
           `Leads that don't reply after 3 touches get marked as no-response.`
         );
       }
-    } catch {}
+    } catch (err) { console.warn("[cron/follow-up] send failed:", err instanceof Error ? err.message : String(err)); }
   }
 
   return NextResponse.json({

@@ -216,22 +216,30 @@ export async function PATCH(request: NextRequest) {
       triggerType: "appointment_completed",
       payload: triggerPayload,
     }).catch((err) => console.error("[scheduling/bookings] fireTrigger failed:", err));
-    // Path 2: durable queue
-    service
-      .from("trigger_events")
-      .insert({
-        user_id: user.id,
-        trigger_type: "appointment_completed",
-        source_table: "bookings",
-        source_id: booking.id,
-        payload: triggerPayload,
-        status: "pending",
-      })
-      .then(({ error: queueErr }) => {
+    // Path 2: durable queue. Apr 28: wrapped in an IIFE try/catch so
+    // unhandled rejections (network drop, RLS violation, db kill) get
+    // logged. Previously the chain was a fire-and-forget thenable —
+    // rejected inserts silently dropped and the route returned success,
+    // leading to "missing trigger event" mysteries downstream.
+    void (async () => {
+      try {
+        const { error: queueErr } = await service
+          .from("trigger_events")
+          .insert({
+            user_id: user.id,
+            trigger_type: "appointment_completed",
+            source_table: "bookings",
+            source_id: booking.id,
+            payload: triggerPayload,
+            status: "pending",
+          });
         if (queueErr) {
           console.error("[scheduling/bookings] trigger_events queue insert failed:", queueErr.message);
         }
-      });
+      } catch (err) {
+        console.error("[scheduling/bookings] trigger_events insert threw:", err instanceof Error ? err.message : String(err));
+      }
+    })();
   }
 
   return NextResponse.json({ booking: data });

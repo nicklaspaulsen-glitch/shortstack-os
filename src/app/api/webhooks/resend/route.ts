@@ -76,10 +76,19 @@ function verifySvixSignature(
     .update(toSign)
     .digest("base64");
   // Header can contain multiple signatures separated by spaces:
-  // "v1,<sig1> v1,<sig2>"
+  // "v1,<sig1> v1,<sig2>". Apr 28: explicitly check the version prefix
+  // is "v1" so a future Svix v2 rotation doesn't silently slip through
+  // (the old code split on ',' and discarded the version, which would
+  // accept whatever came before the comma as if it were v1). When Svix
+  // rotates to v2, this raises a clear ops error instead of pretending
+  // to verify wrong-version sigs.
   const parts = svixSignatureHeader.split(" ");
   for (const part of parts) {
-    const [, sig] = part.split(",");
+    const [version, sig] = part.split(",");
+    if (version !== "v1") {
+      console.warn("[webhooks/resend] unsupported signature version:", version);
+      continue;
+    }
     if (sig && timingSafeEqual(sig, expected)) return true;
   }
   return false;

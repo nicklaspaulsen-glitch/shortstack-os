@@ -869,6 +869,22 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
         toast.success(`Upscaled ${scale}x`);
       } else if (data.job_id) {
         toast.success("Processing...");
+      } else if (res.status === 501 || data?.error === "setup_required") {
+        toast(
+          (t) => (
+            <span>
+              Upscaler isn&apos;t configured.{" "}
+              <a
+                href="/dashboard/integrations"
+                className="underline font-medium"
+                onClick={() => toast.dismiss(t.id)}
+              >
+                Set it up
+              </a>
+            </span>
+          ),
+          { icon: "🔧", duration: 8000 }
+        );
       } else {
         toast.error(data.error || "Failed");
       }
@@ -963,6 +979,22 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
         const img = data.image.startsWith("data:") ? data.image : `data:image/png;base64,${data.image}`;
         setResult(img);
         toast.success("Background removed");
+      } else if (res.status === 501 || data?.error === "setup_required") {
+        toast(
+          (t) => (
+            <span>
+              Background remover isn&apos;t configured.{" "}
+              <a
+                href="/dashboard/integrations"
+                className="underline font-medium"
+                onClick={() => toast.dismiss(t.id)}
+              >
+                Set it up
+              </a>
+            </span>
+          ),
+          { icon: "🔧", duration: 8000 }
+        );
       } else {
         toast.error(data.error || "Failed");
       }

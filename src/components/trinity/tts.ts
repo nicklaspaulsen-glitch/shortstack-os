@@ -54,7 +54,8 @@ function speakViaBrowser(text: string, onStart: () => void, onEnd: () => void) {
     }
   }
 
-  console.log(`[trinity/tts] browser fallback voice: ${pickedName || "(default)"}`);
+  // CLAUDE.md: prefer console.warn over console.log for ops-visible messages.
+  console.warn(`[trinity/tts] browser fallback voice: ${pickedName || "(default)"}`);
 
   utter.rate = 1.0;
   utter.pitch = 1.0;

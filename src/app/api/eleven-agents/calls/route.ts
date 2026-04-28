@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-const API_KEY = process.env.ELEVENLABS_API_KEY ?? "";
+// Apr 28: env reads moved into the handler per CLAUDE.md ban on
+// module-level env reads.
 const BASE = "https://api.elevenlabs.io/v1";
 
 // GET /api/eleven-agents/calls  — list recent conversations (authed — can include transcripts)
@@ -10,7 +11,8 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!API_KEY) {
+  const apiKey = process.env.ELEVENLABS_API_KEY ?? "";
+  if (!apiKey) {
     return NextResponse.json(
       { conversations: [], message: "ELEVENLABS_API_KEY is not configured" },
       { status: 200 },
@@ -20,7 +22,7 @@ export async function GET() {
   try {
     const res = await fetch(`${BASE}/convai/conversations`, {
       headers: {
-        "xi-api-key": API_KEY,
+        "xi-api-key": apiKey,
         "Content-Type": "application/json",
       },
       cache: "no-store",

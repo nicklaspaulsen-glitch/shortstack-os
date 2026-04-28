@@ -1,12 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-const API_KEY = process.env.ELEVENLABS_API_KEY ?? "";
+// Apr 28: env reads moved inside getApiKey() per CLAUDE.md (no
+// module-level env reads — same pattern that bricked Stripe builds).
+// `headers()` accepts the resolved key as a param so callers stay
+// pure functions of the env at request time.
 const BASE = "https://api.elevenlabs.io/v1";
 
-function headers() {
+function getApiKey(): string {
+  return process.env.ELEVENLABS_API_KEY ?? "";
+}
+
+function headers(apiKey: string) {
   return {
-    "xi-api-key": API_KEY,
+    "xi-api-key": apiKey,
     "Content-Type": "application/json",
   };
 }
@@ -23,7 +30,8 @@ export async function GET() {
   const auth = await requireAuth();
   if ("error" in auth && auth.error) return auth.error;
 
-  if (!API_KEY) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
     return NextResponse.json(
       { agents: [], message: "ELEVENLABS_API_KEY is not configured" },
       { status: 200 },
@@ -32,7 +40,7 @@ export async function GET() {
 
   try {
     const res = await fetch(`${BASE}/convai/agents`, {
-      headers: headers(),
+      headers: headers(apiKey),
       cache: "no-store",
     });
 
@@ -60,10 +68,12 @@ export async function POST(req: NextRequest) {
   const auth = await requireAuth();
   if ("error" in auth && auth.error) return auth.error;
 
-  if (!API_KEY) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    // Apr 28: was 200 — destructive endpoints should fail-closed 503.
     return NextResponse.json(
       { error: "ELEVENLABS_API_KEY is not configured" },
-      { status: 200 },
+      { status: 503 },
     );
   }
 
@@ -79,7 +89,7 @@ export async function POST(req: NextRequest) {
       }
       const res = await fetch(`${BASE}/convai/agents/${agentId}`, {
         method: "DELETE",
-        headers: headers(),
+        headers: headers(apiKey),
       });
       if (!res.ok) {
         const text = await res.text();
@@ -123,7 +133,7 @@ export async function POST(req: NextRequest) {
 
     const res = await fetch(`${BASE}/convai/agents/create`, {
       method: "POST",
-      headers: headers(),
+      headers: headers(apiKey),
       body: JSON.stringify(payload),
     });
 
