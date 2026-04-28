@@ -83,10 +83,10 @@ export default function TrinityOrbVisual({
         style={{
           background:
             state === "listening"
-              ? "radial-gradient(circle at 50% 50%, rgba(200,168,85,0.55), rgba(139,92,246,0.25) 45%, transparent 72%)"
+              ? "radial-gradient(circle at 50% 50%, rgba(45,212,191,0.65), rgba(94,234,212,0.30) 45%, transparent 72%)"
               : state === "thinking"
-              ? "radial-gradient(circle at 50% 50%, rgba(200,168,85,0.50), rgba(59,130,246,0.20) 50%, transparent 75%)"
-              : "radial-gradient(circle at 50% 50%, rgba(200,168,85,0.40), rgba(200,168,85,0.10) 50%, transparent 70%)",
+              ? "radial-gradient(circle at 50% 50%, rgba(45,212,191,0.55), rgba(13,148,136,0.25) 50%, transparent 75%)"
+              : "radial-gradient(circle at 50% 50%, rgba(20,184,166,0.42), rgba(20,184,166,0.10) 50%, transparent 70%)",
           animation: reduced ? undefined : `trinity-breath ${breathSpeed} ease-in-out infinite`,
         }}
         aria-hidden
@@ -96,7 +96,7 @@ export default function TrinityOrbVisual({
         className="absolute inset-[-4%] rounded-full opacity-70 pointer-events-none"
         style={{
           background:
-            "conic-gradient(from 0deg, rgba(200,168,85,0) 0%, rgba(200,168,85,0.55) 22%, rgba(139,92,246,0.40) 50%, rgba(59,130,246,0.35) 78%, rgba(200,168,85,0) 100%)",
+            "conic-gradient(from 0deg, rgba(45,212,191,0) 0%, rgba(45,212,191,0.60) 22%, rgba(94,234,212,0.45) 50%, rgba(204,251,241,0.35) 78%, rgba(45,212,191,0) 100%)",
           filter: "blur(5px)",
           animation: reduced ? undefined : `trinity-spin ${ringSpeed} linear infinite`,
         }}
@@ -109,7 +109,7 @@ export default function TrinityOrbVisual({
           aria-hidden
           className="absolute inset-0 rounded-full pointer-events-none"
           style={{
-            border: "1px solid rgba(200,168,85,0.55)",
+            border: "1px solid rgba(45,212,191,0.60)",
             animation: reduced
               ? undefined
               : `trinity-voicering 1.6s ease-out ${i * 0.5}s infinite`,
@@ -135,30 +135,34 @@ export default function TrinityOrbVisual({
           aria-hidden
         >
           <defs>
+            {/* Apr 28 v9: gold gradients (#fff1c2 / #e8c870 / #c8a855) replaced
+                with teal chromatic palette to match the v4 brand. The lit-side
+                facets use a holographic gradient (mint → teal → cyan) so the
+                head reads as iridescent crystal, not gold metal. */}
             <linearGradient id="trinity-facet-light" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#fff1c2" />
-              <stop offset="55%" stopColor="#e8c870" />
-              <stop offset="100%" stopColor="#c8a855" />
+              <stop offset="0%" stopColor="#CFFAFE" />
+              <stop offset="40%" stopColor="#5EEAD4" />
+              <stop offset="100%" stopColor="#14B8A6" />
             </linearGradient>
             <linearGradient id="trinity-facet-mid" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#d8b766" />
-              <stop offset="55%" stopColor="#c8a855" />
-              <stop offset="100%" stopColor="#8a7032" />
+              <stop offset="0%" stopColor="#2DD4BF" />
+              <stop offset="55%" stopColor="#0D9488" />
+              <stop offset="100%" stopColor="#0F766E" />
             </linearGradient>
             <linearGradient id="trinity-facet-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#8a7032" />
-              <stop offset="55%" stopColor="#5a4720" />
-              <stop offset="100%" stopColor="#241b08" />
+              <stop offset="0%" stopColor="#0F766E" />
+              <stop offset="55%" stopColor="#115E59" />
+              <stop offset="100%" stopColor="#042F2E" />
             </linearGradient>
             <radialGradient id="trinity-eye" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-              <stop offset="40%" stopColor="#ffe9a8" stopOpacity={eyeIntensity} />
-              <stop offset="100%" stopColor="#c8a855" stopOpacity="0" />
+              <stop offset="40%" stopColor="#CCFBF1" stopOpacity={eyeIntensity} />
+              <stop offset="100%" stopColor="#14B8A6" stopOpacity="0" />
             </radialGradient>
             <linearGradient id="trinity-scan" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="rgba(255,247,210,0)" />
-              <stop offset="50%" stopColor="rgba(255,247,210,0.7)" />
-              <stop offset="100%" stopColor="rgba(255,247,210,0)" />
+              <stop offset="0%" stopColor="rgba(204,251,241,0)" />
+              <stop offset="50%" stopColor="rgba(94,234,212,0.85)" />
+              <stop offset="100%" stopColor="rgba(204,251,241,0)" />
             </linearGradient>
           </defs>
 
@@ -191,7 +195,7 @@ export default function TrinityOrbVisual({
 
             <g
               fill="none"
-              stroke="rgba(255,235,180,0.18)"
+              stroke="rgba(204,251,241,0.22)"
               strokeWidth="0.4"
               strokeLinejoin="round"
             >
@@ -222,7 +226,7 @@ export default function TrinityOrbVisual({
                 cx="42"
                 cy="46"
                 r="1.6"
-                fill="#fff7d8"
+                fill="#CFFAFE"
                 style={{
                   animation: reduced
                     ? undefined
@@ -236,7 +240,7 @@ export default function TrinityOrbVisual({
                 cx="58"
                 cy="46"
                 r="1.6"
-                fill="#fff7d8"
+                fill="#CFFAFE"
                 style={{
                   animation: reduced
                     ? undefined
@@ -253,7 +257,7 @@ export default function TrinityOrbVisual({
               cy="22"
               rx="9"
               ry="2.4"
-              fill="rgba(255,247,210,0.45)"
+              fill="rgba(204,251,241,0.55)"
               transform="rotate(-15 44 22)"
             />
 

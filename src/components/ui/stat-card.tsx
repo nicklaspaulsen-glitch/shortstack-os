@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useRef, useState, useCallback } from "react";
-import { tokens } from "@/lib/brand/tokens";
+import { tokens, themeTokens } from "@/lib/brand/tokens";
 
 /**
  * StatCard — number-display tile used across the dashboard.
@@ -172,13 +172,17 @@ export default function StatCard({
       ref={ref}
       onMouseMove={handleMouseMove}
       className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden rounded-2xl flex flex-col gap-1.5 transition-all duration-220 ease-out`}
+      // Apr 28 v9 fix: surface bg now uses themeTokens (CSS-var-backed)
+      // so the card flips white on light theme. Was hardcoded
+      // tokens.bg.surface1 (dark hex baked at import time, ignored
+      // theme switching).
       style={{
-        background: tokens.bg.surface1,
-        border: `1px solid ${tokens.border.subtle}`,
+        background: themeTokens.bg.surface1,
+        border: `1px solid var(--border-subtle, rgba(13,148,136,0.08))`,
         boxShadow: [
           "0 1px 0 rgba(255,255,255,0.04) inset",
-          "0 2px 4px rgba(0,0,0,0.45)",
-          "0 12px 28px -12px rgba(0,0,0,0.55)",
+          "0 2px 4px rgba(0,0,0,0.10)",
+          "0 12px 28px -12px rgba(0,0,0,0.18)",
           `0 0 24px -8px ${accent}22`,
         ].join(", "),
         opacity: visible ? 1 : 0,
@@ -188,22 +192,22 @@ export default function StatCard({
       data-premium={premium ? "true" : undefined}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-2px) rotate(0.4deg)";
-        e.currentTarget.style.borderColor = tokens.border.strong;
+        e.currentTarget.style.borderColor = "var(--border-strong, rgba(13,148,136,0.20))";
         e.currentTarget.style.boxShadow = [
           "0 1px 0 rgba(255,255,255,0.06) inset",
-          "0 4px 8px rgba(0,0,0,0.5)",
-          "0 18px 40px -12px rgba(0,0,0,0.6)",
+          "0 4px 8px rgba(0,0,0,0.12)",
+          "0 18px 40px -12px rgba(0,0,0,0.22)",
           `0 0 0 1px ${accent}33`,
           `0 0 32px -8px ${accent}55`,
         ].join(", ");
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "translateY(0) rotate(0deg)";
-        e.currentTarget.style.borderColor = tokens.border.subtle;
+        e.currentTarget.style.borderColor = "var(--border-subtle, rgba(13,148,136,0.08))";
         e.currentTarget.style.boxShadow = [
           "0 1px 0 rgba(255,255,255,0.04) inset",
-          "0 2px 4px rgba(0,0,0,0.45)",
-          "0 12px 28px -12px rgba(0,0,0,0.55)",
+          "0 2px 4px rgba(0,0,0,0.10)",
+          "0 12px 28px -12px rgba(0,0,0,0.18)",
           `0 0 24px -8px ${accent}22`,
         ].join(", ");
       }}
@@ -221,7 +225,7 @@ export default function StatCard({
         <div className="flex items-center justify-between mb-2">
           <span
             className="text-[10px] font-semibold uppercase tracking-[0.14em]"
-            style={{ color: tokens.text.muted }}
+            style={{ color: themeTokens.text.muted }}
           >
             {label}
           </span>
@@ -238,7 +242,7 @@ export default function StatCard({
         </div>
         <span
           className={`${SIZE_VALUE_CLASS[size]} tracking-[-0.025em] tabular-nums`}
-          style={{ color: tokens.text.primary }}
+          style={{ color: themeTokens.text.primary }}
         >
           {typeof value === "string" && value.startsWith("$")
             ? `$${animatedNum.toLocaleString()}`
