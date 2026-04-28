@@ -4,6 +4,7 @@ import {
   filterPayload,
   resolveSmartManageAction,
 } from "@/lib/smart-manage/actions";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // Smart Manage executor.
 //
@@ -34,18 +35,24 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: `Unknown action type: ${actionType}` }, { status: 400 });
   }
 
-  const service = createServiceClient();
+  // Apr 28 IDOR fix: previous ownership check was
+  //   `if (client.profile_id && client.profile_id !== user.id) → 403`
+  // which short-circuited when profile_id was null (legacy/orphaned
+  // clients) — so any authenticated user could execute Smart Manage
+  // actions against unowned clients. Also used raw user.id, so
+  // team_members couldn't operate on their parent agency's clients
+  // even when they should. Both fixed by switching to the canonical
+  // requireOwnedClient gate.
+  const ctx = await requireOwnedClient(supabase, user.id, clientId);
+  if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  // Confirm caller owns the client before executing anything on it.
+  const service = createServiceClient();
   const { data: client } = await service
     .from("clients")
-    .select("id, profile_id, business_name")
+    .select("id, business_name")
     .eq("id", clientId)
     .maybeSingle();
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
-  if (client.profile_id && client.profile_id !== user.id) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
 
   const payload = {
     ...filterPayload(def, rawPayload),

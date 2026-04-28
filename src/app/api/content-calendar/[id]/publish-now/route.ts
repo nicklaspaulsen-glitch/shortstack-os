@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { verifyClientAccess } from "@/lib/verify-client-access";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { publishCalendarRow, type CalendarRow } from "@/lib/content-publish";
 
 /**
@@ -24,17 +25,27 @@ export async function POST(
   // Fetch the row under the user's RLS
   const { data: row, error } = await authSupabase
     .from("content_calendar")
-    .select("id, client_id, title, platform, scheduled_at, status, notes, metadata")
+    .select("id, user_id, client_id, title, platform, scheduled_at, status, notes, metadata")
     .eq("id", rowId)
     .maybeSingle();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Ownership: if the row has a client_id, verify the caller has access.
+  // Apr 28 IDOR fix: ownership check previously short-circuited when
+  // `row.client_id` was null (agency-wide social posts that aren't
+  // tied to a specific client). Net effect: any authenticated user
+  // could publish other tenants' agency-wide content. Now the row's
+  // `user_id` is checked against the caller's effective owner as a
+  // fallback when client_id is null.
   if (row.client_id) {
     const access = await verifyClientAccess(authSupabase, user.id, row.client_id);
     if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  } else {
+    const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
+    if (!ownerId || row.user_id !== ownerId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
   }
 
   // Use service client so we can freely write posted/failed statuses and

@@ -77,7 +77,13 @@ export async function GET(request: NextRequest) {
     includeLogs
       ? supabase
           .from("trinity_log")
+          // Apr 28 IDOR fix: previously this returned the 50 most-recent
+          // trinity_log entries platform-wide because no .eq filter was
+          // applied. Every authenticated user got a cross-tenant feed of
+          // other agencies' agent activity (lead names, client names,
+          // action descriptions). Scoped to the caller's effective owner.
           .select("id, action_type, description, status, created_at")
+          .eq("user_id", ownerId)
           .order("created_at", { ascending: false })
           .limit(50)
       : Promise.resolve({ data: null, error: null }),

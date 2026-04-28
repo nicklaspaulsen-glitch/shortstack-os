@@ -113,6 +113,17 @@ export async function POST(request: NextRequest) {
         );
       }
       cloneId = fallback.id;
+    } else {
+      // Apr 28 IDOR fix: caller-supplied clone_id must belong to caller's agency.
+      const { data: ownsClone } = await supabase
+        .from("voice_clones")
+        .select("id")
+        .eq("id", cloneId)
+        .eq("agency_owner_id", ownerId)
+        .maybeSingle();
+      if (!ownsClone) {
+        return NextResponse.json({ error: "Voice clone not found or not yours" }, { status: 403 });
+      }
     }
     try {
       const result = await synthesize({

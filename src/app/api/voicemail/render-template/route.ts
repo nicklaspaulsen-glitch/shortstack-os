@@ -77,6 +77,21 @@ export async function POST(request: NextRequest) {
       );
     }
     cloneId = fallback.id;
+  } else {
+    // Apr 28 IDOR fix: caller-supplied `clone_id` must belong to the
+    // caller's agency. Without this check, an authenticated user could
+    // synthesize using another agency's voice clone (and the synthesis
+    // cache would attribute usage to that other agency).
+    const supabaseRls = createServerSupabase();
+    const { data: ownsClone } = await supabaseRls
+      .from("voice_clones")
+      .select("id")
+      .eq("id", cloneId)
+      .eq("agency_owner_id", ownerId)
+      .maybeSingle();
+    if (!ownsClone) {
+      return NextResponse.json({ error: "Voice clone not found or not yours" }, { status: 403 });
+    }
   }
 
   try {
