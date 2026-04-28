@@ -47,10 +47,43 @@ export default function Tab2AIUpload() {
   const [tone, setTone] = useState("professional");
   const [analyzing, setAnalyzing] = useState(false);
   const [scheduling, setScheduling] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [suggestions, setSuggestions] = useState<AutoUploadSuggestions | null>(null);
   const [edits, setEdits] = useState<Partial<Record<SocialPlatform, PlatformEdit>>>({});
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Audit Apr 26 M1: upload to R2 before storing the asset URL. blob:
+  // URLs only exist in the browser tab that created them, so the server
+  // routes (/auto-upload → Claude, /schedule → Zernio) couldn't fetch
+  // them and treated the post as having no media.
+  const uploadFile = useCallback(async (f: File) => {
+    const isVideo = f.type.startsWith("video/");
+    const isImage = f.type.startsWith("image/");
+    if (!isVideo && !isImage) {
+      toast.error("Drop an image, video, or text");
+      return;
+    }
+    setUploading(true);
+    setAsset(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", f);
+      const res = await fetch("/api/uploads/r2", { method: "POST", body: fd });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        toast.error(err.error ?? "Upload failed — try again.");
+        return;
+      }
+      const json = (await res.json()) as { url: string; kind: "image" | "video" };
+      setAsset({ kind: json.kind, url: json.url, name: f.name });
+    } catch (err) {
+      console.error("[social-studio/ai-upload] upload error", err);
+      toast.error("Network error during upload — try again.");
+    } finally {
+      setUploading(false);
+    }
+  }, []);
 
   const onDrop = useCallback(async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -64,31 +97,16 @@ export default function Tab2AIUpload() {
       }
       return;
     }
-    const f = files[0];
-    const isVideo = f.type.startsWith("video/");
-    const isImage = f.type.startsWith("image/");
-    if (!isVideo && !isImage) {
-      toast.error("Drop an image, video, or text");
-      return;
-    }
-    // For v1 we use a local object URL. Production wiring will upload to
-    // R2 via /api/uploads and pass the public URL to /auto-upload.
-    const url = URL.createObjectURL(f);
-    setAsset({ kind: isVideo ? "video" : "image", url, name: f.name });
-  }, []);
+    await uploadFile(files[0]);
+  }, [uploadFile]);
 
-  const handleFilePick = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilePick = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
-    const isVideo = f.type.startsWith("video/");
-    const isImage = f.type.startsWith("image/");
-    if (!isVideo && !isImage) {
-      toast.error("Pick an image or video");
-      return;
-    }
-    const url = URL.createObjectURL(f);
-    setAsset({ kind: isVideo ? "video" : "image", url, name: f.name });
-  }, []);
+    await uploadFile(f);
+    // Reset the input so picking the same file twice still fires onChange.
+    e.target.value = "";
+  }, [uploadFile]);
 
   const handleAnalyze = useCallback(async () => {
     setAnalyzing(true);
@@ -268,7 +286,13 @@ export default function Tab2AIUpload() {
               onChange={handleFilePick}
             />
           </div>
-          {asset && (
+          {uploading && (
+            <div className="text-xs text-muted inline-flex items-center gap-1.5">
+              <Loader2 size={12} className="animate-spin" />
+              Uploading to storage...
+            </div>
+          )}
+          {!uploading && asset && (
             <div className="text-xs text-muted">
               Loaded: <span className="text-foreground">{asset.kind === "text" ? "text snippet" : (asset as { name: string }).name}</span>
             </div>
@@ -308,7 +332,7 @@ export default function Tab2AIUpload() {
           <button
             type="button"
             onClick={handleAnalyze}
-            disabled={analyzing || (!asset && !textInput.trim())}
+            disabled={analyzing || uploading || (!asset && !textInput.trim())}
             className="px-4 py-1.5 rounded-md bg-gold/20 border border-gold/40 text-gold inline-flex items-center gap-2 text-xs font-medium hover:bg-gold/30 disabled:opacity-50"
           >
             {analyzing ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
