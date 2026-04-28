@@ -10,50 +10,65 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Bodoni+Moda:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* ═══════════ BRAND FOUNDATION TOKENS ═══════════
- * Authoritative source: src/lib/brand/tokens.ts. These vars drive the
- * OLED-dark editorial-bento direction. Old --color-* vars below remain
- * for back-compat with the existing 100+ pages. */
+ * Authoritative source: src/lib/brand/tokens.ts. ThemeProvider injects
+ * runtime overrides for the active theme — these :root values are just
+ * the SSR pre-paint defaults so the page doesn't flash before hydration.
+ *
+ * Apr 28: lime accent retired. Replaced with disciplined pure-monochrome
+ * (black/white) base + indigo accent (#5E5BFF) that works in both themes.
+ * Legacy --brand-lime-* aliases now resolve to the indigo accent so the
+ * 100+ pages still using `bg-gold/10` / `text-amber-*` keep working
+ * without a sweeping refactor. */
 :root {
-  /* Surfaces (warm-tinted OLED black) */
-  --bg-base: #0A0A0B;
-  --bg-surface-1: #15141A;
-  --bg-surface-2: #1F1E26;
-  --bg-surface-3: #2A2832;
-  --bg-base-rgb: 10 10 11;
-  --bg-surface-1-rgb: 21 20 26;
-  --bg-surface-2-rgb: 31 30 38;
-  --bg-surface-3-rgb: 42 40 50;
+  /* Surfaces — pure-leaning black for OLED contrast */
+  --bg-base: #070708;
+  --bg-surface-1: #101012;
+  --bg-surface-2: #17171A;
+  --bg-surface-3: #26262B;
+  --bg-base-rgb: 7 7 8;
+  --bg-surface-1-rgb: 16 16 18;
+  --bg-surface-2-rgb: 23 23 26;
+  --bg-surface-3-rgb: 38 38 43;
 
-  /* Borders — faint lime tint on every border for cohesion */
-  --border-subtle: rgba(184, 224, 0, 0.07);
-  --border-strong: rgba(184, 224, 0, 0.16);
+  /* Borders — neutral monochrome with faint indigo undertone for cohesion */
+  --border-subtle: rgba(94, 91, 255, 0.07);
+  --border-strong: rgba(94, 91, 255, 0.16);
 
   /* Text — softened off-white, deliberately not pure #FFFFFF */
-  --text-primary: #F5F4F1;
-  --text-secondary: #9F9DAA;
-  --text-muted: #6F6D7A;
-  --text-primary-rgb: 245 244 241;
-  --text-secondary-rgb: 159 157 170;
-  --text-muted-rgb: 111 109 122;
+  --text-primary: #F5F5F7;
+  --text-secondary: #A8A8B2;
+  --text-muted: #6F6F7A;
+  --text-primary-rgb: 245 245 247;
+  --text-secondary-rgb: 168 168 178;
+  --text-muted-rgb: 111 111 122;
 
-  /* Brand — LIME, deliberately not gold. Slightly softer than the original
-     full-saturation neon (#D4FF00) so the brand stays distinctive without
-     going acid against OLED dark surfaces. */
-  --brand-lime: #B8E000;
-  --brand-lime-soft: #D4FF33;
-  --brand-lime-dim: #6F8A00;
-  --brand-lime-glow: rgba(184, 224, 0, 0.4);
-  --brand-lime-rgb: 184 224 0;
-  --brand-lime-soft-rgb: 212 255 51;
-  --brand-lime-dim-rgb: 111 138 0;
+  /* Brand accent — INDIGO. One accent that works on both pure black + pure
+     white themes. Replaces the lime that previously lived here. */
+  --brand-accent: #5E5BFF;
+  --brand-accent-soft: #7B79FF;
+  --brand-accent-dim: #3D3CB3;
+  --brand-accent-glow: rgba(94, 91, 255, 0.4);
+  --brand-accent-rgb: 94 91 255;
+  --brand-accent-soft-rgb: 123 121 255;
+  --brand-accent-dim-rgb: 61 60 179;
 
-  /* Editorial complement — deep plum (replaces generic Tailwind purple) */
-  --brand-plum: #3F0D2D;
-  --brand-plum-hover: #5A1B41;
-  --brand-plum-rgb: 63 13 45;
-  --brand-plum-hover-rgb: 90 27 65;
+  /* Legacy lime aliases — kept so existing pages work but redirected to
+     the indigo accent. Do NOT introduce new uses of these vars in new code. */
+  --brand-lime: #5E5BFF;
+  --brand-lime-soft: #7B79FF;
+  --brand-lime-dim: #3D3CB3;
+  --brand-lime-glow: rgba(94, 91, 255, 0.4);
+  --brand-lime-rgb: 94 91 255;
+  --brand-lime-soft-rgb: 123 121 255;
+  --brand-lime-dim-rgb: 61 60 179;
 
-  /* Single chromatic moment — focus rings, links */
+  /* Editorial complement — neutral charcoal (replaces deep plum) */
+  --brand-plum: #1F1F23;
+  --brand-plum-hover: #2C2C32;
+  --brand-plum-rgb: 31 31 35;
+  --brand-plum-hover-rgb: 44 44 50;
+
+  /* Indigo (now equal to the brand accent — kept as alias for back-compat) */
   --brand-indigo: #5E5BFF;
   --brand-indigo-rgb: 94 91 255;
 
@@ -92,25 +107,84 @@
   --wl-primary: initial;
   --wl-accent: initial;
 
-  /* Dark theme baseline — OLED warm-tinted black + acid lime accent.
+  /* Dark theme baseline — pure-leaning black + indigo accent.
    * Set at :root so SSR'd HTML doesn't flash white before hydration.
-   * ThemeProvider overrides these at runtime if the user picked a
-   * different theme. */
-  --color-background: #0A0A0B;
-  --color-surface: #15141A;
-  --color-surface-light: #1F1E26;
-  --color-border: #2A2832;
-  --color-accent: #B8E000;
-  --color-text: #F5F4F1;
-  --color-muted: #9F9DAA;
-  --color-foreground: #F5F4F1;
-  --color-background-rgb: 10 10 11;
-  --color-surface-rgb: 21 20 26;
-  --color-surface-light-rgb: 31 30 38;
-  --color-border-rgb: 42 40 50;
-  --color-accent-rgb: 184 224 0;
-  --color-text-rgb: 245 244 241;
-  --color-muted-rgb: 159 157 170;
+   * ThemeProvider overrides these at runtime when the user picks
+   * the light theme. */
+  --color-background: #070708;
+  --color-surface: #101012;
+  --color-surface-light: #17171A;
+  --color-border: #26262B;
+  --color-accent: #5E5BFF;
+  --color-text: #F5F5F7;
+  --color-muted: #A8A8B2;
+  --color-foreground: #F5F5F7;
+  --color-background-rgb: 7 7 8;
+  --color-surface-rgb: 16 16 18;
+  --color-surface-light-rgb: 23 23 26;
+  --color-border-rgb: 38 38 43;
+  --color-accent-rgb: 94 91 255;
+  --color-text-rgb: 245 245 247;
+  --color-muted-rgb: 168 168 178;
+}
+
+/* ═══════════ LIGHT THEME OVERRIDES ═══════════
+ * When ThemeProvider sets data-theme="light" (or .theme-light), every
+ * --color-* + --bg-* + --border-* + --text-* var swaps to the white
+ * theme. The accent stays indigo (slightly darker for AA contrast on
+ * white). Hard-coded hex values across the codebase still resolve via
+ * these vars, so no per-component refactor is needed. */
+:root[data-theme="light"],
+.theme-light {
+  --color-background: #FFFFFF;
+  --color-surface: #FAFAFB;
+  --color-surface-light: #F2F2F4;
+  --color-border: #E4E4E7;
+  --color-accent: #4F46E5;
+  --color-text: #0A0A0B;
+  --color-muted: #52525B;
+  --color-foreground: #0A0A0B;
+  --color-background-rgb: 255 255 255;
+  --color-surface-rgb: 250 250 251;
+  --color-surface-light-rgb: 242 242 244;
+  --color-border-rgb: 228 228 231;
+  --color-accent-rgb: 79 70 229;
+  --color-text-rgb: 10 10 11;
+  --color-muted-rgb: 82 82 91;
+
+  --bg-base: #FFFFFF;
+  --bg-surface-1: #FAFAFB;
+  --bg-surface-2: #F2F2F4;
+  --bg-surface-3: #E4E4E7;
+  --bg-base-rgb: 255 255 255;
+  --bg-surface-1-rgb: 250 250 251;
+  --bg-surface-2-rgb: 242 242 244;
+  --bg-surface-3-rgb: 228 228 231;
+
+  --border-subtle: rgba(79, 70, 229, 0.08);
+  --border-strong: rgba(79, 70, 229, 0.20);
+
+  --text-primary: #0A0A0B;
+  --text-secondary: #52525B;
+  --text-muted: #71717A;
+  --text-primary-rgb: 10 10 11;
+  --text-secondary-rgb: 82 82 91;
+  --text-muted-rgb: 113 113 122;
+
+  --brand-accent: #4F46E5;
+  --brand-accent-soft: #6366F1;
+  --brand-accent-dim: #A5A4F0;
+  --brand-accent-glow: rgba(79, 70, 229, 0.3);
+  --brand-accent-rgb: 79 70 229;
+
+  /* Legacy alias remap for light mode */
+  --brand-lime: #4F46E5;
+  --brand-lime-soft: #6366F1;
+  --brand-lime-dim: #A5A4F0;
+  --brand-lime-glow: rgba(79, 70, 229, 0.3);
+  --brand-lime-rgb: 79 70 229;
+  --brand-indigo: #4F46E5;
+  --brand-indigo-rgb: 79 70 229;
 }
 
 html {
@@ -135,10 +209,18 @@ body {
   font-weight: 700;
   letter-spacing: -0.025em;
 }
+/* .font-editorial — Apr 28: italic-serif Bodoni retired (read as ugly).
+ * Now a tight, bold sans-serif so existing eyebrow/section-header callsites
+ * stay legible without the awkward italic. Use `.font-display` for hero
+ * typography (Satoshi); `.font-editorial` is the same family at heavier
+ * weight + uppercase tracking for grouping labels (sidebar headers,
+ * "WORKSPACE", "TEAM", etc.). */
 .font-editorial {
-  font-family: 'Bodoni Moda', Georgia, serif;
-  font-style: italic;
-  letter-spacing: -0.005em;
+  font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  text-transform: none;
 }
 
 /* ═══════════ ANALOG GRAIN OVERLAY ═══════════
@@ -908,6 +990,22 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
+/* ═══════════ Page soft-enter ═══════════
+ * Apr 28 — replaced the "stagger-shatter" 5-slab transition with a
+ * single short fade. No layout shift, no per-element timing, no exit
+ * animation that fights the next page's mount. The route change feels
+ * fast because there is nothing to wait for. */
+.page-soft-enter {
+  animation: pageSoftEnter 180ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+@keyframes pageSoftEnter {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-soft-enter { animation: none; }
+}
+
 /* ═══════════ Preset Library: Transition demo animations ═══════════ */
 /* Used by /dashboard/video-editor/library transition cards. Short,
  * punchy demos of what each transition category looks like. */
@@ -1118,24 +1216,24 @@ body {
 }
 
 /* ═══════════ DARK MODE (data-attribute driven) ═══════════
- * Mirrors the OLED/lime foundation. Themes other than "light" all share
- * the brand-foundation visuals; ThemeProvider can still tweak per-theme. */
+ * Pure-leaning black + indigo accent — Apr 28 monochrome direction.
+ * ThemeProvider can still inject runtime overrides on top of these. */
 [data-theme="dark"] {
-  --color-background: #0A0A0B;
-  --color-surface: #15141A;
-  --color-surface-light: #1F1E26;
-  --color-border: #2A2832;
-  --color-accent: #B8E000;
-  --color-text: #F5F4F1;
-  --color-muted: #9F9DAA;
-  --color-foreground: #F5F4F1;
-  --color-background-rgb: 10 10 11;
-  --color-surface-rgb: 21 20 26;
-  --color-surface-light-rgb: 31 30 38;
-  --color-border-rgb: 42 40 50;
-  --color-accent-rgb: 184 224 0;
-  --color-text-rgb: 245 244 241;
-  --color-muted-rgb: 159 157 170;
+  --color-background: #070708;
+  --color-surface: #101012;
+  --color-surface-light: #17171A;
+  --color-border: #26262B;
+  --color-accent: #5E5BFF;
+  --color-text: #F5F5F7;
+  --color-muted: #A8A8B2;
+  --color-foreground: #F5F5F7;
+  --color-background-rgb: 7 7 8;
+  --color-surface-rgb: 16 16 18;
+  --color-surface-light-rgb: 23 23 26;
+  --color-border-rgb: 38 38 43;
+  --color-accent-rgb: 94 91 255;
+  --color-text-rgb: 245 245 247;
+  --color-muted-rgb: 168 168 178;
 }
 
 /* ═══════════ PREMIUM ANIMATION POLISH ═══════════
@@ -1551,20 +1649,28 @@ body {
   to { --border-angle: 360deg; }
 }
 @keyframes inputFocusPulse {
-  0%, 100% { box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 0 0 2px var(--color-background,#06080c), 0 0 0 4px rgba(var(--color-accent-rgb,201 168 76)/0.4), 0 0 16px -4px rgba(var(--color-accent-rgb,201 168 76)/0.3); }
-  50%       { box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 0 0 2px var(--color-background,#06080c), 0 0 0 4px rgba(var(--color-accent-rgb,201 168 76)/0.65), 0 0 28px -4px rgba(var(--color-accent-rgb,201 168 76)/0.5); }
+  0%, 100% { box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 0 0 2px var(--color-background,#06080c), 0 0 0 4px rgba(var(--color-accent-rgb,94 91 255)/0.4), 0 0 16px -4px rgba(var(--color-accent-rgb,94 91 255)/0.3); }
+  50%       { box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 0 0 2px var(--color-background,#06080c), 0 0 0 4px rgba(var(--color-accent-rgb,94 91 255)/0.65), 0 0 28px -4px rgba(var(--color-accent-rgb,94 91 255)/0.5); }
+}
+
+/* Apr 28 — one-shot focus ring. Expands from 0 → 6px and fades, then
+ * settles on the static :focus-visible outline. Replaces the infinite
+ * inputFocusPulse for a calmer, less anxious feel. */
+@keyframes inputFocusRing {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--color-accent-rgb, 94 91 255) / 0.55); }
+  100% { box-shadow: 0 0 0 6px rgba(var(--color-accent-rgb, 94 91 255) / 0); }
 }
 .card-alive {
   position: relative;
   isolation: isolate;
 }
 @media (prefers-reduced-motion: no-preference) {
-  /* card-alive — explicit opt-in class */
-  .card-alive::before,
-  /* auto-apply to cards that don't already use ::before for an accent bar */
-  .card:not(.card-accent)::before,
-  .stat-card:not(.card-accent)::before,
-  .card-hover:not(.card-accent)::before {
+  /* card-alive — Apr 28: rotating conic-gradient border is now EXPLICIT
+     OPT-IN only. The previous version auto-applied to every .card via
+     `:not(.card-accent)::before` which the user described as "ray doing
+     a circle on every text box and card". Now you have to add the
+     `card-alive` class to get the effect. Default cards stay still. */
+  .card-alive::before {
     content: "";
     position: absolute;
     inset: -1px;
@@ -1572,24 +1678,23 @@ body {
     background: conic-gradient(
       from var(--border-angle),
       transparent 0deg,
-      rgba(var(--color-accent-rgb, 201 168 76) / 0.55) 60deg,
+      rgba(var(--color-accent-rgb, 94 91 255) / 0.55) 60deg,
       transparent 120deg
     );
     z-index: -1;
     pointer-events: none;
-    opacity: 0.18;
+    opacity: 0.3;
     transition: opacity 0.4s ease;
-    animation: borderSpin 6s linear infinite;
+    animation: borderSpin 8s linear infinite;
   }
-  .card-alive::before { opacity: 0.3; }
-  .card:not(.card-accent):hover::before,
-  .stat-card:not(.card-accent):hover::before,
-  .card-hover:not(.card-accent):hover::before,
   .card-alive:hover::before { opacity: 0.65; }
 
+  /* Input focus — Apr 28: replaced the infinite pulsing ring with a
+     one-shot expanding ring that settles on the static focus state.
+     Feels alive on focus without being anxious. */
   .input:focus,
   .input:focus-visible {
-    animation: inputFocusPulse 2s ease-in-out infinite;
+    animation: inputFocusRing 320ms cubic-bezier(0.32, 0.72, 0, 1) 1;
   }
 
   .text-alive {

@@ -1,12 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { LayoutGroup } from "framer-motion";
 import { SkipToContent } from "@/components/a11y/SkipToContent";
 import Sidebar from "@/components/sidebar";
 import GlobalSearch from "@/components/global-search";
 import ClientSwitcher from "@/components/client-switcher";
 import Notifications from "@/components/notifications";
+import ThemeToggle from "@/components/ui/theme-toggle";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import ManagedClientBanner from "@/components/managed-client-banner";
 import { QuotaWallProvider } from "@/components/billing/quota-wall";
@@ -394,6 +395,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 )}
                 <ClientSwitcher />
                 <Notifications />
+                <ThemeToggle />
                 <GlobalSearch />
               </div>
             </div>
@@ -402,38 +404,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Managed client banner */}
           <ManagedClientBanner />
 
-          {/* Page content — Opus's "Stagger-shatter page entry" (Apr 26):
-              new page arrives as 5 horizontal slabs sliding in from
-              alternating sides with 50ms stagger, settling into one
-              surface. Reads like a deck snapping into place rather than
-              a fade. Honors prefers-reduced-motion via CSS @media query
-              that collapses the slabs to a single fade. */}
-          <div className="p-4 lg:p-6 pb-24 page-shatter-host">
+          {/* Page content — Apr 28: "stagger-shatter" entry transition
+              retired (user described as "weird flicker"). Replaced with
+              a single soft fade-in on mount, no exit animation. New
+              pages just appear. Faster perceived load + no layout
+              jitter. Honors prefers-reduced-motion via the underlying
+              `.page-soft-enter` keyframe. */}
+          <div className="p-4 lg:p-6 pb-24">
             <ErrorBoundary>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={pathname}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.05 }}
-                  className="page-shatter"
-                >
-                  {/* Slab overlay — 5 horizontal bars that slide in from
-                      alternating sides on mount, then fade. Sits ABOVE
-                      the page during the entry, under after. */}
-                  <div className="page-shatter-slabs" aria-hidden>
-                    {[0, 1, 2, 3, 4].map((i) => (
-                      <span
-                        key={i}
-                        className={`page-shatter-slab ${i % 2 === 0 ? "from-left" : "from-right"}`}
-                        style={{ animationDelay: `${i * 50}ms` }}
-                      />
-                    ))}
-                  </div>
-                  {children}
-                </motion.div>
-              </AnimatePresence>
+              <div key={pathname} className="page-soft-enter">
+                {children}
+              </div>
             </ErrorBoundary>
           </div>
         </main>

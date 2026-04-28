@@ -28,6 +28,7 @@ import PageAI from "@/components/page-ai";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
+import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 import { PageSkeleton } from "@/components/ui/skeleton";
 import {
   InstagramIcon, FacebookIcon, TikTokIcon, LinkedInIcon, XTwitterIcon,
@@ -1340,6 +1341,12 @@ export default function SocialManagerPage() {
                 </div>
                 <textarea value={abTestInput} onChange={e => setAbTestInput(e.target.value)}
                   className="input w-full h-20 text-xs" placeholder="Describe what your post is about (e.g., 'New product launch for organic skincare line')..." />
+                {/* AI auto-suggest: niche-aware social-post angles based on user's recent activity */}
+                <AITopicSuggest
+                  surface="social_post"
+                  onSelect={picked => setAbTestInput(picked)}
+                  max={5}
+                />
                 <button onClick={() => {
                   if (!abTestInput.trim()) return;
                   setGeneratingAB(true);

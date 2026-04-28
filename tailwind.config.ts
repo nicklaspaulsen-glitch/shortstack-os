@@ -20,21 +20,26 @@ const config: Config = {
         // NEW BRAND FOUNDATION TOKENS (canonical names — prefer these in
         // new code. See src/lib/brand/tokens.ts)
         // ─────────────────────────────────────────────────────────────────
-        "bg-base": "rgb(var(--bg-base-rgb, 10 10 11) / <alpha-value>)",
-        "bg-surface-1": "rgb(var(--bg-surface-1-rgb, 21 20 26) / <alpha-value>)",
-        "bg-surface-2": "rgb(var(--bg-surface-2-rgb, 31 30 38) / <alpha-value>)",
-        "bg-surface-3": "rgb(var(--bg-surface-3-rgb, 42 40 50) / <alpha-value>)",
-        "border-subtle": "rgba(184, 224, 0, 0.07)",
-        "border-strong": "rgba(184, 224, 0, 0.16)",
-        "text-primary": "rgb(var(--text-primary-rgb, 245 244 241) / <alpha-value>)",
-        "text-secondary": "rgb(var(--text-secondary-rgb, 159 157 170) / <alpha-value>)",
-        "text-muted": "rgb(var(--text-muted-rgb, 111 109 122) / <alpha-value>)",
-        // Brand
-        "brand-lime": "rgb(var(--brand-lime-rgb, 184 224 0) / <alpha-value>)",
-        "brand-lime-soft": "rgb(var(--brand-lime-soft-rgb, 212 255 51) / <alpha-value>)",
-        "brand-lime-dim": "rgb(var(--brand-lime-dim-rgb, 111 138 0) / <alpha-value>)",
-        "brand-plum": "rgb(var(--brand-plum-rgb, 63 13 45) / <alpha-value>)",
-        "brand-plum-hover": "rgb(var(--brand-plum-hover-rgb, 90 27 65) / <alpha-value>)",
+        "bg-base": "rgb(var(--bg-base-rgb, 7 7 8) / <alpha-value>)",
+        "bg-surface-1": "rgb(var(--bg-surface-1-rgb, 16 16 18) / <alpha-value>)",
+        "bg-surface-2": "rgb(var(--bg-surface-2-rgb, 23 23 26) / <alpha-value>)",
+        "bg-surface-3": "rgb(var(--bg-surface-3-rgb, 38 38 43) / <alpha-value>)",
+        "border-subtle": "rgba(94, 91, 255, 0.07)",
+        "border-strong": "rgba(94, 91, 255, 0.16)",
+        "text-primary": "rgb(var(--text-primary-rgb, 245 245 247) / <alpha-value>)",
+        "text-secondary": "rgb(var(--text-secondary-rgb, 168 168 178) / <alpha-value>)",
+        "text-muted": "rgb(var(--text-muted-rgb, 111 111 122) / <alpha-value>)",
+        // Brand — pure-monochrome themes + indigo accent (Apr 28).
+        // brand-lime is kept as an alias of brand-accent for back-compat
+        // so existing `bg-brand-lime` / `text-brand-lime/30` etc. still work.
+        "brand-accent": "rgb(var(--brand-accent-rgb, 94 91 255) / <alpha-value>)",
+        "brand-accent-soft": "rgb(var(--brand-accent-soft-rgb, 123 121 255) / <alpha-value>)",
+        "brand-accent-dim": "rgb(var(--brand-accent-dim-rgb, 61 60 179) / <alpha-value>)",
+        "brand-lime": "rgb(var(--brand-lime-rgb, 94 91 255) / <alpha-value>)",
+        "brand-lime-soft": "rgb(var(--brand-lime-soft-rgb, 123 121 255) / <alpha-value>)",
+        "brand-lime-dim": "rgb(var(--brand-lime-dim-rgb, 61 60 179) / <alpha-value>)",
+        "brand-plum": "rgb(var(--brand-plum-rgb, 31 31 35) / <alpha-value>)",
+        "brand-plum-hover": "rgb(var(--brand-plum-hover-rgb, 44 44 50) / <alpha-value>)",
         "brand-indigo": "rgb(var(--brand-indigo-rgb, 94 91 255) / <alpha-value>)",
         // Status
         "status-success": "rgb(var(--status-success-rgb, 127 229 184) / <alpha-value>)",
@@ -54,8 +59,8 @@ const config: Config = {
         // (DEFAULT + 50..900). DEFAULT keeps the runtime CSS-var pipeline so
         // ThemeProvider can still drive `text-gold` per-theme while shaded
         // utilities like `text-gold-400` resolve to lime values.
-        "gold-dark": "rgb(var(--color-accent-rgb, 184 224 0) / <alpha-value>)",
-        "gold-light": "rgb(var(--color-accent-rgb, 184 224 0) / <alpha-value>)",
+        "gold-dark": "rgb(var(--color-accent-rgb, 94 91 255) / <alpha-value>)",
+        "gold-light": "rgb(var(--color-accent-rgb, 94 91 255) / <alpha-value>)",
         foreground: "rgb(var(--color-text-rgb, 55 65 81) / <alpha-value>)",
         muted: "rgb(var(--color-muted-rgb, 107 114 128) / <alpha-value>)",
         "muted-light": "rgb(var(--color-muted-rgb, 107 114 128) / <alpha-value>)",
@@ -80,60 +85,63 @@ const config: Config = {
         // unifies. Pages don't need to change; they get the new look for
         // free.
         // ─────────────────────────────────────────────────────────────────
+        // Apr 28: gold/amber/lime/purple scales all redirected to the new
+        // indigo accent. The aliases stay registered so existing pages
+        // (text-gold-400, bg-amber-500/10, border-lime-700, etc.) keep
+        // resolving — they just paint indigo now. Plum maps to a charcoal
+        // neutral so old purple chrome doesn't fight the monochrome base.
         gold: {
-          DEFAULT: "rgb(var(--color-accent-rgb, 184 224 0) / <alpha-value>)",
-          50: "#F5FCDB",
-          100: "#EBF8B0",
-          200: "#DBEF73",
-          300: "#CBE647",
-          400: "#BFDD1E",
-          500: "#B8E000", // lime (softened from #D4FF00)
-          600: "#9FC400",
-          700: "#6F8A00",
-          800: "#4B5C00",
-          900: "#252E00",
+          DEFAULT: "rgb(var(--color-accent-rgb, 94 91 255) / <alpha-value>)",
+          50: "#EFEEFF",
+          100: "#DCDAFF",
+          200: "#BBB7FF",
+          300: "#9290FF",
+          400: "#7773FF",
+          500: "#5E5BFF",
+          600: "#4946D6",
+          700: "#3835A8",
+          800: "#27257A",
+          900: "#16154D",
         },
         amber: {
-          50: "#F5FCDB",
-          100: "#EBF8B0",
-          200: "#DBEF73",
-          300: "#CBE647",
-          400: "#BFDD1E",
-          500: "#B8E000",
-          600: "#9FC400",
-          700: "#6F8A00",
-          800: "#4B5C00",
-          900: "#252E00",
+          50: "#EFEEFF",
+          100: "#DCDAFF",
+          200: "#BBB7FF",
+          300: "#9290FF",
+          400: "#7773FF",
+          500: "#5E5BFF",
+          600: "#4946D6",
+          700: "#3835A8",
+          800: "#27257A",
+          900: "#16154D",
         },
-        // Plum scale replaces the old purple gradient. Existing
-        // `bg-purple-500/20` / `text-purple-400` etc. now read as deeper,
-        // editorial plum tones — closer to the brand than mass-market
-        // Tailwind purple.
+        // Purple now maps to a charcoal neutral so old `bg-purple-500/20` etc.
+        // don't fight the pure-monochrome base. Same shape as plum.
         purple: {
-          50: "#F5E6F1",
-          100: "#E6C9DC",
-          200: "#CE94B9",
-          300: "#B65F95",
-          400: "#7A2D5A",
-          500: "#5A1B41",
-          600: "#3F0D2D",
-          700: "#2E0921",
-          800: "#1F0617",
-          900: "#10030B",
+          50: "#F4F4F5",
+          100: "#E4E4E7",
+          200: "#D4D4D8",
+          300: "#A1A1AA",
+          400: "#52525B",
+          500: "#3F3F46",
+          600: "#2C2C32",
+          700: "#1F1F23",
+          800: "#18181B",
+          900: "#101012",
         },
         plum: {
-          50: "#F5E6F1",
-          100: "#E6C9DC",
-          200: "#CE94B9",
-          300: "#B65F95",
-          400: "#7A2D5A",
-          500: "#5A1B41",
-          600: "#3F0D2D",
-          700: "#2E0921",
-          800: "#1F0617",
-          900: "#10030B",
+          50: "#F4F4F5",
+          100: "#E4E4E7",
+          200: "#D4D4D8",
+          300: "#A1A1AA",
+          400: "#52525B",
+          500: "#3F3F46",
+          600: "#2C2C32",
+          700: "#1F1F23",
+          800: "#18181B",
+          900: "#101012",
         },
-        // Indigo scale — for focus rings, links, single chromatic moments.
+        // Indigo scale — the canonical brand accent.
         indigo: {
           50: "#EFEEFF",
           100: "#DCDAFF",
@@ -146,17 +154,19 @@ const config: Config = {
           800: "#27257A",
           900: "#16154D",
         },
+        // Lime alias — kept registered so `text-lime-*` / `bg-lime-*` in
+        // old code still resolves, but redirected to the indigo accent.
         lime: {
-          50: "#F5FCDB",
-          100: "#EBF8B0",
-          200: "#DBEF73",
-          300: "#CBE647",
-          400: "#BFDD1E",
-          500: "#B8E000",
-          600: "#9FC400",
-          700: "#6F8A00",
-          800: "#4B5C00",
-          900: "#252E00",
+          50: "#EFEEFF",
+          100: "#DCDAFF",
+          200: "#BBB7FF",
+          300: "#9290FF",
+          400: "#7773FF",
+          500: "#5E5BFF",
+          600: "#4946D6",
+          700: "#3835A8",
+          800: "#27257A",
+          900: "#16154D",
         },
       },
       fontFamily: {
@@ -164,9 +174,11 @@ const config: Config = {
         sans: ["Inter", "system-ui", "sans-serif"],
         // Display — large headlines, hero numbers, page titles.
         display: ["Satoshi", "Inter", "system-ui", "sans-serif"],
-        // Editorial — RESERVED for hero/marketing one-off statements.
-        // Never set as body. Apply via `.font-editorial` class.
-        editorial: ['"Bodoni Moda"', "Georgia", "serif"],
+        // Editorial — Apr 28: italic-serif Bodoni retired (read as ugly).
+        // Now resolves to a bold-weighted sans-serif so existing
+        // `.font-editorial` callsites read clean and bold instead of
+        // italic-serif. Use `font-display` for hero typography.
+        editorial: ["Satoshi", "Inter", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
       },
       fontSize: {
@@ -195,16 +207,16 @@ const config: Config = {
           "0 1px 0 rgba(255,255,255,0.06) inset",
           "0 4px 8px rgba(0,0,0,0.5)",
           "0 16px 40px -12px rgba(0,0,0,0.6)",
-          "0 0 0 1px rgba(184,224,0,0.06)",
+          "0 0 0 1px rgba(94,91,255,0.06)",
         ].join(", "),
         "stack-3": [
           "0 1px 0 rgba(255,255,255,0.08) inset",
           "0 6px 12px rgba(0,0,0,0.55)",
           "0 24px 56px -16px rgba(0,0,0,0.65)",
-          "0 0 0 1px rgba(184,224,0,0.12)",
-          "0 0 32px -8px rgba(184,224,0,0.18)",
+          "0 0 0 1px rgba(94,91,255,0.12)",
+          "0 0 32px -8px rgba(94,91,255,0.18)",
         ].join(", "),
-        "lime-glow": "0 0 24px -4px rgba(184,224,0,0.4)",
+        "lime-glow": "0 0 24px -4px rgba(94,91,255,0.4)",
       },
       animation: {
         "fade-in": "fadeIn 0.4s ease-out",
@@ -239,8 +251,8 @@ const config: Config = {
           to: { opacity: "1" },
         },
         limePulse: {
-          "0%, 100%": { boxShadow: "0 0 0 0 rgba(184,224,0,0.45)" },
-          "50%": { boxShadow: "0 0 0 8px rgba(184,224,0,0)" },
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(94,91,255,0.45)" },
+          "50%": { boxShadow: "0 0 0 8px rgba(94,91,255,0)" },
         },
         stackRotate: {
           from: { transform: "rotateY(0deg)" },

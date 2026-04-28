@@ -554,15 +554,15 @@ export default function Sidebar() {
           href={item.href}
           onMouseEnter={() => setHoveredItem(item.href)}
           onMouseLeave={() => setHoveredItem(null)}
-          className={`nav-item-hover flex items-center gap-2.5 py-1.5 my-[1px] rounded-lg text-[12.5px] transition-all duration-220 ease-out-expo-foundation ${
-            indented ? "px-3.5" : "px-3"
+          className={`nav-item-hover flex items-center gap-2 py-1 my-px rounded-md text-[12px] transition-all duration-220 ease-out-expo-foundation ${
+            indented ? "px-3 ml-1" : "px-2.5"
           } ${
             isActive
-              ? "active text-brand-lime font-medium bg-[rgba(212,255,0,0.06)] shadow-[0_0_14px_rgba(212,255,0,0.08)]"
-              : "text-text-secondary hover:text-text-primary hover:bg-white/[0.02]"
+              ? "active text-brand-accent font-semibold bg-[rgba(94,91,255,0.10)]"
+              : "text-text-secondary hover:text-text-primary hover:bg-white/[0.03]"
           }`}
         >
-          <span className={`shrink-0 transition-colors duration-220 ease-out-expo-foundation nav-icon-alive ${isActive ? "text-brand-lime drop-shadow-[0_0_4px_rgba(212,255,0,0.55)]" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
+          <span className={`shrink-0 transition-colors duration-220 ease-out-expo-foundation ${isActive ? "text-brand-accent" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
             {customIcon || item.icon}
           </span>
           <span className="truncate flex-1">{label}</span>
@@ -570,7 +570,7 @@ export default function Sidebar() {
           {isActive && (
             <motion.div
               layoutId="sidebar-active-accent"
-              className="absolute -left-px top-1/2 w-[2px] h-[68%] rounded-r bg-brand-lime shadow-[0_0_10px_rgba(212,255,0,0.65)]"
+              className="absolute -left-px top-1/2 w-[2px] h-[60%] rounded-r bg-brand-accent"
               style={{ y: "-50%" }}
               transition={{ type: "spring", stiffness: 380, damping: 32 }}
             />
@@ -594,19 +594,19 @@ export default function Sidebar() {
           onMouseLeave={() => setHoveredItem(null)}
           className={`nav-item-hover flex items-center justify-center px-2.5 py-1.5 my-[1px] rounded-lg text-[12.5px] transition-all duration-220 ease-out-expo-foundation ${
             isActive
-              ? "active text-brand-lime bg-[rgba(212,255,0,0.06)] shadow-[0_0_14px_rgba(212,255,0,0.08)]"
+              ? "active text-brand-lime bg-[rgba(94,91,255,0.06)] shadow-[0_0_14px_rgba(94,91,255,0.08)]"
               : "text-text-secondary hover:text-text-primary hover:bg-white/[0.02]"
           }`}
           title={unreadCount > 0 ? `${label} (${unreadCount})` : label}
         >
-          <span className={`relative shrink-0 transition-colors duration-220 ease-out-expo-foundation nav-icon-alive ${isActive ? "text-brand-lime drop-shadow-[0_0_4px_rgba(212,255,0,0.55)]" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
+          <span className={`relative shrink-0 transition-colors duration-220 ease-out-expo-foundation nav-icon-alive ${isActive ? "text-brand-lime drop-shadow-[0_0_4px_rgba(94,91,255,0.55)]" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
             {customIcon || item.icon}
             {unreadCount > 0 && <UnreadDotMini />}
           </span>
           {isActive && (
             <motion.div
               layoutId="sidebar-active-accent"
-              className="absolute -left-px top-1/2 w-[2px] h-[68%] rounded-r bg-brand-lime shadow-[0_0_10px_rgba(212,255,0,0.65)]"
+              className="absolute -left-px top-1/2 w-[2px] h-[68%] rounded-r bg-brand-lime shadow-[0_0_10px_rgba(94,91,255,0.65)]"
               style={{ y: "-50%" }}
               transition={{ type: "spring", stiffness: 380, damping: 32 }}
             />
@@ -631,7 +631,7 @@ export default function Sidebar() {
       }`}
       style={{
         background: "var(--bg-surface-1, #15141A)",
-        borderRight: "1px solid var(--border-subtle, rgba(212,255,0,0.08))",
+        borderRight: "1px solid var(--border-subtle, rgba(94,91,255,0.08))",
       }}
     >
       {/* LED light strip — lives on the sidebar's right edge, theme-colored */}
@@ -701,7 +701,7 @@ export default function Sidebar() {
       {/* Chrome Extension banner — admin only, dismissible */}
       {!collapsed && userRole === "admin" && !extDismissed && (
         <div className="mx-2 mb-1 mt-2">
-          <div className="flex items-center gap-1.5 h-[34px] px-2.5 rounded-lg bg-[rgba(212,255,0,0.05)] border border-border-subtle">
+          <div className="flex items-center gap-1.5 h-[34px] px-2.5 rounded-lg bg-[rgba(94,91,255,0.05)] border border-border-subtle">
             <Puzzle size={13} className="shrink-0 text-brand-lime" />
             <a href="/downloads/shortstack-extension.zip" download
               className="text-[11px] text-brand-lime/90 hover:text-brand-lime font-medium transition-colors duration-220"
@@ -809,7 +809,7 @@ export default function Sidebar() {
                 <div>
                   <button
                     onClick={() => setExpandedSections(p => ({ ...p, _other: !otherExpanded }))}
-                    className="w-full flex items-center gap-2 px-3 pt-4 pb-1.5 group/sec cursor-pointer"
+                    className="w-full flex items-center gap-2 px-3 pt-2.5 pb-1 group/sec cursor-pointer"
                   >
                     <span className="font-editorial text-[11px] text-text-muted uppercase tracking-[0.18em] group-hover/sec:text-text-primary transition-colors duration-220">
                       Other
@@ -846,13 +846,13 @@ export default function Sidebar() {
                     // italic treatment with a tiny arrow makes it visibly
                     // distinct as both a label AND a navigable hub link.
                     return (
-                      <div className="w-full flex items-center gap-1.5 px-3 pt-4 pb-1.5 group/sec">
+                      <div className="w-full flex items-center gap-1.5 px-3 pt-2.5 pb-1 group/sec">
                         <Link
                           href={hubHref}
                           className={`group/hub flex items-center gap-1 rounded px-1 py-0.5 font-editorial text-[11px] uppercase tracking-[0.18em] transition-colors duration-220 ease-out-expo-foundation ${
                             hubActive
-                              ? "text-brand-lime bg-[rgba(212,255,0,0.08)]"
-                              : "text-text-muted hover:text-brand-lime hover:bg-[rgba(212,255,0,0.04)]"
+                              ? "text-brand-lime bg-[rgba(94,91,255,0.08)]"
+                              : "text-text-muted hover:text-brand-lime hover:bg-[rgba(94,91,255,0.04)]"
                           }`}
                           title={`Open ${group.section} hub →`}
                         >
@@ -880,7 +880,7 @@ export default function Sidebar() {
                   return (
                     <button
                       onClick={() => toggleSection(group.section!)}
-                      className="w-full flex items-center gap-2 px-3 pt-4 pb-1.5 group/sec cursor-pointer"
+                      className="w-full flex items-center gap-2 px-3 pt-2.5 pb-1 group/sec cursor-pointer"
                     >
                       <span className="font-editorial text-[11px] text-text-muted uppercase tracking-[0.18em] group-hover/sec:text-text-primary transition-colors duration-220">
                         {group.section}
@@ -964,7 +964,7 @@ export default function Sidebar() {
       )}
 
       {/* User — refined profile footer with email + actions */}
-      <div className="px-2 py-2.5 border-t border-border-subtle bg-[rgba(212,255,0,0.015)]">
+      <div className="px-2 py-2.5 border-t border-border-subtle bg-[rgba(94,91,255,0.015)]">
         {!collapsed ? (
           <div className="flex items-center gap-2">
             <Link
@@ -979,7 +979,7 @@ export default function Sidebar() {
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover ring-1 ring-border-subtle" style={{ boxShadow: glow }} />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.08)] ring-1 ring-border-subtle flex items-center justify-center" style={{ boxShadow: glow }}>
+                  <div className="w-8 h-8 rounded-full bg-[rgba(94,91,255,0.08)] ring-1 ring-border-subtle flex items-center justify-center" style={{ boxShadow: glow }}>
                     <span className="text-brand-lime text-[11px] font-bold font-display">{(profile?.nickname || profile?.full_name)?.charAt(0).toUpperCase() || "?"}</span>
                   </div>
                 );
@@ -1013,7 +1013,7 @@ export default function Sidebar() {
         ) : (
           <div className="flex flex-col items-center gap-1.5">
             <Link href="/dashboard/settings" className="flex justify-center" title="Open settings">
-              <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.08)] ring-1 ring-border-subtle flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-[rgba(94,91,255,0.08)] ring-1 ring-border-subtle flex items-center justify-center">
                 <span className="text-brand-lime text-[10px] font-bold font-display">{profile?.full_name?.charAt(0).toUpperCase() || "?"}</span>
               </div>
             </Link>
