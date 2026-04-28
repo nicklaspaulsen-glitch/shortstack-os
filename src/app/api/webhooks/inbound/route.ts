@@ -54,11 +54,19 @@ function filterLeadUpdateFields(fields: Record<string, unknown>): Record<string,
 }
 
 export async function POST(request: NextRequest) {
-  // Auth via query param or header
+  // Auth via header (or query param as legacy fallback for tools that
+  // can only send GETs). Apr 28 audit: dropped the CRON_SECRET fallback —
+  // the inbound webhook can write leads/deals across all tenants, so
+  // collapsing it onto the cron auth boundary meant any leak of one
+  // secret blew the other.  WEBHOOK_SECRET only.
   const url = new URL(request.url);
   const key = url.searchParams.get("key") || request.headers.get("x-webhook-key");
-  const expectedKey = process.env.WEBHOOK_SECRET || process.env.CRON_SECRET;
+  const expectedKey = process.env.WEBHOOK_SECRET;
 
+  if (!expectedKey) {
+    console.error("[webhooks/inbound] WEBHOOK_SECRET unset — rejecting request");
+    return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
+  }
   if (!key || key !== expectedKey) {
     return NextResponse.json({ error: "Invalid webhook key" }, { status: 401 });
   }

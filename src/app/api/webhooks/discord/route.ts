@@ -30,8 +30,17 @@ function verifyRelaySignature(raw: string, signature: string | null): boolean {
   }
   if (!signature) return false;
   const expected = crypto.createHmac("sha256", secret).update(raw).digest("hex");
+  // Both sides are hex-encoded — decode to bytes BEFORE timingSafeEqual.
+  // utf8 decoding (the default) of a 64-char hex string produces a 64-byte
+  // buffer, while the actual digest is 32 bytes — so timingSafeEqual either
+  // throws on length mismatch or compares wrong bytes. Always fails open
+  // here (correct fail-closed direction) but means valid signatures
+  // ALSO never pass. This was the audit finding.
   try {
-    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+    const sigBytes = Buffer.from(signature, "hex");
+    const expectedBytes = Buffer.from(expected, "hex");
+    if (sigBytes.length !== expectedBytes.length) return false;
+    return crypto.timingSafeEqual(sigBytes, expectedBytes);
   } catch {
     return false;
   }

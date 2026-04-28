@@ -39,8 +39,16 @@ function verifyZernioSignature(raw: string, signature: string | null): boolean {
   }
   if (!signature) return false;
   const expected = crypto.createHmac("sha256", secret).update(raw).digest("hex");
+  // Decode hex strings to bytes before timingSafeEqual. utf8 decoding
+  // (the default) of a hex string produces a buffer twice the size of
+  // the actual digest, so length checks always fail. See discord webhook
+  // for the same fix; both were never verifying a valid signature
+  // before this patch.
   try {
-    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+    const sigBytes = Buffer.from(signature, "hex");
+    const expectedBytes = Buffer.from(expected, "hex");
+    if (sigBytes.length !== expectedBytes.length) return false;
+    return crypto.timingSafeEqual(sigBytes, expectedBytes);
   } catch {
     return false;
   }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 import { parseTrinityMessage, executeTrinityCommand, sendTelegramMessage, cleanupOldTelegramMessages } from "@/lib/services/trinity";
 import { upsertInboundMessage } from "@/lib/conversations";
@@ -18,8 +19,17 @@ export async function POST(request: NextRequest) {
     console.error("[webhooks/telegram] TELEGRAM_WEBHOOK_SECRET is not set — rejecting request. Configure the secret in Vercel env.");
     return NextResponse.json({ ok: true });
   }
-  const token = request.headers.get("x-telegram-bot-api-secret-token");
-  if (token !== webhookSecret) {
+  // Constant-time compare to neutralize byte-by-byte timing attacks on
+  // the secret. `!==` is fast-path optimized by V8 and leaks length +
+  // first-mismatch position over enough samples; timingSafeEqual is the
+  // canonical fix used elsewhere in this repo (elevenlabs, resend, etc.).
+  const token = request.headers.get("x-telegram-bot-api-secret-token") ?? "";
+  const tokenBytes = Buffer.from(token);
+  const expectedBytes = Buffer.from(webhookSecret);
+  if (
+    tokenBytes.length !== expectedBytes.length ||
+    !crypto.timingSafeEqual(tokenBytes, expectedBytes)
+  ) {
     return NextResponse.json({ ok: true }); // Silent rejection — bad signature
   }
 

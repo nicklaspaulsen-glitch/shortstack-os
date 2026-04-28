@@ -1,6 +1,37 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-export const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+/**
+ * Lazy Anthropic client. Module-level `new Anthropic(...)` is BANNED in
+ * this repo (see CLAUDE.md): it runs during Vercel's page-data
+ * collection pass on every cold deploy and broke production at least
+ * once when the SDK bumped its constructor contract. The same
+ * pattern is enforced for Stripe via `getStripe()` in
+ * src/lib/stripe/client.ts.
+ *
+ * `anthropic` is exported as a Proxy so existing callsites that read
+ * `anthropic.messages.create(...)` keep working without a refactor.
+ * Each property access on the Proxy lazily resolves the real client,
+ * which is constructed exactly once and cached.
+ */
+let anthropicSingleton: Anthropic | null = null;
+
+export function getAnthropic(): Anthropic {
+  if (anthropicSingleton) return anthropicSingleton;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error(
+      "ANTHROPIC_API_KEY is not set. Add it to Vercel project env vars or your .env.local before calling Anthropic."
+    );
+  }
+  anthropicSingleton = new Anthropic({ apiKey });
+  return anthropicSingleton;
+}
+
+export const anthropic = new Proxy({} as Anthropic, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getAnthropic(), prop, receiver);
+  },
+});
 
 export const MODEL_HAIKU = "claude-haiku-4-5-20251001";
 export const MODEL_SONNET = "claude-sonnet-4-6-20250514";

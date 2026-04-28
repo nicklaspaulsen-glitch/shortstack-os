@@ -8,12 +8,19 @@ import { handleGHLCallWebhook } from "@/lib/services/cold-calling";
 // logged to trinity_log and no further action is taken.
 // TODO: delete once no external system posts here anymore.
 export async function POST(request: NextRequest) {
-  // Verify webhook authenticity via shared secret
+  // Verify webhook authenticity via shared secret. Apr 28 audit: dropped
+  // the WEBHOOK_SECRET / CRON_SECRET fallbacks — collapsing trust
+  // boundaries means a CRON_SECRET leak would let anyone forge GHL
+  // call-completed events. GHL_WEBHOOK_SECRET only; 503 if unset.
   const url = new URL(request.url);
   const key = url.searchParams.get("key") || request.headers.get("x-webhook-key");
-  const expectedKey = process.env.GHL_WEBHOOK_SECRET || process.env.WEBHOOK_SECRET || process.env.CRON_SECRET;
+  const expectedKey = process.env.GHL_WEBHOOK_SECRET;
 
-  if (!expectedKey || !key || key !== expectedKey) {
+  if (!expectedKey) {
+    console.error("[webhooks/ghl] GHL_WEBHOOK_SECRET unset — rejecting request");
+    return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
+  }
+  if (!key || key !== expectedKey) {
     return NextResponse.json({ error: "Invalid webhook key" }, { status: 401 });
   }
 
