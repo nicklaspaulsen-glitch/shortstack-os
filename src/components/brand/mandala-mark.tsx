@@ -1,29 +1,26 @@
 "use client";
 
 /**
- * MandalaMark — wraps the production ShortStack logo
- * (`public/icons/shortstack-logo.svg`) in a 3D-feeling continuous
- * rotation. No three.js, no R3F, no canvas — pure CSS transform on
- * the existing flat SVG, so it ships in zero extra JS bundle.
+ * MandalaMark — ShortStack brand mark with a slow 3D-feeling rotation.
  *
- * The "3D" illusion comes from:
- *   - perspective on the parent (so rotateY actually shears the image
- *     instead of producing a 2D mirror flip)
- *   - a subtle drop-shadow that strengthens at the broadside angle
- *     (the "edge-on" frames where the disc faces the viewer head-on)
- *     and softens at the side-on angle, simulating ambient occlusion.
- *   - ease-out-back timing so the spin starts fast and decelerates
- *     into a held pose every 9.5 seconds, mimicking a coin landing.
+ * Apr 28 v3: SVG is INLINED (not loaded via <img src>) so the path's
+ * `fill="currentColor"` actually inherits the parent's CSS `color`
+ * property. That lets the same component render correctly on:
+ *   - dark sidebar  → text-text-primary  (off-white)
+ *   - light pages   → text-text-primary  (near-black)
+ *   - active state  → text-brand-accent  (indigo)
+ * without shipping multiple PNG variants.
  *
- * Apr 28: built in response to the user request "do a cool effect
- * with the flat one instead" — the abstract Stack3D mark was being
- * replaced with a real-logo 3D render via an external AI tool, but
- * this is the in-browser path that works today with zero deps.
+ * The mark itself is the 3-tier stacked-shape glyph
+ * (`/icons/shortstack-logo.svg` mirror — same path data, kept here so
+ * the component is self-contained and doesn't need to fetch over the
+ * network on first paint).
+ *
+ * Spin effect: pure CSS rotateY around the parent's perspective, every
+ * 9.5 seconds. Honors prefers-reduced-motion → static.
  *
  * Sizes:  sm=32px (sidebar)  md=64px (page hero)  lg=128px (login)
  *         xl=240px (404, marketing)
- *
- * Honors prefers-reduced-motion → static logo, no spin.
  */
 
 import { useEffect, useState } from "react";
@@ -35,8 +32,6 @@ export interface MandalaMarkProps {
   /** Spin animation. Default true. */
   spinning?: boolean;
   className?: string;
-  /** Override the logo URL — useful for white-label tenants. */
-  logoUrl?: string;
 }
 
 const SIZE_PX: Record<MandalaMarkSize, number> = {
@@ -63,7 +58,6 @@ export default function MandalaMark({
   size = "md",
   spinning = true,
   className = "",
-  logoUrl = "/icons/shortstack-logo.svg",
 }: MandalaMarkProps) {
   const px = SIZE_PX[size];
   const reduce = usePrefersReducedMotion();
@@ -88,20 +82,32 @@ export default function MandalaMark({
           willChange: animate ? "transform, filter" : undefined,
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={logoUrl}
-          alt=""
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 256 256"
           width={px}
           height={px}
-          className="block w-full h-full object-contain"
+          role="img"
+          aria-label="ShortStack"
           style={{
-            // Drop-shadow gives the edge-on pose visual weight.
+            display: "block",
+            width: "100%",
+            height: "100%",
             filter: animate
               ? "drop-shadow(0 4px 12px rgba(79,70,229,0.25))"
               : "drop-shadow(0 2px 6px rgba(0,0,0,0.10))",
           }}
-        />
+        >
+          <title>ShortStack</title>
+          <g fill="currentColor">
+            {/* Top tier */}
+            <path d="M 56 72 Q 56 50 84 50 Q 128 42 172 50 Q 200 50 200 72 Q 200 94 172 94 Q 128 102 84 94 Q 56 94 56 72 Z" />
+            {/* Middle tier */}
+            <path d="M 56 128 Q 56 106 84 106 Q 128 98 172 106 Q 200 106 200 128 Q 200 150 172 150 Q 128 158 84 150 Q 56 150 56 128 Z" />
+            {/* Bottom tier */}
+            <path d="M 56 184 Q 56 162 84 162 Q 128 154 172 162 Q 200 162 200 184 Q 200 206 172 206 Q 128 214 84 206 Q 56 206 56 184 Z" />
+          </g>
+        </svg>
       </span>
     </span>
   );
