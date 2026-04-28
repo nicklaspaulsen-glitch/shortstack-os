@@ -257,7 +257,13 @@ export async function GET(request: NextRequest) {
     .eq("id", user.id)
     .maybeSingle();
 
-  if (profile?.role !== "admin" && profile?.role !== "founder") {
+  // Apr 28: opened up to all authenticated NON-CLIENT roles. The previous
+  // gate (admin/founder only) blocked agency owners + team members from
+  // seeing their own integration health, causing a "Forbidden" toast on
+  // every social-connect attempt + on the integrations page Manage modal.
+  // Clients still get 403 (they shouldn't see backend integration state).
+  const role = profile?.role;
+  if (!role || role === "client") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

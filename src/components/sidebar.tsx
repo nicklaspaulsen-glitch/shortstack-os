@@ -301,6 +301,10 @@ export default function Sidebar() {
   const { profile, signOut, loading: authLoading } = useAuth();
   const { config: wl } = useWhiteLabel();
   const [collapsed, setCollapsed] = useState(false);
+  // Apr 28: live filter text. When non-empty, every nav row is checked
+  // for case-insensitive substring match against label + section + sub.
+  // Sections collapse to show only matches; non-matching rows hide.
+  const [navFilter, setNavFilter] = useState("");
 
   // Use profile role when available. If profile hasn't loaded yet but auth
   // loading is complete (user is logged in, profile just failed to fetch),
@@ -439,7 +443,14 @@ export default function Sidebar() {
     if (!userRole || !item.roles.includes(userRole)) return false;
     // Apply user-level enable list only for admin/team_member (client portal is untouched).
     if ((userRole === "admin" || userRole === "team_member") && enabledHrefs && enabledHrefs.length > 0) {
-      return enabledHrefs.includes(item.href);
+      if (!enabledHrefs.includes(item.href)) return false;
+    }
+    // Apr 28: live filter applied last so the user can substring-search
+    // across label / section / sub. Empty filter passes everything.
+    if (navFilter.trim()) {
+      const q = navFilter.trim().toLowerCase();
+      const haystack = `${item.label} ${item.section ?? ""} ${item.sub ?? ""}`.toLowerCase();
+      if (!haystack.includes(q)) return false;
     }
     return true;
   });
@@ -491,6 +502,10 @@ export default function Sidebar() {
 
   const isSectionExpanded = (section: string | null): boolean => {
     if (!section) return true; // Core items always visible
+    // Apr 28: when there's an active filter, ALWAYS expand sections
+    // that have matches so the user sees results without having to
+    // click open each section.
+    if (navFilter.trim()) return true;
     if (expandedSections[section] !== undefined) return expandedSections[section];
     // Default: expand only the section containing the active page
     return groups.find(g => g.section === section)?.items.some(item =>
@@ -720,6 +735,41 @@ export default function Sidebar() {
             >
               <X size={12} />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Quick filter — Apr 28: type to instantly narrow to matching nav
+          items. When the input has any text, sections collapse to show
+          only matching rows; clearing the input restores the normal
+          collapse state. Pressing Esc clears. Single biggest sidebar
+          UX fix per user feedback ("minimize the sidebar with all the
+          pages or make them into one or something to make it less
+          confusing and easier to navigate"). */}
+      {!collapsed && (
+        <div className="px-2 pt-1 pb-1">
+          <div className="relative">
+            <Search size={11} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            <input
+              type="search"
+              value={navFilter}
+              onChange={(e) => setNavFilter(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setNavFilter("");
+              }}
+              placeholder="Filter…"
+              className="w-full pl-7 pr-7 py-1.5 text-[11px] bg-surface-light/50 border border-border-subtle rounded-md text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/40 focus:bg-surface-light"
+              aria-label="Filter sidebar"
+            />
+            {navFilter && (
+              <button
+                onClick={() => setNavFilter("")}
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 p-0.5 rounded text-text-muted hover:text-text-primary"
+                aria-label="Clear filter"
+              >
+                <X size={10} />
+              </button>
+            )}
           </div>
         </div>
       )}
