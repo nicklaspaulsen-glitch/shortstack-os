@@ -68,18 +68,13 @@ export default function Tab1Calendar() {
   const [editCaption, setEditCaption] = useState("");
   const [editScheduled, setEditScheduled] = useState("");
 
+  // Audit Apr 26 M5: fetch the broadest set once (limit=300), then filter
+  // client-side via useMemo. Toggling a pill no longer triggers a network
+  // round-trip — saves hundreds of KB per click for agencies with many posts.
   const fetchLineup = useCallback(async () => {
     setLoading(true);
     try {
-      const params = new URLSearchParams();
-      if (statusFilters.length > 0 && statusFilters.length < STATUS_OPTIONS.length) {
-        params.set("status", statusFilters.join(","));
-      }
-      if (platformFilters.length > 0) {
-        params.set("platforms", platformFilters.join(","));
-      }
-      params.set("limit", "300");
-      const res = await fetch(`/api/social/lineup?${params.toString()}`);
+      const res = await fetch(`/api/social/lineup?limit=300`);
       if (!res.ok) {
         toast.error("Couldn't load posts");
         setPosts([]);
@@ -91,15 +86,29 @@ export default function Tab1Calendar() {
     } finally {
       setLoading(false);
     }
-  }, [statusFilters, platformFilters]);
+  }, []);
 
   useEffect(() => { void fetchLineup(); }, [fetchLineup]);
+
+  const filteredPosts = useMemo(() => {
+    const useStatus =
+      statusFilters.length > 0 && statusFilters.length < STATUS_OPTIONS.length;
+    const usePlatform = platformFilters.length > 0;
+    if (!useStatus && !usePlatform) return posts;
+    const statusSet = new Set(statusFilters);
+    const platformSet = new Set(platformFilters);
+    return posts.filter((p) => {
+      if (useStatus && !statusSet.has(p.status as SocialPostStatus)) return false;
+      if (usePlatform && !p.platforms.some((pl) => platformSet.has(pl))) return false;
+      return true;
+    });
+  }, [posts, statusFilters, platformFilters]);
 
   const grid = useMemo(() => buildMonthGrid(anchor), [anchor]);
 
   const postsByDay = useMemo(() => {
     const map = new Map<string, SocialPost[]>();
-    for (const post of posts) {
+    for (const post of filteredPosts) {
       const at = post.scheduled_at ?? post.published_at ?? post.created_at;
       if (!at) continue;
       const key = isoDay(new Date(at));
@@ -108,7 +117,7 @@ export default function Tab1Calendar() {
       else map.set(key, [post]);
     }
     return map;
-  }, [posts]);
+  }, [filteredPosts]);
 
   const monthLabel = anchor.toLocaleString(undefined, { month: "long", year: "numeric" });
 

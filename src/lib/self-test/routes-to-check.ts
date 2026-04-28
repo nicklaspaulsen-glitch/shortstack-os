@@ -604,6 +604,36 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     note: "Finalize handler validates body shape — empty body must be rejected, never silently accepted.",
   },
 
+  // ── Design Studio (editor, templates, exports — added per audit Apr 26 M2) ──
+  {
+    path: "/api/design-studio/designs",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "List user's designs. 200 returns { designs: [] } when authed and empty.",
+  },
+  {
+    path: "/api/design-studio/templates",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "List public + own templates. 200 always when authed (default fallback).",
+  },
+  {
+    path: "/api/design-studio/designs",
+    method: "POST",
+    auth_bearer: true,
+    body: {}, // empty body — handler must reject as 400 (missing title/doc) or 401
+    expected_status: [400, 401],
+    note: "Create-design handler validates body shape — empty body must be rejected.",
+  },
+  {
+    path: "/api/design-studio/admin/seed-templates",
+    method: "POST",
+    auth_bearer: true,
+    body: {}, // empty body — admin/founder gate must 401/403 unauth callers before any DB work
+    expected_status: [401, 403],
+    note: "Idempotent template seeder — gated on CRON_SECRET OR admin/founder session.",
+  },
+
   // ── Social Studio (MVP — calendar/lineup, AI upload, trends, stats, commenters) ──
   {
     path: "/api/social/lineup",

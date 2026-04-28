@@ -380,18 +380,9 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        const chatId = process.env.TELEGRAM_CHAT_ID;
-        const botToken = process.env.TELEGRAM_BOT_TOKEN;
-        if (chatId && botToken) {
-          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text: `🚨 Subscription Cancelled!\n\n${client.business_name} just cancelled. Trigger retention!`,
-            }),
-          }).catch(() => {});
-        }
+        await notifyOps(
+          `🚨 Subscription Cancelled!\n\n${client.business_name} just cancelled. Trigger retention!`,
+        );
       }
       break;
     }
@@ -436,19 +427,9 @@ export async function POST(request: NextRequest) {
             ).catch(() => {});
           }
 
-          // Telegram notification
-          const chatId = process.env.TELEGRAM_CHAT_ID;
-          const botToken = process.env.TELEGRAM_BOT_TOKEN;
-          if (chatId && botToken) {
-            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                chat_id: chatId,
-                text: `🎉 New Agency Signup!\n\n${prof?.full_name || "Unknown"} (${prof?.email || ""})\nPlan: ${planTier}\nMRR: $${((session.amount_total || 0) / 100).toFixed(0)}`,
-              }),
-            }).catch(() => {});
-          }
+          await notifyOps(
+            `🎉 New Agency Signup!\n\n${prof?.full_name || "Unknown"} (${prof?.email || ""})\nPlan: ${planTier}\nMRR: $${((session.amount_total || 0) / 100).toFixed(0)}`,
+          );
         }
       } else if (type === "client_subscription") {
         const clientId = session.metadata?.client_id;

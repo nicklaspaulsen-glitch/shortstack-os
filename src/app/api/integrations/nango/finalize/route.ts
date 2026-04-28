@@ -145,6 +145,13 @@ export async function POST(req: NextRequest) {
   // Upsert into the per-tenant connections table. RLS enforces user_id =
   // auth.uid() on insert/update, but we set user_id explicitly for clarity
   // and to preserve the conflict target.
+  //
+  // Audit note (Apr 26 M6): if the user closes the tab between Nango success
+  // and this finalize call, the upstream Nango connection exists but no row
+  // is written here, so the next page mount sees no connection and re-auths,
+  // creating a duplicate upstream. Reconciliation is tracked as part of the
+  // Nango migration plan — either via a webhook that writes the row
+  // server-to-server or a list-and-reconcile pass on /connect/{id} GET.
   const { data, error } = await supabase
     .from("oauth_connections_nango")
     .upsert(

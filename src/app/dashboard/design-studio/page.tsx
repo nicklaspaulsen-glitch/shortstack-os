@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useCallback } from "react";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useDesignStore, makeEmptyDoc } from "@/lib/design/store";
 import type { DesignRow } from "@/lib/design/types";
@@ -220,13 +221,15 @@ function RecentDesigns() {
           href={`/dashboard/design-studio?id=${d.id}`}
           className="block rounded-xl border border-white/10 bg-white/5 hover:bg-white/8 hover:border-white/20 overflow-hidden transition-all group"
         >
-          <div className="aspect-video bg-[#1a1a2e] flex items-center justify-center">
+          <div className="relative aspect-video bg-[#1a1a2e] flex items-center justify-center">
             {d.thumbnail_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={d.thumbnail_url}
                 alt={d.title}
-                className="w-full h-full object-cover"
+                fill
+                unoptimized
+                sizes="(max-width: 768px) 50vw, 33vw"
+                className="object-cover"
               />
             ) : (
               <PenTool size={20} className="text-gray-600" />
