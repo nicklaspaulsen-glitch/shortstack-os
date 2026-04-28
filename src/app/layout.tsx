@@ -77,6 +77,40 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-background min-h-screen">
+        {/* Apr 28: hidden SVG <defs> with the volumetric "3D nav icon"
+            filter. Positioned absolute and 0×0 so it occupies no layout
+            space; referenced by `filter: url(#nav-icon-3d)` from
+            globals.css for every sidebar icon. The filter chains:
+              1. feMorphology dilate — thickens the lucide stroke.
+              2. feSpecularLighting + fePointLight — adds top-left
+                 specular highlight, gives the icon a "shiny extruded
+                 surface" feel.
+              3. feComposite — masks the highlight to icon shape only.
+              4. feMerge — stacks: thickened-base under highlight on top.
+            The result combines with the existing CSS drop-shadow
+            extrusion stack for a genuinely 3D-looking icon. */}
+        <svg width="0" height="0" style={{ position: "absolute", overflow: "hidden" }} aria-hidden="true">
+          <defs>
+            <filter id="nav-icon-3d" x="-30%" y="-30%" width="160%" height="160%">
+              <feMorphology operator="dilate" radius="0.45" in="SourceGraphic" result="thick" />
+              <feSpecularLighting
+                surfaceScale="3"
+                specularConstant="0.85"
+                specularExponent="22"
+                lightingColor="#FFFFFF"
+                in="thick"
+                result="specular"
+              >
+                <fePointLight x="-150" y="-150" z="100" />
+              </feSpecularLighting>
+              <feComposite in="specular" in2="thick" operator="in" result="lit" />
+              <feMerge>
+                <feMergeNode in="thick" />
+                <feMergeNode in="lit" />
+              </feMerge>
+            </filter>
+          </defs>
+        </svg>
         <AuthProvider>
           <WhiteLabelProvider>
           <ThemeProvider>

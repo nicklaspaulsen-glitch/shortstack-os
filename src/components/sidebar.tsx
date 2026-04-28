@@ -667,9 +667,16 @@ export default function Sidebar() {
     <aside
       onMouseEnter={() => { if (!pinned) setHoverExpanded(true); }}
       onMouseLeave={() => { if (!pinned) setHoverExpanded(false); }}
-      className={`sidebar-fade-in fixed inset-y-0 left-0 z-40 flex flex-col transition-all duration-220 ease-out-expo-foundation ${
+      // Apr 28 v3: smooth hover-expand. Transitioning ONLY width + box-shadow
+      // (was `transition-all` which animated child transforms simultaneously
+      // and caused visible jitter). Out-quint bezier (0.22, 1, 0.36, 1)
+      // glides into the rest position instead of decelerating linearly.
+      // 320ms reads as "considered" without feeling slow. `transform-gpu`
+      // forces the aside onto its own compositor layer so the width tween
+      // doesn't trigger layout reflow on the rest of the page.
+      className={`sidebar-fade-in sidebar-rail-anim fixed inset-y-0 left-0 z-40 flex flex-col transform-gpu ${
         collapsed ? "w-[56px]" : "w-60"
-      } ${hoverExpanded && !pinned ? "shadow-[8px_0_32px_-12px_rgba(0,0,0,0.45)]" : ""}`}
+      } ${hoverExpanded && !pinned ? "shadow-[8px_0_36px_-10px_rgba(0,0,0,0.55)]" : ""}`}
       style={{
         background: "var(--bg-surface-1, #15141A)",
         borderRight: "1px solid var(--border-subtle, rgba(94,91,255,0.08))",

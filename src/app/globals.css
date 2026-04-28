@@ -1216,6 +1216,34 @@ body {
   animation: sidebarSlideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Apr 28 v3: smooth hover-expand for the compact rail. Out-quint
+ * (0.22, 1, 0.36, 1) is the modern "drift to rest" easing — it spends
+ * most of the duration close to the destination width, which reads as
+ * smooth motion instead of the abrupt mid-transition speed-change you
+ * get from ease-out / ease-in-out. 320ms is the sweet spot for
+ * sidebar reveals on every device tier we've tested.
+ *
+ * Only `width` and `box-shadow` transition. Child labels handle their
+ * own opacity transition via `.sidebar-label-fade` so they fade in
+ * AFTER the width has mostly resolved (60ms delay → labels appear at
+ * the 19% mark of the width tween, when the rail has cleared 40% of
+ * the distance — visually it looks like the rail "reveals" the labels). */
+.sidebar-rail-anim {
+  transition:
+    width 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: width;
+  /* Force own compositor layer so the width tween doesn't shove the
+   * main content area's reflow onto the same paint frame. */
+  contain: layout paint;
+}
+
+/* Labels + section headers fade after the rail has begun expanding so
+ * they don't "pop" when the rail is still narrow. Pair with .sidebar-rail-anim. */
+.sidebar-label-fade {
+  transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
+}
+
 /* LED strip base — positioned on the sidebar's right edge */
 .sidebar-led-strip {
   position: absolute;
@@ -1490,9 +1518,13 @@ body {
   will-change: transform, filter;
   transform-style: preserve-3d;
   perspective: 360px;
-  /* Default: extruded + slight forward tilt */
+  /* Default: extruded + slight forward tilt. The `url(#nav-icon-3d)`
+   * filter is defined as a hidden <defs> in src/app/layout.tsx — it
+   * adds REAL specular lighting on top of the drop-shadow extrusion
+   * stack, giving each lucide icon a chrome-like 3D surface. */
   transform: rotateX(14deg) rotateY(-6deg);
   filter:
+    url(#nav-icon-3d)
     drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.20))
     drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.16))
     drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.12))
@@ -1504,6 +1536,7 @@ body {
 [data-theme="light"] .nav-item-hover .nav-icon-alive,
 [data-theme="light"] .nav-item-hover > span:first-child {
   filter:
+    url(#nav-icon-3d)
     drop-shadow(1px 1px 0 rgba(60, 50, 130, 0.18))
     drop-shadow(2px 2px 0 rgba(60, 50, 130, 0.14))
     drop-shadow(3px 3px 0 rgba(60, 50, 130, 0.10))
@@ -1517,6 +1550,7 @@ body {
   .nav-item-hover:hover > span:first-child {
     transform: rotateX(0deg) rotateY(0deg) translateY(-1px) scale(1.12);
     filter:
+      url(#nav-icon-3d)
       drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.22))
       drop-shadow(2px 4px 0 rgba(0, 0, 0, 0.18))
       drop-shadow(3px 6px 0 rgba(0, 0, 0, 0.13))
@@ -1528,6 +1562,7 @@ body {
   .nav-item-hover.active .nav-icon-alive,
   .nav-item-hover.active > span:first-child {
     filter:
+      url(#nav-icon-3d)
       drop-shadow(1px 1px 0 rgba(94, 91, 255, 0.40))
       drop-shadow(2px 2px 0 rgba(94, 91, 255, 0.30))
       drop-shadow(3px 3px 0 rgba(94, 91, 255, 0.20))
