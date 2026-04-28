@@ -114,7 +114,14 @@ export default function TrinityHero3DCanvas({
       camera={{ position: [0, 0, 4.2], fov: 35 }}
       style={{ width: size, height: size }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      dpr={[1, 2]}
+      // Apr 28 v5: bumped DPR cap from 2 to 2.5 for crispness on
+      // 4K / retina displays. Modern GPUs handle 2.5x fine for a
+      // small canvas like this hero (~320px). Anything higher
+      // (3x+) starts melting integrated GPUs without visible benefit.
+      // Browser auto-pauses requestAnimationFrame when the canvas
+      // is offscreen, so we keep `frameloop="always"` (the default)
+      // to keep `useFrame` driving the spin animation when visible.
+      dpr={[1, 2.5]}
     >
       {/* HDR-backed reflections without shipping an .hdr file — drei has
        *  a few baked presets. "city" gives a balanced reflection profile

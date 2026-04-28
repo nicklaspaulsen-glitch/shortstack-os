@@ -75,6 +75,39 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem("ss-theme")||"nordic";var l=(t==="nordic"||t==="light");document.documentElement.setAttribute("data-theme",l?"light":"dark");if(!l){document.documentElement.style.backgroundColor="#0f0f0f";}}catch(e){}})();`,
           }}
         />
+        {/* Apr 28 v5: non-blocking font loading.
+            - <link rel="preconnect"> warms the font origin connections
+              so the stylesheet GET handshake is already done by the
+              time the URL is fetched.
+            - <link rel="preload" as="style"> downloads the CSS without
+              blocking render.
+            - The inline script swaps `rel="preload"` to `rel="stylesheet"`
+              once it loads, which is the modern non-blocking pattern.
+              Falls back to a plain stylesheet inside <noscript>.
+            - Inter trimmed from 7 weights to 3 (400/500/700) and
+              Bodoni Moda dropped entirely (CLAUDE.md retired it). */}
+        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preload"
+          as="style"
+          href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap"
+        />
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var ls=document.querySelectorAll('link[rel="preload"][as="style"]');ls.forEach(function(l){l.rel='stylesheet';});})();`,
+          }}
+        />
+        <noscript>
+          <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+        </noscript>
       </head>
       <body className="antialiased bg-background min-h-screen">
         {/* Apr 28: hidden SVG <defs> with the volumetric "3D nav icon"
