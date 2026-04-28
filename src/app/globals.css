@@ -1064,19 +1064,47 @@ body {
 }
 
 /* ═══════════ Page soft-enter ═══════════
- * Apr 28 — replaced the "stagger-shatter" 5-slab transition with a
- * single short fade. No layout shift, no per-element timing, no exit
- * animation that fights the next page's mount. The route change feels
- * fast because there is nothing to wait for. */
+ * Apr 28 v2 — refined the route-change entry. Two-phase reveal:
+ *   1) 0-110ms: page fades in from below (8px → 0)
+ *   2) 110-260ms: subtle scale-up from 0.985 → 1 + the indigo accent
+ *      bar at top scrolls in across the viewport like a progress
+ *      indicator settling.
+ * Designed to feel like a physical card placed on the surface —
+ * dimensional, not a flat fade. Honors reduced-motion.
+ */
 .page-soft-enter {
-  animation: pageSoftEnter 180ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: pageSoftEnter 260ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  position: relative;
+  transform-origin: top center;
+}
+.page-soft-enter::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(var(--color-accent-rgb, 79 70 229) / 0.85),
+    transparent);
+  z-index: 100;
+  pointer-events: none;
+  animation: pageProgressBar 280ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 @keyframes pageSoftEnter {
-  from { opacity: 0; transform: translateY(2px); }
-  to { opacity: 1; transform: translateY(0); }
+  0%   { opacity: 0; transform: translateY(8px) scale(0.985); }
+  60%  { opacity: 1; transform: translateY(0) scale(1.002); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes pageProgressBar {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .page-soft-enter { animation: none; }
+  .page-soft-enter,
+  .page-soft-enter::before { animation: none; }
 }
 
 /* ═══════════ Preset Library: Transition demo animations ═══════════ */
@@ -1375,7 +1403,11 @@ body {
   animation: skeletonPulse 1.6s ease-in-out infinite;
 }
 
-/* Sidebar nav item hover (subtle gold left bar slide-in) */
+/* Sidebar nav item hover — Apr 28 v2.
+ * Indigo left bar slides in from 0% → 60% on hover, the row icon
+ * lifts -1px with a soft indigo glow, and the row text shifts +2px
+ * to feel like the whole row "leans into" your cursor. Adds the
+ * "alive but not jittery" feedback the user asked for. */
 .nav-item-hover {
   position: relative;
   transition: background 0.18s ease, color 0.18s ease;
@@ -1387,7 +1419,7 @@ body {
   top: 50%;
   width: 2px;
   height: 0;
-  background: var(--color-accent, #C9A84C);
+  background: var(--color-accent, #4F46E5);
   transform: translateY(-50%);
   transition: height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 1px;
@@ -1396,6 +1428,32 @@ body {
 .nav-item-hover:hover::before,
 .nav-item-hover.active::before {
   height: 60%;
+}
+/* Icon 3D-feel: lift on row hover. The icon span is tagged with
+ * `nav-icon-alive` already (see line 1268 — class added in nav links). */
+.nav-item-hover .nav-icon-alive,
+.nav-item-hover > span:first-child {
+  transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1),
+              filter 220ms cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform, filter;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nav-item-hover:hover .nav-icon-alive,
+  .nav-item-hover:hover > span:first-child {
+    transform: translateY(-1px) scale(1.08);
+    filter: drop-shadow(0 2px 4px rgba(var(--color-accent-rgb, 79 70 229) / 0.35));
+  }
+  .nav-item-hover.active .nav-icon-alive,
+  .nav-item-hover.active > span:first-child {
+    filter: drop-shadow(0 1px 3px rgba(var(--color-accent-rgb, 79 70 229) / 0.45));
+  }
+  /* Row text leans 2px to the right on hover — implies the cursor
+   * is "pulling" the label, alive feeling. */
+  .nav-item-hover:hover > span.truncate,
+  .nav-item-hover:hover > span.flex-1 {
+    transform: translateX(2px);
+    transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
 }
 
 /* Checkbox bounce when checked */
