@@ -409,17 +409,29 @@ function FontsTab({
     });
   }, [query, category]);
 
-  // Load each font's stylesheet once so previews actually render in the family.
+  // Load each font's stylesheet once so previews actually render in the
+  // family. Apr 28 fix: previously this used `document.styleSheets`
+  // for the dedup check, which is unreliable because async-loaded
+  // stylesheets aren't in that list until their CSS finishes parsing.
+  // Net effect: every search keystroke re-triggered this useEffect and
+  // re-injected every font's <link>, ballooning the DOM and rendering
+  // some fonts only after a 5-10 second delay (browsers throttle
+  // duplicate font requests). The new ref-based seen-set is module-
+  // local + survives re-renders, so each font URL is injected exactly
+  // once for the lifetime of the page.
   useEffect(() => {
-    const existing = new Set(
-      Array.from(document.styleSheets).map((s) => s.href || ""),
-    );
+    if (typeof window === "undefined") return;
+    const seen = (window as unknown as { __ssFontsSeen?: Set<string> }).__ssFontsSeen
+      ?? ((window as unknown as { __ssFontsSeen?: Set<string> }).__ssFontsSeen = new Set<string>());
     for (const f of filtered) {
-      if (existing.has(f.url)) continue;
+      if (seen.has(f.url)) continue;
+      seen.add(f.url);
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = f.url;
-      link.crossOrigin = "anonymous";
+      // No crossOrigin on Google Fonts — they don't send Access-Control
+      // headers for the CSS and adding the attribute makes the browser
+      // refuse the resource silently. Without it: works fine.
       document.head.appendChild(link);
     }
   }, [filtered]);
@@ -932,10 +944,23 @@ function AudioCard({
       const proxied = url.startsWith("http")
         ? `/api/audio-proxy?url=${encodeURIComponent(url)}`
         : url;
-      const a = new Audio(proxied);
+      // CRITICAL: crossOrigin MUST be set BEFORE the src attribute or the
+      // browser fires the request without CORS attributes and the response
+      // is treated as opaque — playback silently fails. Apr 28: previously
+      // we passed src into the Audio() constructor and only set
+      // crossOrigin afterwards, which is why every preview "didn't work."
+      const a = new Audio();
       a.crossOrigin = "anonymous";
+      a.preload = "metadata";
+      a.src = proxied;
       a.onended = () => setPlaying(false);
       a.onerror = () => {
+        // Surface a real error to the console so we can see WHY a track
+        // failed (404, CORS, codec, etc.) instead of just "preview broken".
+        console.warn(
+          "[preset-library] audio preview failed",
+          { id, url, code: a.error?.code, message: a.error?.message }
+        );
         setError(true);
         setPlaying(false);
       };
@@ -945,7 +970,8 @@ function AudioCard({
     if (a.paused) {
       a.play()
         .then(() => setPlaying(true))
-        .catch(() => {
+        .catch((err: unknown) => {
+          console.warn("[preset-library] play() rejected", { id, err });
           setError(true);
           setPlaying(false);
         });
