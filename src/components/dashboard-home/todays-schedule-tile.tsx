@@ -1,7 +1,7 @@
 "use client";
 
 import { Calendar, MessageSquare, Sparkles, Users } from "lucide-react";
-import { tokens } from "@/lib/brand/tokens";
+import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { BentoTile, BentoEmpty } from "./bento-tile";
 import type { ScheduledItem } from "./types";
 
@@ -41,7 +41,7 @@ function kindColor(kind: ScheduledItem["kind"]): string {
     case "calendar":
       return tokens.brand.plumHover;
     default:
-      return tokens.text.secondary;
+      return themeTokens.text.secondary;
   }
 }
 
@@ -75,7 +75,7 @@ export default function TodaysScheduleTile({ schedule, index = 0 }: Props) {
                 <span
                   className="absolute -left-[18px] top-1.5 w-3 h-3 rounded-full flex items-center justify-center"
                   style={{
-                    background: tokens.bg.base,
+                    background: themeTokens.bg.base,
                     border: `1.5px solid ${color}`,
                     boxShadow: `0 0 8px ${color}66`,
                   }}
@@ -86,13 +86,13 @@ export default function TodaysScheduleTile({ schedule, index = 0 }: Props) {
                 <div className="flex items-baseline gap-2 min-w-0">
                   <span
                     className="text-[10px] font-mono font-medium tabular-nums shrink-0"
-                    style={{ color: tokens.text.muted }}
+                    style={{ color: themeTokens.text.muted }}
                   >
                     {formatTime(item.scheduled_at)}
                   </span>
                   <p
                     className="text-[12px] font-medium truncate"
-                    style={{ color: tokens.text.primary }}
+                    style={{ color: themeTokens.text.primary }}
                   >
                     {item.title}
                   </p>
@@ -100,7 +100,7 @@ export default function TodaysScheduleTile({ schedule, index = 0 }: Props) {
                 {item.detail && (
                   <p
                     className="text-[10px] mt-0.5 truncate"
-                    style={{ color: tokens.text.muted }}
+                    style={{ color: themeTokens.text.muted }}
                   >
                     {item.detail}
                   </p>

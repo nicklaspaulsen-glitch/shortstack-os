@@ -3,7 +3,7 @@
 import { Bot } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { RealtimePostgresInsertPayload } from "@supabase/supabase-js";
-import { tokens } from "@/lib/brand/tokens";
+import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { createClient } from "@/lib/supabase/client";
 import { formatRelativeTime } from "@/lib/utils";
 import { AGENTS } from "@/lib/pixel-office/agents";
@@ -35,7 +35,7 @@ const AGENT_BY_KEY = AGENTS.reduce(
 
 function agentColor(key: string): string {
   const agent = AGENT_BY_KEY[key];
-  if (!agent) return tokens.text.muted;
+  if (!agent) return themeTokens.text.muted;
   // Convert 0xrrggbb to #rrggbb
   return `#${agent.brandColor.toString(16).padStart(6, "0")}`;
 }
@@ -105,7 +105,7 @@ export default function AgentActivityFeedTile({ ownerId, initialEvents, index = 
               <div className="min-w-0 flex-1">
                 <p
                   className="text-[11px] leading-snug"
-                  style={{ color: tokens.text.primary }}
+                  style={{ color: themeTokens.text.primary }}
                 >
                   <span className="font-semibold" style={{ color: agentColor(ev.agent_key) }}>
                     {AGENT_BY_KEY[ev.agent_key]?.name || ev.agent_key}
@@ -114,7 +114,7 @@ export default function AgentActivityFeedTile({ ownerId, initialEvents, index = 
                 </p>
                 <p
                   className="text-[9px] mt-0.5"
-                  style={{ color: tokens.text.muted }}
+                  style={{ color: themeTokens.text.muted }}
                 >
                   {formatRelativeTime(ev.created_at)}
                 </p>

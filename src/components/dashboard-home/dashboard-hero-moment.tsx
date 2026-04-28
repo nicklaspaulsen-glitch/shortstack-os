@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { tokens } from "@/lib/brand/tokens";
+import { tokens, themeTokens } from "@/lib/brand/tokens";
 import Stack3D from "@/components/brand/stack-3d";
 import type { HeroBlock } from "./types";
 
@@ -30,15 +30,17 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
 
   return (
     <motion.section
-      className="lg:col-span-8 lg:row-span-2 relative overflow-hidden rounded-2xl flex"
+      className="lg:col-span-8 lg:row-span-2 relative overflow-hidden rounded-2xl flex border border-border-subtle"
+      // Apr 28 v4 fix: was hardcoding themeTokens.bg.surface1 (dark hex) which
+      // broke the card in light theme. Now uses CSS var-backed gradient
+      // so the card flips correctly when [data-theme="light"] is active.
       style={{
-        background: `linear-gradient(135deg, ${tokens.bg.surface1} 0%, ${tokens.bg.surface2} 50%, ${tokens.brand.plum} 145%)`,
-        border: `1px solid ${tokens.border.subtle}`,
+        background: `linear-gradient(135deg, rgb(var(--bg-surface-1-rgb) / 1) 0%, rgb(var(--bg-surface-2-rgb) / 1) 50%, rgb(var(--brand-plum-rgb) / 1) 145%)`,
         boxShadow: [
           "0 1px 0 rgba(255,255,255,0.04) inset",
-          "0 4px 12px rgba(0,0,0,0.4)",
-          "0 24px 56px -16px rgba(0,0,0,0.6)",
-          `0 0 48px -12px ${tokens.brand.lime}22`,
+          "0 4px 12px rgba(0,0,0,0.10)",
+          "0 24px 56px -16px rgba(0,0,0,0.18)",
+          `0 0 48px -12px rgb(var(--brand-accent-rgb) / 0.13)`,
         ].join(", "),
       }}
       initial={reduceMotion ? false : { opacity: 0, y: 20 }}
@@ -81,35 +83,20 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
 
       <div className="relative flex-1 flex flex-col justify-between px-7 py-7 sm:px-10 sm:py-9 z-10">
         <div>
-          <p
-            className="font-editorial text-sm mb-3 italic"
-            style={{ color: tokens.brand.lime, opacity: 0.95 }}
-          >
+          <p className="font-editorial text-sm mb-3 italic text-brand-accent opacity-95">
             Moment of the day
           </p>
-          <h2
-            className="font-display tracking-[-0.025em] leading-[1.02] text-[clamp(2rem,1.4rem+2.4vw,3.75rem)]"
-            style={{
-              color: tokens.text.primary,
-              textShadow: "0 1px 2px rgba(0,0,0,0.45)",
-            }}
-          >
+          <h2 className="font-display tracking-[-0.025em] leading-[1.02] text-[clamp(2rem,1.4rem+2.4vw,3.75rem)] text-text-primary [text-shadow:0_1px_2px_rgba(0,0,0,0.10)]">
             {hero.headline}
           </h2>
-          <p
-            className="text-sm mt-3 max-w-2xl leading-relaxed"
-            style={{ color: tokens.text.secondary }}
-          >
+          <p className="text-sm mt-3 max-w-2xl leading-relaxed text-text-secondary">
             {hero.subhead}
           </p>
 
           {/* Progress bar — only when the hero has meaningful progress */}
           {hero.progressPct > 0 && (
             <div className="mt-6 max-w-md">
-              <div
-                className="h-1.5 rounded-full overflow-hidden"
-                style={{ background: tokens.bg.surface3 }}
-              >
+              <div className="h-1.5 rounded-full overflow-hidden bg-bg-surface-3">
                 <motion.div
                   className="h-full rounded-full"
                   style={{
@@ -125,10 +112,7 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
                   }}
                 />
               </div>
-              <p
-                className="mt-2 text-[11px] font-mono"
-                style={{ color: tokens.text.muted }}
-              >
+              <p className="mt-2 text-[11px] font-mono text-text-muted">
                 {hero.progressPct}% of today&apos;s target
               </p>
             </div>
@@ -138,19 +122,9 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
         <div className="mt-6">
           <Link
             href={hero.cta.href}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold transition-all duration-220"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold transition-all duration-220 bg-brand-accent text-white hover:-translate-y-px"
             style={{
-              background: tokens.brand.lime,
-              color: tokens.bg.base,
-              boxShadow: `0 4px 18px -4px ${tokens.brand.lime}88, 0 1px 0 rgba(255,255,255,0.4) inset`,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-1px)";
-              e.currentTarget.style.boxShadow = `0 6px 22px -4px ${tokens.brand.lime}aa, 0 1px 0 rgba(255,255,255,0.5) inset`;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = `0 4px 18px -4px ${tokens.brand.lime}88, 0 1px 0 rgba(255,255,255,0.4) inset`;
+              boxShadow: `0 4px 18px -4px rgb(var(--brand-accent-rgb) / 0.55), 0 1px 0 rgba(255,255,255,0.25) inset`,
             }}
           >
             {hero.cta.label}

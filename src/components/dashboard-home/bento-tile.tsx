@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { tokens } from "@/lib/brand/tokens";
+import { tokens, themeTokens } from "@/lib/brand/tokens";
 import Stack3D from "@/components/brand/stack-3d";
 
 /**
@@ -50,7 +50,7 @@ export function BentoTile({
     <motion.section
       className={`${span} relative overflow-hidden rounded-2xl flex flex-col`}
       style={{
-        background: tokens.bg.surface1,
+        background: themeTokens.bg.surface1,
         border: `1px solid ${borderColor}`,
         boxShadow: [
           "0 1px 0 rgba(255,255,255,0.04) inset",
@@ -91,7 +91,7 @@ export function BentoTile({
           )}
           <h2
             className="font-display text-[13px] font-semibold uppercase tracking-[0.14em] truncate"
-            style={{ color: tokens.text.primary }}
+            style={{ color: themeTokens.text.primary }}
           >
             {title}
           </h2>
@@ -133,7 +133,7 @@ export function BentoEmpty({ copy, cta, mark = true }: BentoEmptyProps) {
       )}
       <p
         className="font-editorial text-[13px] leading-snug max-w-[26ch]"
-        style={{ color: tokens.text.secondary }}
+        style={{ color: themeTokens.text.secondary }}
       >
         {copy}
       </p>
@@ -142,7 +142,7 @@ export function BentoEmpty({ copy, cta, mark = true }: BentoEmptyProps) {
           href={cta.href}
           className="text-[11px] font-medium px-3 py-1.5 rounded-full transition-colors"
           style={{
-            color: tokens.bg.base,
+            color: themeTokens.bg.base,
             background: tokens.brand.lime,
             boxShadow: `0 0 16px -4px ${tokens.brand.lime}66`,
           }}

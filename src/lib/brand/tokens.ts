@@ -25,27 +25,32 @@ export const tokens = {
     muted: "#6F6F7A",
   },
   brand: {
-    /** The brand accent — indigo. Works on both pure black and pure white. */
-    accent: "#5E5BFF",
-    accentSoft: "#7B79FF",
-    accentDim: "#3D3CB3",
-    accentGlow: "rgba(94, 91, 255, 0.4)",
+    /** The brand accent — TEAL (Apr 28 v4). Lighter, cooler, more modern
+     *  than the previous indigo. Three variants:
+     *    accent     — teal-400 (#2DD4BF) — primary on dark surfaces
+     *    accentSoft — teal-300 (#5EEAD4) — hover / highlight on dark
+     *    accentDim  — teal-600 (#0D9488) — primary on LIGHT surfaces (AA on white)
+     *  Light theme picks accentDim via globals.css so contrast holds. */
+    accent: "#2DD4BF",
+    accentSoft: "#5EEAD4",
+    accentDim: "#0D9488",
+    accentGlow: "rgba(45, 212, 191, 0.4)",
 
-    /** Legacy alias — `tokens.brand.lime` now resolves to the indigo accent.
+    /** Legacy alias — `tokens.brand.lime` now resolves to the teal accent.
      *  Do not introduce new uses; existing call sites are intentionally left
      *  pointing at this so the visual system migrates without a sweeping
      *  refactor of the 100+ pages still referencing it. */
-    lime: "#5E5BFF",
-    limeSoft: "#7B79FF",
-    limeDim: "#3D3CB3",
-    limeGlow: "rgba(94, 91, 255, 0.4)",
+    lime: "#2DD4BF",
+    limeSoft: "#5EEAD4",
+    limeDim: "#0D9488",
+    limeGlow: "rgba(45, 212, 191, 0.4)",
 
     /** Editorial complement — neutral charcoal (replaces the old plum). */
     plum: "#1F1F23",
     plumHover: "#2C2C32",
 
-    /** Same hex as `accent` — kept as alias for back-compat. */
-    indigo: "#5E5BFF",
+    /** `indigo` alias kept for back-compat — also resolves to teal now. */
+    indigo: "#2DD4BF",
   },
   status: {
     success: "#7FE5B8",
@@ -61,6 +66,49 @@ export const tokens = {
 
 export type BrandTokens = typeof tokens;
 
+/**
+ * CSS-var-backed sibling tokens (Apr 28 v4).
+ *
+ * The hex values in `tokens` above are baked-in defaults. Components that
+ * need to RESPECT the active theme (light vs dark) at render time should
+ * import `themeTokens` instead — every value is a `rgb(var(--name-rgb) / a)`
+ * string that the browser resolves against the active theme's CSS vars.
+ *
+ * Use:
+ *   import { themeTokens } from "@/lib/brand/tokens";
+ *   <div style={{ background: themeTokens.bg.surface1 }} />
+ *
+ * Don't use these for hex+alpha string concatenation (e.g.
+ * `${tokens.brand.lime}22` for an 0x22 alpha hex). For that path stay
+ * with the hex `tokens` export and accept the dark-baked default.
+ */
+export const themeTokens = {
+  bg: {
+    base: "rgb(var(--bg-base-rgb) / 1)",
+    surface1: "rgb(var(--bg-surface-1-rgb) / 1)",
+    surface2: "rgb(var(--bg-surface-2-rgb) / 1)",
+    surface3: "rgb(var(--bg-surface-3-rgb) / 1)",
+  },
+  text: {
+    primary: "rgb(var(--text-primary-rgb) / 1)",
+    secondary: "rgb(var(--text-secondary-rgb) / 1)",
+    muted: "rgb(var(--text-muted-rgb) / 1)",
+  },
+  brand: {
+    accent: "rgb(var(--brand-accent-rgb) / 1)",
+    accentSoft: "rgb(var(--brand-accent-soft-rgb) / 1)",
+    accentGlow: "rgb(var(--brand-accent-rgb) / 0.4)",
+    lime: "rgb(var(--brand-lime-rgb) / 1)",
+    limeSoft: "rgb(var(--brand-lime-soft-rgb) / 1)",
+    limeGlow: "rgb(var(--brand-lime-rgb) / 0.4)",
+    plum: "rgb(var(--brand-plum-rgb) / 1)",
+  },
+  border: {
+    subtle: "rgb(var(--brand-accent-rgb) / 0.08)",
+    strong: "rgb(var(--brand-accent-rgb) / 0.20)",
+  },
+} as const;
+
 /** RGB triplet helpers — Tailwind opacity modifiers need `r g b` strings. */
 export const tokenRgb = {
   bgBase: "7 7 8",
@@ -70,15 +118,15 @@ export const tokenRgb = {
   textPrimary: "245 245 247",
   textSecondary: "168 168 178",
   textMuted: "111 111 122",
-  brandAccent: "94 91 255",
-  brandAccentSoft: "123 121 255",
-  brandAccentDim: "61 60 179",
-  brandLime: "94 91 255",       // legacy alias (= accent)
-  brandLimeSoft: "123 121 255", // legacy alias (= accentSoft)
-  brandLimeDim: "61 60 179",    // legacy alias (= accentDim)
+  brandAccent: "45 212 191",
+  brandAccentSoft: "94 234 212",
+  brandAccentDim: "13 148 136",
+  brandLime: "45 212 191",       // legacy alias (= accent)
+  brandLimeSoft: "94 234 212",   // legacy alias (= accentSoft)
+  brandLimeDim: "13 148 136",    // legacy alias (= accentDim)
   brandPlum: "31 31 35",
   brandPlumHover: "44 44 50",
-  brandIndigo: "94 91 255",
+  brandIndigo: "45 212 191",
   statusSuccess: "127 229 184",
   statusWarning: "255 192 98",
   statusError: "242 96 99",

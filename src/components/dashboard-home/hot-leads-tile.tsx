@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Flame } from "lucide-react";
-import { tokens } from "@/lib/brand/tokens";
+import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { formatRelativeTime } from "@/lib/utils";
 import { BentoTile, BentoEmpty } from "./bento-tile";
 import type { HotLeadRow } from "./types";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 function scoreBadge(score: number | null): { color: string; bg: string; label: string } {
-  if (score == null) return { color: tokens.text.muted, bg: `${tokens.text.muted}22`, label: "—" };
+  if (score == null) return { color: themeTokens.text.muted, bg: `${tokens.text.muted}22`, label: "—" };
   if (score >= 80) {
     return {
       color: tokens.brand.lime,
@@ -29,7 +29,7 @@ function scoreBadge(score: number | null): { color: string; bg: string; label: s
     };
   }
   return {
-    color: tokens.text.muted,
+    color: themeTokens.text.muted,
     bg: `${tokens.text.muted}22`,
     label: String(score),
   };
@@ -60,7 +60,7 @@ export default function HotLeadsTile({ leads, index = 0 }: Props) {
                   className="flex items-center justify-between gap-3 py-2 px-2 -mx-2 rounded-lg transition-colors"
                   style={{ borderColor: tokens.border.subtle }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = tokens.bg.surface2;
+                    e.currentTarget.style.background = themeTokens.bg.surface2;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = "transparent";
@@ -69,13 +69,13 @@ export default function HotLeadsTile({ leads, index = 0 }: Props) {
                   <div className="min-w-0 flex-1">
                     <p
                       className="text-[12px] font-medium truncate"
-                      style={{ color: tokens.text.primary }}
+                      style={{ color: themeTokens.text.primary }}
                     >
                       {lead.business_name || "(unnamed lead)"}
                     </p>
                     <p
                       className="text-[10px] truncate"
-                      style={{ color: tokens.text.muted }}
+                      style={{ color: themeTokens.text.muted }}
                     >
                       {lead.industry || "Unknown industry"}
                       {lead.scraped_at && (

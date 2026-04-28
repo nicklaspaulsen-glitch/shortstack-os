@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Calendar, Mail, PhoneCall, Sparkles, UserPlus, Workflow, Zap } from "lucide-react";
-import { tokens } from "@/lib/brand/tokens";
+import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { BentoTile } from "./bento-tile";
 
 /**
@@ -46,16 +46,16 @@ export default function QuickActionsGrid({ index = 0 }: Props) {
             href={action.href}
             className="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl transition-all duration-220"
             style={{
-              background: tokens.bg.surface2,
+              background: themeTokens.bg.surface2,
               border: `1px solid ${tokens.border.subtle}`,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = tokens.bg.surface3;
+              e.currentTarget.style.background = themeTokens.bg.surface3;
               e.currentTarget.style.borderColor = tokens.border.strong;
               e.currentTarget.style.transform = "translateY(-2px)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = tokens.bg.surface2;
+              e.currentTarget.style.background = themeTokens.bg.surface2;
               e.currentTarget.style.borderColor = tokens.border.subtle;
               e.currentTarget.style.transform = "translateY(0)";
             }}
@@ -67,7 +67,7 @@ export default function QuickActionsGrid({ index = 0 }: Props) {
             />
             <span
               className="text-[10px] font-medium text-center"
-              style={{ color: tokens.text.secondary }}
+              style={{ color: themeTokens.text.secondary }}
             >
               {action.label}
             </span>

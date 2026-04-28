@@ -1,7 +1,7 @@
 "use client";
 
 import { Mail } from "lucide-react";
-import { tokens } from "@/lib/brand/tokens";
+import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { formatRelativeTime } from "@/lib/utils";
 import { BentoTile, BentoEmpty } from "./bento-tile";
 import type { OutreachEmailRow } from "./types";
@@ -17,7 +17,7 @@ function statusColor(status: string): string {
   if (s === "opened" || s === "clicked") return tokens.status.success;
   if (s === "bounced" || s === "failed") return tokens.status.error;
   if (s === "queued" || s === "pending") return tokens.status.warning;
-  return tokens.text.secondary;
+  return themeTokens.text.secondary;
 }
 
 export default function RecentEmailsTile({ emails, index = 0 }: Props) {
@@ -45,13 +45,13 @@ export default function RecentEmailsTile({ emails, index = 0 }: Props) {
               <div className="min-w-0 flex-1">
                 <p
                   className="text-[12px] font-medium truncate"
-                  style={{ color: tokens.text.primary }}
+                  style={{ color: themeTokens.text.primary }}
                 >
                   {email.subject || "(no subject)"}
                 </p>
                 <p
                   className="text-[10px] truncate"
-                  style={{ color: tokens.text.muted }}
+                  style={{ color: themeTokens.text.muted }}
                 >
                   {email.recipient || "Unknown"}
                   <span className="mx-1.5 opacity-30">·</span>

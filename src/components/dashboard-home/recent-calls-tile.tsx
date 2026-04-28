@@ -1,7 +1,7 @@
 "use client";
 
 import { PhoneCall } from "lucide-react";
-import { tokens } from "@/lib/brand/tokens";
+import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { formatRelativeTime } from "@/lib/utils";
 import { BentoTile, BentoEmpty } from "./bento-tile";
 import type { VoiceCallRow } from "./types";
@@ -32,9 +32,9 @@ function formatPhone(num: string | null): string {
 function outcomeColor(outcome: string | null): string {
   const o = (outcome || "").toLowerCase();
   if (o.includes("book") || o.includes("interested") || o.includes("hot")) return tokens.brand.lime;
-  if (o.includes("voicemail") || o.includes("nointerest")) return tokens.text.muted;
+  if (o.includes("voicemail") || o.includes("nointerest")) return themeTokens.text.muted;
   if (o.includes("decline") || o.includes("dnc") || o.includes("hostile")) return tokens.status.error;
-  return tokens.text.secondary;
+  return themeTokens.text.secondary;
 }
 
 export default function RecentCallsTile({ calls, index = 0 }: Props) {
@@ -62,13 +62,13 @@ export default function RecentCallsTile({ calls, index = 0 }: Props) {
               <div className="min-w-0 flex-1">
                 <p
                   className="text-[12px] font-medium truncate"
-                  style={{ color: tokens.text.primary }}
+                  style={{ color: themeTokens.text.primary }}
                 >
                   {formatPhone(call.from_number) || formatPhone(call.to_number)}
                 </p>
                 <p
                   className="text-[10px]"
-                  style={{ color: tokens.text.muted }}
+                  style={{ color: themeTokens.text.muted }}
                 >
                   {formatDuration(call.duration_seconds)}
                   <span className="mx-1.5 opacity-30">·</span>
