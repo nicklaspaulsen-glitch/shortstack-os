@@ -23,18 +23,20 @@ export const metadata: Metadata = {
   description: "Trinity is the all-in-one AI operating system for modern agencies. Scrape leads, automate outreach, manage clients, and scale revenue from one place.",
   keywords: ["agency management", "marketing automation", "lead generation", "CRM", "AI outreach", "digital marketing", "client portal", "agency OS"],
   icons: {
-    // ?v=2 cache-buster — browsers aggressively cache favicons across deploys.
-    // Bump this when the mandala source changes so users get the new icon
-    // without needing to clear cache manually.
+    // ?v=3 cache-buster — bumped when the favicon source changed (gold
+    // mandala → 3-tier stack mark). Browsers aggressively cache favicons
+    // across deploys, so the version query string forces a fresh fetch.
     icon: [
-      { url: "/icons/shortstack-logo.ico?v=2", sizes: "any" },
-      { url: "/icons/shortstack-logo.svg?v=2", type: "image/svg+xml" },
+      { url: "/icons/shortstack-logo.svg?v=3", type: "image/svg+xml" },
+      { url: "/icons/shortstack-logo.ico?v=3", sizes: "any" },
+      { url: "/icons/shortstack-logo-192.png?v=3", sizes: "192x192", type: "image/png" },
+      { url: "/icons/shortstack-logo-512.png?v=3", sizes: "512x512", type: "image/png" },
     ],
-    apple: "/icons/shortstack-logo.png?v=2",
-    shortcut: "/icons/shortstack-logo.ico?v=2",
+    apple: "/icons/shortstack-logo-180.png?v=3",
+    shortcut: "/icons/shortstack-logo.ico?v=3",
   },
   manifest: "/manifest.json",
-  themeColor: "#0b0d12",
+  themeColor: "#0D9488",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

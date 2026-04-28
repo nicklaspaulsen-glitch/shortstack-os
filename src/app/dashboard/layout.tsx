@@ -31,6 +31,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 
 // Lazy-load overlay/modal components — not needed on initial render
+const DashboardAmbient3D = dynamic(() => import("@/components/brand/dashboard-ambient-3d"), { ssr: false });
 const ClientChatWidget = dynamic(() => import("@/components/client-chat-widget"), { ssr: false });
 const VoiceAssistant = dynamic(() => import("@/components/voice-assistant"), { ssr: false });
 const OnboardingTour = dynamic(() => import("@/components/onboarding-tour"), { ssr: false });
@@ -340,7 +341,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <QuotaWallProvider>
       <SkipToContent />
-      <div className="flex min-h-screen bg-background">
+      {/* Apr 28 v6: ambient 3D background. Floating teal shapes drift
+          behind every dashboard page (similar to landing-page hero
+          treatment). pointer-events-none + -z-10 means it never blocks
+          UI. Auto-disabled on prefers-reduced-motion + togglable via
+          `data-ambient="off"` on <html> for video-editor / AI-studio
+          where every paint frame matters. */}
+      <DashboardAmbient3D />
+      {/* `bg-background/85` instead of opaque `bg-background` lets the
+          ambient 3D shapes peek through at 15% intensity — atmospheric
+          but doesn't fight content readability. */}
+      <div className="flex min-h-screen bg-background/85 relative">
 
         {/* Desktop sidebar — wrapped in its own LayoutGroup so the
             layoutId="sidebar-active-accent" inside Sidebar doesn't
