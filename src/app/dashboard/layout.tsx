@@ -391,7 +391,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 )}
                 {/* Subscription badge for admin */}
                 {profile?.role === "admin" && (
-                  <PlanBadge planTier={profile.plan_tier || undefined} />
+                  <PlanBadge
+                    planTier={profile.plan_tier || undefined}
+                    customLabel={
+                      ((profile as unknown as { onboarding_preferences?: Record<string, unknown> })
+                        .onboarding_preferences?.custom_plan_label) as string | undefined
+                    }
+                  />
                 )}
                 <ClientSwitcher />
                 <Notifications />
@@ -437,13 +443,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 }
 
 /* ─── Plan Badge (header) ───────────────────────────────────────── */
-function PlanBadge({ planTier }: { planTier?: string }) {
+/* Apr 28: now supports a custom label override stored in
+ * `profile.onboarding_preferences.custom_plan_label`. Lets the user
+ * (or admin/founder) replace the generic plan name with whatever
+ * they want — e.g. "Founder" → "OG #1" or "Lifetime VIP". Falls back
+ * to the canonical `plan.badge_label` when the override isn't set. */
+function PlanBadge({ planTier, customLabel }: { planTier?: string; customLabel?: string }) {
   const plan = getPlanConfig(planTier);
+  const label = (customLabel && customLabel.trim()) || plan.badge_label;
   return (
     <Link href="/dashboard/settings"
       className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg transition-colors"
-      style={{ background: `${plan.color}12`, color: plan.color, border: `1px solid ${plan.color}25` }}>
-      <Crown size={10} /> {plan.badge_label}
+      style={{ background: `${plan.color}12`, color: plan.color, border: `1px solid ${plan.color}25` }}
+      title={`Plan: ${plan.badge_label}${customLabel ? ` (custom label: ${customLabel})` : ""}`}>
+      <Crown size={10} /> {label}
     </Link>
   );
 }

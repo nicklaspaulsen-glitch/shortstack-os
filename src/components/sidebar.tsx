@@ -730,9 +730,16 @@ export default function Sidebar() {
       <nav className="flex-1 px-1.5 py-1 overflow-y-auto scrollbar-none">
         {/* Pinned items (always at top if any) */}
         {!collapsed && pins.length > 0 && (() => {
+          // Apr 28 audit fix: previous predicate
+          //   `!!x && (!userRole || x.roles.includes(userRole))`
+          // had wrong operator precedence. JS evaluates as
+          //   `((!!x && userRole) ? x.roles.includes(userRole) : false)`
+          // which means when `userRole` is "" (empty string during auth
+          // load) the whole thing returns false and pinned items
+          // disappear. Fix: short-circuit when no role yet.
           const pinnedNavItems = pins
             .map(href => navItems.find(i => i.href === href))
-            .filter((x): x is NavItem => !!x && userRole ? x.roles.includes(userRole) : false)
+            .filter((x): x is NavItem => !!x && (!userRole || x.roles.includes(userRole)))
             .filter(i => !enabledHrefs || enabledHrefs.length === 0 || enabledHrefs.includes(i.href));
           if (pinnedNavItems.length === 0) return null;
           return (
@@ -760,7 +767,7 @@ export default function Sidebar() {
                 const directItems = cg.items
                   .filter(h => !pinnedSet.has(h))
                   .map(h => navItems.find(i => i.href === h))
-                  .filter((x): x is NavItem => !!x && userRole ? x.roles.includes(userRole) : false)
+                  .filter((x): x is NavItem => !!x && (!userRole || x.roles.includes(userRole)))
                   .filter(i => !enabledHrefs || enabledHrefs.length === 0 || enabledHrefs.includes(i.href));
                 const subs = (cg.subgroups || []).map(sg => ({
                   id: sg.id,
@@ -768,7 +775,7 @@ export default function Sidebar() {
                   items: sg.items
                     .filter(h => !pinnedSet.has(h))
                     .map(h => navItems.find(i => i.href === h))
-                    .filter((x): x is NavItem => !!x && userRole ? x.roles.includes(userRole) : false)
+                    .filter((x): x is NavItem => !!x && (!userRole || x.roles.includes(userRole)))
                     .filter(i => !enabledHrefs || enabledHrefs.length === 0 || enabledHrefs.includes(i.href)),
                 })).filter(s => s.items.length > 0);
                 if (directItems.length === 0 && subs.length === 0) return null;
