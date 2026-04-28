@@ -15,8 +15,9 @@ import {
   UserPlus, Download, CreditCard, RefreshCw, ExternalLink, Loader, Zap,
   Tag, Check, ChevronDown, ChevronRight, Mail, Phone, Eye,
   Filter, ArrowUpDown, LayoutGrid, LayoutList, AlertTriangle,
-  Clock, CheckCircle, XCircle, StickyNote, Columns
+  Clock, CheckCircle, XCircle, StickyNote, Columns, UserCheck
 } from "lucide-react";
+import { useAppStore } from "@/lib/store";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
@@ -53,6 +54,7 @@ export default function ClientsPage() {
   const [tab, setTab] = useState<"clients" | "contracts" | "invoices" | "billing">("clients");
   const supabase = createClient();
   const router = useRouter();
+  const setManagedClient = useAppStore(s => s.setManagedClient);
 
   // --- New feature state ---
   const [viewMode, setViewMode] = useState<ViewMode>("table");
@@ -963,8 +965,29 @@ export default function ClientsPage() {
                     <button onClick={() => c.phone && window.open(`tel:${c.phone}`)} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
                       <Phone size={10} /> Call
                     </button>
-                    <button onClick={() => router.push(`/dashboard/clients/${c.id}`)} className="btn-primary text-[10px] px-2 py-1 flex items-center gap-1">
+                    <button onClick={() => router.push(`/dashboard/clients/${c.id}`)} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
                       <Eye size={10} /> View
+                    </button>
+                    {/* Manage as <client> — switches the global managed-client
+                        context so every page in the OS scopes its data + AI
+                        recommendations to this client. The little banner at the
+                        top of the screen confirms you're managing them; click
+                        the X on the banner to switch back to your own data. */}
+                    <button
+                      onClick={() => {
+                        setManagedClient({
+                          id: c.id,
+                          business_name: c.business_name,
+                          contact_name: c.contact_name ?? "",
+                          email: c.email ?? "",
+                          package_tier: c.package_tier ?? "",
+                        });
+                        toast.success(`Now managing ${c.business_name}`);
+                      }}
+                      className="btn-primary text-[10px] px-2 py-1 flex items-center gap-1"
+                      title="Switch the whole OS to manage this client's data, content, AI recs, etc."
+                    >
+                      <UserCheck size={10} /> Manage
                     </button>
                     <button onClick={() => setShowTagModal(c.id)} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
                       <Tag size={10} />

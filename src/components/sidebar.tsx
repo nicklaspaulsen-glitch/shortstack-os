@@ -197,6 +197,14 @@ const navItems: NavItem[] = [
   { label: "API Docs", href: "/dashboard/api-docs", icon: <FileText size={16} />, roles: ["admin"], sub: "Channels" },
   { label: "Activity Log", href: "/dashboard/activity-log", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Channels" },
 
+  // ── Workspace (team collaboration — internal team tools) ──
+  // Apr 28: positioned between Automate and Manage. Not at the very
+  // top (those are daily-use business surfaces) and not at the very
+  // bottom (which felt buried per user feedback).
+  { label: "Board", href: "/dashboard/workspace/board", icon: <Kanban size={16} />, roles: ["admin", "team_member"], section: "Workspace", sub: "Team" },
+  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <LayoutGrid size={16} />, roles: ["admin", "team_member"], sub: "Team" },
+  { label: "Files", href: "/dashboard/workspace/files", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"], sub: "Team" },
+
   // ── Manage (operations & finance) ──
   { label: "Workspaces", href: "/dashboard/workspaces", icon: <Building2 size={16} />, roles: ["admin"], section: "Manage", sub: "Business" },
   { label: "Team", href: "/dashboard/team", icon: <UsersRound size={16} />, roles: ["admin"], sub: "Business" },
@@ -237,15 +245,6 @@ const navItems: NavItem[] = [
   { label: "System Status", href: "/dashboard/system-status", icon: <ShieldCheck size={16} />, roles: ["admin"] },
   { label: "Public Status", href: "/dashboard/admin/status", icon: <Activity size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
-
-  // ── Workspace (team collaboration — internal team tools) ──
-  // Sits AFTER the business sections so daily-use surfaces come first.
-  // Only the FIRST item carries `section`; subsequent siblings keep `sub`
-  // so the renderer collects them under one header instead of starting a
-  // new group on each flag.
-  { label: "Board", href: "/dashboard/workspace/board", icon: <Kanban size={16} />, roles: ["admin", "team_member"], section: "Workspace", sub: "Team" },
-  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <LayoutGrid size={16} />, roles: ["admin", "team_member"], sub: "Team" },
-  { label: "Files", href: "/dashboard/workspace/files", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"], sub: "Team" },
 
   // ── Client Portal ──
   { label: "Overview", href: "/dashboard/portal", icon: <LayoutDashboard size={16} />, roles: ["client"] },
