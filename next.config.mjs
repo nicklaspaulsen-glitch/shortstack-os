@@ -32,6 +32,17 @@ const nextConfig = {
         "node_modules/puppeteer/**",
       ],
     },
+    // Tree-shake heavy packages that are imported everywhere via barrel
+    // files. Without this, importing { Sparkles } from "lucide-react"
+    // pulls in all ~1500 icons. With it, Next rewrites the import to a
+    // direct path so only the icons used ship. Same for date-fns.
+    // Ref: https://nextjs.org/docs/app/api-reference/next-config-js/optimizePackageImports
+    optimizePackageImports: [
+      "lucide-react",
+      "date-fns",
+      "framer-motion",
+      "@radix-ui/react-icons",
+    ],
   },
   images: {
     formats: ["image/avif", "image/webp"],
