@@ -41,17 +41,38 @@ const PageHero3DCanvas = dynamic(() => import("./page-hero-3d-canvas"), {
 });
 
 export type PageHero3DTheme =
+  // section-hub themes
   | "sales"
   | "create"
   | "visual"
   | "automate"
   | "manage"
   | "connect"
+  // domain themes
   | "ai"
   | "voice"
   | "analytics"
   | "leads"
   | "inbox"
+  // sidebar-icon-matched themes (Apr 28 v7)
+  | "phone"
+  | "mic"
+  | "calendar"
+  | "mail"
+  | "search"
+  | "settings"
+  | "bell"
+  | "crown"
+  | "bot"
+  | "globe"
+  | "heart"
+  | "star"
+  | "key"
+  | "shield"
+  | "target"
+  | "briefcase"
+  | "headphones"
+  // fallback
   | "default";
 
 export type PageHero3DSize = "sm" | "md" | "lg";

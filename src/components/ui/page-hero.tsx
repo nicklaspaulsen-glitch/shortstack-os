@@ -17,7 +17,82 @@ import PageHero3D, { type PageHero3DTheme } from "@/components/brand/page-hero-3
  * "default" Trinity scene catches uncommon routes.
  */
 function autoTheme3dFromPath(path: string): PageHero3DTheme {
-  // Section hubs first — most authoritative match.
+  // Apr 28 v7: most-specific icon-matched themes win FIRST. The
+  // section-hub themes are the broad fallback. Pages that have a
+  // dedicated sidebar icon (Phone, Mic, Calendar, etc.) should render
+  // a 3D scene that visibly matches that icon.
+
+  // ── ICON-MATCHED themes (closest fit) ────────────────────────────
+  // Phone (call surfaces)
+  if (/\/(eleven-agents|voicemail-drop|phone-setup|phone-email|dialer)(?:\/|$)/.test(path)) {
+    return "phone";
+  }
+  // Mic (voice studio)
+  if (/\/(voice-studio|settings\/voice-profile)(?:\/|$)/.test(path)) {
+    return "mic";
+  }
+  // Headphones (voice-AI)
+  if (/\/voice-receptionist(?:\/|$)/.test(path)) {
+    return "headphones";
+  }
+  // Calendar
+  if (/\/(calendar|scheduling|meetings|content-plan)(?:\/|$)/.test(path)) {
+    return "calendar";
+  }
+  // Mail / send
+  if (/\/(email-composer|email-templates|mail-setup|newsletter|cold-email)(?:\/|$)/.test(path)) {
+    return "mail";
+  }
+  // Search (lead finder)
+  if (/\/(scraper|search)(?:\/|$)/.test(path)) {
+    return "search";
+  }
+  // Settings
+  if (/\/settings(?:\/|$)/.test(path)) {
+    return "settings";
+  }
+  // Bell (notifications)
+  if (/\/notifications(?:\/|$)/.test(path)) {
+    return "bell";
+  }
+  // Crown (Agent HQ / premium / upgrade)
+  if (/\/(agent-supervisor|upgrade|pricing)(?:\/|$)/.test(path)) {
+    return "crown";
+  }
+  // Bot (telegram bot, AI chat)
+  if (/\/(telegram-bot|telegram-presets|whatsapp|sms-templates|trinity)(?:\/|$)/.test(path)) {
+    return "bot";
+  }
+  // Globe (websites, domains, google-business)
+  if (/\/(websites|domains|google-business)(?:\/|$)/.test(path)) {
+    return "globe";
+  }
+  // Heart (client health, reviews)
+  if (/\/client-health(?:\/|$)/.test(path)) {
+    return "heart";
+  }
+  // Star (reviews)
+  if (/\/reviews(?:\/|$)/.test(path)) {
+    return "star";
+  }
+  // Key (API keys, security)
+  if (/\/(api\/keys|api\/webhooks|api-docs|webhooks)(?:\/|$)/.test(path)) {
+    return "key";
+  }
+  // Shield (system status, security)
+  if (/\/(system-status|admin\/status|self-test|monitor)(?:\/|$)/.test(path)) {
+    return "shield";
+  }
+  // Target (competitors, ads)
+  if (/\/(competitive-monitor|competitor|ads-manager|ads)(?:\/|$)/.test(path)) {
+    return "target";
+  }
+  // Briefcase (vertical templates, white-label, subaccounts)
+  if (/\/(verticals|white-label|subaccounts|workspaces)(?:\/|$)/.test(path)) {
+    return "briefcase";
+  }
+
+  // ── SECTION-HUB themes (broad fallback) ──────────────────────────
   if (/\/dashboard\/sales(?:\/|$)/.test(path)) return "sales";
   if (/\/dashboard\/create(?:\/|$)/.test(path)) return "create";
   if (/\/dashboard\/visual(?:\/|$)/.test(path)) return "visual";
@@ -25,53 +100,40 @@ function autoTheme3dFromPath(path: string): PageHero3DTheme {
   if (/\/dashboard\/manage(?:\/|$)/.test(path)) return "manage";
   if (/\/dashboard\/connect(?:\/|$)/.test(path)) return "connect";
 
-  // Voice / call surfaces.
-  if (/\/(voice-receptionist|voice-studio|voicemail-drop|dialer|eleven-agents)(?:\/|$)/.test(path)) {
-    return "voice";
-  }
-
-  // AI / agent surfaces.
-  if (/\/(agent-supervisor|agent-office|agent-controls|agent-desktop|trinity|services|ai-)(?:\/|$)/.test(path)) {
+  // AI / agent surfaces (broader catch).
+  if (/\/(agent-office|agent-controls|agent-desktop|services|ai-)(?:\/|$)/.test(path)) {
     return "ai";
   }
-
-  // Inbox / messaging surfaces.
-  if (/\/(inbox|conversations|outreach-feed|portal\/support)(?:\/|$)/.test(path)) {
+  // Inbox / messaging.
+  if (/\/(inbox|conversations|outreach-feed|portal\/support|discord)(?:\/|$)/.test(path)) {
     return "inbox";
   }
-
-  // Lead / CRM / scraping.
-  if (/\/(leads|scraper|lead-sources|crm|cold-email|deals)(?:\/|$)/.test(path)) {
+  // Lead / CRM.
+  if (/\/(leads|lead-sources|crm|deals)(?:\/|$)/.test(path)) {
     return "leads";
   }
-
   // Sales-pipeline tools.
-  if (/\/(outreach-hub|outreach-logs|sequences|proposals|forecast|commission|ads-manager|affiliates|dm-controller|whatsapp|sms-templates)(?:\/|$)/.test(path)) {
+  if (/\/(outreach-hub|outreach-logs|sequences|proposals|forecast|commission|affiliates|dm-controller)(?:\/|$)/.test(path)) {
     return "sales";
   }
-
   // Content creation.
-  if (/\/(copywriter|script-lab|email-composer|email-templates|newsletter|content-plan|carousel-generator|brand-voice|brand-kit|content|content-library|funnels|landing-pages|websites|surveys|forms|social-studio|social-manager)(?:\/|$)/.test(path)) {
+  if (/\/(copywriter|script-lab|carousel-generator|brand-voice|brand-kit|content|content-library|funnels|landing-pages|surveys|forms|social-studio|social-manager)(?:\/|$)/.test(path)) {
     return "create";
   }
-
   // Visual / image / video.
   if (/\/(thumbnail-generator|ai-studio|design-studio|design|video-editor|ai-video)(?:\/|$)/.test(path)) {
     return "visual";
   }
-
   // Automate / workflows / integrations.
-  if (/\/(workflows|workflow-builder|automations|triggers|webhooks|api\/keys|api\/webhooks|api-docs|integrations|integrations-hub|integrations-marketplace|telegram-bot|telegram-presets|notion-sync|discord|google-business)(?:\/|$)/.test(path)) {
+  if (/\/(workflows|workflow-builder|automations|triggers|integrations|integrations-hub|integrations-marketplace|notion-sync)(?:\/|$)/.test(path)) {
     return "automate";
   }
-
   // Analytics / reports.
-  if (/\/(analytics|reports|report-generator|client-health|monitor|usage|admin\/llm-costs|admin\/agent-traces|system-status|admin\/status|self-test)(?:\/|$)/.test(path)) {
+  if (/\/(analytics|reports|report-generator|usage|admin\/llm-costs|admin\/agent-traces)(?:\/|$)/.test(path)) {
     return "analytics";
   }
-
-  // Manage / business.
-  if (/\/(workspaces|workspace|team|production|projects|financials|invoices|invoice-templates|subaccounts|white-label|billing|pricing|phone-email|phone-setup|mail-setup|domains|reviews|tickets|referrals|roi-calculator|marketplace|verticals|notifications|generations|settings|profile|tags|courses|community|portal)(?:\/|$)/.test(path)) {
+  // Manage / business (final fallback for ops surfaces).
+  if (/\/(workspace|team|production|projects|financials|invoices|invoice-templates|billing|tickets|referrals|roi-calculator|marketplace|generations|profile|tags|courses|community|portal)(?:\/|$)/.test(path)) {
     return "manage";
   }
 
@@ -228,6 +290,25 @@ export default function PageHero({
         ].join(", "),
       }}
     >
+      {/* Apr 28 v7: 3D scene moved OUT of the actions row to a corner-
+          decoration absolute position. Previous layout placed the
+          canvas inside the same flex row as the action buttons —
+          even with pointer-events-none the wider canvas wrapper was
+          eating click area on small viewports. Now the 3D sits
+          behind everything (z-0) at top-right with pointer-events-
+          none + opacity 0.85 so it reads as ambient depth, not UI. */}
+      {renderHero3d && (
+        <div
+          className="pointer-events-none absolute top-1 right-2 sm:top-2 sm:right-4 z-0 hidden md:block"
+          style={{ opacity: 0.92 }}
+          aria-hidden
+        >
+          <PageHero3D
+            theme={effectiveTheme3d}
+            size={variant === "hero" ? "lg" : "md"}
+          />
+        </div>
+      )}
       {/* Optional photographic backdrop — sits behind the gradient scrim. */}
       {photoUrl && (
         <div
@@ -345,22 +426,15 @@ export default function PageHero({
               {actions}
             </div>
           )}
-          {/* Theme-specific 3D scene. Auto-picks from URL path when
-              the caller didn't pass an explicit `theme3d`. The
-              legacy Stack3D mark wins only when the page explicitly
-              passed `showStack3D` (older API). */}
-          {showStack3D ? (
+          {/* Legacy Stack3D mark — only when the page explicitly
+              passed `showStack3D`. The new auto-3D scene is rendered
+              as a corner decoration above (outside this row) so it
+              never overlaps action buttons on small viewports. */}
+          {showStack3D && (
             <div className="hidden md:block shrink-0">
               <Stack3D size={variant === "hero" ? "md" : "sm"} />
             </div>
-          ) : renderHero3d ? (
-            <div className="hidden md:block shrink-0">
-              <PageHero3D
-                theme={effectiveTheme3d}
-                size={variant === "hero" ? "lg" : "md"}
-              />
-            </div>
-          ) : null}
+          )}
         </div>
       </motion.div>
     </div>
