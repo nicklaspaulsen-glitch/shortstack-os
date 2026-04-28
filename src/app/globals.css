@@ -1215,6 +1215,31 @@ body {
 .mandala-mark-spinner {
   animation: mandalaSpin 9.5s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
+
+/* Apr 28 v8 — page-hero 3D icon idle motion. The Fluent emoji PNGs
+ * already read as 3D thanks to their PBR-rendered source. The spin
+ * keeps them feeling "alive" without being distracting:
+ *   - Slow Y rotation, full 360° loop every 12s.
+ *   - Subtle X tilt on top so the icon isn't perfectly flat to camera.
+ *   - Pause on hover so the user can read details if they're curious.
+ */
+.hero-3d-icon-spin {
+  animation: hero3dIconSpin 12s linear infinite;
+}
+.hero-3d-icon:hover .hero-3d-icon-spin {
+  animation-play-state: paused;
+}
+@keyframes hero3dIconSpin {
+  0%   { transform: rotateY(0deg)   rotateX(8deg); }
+  50%  { transform: rotateY(180deg) rotateX(-6deg); }
+  100% { transform: rotateY(360deg) rotateX(8deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-3d-icon-spin {
+    animation: none;
+    transform: rotateY(0deg) rotateX(0deg);
+  }
+}
 @keyframes mandalaSpin {
   0%   { transform: rotateY(0deg);   filter: drop-shadow(0 2px 8px rgba(79,70,229,0.20)); }
   20%  { transform: rotateY(120deg); filter: drop-shadow(0 4px 12px rgba(79,70,229,0.32)); }
