@@ -58,13 +58,13 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      const zernioRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/social/zernio`, {
+      const zernioRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/api/social/zernio`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           client_id,
           platform,
-          callback_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/social-manager?connected=${platform}`,
+          callback_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/dashboard/social-manager?connected=${platform}`,
         }),
       });
 
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
               Authorization: `Bearer ${ZERNIO_API_KEY}`,
             },
             body: JSON.stringify({
-              callback_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/social-manager?connected=${platform}`,
+              callback_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/dashboard/social-manager?connected=${platform}`,
             }),
           });
 

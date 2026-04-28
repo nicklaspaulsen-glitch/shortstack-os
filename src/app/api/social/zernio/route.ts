@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     const connection = await zernioFetch(`/profiles/${profileId}/connect/${platform}`, {
       method: "POST",
       body: JSON.stringify({
-        callback_url: callback_url || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/integrations?connected=${platform}`,
+        callback_url: callback_url || `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/dashboard/integrations?connected=${platform}`,
       }),
     });
 

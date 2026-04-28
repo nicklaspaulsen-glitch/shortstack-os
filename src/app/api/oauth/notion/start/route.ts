@@ -7,7 +7,7 @@ export async function GET() {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.redirect(new URL("/login", process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"));
+    return NextResponse.redirect(new URL("/login", process.env.NEXT_PUBLIC_APP_URL ?? "https://app.shortstack.work"));
   }
 
   // TODO: implement Notion OAuth redirect once NOTION_CLIENT_ID and

@@ -224,5 +224,5 @@ export function resolveOrigin(headers: Headers): string {
   const proto = headers.get("x-forwarded-proto") || "https";
   const host = headers.get("x-forwarded-host") || headers.get("host");
   if (host) return `${proto}://${host}`;
-  return process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "http://localhost:3000";
+  return process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://app.shortstack.work";
 }

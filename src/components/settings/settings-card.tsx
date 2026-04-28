@@ -54,6 +54,40 @@ export default function SettingsCard({
         ease: [0.32, 0.72, 0, 1],
       }}
     >
+      {/* Apr 28 audit fix: when `queued`, render a non-clickable div
+          with a tooltip + cursor-not-allowed instead of a Link. The
+          old version painted a "Soon" pill but still navigated to a
+          404 because the destination page didn't exist. Now misclicks
+          show a toast and stay put. */}
+      {queued ? (
+        <div
+          className="block rounded-xl p-6 h-full transition-all duration-220 select-none"
+          role="button"
+          aria-disabled="true"
+          title="Coming soon — this surface ships in a future release"
+          style={{
+            background: tokens.bg.surface1,
+            border: `1px solid ${borderColor}`,
+            cursor: "not-allowed",
+            opacity: 0.65,
+            boxShadow: [
+              "0 1px 0 rgba(255,255,255,0.04) inset",
+              "0 2px 4px rgba(0,0,0,0.4)",
+              "0 8px 20px -10px rgba(0,0,0,0.55)",
+            ].join(", "),
+          }}
+          onClick={(e) => e.preventDefault()}
+        >
+          <SettingsCardBody
+            Icon={Icon}
+            accentColor={accentColor}
+            title={title}
+            description={description}
+            queued={queued}
+            preview={preview}
+          />
+        </div>
+      ) : (
       <Link
         href={href}
         className="group block rounded-xl p-6 h-full transition-all duration-220"
@@ -90,59 +124,84 @@ export default function SettingsCard({
           ].join(", ");
         }}
       >
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{
-              background: `${accentColor}1a`,
-              color: accentColor,
-              border: `1px solid ${accentColor}33`,
-            }}
-          >
-            <Icon size={18} />
-          </div>
-          <div className="flex items-center gap-2">
-            {queued && (
-              <span
-                className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
-                style={{
-                  background: `${tokens.text.muted}22`,
-                  color: tokens.text.muted,
-                  border: `1px solid ${tokens.text.muted}33`,
-                }}
-              >
-                Soon
-              </span>
-            )}
-            <span
-              className="opacity-60 group-hover:opacity-100 transition-opacity"
-              style={{ color: accentColor }}
-            >
-              <ArrowUpRight size={16} />
-            </span>
-          </div>
-        </div>
-        <h3
-          className="font-display text-base font-semibold tracking-tight mb-1.5"
-          style={{ color: tokens.text.primary }}
-        >
-          {title}
-        </h3>
-        <p
-          className="text-[12px] leading-snug"
-          style={{ color: tokens.text.secondary }}
-        >
-          {description}
-        </p>
-        {preview && (
-          <div
-            className="mt-4 pt-4 border-t flex items-center gap-2"
-            style={{ borderColor: tokens.border.subtle }}
-          >
-            {preview}
-          </div>
-        )}
+        <SettingsCardBody
+          Icon={Icon}
+          accentColor={accentColor}
+          title={title}
+          description={description}
+          queued={queued}
+          preview={preview}
+        />
       </Link>
+      )}
     </motion.div>
+  );
+}
+
+interface SettingsCardBodyProps {
+  Icon: Props["Icon"];
+  accentColor: string;
+  title: string;
+  description: string;
+  queued?: boolean;
+  preview?: ReactNode;
+}
+
+function SettingsCardBody({ Icon, accentColor, title, description, queued, preview }: SettingsCardBodyProps) {
+  return (
+    <>
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center"
+          style={{
+            background: `${accentColor}1a`,
+            color: accentColor,
+            border: `1px solid ${accentColor}33`,
+          }}
+        >
+          <Icon size={18} />
+        </div>
+        <div className="flex items-center gap-2">
+          {queued && (
+            <span
+              className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
+              style={{
+                background: `${tokens.text.muted}22`,
+                color: tokens.text.muted,
+                border: `1px solid ${tokens.text.muted}33`,
+              }}
+            >
+              Soon
+            </span>
+          )}
+          <span
+            className="opacity-60 group-hover:opacity-100 transition-opacity"
+            style={{ color: accentColor }}
+          >
+            <ArrowUpRight size={16} />
+          </span>
+        </div>
+      </div>
+      <h3
+        className="font-display text-base font-semibold tracking-tight mb-1.5"
+        style={{ color: tokens.text.primary }}
+      >
+        {title}
+      </h3>
+      <p
+        className="text-[12px] leading-snug"
+        style={{ color: tokens.text.secondary }}
+      >
+        {description}
+      </p>
+      {preview && (
+        <div
+          className="mt-4 pt-4 border-t flex items-center gap-2"
+          style={{ borderColor: tokens.border.subtle }}
+        >
+          {preview}
+        </div>
+      )}
+    </>
   );
 }

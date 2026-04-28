@@ -3411,7 +3411,7 @@ export async function POST(request: NextRequest) {
   const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
   const origin = host
     ? `${proto}://${host}`
-    : process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "http://localhost:3000";
+    : process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://app.shortstack.work";
   const cookieHeader = request.headers.get("cookie") || undefined;
 
   const ctx: ToolCtx = {

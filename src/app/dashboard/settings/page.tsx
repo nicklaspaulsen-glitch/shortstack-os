@@ -94,9 +94,16 @@ export default function SettingsIndexPage() {
 
     (async () => {
       try {
-        const res = await fetch("/api/integrations/status");
+        // Apr 28 audit: was hitting non-existent /api/integrations/status.
+        // The real surface is /api/integrations/health which returns
+        // { results: HealthResult[] } where each result has a .status of
+        // "connected" / "not_configured" / "error". Compute counts here.
+        const res = await fetch("/api/integrations/health");
         if (!res.ok) return;
-        const json = (await res.json()) as { connected?: number; total?: number };
+        const raw = (await res.json()) as { results?: Array<{ status: string }> };
+        const connected = (raw.results ?? []).filter(r => r.status === "connected").length;
+        const total = (raw.results ?? []).length;
+        const json: { connected: number; total: number } = { connected, total };
         if (!cancelled && typeof json.connected === "number") {
           setIntegrations({
             connected: json.connected,
@@ -126,11 +133,10 @@ export default function SettingsIndexPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <SettingsCard
           index={0}
-          href="/dashboard/settings/account"
+          href="/dashboard/profile"
           title="Account & Profile"
           description="Your name, email, avatar, password, and account deletion."
           Icon={User}
-          queued
           preview={
             <>
               <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -148,7 +154,7 @@ export default function SettingsIndexPage() {
 
         <SettingsCard
           index={1}
-          href="/dashboard/settings/white-label"
+          href="/dashboard/white-label"
           title="Branding & White-label"
           description="Logo, brand color, custom domain, support email."
           Icon={Palette}
@@ -230,11 +236,10 @@ export default function SettingsIndexPage() {
 
         <SettingsCard
           index={7}
-          href="/dashboard/settings/notifications"
+          href="/dashboard/notifications"
           title="Notifications"
           description="Email, push, and Slack toggles for every alert type."
           Icon={Bell}
-          queued
           preview={
             <>
               <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -272,7 +277,6 @@ export default function SettingsIndexPage() {
           description="Export workspace data, transfer ownership, delete account."
           Icon={AlertTriangle}
           danger
-          queued
           preview={
             <>
               <span
