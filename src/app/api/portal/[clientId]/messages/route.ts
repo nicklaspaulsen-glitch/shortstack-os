@@ -55,9 +55,14 @@ export async function GET(
     .filter((m) => !m.read_at && m.sender_role !== callerOwnRole)
     .map((m) => m.id);
   if (unreadIds.length) {
+    // Apr 28 IDOR defense-in-depth: scope the update to the specific
+    // client_id even though unreadIds was already filtered from a
+    // client-scoped read. Closes the (small) race where a row's
+    // client_id flips between read and update.
     await service
       .from("portal_messages")
       .update({ read_at: new Date().toISOString() })
+      .eq("client_id", params.clientId)
       .in("id", unreadIds);
   }
 

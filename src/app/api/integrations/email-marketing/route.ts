@@ -173,13 +173,16 @@ export async function POST(request: NextRequest) {
   // monthly emails cap entirely). Verify client ownership when one is
   // supplied so the audit log entry below can't be written on another
   // tenant's client_id.
-  let ownerId = user.id;
+  let ownerId: string;
   if (client_id) {
     const ctx = await requireOwnedClient(supabase, user.id, client_id);
     if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     ownerId = ctx.ownerId;
   } else {
-    ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+    // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+    const resolved = await getEffectiveOwnerId(supabase, user.id);
+    if (!resolved) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    ownerId = resolved;
   }
 
   try {

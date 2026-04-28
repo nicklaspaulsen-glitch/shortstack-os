@@ -74,7 +74,11 @@ export async function POST(request: NextRequest) {
   // are allowed to create meetings against their parent agency's clients.
   // This matches the pattern in /api/courses/[id]/enroll.
   if (body.client_id) {
-    const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+    // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+
+    const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+    if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     const { data: client } = await supabase
       .from("clients")
       .select("profile_id")

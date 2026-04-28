@@ -49,8 +49,11 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   // Effective agency owner (team members → parent agency)
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const config = await request.json();
   const {
     platforms = ["google_maps"],

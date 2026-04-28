@@ -34,7 +34,13 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const service = createServiceClient();
 
   const { data, error } = await service
@@ -69,8 +75,13 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   let body: { name?: string; scopes?: string[]; expires_at?: string | null };
   try {
     body = await request.json();
@@ -126,7 +137,13 @@ export async function DELETE(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const id = request.nextUrl.searchParams.get("id");
   if (!id) return NextResponse.json({ error: "id query param required" }, { status: 400 });
 

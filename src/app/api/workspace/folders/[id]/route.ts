@@ -41,7 +41,13 @@ export async function PATCH(req: NextRequest, ctx: RouteCtx) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const folderId = ctx.params.id;
   if (!isUuid(folderId)) return NextResponse.json({ error: "Bad id" }, { status: 400 });
 
@@ -96,7 +102,13 @@ export async function DELETE(_req: NextRequest, ctx: RouteCtx) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const folderId = ctx.params.id;
   if (!isUuid(folderId)) return NextResponse.json({ error: "Bad id" }, { status: 400 });
 

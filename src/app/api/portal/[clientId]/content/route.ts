@@ -113,10 +113,15 @@ export async function PATCH(
     update.notes = `${existingNotes}${rejectionNote}`;
   }
 
+  // Apr 28 IDOR defense-in-depth: scope the update to the route's
+  // client_id alongside the row id. Ownership was verified above
+  // (lines 89), but adding the client_id constraint closes the race
+  // where the row's client_id flips between read + update.
   const { data: item, error } = await service
     .from("content_calendar")
     .update(update)
     .eq("id", body.id)
+    .eq("client_id", params.clientId)
     .select()
     .single();
 

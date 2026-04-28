@@ -32,8 +32,13 @@ export async function GET() {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) ?? user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   // Auto-seed on first list — non-blocking failure (just log).
   await seedStarterTemplates(ownerId);
 
@@ -54,8 +59,13 @@ export async function POST(request: NextRequest) {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) ?? user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   let body: CreateTemplateBody;
   try {
     body = (await request.json()) as CreateTemplateBody;

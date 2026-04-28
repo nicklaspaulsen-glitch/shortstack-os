@@ -38,8 +38,13 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const { searchParams } = new URL(request.url);
   const from = searchParams.get("from");
   const to = searchParams.get("to");
@@ -70,8 +75,13 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   try {
     const body = await request.json();
     const { title, client, team_member, date, time, duration, category, type, recurring } = body;
@@ -114,8 +124,13 @@ export async function PATCH(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   try {
     const body = await request.json();
     const { id, ...fields } = body;
@@ -162,8 +177,13 @@ export async function DELETE(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 

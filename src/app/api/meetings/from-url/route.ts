@@ -43,7 +43,11 @@ export async function POST(request: NextRequest) {
   if (!sourceUrl) return NextResponse.json({ error: "source_url is required" }, { status: 400 });
 
   // Validate any caller-provided CRM links belong to the caller's tenant.
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   if (body.lead_id) {
     const { data: lead } = await supabase
       .from("leads")

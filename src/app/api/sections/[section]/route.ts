@@ -121,7 +121,11 @@ export async function GET(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — getEffectiveOwnerId returns null
+  // for suspended/revoked team_members. The fallback silently let them keep
+  // querying their own user_id rows after suspension. Now 403 instead.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const service = createServiceClient();
 
   const today = new Date().toISOString().split("T")[0];

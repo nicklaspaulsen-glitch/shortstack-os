@@ -26,8 +26,13 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const ownerId = (await getEffectiveOwnerId(auth, user.id)) ?? user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+
+  const ownerId = await getEffectiveOwnerId(auth, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   let body: Record<string, unknown> = {};
   try {
     body = await request.json();

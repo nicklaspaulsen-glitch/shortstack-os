@@ -30,7 +30,11 @@ export async function GET(request: NextRequest) {
   // if they're a team_member). The row is created synchronously by the
   // generation endpoint before the job is queued, so this should always
   // exist by the time the client polls.
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const service = createServiceClient();
   const { data: owned } = await service
     .from("generated_images")

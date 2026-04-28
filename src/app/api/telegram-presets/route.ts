@@ -40,8 +40,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const ownerId = (await getEffectiveOwnerId(auth, user.id)) ?? user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+
+  const ownerId = await getEffectiveOwnerId(auth, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const url = new URL(request.url);
   const category = url.searchParams.get("category");
   const scope = url.searchParams.get("scope") ?? "all";
@@ -86,8 +91,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const ownerId = (await getEffectiveOwnerId(auth, user.id)) ?? user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
+
+  const ownerId = await getEffectiveOwnerId(auth, user.id);
+
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   let body: Record<string, unknown> = {};
   try {
     body = await request.json();

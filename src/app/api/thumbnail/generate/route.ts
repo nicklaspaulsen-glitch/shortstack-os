@@ -227,7 +227,11 @@ export async function POST(request: NextRequest) {
     // are metered.
     const variationCount = Math.max(1, Math.min(4, Number(variations) || 1));
     const estimatedTokens = THUMBNAIL_TOKEN_COST * variationCount;
-    const ownerId = (await getEffectiveOwnerId(authSupabase, user.id)) || user.id;
+    // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+
+    const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
+
+    if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     const gate = await checkLimit(ownerId, "tokens", estimatedTokens);
     if (!gate.allowed) {
       return NextResponse.json(

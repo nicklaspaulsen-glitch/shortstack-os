@@ -81,7 +81,11 @@ export async function PATCH(
   // Cross-tenant guard on CRM linking. Without this an authenticated user
   // could PATCH a meeting and pin a lead_id/deal_id from a different agency.
   if (typeof patch.lead_id === "string" || typeof patch.deal_id === "string") {
-    const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+    // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+
+    const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+    if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     if (typeof patch.lead_id === "string" && patch.lead_id) {
       const { data: lead } = await supabase
         .from("leads")

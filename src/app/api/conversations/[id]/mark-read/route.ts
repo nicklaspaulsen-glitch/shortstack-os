@@ -17,7 +17,11 @@ export async function POST(
   // Defense in depth: pre-verify the caller's tenant owns the conversation
   // BEFORE mutating either it or its messages. team_member users resolve
   // to their parent_agency_id so they can mark-read for the agency.
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const { data: conv } = await supabase
     .from("conversations")
     .select("user_id")

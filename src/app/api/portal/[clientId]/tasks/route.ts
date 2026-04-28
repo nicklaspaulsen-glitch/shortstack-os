@@ -171,10 +171,14 @@ export async function PATCH(
     return NextResponse.json({ error: "No changes requested" }, { status: 400 });
   }
 
+  // Apr 28 IDOR defense-in-depth: scope the update to the route's
+  // client_id alongside the row id (ownership was verified earlier;
+  // this closes the race where client_id flips between read + update).
   const { data: task, error } = await service
     .from("client_tasks")
     .update(update)
     .eq("id", body.id)
+    .eq("client_id", params.clientId)
     .select()
     .single();
 
