@@ -12,6 +12,7 @@ import { PageSkeleton } from "@/components/ui/skeleton";
 import UsageNudgeBanner from "@/components/billing/usage-nudge-banner";
 import TrinityOrb from "@/components/dashboard/trinity-orb";
 import TrinityHero3D from "@/components/dashboard-home/trinity-hero-3d";
+import AgentOfficeTile from "@/components/dashboard-home/agent-office-tile";
 import DashboardHeroStrip from "@/components/dashboard-home/dashboard-hero-strip";
 import BentoGrid from "@/components/dashboard-home/bento-grid";
 import type { BentoData } from "@/components/dashboard-home/types";
@@ -118,6 +119,13 @@ export default function DashboardPage() {
           monochrome direction. R3F crystal lazy-loads + lip-syncs
           to AI suggestions piped from /api/ai/suggest-topics. */}
       <TrinityHero3D greeting={firstName} suggestionSurface="script_lab" />
+
+      {/* Agent Office preview — smooth premium tile (replaces the
+          pixelated PixiJS preview that used to live here). Each agent
+          gets a circular disc + name + role. Live pulse rings when
+          the agent has recent activity. Links into the full office
+          page for the live PixiJS experience. */}
+      <AgentOfficeTile />
 
       {/* Legacy ask-anything orb stays available below the hero — keeps
           the chat-prompt entry point that some users rely on. */}
