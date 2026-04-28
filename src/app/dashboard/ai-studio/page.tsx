@@ -500,6 +500,25 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         toast.success("Transcription complete");
       } else if (data.job_id) {
         toast.success("Processing... check back in a moment");
+      } else if (res.status === 501 || data?.error === "setup_required") {
+        // Apr 28 audit: AI Studio routes 501 when no provider env is
+        // configured (RUNPOD / REPLICATE / OPENAI). Surface a real CTA
+        // instead of a generic "Failed" toast.
+        toast(
+          (t) => (
+            <span>
+              Transcription provider isn't configured.{" "}
+              <a
+                href="/dashboard/integrations"
+                className="underline font-medium"
+                onClick={() => toast.dismiss(t.id)}
+              >
+                Set it up
+              </a>
+            </span>
+          ),
+          { icon: "🔧", duration: 8000 }
+        );
       } else {
         toast.error(data.error || "Failed");
       }
