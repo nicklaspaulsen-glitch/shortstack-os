@@ -1,12 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
 // ── POST /api/agents/auth ──────────────────────────────────────
 // Electron agent authenticates with email/password or refreshes a session.
 export async function POST(request: NextRequest) {
+  // Apr 28 audit: env reads moved INSIDE the handler. Module-level
+  // `process.env.X!` non-null assertion with `!` would silently swallow
+  // unset env on Vercel page-data collection and produce a cryptic
+  // `createClient(undefined, undefined)` failure at runtime.
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return NextResponse.json(
+      { error: "Supabase env not configured" },
+      { status: 503 }
+    );
+  }
+
   try {
     const body = await request.json();
 

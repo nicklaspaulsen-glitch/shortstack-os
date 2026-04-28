@@ -7,6 +7,10 @@ import {
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Apr 28 audit: maxDuration was missing — Vercel default is 10s and this
+// cron polls up to 50 RunPod jobs sequentially. Match the other long
+// crons at 60s.
+export const maxDuration = 60;
 
 const RUNPOD_PROVIDERS: ReadonlyArray<RunPodCloneProvider> = [
   "runpod_f5tts",

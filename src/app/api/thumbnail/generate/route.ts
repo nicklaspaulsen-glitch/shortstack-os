@@ -11,8 +11,9 @@ import { checkLimit, recordUsage } from "@/lib/usage-limits";
 // cap, which matches the rough infra-cost breakeven.
 const THUMBNAIL_TOKEN_COST = 1000;
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+// Apr 28 audit: env reads now inside the createClient call below
+// (line ~430). Module-level non-null assertions silently swallow unset
+// env on Vercel build collection and produce a cryptic runtime failure.
 
 // Platform dimensions
 const PLATFORM_SIZES: Record<string, { width: number; height: number }> = {
@@ -427,6 +428,9 @@ export async function POST(request: NextRequest) {
 
     // Log to trinity_log
     try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      if (!supabaseUrl || !supabaseKey) throw new Error("Supabase env unset");
       const supabase = createClient(supabaseUrl, supabaseKey);
       await supabase.from("trinity_log").insert({
         type: "thumbnail_generate",
