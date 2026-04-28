@@ -17,6 +17,7 @@ import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { trackGeneration } from "@/lib/track-generation";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
+import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 
 interface SubjectVariant {
   subject: string;
@@ -1415,10 +1416,16 @@ export default function EmailComposerPage() {
       {/* ===== AI WRITE MODAL ===== */}
       <Modal isOpen={showAiWrite} onClose={() => setShowAiWrite(false)} title="Write Email with AI" size="lg">
         <div className="space-y-3">
-          <div>
+          <div className="space-y-2">
             <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">What should this email be about?</label>
             <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)} rows={4}
               className="input w-full text-xs" placeholder="e.g. Follow up with a dental practice owner we called last week about a lead generation trial..." />
+            {/* AI auto-suggest: niche-aware email topic ideas */}
+            <AITopicSuggest
+              surface="email_composer"
+              onSelect={picked => setAiPrompt(picked)}
+              max={5}
+            />
           </div>
           <div className="grid grid-cols-3 gap-2">
             <div>

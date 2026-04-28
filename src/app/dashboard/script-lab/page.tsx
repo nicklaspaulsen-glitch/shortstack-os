@@ -21,6 +21,7 @@ import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPre
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import { trackGeneration } from "@/lib/track-generation";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
+import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 
 // Example "phone mockup" script cards used in the landing state marquee.
 // Each card shows 2-3 lines of a sample script opener — just enough to
@@ -1162,8 +1163,15 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
             autoFocus
           />
+          {/* AI auto-suggest: surface-aware topic ideas based on the user's
+              niche, recent activity, and (if set) the targeted client. */}
+          <AITopicSuggest
+            surface="script_lab"
+            clientId={selectedClient || undefined}
+            onSelect={topic => setConfig(prev => ({ ...prev, topic }))}
+          />
           <div>
-            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Quick starters</p>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Or pick a quick starter</p>
             <div className="flex flex-wrap gap-1.5">
               {topicPresets.slice(0, 4).map((p: string, i: number) => (
                 <button

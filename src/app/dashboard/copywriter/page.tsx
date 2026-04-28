@@ -16,6 +16,7 @@ import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/c
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { trackGeneration } from "@/lib/track-generation";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
+import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 
 // Fake-screenshot text cards used as the rolling marquee on the copywriter
 // landing state. Each card = one example of the kind of copy this tool
@@ -663,6 +664,20 @@ export default function CopywriterPage() {
             className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
             autoFocus
             aria-label="Topic"
+          />
+          {/* AI auto-suggest topics tailored to the user's niche + recent
+              activity. Surface differs based on the active copywriter type. */}
+          <AITopicSuggest
+            surface={
+              activeType.id === "ad"
+                ? "ad_copy"
+                : activeType.id === "email"
+                  ? "email_composer"
+                  : activeType.id === "social"
+                    ? "social_post"
+                    : "copywriter"
+            }
+            onSelect={picked => setTopic(picked)}
           />
           <div>
             <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">

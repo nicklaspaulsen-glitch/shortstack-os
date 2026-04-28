@@ -13,6 +13,7 @@ import {
   Clock,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 
 type Depth = "shallow" | "medium" | "deep";
 
@@ -245,7 +246,7 @@ export default function ColdEmailPage() {
             </div>
           </div>
 
-          <div>
+          <div className="space-y-2">
             <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
               Template seed
             </label>
@@ -260,6 +261,13 @@ export default function ColdEmailPage() {
               <code>{"{{industry}}"}</code>, <code>{"{{location}}"}</code>,{" "}
               <code>{"{{personal_hook}}"}</code> (LLM-generated).
             </p>
+            {/* AI auto-suggest cold-email angles tailored to user's niche +
+                recent campaigns. Click a pill to use as the template seed. */}
+            <AITopicSuggest
+              surface="cold_email"
+              onSelect={picked => setTemplateSeed(picked)}
+              max={5}
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
