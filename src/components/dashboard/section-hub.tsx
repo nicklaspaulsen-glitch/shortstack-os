@@ -22,6 +22,11 @@ export interface HubTool {
   href: string;
   icon: LucideIcon;
   comingSoon?: boolean;
+  /** Apr 28: optional category groups tools into labeled subsections.
+   * Tools without a category render in a default "Tools" group at the
+   * end. Existing call sites (those that haven't set this) get the
+   * old un-categorized list — fully back-compat. */
+  category?: string;
 }
 
 export interface HubQuickAction {
@@ -205,14 +210,32 @@ export default function SectionHub({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Tools grid */}
+        {/* Tools grid — Apr 28: now groups by `tool.category` when set,
+            falling back to a single un-categorized list when none of
+            the tools have a category (back-compat with old call sites). */}
         <div className="lg:col-span-2 space-y-2.5">
           <div className="flex items-center justify-between px-1">
             <h2 className="text-[11px] font-semibold text-muted uppercase tracking-[0.18em]">Tools</h2>
             <span className="text-[10px] text-muted">{tools.length} in this section</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-            {tools.map((tool) => {
+          {(() => {
+            // Bucket tools by category. Preserves first-occurrence order
+            // so the call site controls the section ordering.
+            const buckets: { category: string | undefined; tools: HubTool[] }[] = [];
+            const indexByCat = new Map<string | undefined, number>();
+            for (const t of tools) {
+              const cat = t.category;
+              const idx = indexByCat.get(cat);
+              if (idx !== undefined) {
+                buckets[idx].tools.push(t);
+              } else {
+                indexByCat.set(cat, buckets.length);
+                buckets.push({ category: cat, tools: [t] });
+              }
+            }
+            const showHeaders = buckets.some(b => b.category);
+
+            const renderTool = (tool: HubTool) => {
               const Icon = tool.icon;
               const ts = data?.lastUsed?.[tool.slug] || null;
               const disabled = !!tool.comingSoon;
@@ -258,8 +281,29 @@ export default function SectionHub({
                   {content}
                 </Link>
               );
-            })}
-          </div>
+            };
+
+            return (
+              <div className="space-y-4">
+                {buckets.map((bucket, i) => (
+                  <div key={bucket.category ?? `_uncat_${i}`} className="space-y-2">
+                    {showHeaders && (
+                      <div className="flex items-center gap-2 px-1">
+                        <h3 className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+                          {bucket.category ?? "Other"}
+                        </h3>
+                        <div className="flex-1 h-px bg-border-subtle" />
+                        <span className="text-[9px] text-text-muted">{bucket.tools.length}</span>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                      {bucket.tools.map(renderTool)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Recent activity feed */}
