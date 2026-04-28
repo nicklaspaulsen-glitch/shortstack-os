@@ -58,21 +58,33 @@ a,
   touch-action: manipulation;
 }
 
-/* High-DPI displays: switch to crisp-edges for small UI icons so
- * subpixel anti-aliasing doesn't blur 16px sidebar glyphs. Vector
- * paths (Solar bold-duotone, lucide) stay sharp. Photos/videos
- * inside .image keep auto rendering. */
-@media (min-resolution: 2dppx), (-webkit-min-device-pixel-ratio: 2) {
-  svg.icon-3d-target,
-  .nav-icon-alive svg {
-    shape-rendering: geometricPrecision;
-  }
-}
-/* Default: optimizeSpeed for SVG. Marker-class `.icon-3d-target` opts
- * back in to geometricPrecision when the icon is intentionally a
- * brand-grade glyph (logo, hero mark). */
+/* Apr 28 v6 — full crispness pass.
+ * User feedback: "make text images icons more quality… cant everything
+ * be 4k or upscaled?". The previous shape-rendering: optimizeSpeed
+ * default made small icons paint faster but slightly blurred their
+ * edges on retina. Flipping the default to geometricPrecision so EVERY
+ * SVG renders with sub-pixel-accurate anti-aliasing. Modern GPUs
+ * handle this fine — the perf concern was historical (mid-2010s era).
+ *
+ * Plus image-rendering hints: raster images use the new high-quality
+ * algorithm (CSS Image Rendering Level 1) for upscaling on retina.
+ * The browser auto-picks the best filter for the source resolution.
+ */
 svg {
-  shape-rendering: optimizeSpeed;
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+}
+img {
+  image-rendering: high-quality;
+  -ms-interpolation-mode: bicubic;
+}
+/* On 3x+ displays (4K @ 200% scaling, ProMotion 6, etc.) raster
+ * images upscale through the highest-quality filter the browser
+ * supports. */
+@media (min-resolution: 3dppx) {
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
 }
 
 /* ── 3. PROMOTION — hover-only GPU layer ─────────────────────────── */

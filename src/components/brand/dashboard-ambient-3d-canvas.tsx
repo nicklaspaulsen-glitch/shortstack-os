@@ -123,7 +123,11 @@ export default function DashboardAmbient3DCanvas() {
   return (
     <Canvas
       camera={{ position: [0, 0, 5], fov: 50 }}
-      dpr={[1, 1.5]}
+      // Apr 28 v6: bumped from 1.5 to 2 — the shapes are translucent
+      // background atmosphere, so subtle facet detail benefits readability
+      // on retina without breaking the perf budget. Modern GPUs handle
+      // 2x at full-screen for low-poly scenes (3 shapes total).
+      dpr={[1, 2]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
     >
       <Suspense fallback={null}>
