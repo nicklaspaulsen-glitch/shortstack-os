@@ -8,6 +8,23 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Belt-and-suspenders against electron (~300MB) sneaking into serverless
+  // function bundles. The browser-worker imports `playwright-core` (lean,
+  // no electron dep) — but if any other transitive path touches electron,
+  // these excludes keep the function under Vercel's 250MB ceiling.
+  // Affected functions (per Apr 27 build log): api/cron/run-browser-tasks
+  // and 2 others. Globs match all routes so we're safe across the whole tree.
+  experimental: {
+    outputFileTracingExcludes: {
+      "*": [
+        "node_modules/electron/**",
+        "node_modules/electron-builder/**",
+        "node_modules/playwright/**",
+        "node_modules/@playwright/**",
+        "node_modules/puppeteer/**",
+      ],
+    },
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

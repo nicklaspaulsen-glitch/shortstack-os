@@ -8,7 +8,8 @@
  * Why not full DOM? Full HTML eats >100k tokens for typical SaaS apps; this
  * keeps the prompt under ~3k tokens for most pages.
  */
-import type { Page } from "playwright";
+// Use playwright-core (matches agent-loop.ts) — see comment there for why.
+import type { Page } from "playwright-core";
 
 export interface DomElement {
   index: number;

@@ -15,7 +15,11 @@
  *   - Per-step recording (screenshot key + tool call + reasoning) is appended
  *     to `browser_tasks.recordings` so the UI can replay the trace.
  */
-import { chromium, type Browser, type BrowserContext, type Page } from "playwright";
+// Use playwright-core (no electron, ~4MB) instead of playwright (300MB+
+// because it transitively pulls in electron's chromium binary). The
+// chromium browser is provided by Vercel's serverless runtime, so we only
+// need the driver bindings, not the test runner.
+import { chromium, type Browser, type BrowserContext, type Page } from "playwright-core";
 import type Anthropic from "@anthropic-ai/sdk";
 import { anthropic } from "@/lib/ai/claude-helpers";
 import { uploadToR2 } from "@/lib/server/r2-client";
