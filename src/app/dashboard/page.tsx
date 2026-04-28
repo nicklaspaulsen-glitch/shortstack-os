@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/auth-context";
 import { PageSkeleton } from "@/components/ui/skeleton";
 import UsageNudgeBanner from "@/components/billing/usage-nudge-banner";
 import TrinityOrb from "@/components/dashboard/trinity-orb";
+import TrinityHero3D from "@/components/dashboard-home/trinity-hero-3d";
 import DashboardHeroStrip from "@/components/dashboard-home/dashboard-hero-strip";
 import BentoGrid from "@/components/dashboard-home/bento-grid";
 import type { BentoData } from "@/components/dashboard-home/types";
@@ -113,7 +114,13 @@ export default function DashboardPage() {
 
       <DowntimeBanner />
 
-      {/* Trinity orb — the centerpiece for "ask anything" */}
+      {/* Trinity 3D speaking hero — replaces the orb for the new
+          monochrome direction. R3F crystal lazy-loads + lip-syncs
+          to AI suggestions piped from /api/ai/suggest-topics. */}
+      <TrinityHero3D greeting={firstName} suggestionSurface="script_lab" />
+
+      {/* Legacy ask-anything orb stays available below the hero — keeps
+          the chat-prompt entry point that some users rely on. */}
       <TrinityOrb firstName={firstName} />
 
       {/* The bento grid */}
