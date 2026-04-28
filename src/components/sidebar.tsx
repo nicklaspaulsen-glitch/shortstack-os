@@ -27,7 +27,6 @@ import {
   LayoutDashboard,
   LogOut,
   ChevronLeft,
-  ChevronRight,
   Settings,
   Bell,
   BarChart3,
@@ -301,7 +300,28 @@ export default function Sidebar() {
   const pathname = usePathname() || "";
   const { profile, signOut, loading: authLoading } = useAuth();
   const { config: wl } = useWhiteLabel();
-  const [collapsed, setCollapsed] = useState(false);
+  // Apr 28 v3 — compact rail UX. Default behavior:
+  //   • Sidebar renders as a 56px icon-only RAIL.
+  //   • Hovering anywhere on the rail expands it to 240px transiently.
+  //   • Mouse leaving the rail collapses it back.
+  //   • Clicking the pin lock-expands it (state persisted to localStorage).
+  // The previous "always-expanded by default" mode created the
+  // overwhelming-list feeling the user complained about. Compact rail is
+  // the Linear/Notion/Discord pattern — recognized industry default.
+  const [pinned, setPinned] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    try { return localStorage.getItem("sidebar_pinned") === "1"; } catch { return false; }
+  });
+  const [hoverExpanded, setHoverExpanded] = useState(false);
+  // collapsed = NOT (pinned OR hoverExpanded). The legacy `setCollapsed`
+  // call sites keep working — they flip pinned, which is the only state
+  // worth persisting.
+  const collapsed = !pinned && !hoverExpanded;
+  const setCollapsed = (next: boolean) => {
+    const newPinned = !next;
+    setPinned(newPinned);
+    try { localStorage.setItem("sidebar_pinned", newPinned ? "1" : "0"); } catch {}
+  };
   // Apr 28: live filter text. When non-empty, every nav row is checked
   // for case-insensitive substring match against label + section + sub.
   // Sections collapse to show only matches; non-matching rows hide.
@@ -645,9 +665,11 @@ export default function Sidebar() {
 
   return (
     <aside
+      onMouseEnter={() => { if (!pinned) setHoverExpanded(true); }}
+      onMouseLeave={() => { if (!pinned) setHoverExpanded(false); }}
       className={`sidebar-fade-in fixed inset-y-0 left-0 z-40 flex flex-col transition-all duration-220 ease-out-expo-foundation ${
         collapsed ? "w-[56px]" : "w-60"
-      }`}
+      } ${hoverExpanded && !pinned ? "shadow-[8px_0_32px_-12px_rgba(0,0,0,0.45)]" : ""}`}
       style={{
         background: "var(--bg-surface-1, #15141A)",
         borderRight: "1px solid var(--border-subtle, rgba(94,91,255,0.08))",
@@ -705,11 +727,16 @@ export default function Sidebar() {
         })()}
         {!collapsed && (
           <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="p-1 rounded-md text-text-muted hover:text-brand-lime hover:bg-white/[0.02] transition-colors duration-220 ease-out-expo-foundation shrink-0"
-            aria-label="Collapse sidebar"
+            onClick={() => setPinned(!pinned)}
+            className={`p-1 rounded-md transition-colors duration-220 ease-out-expo-foundation shrink-0 ${
+              pinned
+                ? "text-brand-accent bg-[rgba(94,91,255,0.10)]"
+                : "text-text-muted hover:text-brand-accent hover:bg-white/[0.02]"
+            }`}
+            aria-label={pinned ? "Unpin sidebar (auto-collapse)" : "Pin sidebar open"}
+            title={pinned ? "Unpin (auto-collapse on mouse-leave)" : "Pin sidebar open"}
           >
-            <ChevronLeft size={14} />
+            <Pin size={13} className={pinned ? "fill-current" : ""} />
           </button>
         )}
       </div>
@@ -1015,11 +1042,18 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Collapse button when collapsed */}
+      {/* Pin button shown in collapsed rail (touch-device fallback for the
+          hover-expand UX — fingers don't hover, so we still need a way to
+          lock it open). Single-tap pins; tap again to release. */}
       {collapsed && (
         <div className="px-1.5 py-1">
-          <button onClick={() => setCollapsed(false)} className="w-full p-2 rounded-lg text-text-muted hover:text-brand-lime hover:bg-white/[0.02] flex items-center justify-center transition-colors duration-220 ease-out-expo-foundation">
-            <ChevronRight size={14} />
+          <button
+            onClick={() => setPinned(true)}
+            className="w-full p-2 rounded-lg text-text-muted hover:text-brand-accent hover:bg-white/[0.02] flex items-center justify-center transition-colors duration-220 ease-out-expo-foundation"
+            aria-label="Pin sidebar open"
+            title="Pin sidebar open"
+          >
+            <Pin size={14} />
           </button>
         </div>
       )}
