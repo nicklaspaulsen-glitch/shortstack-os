@@ -18,11 +18,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe/client";
+import { requireAgencyStaff } from "@/lib/security/require-agency-staff";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Apr 28: only agency staff should onboard a Stripe Connect account on
+  // behalf of the agency. Portal clients hitting this would pollute
+  // agency_stripe_accounts with rows keyed on their own user_id.
+  const denied = await requireAgencyStaff(supabase, user.id);
+  if (denied) return denied;
 
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ||

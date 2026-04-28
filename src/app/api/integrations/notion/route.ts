@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireAgencyStaff } from "@/lib/security/require-agency-staff";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Notion Integration — sync databases, create pages, manage tasks
 // Requires: NOTION_API_KEY (internal integration token)
@@ -101,6 +103,12 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Apr 28: Notion uses a SHARED workspace API key. Mutations were previously
+  // open to any authed user — including portal clients — letting them write
+  // pages or sync ALL agency clients into their own Notion DB (data exfil).
+  const denied = await requireAgencyStaff(supabase, user.id);
+  if (denied) return denied;
+
   if (!process.env.NOTION_API_KEY) {
     return NextResponse.json({ error: "Notion not configured" }, { status: 500 });
   }
@@ -173,13 +181,20 @@ export async function POST(request: NextRequest) {
     }
 
     if (action === "sync_clients") {
-      // Sync ShortStack clients to a Notion database
+      // Sync ShortStack clients to a Notion database — scoped to caller's
+      // OWN clients only. The previous version pulled is_active rows across
+      // every tenant on the platform (RLS-only scoping), letting any caller
+      // exfil all agencies' clients into their personal Notion workspace.
       const { database_id } = params;
       if (!database_id) return NextResponse.json({ error: "database_id required" }, { status: 400 });
+
+      const ownerId = await getEffectiveOwnerId(supabase, user.id);
+      if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
       const { data: clients } = await supabase
         .from("clients")
         .select("id, business_name, contact_name, email, package_tier, mrr, health_score, is_active")
+        .eq("profile_id", ownerId)
         .eq("is_active", true);
 
       let synced = 0;

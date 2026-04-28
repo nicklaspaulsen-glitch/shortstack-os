@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireAgencyStaff } from "@/lib/security/require-agency-staff";
 
 // Calendly Integration — scheduling, event types, bookings
 // Requires: CALENDLY_API_TOKEN (personal access token or OAuth)
@@ -114,6 +115,13 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Apr 28: Calendly uses a SHARED org token. Cancel-event + create-webhook
+  // were previously open to any authed user. A portal client could cancel
+  // ANY meeting in the org or register a callback URL pointing at their
+  // own webhook collector. Gate to agency staff only.
+  const denied = await requireAgencyStaff(supabase, user.id);
+  if (denied) return denied;
 
   const { action, ...params } = await request.json();
 

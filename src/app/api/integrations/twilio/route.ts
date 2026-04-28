@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireAgencyStaff } from "@/lib/security/require-agency-staff";
 
 // Twilio Integration — SMS, voice calls, phone number management
 // Requires: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER
@@ -83,6 +84,12 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Apr 28: Twilio uses a SHARED platform account. Any authed user could
+  // previously SMS-bomb / call-bomb arbitrary numbers via this route. Gate
+  // it to agency staff only — portal clients never need it.
+  const denied = await requireAgencyStaff(supabase, user.id);
+  if (denied) return denied;
 
   const cfg = getConfig();
   if (!cfg.accountSid) return NextResponse.json({ error: "Twilio not configured" }, { status: 500 });

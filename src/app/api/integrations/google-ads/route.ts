@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireAgencyStaff } from "@/lib/security/require-agency-staff";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // Google Ads API — campaign management, performance data
 // Requires: GOOGLE_ADS_DEVELOPER_TOKEN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
@@ -116,8 +118,18 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Apr 28: gate to agency staff (clients should not pause/enable agency
+  // ad campaigns). Then verify the supplied client_id is one the caller
+  // actually owns — without this, any agency staff could mutate any
+  // tenant's campaigns by guessing client_id values.
+  const denied = await requireAgencyStaff(supabase, user.id);
+  if (denied) return denied;
+
   const { client_id, action, campaign_id, status } = await request.json();
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
+
+  const ctx = await requireOwnedClient(supabase, user.id, client_id);
+  if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { data: account } = await supabase
     .from("social_accounts")
