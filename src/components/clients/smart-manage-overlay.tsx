@@ -86,15 +86,29 @@ export default function SmartManageOverlay({
       .finally(() => setLoading(false));
   }, [isOpen, clientId]);
 
-  // Close on Escape.
+  // Close on Escape + scroll-lock that preserves visual scroll position.
+  // (Plain overflow:hidden makes the page snap to top in some browsers.)
   useEffect(() => {
     if (!isOpen) return;
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
+
+    const scrollY = window.scrollY;
+    const body = document.body;
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.overflow = "hidden";
+
     return () => {
       window.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.overflow = "";
+      window.scrollTo({ top: scrollY, behavior: "instant" });
     };
   }, [isOpen, onClose]);
 

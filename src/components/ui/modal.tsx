@@ -13,13 +13,31 @@ interface ModalProps {
 
 export default function Modal({ isOpen, onClose, title, children, size = "md" }: ModalProps) {
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!isOpen) return;
+
+    // Scroll-lock that preserves visual position. Plain
+    // `body.overflow = hidden` can make the page snap back to the top in
+    // some browsers — the user clicks Manage on a tile near the bottom,
+    // the modal opens centered in viewport, but the page underneath has
+    // jumped to scrollY=0 so it feels like the modal popped up "in the
+    // wrong place". The position:fixed + top:-scrollY trick keeps the
+    // background visually pinned where it was, so the modal centers in
+    // the viewport the user actually had open.
+    const scrollY = window.scrollY;
+    const body = document.body;
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.overflow = "hidden";
+
     return () => {
-      document.body.style.overflow = "";
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.overflow = "";
+      window.scrollTo({ top: scrollY, behavior: "instant" });
     };
   }, [isOpen]);
 

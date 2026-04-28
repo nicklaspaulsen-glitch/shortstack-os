@@ -61,17 +61,37 @@ export default function ConnectModal({
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
   // Lock body scroll + capture previously-focused element so we can restore.
+  // Uses position:fixed + top:-scrollY to preserve the background's visual
+  // position (plain `overflow:hidden` makes some browsers snap to top, which
+  // looks like the modal "popped up in the wrong place").
   useEffect(() => {
     previouslyFocused.current = document.activeElement as HTMLElement | null;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const prev = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      overflow: body.style.overflow,
+    };
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.overflow = "hidden";
 
     // Move focus into the dialog on open. Confirm button is the safer default
     // than auto-firing — user can still tab to Cancel before pressing Enter.
     confirmRef.current?.focus();
 
     return () => {
-      document.body.style.overflow = prevOverflow;
+      body.style.position = prev.position;
+      body.style.top = prev.top;
+      body.style.left = prev.left;
+      body.style.right = prev.right;
+      body.style.overflow = prev.overflow;
+      window.scrollTo({ top: scrollY, behavior: "instant" });
       previouslyFocused.current?.focus?.();
     };
   }, []);
