@@ -1,0 +1,74 @@
+# Graphify ignore — keep the graph focused on real source code,
+# not deps, build artifacts, generated files, or vendored binaries.
+
+# Dependencies
+node_modules/
+.pnpm-store/
+.yarn/
+vendor/
+
+# Build outputs
+.next/
+.vercel/
+out/
+build/
+dist/
+.cache/
+
+# Electron app build artifacts (huge — would dominate the graph)
+extensions/electron/dist/
+extensions/electron/out/
+extensions/electron/release/
+desktop-app/dist/
+desktop-app/out/
+desktop-app/release/
+electron-app/dist/
+electron-app/out/
+electron-app/release/
+
+# Test snapshots and coverage
+coverage/
+__snapshots__/
+*.snap
+.nyc_output/
+test-results/
+playwright-report/
+
+# Generated types & lockfiles
+*.tsbuildinfo
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Logs and temp
+*.log
+.tmp/
+tmp/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Graphify itself (don't graph the graph)
+graphify-out/
+
+# Audit-generated artifacts
+docs/audit/
+
+# Public assets (huge media — graphify can't reason about binaries anyway)
+public/screenshots/
+public/recordings/
+public/videos/
+public/audio/
+
+# Supabase generated
+supabase/.temp/
+supabase/.branches/
+
+# Archived experiments
+archive/
+.archive/
+deprecated/
