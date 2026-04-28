@@ -24,7 +24,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Sparkles, Activity, Users, Phone, Mail, BarChart3 } from "lucide-react";
-import dynamic from "next/dynamic";
 import PageHero from "@/components/ui/page-hero";
 import { useAuth } from "@/lib/auth-context";
 import { AGENTS, AGENT_BY_KEY } from "@/lib/pixel-office/agents";
@@ -34,12 +33,9 @@ import AgentSidePanel from "@/components/pixel-office/agent-side-panel";
 import OfficeEventFeed, {
   OnlineNow,
 } from "@/components/pixel-office/office-event-feed";
-
-// Dynamic-import the canvas to avoid PixiJS in the SSR bundle.
-const PixelOfficeCanvas = dynamic(
-  () => import("@/components/pixel-office/pixel-office-canvas"),
-  { ssr: false },
-);
+// Apr 28 v12: swapped from PixiJS pixel canvas to the shared
+// Kumospace-style scene used in the dashboard tile too.
+import KumoScene from "@/components/agent-office/kumo-scene";
 
 interface Snapshot {
   /** Effective owner id resolved server-side. Used as the realtime channel partition key. */
@@ -138,6 +134,19 @@ export default function AgentOfficePage() {
     }
     return out;
   }, [snapshot]);
+
+  // Apr 28 v12: feed-based recent map for KumoScene activity rings.
+  // Each agent_key → most-recent-event timestamp.
+  const kumoRecent = useMemo<Record<string, number>>(() => {
+    const out: Record<string, number> = {};
+    for (const e of feed) {
+      const ts = Date.parse(e.ts);
+      if (!isFinite(ts)) continue;
+      const prev = out[e.agentKey] ?? 0;
+      if (ts > prev) out[e.agentKey] = ts;
+    }
+    return out;
+  }, [feed]);
 
   // Owner id is resolved server-side in /api/agent-office/snapshot — falls
   // back to the user id only as a defensive default while the snapshot
@@ -243,18 +252,16 @@ export default function AgentOfficePage() {
         </div>
       )}
 
-      {/* Main canvas + right rail */}
+      {/* Main scene + right rail */}
       <div className="flex flex-col gap-4 xl:flex-row xl:items-stretch">
         <div className="min-w-0 flex-1">
-          {ownerId && (
-            <PixelOfficeCanvas
-              ownerId={ownerId}
-              initialHistory={initialHistory}
-              selectedAgentKey={selectedAgentKey}
-              onSelectAgent={(k) => setSelectedAgentKey(k)}
-              onActionResolved={handleActionResolved}
-            />
-          )}
+          <KumoScene
+            variant="full"
+            recent={kumoRecent}
+            hovered={selectedAgentKey}
+            setHovered={(k) => setSelectedAgentKey(k)}
+            onAgentClick={(k) => setSelectedAgentKey(prev => prev === k ? null : k)}
+          />
         </div>
         <div className="flex w-full shrink-0 flex-col gap-3 xl:w-[320px]">
           <OnlineNow rows={snapshot?.online ?? []} />
