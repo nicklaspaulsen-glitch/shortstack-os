@@ -2,6 +2,101 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════ APR 28 v4: GLOBAL MOTION + RENDERING POLISH ═══════════
+ * Single block at the TOP of the cascade so every transition / paint /
+ * scroll across the OS picks up the smooth defaults. Targets the
+ * "everything feels laggy and jaggy" complaint without rewriting
+ * 1000+ component files.
+ *
+ * Three things going on here:
+ *
+ * 1. EASING — Tailwind's default `ease-in-out` is a plain symmetric
+ *    cubic that reads as stiff. Override with out-quint
+ *    (cubic-bezier(0.22, 1, 0.36, 1)) which "drifts to rest" — most
+ *    of the duration is spent close to the destination value, so
+ *    motion reads as smooth deceleration instead of a snap-stop.
+ *    Applied via the global `transition-timing-function` for every
+ *    Tailwind transition utility.
+ *
+ * 2. RENDERING — Force GPU compositing on heavy animated surfaces +
+ *    crisp SVG rendering + smoothed font edges. The `transform-gpu`
+ *    Tailwind utility is opt-in but most components don't use it;
+ *    this block makes the optimization automatic for elements that
+ *    are clearly going to animate (rows, cards, buttons, anything
+ *    inside the dashboard layout).
+ *
+ * 3. INTERACTION — `scroll-behavior: smooth` for in-page anchors,
+ *    `overscroll-behavior: contain` so trackpad over-scrolls don't
+ *    bubble to the body and bounce, plus `touch-action: manipulation`
+ *    on common tap targets so mobile taps don't wait the 300ms
+ *    double-tap debounce. */
+
+/* ── 1. EASING ───────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  /* Tailwind sets `transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)`
+   * by default. We override to out-quint for a smoother, more polished
+   * feel everywhere a transition runs. */
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── 2. RENDERING — global anti-jaggy ───────────────────────────── */
+html {
+  /* Smooth scroll for in-page anchor jumps. */
+  scroll-behavior: smooth;
+  /* `contain` blocks scroll-chain to body without breaking pull-to-refresh. */
+  overscroll-behavior-y: contain;
+  /* Prevent iOS font scaling on rotation. */
+  -webkit-text-size-adjust: 100%;
+  /* High-quality glyph rendering on macOS / iOS. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+/* Tap targets only — no 300ms double-tap delay on mobile. We DON'T
+ * apply this to body to avoid breaking custom swipe gestures (video
+ * editor, social manager, etc.). */
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+}
+/* Crisp SVG rendering — Solar bold-duotone glyphs benefit from this
+ * since they're pixel-aligned at small sizes. */
+svg {
+  shape-rendering: geometricPrecision;
+}
+/* Common animated surfaces — automatic GPU compositing.
+ * `transform: translateZ(0)` promotes the element to its own
+ * compositor layer, removing repaint cost from sibling transitions. */
+button,
+a[role="button"],
+.card,
+.btn,
+[class*="hover:scale-"],
+[class*="hover:translate-"],
+[class*="transition-transform"] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ── 3. INTERACTION — reduced-motion respect ────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* Cap every transition + animation to 100ms when the user prefers
+     * reduced motion. Doesn't kill animation entirely (which can break
+     * UX cues like loading indicators) — just makes them quick. */
+    transition-duration: 100ms !important;
+    animation-duration: 100ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
 /* ═══════════ FONT IMPORTS ═══════════
  * Foundation: Satoshi (display), Inter (body/default), Bodoni Moda (editorial,
  * reserved for hero/marketing one-off statements only — never body).
