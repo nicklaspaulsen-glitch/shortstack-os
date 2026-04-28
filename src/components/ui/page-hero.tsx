@@ -2,8 +2,81 @@
 
 import { ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { tokens } from "@/lib/brand/tokens";
 import Stack3D from "@/components/brand/stack-3d";
+import PageHero3D, { type PageHero3DTheme } from "@/components/brand/page-hero-3d";
+
+/**
+ * Auto-pick a `theme3d` based on the current dashboard route. Every
+ * dashboard page that mounts <PageHero> automatically gets a themed
+ * 3D scene without per-page edits. Pages that pass an explicit
+ * `theme3d` override this auto-detection.
+ *
+ * Mapping is broad — most pages fall under a section hub theme. The
+ * "default" Trinity scene catches uncommon routes.
+ */
+function autoTheme3dFromPath(path: string): PageHero3DTheme {
+  // Section hubs first — most authoritative match.
+  if (/\/dashboard\/sales(?:\/|$)/.test(path)) return "sales";
+  if (/\/dashboard\/create(?:\/|$)/.test(path)) return "create";
+  if (/\/dashboard\/visual(?:\/|$)/.test(path)) return "visual";
+  if (/\/dashboard\/automate(?:\/|$)/.test(path)) return "automate";
+  if (/\/dashboard\/manage(?:\/|$)/.test(path)) return "manage";
+  if (/\/dashboard\/connect(?:\/|$)/.test(path)) return "connect";
+
+  // Voice / call surfaces.
+  if (/\/(voice-receptionist|voice-studio|voicemail-drop|dialer|eleven-agents)(?:\/|$)/.test(path)) {
+    return "voice";
+  }
+
+  // AI / agent surfaces.
+  if (/\/(agent-supervisor|agent-office|agent-controls|agent-desktop|trinity|services|ai-)(?:\/|$)/.test(path)) {
+    return "ai";
+  }
+
+  // Inbox / messaging surfaces.
+  if (/\/(inbox|conversations|outreach-feed|portal\/support)(?:\/|$)/.test(path)) {
+    return "inbox";
+  }
+
+  // Lead / CRM / scraping.
+  if (/\/(leads|scraper|lead-sources|crm|cold-email|deals)(?:\/|$)/.test(path)) {
+    return "leads";
+  }
+
+  // Sales-pipeline tools.
+  if (/\/(outreach-hub|outreach-logs|sequences|proposals|forecast|commission|ads-manager|affiliates|dm-controller|whatsapp|sms-templates)(?:\/|$)/.test(path)) {
+    return "sales";
+  }
+
+  // Content creation.
+  if (/\/(copywriter|script-lab|email-composer|email-templates|newsletter|content-plan|carousel-generator|brand-voice|brand-kit|content|content-library|funnels|landing-pages|websites|surveys|forms|social-studio|social-manager)(?:\/|$)/.test(path)) {
+    return "create";
+  }
+
+  // Visual / image / video.
+  if (/\/(thumbnail-generator|ai-studio|design-studio|design|video-editor|ai-video)(?:\/|$)/.test(path)) {
+    return "visual";
+  }
+
+  // Automate / workflows / integrations.
+  if (/\/(workflows|workflow-builder|automations|triggers|webhooks|api\/keys|api\/webhooks|api-docs|integrations|integrations-hub|integrations-marketplace|telegram-bot|telegram-presets|notion-sync|discord|google-business)(?:\/|$)/.test(path)) {
+    return "automate";
+  }
+
+  // Analytics / reports.
+  if (/\/(analytics|reports|report-generator|client-health|monitor|usage|admin\/llm-costs|admin\/agent-traces|system-status|admin\/status|self-test)(?:\/|$)/.test(path)) {
+    return "analytics";
+  }
+
+  // Manage / business.
+  if (/\/(workspaces|workspace|team|production|projects|financials|invoices|invoice-templates|subaccounts|white-label|billing|pricing|phone-email|phone-setup|mail-setup|domains|reviews|tickets|referrals|roi-calculator|marketplace|verticals|notifications|generations|settings|profile|tags|courses|community|portal)(?:\/|$)/.test(path)) {
+    return "manage";
+  }
+
+  return "default";
+}
 
 /**
  * PageHero — shared header used on every dashboard page.
@@ -41,6 +114,12 @@ interface PageHeroProps {
   photoUrl?: string;
   /** Render the 3D Stack brand mark in the top-right slot. */
   showStack3D?: boolean;
+  /** Render a themed 3D scene in the top-right slot. Each theme renders
+   *  a different 2-4 shape composition matching the page's purpose
+   *  (sales, create, visual, automate, manage, connect, ai, voice,
+   *  analytics, leads, inbox, default). Pages that pass `theme3d`
+   *  get a unique brand moment without the per-page 3D refactor. */
+  theme3d?: PageHero3DTheme;
   /** Visual size — controls title scale and vertical padding. */
   variant?: HeroVariant;
   className?: string;
@@ -120,11 +199,21 @@ export default function PageHero({
   sparkles: _sparkles, // eslint-disable-line @typescript-eslint/no-unused-vars
   photoUrl,
   showStack3D = false,
+  theme3d,
   variant = "default",
   className = "",
 }: PageHeroProps) {
   const treatment = TREATMENTS[TREATMENT_BY_GRADIENT[gradient]];
   const reduceMotion = useReducedMotion();
+  // Auto-pick theme from pathname when caller didn't pass one. This
+  // means every dashboard page that already uses <PageHero> picks up
+  // a themed 3D moment without any per-page edit. Pages that want
+  // to override (or opt out via "default") just pass `theme3d` explicit.
+  const pathname = usePathname() || "";
+  const effectiveTheme3d: PageHero3DTheme = theme3d ?? autoTheme3dFromPath(pathname);
+  // Auto-show the 3D mark unless the page explicitly opted into
+  // showStack3D (older pattern). Hide on compact variant — too cramped.
+  const renderHero3d = !showStack3D && variant !== "compact";
 
   return (
     <div
@@ -256,11 +345,22 @@ export default function PageHero({
               {actions}
             </div>
           )}
-          {showStack3D && (
+          {/* Theme-specific 3D scene. Auto-picks from URL path when
+              the caller didn't pass an explicit `theme3d`. The
+              legacy Stack3D mark wins only when the page explicitly
+              passed `showStack3D` (older API). */}
+          {showStack3D ? (
             <div className="hidden md:block shrink-0">
               <Stack3D size={variant === "hero" ? "md" : "sm"} />
             </div>
-          )}
+          ) : renderHero3d ? (
+            <div className="hidden md:block shrink-0">
+              <PageHero3D
+                theme={effectiveTheme3d}
+                size={variant === "hero" ? "lg" : "md"}
+              />
+            </div>
+          ) : null}
         </div>
       </motion.div>
     </div>
