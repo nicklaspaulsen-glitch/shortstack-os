@@ -297,11 +297,19 @@ async function loadSourceRows(
       .eq("profile_id", agencyOwnerId)
       .order("created_at", { ascending: false })
       .limit(500),
+    // Apr 28 IDOR defense-in-depth: the original outreach_log RLS policy
+    // was a `FOR ALL ... admin OR team_member` — wide-open across tenants.
+    // Migration 20260428_outreach_log_user_id.sql adds user_id + scoped
+    // RLS; this explicit filter lands the fix in code regardless of when
+    // the migration deploys. After the migration backfills, every existing
+    // row carries user_id; before that, rows with NULL user_id (orphans)
+    // are correctly invisible.
     supabase
       .from("outreach_log")
       .select(
         "id, lead_id, platform, business_name, recipient_handle, message_text, reply_text, status, sent_at, replied_at, created_at, metadata",
       )
+      .eq("user_id", agencyOwnerId)
       .order("created_at", { ascending: false })
       .limit(1000),
     supabase

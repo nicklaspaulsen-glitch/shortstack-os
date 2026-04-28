@@ -22,7 +22,33 @@ async function requireAuth() {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
-  return { user };
+  return { user, supabase };
+}
+
+// Apr 28: agent CRUD acts on the SHARED ElevenLabs account, so a destructive
+// call (delete_agent / create_agent) leaks across every tenant on the same
+// API key. Restrict mutations to admin / founder / team_member with manage
+// rights — clients NEVER touch account-level agent state. Reads are kept
+// open to authed users since the UI lists agents on multiple surfaces.
+const AGENCY_MUTATE_ROLES = ["admin", "founder", "agency", "team_member"];
+
+async function requireAgencyMutator(
+  supabase: ReturnType<typeof createServerSupabase>,
+  userId: string,
+) {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .single();
+  const role = (profile?.role as string | null) ?? null;
+  if (!role || !AGENCY_MUTATE_ROLES.includes(role)) {
+    return NextResponse.json(
+      { error: "Only agency staff can manage ElevenLabs agents" },
+      { status: 403 },
+    );
+  }
+  return null;
 }
 
 // GET /api/eleven-agents  — list agents (authed only — exposes account-level agents)
@@ -63,10 +89,16 @@ export async function GET() {
   }
 }
 
-// POST /api/eleven-agents  — create or delete an agent (authed only)
+// POST /api/eleven-agents  — create or delete an agent (agency-staff only)
 export async function POST(req: NextRequest) {
   const auth = await requireAuth();
   if ("error" in auth && auth.error) return auth.error;
+
+  // Apr 28: gate destructive agent mutations behind agency-staff roles.
+  // Previously any authed user (including portal clients) could delete
+  // every agent on the shared ElevenLabs account.
+  const denied = await requireAgencyMutator(auth.supabase, auth.user.id);
+  if (denied) return denied;
 
   const apiKey = getApiKey();
   if (!apiKey) {
