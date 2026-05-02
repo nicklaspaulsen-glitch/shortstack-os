@@ -163,9 +163,9 @@ a[role="button"]:hover,
   --bg-surface-2-rgb: 242 242 244;
   --bg-surface-3-rgb: 228 228 231;
 
-  /* Borders — neutral monochrome with faint teal undertone for cohesion */
-  --border-subtle: rgba(13, 148, 136, 0.08);
-  --border-strong: rgba(13, 148, 136, 0.20);
+  /* Borders — neutral monochrome with faint indigo undertone for cohesion */
+  --border-subtle: rgba(99, 102, 241, 0.08);
+  --border-strong: rgba(99, 102, 241, 0.20);
 
   /* Text — pure black for body on white, softer scale for subtitles */
   --text-primary: #0A0A0B;
@@ -175,24 +175,24 @@ a[role="button"]:hover,
   --text-secondary-rgb: 82 82 91;
   --text-muted-rgb: 113 113 122;
 
-  /* Brand accent — TEAL (Apr 28 v4). teal-600 for AA contrast on white. */
-  --brand-accent: #0D9488;
-  --brand-accent-soft: #14B8A6;
-  --brand-accent-dim: #5EEAD4;
-  --brand-accent-glow: rgba(13, 148, 136, 0.3);
-  --brand-accent-rgb: 13 148 136;
-  --brand-accent-soft-rgb: 20 184 166;
-  --brand-accent-dim-rgb: 94 234 212;
+  /* Brand accent — INDIGO/VIOLET (May 2). indigo-600 for AA contrast on white. */
+  --brand-accent: #4F46E5;
+  --brand-accent-soft: #6366F1;
+  --brand-accent-dim: #A78BFA;
+  --brand-accent-glow: rgba(79, 70, 229, 0.3);
+  --brand-accent-rgb: 79 70 229;
+  --brand-accent-soft-rgb: 99 102 241;
+  --brand-accent-dim-rgb: 167 139 250;
 
   /* Legacy lime aliases — kept so existing pages work but redirected to
-     the teal accent. Do NOT introduce new uses of these vars in new code. */
-  --brand-lime: #0D9488;
-  --brand-lime-soft: #14B8A6;
-  --brand-lime-dim: #5EEAD4;
-  --brand-lime-glow: rgba(13, 148, 136, 0.3);
-  --brand-lime-rgb: 13 148 136;
-  --brand-lime-soft-rgb: 20 184 166;
-  --brand-lime-dim-rgb: 94 234 212;
+     the indigo accent. Do NOT introduce new uses of these vars in new code. */
+  --brand-lime: #4F46E5;
+  --brand-lime-soft: #6366F1;
+  --brand-lime-dim: #A78BFA;
+  --brand-lime-glow: rgba(79, 70, 229, 0.3);
+  --brand-lime-rgb: 79 70 229;
+  --brand-lime-soft-rgb: 99 102 241;
+  --brand-lime-dim-rgb: 167 139 250;
 
   /* Editorial complement — neutral charcoal (replaces deep plum) */
   --brand-plum: #E4E4E7;
@@ -200,9 +200,9 @@ a[role="button"]:hover,
   --brand-plum-rgb: 228 228 231;
   --brand-plum-hover-rgb: 212 212 216;
 
-  /* Indigo alias kept for back-compat — now resolves to teal. */
-  --brand-indigo: #0D9488;
-  --brand-indigo-rgb: 13 148 136;
+  /* Indigo alias — canonical brand accent. */
+  --brand-indigo: #4F46E5;
+  --brand-indigo-rgb: 79 70 229;
 
   /* Functional */
   --status-success: #7FE5B8;
@@ -247,7 +247,7 @@ a[role="button"]:hover,
   --color-surface: #FAFAFB;
   --color-surface-light: #F2F2F4;
   --color-border: #E4E4E7;
-  --color-accent: #0D9488;
+  --color-accent: #4F46E5;
   --color-text: #0A0A0B;
   --color-muted: #52525B;
   --color-foreground: #0A0A0B;
@@ -255,7 +255,7 @@ a[role="button"]:hover,
   --color-surface-rgb: 250 250 251;
   --color-surface-light-rgb: 242 242 244;
   --color-border-rgb: 228 228 231;
-  --color-accent-rgb: 13 148 136;
+  --color-accent-rgb: 79 70 229;
   --color-text-rgb: 10 10 11;
   --color-muted-rgb: 82 82 91;
 }
@@ -275,7 +275,7 @@ a[role="button"]:hover,
   --color-surface: #101012;
   --color-surface-light: #17171A;
   --color-border: #26262B;
-  --color-accent: #2DD4BF;
+  --color-accent: #6366F1;
   --color-text: #F5F5F7;
   --color-muted: #A8A8B2;
   --color-foreground: #F5F5F7;
@@ -283,7 +283,7 @@ a[role="button"]:hover,
   --color-surface-rgb: 16 16 18;
   --color-surface-light-rgb: 23 23 26;
   --color-border-rgb: 38 38 43;
-  --color-accent-rgb: 45 212 191;
+  --color-accent-rgb: 99 102 241;
   --color-text-rgb: 245 245 247;
   --color-muted-rgb: 168 168 178;
 
@@ -296,9 +296,9 @@ a[role="button"]:hover,
   --bg-surface-2-rgb: 23 23 26;
   --bg-surface-3-rgb: 38 38 43;
 
-  /* Dark theme: teal-400 borders for stronger contrast on black */
-  --border-subtle: rgba(45, 212, 191, 0.07);
-  --border-strong: rgba(45, 212, 191, 0.16);
+  /* Dark theme: indigo-500 borders for contrast on black */
+  --border-subtle: rgba(99, 102, 241, 0.07);
+  --border-strong: rgba(99, 102, 241, 0.16);
 
   --text-primary: #F5F5F7;
   --text-secondary: #A8A8B2;
@@ -307,20 +307,20 @@ a[role="button"]:hover,
   --text-secondary-rgb: 168 168 178;
   --text-muted-rgb: 111 111 122;
 
-  /* Dark theme accent — brighter teal-400 for vibrant contrast on black */
-  --brand-accent: #2DD4BF;
-  --brand-accent-soft: #5EEAD4;
-  --brand-accent-dim: #14B8A6;
-  --brand-accent-glow: rgba(45, 212, 191, 0.4);
-  --brand-accent-rgb: 45 212 191;
+  /* Dark theme accent — indigo-500 for vibrant contrast on black */
+  --brand-accent: #6366F1;
+  --brand-accent-soft: #A78BFA;
+  --brand-accent-dim: #4F46E5;
+  --brand-accent-glow: rgba(99, 102, 241, 0.4);
+  --brand-accent-rgb: 99 102 241;
 
-  --brand-lime: #2DD4BF;
-  --brand-lime-soft: #5EEAD4;
-  --brand-lime-dim: #14B8A6;
-  --brand-lime-glow: rgba(45, 212, 191, 0.4);
-  --brand-lime-rgb: 45 212 191;
-  --brand-indigo: #2DD4BF;
-  --brand-indigo-rgb: 45 212 191;
+  --brand-lime: #6366F1;
+  --brand-lime-soft: #A78BFA;
+  --brand-lime-dim: #4F46E5;
+  --brand-lime-glow: rgba(99, 102, 241, 0.4);
+  --brand-lime-rgb: 99 102 241;
+  --brand-indigo: #6366F1;
+  --brand-indigo-rgb: 99 102 241;
 }
 
 /* ═══════════ LIGHT THEME OVERRIDES (kept for parity / explicit selector) ═══════════
@@ -334,7 +334,7 @@ a[role="button"]:hover,
   --color-surface: #FAFAFB;
   --color-surface-light: #F2F2F4;
   --color-border: #E4E4E7;
-  --color-accent: #0D9488;
+  --color-accent: #4F46E5;
   --color-text: #0A0A0B;
   --color-muted: #52525B;
   --color-foreground: #0A0A0B;
@@ -342,7 +342,7 @@ a[role="button"]:hover,
   --color-surface-rgb: 250 250 251;
   --color-surface-light-rgb: 242 242 244;
   --color-border-rgb: 228 228 231;
-  --color-accent-rgb: 13 148 136;
+  --color-accent-rgb: 79 70 229;
   --color-text-rgb: 10 10 11;
   --color-muted-rgb: 82 82 91;
 

@@ -16,8 +16,8 @@ export const tokens = {
     surface3: "#26262B",
   },
   border: {
-    subtle: "rgba(94, 91, 255, 0.07)",
-    strong: "rgba(94, 91, 255, 0.16)",
+    subtle: "rgba(99, 102, 241, 0.07)",
+    strong: "rgba(99, 102, 241, 0.16)",
   },
   text: {
     primary: "#F5F5F7",
@@ -25,32 +25,32 @@ export const tokens = {
     muted: "#6F6F7A",
   },
   brand: {
-    /** The brand accent — TEAL (Apr 28 v4). Lighter, cooler, more modern
-     *  than the previous indigo. Three variants:
-     *    accent     — teal-400 (#2DD4BF) — primary on dark surfaces
-     *    accentSoft — teal-300 (#5EEAD4) — hover / highlight on dark
-     *    accentDim  — teal-600 (#0D9488) — primary on LIGHT surfaces (AA on white)
+    /** The brand accent — INDIGO/VIOLET (May 2). Richer, more editorial.
+     *  Three variants:
+     *    accent     — indigo-500 (#6366F1) — primary on dark surfaces
+     *    accentSoft — violet-400 (#A78BFA) — hover / highlight on dark
+     *    accentDim  — indigo-600 (#4F46E5) — primary on LIGHT surfaces (AA on white)
      *  Light theme picks accentDim via globals.css so contrast holds. */
-    accent: "#2DD4BF",
-    accentSoft: "#5EEAD4",
-    accentDim: "#0D9488",
-    accentGlow: "rgba(45, 212, 191, 0.4)",
+    accent: "#6366F1",
+    accentSoft: "#A78BFA",
+    accentDim: "#4F46E5",
+    accentGlow: "rgba(99, 102, 241, 0.4)",
 
-    /** Legacy alias — `tokens.brand.lime` now resolves to the teal accent.
+    /** Legacy alias — `tokens.brand.lime` now resolves to the indigo accent.
      *  Do not introduce new uses; existing call sites are intentionally left
      *  pointing at this so the visual system migrates without a sweeping
      *  refactor of the 100+ pages still referencing it. */
-    lime: "#2DD4BF",
-    limeSoft: "#5EEAD4",
-    limeDim: "#0D9488",
-    limeGlow: "rgba(45, 212, 191, 0.4)",
+    lime: "#6366F1",
+    limeSoft: "#A78BFA",
+    limeDim: "#4F46E5",
+    limeGlow: "rgba(99, 102, 241, 0.4)",
 
     /** Editorial complement — neutral charcoal (replaces the old plum). */
     plum: "#1F1F23",
     plumHover: "#2C2C32",
 
-    /** `indigo` alias kept for back-compat — also resolves to teal now. */
-    indigo: "#2DD4BF",
+    /** `indigo` alias — resolves to the primary accent. */
+    indigo: "#6366F1",
   },
   status: {
     success: "#7FE5B8",
@@ -118,15 +118,15 @@ export const tokenRgb = {
   textPrimary: "245 245 247",
   textSecondary: "168 168 178",
   textMuted: "111 111 122",
-  brandAccent: "45 212 191",
-  brandAccentSoft: "94 234 212",
-  brandAccentDim: "13 148 136",
-  brandLime: "45 212 191",       // legacy alias (= accent)
-  brandLimeSoft: "94 234 212",   // legacy alias (= accentSoft)
-  brandLimeDim: "13 148 136",    // legacy alias (= accentDim)
+  brandAccent: "99 102 241",
+  brandAccentSoft: "167 139 250",
+  brandAccentDim: "79 70 229",
+  brandLime: "99 102 241",       // legacy alias (= accent)
+  brandLimeSoft: "167 139 250",  // legacy alias (= accentSoft)
+  brandLimeDim: "79 70 229",     // legacy alias (= accentDim)
   brandPlum: "31 31 35",
   brandPlumHover: "44 44 50",
-  brandIndigo: "45 212 191",
+  brandIndigo: "99 102 241",
   statusSuccess: "127 229 184",
   statusWarning: "255 192 98",
   statusError: "242 96 99",
