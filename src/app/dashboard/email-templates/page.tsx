@@ -346,7 +346,7 @@ export default function EmailTemplatesPage() {
       {/* ===== PERFORMANCE STATS ===== */}
       {activeTab === "performance" && (
         <div className="space-y-4">
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
               { label: "Avg Open Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.opens, 0) / TEMPLATES.length)}%` : "0%", icon: <Eye size={12} />, color: "text-blue-400" },
               { label: "Avg Click Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.clicks, 0) / TEMPLATES.length)}%` : "0%", icon: <TrendingUp size={12} />, color: "text-green-400" },

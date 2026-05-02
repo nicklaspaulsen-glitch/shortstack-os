@@ -434,7 +434,7 @@ export default function BrandKitPage() {
           />
 
           {/* How it works */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
               { icon: <Globe size={18} />, title: "1. Paste URL", desc: "Enter any website address" },
               { icon: <Eye size={18} />, title: "2. We Analyze", desc: "Colors, fonts, images, socials" },

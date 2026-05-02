@@ -590,7 +590,7 @@ export default function OutreachLogsPage() {
 
       {/* ══════════ OUTREACH TAB ══════════ */}
       {tab === "outreach" && (
-        <div className={`flex gap-4 ${detailEntry ? "" : ""}`}>
+        <div className={`flex flex-col lg:flex-row gap-4 ${detailEntry ? "" : ""}`}>
           {/* Main content */}
           <div className={`space-y-3 transition-all ${detailEntry ? "flex-1 min-w-0" : "w-full"}`}>
             {/* Filters */}
@@ -892,7 +892,7 @@ export default function OutreachLogsPage() {
 
           {/* ── DETAIL SIDE PANEL ── */}
           {detailEntry && (
-            <div className="w-[380px] flex-shrink-0 sticky top-4 self-start">
+            <div className="w-full lg:w-[380px] flex-shrink-0 lg:sticky lg:top-4 lg:self-start">
               <div className="card space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto">
                 {/* Header */}
                 <div className="flex items-start justify-between">

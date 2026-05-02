@@ -132,7 +132,7 @@ export default function AutomationsPage() {
       />
 
       {/* Stats bar */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
           { label: "Total", value: workflows.length, color: "text-white" },
           { label: "Active", value: activeCount, color: "text-emerald-400" },

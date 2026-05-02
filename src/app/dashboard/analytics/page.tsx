@@ -567,7 +567,7 @@ export default function AnalyticsPage() {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-            <div className="grid grid-cols-3 gap-3 mt-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
               {revenueForecast.map(f => (
                 <div key={f.month} className="bg-surface-light rounded-lg p-3 text-center">
                   <p className="text-[10px] text-muted uppercase tracking-wider">{f.month} Forecast</p>

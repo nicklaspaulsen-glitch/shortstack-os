@@ -1365,7 +1365,7 @@ export default function ClientsPage() {
       {/* Add Client Modal */}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add Client" size="lg">
         <form onSubmit={(e) => { e.preventDefault(); addClient(new FormData(e.currentTarget)); }} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-muted mb-1">Business Name *</label>
               <input name="business_name" className="input w-full" required />

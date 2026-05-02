@@ -842,7 +842,7 @@ export default function CommunityPage() {
       </div>
 
       {/* Stats bar */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="card p-3 text-center">
           <p className="text-lg font-bold font-mono">{MEMBERS.length}</p>
           <p className="text-[10px] text-muted">Members</p>

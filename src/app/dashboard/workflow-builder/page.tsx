@@ -996,7 +996,7 @@ function WorkflowBuilderInner() {
 
         {/* ── Right Panel: Node Config ── */}
         {selectedNode && selectedDef && (
-          <div className="shrink-0 w-[300px] border-l border-border bg-surface overflow-y-auto">
+          <div className="hidden lg:block shrink-0 w-[300px] border-l border-border bg-surface overflow-y-auto">
             <div className="p-4">
               {/* Header */}
               <div className="flex items-center justify-between mb-4">

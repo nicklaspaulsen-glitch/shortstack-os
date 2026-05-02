@@ -269,7 +269,7 @@ export default function ApiKeysPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="card p-3">
           <div className="flex items-center gap-2 mb-1">
             <Key size={12} className="text-gold" />

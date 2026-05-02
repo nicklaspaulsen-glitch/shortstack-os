@@ -318,7 +318,7 @@ export default function DealsPage() {
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Clock size={14} className="text-gold" /> Deal Velocity Tracker
             </h3>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { stage: "Prospect to Qualified", avg: "0 days", trend: "faster" },
                 { stage: "Qualified to Proposal", avg: "0 days", trend: "faster" },
