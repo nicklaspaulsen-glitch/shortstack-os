@@ -111,6 +111,14 @@ interface NavItem {
    * Untagged items default to tier 3 to reduce noise.
    */
   tier?: 1 | 2 | 3 | 4;
+  /**
+   * settingsOnly = true means the item is tier 4 (excluded from main nav)
+   * but also excluded from the sidebar footer strip. It is only reachable
+   * from the /dashboard/settings hub page. Use this for pages that ARE
+   * genuinely configuration (Billing, Domains, API Keys, etc.) but do not
+   * need a permanent sidebar footprint.
+   */
+  settingsOnly?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -199,11 +207,12 @@ const navItems: NavItem[] = [
   { label: "Triggers", href: "/dashboard/triggers", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin"], sub: "Workflows", tier: 3 },
   { label: "Automations", href: "/dashboard/automations", icon: <NavIcon3D name="RotateCcw" size={16} />, roles: ["admin"], sub: "Workflows", tier: 3 },
   { label: "WhatsApp", href: "/dashboard/whatsapp", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
-  { label: "Webhooks", href: "/dashboard/webhooks", icon: <NavIcon3D name="Webhook" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
-  { label: "API Keys", href: "/dashboard/api/keys", icon: <NavIcon3D name="Key" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
-  { label: "API Webhooks", href: "/dashboard/api/webhooks", icon: <NavIcon3D name="Webhook" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
   { label: "API Docs", href: "/dashboard/api-docs", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
-  { label: "Activity Log", href: "/dashboard/activity-log", icon: <NavIcon3D name="ClipboardList" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
+  // Moved to Settings hub — not in sidebar footer, only reachable from /dashboard/settings:
+  { label: "Webhooks", href: "/dashboard/webhooks", icon: <NavIcon3D name="Webhook" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "API Keys", href: "/dashboard/api/keys", icon: <NavIcon3D name="Key" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "API Webhooks", href: "/dashboard/api/webhooks", icon: <NavIcon3D name="Webhook" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "Activity Log", href: "/dashboard/activity-log", icon: <NavIcon3D name="ClipboardList" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
 
   // ── Workspace (team collaboration — internal team tools) ──
   // Apr 28: positioned between Automate and Manage. Not at the very
@@ -222,14 +231,15 @@ const navItems: NavItem[] = [
   { label: "Invoices", href: "/dashboard/invoices", icon: <NavIcon3D name="Receipt" size={16} />, roles: ["admin"], sub: "Business", tier: 2 },
   { label: "Invoice Templates", href: "/dashboard/invoice-templates", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
   { label: "Subaccounts", href: "/dashboard/subaccounts", icon: <NavIcon3D name="Building2" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
-  { label: "White Label", href: "/dashboard/white-label", icon: <NavIcon3D name="Palette" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
-  { label: "Billing", href: "/dashboard/billing", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business", tier: 3 },
   { label: "Pricing", href: "/dashboard/pricing", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
-  { label: "Usage & Tokens", href: "/dashboard/usage", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin", "team_member"], sub: "Business", tier: 3 },
-  { label: "Phone & Email", href: "/dashboard/phone-email", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business", tier: 3 },
-  { label: "Phone Setup", href: "/dashboard/phone-setup", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business", tier: 3 },
-  { label: "Mail Setup", href: "/dashboard/mail-setup", icon: <NavIcon3D name="Mail" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business", tier: 3 },
-  { label: "Domains", href: "/dashboard/domains", icon: <NavIcon3D name="Globe2" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
+  // Moved to Settings hub — not in sidebar footer, only reachable from /dashboard/settings:
+  { label: "White Label", href: "/dashboard/white-label", icon: <NavIcon3D name="Palette" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "Billing", href: "/dashboard/billing", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin", "founder", "agency", "team_member"], tier: 4, settingsOnly: true },
+  { label: "Usage & Tokens", href: "/dashboard/usage", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin", "team_member"], tier: 4, settingsOnly: true },
+  { label: "Phone & Email", href: "/dashboard/phone-email", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin", "founder", "agency", "team_member"], tier: 4, settingsOnly: true },
+  { label: "Phone Setup", href: "/dashboard/phone-setup", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin", "founder", "agency", "team_member"], tier: 4, settingsOnly: true },
+  { label: "Mail Setup", href: "/dashboard/mail-setup", icon: <NavIcon3D name="Mail" size={16} />, roles: ["admin", "founder", "agency", "team_member"], tier: 4, settingsOnly: true },
+  { label: "Domains", href: "/dashboard/domains", icon: <NavIcon3D name="Globe2" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
   { label: "Client Health", href: "/dashboard/client-health", icon: <NavIcon3D name="Heart" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
   { label: "Reviews", href: "/dashboard/reviews", icon: <NavIcon3D name="Star" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
   { label: "Tickets", href: "/dashboard/tickets", icon: <NavIcon3D name="LifeBuoy" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
@@ -506,9 +516,11 @@ export default function Sidebar() {
     return true;
   });
 
-  // Separate tier-4 items (Settings/Notifications/Status) for footer rendering
+  // Separate tier-4 items for footer rendering.
+  // settingsOnly=true items are excluded from the footer — they live only on
+  // the /dashboard/settings hub page and are not given a sidebar footprint.
   const tier4Nav = navItems.filter((item) =>
-    item.tier === 4 && !!userRole && item.roles.includes(userRole)
+    item.tier === 4 && !item.settingsOnly && !!userRole && item.roles.includes(userRole)
   );
 
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);

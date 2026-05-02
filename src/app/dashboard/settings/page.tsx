@@ -2,16 +2,22 @@
 
 import { useEffect, useState } from "react";
 import {
+  Activity,
   AlertTriangle,
   Bell,
+  ClipboardList,
   Code,
   CreditCard,
+  Globe2,
   Mail,
   Mic,
   Palette,
+  Phone,
   Plug,
   User,
   Users,
+  Webhook,
+  Zap,
 } from "lucide-react";
 
 import PageHero from "@/components/ui/page-hero";
@@ -291,6 +297,196 @@ export default function SettingsIndexPage() {
             </>
           }
         />
+      </div>
+
+      {/* ── Channel & Infrastructure config ─────────────────────────────── */}
+      <div>
+        <div className="flex items-center gap-3 mb-4">
+          <h2
+            className="font-editorial text-[11px] uppercase tracking-[0.18em]"
+            style={{ color: tokens.text.muted }}
+          >
+            Channels &amp; Infrastructure
+          </h2>
+          <div className="flex-1 h-px" style={{ background: tokens.border.subtle }} />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <SettingsCard
+            index={10}
+            href="/dashboard/phone-email"
+            title="Phone & Email"
+            description="Twilio phone numbers, caller ID, and sending email addresses."
+            Icon={Phone}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Channels
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  SMS · Voice · Email
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={11}
+            href="/dashboard/phone-setup"
+            title="Phone Setup"
+            description="Configure Twilio SID, auth token, and inbound call routing."
+            Icon={Phone}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Provider
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Twilio
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={12}
+            href="/dashboard/mail-setup"
+            title="Mail Setup"
+            description="Resend / SMTP configuration, DNS records, and deliverability."
+            Icon={Mail}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Provider
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Resend / SMTP
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={13}
+            href="/dashboard/domains"
+            title="Domains"
+            description="Custom domains for portals, landing pages, and white-label apps."
+            Icon={Globe2}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  CNAME / A
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Fully custom domain
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={14}
+            href="/dashboard/usage"
+            title="Usage & Tokens"
+            description="AI token consumption, credit balance, and plan usage caps."
+            Icon={Zap}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Credits
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Usage breakdown
+                </span>
+              </>
+            }
+          />
+        </div>
+      </div>
+
+      {/* ── Developer tools ──────────────────────────────────────────────── */}
+      <div>
+        <div className="flex items-center gap-3 mb-4">
+          <h2
+            className="font-editorial text-[11px] uppercase tracking-[0.18em]"
+            style={{ color: tokens.text.muted }}
+          >
+            Developer
+          </h2>
+          <div className="flex-1 h-px" style={{ background: tokens.border.subtle }} />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <SettingsCard
+            index={15}
+            href="/dashboard/api/keys"
+            title="API Keys"
+            description="Personal access tokens for the ShortStack REST API."
+            Icon={Code}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Programmatic
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Bearer token auth
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={16}
+            href="/dashboard/webhooks"
+            title="Webhooks"
+            description="Outgoing webhook endpoints — trigger external services on events."
+            Icon={Webhook}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Outgoing
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  HMAC signed
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={17}
+            href="/dashboard/api/webhooks"
+            title="API Webhooks"
+            description="Inbound webhook subscriptions via the public REST API."
+            Icon={Webhook}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Inbound
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Event subscriptions
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={18}
+            href="/dashboard/activity-log"
+            title="Activity Log"
+            description="Audit trail of all actions taken in your workspace."
+            Icon={ClipboardList}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Audit
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Full history
+                </span>
+              </>
+            }
+          />
+        </div>
       </div>
     </div>
   );
