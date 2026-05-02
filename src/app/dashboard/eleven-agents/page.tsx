@@ -59,26 +59,13 @@ interface ScriptTemplate {
   conversionRate: number;
 }
 
-/* ── Mock Data ── */
-const MOCK_AGENTS: VoiceAgent[] = [];
-
-const MOCK_CALLS: CallRecord[] = [];
-
-const MOCK_TRANSCRIPT: TranscriptEntry[] = [];
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const MOCK_VOICES: VoiceClone[] = [];
-
-const MOCK_SCRIPTS: ScriptTemplate[] = [];
-
-const MOCK_CONTACTS: { id: string; name: string; count: number; lastCalled: string; status: string }[] = [];
 
 const TABS = ["Dashboard", "Calls", "Transcripts", "Sentiment", "Voices", "Scripts", "A/B Tests", "Scheduling", "Contacts", "Analytics", "Compliance", "Transfer Rules"] as const;
 type Tab = typeof TABS[number];
 
 export default function ElevenAgentsPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Dashboard");
-  const [agents, setAgents] = useState(MOCK_AGENTS);
+  const [agents, setAgents] = useState<VoiceAgent[]>([]);
   const [selectedCall, setSelectedCall] = useState<string | null>(null);
   const [callFilter, setCallFilter] = useState<string>("all");
   const [scriptFilter, setScriptFilter] = useState<string>("all");
@@ -213,11 +200,11 @@ export default function ElevenAgentsPage() {
 
   const totalCallsToday = agents.reduce((sum, a) => sum + a.callsToday, 0);
   const avgSuccessRate = agents.length > 0 ? Math.round(agents.reduce((sum, a) => sum + a.successRate, 0) / agents.length) : 0;
-  const totalCost = MOCK_CALLS.reduce((sum, c) => sum + c.cost, 0);
-  const qualifiedCalls = MOCK_CALLS.filter(c => c.outcome === "qualified").length;
+  const totalCost = 0;
+  const qualifiedCalls = 0;
 
-  const filteredCalls = callFilter === "all" ? MOCK_CALLS : MOCK_CALLS.filter(c => c.outcome === callFilter);
-  const filteredScripts = scriptFilter === "all" ? MOCK_SCRIPTS : MOCK_SCRIPTS.filter(s => s.category === scriptFilter);
+  const filteredCalls: CallRecord[] = [];
+  const filteredScripts: ScriptTemplate[] = [];
 
   const outcomeColors: Record<string, string> = {
     qualified: "bg-green-500/10 text-green-400",
@@ -485,18 +472,10 @@ export default function ElevenAgentsPage() {
                 })}
               </div>
             ) : (
-              <div className="space-y-1.5">
-                {MOCK_CALLS.slice(0, 5).map(call => (
-                  <div key={call.id} className="flex items-center gap-3 p-2 rounded-lg border border-border text-[10px]">
-                    <span className={`w-2 h-2 rounded-full ${call.sentiment === "positive" ? "bg-green-400" : call.sentiment === "negative" ? "bg-red-400" : "bg-yellow-400"}`} />
-                    <span className="font-medium w-32">{call.contactName}</span>
-                    <span className="text-muted font-mono w-28">{call.phone}</span>
-                    <span className="text-muted w-12">{formatDuration(call.duration)}</span>
-                    <span className={`px-1.5 py-0.5 rounded text-[8px] ${outcomeColors[call.outcome]}`}>{call.outcome.replace("_", " ")}</span>
-                    <span className="text-muted ml-auto">{call.startTime}</span>
-                  </div>
-                ))}
-                <p className="text-[9px] text-muted text-center mt-2">Showing demo data — create an agent and make calls to see live data</p>
+              <div className="flex flex-col items-center justify-center py-10 text-center">
+                <PhoneCall size={20} className="text-muted mb-2" />
+                <p className="text-xs text-muted">No conversations yet.</p>
+                <p className="text-[10px] text-muted mt-1">Create an agent and make calls to see live data here.</p>
               </div>
             )}
           </div>
@@ -607,36 +586,10 @@ export default function ElevenAgentsPage() {
               <FileText size={14} className="text-gold" />
               <h2 className="text-sm font-semibold">Call Transcript Viewer</h2>
             </div>
-            <div className="flex gap-2 mb-4">
-              <select className="input text-xs w-64">
-                {MOCK_CALLS.filter(c => c.hasTranscript).map(c => (
-                  <option key={c.id}>{c.contactName} - {c.startTime}</option>
-                ))}
-              </select>
-              <button className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all flex items-center gap-1">
-                <Copy size={10} /> Copy
-              </button>
-            </div>
-            <div className="space-y-3 max-h-96 overflow-y-auto">
-              {MOCK_TRANSCRIPT.map((entry, i) => (
-                <div key={i} className={`flex gap-3 ${entry.speaker === "ai" ? "" : "flex-row-reverse"}`}>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                    entry.speaker === "ai" ? "bg-purple-500/10" : "bg-blue-500/10"
-                  }`}>
-                    {entry.speaker === "ai" ? <Phone size={12} className="text-purple-400" /> : <Users size={12} className="text-blue-400" />}
-                  </div>
-                  <div className={`max-w-[70%] p-3 rounded-lg ${
-                    entry.speaker === "ai" ? "bg-purple-500/5 border border-purple-500/10" : "bg-blue-500/5 border border-blue-500/10"
-                  }`}>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[8px] font-bold uppercase text-muted">{entry.speaker === "ai" ? "AI Agent" : "Lead"}</span>
-                      <span className="text-[8px] text-muted font-mono">{entry.timestamp}</span>
-                      {entry.sentiment && <span className={`text-[8px] ${sentimentColors[entry.sentiment]}`}>{entry.sentiment}</span>}
-                    </div>
-                    <p className="text-[10px] leading-relaxed">{entry.text}</p>
-                  </div>
-                </div>
-              ))}
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <FileText size={24} className="text-muted mb-2" />
+              <p className="text-xs text-muted">No transcripts available yet.</p>
+              <p className="text-[10px] text-muted mt-1">Make calls with an agent to see transcripts here.</p>
             </div>
           </div>
         </div>
@@ -647,33 +600,10 @@ export default function ElevenAgentsPage() {
         <div className="space-y-4">
           <div className="card p-4">
             <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendingUp size={14} className="text-gold" /> Sentiment Analysis</h2>
-            <div className="grid grid-cols-3 gap-4 mb-4">
-              {[
-                { label: "Positive", count: MOCK_CALLS.filter(c => c.sentiment === "positive").length, color: "text-green-400", bg: "bg-green-500/10" },
-                { label: "Neutral", count: MOCK_CALLS.filter(c => c.sentiment === "neutral").length, color: "text-yellow-400", bg: "bg-yellow-500/10" },
-                { label: "Negative", count: MOCK_CALLS.filter(c => c.sentiment === "negative").length, color: "text-red-400", bg: "bg-red-500/10" },
-              ].map((s, i) => (
-                <div key={i} className={`p-4 rounded-lg border border-border ${s.bg}`}>
-                  <p className={`text-2xl font-bold ${s.color}`}>{s.count}</p>
-                  <p className="text-[10px] text-muted mt-1">{s.label} calls</p>
-                  <div className="w-full bg-surface-light rounded-full h-2 mt-2">
-                    <div className={`h-2 rounded-full ${s.color.replace("text-", "bg-")}`} style={{ width: `${MOCK_CALLS.length > 0 ? (s.count / MOCK_CALLS.length) * 100 : 0}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="space-y-1.5">
-              {MOCK_CALLS.map(call => (
-                <div key={call.id} className="flex items-center gap-3 p-2 rounded-lg border border-border text-[10px]">
-                  <span className={`w-3 h-3 rounded-full ${
-                    call.sentiment === "positive" ? "bg-green-400" : call.sentiment === "negative" ? "bg-red-400" : "bg-yellow-400"
-                  }`} />
-                  <span className="font-medium w-32">{call.contactName}</span>
-                  <span className={sentimentColors[call.sentiment]}>{call.sentiment}</span>
-                  <span className={`px-1.5 py-0.5 rounded text-[8px] ${outcomeColors[call.outcome]}`}>{call.outcome.replace("_", " ")}</span>
-                  <span className="text-muted ml-auto">{formatDuration(call.duration)}</span>
-                </div>
-              ))}
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <TrendingUp size={24} className="text-muted mb-2" />
+              <p className="text-xs text-muted">No sentiment data yet.</p>
+              <p className="text-[10px] text-muted mt-1">Sentiment is tracked automatically as calls complete.</p>
             </div>
           </div>
         </div>
@@ -749,24 +679,10 @@ export default function ElevenAgentsPage() {
                 }`}>{f.replace("-", " ")}</button>
             ))}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {filteredScripts.map(s => (
-              <div key={s.id} className="card p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold">{s.name}</span>
-                  <span className="text-[8px] px-1.5 py-0.5 bg-surface-light rounded-full text-muted">{s.category}</span>
-                </div>
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {s.variables.map((v, i) => (
-                    <span key={i} className="text-[8px] px-1.5 py-0.5 bg-gold/10 text-gold rounded font-mono">{`{${v}}`}</span>
-                  ))}
-                </div>
-                <div className="flex items-center gap-4 text-[9px] text-muted">
-                  <span>Open: <span className="text-green-400">{s.openRate}%</span></span>
-                  <span>Convert: <span className="text-gold">{s.conversionRate}%</span></span>
-                </div>
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <FileText size={24} className="text-muted mb-2" />
+            <p className="text-xs text-muted">No scripts yet.</p>
+            <p className="text-[10px] text-muted mt-1">Scripts will appear here once created.</p>
           </div>
         </div>
       )}
@@ -839,24 +755,10 @@ export default function ElevenAgentsPage() {
       {activeTab === "Contacts" && (
         <div className="card p-4">
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-gold" /> Contact Lists</h2>
-          <div className="space-y-2">
-            {MOCK_CONTACTS.map(list => (
-              <div key={list.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                <div className="flex-1">
-                  <p className="text-[11px] font-medium">{list.name}</p>
-                  <p className="text-[9px] text-muted">{list.count} contacts &middot; Last called: {list.lastCalled}</p>
-                </div>
-                <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                  list.status === "active" ? "bg-green-500/10 text-green-400" :
-                  list.status === "completed" ? "bg-blue-500/10 text-blue-400" :
-                  list.status === "new" ? "bg-gold/10 text-gold" :
-                  "bg-surface-light text-muted"
-                }`}>{list.status}</span>
-                <button className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1">
-                  <PhoneCall size={9} /> Call
-                </button>
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <Users size={24} className="text-muted mb-2" />
+            <p className="text-xs text-muted">No contact lists yet.</p>
+            <p className="text-[10px] text-muted mt-1">Upload a contact list to start calling.</p>
           </div>
         </div>
       )}
@@ -869,21 +771,9 @@ export default function ElevenAgentsPage() {
             <div className="space-y-3">
               <div>
                 <p className="text-[9px] text-muted uppercase mb-2">Outcome Distribution</p>
-                {["qualified", "callback", "not_interested", "voicemail", "no_answer"].map(outcome => {
-                  const count = MOCK_CALLS.filter(c => c.outcome === outcome).length;
-                  return (
-                    <div key={outcome} className="flex items-center gap-2 mb-1.5 text-[10px]">
-                      <span className="w-28 capitalize">{outcome.replace("_", " ")}</span>
-                      <div className="flex-1 bg-surface-light rounded-full h-2.5">
-                        <div className={`h-2.5 rounded-full ${
-                          outcome === "qualified" ? "bg-green-400" : outcome === "callback" ? "bg-blue-400" :
-                          outcome === "not_interested" ? "bg-red-400" : outcome === "voicemail" ? "bg-yellow-400" : "bg-gray-400"
-                        }`} style={{ width: `${MOCK_CALLS.length > 0 ? (count / MOCK_CALLS.length) * 100 : 0}%` }} />
-                      </div>
-                      <span className="w-8 text-right font-mono">{count}</span>
-                    </div>
-                  );
-                })}
+                <div className="flex flex-col items-center justify-center py-6 text-center">
+                  <p className="text-xs text-muted">No call data yet.</p>
+                </div>
               </div>
 
               <div>

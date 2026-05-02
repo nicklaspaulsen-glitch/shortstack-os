@@ -40,21 +40,6 @@ const NOTIFY_CATEGORIES: { key: string; label: string; desc: string }[] = [
 const tabs = ["Install", "Servers", "Commands", "Auto-Roles", "Welcome", "Moderation", "Analytics", "Events", "Embeds", "Webhooks", "Announcements", "Insights"] as const;
 type Tab = (typeof tabs)[number];
 
-const mockServers: { id: string; name: string; guildId: string; members: number; channels: number; online: number; status: string; client: string; invite: string }[] = [];
-
-const mockChannels: { id: string; name: string; type: string; synced: boolean; messages: number }[] = [];
-
-const mockCommands: { name: string; desc: string; category: string; enabled: boolean }[] = [];
-
-const mockAutoRoles: { id: string; trigger: string; role: string; color: string; enabled: boolean }[] = [];
-
-const mockModRules: { id: string; name: string; desc: string; action: string; enabled: boolean }[] = [];
-
-const mockEvents: { id: string; title: string; date: string; time: string; channel: string; attendees: number; recurring: boolean }[] = [];
-
-const mockWebhooks: { id: string; name: string; url: string; channel: string; lastFired: string; status: string }[] = [];
-
-const mockAnnouncements: { id: string; title: string; body: string; scheduled: string; channels: string[]; status: string }[] = [];
 
 const dailyActivity = [
   { day: "Mon", messages: 0, members: 0 },
@@ -70,12 +55,12 @@ export default function DiscordPage() {
   const { profile } = useAuth();
   const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
   const [activeTab, setActiveTab] = useState<Tab>("Install");
-  const [selectedServer, setSelectedServer] = useState(mockServers[0]?.id ?? "");
+  const [selectedServer, setSelectedServer] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [commandFilter, setCommandFilter] = useState("All");
-  const [commands, setCommands] = useState(mockCommands);
-  const [autoRoles, setAutoRoles] = useState(mockAutoRoles);
-  const [modRules, setModRules] = useState(mockModRules);
+  const [commands, setCommands] = useState<{ name: string; desc: string; category: string; enabled: boolean }[]>([]);
+  const [autoRoles, setAutoRoles] = useState<{ id: string; trigger: string; role: string; color: string; enabled: boolean }[]>([]);
+  const [modRules, setModRules] = useState<{ id: string; name: string; desc: string; action: string; enabled: boolean }[]>([]);
   const [welcomeMsg, setWelcomeMsg] = useState("Welcome to {server}, {user}! Check out #rules and introduce yourself in #general.");
   const [welcomeDm, setWelcomeDm] = useState(true);
   const [welcomeChannel, setWelcomeChannel] = useState(true);
@@ -205,7 +190,7 @@ export default function DiscordPage() {
   }
 
   const maxMessages = Math.max(...dailyActivity.map(d => d.messages));
-  const currentServer = mockServers.find(s => s.id === selectedServer);
+  const currentServer = undefined as { name: string } | undefined;
 
   return (
     <div className="fade-in space-y-6 max-w-[1200px] mx-auto">
@@ -215,9 +200,7 @@ export default function DiscordPage() {
         subtitle="Servers, bot commands, moderation & community."
         gradient="purple"
         actions={
-          <select value={selectedServer} onChange={e => setSelectedServer(e.target.value)} className="text-xs border border-white/20 bg-white/10 text-white rounded-lg px-3 py-1.5">
-            {mockServers.map(s => <option key={s.id} value={s.id} className="bg-slate-800">{s.name}</option>)}
-          </select>
+          <span className="text-xs text-white/60">No servers connected</span>
         }
       />
 
@@ -229,15 +212,15 @@ export default function DiscordPage() {
         </div>
         <div className="card p-3 flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-[#5865F2]/10 flex items-center justify-center"><Server size={16} className="text-[#5865F2]" /></div>
-          <div><p className="text-lg font-bold font-mono">{mockServers.length}</p><p className="text-[10px] text-muted">Servers</p></div>
+          <div><p className="text-lg font-bold font-mono">0</p><p className="text-[10px] text-muted">Servers</p></div>
         </div>
         <div className="card p-3 flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-gold/10 flex items-center justify-center"><Users size={16} className="text-gold" /></div>
-          <div><p className="text-lg font-bold font-mono">{mockServers.reduce((s, sv) => s + sv.members, 0)}</p><p className="text-[10px] text-muted">Total Members</p></div>
+          <div><p className="text-lg font-bold font-mono">0</p><p className="text-[10px] text-muted">Total Members</p></div>
         </div>
         <div className="card p-3 flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center"><Hash size={16} className="text-purple-400" /></div>
-          <div><p className="text-lg font-bold font-mono">{mockServers.reduce((s, sv) => s + sv.channels, 0)}</p><p className="text-[10px] text-muted">Total Channels</p></div>
+          <div><p className="text-lg font-bold font-mono">0</p><p className="text-[10px] text-muted">Total Channels</p></div>
         </div>
       </div>
 
@@ -461,54 +444,10 @@ export default function DiscordPage() {
       {activeTab === "Servers" && (
         <div className="space-y-4">
           <PreviewBanner />
-          <div className="space-y-2">
-            {mockServers.map(server => (
-              <div key={server.id} className={`card p-4 ${selectedServer === server.id ? "border-gold/30" : ""}`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-[#5865F2]/10 flex items-center justify-center text-[#5865F2] font-bold text-sm">{server.name.charAt(0)}</div>
-                    <div>
-                      <p className="text-sm font-semibold">{server.name}</p>
-                      <div className="flex items-center gap-3 text-[10px] text-muted">
-                        <span className="flex items-center gap-1"><Users size={10} /> {server.members} members</span>
-                        <span className="flex items-center gap-1"><Hash size={10} /> {server.channels} channels</span>
-                        <span className="flex items-center gap-1"><Globe size={10} /> {server.client}</span>
-                        <span className={`flex items-center gap-1 ${server.status === "healthy" ? "text-green-400" : "text-yellow-400"}`}>
-                          <Zap size={10} /> {server.online} online
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => copyText(server.invite, server.id)} className="p-2 rounded-lg hover:bg-surface-light border border-transparent hover:border-border">
-                      {copiedId === server.id ? <Check size={14} className="text-green-400" /> : <Copy size={14} className="text-muted" />}
-                    </button>
-                    <span className={`text-[9px] px-2 py-0.5 rounded-full ${server.status === "healthy" ? "bg-green-400/10 text-green-400" : "bg-yellow-400/10 text-yellow-400"}`}>{server.status}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Channel Sync Status */}
-          <div className="card p-4">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Hash size={14} className="text-gold" /> Channel Sync Status - {currentServer?.name}</h3>
-            <div className="space-y-1.5">
-              {mockChannels.map(ch => (
-                <div key={ch.id} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border text-xs">
-                  <div className="flex items-center gap-2">
-                    {ch.type === "text" ? <Hash size={12} className="text-muted" /> : <Volume2 size={12} className="text-muted" />}
-                    <span className="font-mono">{ch.name}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {ch.type === "text" && <span className="text-[10px] text-muted">{ch.messages} msgs</span>}
-                    <span className={`text-[9px] px-2 py-0.5 rounded-full ${ch.synced ? "bg-green-400/10 text-green-400" : "bg-yellow-400/10 text-yellow-400"}`}>
-                      {ch.synced ? "Synced" : "Pending"}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="flex flex-col items-center justify-center py-10 text-center">
+            <Server size={20} className="text-muted mb-2" />
+            <p className="text-xs text-muted">No servers connected yet.</p>
+            <p className="text-[10px] text-muted mt-1">Install the Trinity bot above and connect your Discord server.</p>
           </div>
         </div>
       )}
@@ -527,6 +466,9 @@ export default function DiscordPage() {
             </div>
           </div>
           <div className="space-y-2">
+            {commands.filter(c => commandFilter === "All" || c.category === commandFilter).length === 0 && (
+              <p className="text-xs text-muted text-center py-6">No commands available. Connect a server to see slash commands.</p>
+            )}
             {commands.filter(c => commandFilter === "All" || c.category === commandFilter).map(cmd => (
               <div key={cmd.name} className="card p-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -579,6 +521,9 @@ export default function DiscordPage() {
           <PreviewBanner />
           <p className="text-xs text-muted">Automatically assign roles based on join events, reactions, or commands.</p>
           <div className="space-y-2">
+            {autoRoles.length === 0 && (
+              <p className="text-xs text-muted text-center py-4">No auto-roles configured.</p>
+            )}
             {autoRoles.map(role => (
               <div key={role.id} className="card p-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -680,6 +625,9 @@ export default function DiscordPage() {
           <PreviewBanner />
           <p className="text-xs text-muted">Auto-moderation rules to keep your community safe and clean.</p>
           <div className="space-y-2">
+            {modRules.length === 0 && (
+              <p className="text-xs text-muted text-center py-4">No moderation rules configured.</p>
+            )}
             {modRules.map(rule => (
               <div key={rule.id} className="card p-3">
                 <div className="flex items-center justify-between">
@@ -746,23 +694,7 @@ export default function DiscordPage() {
           {/* Top Channels */}
           <div className="card p-4">
             <h3 className="text-sm font-semibold mb-3">Top Active Channels</h3>
-            <div className="space-y-2">
-              {mockChannels.filter(c => c.type === "text").sort((a, b) => b.messages - a.messages).slice(0, 5).map((ch, i) => (
-                <div key={ch.id} className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-muted w-4">{i + 1}.</span>
-                    <Hash size={10} className="text-muted" />
-                    <span className="font-mono">{ch.name}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-24 h-1.5 bg-surface-light rounded-full overflow-hidden">
-                      <div className="h-full bg-[#5865F2] rounded-full" style={{ width: `${(ch.messages / 892) * 100}%` }} />
-                    </div>
-                    <span className="text-[10px] text-muted w-12 text-right">{ch.messages} msgs</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <p className="text-xs text-muted text-center py-4">No channel data available.</p>
           </div>
         </div>
       )}
@@ -788,8 +720,7 @@ export default function DiscordPage() {
                 <div>
                   <label className="text-[10px] text-muted font-semibold uppercase">Channel</label>
                   <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
-                    {mockChannels.filter(c => c.type === "voice").map(c => <option key={c.id}>#{c.name}</option>)}
-                    {mockChannels.filter(c => c.type === "text").map(c => <option key={c.id}>#{c.name}</option>)}
+                    <option value="">No channels — connect a server first</option>
                   </select>
                 </div>
                 <div>
@@ -804,28 +735,9 @@ export default function DiscordPage() {
               <button className="mt-3 text-xs bg-gold/10 text-gold px-4 py-2 rounded-lg font-medium">Create Event</button>
             </div>
           )}
-          <div className="space-y-2">
-            {mockEvents.map(event => (
-              <div key={event.id} className="card p-3 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#5865F2]/10 flex items-center justify-center">
-                    <Calendar size={16} className="text-[#5865F2]" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold">{event.title}</p>
-                    <div className="flex items-center gap-3 text-[10px] text-muted">
-                      <span>{event.date} at {event.time}</span>
-                      <span>{event.channel}</span>
-                      <span>{event.attendees} attending</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {event.recurring && <span className="text-[9px] px-2 py-0.5 rounded-full bg-purple-400/10 text-purple-400">Recurring</span>}
-                  <button className="text-[10px] text-muted hover:text-foreground" aria-label="Edit event"><Edit3 size={12} /></button>
-                </div>
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <Calendar size={18} className="text-muted mb-2" />
+            <p className="text-xs text-muted">No events scheduled yet.</p>
           </div>
         </div>
       )}
@@ -909,28 +821,9 @@ export default function DiscordPage() {
         <div className="space-y-4">
           <PreviewBanner />
           <p className="text-xs text-muted">Manage webhooks for external integrations and automated notifications.</p>
-          <div className="space-y-2">
-            {mockWebhooks.map(wh => (
-              <div key={wh.id} className="card p-3 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center"><Link size={14} className="text-gold" /></div>
-                  <div>
-                    <p className="text-xs font-semibold">{wh.name}</p>
-                    <div className="flex items-center gap-3 text-[10px] text-muted">
-                      <span>{wh.channel}</span>
-                      <span>Last: {wh.lastFired}</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${wh.status === "active" ? "bg-green-400/10 text-green-400" : "bg-gray-400/10 text-gray-400"}`}>{wh.status}</span>
-                  <button onClick={() => copyText(wh.url, wh.id)} className="p-1.5 rounded hover:bg-surface-light" aria-label="Copy webhook URL">
-                    {copiedId === wh.id ? <Check size={12} className="text-green-400" /> : <Copy size={12} className="text-muted" />}
-                  </button>
-                  <button className="p-1.5 rounded hover:bg-surface-light" aria-label="Delete webhook"><Trash2 size={12} className="text-red-400" /></button>
-                </div>
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <Link size={18} className="text-muted mb-2" />
+            <p className="text-xs text-muted">No webhooks created yet.</p>
           </div>
           <div className="card p-4">
             <h3 className="text-sm font-semibold mb-3">Create Webhook</h3>
@@ -942,7 +835,7 @@ export default function DiscordPage() {
               <div>
                 <label className="text-[10px] text-muted font-semibold uppercase">Target Channel</label>
                 <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
-                  {mockChannels.filter(c => c.type === "text").map(c => <option key={c.id}>#{c.name}</option>)}
+                  <option value="">No channels — connect a server first</option>
                 </select>
               </div>
             </div>
@@ -1002,19 +895,9 @@ export default function DiscordPage() {
               <button className="text-xs bg-gold/10 text-gold px-4 py-2 rounded-lg font-medium hover:bg-gold/20">Schedule</button>
             </div>
           </div>
-          <div className="space-y-2">
-            {mockAnnouncements.map(a => (
-              <div key={a.id} className="card p-3 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-semibold">{a.title}</p>
-                  <div className="flex items-center gap-3 text-[10px] text-muted">
-                    <span>{a.scheduled}</span>
-                    <span>{a.channels.join(", ")}</span>
-                  </div>
-                </div>
-                <span className={`text-[9px] px-2 py-0.5 rounded-full ${a.status === "sent" ? "bg-green-400/10 text-green-400" : a.status === "scheduled" ? "bg-[#5865F2]/10 text-[#5865F2]" : "bg-yellow-400/10 text-yellow-400"}`}>{a.status}</span>
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <Megaphone size={18} className="text-muted mb-2" />
+            <p className="text-xs text-muted">No announcements scheduled yet.</p>
           </div>
         </div>
       )}

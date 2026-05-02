@@ -11,7 +11,7 @@ import {
 import PageHero from "@/components/ui/page-hero";
 
 /* ------------------------------------------------------------------ */
-/*  Mock Data                                                          */
+/*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
 interface Review {
@@ -24,25 +24,8 @@ interface Review {
   replyText?: string;
 }
 
-const QA_DATA: { id: string; question: string; answer: string | null; askedBy: string; date: string }[] = [];
-
-const INSIGHTS = {
-  views: { total: 0, search: 0, maps: 0, trend: "--" },
-  searches: { direct: 0, discovery: 0, branded: 0, trend: "--" },
-  actions: { website: 0, directions: 0, calls: 0, messages: 0, trend: "--" },
-  photos: { views: 0, count: 0, trend: "--" },
-};
-
-const LOCATIONS: { id: string; name: string; address: string; verified: boolean; rating: number; reviews: number }[] = [];
-
 const CATEGORIES = ["Marketing Agency", "Digital Marketing Service", "Social Media Agency", "Advertising Agency", "SEO Service"];
 const SELECTED_CATEGORIES = ["Marketing Agency", "Digital Marketing Service"];
-
-const COMPETITOR_DATA: { name: string; rating: number; reviews: number; photos: number }[] = [];
-
-const HOLIDAY_HOURS: { holiday: string; date: string; hours: string }[] = [];
-
-const SCHEDULED_POSTS: { id: string; content: string; date: string; status: string }[] = [];
 
 /* ------------------------------------------------------------------ */
 /*  Page Component                                                     */
@@ -100,15 +83,9 @@ export default function GoogleBusinessPage() {
         subtitle="Listings, reviews, posts & local SEO."
         gradient="blue"
         actions={
-          <>
-            <select value={selectedLocation} onChange={e => setSelectedLocation(e.target.value)}
-              className="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-xs text-white min-w-[160px]">
-              {LOCATIONS.map(l => <option key={l.id} value={l.id} className="bg-slate-800">{l.name}</option>)}
-            </select>
-            <button className="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white text-xs hover:bg-white/20 transition-all flex items-center gap-1.5">
-              <RefreshCw size={12} /> Refresh
-            </button>
-          </>
+          <button className="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white text-xs hover:bg-white/20 transition-all flex items-center gap-1.5">
+            <RefreshCw size={12} /> Refresh
+          </button>
         }
       />
 
@@ -127,28 +104,15 @@ export default function GoogleBusinessPage() {
           <p className="text-[10px] text-muted">Needs Reply</p>
         </div>
         <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-green-400 flex items-center justify-center gap-0.5">{INSIGHTS.views.total.toLocaleString()} <ArrowUpRight size={10} /></p>
+          <p className="text-lg font-bold text-green-400">—</p>
           <p className="text-[10px] text-muted">Profile Views</p>
         </div>
         <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-[#4285F4]">{INSIGHTS.actions.website + INSIGHTS.actions.calls}</p>
+          <p className="text-lg font-bold text-[#4285F4]">—</p>
           <p className="text-[10px] text-muted">Actions Taken</p>
         </div>
       </div>
 
-      {/* Multi-location */}
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {LOCATIONS.map(l => (
-          <div key={l.id} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[10px] whitespace-nowrap shrink-0 cursor-pointer transition-all ${
-            selectedLocation === l.id ? "border-[#4285F4]/30 bg-[#4285F4]/10 text-[#4285F4]" : "border-border text-muted"
-          }`} onClick={() => setSelectedLocation(l.id)}>
-            <MapPin size={10} />
-            <span className="font-medium">{l.name.split(" - ")[1] || l.name}</span>
-            {l.verified ? <CheckCircle size={8} className="text-green-400" /> : <Clock size={8} className="text-yellow-400" />}
-            {l.rating > 0 && <span>{l.rating}<Star size={7} className="inline fill-yellow-400 text-yellow-400 ml-0.5" /></span>}
-          </div>
-        ))}
-      </div>
 
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto pb-1">
@@ -235,15 +199,7 @@ export default function GoogleBusinessPage() {
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-[#4285F4]" /> Post Scheduler</h3>
             <div className="space-y-2 mb-3">
-              {SCHEDULED_POSTS.map(sp => (
-                <div key={sp.id} className="flex items-center justify-between p-2 rounded-lg border border-border">
-                  <div>
-                    <p className="text-[10px] font-medium">{sp.content}</p>
-                    <p className="text-[9px] text-muted flex items-center gap-1"><Clock size={8} /> {sp.date}</p>
-                  </div>
-                  <span className={`text-[9px] px-2 py-0.5 rounded ${sp.status === "scheduled" ? "bg-green-400/10 text-green-400" : "bg-yellow-400/10 text-yellow-400"}`}>{sp.status}</span>
-                </div>
-              ))}
+              <p className="text-xs text-muted text-center py-2">No scheduled posts.</p>
             </div>
           </div>
 
@@ -277,75 +233,10 @@ export default function GoogleBusinessPage() {
 
       {/* ---- TAB: Insights ---- */}
       {activeTab === "insights" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="card p-3">
-              <p className="text-[9px] text-muted uppercase mb-1">Profile Views</p>
-              <p className="text-xl font-bold">{INSIGHTS.views.total.toLocaleString()}</p>
-              <span className="text-[9px] text-green-400 flex items-center gap-0.5"><TrendingUp size={8} /> {INSIGHTS.views.trend}</span>
-            </div>
-            <div className="card p-3">
-              <p className="text-[9px] text-muted uppercase mb-1">Search Impressions</p>
-              <p className="text-xl font-bold">{(INSIGHTS.searches.direct + INSIGHTS.searches.discovery).toLocaleString()}</p>
-              <span className="text-[9px] text-green-400 flex items-center gap-0.5"><TrendingUp size={8} /> {INSIGHTS.searches.trend}</span>
-            </div>
-            <div className="card p-3">
-              <p className="text-[9px] text-muted uppercase mb-1">Website Clicks</p>
-              <p className="text-xl font-bold">{INSIGHTS.actions.website}</p>
-              <span className="text-[9px] text-green-400 flex items-center gap-0.5"><TrendingUp size={8} /> {INSIGHTS.actions.trend}</span>
-            </div>
-            <div className="card p-3">
-              <p className="text-[9px] text-muted uppercase mb-1">Phone Calls</p>
-              <p className="text-xl font-bold">{INSIGHTS.actions.calls}</p>
-            </div>
-          </div>
-
-          {/* Search breakdown */}
-          <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3">How Customers Find You</h3>
-            <div className="space-y-2">
-              {[
-                { label: "Direct searches", value: INSIGHTS.searches.direct, color: "bg-[#4285F4]" },
-                { label: "Discovery searches", value: INSIGHTS.searches.discovery, color: "bg-green-400" },
-                { label: "Branded searches", value: INSIGHTS.searches.branded, color: "bg-gold" },
-              ].map(s => (
-                <div key={s.label}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px]">{s.label}</span>
-                    <span className="text-[10px] font-mono text-muted">{s.value}</span>
-                  </div>
-                  <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
-                    <div className={`h-full rounded-full ${s.color}/40`} style={{ width: `${(s.value / (INSIGHTS.searches.direct + INSIGHTS.searches.discovery + INSIGHTS.searches.branded)) * 100}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Competitor Comparison */}
-          <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Eye size={12} className="text-[#4285F4]" /> Competitor Comparison</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full text-[10px]">
-                <thead><tr className="border-b border-border">
-                  <th className="text-left py-2 text-muted">Business</th>
-                  <th className="text-center py-2 text-muted">Rating</th>
-                  <th className="text-center py-2 text-muted">Reviews</th>
-                  <th className="text-center py-2 text-muted">Photos</th>
-                </tr></thead>
-                <tbody>
-                  {COMPETITOR_DATA.map(c => (
-                    <tr key={c.name} className="border-b border-border/30">
-                      <td className={`py-2 font-medium ${c.name === "Your Business" ? "text-[#4285F4]" : ""}`}>{c.name}</td>
-                      <td className="text-center py-2">{c.rating}<Star size={7} className="inline fill-yellow-400 text-yellow-400 ml-0.5" /></td>
-                      <td className="text-center py-2">{c.reviews}</td>
-                      <td className="text-center py-2">{c.photos}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <BarChart3 size={24} className="text-muted mb-2" />
+          <p className="text-sm text-muted">No insights data available yet.</p>
+          <p className="text-[10px] text-muted mt-1">Connect your Google Business Profile to see performance data.</p>
         </div>
       )}
 
@@ -353,21 +244,9 @@ export default function GoogleBusinessPage() {
       {activeTab === "qa" && (
         <div className="card p-4">
           <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><MessageSquare size={12} className="text-[#4285F4]" /> Q&A Manager</h3>
-          <div className="space-y-3">
-            {QA_DATA.map(qa => (
-              <div key={qa.id} className="p-3 rounded-lg border border-border">
-                <p className="text-xs font-medium">Q: {qa.question}</p>
-                <p className="text-[9px] text-muted mb-2">Asked by {qa.askedBy} &middot; {qa.date}</p>
-                {qa.answer ? (
-                  <p className="text-[10px] text-muted pl-3 border-l-2 border-[#4285F4]/20">A: {qa.answer}</p>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <input className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground" placeholder="Type an answer..." aria-label="Answer to question" />
-                    <button className="px-2 py-1 rounded-lg bg-[#4285F4] text-white text-[10px] font-medium">Answer</button>
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-center py-10 text-center">
+            <MessageSquare size={24} className="text-muted mb-2" />
+            <p className="text-xs text-muted">No questions yet.</p>
           </div>
         </div>
       )}
@@ -387,7 +266,7 @@ export default function GoogleBusinessPage() {
                 </div>
               ))}
             </div>
-            <p className="text-[10px] text-muted mt-2">{INSIGHTS.photos.count} photos &middot; {INSIGHTS.photos.views.toLocaleString()} total views</p>
+            <p className="text-[10px] text-muted mt-2">No photos uploaded yet.</p>
           </div>
         </div>
       )}
@@ -422,15 +301,7 @@ export default function GoogleBusinessPage() {
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-[#4285F4]" /> Holiday Hours</h3>
             <div className="space-y-2">
-              {HOLIDAY_HOURS.map(h => (
-                <div key={h.holiday} className="flex items-center justify-between p-2 rounded-lg border border-border">
-                  <div>
-                    <p className="text-[10px] font-medium">{h.holiday}</p>
-                    <p className="text-[9px] text-muted">{h.date}</p>
-                  </div>
-                  <span className="text-[10px] text-red-400">{h.hours}</span>
-                </div>
-              ))}
+              <p className="text-xs text-muted text-center py-2">No holiday hours configured.</p>
             </div>
           </div>
 

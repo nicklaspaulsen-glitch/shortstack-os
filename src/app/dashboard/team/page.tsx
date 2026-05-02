@@ -52,7 +52,6 @@ interface PermissionRow {
   viewer: boolean;
 }
 
-const MOCK_MEMBERS: TeamMember[] = [];
 
 const ROLE_DEFINITIONS: RoleDefinition[] = [
   { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#C9A84C", memberCount: 0 },
@@ -96,7 +95,7 @@ const ROLE_COLORS: Record<string, string> = {
 
 export default function TeamPage() {
   const [tab, setTab] = useState<TeamTab>("members");
-  const [members] = useState<TeamMember[]>(MOCK_MEMBERS);
+  const [members] = useState<TeamMember[]>([]);
   const [showInvite, setShowInvite] = useState(false);
   const [showCustomRole, setShowCustomRole] = useState(false);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);

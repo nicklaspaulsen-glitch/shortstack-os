@@ -56,19 +56,6 @@ interface Booking {
   meeting_types: { name: string; duration: number; color: string | null } | null;
 }
 
-interface PrepCard {
-  id: string;
-  guestName: string;
-  meetingType: string;
-  date: string;
-  time: string;
-  clientSince: string;
-  lastMeeting: string;
-  dealValue: string;
-  notes: string[];
-  talking_points: string[];
-  sentiment: "positive" | "neutral" | "at_risk";
-}
 
 const TIME_SLOTS = [
   "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -98,16 +85,12 @@ const COLOR_OPTIONS = [
 ];
 
 /* ------------------------------------------------------------------ */
-/*  AI Smart placeholders — empty arrays/records until real APIs ship: */
-/*    /api/scheduling/ai-suggestions, /api/scheduling/conflicts,       */
-/*    /api/scheduling/prep-cards, /api/scheduling/heatmap,             */
-/*    /api/scheduling/team. The UI renders empty states when blank.    */
+/*  AI Smart placeholders — empty until real APIs ship.               */
 /* ------------------------------------------------------------------ */
 const AI_SUGGESTED_TIMES: { time: string; day: string; score: number; reason: string }[] = [];
 
 const CONFLICT_ALERTS: { id: string; type: string; title: string; description: string; severity: string }[] = [];
 
-const MOCK_PREP_CARDS: PrepCard[] = [];
 
 const HEATMAP_DATA: Record<string, Record<string, number>> = {
   "Mon": { "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0 },
@@ -144,7 +127,6 @@ export default function SchedulingPage() {
   // AI smart state
   const [autoBuffer, setAutoBuffer] = useState(true);
   const [bufferMinutes, setBufferMinutes] = useState(10);
-  const [showPrepCard, setShowPrepCard] = useState<string | null>(null);
   const [detectedTimezone] = useState("America/Chicago (CDT, UTC-5)");
 
   // Create form state
@@ -758,92 +740,7 @@ export default function SchedulingPage() {
             </h3>
             <p className="text-[10px] text-muted mb-3">AI-generated prep briefs for your upcoming meetings</p>
             <div className="space-y-3">
-              {MOCK_PREP_CARDS.length === 0 && (
-                <p className="text-xs text-muted text-center py-4">No upcoming meetings to prep for.</p>
-              )}
-              {MOCK_PREP_CARDS.map(prep => (
-                <div key={prep.id} className={`rounded-2xl border overflow-hidden transition-all ${
-                  prep.sentiment === "at_risk" ? "border-red-500/20" : "border-border hover:border-gold/20"
-                }`}>
-                  <div className="flex items-center justify-between p-4">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${
-                        prep.sentiment === "at_risk" ? "bg-red-500/10 text-red-400" :
-                        prep.sentiment === "positive" ? "bg-emerald-400/10 text-emerald-400" :
-                        "bg-surface-light text-muted"
-                      }`}>
-                        {prep.guestName.split(" ").map(n => n[0]).join("")}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="text-xs font-semibold">{prep.guestName}</p>
-                          <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${
-                            prep.sentiment === "at_risk" ? "bg-red-400/10 text-red-400" :
-                            prep.sentiment === "positive" ? "bg-emerald-400/10 text-emerald-400" :
-                            "bg-surface-light text-muted"
-                          }`}>
-                            {prep.sentiment === "at_risk" ? "At Risk" : prep.sentiment === "positive" ? "Positive" : "Neutral"}
-                          </span>
-                        </div>
-                        <p className="text-[10px] text-muted">{prep.meetingType} -- {prep.date} at {prep.time}</p>
-                      </div>
-                    </div>
-                    <button onClick={() => setShowPrepCard(showPrepCard === prep.id ? null : prep.id)}
-                      className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-gold hover:border-gold/20 transition-all flex items-center gap-1">
-                      <Eye size={10} /> {showPrepCard === prep.id ? "Hide" : "View"} Brief
-                    </button>
-                  </div>
-
-                  {showPrepCard === prep.id && (
-                    <div className="px-4 pb-4 pt-0 space-y-3">
-                      <div className="h-px bg-border" />
-                      {/* Quick Info */}
-                      <div className="grid grid-cols-3 gap-2">
-                        <div className="p-2 rounded-lg bg-surface-light border border-border text-center">
-                          <p className="text-[8px] text-muted uppercase tracking-wider">Client Since</p>
-                          <p className="text-[10px] font-semibold">{prep.clientSince}</p>
-                        </div>
-                        <div className="p-2 rounded-lg bg-surface-light border border-border text-center">
-                          <p className="text-[8px] text-muted uppercase tracking-wider">Last Meeting</p>
-                          <p className="text-[10px] font-semibold">{prep.lastMeeting}</p>
-                        </div>
-                        <div className="p-2 rounded-lg bg-surface-light border border-border text-center">
-                          <p className="text-[8px] text-muted uppercase tracking-wider">Deal Value</p>
-                          <p className="text-[10px] font-semibold text-gold">{prep.dealValue}</p>
-                        </div>
-                      </div>
-
-                      {/* Notes */}
-                      <div>
-                        <p className="text-[9px] text-muted uppercase tracking-wider font-semibold mb-1.5">Key Notes</p>
-                        <div className="space-y-1">
-                          {prep.notes.map((note, i) => (
-                            <div key={i} className="flex items-start gap-1.5 text-[10px] text-muted">
-                              <span className="text-gold mt-0.5">-</span>
-                              <span>{note}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Talking Points */}
-                      <div className="p-3 rounded-xl bg-gold/[0.03] border border-gold/20">
-                        <p className="text-[9px] text-gold uppercase tracking-wider font-semibold mb-1.5 flex items-center gap-1">
-                          <Sparkles size={9} /> AI Suggested Talking Points
-                        </p>
-                        <div className="space-y-1">
-                          {prep.talking_points.map((tp, i) => (
-                            <div key={i} className="flex items-start gap-1.5 text-[10px] text-foreground">
-                              <Check size={9} className="text-gold mt-0.5 shrink-0" />
-                              <span>{tp}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+              <p className="text-xs text-muted text-center py-4">No upcoming meetings to prep for.</p>
             </div>
           </div>
         </div>

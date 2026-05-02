@@ -87,8 +87,6 @@ const FREQUENCY_LABELS: Record<Frequency, string> = {
 
 const CHANNEL_OPTIONS = ["Email", "Telegram", "Slack", "SMS"];
 
-// ─── Comparison data ─────────────────────────────────────────────────
-const COMPARISON_ROWS: { metric: string; you: string; values: string[]; scores: number[] }[] = [];
 
 // ─── Component ───────────────────────────────────────────────────────
 export default function CompetitiveMonitorPage() {
@@ -519,17 +517,11 @@ export default function CompetitiveMonitorPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {COMPARISON_ROWS.map((row, ri) => (
-                    <tr key={ri} className="border-b border-border/50 hover:bg-surface-light/50 transition">
-                      <td className="p-3 font-medium text-muted sticky left-0 bg-surface">{row.metric}</td>
-                      <td className="p-3 text-center text-gold font-bold">{row.you}</td>
-                      {row.values.map((val, vi) => {
-                        const score = row.scores[vi];
-                        const clr = score === 1 ? "text-emerald-400" : score === -1 ? "text-red-400" : "text-amber-400";
-                        return <td key={vi} className={`p-3 text-center ${clr}`}>{val}</td>;
-                      })}
-                    </tr>
-                  ))}
+                  <tr>
+                    <td colSpan={competitors.length + 2} className="text-center py-10 text-muted text-xs">
+                      Add competitors above to compare metrics side-by-side.
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
