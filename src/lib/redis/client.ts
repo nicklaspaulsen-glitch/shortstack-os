@@ -1,7 +1,7 @@
-/**
+﻿/**
  * Lazy Upstash Redis singleton.
  *
- * Required env vars (from upstash.com console → REST API):
+ * Required env vars (from upstash.com console -> REST API):
  *   UPSTASH_REDIS_REST_URL=https://...upstash.io
  *   UPSTASH_REDIS_REST_TOKEN=AX...
  *
@@ -33,3 +33,4 @@ export function getRedisClient(): Redis | null {
   _redis = new Redis({ url, token });
   return _redis;
 }
+
