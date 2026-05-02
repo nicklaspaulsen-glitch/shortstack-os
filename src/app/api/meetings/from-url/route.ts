@@ -16,6 +16,7 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { fetchMeetingFromUrl } from "@/lib/meetings/url-fetcher";
 import { SsrfBlockedError } from "@/lib/security/ssrf";
+import { uploadToR2 } from "@/lib/server/r2-client";
 
 export const maxDuration = 300;
 
@@ -112,31 +113,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: insertErr?.message || "Insert failed" }, { status: 500 });
   }
 
-  // Upload the downloaded file into the meetings bucket.
-  const path = `${user.id}/${meeting.id}/${Date.now()}_${recording.filename}`;
-  const buffer = new Uint8Array(await recording.blob.arrayBuffer());
+  // Upload the downloaded file to R2.
+  const r2Key = `meetings/${user.id}/${meeting.id}/${Date.now()}_${recording.filename}`;
+  const buffer = Buffer.from(await recording.blob.arrayBuffer());
 
-  const { error: uploadErr } = await supabase.storage
-    .from("meetings")
-    .upload(path, buffer, { contentType: recording.contentType, upsert: false });
-  if (uploadErr) {
-    console.error("[meetings/from-url] storage error:", uploadErr);
+  let audioUrl: string;
+  try {
+    audioUrl = await uploadToR2(r2Key, buffer, recording.contentType);
+  } catch (err) {
+    console.error("[meetings/from-url] R2 upload error:", err);
     // Mark the row as failed so the dashboard reflects the broken state.
     await supabase
       .from("meetings")
       .update({ status: "failed" })
       .eq("id", meeting.id);
-    return NextResponse.json({ error: uploadErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Storage upload failed" }, { status: 500 });
   }
-
-  const { data: signed } = await supabase.storage
-    .from("meetings")
-    .createSignedUrl(path, 60 * 60 * 24 * 7);
-  const audioUrl = signed?.signedUrl || null;
 
   const { data: updated } = await supabase
     .from("meetings")
-    .update({ audio_url: audioUrl, audio_r2_key: path })
+    .update({ audio_url: audioUrl, audio_r2_key: r2Key })
     .eq("id", meeting.id)
     .select()
     .single();

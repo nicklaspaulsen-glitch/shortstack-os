@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { deleteFromR2 } from "@/lib/server/r2-client";
 
 const UPDATABLE_FIELDS = new Set([
   "title",
@@ -142,11 +143,11 @@ export async function DELETE(
     .eq("created_by", user.id)
     .maybeSingle();
   if (existing?.audio_r2_key) {
-    const { error: storageErr } = await supabase.storage
-      .from("meetings")
-      .remove([existing.audio_r2_key]);
-    if (storageErr) {
-      console.error("[meetings] storage cleanup failed:", storageErr);
+    try {
+      await deleteFromR2(existing.audio_r2_key);
+    } catch (err) {
+      // Best-effort cleanup — log but don't block the row delete.
+      console.error("[meetings] R2 cleanup failed:", err);
     }
   }
 

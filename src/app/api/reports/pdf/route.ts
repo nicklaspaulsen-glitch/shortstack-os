@@ -3,6 +3,7 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
 import { sendMessage } from "@/lib/email";
 import PDFDocument from "pdfkit";
+import { uploadToR2 } from "@/lib/server/r2-client";
 
 export const maxDuration = 60;
 export const runtime = "nodejs";
@@ -407,22 +408,14 @@ export async function POST(request: NextRequest) {
     branding,
   });
 
-  // Upload to storage: reports/<user_id>/<uuid>.pdf
-  const objectKey = `${user.id}/${crypto.randomUUID()}.pdf`;
-  const upload = await supabase.storage.from("reports").upload(objectKey, pdfBuffer, {
-    contentType: "application/pdf",
-    upsert: false,
-  });
-  if (upload.error) {
-    return NextResponse.json({ error: "Upload failed", details: upload.error.message }, { status: 500 });
-  }
-
-  // Signed URL (7 days)
-  const { data: signed, error: signedErr } = await supabase.storage
-    .from("reports")
-    .createSignedUrl(objectKey, 60 * 60 * 24 * 7);
-  if (signedErr || !signed?.signedUrl) {
-    return NextResponse.json({ error: "Failed to sign URL", details: signedErr?.message }, { status: 500 });
+  // Upload PDF to R2: reports/<user_id>/<uuid>.pdf
+  const r2Key = `reports/${user.id}/${crypto.randomUUID()}.pdf`;
+  let pdfUrl: string;
+  try {
+    pdfUrl = await uploadToR2(r2Key, pdfBuffer, "application/pdf");
+  } catch (err) {
+    console.error("[reports/pdf] R2 upload error:", err);
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
 
   // Persist history row
@@ -435,7 +428,7 @@ export async function POST(request: NextRequest) {
       metrics,
       date_from: dateOnly(dFrom),
       date_to: dateOnly(dTo),
-      pdf_url: signed.signedUrl,
+      pdf_url: pdfUrl,
       pdf_size_bytes: pdfBuffer.length,
     })
     .select("id, created_at")
@@ -490,7 +483,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({
     success: true,
     id: saved?.id,
-    pdf_url: signed.signedUrl,
+    pdf_url: pdfUrl,
     pdf_size_bytes: pdfBuffer.length,
     emailed,
     email_error: emailError,

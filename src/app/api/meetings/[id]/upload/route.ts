@@ -2,13 +2,13 @@
  * POST /api/meetings/[id]/upload
  *
  * Accepts a multipart form-data body with a `file` field (audio). Uploads it
- * to the `meetings` Storage bucket under `<uid>/<meeting_id>/<filename>` and
- * stores a signed URL on the meetings row. Caller can then call /transcribe.
+ * to Cloudflare R2 under `meetings/<uid>/<meeting_id>/<filename>` and stores
+ * the public CDN URL on the meetings row. Caller can then call /transcribe.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { uploadToR2 } from "@/lib/server/r2-client";
 
-const SIGNED_URL_TTL_SEC = 60 * 60 * 24 * 7; // 7 days
 const MAX_BYTES = 250 * 1024 * 1024; // 250 MB cap
 
 export async function POST(
@@ -45,35 +45,24 @@ export async function POST(
 
   const originalName = (file as File).name || "audio.webm";
   const sanitized = originalName.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const path = `${user.id}/${params.id}/${Date.now()}_${sanitized}`;
+  const r2Key = `meetings/${user.id}/${params.id}/${Date.now()}_${sanitized}`;
+  const contentType = file.type || "audio/webm";
 
-  const buffer = new Uint8Array(await file.arrayBuffer());
-  const { error: uploadErr } = await supabase.storage
-    .from("meetings")
-    .upload(path, buffer, {
-      contentType: file.type || "audio/webm",
-      upsert: false,
-    });
-  if (uploadErr) {
-    console.error("[meetings/upload] storage error:", uploadErr);
-    return NextResponse.json({ error: uploadErr.message }, { status: 500 });
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  let audioUrl: string;
+  try {
+    audioUrl = await uploadToR2(r2Key, buffer, contentType);
+  } catch (err) {
+    console.error("[meetings/upload] R2 upload error:", err);
+    return NextResponse.json({ error: "Storage upload failed" }, { status: 500 });
   }
-
-  const { data: signed, error: signErr } = await supabase.storage
-    .from("meetings")
-    .createSignedUrl(path, SIGNED_URL_TTL_SEC);
-  if (signErr) {
-    console.error("[meetings/upload] sign error:", signErr);
-    return NextResponse.json({ error: signErr.message }, { status: 500 });
-  }
-
-  const audioUrl = signed?.signedUrl || null;
 
   const { data: updated, error: updErr } = await supabase
     .from("meetings")
     .update({
       audio_url: audioUrl,
-      audio_r2_key: path,
+      audio_r2_key: r2Key,
       source_type: "upload",
       status: "processing",
     })
@@ -88,7 +77,7 @@ export async function POST(
 
   return NextResponse.json({
     meeting: updated,
-    storage_path: path,
+    storage_path: r2Key,
     audio_url: audioUrl,
   });
 }
