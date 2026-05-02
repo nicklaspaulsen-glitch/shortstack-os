@@ -102,16 +102,30 @@ interface NavItem {
   roles: string[];
   section?: string;
   sub?: string;
+  /**
+   * Visibility tier:
+   *   1 = Core — always visible (dashboard, clients, inbox, analytics, crm, calendar)
+   *   2 = Main features — visible by default (~14 items)
+   *   3 = Advanced — hidden until "Show more" is toggled
+   *   4 = Settings/admin — always visible but rendered in footer section
+   * Untagged items default to tier 3 to reduce noise.
+   */
+  tier?: 1 | 2 | 3 | 4;
 }
 
 const navItems: NavItem[] = [
-  // ── Core ──
-  { label: "Inbox", href: "/dashboard/inbox", icon: <NavIcon3D name="Inbox" size={16} />, roles: ["admin", "team_member"] },
-  { label: "Generations", href: "/dashboard/generations", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"] },
-  { label: "Dashboard", href: "/dashboard", icon: <NavIcon3D name="LayoutDashboard" size={16} />, roles: ["admin", "team_member"] },
-  { label: "Community", href: "/dashboard/community", icon: <NavIcon3D name="Users" size={16} />, roles: ["admin", "team_member", "client"] },
-  { label: "Analytics", href: "/dashboard/analytics", icon: <NavIcon3D name="BarChart3" size={16} />, roles: ["admin"] },
-  { label: "Reports", href: "/dashboard/reports", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"] },
+  // ── Core (tier 1 — always visible) ──
+  { label: "Dashboard", href: "/dashboard", icon: <NavIcon3D name="LayoutDashboard" size={16} />, roles: ["admin", "team_member"], tier: 1 },
+  { label: "Inbox", href: "/dashboard/inbox", icon: <NavIcon3D name="Inbox" size={16} />, roles: ["admin", "team_member"], tier: 1 },
+  { label: "Clients", href: "/dashboard/clients", icon: <NavIcon3D name="Users" size={16} />, roles: ["admin", "team_member"], tier: 1 },
+  { label: "Analytics", href: "/dashboard/analytics", icon: <NavIcon3D name="BarChart3" size={16} />, roles: ["admin"], tier: 1 },
+  { label: "CRM", href: "/dashboard/crm", icon: <NavIcon3D name="Users" size={16} />, roles: ["admin", "team_member"], tier: 1, sub: "Pipeline" },
+  { label: "Calendar", href: "/dashboard/calendar", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], tier: 1, sub: "Scheduling" },
+
+  // ── Advanced core (tier 2 — visible by default) ──
+  { label: "Generations", href: "/dashboard/generations", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], tier: 2 },
+  { label: "Community", href: "/dashboard/community", icon: <NavIcon3D name="Users" size={16} />, roles: ["admin", "team_member", "client"], tier: 2 },
+  { label: "Reports", href: "/dashboard/reports", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], tier: 2 },
 
   // ── Sales (full revenue pipeline) ──
   // Workspace section moved to the BOTTOM (search for `section: "Workspace"`
@@ -119,128 +133,125 @@ const navItems: NavItem[] = [
   // sections come first, since those are the daily-use surfaces. Workspace
   // (team collab — Board/Whiteboard/Files) is internal team tooling, less
   // frequently used than client-facing flows.
-  { label: "Outreach", href: "/dashboard/outreach-hub", icon: <NavIcon3D name="Send" size={16} />, roles: ["admin"], section: "Sales", sub: "Leads & Outreach" },
-  { label: "Lead Finder", href: "/dashboard/scraper", icon: <NavIcon3D name="Search" size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },
-  { label: "AI Caller", href: "/dashboard/eleven-agents", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
-  { label: "Dialer", href: "/dashboard/dialer", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },
-  { label: "Voice AI", href: "/dashboard/voice-receptionist", icon: <NavIcon3D name="Headphones" size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
-  { label: "Voicemail Drop", href: "/dashboard/voicemail-drop", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
-  { label: "Voice Studio", href: "/dashboard/voice-studio", icon: <NavIcon3D name="Mic" size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },
-  { label: "DM Controller", href: "/dashboard/dm-controller", icon: <NavIcon3D name="Send" size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
-  { label: "Conversations", href: "/dashboard/conversations", icon: <NavIcon3D name="MessagesSquare" size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
-  { label: "Outreach Feed", href: "/dashboard/outreach-feed", icon: <NavIcon3D name="MessagesSquare" size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },
-  { label: "Sales Coach", href: "/dashboard/coach", icon: <NavIcon3D name="Award" size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },
-  { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <NavIcon3D name="ClipboardList" size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
-  { label: "Cold Email", href: "/dashboard/cold-email", icon: <NavIcon3D name="MailPlus" size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
-  { label: "Sequences", href: "/dashboard/sequences", icon: <NavIcon3D name="ListOrdered" size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
-  { label: "Lead Sources", href: "/dashboard/lead-sources", icon: <NavIcon3D name="GitBranch" size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
-  { label: "CRM", href: "/dashboard/crm", icon: <NavIcon3D name="Users" size={16} />, roles: ["admin", "team_member"], sub: "Pipeline" },
-  { label: "Tags", href: "/dashboard/tags", icon: <NavIcon3D name="Layers" size={16} />, roles: ["admin"], sub: "Pipeline" },
-  { label: "Deals", href: "/dashboard/deals", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin", "team_member"], sub: "Pipeline" },
-  { label: "Proposals", href: "/dashboard/proposals", icon: <NavIcon3D name="FileCheck" size={16} />, roles: ["admin", "team_member"], sub: "Pipeline" },
-  { label: "Forecast", href: "/dashboard/forecast", icon: <NavIcon3D name="TrendingUp" size={16} />, roles: ["admin"], sub: "Pipeline" },
-  { label: "Commissions", href: "/dashboard/commission-tracker", icon: <NavIcon3D name="Award" size={16} />, roles: ["admin"], sub: "Pipeline" },
-  { label: "Affiliates", href: "/dashboard/affiliates", icon: <NavIcon3D name="Award" size={16} />, roles: ["admin"], sub: "Pipeline" },
-  { label: "Ads Manager", href: "/dashboard/ads-manager", icon: <NavIcon3D name="Target" size={16} />, roles: ["admin"], sub: "Pipeline" },
-  { label: "Calendar", href: "/dashboard/calendar", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
-  { label: "Scheduling", href: "/dashboard/scheduling", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
-  { label: "Meetings", href: "/dashboard/meetings", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
-  { label: "Clients", href: "/dashboard/clients", icon: <NavIcon3D name="Users" size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
-  { label: "Courses", href: "/dashboard/courses", icon: <NavIcon3D name="BookOpen" size={16} />, roles: ["admin"], sub: "Membership" },
-  { label: "Vertical Templates", href: "/dashboard/verticals", icon: <NavIcon3D name="Briefcase" size={16} />, roles: ["admin"], sub: "Membership" },
+  { label: "Outreach", href: "/dashboard/outreach-hub", icon: <NavIcon3D name="Send" size={16} />, roles: ["admin"], section: "Sales", sub: "Leads & Outreach", tier: 2 },
+  { label: "Lead Finder", href: "/dashboard/scraper", icon: <NavIcon3D name="Search" size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach", tier: 2 },
+  { label: "AI Caller", href: "/dashboard/eleven-agents", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Dialer", href: "/dashboard/dialer", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Voice AI", href: "/dashboard/voice-receptionist", icon: <NavIcon3D name="Headphones" size={16} />, roles: ["admin"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Voicemail Drop", href: "/dashboard/voicemail-drop", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Voice Studio", href: "/dashboard/voice-studio", icon: <NavIcon3D name="Mic" size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach", tier: 3 },
+  { label: "DM Controller", href: "/dashboard/dm-controller", icon: <NavIcon3D name="Send" size={16} />, roles: ["admin"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Conversations", href: "/dashboard/conversations", icon: <NavIcon3D name="MessagesSquare" size={16} />, roles: ["admin"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Outreach Feed", href: "/dashboard/outreach-feed", icon: <NavIcon3D name="MessagesSquare" size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Sales Coach", href: "/dashboard/coach", icon: <NavIcon3D name="Award" size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <NavIcon3D name="ClipboardList" size={16} />, roles: ["admin"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Cold Email", href: "/dashboard/cold-email", icon: <NavIcon3D name="MailPlus" size={16} />, roles: ["admin"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Sequences", href: "/dashboard/sequences", icon: <NavIcon3D name="ListOrdered" size={16} />, roles: ["admin"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Lead Sources", href: "/dashboard/lead-sources", icon: <NavIcon3D name="GitBranch" size={16} />, roles: ["admin"], sub: "Leads & Outreach", tier: 3 },
+  { label: "Tags", href: "/dashboard/tags", icon: <NavIcon3D name="Layers" size={16} />, roles: ["admin"], sub: "Pipeline", tier: 3 },
+  { label: "Deals", href: "/dashboard/deals", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin", "team_member"], sub: "Pipeline", tier: 2 },
+  { label: "Proposals", href: "/dashboard/proposals", icon: <NavIcon3D name="FileCheck" size={16} />, roles: ["admin", "team_member"], sub: "Pipeline", tier: 2 },
+  { label: "Forecast", href: "/dashboard/forecast", icon: <NavIcon3D name="TrendingUp" size={16} />, roles: ["admin"], sub: "Pipeline", tier: 3 },
+  { label: "Commissions", href: "/dashboard/commission-tracker", icon: <NavIcon3D name="Award" size={16} />, roles: ["admin"], sub: "Pipeline", tier: 3 },
+  { label: "Affiliates", href: "/dashboard/affiliates", icon: <NavIcon3D name="Award" size={16} />, roles: ["admin"], sub: "Pipeline", tier: 3 },
+  { label: "Ads Manager", href: "/dashboard/ads-manager", icon: <NavIcon3D name="Target" size={16} />, roles: ["admin"], sub: "Pipeline", tier: 3 },
+  { label: "Scheduling", href: "/dashboard/scheduling", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], sub: "Scheduling", tier: 3 },
+  { label: "Meetings", href: "/dashboard/meetings", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], sub: "Scheduling", tier: 3 },
+  { label: "Courses", href: "/dashboard/courses", icon: <NavIcon3D name="BookOpen" size={16} />, roles: ["admin"], sub: "Membership", tier: 3 },
+  { label: "Vertical Templates", href: "/dashboard/verticals", icon: <NavIcon3D name="Briefcase" size={16} />, roles: ["admin"], sub: "Membership", tier: 3 },
 
   // ── Create (content production) ──
-  { label: "AI Copywriter", href: "/dashboard/copywriter", icon: <NavIcon3D name="Pen" size={16} />, roles: ["admin", "team_member"], section: "Create", sub: "Writing" },
-  { label: "Script Lab", href: "/dashboard/script-lab", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], sub: "Writing" },
-  { label: "Email Composer", href: "/dashboard/email-composer", icon: <NavIcon3D name="Mail" size={16} />, roles: ["admin", "team_member"], sub: "Writing" },
-  { label: "Email Templates", href: "/dashboard/email-templates", icon: <NavIcon3D name="MailPlus" size={16} />, roles: ["admin"], sub: "Writing" },
-  { label: "SMS Templates", href: "/dashboard/sms-templates", icon: <NavIcon3D name="Smartphone" size={16} />, roles: ["admin"], sub: "Writing" },
-  { label: "Newsletter", href: "/dashboard/newsletter", icon: <NavIcon3D name="Newspaper" size={16} />, roles: ["admin"], sub: "Writing" },
-  { label: "Brand Voice", href: "/dashboard/brand-voice", icon: <NavIcon3D name="BookOpen" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
-  { label: "Brand Kit", href: "/dashboard/brand-kit", icon: <NavIcon3D name="Palette" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
-  { label: "Content Library", href: "/dashboard/content-library", icon: <NavIcon3D name="FolderOpen" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
-  { label: "Websites", href: "/dashboard/websites", icon: <NavIcon3D name="Globe" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
-  { label: "Landing Pages", href: "/dashboard/landing-pages", icon: <NavIcon3D name="LayoutTemplate" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
-  { label: "Funnels", href: "/dashboard/funnels", icon: <NavIcon3D name="GitBranch" size={16} />, roles: ["admin"], sub: "Brand & Web" },
-  { label: "A/B Tests", href: "/dashboard/ab-tests", icon: <NavIcon3D name="FlaskConical" size={16} />, roles: ["admin"], sub: "Brand & Web" },
-  { label: "Forms", href: "/dashboard/forms", icon: <NavIcon3D name="ClipboardCheck" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
-  { label: "Surveys", href: "/dashboard/surveys", icon: <NavIcon3D name="ClipboardList" size={16} />, roles: ["admin"], sub: "Brand & Web" },
-  { label: "Social Studio", href: "/dashboard/social-studio", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], sub: "Social" },
-  { label: "Social Manager", href: "/dashboard/social-manager", icon: <NavIcon3D name="Share2" size={16} />, roles: ["admin", "team_member"], sub: "Social" },
-  { label: "Content Plan", href: "/dashboard/content-plan", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], sub: "Social" },
+  { label: "AI Copywriter", href: "/dashboard/copywriter", icon: <NavIcon3D name="Pen" size={16} />, roles: ["admin", "team_member"], section: "Create", sub: "Writing", tier: 2 },
+  { label: "Script Lab", href: "/dashboard/script-lab", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], sub: "Writing", tier: 2 },
+  { label: "Email Composer", href: "/dashboard/email-composer", icon: <NavIcon3D name="Mail" size={16} />, roles: ["admin", "team_member"], sub: "Writing", tier: 3 },
+  { label: "Email Templates", href: "/dashboard/email-templates", icon: <NavIcon3D name="MailPlus" size={16} />, roles: ["admin"], sub: "Writing", tier: 3 },
+  { label: "SMS Templates", href: "/dashboard/sms-templates", icon: <NavIcon3D name="Smartphone" size={16} />, roles: ["admin"], sub: "Writing", tier: 3 },
+  { label: "Newsletter", href: "/dashboard/newsletter", icon: <NavIcon3D name="Newspaper" size={16} />, roles: ["admin"], sub: "Writing", tier: 3 },
+  { label: "Brand Voice", href: "/dashboard/brand-voice", icon: <NavIcon3D name="BookOpen" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web", tier: 3 },
+  { label: "Brand Kit", href: "/dashboard/brand-kit", icon: <NavIcon3D name="Palette" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web", tier: 2 },
+  { label: "Content Library", href: "/dashboard/content-library", icon: <NavIcon3D name="FolderOpen" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web", tier: 3 },
+  { label: "Websites", href: "/dashboard/websites", icon: <NavIcon3D name="Globe" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web", tier: 2 },
+  { label: "Landing Pages", href: "/dashboard/landing-pages", icon: <NavIcon3D name="LayoutTemplate" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web", tier: 3 },
+  { label: "Funnels", href: "/dashboard/funnels", icon: <NavIcon3D name="GitBranch" size={16} />, roles: ["admin"], sub: "Brand & Web", tier: 3 },
+  { label: "A/B Tests", href: "/dashboard/ab-tests", icon: <NavIcon3D name="FlaskConical" size={16} />, roles: ["admin"], sub: "Brand & Web", tier: 3 },
+  { label: "Forms", href: "/dashboard/forms", icon: <NavIcon3D name="ClipboardCheck" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web", tier: 3 },
+  { label: "Surveys", href: "/dashboard/surveys", icon: <NavIcon3D name="ClipboardList" size={16} />, roles: ["admin"], sub: "Brand & Web", tier: 3 },
+  { label: "Social Studio", href: "/dashboard/social-studio", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], sub: "Social", tier: 3 },
+  { label: "Social Manager", href: "/dashboard/social-manager", icon: <NavIcon3D name="Share2" size={16} />, roles: ["admin", "team_member"], sub: "Social", tier: 2 },
+  { label: "Content Plan", href: "/dashboard/content-plan", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], sub: "Social", tier: 2 },
 
   // ── Visual (image, video, design) ──
-  { label: "Thumbnails", href: "/dashboard/thumbnail-generator", icon: <NavIcon3D name="ImageIcon" size={16} />, roles: ["admin", "team_member"], section: "Visual", sub: "Image" },
-  { label: "AI Studio", href: "/dashboard/ai-studio", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], sub: "Image" },
-  { label: "Design Studio", href: "/dashboard/design-studio", icon: <NavIcon3D name="PenTool" size={16} />, roles: ["admin", "team_member"], sub: "Image" },
-  { label: "Carousel Gen", href: "/dashboard/carousel-generator", icon: <NavIcon3D name="Layers" size={16} />, roles: ["admin", "team_member"], sub: "Image" },
-  { label: "Video Editor", href: "/dashboard/video-editor", icon: <NavIcon3D name="Film" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video" },
-  { label: "Preset Library", href: "/dashboard/video-editor/library", icon: <NavIcon3D name="LayoutTemplate" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video" },
-  { label: "AI Video Gen", href: "/dashboard/ai-video", icon: <NavIcon3D name="Film" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video" },
+  { label: "Thumbnails", href: "/dashboard/thumbnail-generator", icon: <NavIcon3D name="ImageIcon" size={16} />, roles: ["admin", "team_member"], section: "Visual", sub: "Image", tier: 3 },
+  { label: "AI Studio", href: "/dashboard/ai-studio", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], sub: "Image", tier: 3 },
+  { label: "Design Studio", href: "/dashboard/design-studio", icon: <NavIcon3D name="PenTool" size={16} />, roles: ["admin", "team_member"], sub: "Image", tier: 3 },
+  { label: "Carousel Gen", href: "/dashboard/carousel-generator", icon: <NavIcon3D name="Layers" size={16} />, roles: ["admin", "team_member"], sub: "Image", tier: 3 },
+  { label: "Video Editor", href: "/dashboard/video-editor", icon: <NavIcon3D name="Film" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video", tier: 2 },
+  { label: "Preset Library", href: "/dashboard/video-editor/library", icon: <NavIcon3D name="LayoutTemplate" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video", tier: 3 },
+  { label: "AI Video Gen", href: "/dashboard/ai-video", icon: <NavIcon3D name="Film" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video", tier: 3 },
 
   // ── Automate (AI & workflows) ──
-  { label: "AI Agents", href: "/dashboard/services", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], section: "Automate", sub: "AI" },
-  { label: "Agent Office", href: "/dashboard/agent-office", icon: <NavIcon3D name="UsersRound" size={16} />, roles: ["admin", "team_member"], sub: "AI" },
-  { label: "Agent Controls", href: "/dashboard/agent-controls", icon: <NavIcon3D name="SlidersHorizontal" size={16} />, roles: ["admin"], sub: "AI" },
-  { label: "Apps", href: "/dashboard/agent-desktop", icon: <NavIcon3D name="Monitor" size={16} />, roles: ["admin", "team_member"], sub: "AI" },
-  { label: "Workflows", href: "/dashboard/workflows", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin"], sub: "Workflows" },
-  { label: "Flow Builder", href: "/dashboard/workflow-builder", icon: <NavIcon3D name="GitBranch" size={16} />, roles: ["admin"], sub: "Workflows" },
-  { label: "Triggers", href: "/dashboard/triggers", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin"], sub: "Workflows" },
-  { label: "Automations", href: "/dashboard/automations", icon: <NavIcon3D name="RotateCcw" size={16} />, roles: ["admin"], sub: "Workflows" },
-  { label: "WhatsApp", href: "/dashboard/whatsapp", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], sub: "Channels" },
-  { label: "Webhooks", href: "/dashboard/webhooks", icon: <NavIcon3D name="Webhook" size={16} />, roles: ["admin"], sub: "Channels" },
-  { label: "API Keys", href: "/dashboard/api/keys", icon: <NavIcon3D name="Key" size={16} />, roles: ["admin"], sub: "Channels" },
-  { label: "API Webhooks", href: "/dashboard/api/webhooks", icon: <NavIcon3D name="Webhook" size={16} />, roles: ["admin"], sub: "Channels" },
-  { label: "API Docs", href: "/dashboard/api-docs", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], sub: "Channels" },
-  { label: "Activity Log", href: "/dashboard/activity-log", icon: <NavIcon3D name="ClipboardList" size={16} />, roles: ["admin"], sub: "Channels" },
+  { label: "AI Agents", href: "/dashboard/services", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], section: "Automate", sub: "AI", tier: 2 },
+  { label: "Agent Office", href: "/dashboard/agent-office", icon: <NavIcon3D name="UsersRound" size={16} />, roles: ["admin", "team_member"], sub: "AI", tier: 3 },
+  { label: "Agent Controls", href: "/dashboard/agent-controls", icon: <NavIcon3D name="SlidersHorizontal" size={16} />, roles: ["admin"], sub: "AI", tier: 3 },
+  { label: "Apps", href: "/dashboard/agent-desktop", icon: <NavIcon3D name="Monitor" size={16} />, roles: ["admin", "team_member"], sub: "AI", tier: 3 },
+  { label: "Workflows", href: "/dashboard/workflows", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin"], sub: "Workflows", tier: 2 },
+  { label: "Flow Builder", href: "/dashboard/workflow-builder", icon: <NavIcon3D name="GitBranch" size={16} />, roles: ["admin"], sub: "Workflows", tier: 3 },
+  { label: "Triggers", href: "/dashboard/triggers", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin"], sub: "Workflows", tier: 3 },
+  { label: "Automations", href: "/dashboard/automations", icon: <NavIcon3D name="RotateCcw" size={16} />, roles: ["admin"], sub: "Workflows", tier: 3 },
+  { label: "WhatsApp", href: "/dashboard/whatsapp", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
+  { label: "Webhooks", href: "/dashboard/webhooks", icon: <NavIcon3D name="Webhook" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
+  { label: "API Keys", href: "/dashboard/api/keys", icon: <NavIcon3D name="Key" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
+  { label: "API Webhooks", href: "/dashboard/api/webhooks", icon: <NavIcon3D name="Webhook" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
+  { label: "API Docs", href: "/dashboard/api-docs", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
+  { label: "Activity Log", href: "/dashboard/activity-log", icon: <NavIcon3D name="ClipboardList" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
 
   // ── Workspace (team collaboration — internal team tools) ──
   // Apr 28: positioned between Automate and Manage. Not at the very
   // top (those are daily-use business surfaces) and not at the very
   // bottom (which felt buried per user feedback).
-  { label: "Board", href: "/dashboard/workspace/board", icon: <NavIcon3D name="Kanban" size={16} />, roles: ["admin", "team_member"], section: "Workspace", sub: "Team" },
-  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <NavIcon3D name="LayoutGrid" size={16} />, roles: ["admin", "team_member"], sub: "Team" },
-  { label: "Files", href: "/dashboard/workspace/files", icon: <NavIcon3D name="FolderOpen" size={16} />, roles: ["admin", "team_member"], sub: "Team" },
+  { label: "Board", href: "/dashboard/workspace/board", icon: <NavIcon3D name="Kanban" size={16} />, roles: ["admin", "team_member"], section: "Workspace", sub: "Team", tier: 3 },
+  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <NavIcon3D name="LayoutGrid" size={16} />, roles: ["admin", "team_member"], sub: "Team", tier: 3 },
+  { label: "Files", href: "/dashboard/workspace/files", icon: <NavIcon3D name="FolderOpen" size={16} />, roles: ["admin", "team_member"], sub: "Team", tier: 3 },
 
   // ── Manage (operations & finance) ──
-  { label: "Workspaces", href: "/dashboard/workspaces", icon: <NavIcon3D name="Building2" size={16} />, roles: ["admin"], section: "Manage", sub: "Business" },
-  { label: "Team", href: "/dashboard/team", icon: <NavIcon3D name="UsersRound" size={16} />, roles: ["admin"], sub: "Business" },
-  { label: "Production", href: "/dashboard/production", icon: <NavIcon3D name="Kanban" size={16} />, roles: ["admin", "team_member"], sub: "Business" },
-  { label: "Projects", href: "/dashboard/projects", icon: <NavIcon3D name="Kanban" size={16} />, roles: ["admin", "team_member"], sub: "Business" },
-  { label: "Financials", href: "/dashboard/financials", icon: <NavIcon3D name="BarChart3" size={16} />, roles: ["admin"], sub: "Business" },
-  { label: "Invoices", href: "/dashboard/invoices", icon: <NavIcon3D name="Receipt" size={16} />, roles: ["admin"], sub: "Business" },
-  { label: "Invoice Templates", href: "/dashboard/invoice-templates", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], sub: "Business" },
-  { label: "Subaccounts", href: "/dashboard/subaccounts", icon: <NavIcon3D name="Building2" size={16} />, roles: ["admin"], sub: "Business" },
-  { label: "White Label", href: "/dashboard/white-label", icon: <NavIcon3D name="Palette" size={16} />, roles: ["admin"], sub: "Business" },
-  { label: "Billing", href: "/dashboard/billing", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
-  { label: "Pricing", href: "/dashboard/pricing", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin"], sub: "Business" },
-  { label: "Usage & Tokens", href: "/dashboard/usage", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin", "team_member"], sub: "Business" },
-  { label: "Phone & Email", href: "/dashboard/phone-email", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
-  { label: "Phone Setup", href: "/dashboard/phone-setup", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
-  { label: "Mail Setup", href: "/dashboard/mail-setup", icon: <NavIcon3D name="Mail" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
-  { label: "Domains", href: "/dashboard/domains", icon: <NavIcon3D name="Globe2" size={16} />, roles: ["admin"], sub: "Business" },
-  { label: "Client Health", href: "/dashboard/client-health", icon: <NavIcon3D name="Heart" size={16} />, roles: ["admin"], sub: "Support" },
-  { label: "Reviews", href: "/dashboard/reviews", icon: <NavIcon3D name="Star" size={16} />, roles: ["admin"], sub: "Support" },
-  { label: "Tickets", href: "/dashboard/tickets", icon: <NavIcon3D name="LifeBuoy" size={16} />, roles: ["admin"], sub: "Support" },
-  { label: "Referrals", href: "/dashboard/referrals", icon: <NavIcon3D name="Gift" size={16} />, roles: ["admin"], sub: "Support" },
-  { label: "ROI Calculator", href: "/dashboard/roi-calculator", icon: <NavIcon3D name="Calculator" size={16} />, roles: ["admin"], sub: "Support" },
-  { label: "Monitor", href: "/dashboard/monitor", icon: <NavIcon3D name="Activity" size={16} />, roles: ["admin"], sub: "Tools" },
-  { label: "Reports Gen", href: "/dashboard/report-generator", icon: <NavIcon3D name="FileBarChart2" size={16} />, roles: ["admin"], sub: "Tools" },
-  { label: "Marketplace", href: "/dashboard/marketplace", icon: <NavIcon3D name="Store" size={16} />, roles: ["admin"], sub: "Tools" },
-  { label: "Download Desktop", href: "/dashboard/download", icon: <NavIcon3D name="Download" size={16} />, roles: ["admin", "team_member"], sub: "Tools" },
+  { label: "Workspaces", href: "/dashboard/workspaces", icon: <NavIcon3D name="Building2" size={16} />, roles: ["admin"], section: "Manage", sub: "Business", tier: 3 },
+  { label: "Team", href: "/dashboard/team", icon: <NavIcon3D name="UsersRound" size={16} />, roles: ["admin"], sub: "Business", tier: 2 },
+  { label: "Production", href: "/dashboard/production", icon: <NavIcon3D name="Kanban" size={16} />, roles: ["admin", "team_member"], sub: "Business", tier: 3 },
+  { label: "Projects", href: "/dashboard/projects", icon: <NavIcon3D name="Kanban" size={16} />, roles: ["admin", "team_member"], sub: "Business", tier: 3 },
+  { label: "Financials", href: "/dashboard/financials", icon: <NavIcon3D name="BarChart3" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
+  { label: "Invoices", href: "/dashboard/invoices", icon: <NavIcon3D name="Receipt" size={16} />, roles: ["admin"], sub: "Business", tier: 2 },
+  { label: "Invoice Templates", href: "/dashboard/invoice-templates", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
+  { label: "Subaccounts", href: "/dashboard/subaccounts", icon: <NavIcon3D name="Building2" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
+  { label: "White Label", href: "/dashboard/white-label", icon: <NavIcon3D name="Palette" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
+  { label: "Billing", href: "/dashboard/billing", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business", tier: 3 },
+  { label: "Pricing", href: "/dashboard/pricing", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
+  { label: "Usage & Tokens", href: "/dashboard/usage", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin", "team_member"], sub: "Business", tier: 3 },
+  { label: "Phone & Email", href: "/dashboard/phone-email", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business", tier: 3 },
+  { label: "Phone Setup", href: "/dashboard/phone-setup", icon: <NavIcon3D name="Phone" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business", tier: 3 },
+  { label: "Mail Setup", href: "/dashboard/mail-setup", icon: <NavIcon3D name="Mail" size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business", tier: 3 },
+  { label: "Domains", href: "/dashboard/domains", icon: <NavIcon3D name="Globe2" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
+  { label: "Client Health", href: "/dashboard/client-health", icon: <NavIcon3D name="Heart" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
+  { label: "Reviews", href: "/dashboard/reviews", icon: <NavIcon3D name="Star" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
+  { label: "Tickets", href: "/dashboard/tickets", icon: <NavIcon3D name="LifeBuoy" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
+  { label: "Referrals", href: "/dashboard/referrals", icon: <NavIcon3D name="Gift" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
+  { label: "ROI Calculator", href: "/dashboard/roi-calculator", icon: <NavIcon3D name="Calculator" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
+  { label: "Monitor", href: "/dashboard/monitor", icon: <NavIcon3D name="Activity" size={16} />, roles: ["admin"], sub: "Tools", tier: 3 },
+  { label: "Reports Gen", href: "/dashboard/report-generator", icon: <NavIcon3D name="FileBarChart2" size={16} />, roles: ["admin"], sub: "Tools", tier: 3 },
+  { label: "Marketplace", href: "/dashboard/marketplace", icon: <NavIcon3D name="Store" size={16} />, roles: ["admin"], sub: "Tools", tier: 3 },
+  { label: "Download Desktop", href: "/dashboard/download", icon: <NavIcon3D name="Download" size={16} />, roles: ["admin", "team_member"], sub: "Tools", tier: 3 },
 
   // ── Connect (integrations) — no sub-groups ──
-  { label: "Google Biz", href: "/dashboard/google-business", icon: <NavIcon3D name="Globe" size={16} />, roles: ["admin"], section: "Connect" },
-  { label: "Discord", href: "/dashboard/discord", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"] },
-  { label: "Notion", href: "/dashboard/notion-sync", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"] },
-  { label: "Integrations Hub", href: "/dashboard/integrations-hub", icon: <NavIcon3D name="Plug" size={16} />, roles: ["admin"] },
-  { label: "Competitors", href: "/dashboard/competitive-monitor", icon: <NavIcon3D name="Target" size={16} />, roles: ["admin"] },
-  { label: "Telegram Bot", href: "/dashboard/telegram-bot", icon: <NavIcon3D name="Bot" size={16} />, roles: ["admin"] },
-  { label: "Telegram Presets", href: "/dashboard/telegram-presets", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"] },
-  { label: "Notifications", href: "/dashboard/notifications", icon: <NavIcon3D name="Bell" size={16} />, roles: ["admin", "team_member"] },
-  { label: "System Status", href: "/dashboard/system-status", icon: <NavIcon3D name="ShieldCheck" size={16} />, roles: ["admin"] },
-  { label: "Public Status", href: "/dashboard/admin/status", icon: <NavIcon3D name="Activity" size={16} />, roles: ["admin"] },
-  { label: "Settings", href: "/dashboard/settings", icon: <NavIcon3D name="Settings" size={16} />, roles: ["admin"] },
+  { label: "Google Biz", href: "/dashboard/google-business", icon: <NavIcon3D name="Globe" size={16} />, roles: ["admin"], section: "Connect", tier: 3 },
+  { label: "Discord", href: "/dashboard/discord", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], tier: 3 },
+  { label: "Notion", href: "/dashboard/notion-sync", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], tier: 3 },
+  { label: "Integrations Hub", href: "/dashboard/integrations-hub", icon: <NavIcon3D name="Plug" size={16} />, roles: ["admin"], tier: 2 },
+  { label: "Competitors", href: "/dashboard/competitive-monitor", icon: <NavIcon3D name="Target" size={16} />, roles: ["admin"], tier: 3 },
+  { label: "Telegram Bot", href: "/dashboard/telegram-bot", icon: <NavIcon3D name="Bot" size={16} />, roles: ["admin"], tier: 3 },
+  { label: "Telegram Presets", href: "/dashboard/telegram-presets", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], tier: 3 },
+  { label: "Notifications", href: "/dashboard/notifications", icon: <NavIcon3D name="Bell" size={16} />, roles: ["admin", "team_member"], tier: 4 },
+  { label: "System Status", href: "/dashboard/system-status", icon: <NavIcon3D name="ShieldCheck" size={16} />, roles: ["admin"], tier: 4 },
+  { label: "Public Status", href: "/dashboard/admin/status", icon: <NavIcon3D name="Activity" size={16} />, roles: ["admin"], tier: 3 },
+  { label: "Settings", href: "/dashboard/settings", icon: <NavIcon3D name="Settings" size={16} />, roles: ["admin"], tier: 4 },
 
   // ── Client Portal ──
   { label: "Overview", href: "/dashboard/portal", icon: <NavIcon3D name="LayoutDashboard" size={16} />, roles: ["client"] },
@@ -322,6 +333,21 @@ export default function Sidebar() {
   // for case-insensitive substring match against label + section + sub.
   // Sections collapse to show only matches; non-matching rows hide.
   const [navFilter, setNavFilter] = useState("");
+
+  // Tier v2: show/hide tier-3 "Advanced" items. Persisted to localStorage
+  // so users who unlock the full list don't have to click every session.
+  // Tier 1 + 2 always render; tier 3 gates behind this toggle.
+  // Tier 4 (Settings/Notifications/Status) render in the footer independently.
+  const [showAdvanced, setShowAdvanced] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    try { return localStorage.getItem("sidebar-show-advanced") === "true"; } catch { return false; }
+  });
+
+  const toggleAdvanced = () => {
+    const next = !showAdvanced;
+    setShowAdvanced(next);
+    try { localStorage.setItem("sidebar-show-advanced", String(next)); } catch {}
+  };
 
   // Use profile role when available. If profile hasn't loaded yet but auth
   // loading is complete (user is logged in, profile just failed to fetch),
@@ -462,6 +488,14 @@ export default function Sidebar() {
     if ((userRole === "admin" || userRole === "team_member") && enabledHrefs && enabledHrefs.length > 0) {
       if (!enabledHrefs.includes(item.href)) return false;
     }
+    // Tier v2: hide tier-3 items unless showAdvanced is true.
+    // When a live filter is active we show everything that matches (tier ignored)
+    // so the user can reach any item by typing, regardless of tier.
+    // Tier 4 items are handled separately in the nav footer — exclude from main list.
+    // Client portal items have no tier, so they always pass.
+    const itemTier = item.tier;
+    if (itemTier === 4) return false; // footer renders these
+    if (itemTier === 3 && !showAdvanced && !navFilter.trim()) return false;
     // Apr 28: live filter applied last so the user can substring-search
     // across label / section / sub. Empty filter passes everything.
     if (navFilter.trim()) {
@@ -471,6 +505,11 @@ export default function Sidebar() {
     }
     return true;
   });
+
+  // Separate tier-4 items (Settings/Notifications/Status) for footer rendering
+  const tier4Nav = navItems.filter((item) =>
+    item.tier === 4 && !!userRole && item.roles.includes(userRole)
+  );
 
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
@@ -1043,6 +1082,45 @@ export default function Sidebar() {
             </div>
           );
         })}
+
+        {/* Tier v2: "Show advanced" toggle — only when sidebar is expanded and
+            no live filter is active (filter already reveals all matching items). */}
+        {!collapsed && !navFilter.trim() && (
+          <div className="px-2 pt-2 pb-1">
+            <button
+              onClick={toggleAdvanced}
+              className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[11px] text-text-muted hover:text-text-primary hover:bg-white/[0.03] transition-colors duration-220 ease-out-expo-foundation group"
+              aria-label={showAdvanced ? "Show fewer navigation items" : "Show all navigation items"}
+              title={showAdvanced ? "Collapse advanced items" : "Expand to show all items"}
+            >
+              <ChevronDown
+                size={10}
+                className={`shrink-0 transition-transform duration-220 ${showAdvanced ? "" : "-rotate-90"}`}
+              />
+              <span className="flex-1 text-left tracking-wide">
+                {showAdvanced ? "Show less" : "Show more"}
+              </span>
+              {!showAdvanced && (
+                <span className="text-[10px] text-text-muted/50 tabular-nums">
+                  {navItems.filter(i => i.tier === 3 && !!userRole && i.roles.includes(userRole)).length}
+                </span>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* Tier 4 — Settings/admin footer items, always visible in the nav area */}
+        {!collapsed && tier4Nav.length > 0 && (
+          <div className="px-2 pt-1 pb-1">
+            <div className="h-px bg-border-subtle mb-2" />
+            {tier4Nav.map(item => renderNavLink(item))}
+          </div>
+        )}
+        {collapsed && tier4Nav.length > 0 && (
+          <div className="px-1 pb-1">
+            {tier4Nav.map(item => renderCollapsedLink(item))}
+          </div>
+        )}
       </nav>
 
       {/* Pin button shown in collapsed rail (touch-device fallback for the
