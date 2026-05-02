@@ -522,8 +522,12 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
       } else {
         toast.error(data.error || "Failed");
       }
-    } catch { toast.error("Transcription failed"); }
-    setProcessing(false);
+    } catch (err) {
+      console.error("[ai-studio/transcribe] failed:", err);
+      toast.error("Transcription failed");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -705,8 +709,12 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
       } else {
         toast.error(data.error || "Generation failed");
       }
-    } catch { toast.error("Generation failed"); }
-    setProcessing(false);
+    } catch (err) {
+      console.error("[ai-studio/image-gen] failed:", err);
+      toast.error("Generation failed");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleGenerate = () => runGenerate();
@@ -888,8 +896,12 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
       } else {
         toast.error(data.error || "Failed");
       }
-    } catch { toast.error("Upscale failed"); }
-    setProcessing(false);
+    } catch (err) {
+      console.error("[ai-studio/upscale] failed:", err);
+      toast.error("Upscale failed");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -998,8 +1010,12 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
       } else {
         toast.error(data.error || "Failed");
       }
-    } catch { toast.error("Failed"); }
-    setProcessing(false);
+    } catch (err) {
+      console.error("[ai-studio/remove-bg] failed:", err);
+      toast.error("Failed");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -1081,7 +1097,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
       fd.append("file", file);
       fd.append("motion_bucket", String(motion));
       fd.append("fps", String(fps));
-      const res = await fetch("/api/ai/img-to-video", { method: "POST", body: fd });
+      const res = await fetch("/api/ai-studio/img-to-video", { method: "POST", body: fd });
       const data = await res.json();
       if (data.video) {
         setResult(data.video.startsWith("data:") ? data.video : data.video);
@@ -1091,8 +1107,12 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
       } else {
         toast.error(data.error || "Failed");
       }
-    } catch { toast.error("Failed"); }
-    setProcessing(false);
+    } catch (err) {
+      console.error("[ai-studio/img-to-video] failed:", err);
+      toast.error("Failed");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -1182,8 +1202,12 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
       } else {
         toast.error(data.error || "Failed");
       }
-    } catch { toast.error("Failed"); }
-    setProcessing(false);
+    } catch (err) {
+      console.error("[ai-studio/music-gen] failed:", err);
+      toast.error("Failed");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -1291,12 +1315,19 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
         toast.success(`${successCount} voice${successCount > 1 ? "s" : ""} cloned!`);
         setVoiceFiles([]);
       }
-    } catch { toast.error("Clone failed"); }
-    setProcessing(false);
+    } catch (err) {
+      console.error("[ai-studio/voice-clone] clone failed:", err);
+      toast.error("Clone failed");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleSpeak = async () => {
     if (!text) return toast.error("Enter text to speak");
+    if (!selectedVoice && savedVoices.length === 0 && voiceFiles.length === 0) {
+      return toast.error("Select or clone a voice first");
+    }
     setProcessing(true);
     try {
       const fd = new FormData();
@@ -1313,8 +1344,12 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
       } else {
         toast.error(data.error || "Failed");
       }
-    } catch { toast.error("Failed"); }
-    setProcessing(false);
+    } catch (err) {
+      console.error("[ai-studio/voice-clone] speak failed:", err);
+      toast.error("Failed");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -1445,8 +1480,12 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
       } else {
         toast.error(data.error || "Failed");
       }
-    } catch { toast.error("Failed"); }
-    setProcessing(false);
+    } catch (err) {
+      console.error("[ai-studio/train-lora] failed:", err);
+      toast.error("Failed");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -1564,8 +1603,12 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
       } else {
         toast.error(data.error || "Failed");
       }
-    } catch { toast.error("Failed"); }
-    setProcessing(false);
+    } catch (err) {
+      console.error("[ai-studio/batch-gen] failed:", err);
+      toast.error("Failed");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -1593,8 +1636,8 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
             ))}
           </div>
 
-          <button onClick={() => setPrompts(prev => [...prev, ""])}
-            className="text-[10px] text-cyan-400 hover:underline flex items-center gap-1">
+          <button onClick={() => setPrompts(prev => [...prev, ""])} disabled={prompts.length >= 50}
+            className="text-[10px] text-cyan-400 hover:underline flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed">
             + Add prompt (max 50)
           </button>
 
@@ -1718,7 +1761,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
             toast.success("Subject suggested!");
             return { subject: suggestion };
           } catch (err) {
-            console.error(err);
+            console.error("[ai-studio/enhance-prompt]", err);
             toast.error("Subject suggestion failed");
             return {};
           }
@@ -1808,7 +1851,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
             toast.success("Prompt enhanced!");
             return { prompt: enhanced };
           } catch (err) {
-            console.error(err);
+            console.error("[ai-studio/enhance-prompt]", err);
             toast.error("Prompt enhancement failed");
             return {};
           }
