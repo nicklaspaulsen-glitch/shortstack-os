@@ -108,11 +108,7 @@ const TEMPLATES = [
   { id: "event", name: "Event", desc: "Countdown + speakers + schedule + tickets", icon: CalendarDays, color: "#ec4899", gradient: "from-pink-500 to-rose-500" },
 ];
 
-const MOCK_PAGES: GeneratedPage[] = [];
-
-const MOCK_DEPLOYMENTS: Deployment[] = [];
-
-const MOCK_ANALYTICS = {
+const EMPTY_ANALYTICS = {
   views: 0, uniqueVisitors: 0, bounceRate: 0, avgTime: "0m 0s",
   conversionRate: 0, formSubmissions: 0,
   sources: [] as { name: string; pct: number }[],
@@ -208,7 +204,7 @@ export default function LandingPagesPage() {
   const [generating, setGenerating] = useState(false);
 
   /* ── pages tab ── */
-  const [pages, setPages] = useState<GeneratedPage[]>(MOCK_PAGES);
+  const [pages, setPages] = useState<GeneratedPage[]>([]);
   const [pageSearch, setPageSearch] = useState("");
 
   /* ── deploy tab ── */
@@ -1416,22 +1412,8 @@ export default function LandingPagesPage() {
                 <Clock className="w-4 h-4 text-gold" />
                 Deployment History
               </h3>
-              <div className="space-y-2">
-                {MOCK_DEPLOYMENTS.map(dep => (
-                  <div key={dep.id} className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-2 h-2 rounded-full ${dep.status === "Success" ? "bg-green-400" : dep.status === "Failed" ? "bg-red-400" : "bg-yellow-400 animate-pulse"}`} />
-                      <div>
-                        <p className="text-sm text-white font-medium">{dep.url}</p>
-                        <p className="text-xs text-muted">Commit: {dep.commit}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className={`text-xs font-semibold ${dep.status === "Success" ? "text-green-400" : dep.status === "Failed" ? "text-red-400" : "text-yellow-400"}`}>{dep.status}</span>
-                      <p className="text-xs text-muted">{dep.timestamp}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="text-muted-foreground text-sm">No deployments yet.</div>
               </div>
             </div>
           </div>
@@ -1449,7 +1431,7 @@ export default function LandingPagesPage() {
               onChange={e => setAnalyticsPage(e.target.value)}
               className="bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-white focus:border-gold focus:outline-none"
             >
-              {MOCK_PAGES.filter(p => p.status === "Published").map(p => (
+              {pages.filter(p => p.status === "Published").map(p => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
             </select>
@@ -1458,12 +1440,12 @@ export default function LandingPagesPage() {
           {/* Stat Cards */}
           <div className="grid grid-cols-6 gap-3">
             {[
-              { label: "Total Views", value: MOCK_ANALYTICS.views.toLocaleString(), icon: Eye, color: "text-blue-400" },
-              { label: "Unique Visitors", value: MOCK_ANALYTICS.uniqueVisitors.toLocaleString(), icon: Users, color: "text-purple-400" },
-              { label: "Bounce Rate", value: `${MOCK_ANALYTICS.bounceRate}%`, icon: TrendingUp, color: "text-orange-400" },
-              { label: "Avg. Time", value: MOCK_ANALYTICS.avgTime, icon: Timer, color: "text-cyan-400" },
-              { label: "Conversion Rate", value: `${MOCK_ANALYTICS.conversionRate}%`, icon: Target, color: "text-green-400" },
-              { label: "Form Submissions", value: MOCK_ANALYTICS.formSubmissions.toLocaleString(), icon: Mail, color: "text-gold" },
+              { label: "Total Views", value: EMPTY_ANALYTICS.views.toLocaleString(), icon: Eye, color: "text-blue-400" },
+              { label: "Unique Visitors", value: EMPTY_ANALYTICS.uniqueVisitors.toLocaleString(), icon: Users, color: "text-purple-400" },
+              { label: "Bounce Rate", value: `${EMPTY_ANALYTICS.bounceRate}%`, icon: TrendingUp, color: "text-orange-400" },
+              { label: "Avg. Time", value: EMPTY_ANALYTICS.avgTime, icon: Timer, color: "text-cyan-400" },
+              { label: "Conversion Rate", value: `${EMPTY_ANALYTICS.conversionRate}%`, icon: Target, color: "text-green-400" },
+              { label: "Form Submissions", value: EMPTY_ANALYTICS.formSubmissions.toLocaleString(), icon: Mail, color: "text-gold" },
             ].map(stat => (
               <div key={stat.label} className="card p-4">
                 <div className="flex items-center justify-between mb-2">
@@ -1483,10 +1465,10 @@ export default function LandingPagesPage() {
                 Views (Last 7 Days)
               </h3>
               <div className="flex items-end gap-2 h-40">
-                {MOCK_ANALYTICS.dailyViews.length === 0 ? (
+                {EMPTY_ANALYTICS.dailyViews.length === 0 ? (
                   <div className="flex-1 flex items-center justify-center text-xs text-muted">No data yet</div>
-                ) : MOCK_ANALYTICS.dailyViews.map((v, i) => {
-                  const max = Math.max(...MOCK_ANALYTICS.dailyViews, 1);
+                ) : EMPTY_ANALYTICS.dailyViews.map((v, i) => {
+                  const max = Math.max(...EMPTY_ANALYTICS.dailyViews, 1);
                   const h = (v / max) * 100;
                   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
                   return (
@@ -1501,7 +1483,7 @@ export default function LandingPagesPage() {
                 })}
               </div>
               {/* Simple line overlay */}
-              {MOCK_ANALYTICS.dailyViews.length > 0 && (
+              {EMPTY_ANALYTICS.dailyViews.length > 0 && (
               <div className="relative h-1">
                 <svg viewBox="0 0 700 100" className="absolute -top-40 left-0 w-full h-40 pointer-events-none" preserveAspectRatio="none">
                   <polyline
@@ -1509,16 +1491,16 @@ export default function LandingPagesPage() {
                     stroke="#C9A84C"
                     strokeWidth="2"
                     strokeLinejoin="round"
-                    points={MOCK_ANALYTICS.dailyViews.map((v, i) => {
-                      const max = Math.max(...MOCK_ANALYTICS.dailyViews, 1);
-                      const x = (i / (MOCK_ANALYTICS.dailyViews.length - 1 || 1)) * 680 + 10;
+                    points={EMPTY_ANALYTICS.dailyViews.map((v, i) => {
+                      const max = Math.max(...EMPTY_ANALYTICS.dailyViews, 1);
+                      const x = (i / (EMPTY_ANALYTICS.dailyViews.length - 1 || 1)) * 680 + 10;
                       const y = 95 - (v / max) * 90;
                       return `${x},${y}`;
                     }).join(" ")}
                   />
-                  {MOCK_ANALYTICS.dailyViews.map((v, i) => {
-                    const max = Math.max(...MOCK_ANALYTICS.dailyViews, 1);
-                    const x = (i / (MOCK_ANALYTICS.dailyViews.length - 1 || 1)) * 680 + 10;
+                  {EMPTY_ANALYTICS.dailyViews.map((v, i) => {
+                    const max = Math.max(...EMPTY_ANALYTICS.dailyViews, 1);
+                    const x = (i / (EMPTY_ANALYTICS.dailyViews.length - 1 || 1)) * 680 + 10;
                     const y = 95 - (v / max) * 90;
                     return <circle key={i} cx={x} cy={y} r="3" fill="#C9A84C" />;
                   })}
@@ -1534,7 +1516,7 @@ export default function LandingPagesPage() {
                 Traffic Sources
               </h3>
               <div className="space-y-3">
-                {MOCK_ANALYTICS.sources.map(src => (
+                {EMPTY_ANALYTICS.sources.map(src => (
                   <div key={src.name}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs text-white font-medium">{src.name}</span>
@@ -1549,7 +1531,7 @@ export default function LandingPagesPage() {
               <div className="pt-3 border-t border-border">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted">Total Sessions</span>
-                  <span className="text-white font-semibold">{MOCK_ANALYTICS.views.toLocaleString()}</span>
+                  <span className="text-white font-semibold">{EMPTY_ANALYTICS.views.toLocaleString()}</span>
                 </div>
               </div>
             </div>

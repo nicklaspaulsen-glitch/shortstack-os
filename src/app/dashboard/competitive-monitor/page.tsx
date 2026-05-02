@@ -87,15 +87,6 @@ const FREQUENCY_LABELS: Record<Frequency, string> = {
 
 const CHANNEL_OPTIONS = ["Email", "Telegram", "Slack", "SMS"];
 
-// ─── Mock Competitors ────────────────────────────────────────────────
-const MOCK_COMPETITORS: Competitor[] = [];
-
-// ─── Mock Changes ────────────────────────────────────────────────────
-const MOCK_CHANGES: Change[] = [];
-
-// ─── Mock Alert Rules ────────────────────────────────────────────────
-const MOCK_ALERT_RULES: AlertRule[] = [];
-
 // ─── Comparison data ─────────────────────────────────────────────────
 const COMPARISON_ROWS: { metric: string; you: string; values: string[]; scores: number[] }[] = [];
 
@@ -104,9 +95,9 @@ export default function CompetitiveMonitorPage() {
   useAuth();
 
   const [tab, setTab] = useState<Tab>("changes");
-  const [competitors, setCompetitors] = useState<Competitor[]>(MOCK_COMPETITORS);
-  const [changes] = useState<Change[]>(MOCK_CHANGES);
-  const [alertRules, setAlertRules] = useState<AlertRule[]>(MOCK_ALERT_RULES);
+  const [competitors, setCompetitors] = useState<Competitor[]>([]);
+  const [changes] = useState<Change[]>([]);
+  const [alertRules, setAlertRules] = useState<AlertRule[]>([]);
 
   // Add competitor form
   const [addUrl, setAddUrl] = useState("");

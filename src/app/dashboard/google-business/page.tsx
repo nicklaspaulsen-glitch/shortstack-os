@@ -24,10 +24,6 @@ interface Review {
   replyText?: string;
 }
 
-const MOCK_REVIEWS: Review[] = [];
-
-const MOCK_POSTS: { id: string; content: string; date: string; views: number; clicks: number; type: string }[] = [];
-
 const QA_DATA: { id: string; question: string; answer: string | null; askedBy: string; date: string }[] = [];
 
 const INSIGHTS = {
@@ -60,9 +56,11 @@ export default function GoogleBusinessPage() {
   const [postContent, setPostContent] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [aiReply, setAiReply] = useState<Record<string, string>>({});
+  const [reviews] = useState<Review[]>([]);
+  const [posts] = useState<{ id: string; content: string; date: string; views: number; clicks: number; type: string }[]>([]);
 
-  const avgRating = MOCK_REVIEWS.length ? (MOCK_REVIEWS.reduce((s, r) => s + r.stars, 0) / MOCK_REVIEWS.length).toFixed(1) : "0.0";
-  const needsReply = MOCK_REVIEWS.filter(r => !r.replied).length;
+  const avgRating = reviews.length ? (reviews.reduce((s, r) => s + r.stars, 0) / reviews.length).toFixed(1) : "0.0";
+  const needsReply = reviews.filter(r => !r.replied).length;
 
   function generateReply(review: Review) {
     setReplyingTo(review.id);
@@ -121,7 +119,7 @@ export default function GoogleBusinessPage() {
           <p className="text-[10px] text-muted flex items-center justify-center gap-0.5">{renderStars(Math.round(Number(avgRating)))} Avg</p>
         </div>
         <div className="card p-3 text-center">
-          <p className="text-lg font-bold">{MOCK_REVIEWS.length}</p>
+          <p className="text-lg font-bold">{reviews.length}</p>
           <p className="text-[10px] text-muted">Total Reviews</p>
         </div>
         <div className="card p-3 text-center">
@@ -172,8 +170,8 @@ export default function GoogleBusinessPage() {
             <h3 className="text-xs font-semibold mb-3">Rating Distribution</h3>
             <div className="space-y-1.5">
               {[5, 4, 3, 2, 1].map(r => {
-                const count = MOCK_REVIEWS.filter(rev => rev.stars === r).length;
-                const pct = MOCK_REVIEWS.length ? Math.round((count / MOCK_REVIEWS.length) * 100) : 0;
+                const count = reviews.filter(rev => rev.stars === r).length;
+                const pct = reviews.length ? Math.round((count / reviews.length) * 100) : 0;
                 return (
                   <div key={r} className="flex items-center gap-2">
                     <span className="text-xs w-4 text-right">{r}</span>
@@ -189,7 +187,7 @@ export default function GoogleBusinessPage() {
           </div>
 
           {/* Reviews */}
-          {MOCK_REVIEWS.map(review => (
+          {reviews.map(review => (
             <div key={review.id} className="card p-4">
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-[#4285F4]/10 flex items-center justify-center text-xs font-bold text-[#4285F4] shrink-0">
@@ -262,7 +260,7 @@ export default function GoogleBusinessPage() {
 
           {/* Recent Posts */}
           <div className="space-y-2">
-            {MOCK_POSTS.map(p => (
+            {posts.map(p => (
               <div key={p.id} className="card p-3">
                 <p className="text-xs">{p.content}</p>
                 <div className="flex items-center gap-3 mt-2 text-[9px] text-muted">

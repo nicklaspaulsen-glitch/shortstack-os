@@ -46,11 +46,9 @@ const STATUS_CONFIG: Record<KanbanStatus, { label: string; color: string }> = {
   delivered: { label: "Delivered", color: "text-gold" },
 };
 
-const MOCK_ITEMS: ProductionItem[] = [];
-
 export default function ProductionPage() {
   const [tab, setTab] = useState<ProductionTab>("pipeline");
-  const [items, setItems] = useState<ProductionItem[]>(MOCK_ITEMS);
+  const [items, setItems] = useState<ProductionItem[]>([]);
   const [filterClient, setFilterClient] = useState("All");
   const [filterPriority, setFilterPriority] = useState<string>("All");
   const [showSubmit, setShowSubmit] = useState(false);

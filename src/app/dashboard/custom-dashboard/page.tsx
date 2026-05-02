@@ -33,16 +33,6 @@ function getWidgetDef(id: WidgetId) {
   return WIDGET_TYPES.find((w) => w.id === id)!;
 }
 
-// Placeholder metric values — in production these would be real queries
-const MOCK_VALUES: Record<WidgetId, string> = {
-  leads_today: "12",
-  revenue_month: "$8,420",
-  active_clients: "34",
-  pipeline_value: "$142K",
-  messages_inbox: "7 new",
-  reviews_week: "9",
-  upcoming_calls: "3 today",
-};
 
 function WidgetCard({
   instance,
@@ -88,8 +78,8 @@ function WidgetCard({
           <Trash2 className="w-3.5 h-3.5" />
         </button>
       </div>
-      <p className="text-2xl font-bold text-white pl-6">{MOCK_VALUES[instance.widgetId]}</p>
-      <p className="text-[10px] text-white/30 pl-6 uppercase tracking-wider">Live data</p>
+      <p className="text-2xl font-bold text-white/30 pl-6">–</p>
+      <p className="text-[10px] text-white/30 pl-6 uppercase tracking-wider">No data yet</p>
     </div>
   );
 }
