@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Suspense } from "react";
 import { AuthProvider } from "@/lib/auth-context";
+import { PostHogProvider } from "./providers";
 import { WhiteLabelProvider } from "@/lib/white-label-context";
 import { Toaster } from "react-hot-toast";
 import PWARegister from "@/components/pwa-register";
@@ -146,6 +148,8 @@ export default function RootLayout({
             </filter>
           </defs>
         </svg>
+        <Suspense>
+        <PostHogProvider>
         <AuthProvider>
           <WhiteLabelProvider>
           <ThemeProvider>
@@ -170,6 +174,8 @@ export default function RootLayout({
           />
           </WhiteLabelProvider>
         </AuthProvider>
+        </PostHogProvider>
+        </Suspense>
         <GrainOverlay />
       </body>
     </html>
