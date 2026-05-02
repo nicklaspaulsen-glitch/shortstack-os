@@ -442,7 +442,7 @@ body {
 
 /* Selection */
 ::selection {
-  background: rgba(201, 168, 76, 0.2);
+  background: rgba(99, 102, 241, 0.2);
   color: var(--color-foreground, #1A1A2E);
 }
 
@@ -711,7 +711,7 @@ body {
       0 1px 0 rgba(255,255,255,0.06) inset,
       0 2px 4px rgba(0,0,0,0.15),
       0 12px 28px -8px rgba(0,0,0,0.5),
-      0 0 0 1px rgba(201, 168, 76, 0.08);
+      0 0 0 1px rgba(99, 102, 241, 0.08);
     transform: translateY(-2px);
   }
 
@@ -763,7 +763,7 @@ body {
     transform: translateX(100%);
   }
   /* Preset accent colors — override --card-accent-color or stack classes */
-  .card-accent-gold   { --card-accent-color: #C9A84C; }
+  .card-accent-gold   { --card-accent-color: #6366F1; }
   .card-accent-blue   { --card-accent-color: #3B82F6; }
   .card-accent-green  { --card-accent-color: #10B981; }
   .card-accent-purple { --card-accent-color: #A855F7; }
@@ -920,7 +920,7 @@ body {
   }
   .breathe { animation: breathe 3s ease-in-out infinite; }
   .pulse-ring { animation: pulseRing 2s ease-out infinite; }
-  .shimmer-bg { background: linear-gradient(90deg, transparent 33%, rgba(201,168,76,0.06) 50%, transparent 66%); background-size: 200% 100%; animation: shimmer 2.5s ease-in-out infinite; }
+  .shimmer-bg { background: linear-gradient(90deg, transparent 33%, rgba(99,102,241,0.06) 50%, transparent 66%); background-size: 200% 100%; animation: shimmer 2.5s ease-in-out infinite; }
 
   .stagger-1 { animation-delay: 0.06s; animation-fill-mode: backwards; }
   .stagger-2 { animation-delay: 0.12s; animation-fill-mode: backwards; }
@@ -964,7 +964,7 @@ body {
     position: absolute;
     inset: -4px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(201, 168, 76, 0.18) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, transparent 70%);
     animation: breathe 2s ease-in-out infinite;
   }
 
@@ -1893,34 +1893,34 @@ body {
   letter-spacing: -0.005em;
 }
 
-/* Gold→amber radial generate button with breathing glow */
+/* Indigo radial generate button with breathing glow */
 .hf-generate {
   position: relative;
   height: 56px;
   padding: 0 2rem;
   border-radius: 14px;
-  border: 1px solid rgba(201, 168, 76, 0.5);
+  border: 1px solid rgba(99, 102, 241, 0.5);
   background: radial-gradient(ellipse at center,
-    #E4C876 0%,
-    #C9A84C 45%,
-    #A8882F 100%);
-  color: #1a1208;
+    #818CF8 0%,
+    #6366F1 45%,
+    #4F46E5 100%);
+  color: #FFFFFF;
   font-weight: 700;
   font-size: 0.95rem;
   letter-spacing: 0.01em;
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
   box-shadow:
-    0 0 0 0 rgba(201, 168, 76, 0.4),
-    0 8px 24px -6px rgba(201, 168, 76, 0.5),
+    0 0 0 0 rgba(99, 102, 241, 0.4),
+    0 8px 24px -6px rgba(99, 102, 241, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
   animation: hfBreathe 3s ease-in-out infinite;
 }
 .hf-generate:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow:
-    0 0 0 6px rgba(201, 168, 76, 0.12),
-    0 14px 36px -6px rgba(201, 168, 76, 0.6),
+    0 0 0 6px rgba(99, 102, 241, 0.12),
+    0 14px 36px -6px rgba(99, 102, 241, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .hf-generate:active:not(:disabled) {

@@ -20,7 +20,7 @@ interface AgentAvatarProps {
 
 const STATUS_COLORS: Record<AgentStatus, { glow: string; accent: string }> = {
   idle:     { glow: "rgba(59, 130, 246, 0.4)",  accent: "#60A5FA" },
-  working:  { glow: "rgba(201, 168, 76, 0.5)",  accent: "#C9A84C" },
+  working:  { glow: "rgba(99, 102, 241, 0.5)",   accent: "#6366F1" },
   thinking: { glow: "rgba(168, 85, 247, 0.5)",  accent: "#A855F7" },
   error:    { glow: "rgba(239, 68, 68, 0.5)",   accent: "#EF4444" },
   success:  { glow: "rgba(16, 185, 129, 0.5)",  accent: "#10B981" },
