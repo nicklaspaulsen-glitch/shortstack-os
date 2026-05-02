@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -20,7 +20,8 @@ import { StatSkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import Link from "next/link";
 
-const CHART_COLORS = ["#C9A84C", "#38bdf8", "#10b981", "#f43f5e", "#f59e0b", "#8b5cf6"];
+// Brand-aligned chart palette: indigo → violet → mint → rose → amber → indigo-dim
+const CHART_COLORS = ["#6366F1", "#A78BFA", "#7FE5B8", "#F26063", "#FFC062", "#4F46E5"];
 
 // --- Types ---
 interface ChurnClient { name: string; risk: "high" | "medium" | "low"; score: number; reason: string; mrr: number }
@@ -272,7 +273,7 @@ export default function AnalyticsPage() {
 
   // --- Feature 5: Funnel Data ---
   const funnelData = useMemo(() => [
-    { name: "Leads", value: stats.totalLeads || 0, fill: "#C9A84C" },
+    { name: "Leads", value: stats.totalLeads || 0, fill: "#6366F1" },
     { name: "Contacted", value: stats.dmsSent || 0, fill: "#38bdf8" },
     { name: "Calls Booked", value: stats.callsBooked || 0, fill: "#8b5cf6" },
     // TODO: Wire Proposals from real deals/proposals data once tracked
@@ -504,16 +505,16 @@ export default function AnalyticsPage() {
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={leadsByDay}>
                 <defs>
-                  <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#C9A84C" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="#C9A84C" stopOpacity={0} />
+                  <linearGradient id="accentGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#6366F1" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="#6366F1" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
                 <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
                 <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
                 <Tooltip {...chartTooltipStyle} />
-                <Area type="monotone" dataKey="count" stroke="#C9A84C" fill="url(#goldGrad)" strokeWidth={2} />
+                <Area type="monotone" dataKey="count" stroke="#6366F1" fill="url(#accentGrad)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -529,7 +530,7 @@ export default function AnalyticsPage() {
                 <XAxis dataKey="month" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
                 <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
                 <Tooltip {...chartTooltipStyle} />
-                <Bar dataKey="mrr" fill="#C9A84C" radius={[4, 4, 0, 0]} name="MRR" />
+                <Bar dataKey="mrr" fill="#6366F1" radius={[4, 4, 0, 0]} name="MRR" />
                 <Bar dataKey="deals" fill="#38bdf8" radius={[4, 4, 0, 0]} name="Deal Revenue" />
               </BarChart>
             </ResponsiveContainer>
@@ -561,7 +562,7 @@ export default function AnalyticsPage() {
                   <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
                   <Tooltip {...chartTooltipStyle} formatter={(v) => formatCurrency(Number(v) || 0)} />
                   <Area type="monotone" dataKey="optimistic" stroke="#10b981" fill="none" strokeWidth={1} strokeDasharray="4 4" name="Optimistic" />
-                  <Area type="monotone" dataKey="projected" stroke="#C9A84C" fill="url(#forecastGrad)" strokeWidth={2} name="Projected" />
+                  <Area type="monotone" dataKey="projected" stroke="#6366F1" fill="url(#forecastGrad)" strokeWidth={2} name="Projected" />
                   <Area type="monotone" dataKey="conservative" stroke="#f59e0b" fill="none" strokeWidth={1} strokeDasharray="4 4" name="Conservative" />
                   <Legend wrapperStyle={{ fontSize: "10px" }} />
                 </AreaChart>
@@ -707,7 +708,7 @@ export default function AnalyticsPage() {
                 <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
                 <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
                 <Tooltip {...chartTooltipStyle} />
-                <Line type="monotone" dataKey="sent" stroke="#C9A84C" strokeWidth={2} dot={false} name="Sent" />
+                <Line type="monotone" dataKey="sent" stroke="#6366F1" strokeWidth={2} dot={false} name="Sent" />
                 <Line type="monotone" dataKey="replies" stroke="#10b981" strokeWidth={2} dot={false} name="Replies" />
               </LineChart>
             </ResponsiveContainer>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -102,7 +102,7 @@ export default function NotionSyncPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#6366F1]" />
       </div>
     );
   }
@@ -150,7 +150,7 @@ export default function NotionSyncPage() {
             {/* Sync now */}
             <div className="rounded-xl border border-white/8 bg-white/3 p-5 flex flex-col gap-3">
               <div className="flex items-center gap-2">
-                <RefreshCw className="w-4 h-4 text-[#C9A84C]" />
+                <RefreshCw className="w-4 h-4 text-[#6366F1]" />
                 <p className="text-sm font-semibold text-white">Sync Now</p>
               </div>
               <p className="text-xs text-white/50">
@@ -159,7 +159,7 @@ export default function NotionSyncPage() {
               <button
                 onClick={handleSyncNow}
                 disabled={syncing}
-                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#C9A84C] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#6366F1] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
               >
                 {syncing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -173,7 +173,7 @@ export default function NotionSyncPage() {
             {/* Auto-sync toggle */}
             <div className="rounded-xl border border-white/8 bg-white/3 p-5 flex flex-col gap-3">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#C9A84C]" />
+                <Clock className="w-4 h-4 text-[#6366F1]" />
                 <p className="text-sm font-semibold text-white">Auto-Sync</p>
               </div>
               <p className="text-xs text-white/50">
@@ -182,7 +182,7 @@ export default function NotionSyncPage() {
               <div className="flex items-center gap-3 mt-1">
                 <button onClick={handleToggleAutoSync} className="shrink-0">
                   {autoSync ? (
-                    <ToggleRight className="w-9 h-9 text-[#C9A84C]" />
+                    <ToggleRight className="w-9 h-9 text-[#6366F1]" />
                   ) : (
                     <ToggleLeft className="w-9 h-9 text-white/30" />
                   )}
@@ -250,7 +250,7 @@ export default function NotionSyncPage() {
               { icon: <Clock className="w-5 h-5" />, label: "Auto-sync", desc: "Background sync every 15 minutes" },
             ].map((f) => (
               <div key={f.label} className="rounded-xl border border-white/8 bg-white/3 p-4 flex flex-col gap-2">
-                <div className="text-[#C9A84C]">{f.icon}</div>
+                <div className="text-[#6366F1]">{f.icon}</div>
                 <p className="text-sm font-semibold text-white">{f.label}</p>
                 <p className="text-xs text-white/50">{f.desc}</p>
               </div>

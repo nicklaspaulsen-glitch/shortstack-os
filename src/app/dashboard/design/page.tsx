@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -166,14 +166,14 @@ const INDUSTRY_STYLES: Record<string, string> = {
 };
 
 const COLOR_PALETTES = [
-  { name: "Professional", colors: ["#1a1a2e", "#16213e", "#0f3460", "#e94560", "#C9A84C"] },
+  { name: "Professional", colors: ["#1a1a2e", "#16213e", "#0f3460", "#e94560", "#6366F1"] },
   { name: "Fresh & Clean", colors: ["#ffffff", "#f0f0f0", "#2d3436", "#00cec9", "#6c5ce7"] },
   { name: "Bold & Vibrant", colors: ["#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3", "#54a0ff"] },
-  { name: "Luxury Gold", colors: ["#0d0d0d", "#1a1a1a", "#C9A84C", "#e8d5a3", "#ffffff"] },
+  { name: "Luxury Gold", colors: ["#0d0d0d", "#1a1a1a", "#6366F1", "#e8d5a3", "#ffffff"] },
   { name: "Nature", colors: ["#2d5016", "#3a7d0a", "#87c159", "#f5f5dc", "#8b4513"] },
   { name: "Ocean", colors: ["#003545", "#006d77", "#83c5be", "#edf6f9", "#ffddd2"] },
   { name: "Sunset", colors: ["#2b1055", "#d63230", "#f5a623", "#f7dc6f", "#fed8b1"] },
-  { name: "Minimal Dark", colors: ["#0a0a0a", "#1a1a1a", "#333333", "#ffffff", "#C9A84C"] },
+  { name: "Minimal Dark", colors: ["#0a0a0a", "#1a1a1a", "#333333", "#ffffff", "#6366F1"] },
   { name: "Neon Pop", colors: ["#0D0D0D", "#FF00FF", "#00FF87", "#FFE600", "#00D4FF"] },
   { name: "Pastel Dream", colors: ["#FDA4AF", "#A5B4FC", "#86EFAC", "#FDE68A", "#FBCFE8"] },
   { name: "Earth Tones", colors: ["#78350F", "#92400E", "#B45309", "#D4A574", "#FDF8E1"] },
@@ -359,11 +359,11 @@ export default function DesignStudioPage() {
   // ---------- New Feature State ----------
   const [toolsTab, setToolsTab] = useState<string>("brand-kit");
   const [brandKits, setBrandKits] = useState<BrandKit[]>([
-    { id: "1", name: "Default Brand", colors: ["#C9A84C", "#1a1a2e", "#16213e", "#ffffff", "#f0f0f0"], fonts: { heading: "Montserrat Bold", body: "Open Sans Regular" }, logoUrl: "" },
+    { id: "1", name: "Default Brand", colors: ["#6366F1", "#1a1a2e", "#16213e", "#ffffff", "#f0f0f0"], fonts: { heading: "Montserrat Bold", body: "Open Sans Regular" }, logoUrl: "" },
   ]);
   const [activeBrandKit, setActiveBrandKit] = useState<string>("1");
   const [newBrandKitName, setNewBrandKitName] = useState("");
-  const [newBrandColor, setNewBrandColor] = useState("#C9A84C");
+  const [newBrandColor, setNewBrandColor] = useState("#6366F1");
 
   // Smart Resize
   const [resizeSource, setResizeSource] = useState<string>("");
@@ -410,7 +410,7 @@ export default function DesignStudioPage() {
 
   // Pattern Generator
   const [patternType, setPatternType] = useState("geometric");
-  const [patternColor1, setPatternColor1] = useState("#C9A84C");
+  const [patternColor1, setPatternColor1] = useState("#6366F1");
   const [patternColor2, setPatternColor2] = useState("#1a1a2e");
   const [patternScale, setPatternScale] = useState(50);
 
@@ -470,13 +470,13 @@ export default function DesignStudioPage() {
 
   // Mood Board
   const [moodBoardItems, setMoodBoardItems] = useState<Array<{ id: string; type: "color" | "image" | "note"; value: string }>>([
-    { id: "m1", type: "color", value: "#C9A84C" },
+    { id: "m1", type: "color", value: "#6366F1" },
     { id: "m2", type: "color", value: "#1a1a2e" },
     { id: "m3", type: "note", value: "Minimalist luxury feel" },
     { id: "m4", type: "note", value: "Gold accents on dark background" },
   ]);
   const [newMoodNote, setNewMoodNote] = useState("");
-  const [newMoodColor, setNewMoodColor] = useState("#C9A84C");
+  const [newMoodColor, setNewMoodColor] = useState("#6366F1");
 
   // AI Style Transfer
   const [styleTransferSource, setStyleTransferSource] = useState("");
@@ -520,7 +520,7 @@ export default function DesignStudioPage() {
   function handleExtractColors() {
     setExtractingColors(true);
     setTimeout(() => {
-      setExtractedColors(["#2d3436", "#636e72", "#b2bec3", "#dfe6e9", "#C9A84C", "#e17055"]);
+      setExtractedColors(["#2d3436", "#636e72", "#b2bec3", "#dfe6e9", "#6366F1", "#e17055"]);
       setExtractingColors(false);
       toast.success("Extracted 6 colors from image");
     }, 1500);

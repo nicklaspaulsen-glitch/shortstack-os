@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -797,13 +797,13 @@ export default function CompetitiveMonitorPage() {
                 { name: "AgencyFlow", share: 22, color: "#6366f1" },
                 { name: "MarketMind AI", share: 18, color: "#8b5cf6" },
                 { name: "SocialSpark", share: 15, color: "#f59e0b" },
-                { name: "Trinity (You)", share: 12, color: "#C9A84C" },
+                { name: "Trinity (You)", share: 12, color: "#6366F1" },
                 { name: "ClientPulse", share: 10, color: "#ec4899" },
                 { name: "ContentEngine", share: 8, color: "#0ea5e9" },
                 { name: "Others", share: 15, color: "#64748b" },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className="w-32 text-xs text-right truncate" style={{ color: item.name.includes("You") ? "#C9A84C" : undefined }}>
+                  <div className="w-32 text-xs text-right truncate" style={{ color: item.name.includes("You") ? "#6366F1" : undefined }}>
                     {item.name.includes("You") ? <strong>{item.name}</strong> : item.name}
                   </div>
                   <div className="flex-1 bg-surface-light rounded-full h-5 overflow-hidden">

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -214,7 +214,7 @@ export default function WhatsAppPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#6366F1]" />
       </div>
     );
   }

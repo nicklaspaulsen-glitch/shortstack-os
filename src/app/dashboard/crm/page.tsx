@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 // CRM settings tab now persists to Supabase (automations, tags, notes, follow-ups, segments).
 
 import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
@@ -932,7 +932,7 @@ export default function CRMPage() {
               {STATUS_TABS.filter(t => t.key !== "all").map((t, i) => {
                 const count = statusCounts[t.key] || 0;
                 const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
-                const colors: Record<string, string> = { new: "#3b82f6", contacted: "#f59e0b", replied: "#10b981", booked: "#a855f7", converted: "#C9A84C" };
+                const colors: Record<string, string> = { new: "#3b82f6", contacted: "#f59e0b", replied: "#10b981", booked: "#a855f7", converted: "#6366F1" };
                 return (
                   <div key={t.key} className="flex-1 group cursor-pointer" onClick={() => setActiveTab(t.key as CRMStatus)}>
                     <div className="h-2 rounded-full transition-all group-hover:h-3" style={{ background: colors[t.key], opacity: count > 0 ? 1 : 0.2 }} />
@@ -1568,7 +1568,7 @@ export default function CRMPage() {
             <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: "500px" }}>
               {STATUS_TABS.filter(t => t.key !== "all").map(stage => {
                 const stageLeads = searchFiltered.filter(l => mapToCRMStatus(l.status) === stage.key);
-                const colors: Record<string, string> = { new: "#3b82f6", contacted: "#f59e0b", replied: "#10b981", booked: "#a855f7", converted: "#C9A84C" };
+                const colors: Record<string, string> = { new: "#3b82f6", contacted: "#f59e0b", replied: "#10b981", booked: "#a855f7", converted: "#6366F1" };
                 const color = colors[stage.key] || "#6b7280";
                 return (
                   <div key={stage.key} className="flex-shrink-0 w-[260px]">

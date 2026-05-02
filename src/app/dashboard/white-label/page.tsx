@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -37,7 +37,7 @@ const DEFAULT: WhiteLabelConfig = {
   company_name: "",
   brand_name: "",
   logo_url: "",
-  primary_color: "#C9A84C",
+  primary_color: "#6366F1",
   custom_domain: "",
   custom_domain_verified: false,
   custom_domain_ssl_status: "pending",
@@ -71,7 +71,7 @@ function Input({ value, onChange, placeholder, type = "text" }: { value: string;
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#C9A84C]/50 focus:bg-white/8 transition-all"
+      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#6366F1]/50 focus:bg-white/8 transition-all"
     />
   );
 }
@@ -216,7 +216,7 @@ export default function WhiteLabelPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#6366F1]" />
       </div>
     );
   }
@@ -240,7 +240,7 @@ export default function WhiteLabelPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#C9A84C] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#6366F1] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Settings
@@ -311,7 +311,7 @@ export default function WhiteLabelPage() {
           <Field label="Primary Color" hint="Main accent color -- buttons, highlights">
             <div className="flex gap-3 items-center">
               <input type="color" value={config.primary_color} onChange={(e) => set("primary_color", e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border border-white/10 bg-transparent" />
-              <Input value={config.primary_color} onChange={(v) => set("primary_color", v)} placeholder="#C9A84C" />
+              <Input value={config.primary_color} onChange={(v) => set("primary_color", v)} placeholder="#6366F1" />
             </div>
           </Field>
           <Field label="Background / Dark Color" hint="Used in hero gradients and dark surfaces">
@@ -327,7 +327,7 @@ export default function WhiteLabelPage() {
               <p className="text-xs text-white/40">Display attribution in the footer</p>
             </div>
             <button onClick={() => set("show_powered_by", !config.show_powered_by)} className="shrink-0">
-              {config.show_powered_by ? <ToggleRight className="w-8 h-8 text-[#C9A84C]" /> : <ToggleLeft className="w-8 h-8 text-white/30" />}
+              {config.show_powered_by ? <ToggleRight className="w-8 h-8 text-[#6366F1]" /> : <ToggleLeft className="w-8 h-8 text-white/30" />}
             </button>
           </div>
         </div>
@@ -352,13 +352,13 @@ export default function WhiteLabelPage() {
                     value={domainInput}
                     onChange={(e) => setDomainInput(e.target.value)}
                     placeholder="app.youragency.com"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#C9A84C]/50 transition-all"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#6366F1]/50 transition-all"
                   />
                 </div>
                 <button
                   onClick={handleAddDomain}
                   disabled={domainBusy || !domainInput.trim()}
-                  className="px-4 py-2.5 rounded-lg bg-[#C9A84C] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
+                  className="px-4 py-2.5 rounded-lg bg-[#6366F1] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
                 >
                   {domainBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : "Attach"}
                 </button>
@@ -444,7 +444,7 @@ export default function WhiteLabelPage() {
               className="shrink-0 disabled:opacity-40"
               title={stripeStatus?.fully_onboarded ? "Toggle reselling" : "Connect Stripe first"}
             >
-              {config.resell_enabled ? <ToggleRight className="w-8 h-8 text-[#C9A84C]" /> : <ToggleLeft className="w-8 h-8 text-white/30" />}
+              {config.resell_enabled ? <ToggleRight className="w-8 h-8 text-[#6366F1]" /> : <ToggleLeft className="w-8 h-8 text-white/30" />}
             </button>
           </div>
 
@@ -458,14 +458,14 @@ export default function WhiteLabelPage() {
                 step={5}
                 value={config.markup_percent}
                 onChange={(e) => set("markup_percent", Number(e.target.value) || 0)}
-                className="w-32 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[#C9A84C]/50"
+                className="w-32 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[#6366F1]/50"
               />
               <span className="text-white/60 text-sm">%</span>
             </div>
           </Field>
 
           {!stripeStatus?.connected && (
-            <a href="/api/integrations/stripe-connect/onboard" className="text-xs text-[#C9A84C] hover:underline flex items-center gap-1">
+            <a href="/api/integrations/stripe-connect/onboard" className="text-xs text-[#6366F1] hover:underline flex items-center gap-1">
               <ExternalLink className="w-3 h-3" />
               Connect your Stripe account to enable resell billing
             </a>
@@ -483,7 +483,7 @@ export default function WhiteLabelPage() {
                   value={config.email_from_name}
                   onChange={(e) => set("email_from_name", e.target.value)}
                   placeholder="Acme Agency Team"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#C9A84C]/50 transition-all"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#6366F1]/50 transition-all"
                 />
               </div>
             </Field>
@@ -505,7 +505,7 @@ export default function WhiteLabelPage() {
                 onChange={(e) => set("login_text", e.target.value)}
                 placeholder="Welcome back! Sign in to manage your growth."
                 rows={3}
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#C9A84C]/50 transition-all resize-none"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#6366F1]/50 transition-all resize-none"
               />
             </div>
           </Field>
@@ -516,7 +516,7 @@ export default function WhiteLabelPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-[#C9A84C] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-[#6366F1] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
         >
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save White Label Settings

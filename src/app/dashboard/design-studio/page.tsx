@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useCallback } from "react";
 import Image from "next/image";
@@ -138,7 +138,7 @@ export default function DesignStudioPage() {
                   className="flex flex-col items-center gap-2 p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group"
                 >
                   <div
-                    className="border border-white/20 bg-white/5 rounded group-hover:border-[#C9A84C]/50 transition-colors"
+                    className="border border-white/20 bg-white/5 rounded group-hover:border-[#6366F1]/50 transition-colors"
                     style={{
                       width: 48,
                       height: Math.round(48 * (preset.height / preset.width)),
@@ -169,7 +169,7 @@ export default function DesignStudioPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0a0a14]">
-        <Loader2 size={32} className="animate-spin text-[#C9A84C]" />
+        <Loader2 size={32} className="animate-spin text-[#6366F1]" />
       </div>
     );
   }

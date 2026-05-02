@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
@@ -544,7 +544,7 @@ export default function ProjectsPage() {
               >
                 <span
                   className="w-2 h-2 rounded-full"
-                  style={{ background: b.color || "#C9A84C" }}
+                  style={{ background: b.color || "#6366F1" }}
                 />
                 {b.name}
               </button>

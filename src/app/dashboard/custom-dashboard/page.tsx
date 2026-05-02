@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 
 // ── Widget definitions ─────────────────────────────────────────────────────────
 const WIDGET_TYPES = [
-  { id: "leads_today", label: "Leads Today", icon: <Users className="w-5 h-5" />, color: "#C9A84C", bg: "from-[#C9A84C]/15 to-[#C9A84C]/5" },
+  { id: "leads_today", label: "Leads Today", icon: <Users className="w-5 h-5" />, color: "#6366F1", bg: "from-[#6366F1]/15 to-[#6366F1]/5" },
   { id: "revenue_month", label: "Revenue This Month", icon: <DollarSign className="w-5 h-5" />, color: "#10B981", bg: "from-emerald-500/15 to-emerald-500/5" },
   { id: "active_clients", label: "Active Clients", icon: <Activity className="w-5 h-5" />, color: "#3B82F6", bg: "from-blue-500/15 to-blue-500/5" },
   { id: "pipeline_value", label: "Pipeline Value", icon: <TrendingUp className="w-5 h-5" />, color: "#8B5CF6", bg: "from-violet-500/15 to-violet-500/5" },
@@ -57,7 +57,7 @@ function WidgetCard({
       onDragOver={onDragOver}
       onDrop={onDrop}
       className={`rounded-xl border bg-gradient-to-br ${def.bg} p-4 flex flex-col gap-3 cursor-grab active:cursor-grabbing transition-all select-none ${
-        isDragOver ? "border-[#C9A84C]/60 scale-[1.02]" : "border-white/10"
+        isDragOver ? "border-[#6366F1]/60 scale-[1.02]" : "border-white/10"
       }`}
     >
       <div className="flex items-center justify-between">
@@ -177,7 +177,7 @@ export default function CustomDashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#C9A84C]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#6366F1]" />
       </div>
     );
   }
@@ -201,7 +201,7 @@ export default function CustomDashboardPage() {
             <button
               onClick={() => saveLayout(widgets)}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#C9A84C] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#6366F1] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Layout

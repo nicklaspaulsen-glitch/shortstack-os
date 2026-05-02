@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -32,7 +32,7 @@ type SortDir = "asc" | "desc";
 type ViewMode = "table" | "card";
 
 const TAG_PRESETS: ClientTag[] = [
-  { label: "VIP", color: "#C9A84C" },
+  { label: "VIP", color: "#6366F1" },
   { label: "At Risk", color: "#f43f5e" },
   { label: "New", color: "#38bdf8" },
   { label: "Enterprise", color: "#8b5cf6" },

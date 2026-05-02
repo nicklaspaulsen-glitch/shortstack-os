@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback, useRef } from "react";
 import {
@@ -94,7 +94,7 @@ const COLOR_SCHEMES = [
   { id: "clean-light", name: "Clean Light", bg: "#ffffff", primary: "#2563eb", accent: "#3b82f6", text: "#1e293b" },
   { id: "bold-gradient", name: "Bold Gradient", bg: "linear-gradient(135deg,#6366f1,#ec4899)", primary: "#8b5cf6", accent: "#f472b6", text: "#ffffff" },
   { id: "minimal", name: "Minimal", bg: "#fafafa", primary: "#18181b", accent: "#71717a", text: "#18181b" },
-  { id: "luxury-gold", name: "Luxury Gold", bg: "#0a0a0a", primary: "#C9A84C", accent: "#d4af37", text: "#f5f5f5" },
+  { id: "luxury-gold", name: "Luxury Gold", bg: "#0a0a0a", primary: "#6366F1", accent: "#d4af37", text: "#f5f5f5" },
 ];
 
 const TEMPLATES = [
@@ -1474,7 +1474,7 @@ export default function LandingPagesPage() {
                   return (
                     <div key={i} className="flex-1 flex flex-col items-center gap-1">
                       <span className="text-[10px] text-muted">{v.toLocaleString()}</span>
-                      <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #C9A84C 0%, #C9A84C40 100%)` }}>
+                      <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #6366F1 0%, #6366F140 100%)` }}>
                         <div className="absolute inset-0 bg-gold/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md" />
                       </div>
                       <span className="text-[10px] text-muted">{days[i]}</span>
@@ -1488,7 +1488,7 @@ export default function LandingPagesPage() {
                 <svg viewBox="0 0 700 100" className="absolute -top-40 left-0 w-full h-40 pointer-events-none" preserveAspectRatio="none">
                   <polyline
                     fill="none"
-                    stroke="#C9A84C"
+                    stroke="#6366F1"
                     strokeWidth="2"
                     strokeLinejoin="round"
                     points={EMPTY_ANALYTICS.dailyViews.map((v, i) => {
@@ -1502,7 +1502,7 @@ export default function LandingPagesPage() {
                     const max = Math.max(...EMPTY_ANALYTICS.dailyViews, 1);
                     const x = (i / (EMPTY_ANALYTICS.dailyViews.length - 1 || 1)) * 680 + 10;
                     const y = 95 - (v / max) * 90;
-                    return <circle key={i} cx={x} cy={y} r="3" fill="#C9A84C" />;
+                    return <circle key={i} cx={x} cy={y} r="3" fill="#6366F1" />;
                   })}
                 </svg>
               </div>
@@ -1523,7 +1523,7 @@ export default function LandingPagesPage() {
                       <span className="text-xs text-gold font-semibold">{src.pct}%</span>
                     </div>
                     <div className="w-full h-2 bg-surface-light rounded-full overflow-hidden">
-                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${src.pct}%`, background: "linear-gradient(90deg, #C9A84C, #C9A84C80)" }} />
+                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${src.pct}%`, background: "linear-gradient(90deg, #6366F1, #6366F180)" }} />
                     </div>
                   </div>
                 ))}

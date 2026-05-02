@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import {
@@ -243,7 +243,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "luxury-gold",
       hero_style: "big-headline-image",
       cta_goal: "contact",
-      brand_primary: "#C9A84C",
+      brand_primary: "#6366F1",
       brand_accent: "#1E293B",
       sections: ["gallery", "about", "testimonials", "contact"],
     },
@@ -366,7 +366,7 @@ export default function WebsitesPage() {
     const industry = String(data.industry || data.business_type || "");
     const map: Record<string, { primary: string; accent: string }> = {
       restaurant: { primary: "#B45309", accent: "#78350F" },
-      real_estate: { primary: "#C9A84C", accent: "#1E293B" },
+      real_estate: { primary: "#6366F1", accent: "#1E293B" },
       coach: { primary: "#7C3AED", accent: "#1E1B4B" },
       saas: { primary: "#2563EB", accent: "#0F172A" },
       ecommerce: { primary: "#EC4899", accent: "#111827" },
@@ -375,7 +375,7 @@ export default function WebsitesPage() {
       blog: { primary: "#059669", accent: "#064E3B" },
       agency: { primary: "#DC2626", accent: "#1F2937" },
     };
-    const palette = map[industry.toLowerCase()] || { primary: "#C9A84C", accent: "#0F172A" };
+    const palette = map[industry.toLowerCase()] || { primary: "#6366F1", accent: "#0F172A" };
     return { brand_primary: palette.primary, brand_accent: palette.accent };
   }
 
@@ -594,7 +594,7 @@ export default function WebsitesPage() {
 
   function startBlank(): void {
     setWizardPreset({
-      brand_primary: "#C9A84C",
+      brand_primary: "#6366F1",
       brand_accent: "#0F172A",
       sections: ["about", "features", "testimonials", "faq"],
       visuals: "stock-photos",

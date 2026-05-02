@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -54,7 +54,7 @@ interface PermissionRow {
 
 
 const ROLE_DEFINITIONS: RoleDefinition[] = [
-  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#C9A84C", memberCount: 0 },
+  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#6366F1", memberCount: 0 },
   { id: "admin", label: "Admin", description: "Everything except billing management and workspace deletion", color: "#3b82f6", memberCount: 0 },
   { id: "manager", label: "Manager", description: "Client management, reports, content creation and approval", color: "#8b5cf6", memberCount: 0 },
   { id: "creator", label: "Creator", description: "Content creation only - no client or financial access", color: "#10b981", memberCount: 0 },
@@ -554,7 +554,7 @@ export default function TeamPage() {
                 const combinedLoad = Math.min(Math.round((taskLoad + hourLoad) / 2), 100);
                 const loadLevel = combinedLoad > 80 ? "Overloaded" : combinedLoad > 50 ? "Balanced" : "Available";
                 const loadColor = combinedLoad > 80 ? "text-red-400" : combinedLoad > 50 ? "text-gold" : "text-emerald-400";
-                const barColor = combinedLoad > 80 ? "#ef4444" : combinedLoad > 50 ? "#C9A84C" : "#10b981";
+                const barColor = combinedLoad > 80 ? "#ef4444" : combinedLoad > 50 ? "#6366F1" : "#10b981";
                 return (
                   <div key={m.id} className="p-3 rounded-lg bg-surface-light border border-border">
                     <div className="flex items-center gap-3 mb-2">

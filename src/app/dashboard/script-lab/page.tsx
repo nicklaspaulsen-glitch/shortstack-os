@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -1083,20 +1083,20 @@ export default function ScriptLabPage() {
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Inter', system-ui, sans-serif; background: #fff; color: #1a1a1a; padding: 40px; max-width: 800px; margin: 0 auto; }
-  .logo-bar { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #C9A84C; padding-bottom: 16px; margin-bottom: 32px; }
-  .logo-bar h1 { font-size: 20px; font-weight: 800; color: #C9A84C; letter-spacing: -0.5px; }
+  .logo-bar { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #6366F1; padding-bottom: 16px; margin-bottom: 32px; }
+  .logo-bar h1 { font-size: 20px; font-weight: 800; color: #6366F1; letter-spacing: -0.5px; }
   .logo-bar .sub { font-size: 11px; color: #666; }
   .meta { font-size: 12px; color: #888; margin-bottom: 24px; }
-  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #C9A84C; margin: 24px 0 12px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
-  .hook-box { background: linear-gradient(135deg, #fdf8ed, #fff9e0); border: 1px solid #C9A84C40; border-radius: 12px; padding: 16px; margin: 12px 0; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #6366F1; margin: 24px 0 12px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
+  .hook-box { background: linear-gradient(135deg, #fdf8ed, #fff9e0); border: 1px solid #6366F140; border-radius: 12px; padding: 16px; margin: 12px 0; }
   .hook-text { font-size: 16px; font-style: italic; font-weight: 600; color: #1a1a1a; }
-  .section { background: #f9f9f9; border-radius: 8px; padding: 16px; margin: 8px 0; border-left: 3px solid #C9A84C; }
-  .section-name { font-weight: 700; font-size: 12px; color: #C9A84C; text-transform: uppercase; }
+  .section { background: #f9f9f9; border-radius: 8px; padding: 16px; margin: 8px 0; border-left: 3px solid #6366F1; }
+  .section-name { font-weight: 700; font-size: 12px; color: #6366F1; text-transform: uppercase; }
   .section-meta { font-size: 11px; color: #888; }
   .dialogue { font-size: 14px; line-height: 1.6; margin-top: 8px; }
   .visual { font-size: 11px; color: #0ea5e9; margin-top: 6px; }
   .cta-box { background: #1a1a1a; color: white; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0; }
-  .cta-text { font-size: 18px; font-weight: 700; color: #C9A84C; }
+  .cta-text { font-size: 18px; font-weight: 700; color: #6366F1; }
   .caption { background: #f5f5f5; border-radius: 8px; padding: 16px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
   .hashtags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
   .hashtag { background: #e8f4fd; color: #0ea5e9; font-size: 11px; padding: 3px 8px; border-radius: 20px; }

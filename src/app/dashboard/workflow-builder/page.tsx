@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback, useRef, useMemo, useEffect, DragEvent } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -135,7 +135,7 @@ function mkNode(id: string, defId: string, x: number, y: number, cfg?: Record<st
   return { id, type: "workflow", position: { x, y }, data: { defId, config: cfg || {} } };
 }
 function mkEdge(src: string, tgt: string): Edge {
-  return { id: `e_${src}_${tgt}`, source: src, target: tgt, animated: true, style: { stroke: "#C9A84C", strokeWidth: 1.5 }, markerEnd: { type: MarkerType.ArrowClosed, color: "#C9A84C", width: 16, height: 16 } };
+  return { id: `e_${src}_${tgt}`, source: src, target: tgt, animated: true, style: { stroke: "#6366F1", strokeWidth: 1.5 }, markerEnd: { type: MarkerType.ArrowClosed, color: "#6366F1", width: 16, height: 16 } };
 }
 
 const TEMPLATES: Template[] = [
@@ -567,7 +567,7 @@ function WorkflowBuilderInner() {
   // ── Callbacks ──
   const onConnect = useCallback((connection: Connection) => {
     pushHistory();
-    setEdges(eds => addEdge({ ...connection, animated: true, style: { stroke: "#C9A84C", strokeWidth: 1.5 }, markerEnd: { type: MarkerType.ArrowClosed, color: "#C9A84C", width: 16, height: 16 } }, eds));
+    setEdges(eds => addEdge({ ...connection, animated: true, style: { stroke: "#6366F1", strokeWidth: 1.5 }, markerEnd: { type: MarkerType.ArrowClosed, color: "#6366F1", width: 16, height: 16 } }, eds));
   }, [setEdges, pushHistory]);
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
@@ -946,8 +946,8 @@ function WorkflowBuilderInner() {
             proOptions={{ hideAttribution: true }}
             defaultEdgeOptions={{
               animated: true,
-              style: { stroke: "#C9A84C", strokeWidth: 1.5 },
-              markerEnd: { type: MarkerType.ArrowClosed, color: "#C9A84C", width: 16, height: 16 },
+              style: { stroke: "#6366F1", strokeWidth: 1.5 },
+              markerEnd: { type: MarkerType.ArrowClosed, color: "#6366F1", width: 16, height: 16 },
             }}
             style={{ background: "var(--color-background, #0a0a0f)" }}
           >
@@ -957,7 +957,7 @@ function WorkflowBuilderInner() {
               className="!bg-surface !border-border !rounded-xl !shadow-lg [&>button]:!bg-surface [&>button]:!border-border [&>button]:!text-muted [&>button:hover]:!text-foreground [&>button:hover]:!bg-surface-light"
             />
             <MiniMap
-              nodeColor={() => "#C9A84C"}
+              nodeColor={() => "#6366F1"}
               maskColor="rgba(0,0,0,0.3)"
               className="!bg-surface !border-border !rounded-xl"
               pannable

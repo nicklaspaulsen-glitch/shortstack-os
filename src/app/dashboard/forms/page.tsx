@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import {
@@ -230,7 +230,7 @@ export default function FormsPage() {
         redirectUrl: "",
         webhookUrl: "",
         thankYouMessage: data.success_message || "Thanks! We'll be in touch soon.",
-        accentColor: "#C9A84C",
+        accentColor: "#6366F1",
         spamProtection: true,
         views: 0, starts: 0, completions: 0,
       };
@@ -292,7 +292,7 @@ export default function FormsPage() {
       redirectUrl: "",
       webhookUrl: "",
       thankYouMessage: "Thank you for your submission! We'll be in touch soon.",
-      accentColor: "#C9A84C",
+      accentColor: "#6366F1",
       spamProtection: true,
       views: 0,
       starts: 0,
@@ -587,7 +587,7 @@ export default function FormsPage() {
                 <div>
                   <label className="block text-[10px] text-muted mb-1">Accent Color</label>
                   <div className="flex gap-2">
-                    {["#C9A84C", "#3b82f6", "#10b981", "#ef4444", "#8b5cf6", "#ec4899", "#f59e0b"].map(c => (
+                    {["#6366F1", "#3b82f6", "#10b981", "#ef4444", "#8b5cf6", "#ec4899", "#f59e0b"].map(c => (
                       <button key={c} onClick={() => {
                         const u = { ...activeForm, accentColor: c }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
                       }} className={`w-6 h-6 rounded-full transition-all ${activeForm.accentColor === c ? "ring-2 ring-white/30 scale-110" : ""}`}
