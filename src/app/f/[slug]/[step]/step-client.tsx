@@ -115,11 +115,20 @@ export default function StepClientShell({
   const ctaTarget = pageDoc.cta_target ?? null;
   const bodyHtml = typeof pageDoc.body_html === "string" ? pageDoc.body_html : null;
 
-  // Lightweight sanitiser: drop <script> blocks. Authors who want richer
-  // HTML embeds must use a website_projects page instead.
+  // Sanitiser: strip script blocks, all event handlers, javascript: URLs,
+  // and dangerous embed elements. Authors who want richer HTML embeds must
+  // use a website_projects page instead.
   const safeHtml = useMemo(() => {
     if (!bodyHtml) return null;
-    return bodyHtml.replace(/<script[\s\S]*?<\/script>/gi, "");
+    return bodyHtml
+      .replace(/<script[\s\S]*?<\/script>/gi, "")
+      .replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, "")
+      .replace(/\s+on\w+\s*=\s*[^\s>]*/gi, "")
+      .replace(/javascript\s*:/gi, "data:blocked:")
+      .replace(/<iframe[\s\S]*?>/gi, "")
+      .replace(/<object[\s\S]*?>/gi, "")
+      .replace(/<embed[\s\S]*?>/gi, "")
+      .replace(/src\s*=\s*["']data:/gi, 'src="data:blocked:');
   }, [bodyHtml]);
 
   return (

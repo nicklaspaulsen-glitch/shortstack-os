@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
+    .replace(/`/g, "&#x60;");
+}
+
+const CSS_COLOR_RE = /^#[0-9a-fA-F]{3,8}$|^rgb\([\d\s,]+\)$|^hsl\([\d\s,%]+\)$/;
+
 // Chatbot Embed Code Generator — Creates embeddable chat widget for client websites
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -24,12 +36,18 @@ export async function POST(request: NextRequest) {
     if (client) clientName = client.business_name;
   }
 
-  const name = bot_name || "Assistant";
-  const color = primary_color || "#C9A84C";
-  const pos = position || "bottom-right";
-  const welcome = welcome_message || `Hi! Welcome to ${clientName}. How can I help you today?`;
+  const safeColor = CSS_COLOR_RE.test(primary_color ?? "") ? primary_color! : "#C9A84C";
+  const safeName = escapeHtml(bot_name || "Assistant");
+  const pos = (position === "bottom-left" || position === "bottom-right") ? position : "bottom-right";
+  const safeWelcome = escapeHtml(welcome_message || `Hi! Welcome to ${clientName}. How can I help you today?`);
+  const safeClientName = escapeHtml(clientName);
 
-  const embedCode = `<!-- ${clientName} Chat Widget - Powered by ShortStack -->
+  // Legacy aliases kept for template string references below
+  const name = safeName;
+  const color = safeColor;
+  const welcome = safeWelcome;
+
+  const embedCode = `<!-- ${safeClientName} Chat Widget - Powered by ShortStack -->
 <div id="ss-chat-widget"></div>
 <script>
 (function() {
@@ -99,6 +117,6 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({
     success: true,
     embed_code: embedCode,
-    preview_html: `<!DOCTYPE html><html><head><title>${clientName} - Chat Preview</title></head><body style="background:#0a0a0a;min-height:100vh;">${embedCode}</body></html>`,
+    preview_html: `<!DOCTYPE html><html><head><title>${safeClientName} - Chat Preview</title></head><body style="background:#0a0a0a;min-height:100vh;">${embedCode}</body></html>`,
   });
 }

@@ -9,10 +9,15 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { data: profile } = await supabase.from("profiles").select("role, plan_tier").eq("id", user.id).single();
+  if (!profile || profile.role === "client") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+
   const limited = checkAiRateLimit(user.id, profile?.plan_tier);
   if (limited) return limited;
 

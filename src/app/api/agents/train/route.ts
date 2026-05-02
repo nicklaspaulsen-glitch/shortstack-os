@@ -17,6 +17,11 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { data: profile } = await authSupabase.from("profiles").select("role").eq("id", user.id).single();
+  if (!profile || profile.role === "client") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 

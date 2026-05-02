@@ -9,6 +9,11 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  if (!profile || profile.role === "client") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   // Resolve effective owner so agent rows are scoped to the right agency
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -166,6 +171,11 @@ export async function GET() {
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: getProfile } = await authSupabase.from("profiles").select("role").eq("id", user.id).single();
+  if (!getProfile || getProfile.role === "client") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   // Resolve effective owner — without this filter every tenant's agents
   // were returned to any authenticated caller (cross-tenant data leak).
