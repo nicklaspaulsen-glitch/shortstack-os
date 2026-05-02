@@ -237,7 +237,7 @@ export default function VoiceStudioPage() {
           {!loading && tab === "my_voices" && (
             <MyVoicesTab clones={mine} onChange={refresh} />
           )}
-          {!loading && tab === "presets" && <PresetsTab presets={presets} />}
+          {tab === "presets" && <PresetsTab presets={presets} loading={loading} />}
           {!loading && tab === "renders" && <RendersTab renders={renders} />}
         </div>
       </div>
@@ -669,19 +669,97 @@ function StatusChip({ status }: { status: VoiceClone["status"] }) {
 }
 
 // ── Presets ─────────────────────────────────────────────────────
-function PresetsTab({ presets }: { presets: VoiceClone[] }) {
-  if (presets.length === 0) {
+const PRESET_CATEGORIES = ["all", "professional", "casual", "character", "narration", "sales"] as const;
+type PresetCategory = (typeof PRESET_CATEGORIES)[number];
+
+function PresetsTab({ presets, loading }: { presets: VoiceClone[]; loading?: boolean }) {
+  const [categoryFilter, setCategoryFilter] = useState<PresetCategory>("all");
+  const [langFilter, setLangFilter] = useState<string>("all");
+
+  const languages = useMemo(() => {
+    const langs = new Set(presets.map((p) => p.language || "en").filter(Boolean));
+    return ["all", ...Array.from(langs).sort()];
+  }, [presets]);
+
+  const filtered = useMemo(() => {
+    return presets.filter((p) => {
+      const cat = (p.consent_evidence?.category as string) || "preset";
+      if (categoryFilter !== "all" && cat !== categoryFilter) return false;
+      if (langFilter !== "all" && (p.language || "en") !== langFilter) return false;
+      return true;
+    });
+  }, [presets, categoryFilter, langFilter]);
+
+  if (loading) {
     return (
-      <div className="rounded-xl border border-white/10 bg-white/5 p-12 text-center text-white/60">
-        Loading preset library...
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="h-44 animate-pulse rounded-xl border border-white/10 bg-white/5" />
+        ))}
       </div>
     );
   }
+
+  if (presets.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 p-12 text-center">
+        <Library size={28} className="text-white/40" />
+        <h3 className="mt-3 text-base font-medium text-white">No presets yet</h3>
+        <p className="mt-1 max-w-sm text-sm text-white/60">
+          Preset voices are seeded on first dashboard load. Refresh to reload.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {presets.map((p) => (
-        <PresetCard key={p.id} preset={p} />
-      ))}
+    <div className="space-y-4">
+      {/* Filter bar */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap gap-1.5">
+          {PRESET_CATEGORIES.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setCategoryFilter(c)}
+              className={[
+                "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
+                categoryFilter === c
+                  ? "bg-[#6366F1] text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
+                  : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
+              ].join(" ")}
+            >
+              {c === "all" ? "All categories" : c.charAt(0).toUpperCase() + c.slice(1)}
+            </button>
+          ))}
+        </div>
+        {languages.length > 2 && (
+          <select
+            value={langFilter}
+            onChange={(e) => setLangFilter(e.target.value)}
+            className="ml-auto rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50 cursor-pointer"
+          >
+            {languages.map((l) => (
+              <option key={l} value={l} className="bg-[#17171A]">
+                {l === "all" ? "All languages" : l.toUpperCase()}
+              </option>
+            ))}
+          </select>
+        )}
+        <span className="ml-auto text-xs text-white/40">{filtered.length} of {presets.length} presets</span>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="rounded-xl border border-white/10 bg-white/5 p-8 text-center text-sm text-white/50">
+          No presets match the current filters.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((p) => (
+            <PresetCard key={p.id} preset={p} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -690,62 +768,117 @@ function PresetCard({ preset }: { preset: VoiceClone }) {
   const [testing, setTesting] = useState(false);
   const [testUrl, setTestUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [testText, setTestText] = useState(TEST_PROMPT_DEFAULT);
 
   const onTest = useCallback(async () => {
     setTesting(true);
     setError(null);
+    setTestUrl(null);
     try {
       const res = await fetch(`/api/voice/clones/${preset.id}/test`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: TEST_PROMPT_DEFAULT }),
+        body: JSON.stringify({ text: testText.trim() || TEST_PROMPT_DEFAULT }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Test failed (${res.status})`);
       setTestUrl(data.r2_url);
     } catch (err) {
+      console.error("[voice-studio/preset-test] failed:", err);
       setError(err instanceof Error ? err.message : "Test failed");
     } finally {
       setTesting(false);
     }
-  }, [preset.id]);
+  }, [preset.id, testText]);
 
   const category = (preset.consent_evidence?.category as string) || "preset";
+  const lang = preset.language?.toUpperCase() || "EN";
 
   return (
-    <div className="rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
+    <div className="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-5 transition-colors duration-150 hover:border-[#6366F1]/25">
+      {/* Header */}
       <div className="flex items-start justify-between gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-amber-400/40 bg-amber-500/10 text-amber-200">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 text-[#A78BFA]">
           <Mic size={16} />
         </div>
-        <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/60">
-          {category}
-        </span>
+        <div className="flex items-center gap-1.5">
+          <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
+            {lang}
+          </span>
+          <span className="rounded-full border border-[#6366F1]/20 bg-[#6366F1]/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#A78BFA]">
+            {category}
+          </span>
+        </div>
       </div>
+
+      {/* Info */}
       <h3 className="mt-3 text-sm font-semibold text-white">{preset.label}</h3>
       {preset.description && (
-        <p className="mt-1 text-xs text-white/60">{preset.description}</p>
+        <p className="mt-1 text-xs text-white/55 leading-relaxed">{preset.description}</p>
       )}
-      <button
-        type="button"
-        onClick={onTest}
-        disabled={testing}
-        className="mt-3 flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        {testing ? (
-          <Loader2 size={12} className="animate-spin" />
-        ) : (
-          <Play size={12} />
-        )}
-        Test playback
-      </button>
+
+      {/* Edit test text */}
+      {editMode ? (
+        <div className="mt-3 space-y-1.5">
+          <textarea
+            value={testText}
+            onChange={(e) => setTestText(e.target.value)}
+            rows={3}
+            maxLength={300}
+            placeholder="Type what you want the voice to say…"
+            className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50 resize-none"
+          />
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] text-white/30">{testText.length}/300</span>
+            <button
+              type="button"
+              onClick={() => setEditMode(false)}
+              className="text-[10px] text-white/40 hover:text-white/70 cursor-pointer"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-3 flex items-center gap-1.5">
+          <p className="flex-1 truncate text-[11px] text-white/35 italic">{testText}</p>
+          <button
+            type="button"
+            onClick={() => setEditMode(true)}
+            className="flex-shrink-0 text-[10px] text-[#6366F1]/70 hover:text-[#6366F1] cursor-pointer"
+            aria-label="Edit test phrase"
+          >
+            Edit
+          </button>
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="mt-3 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onTest}
+          disabled={testing}
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40 transition-colors duration-150 cursor-pointer"
+        >
+          {testing ? (
+            <Loader2 size={12} className="animate-spin" />
+          ) : (
+            <Play size={12} />
+          )}
+          {testing ? "Generating…" : "Preview"}
+        </button>
+      </div>
+
+      {/* Audio player */}
       {testUrl && (
         <div className="mt-3 rounded-lg border border-white/10 bg-black/30 p-2">
           {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-          <audio src={testUrl} controls className="w-full" />
+          <audio src={testUrl} controls className="w-full" style={{ height: 32 }} />
         </div>
       )}
-      {error && <p className="mt-2 text-xs text-rose-300">{error}</p>}
+      {error && <p className="mt-2 text-xs text-[#F26063]">{error}</p>}
     </div>
   );
 }
