@@ -215,9 +215,20 @@ export default function AnalyticsPage() {
     : 0;
   const replyRate = stats.dmsSent > 0 ? Math.round((stats.replies / stats.dmsSent) * 100) : 0;
 
+  // Recharts tooltip — OLED surface + indigo glow border so it reads as
+  // intentional brand surface, not a default Tailwind popover.
   const chartTooltipStyle = {
-    contentStyle: { background: "var(--color-surface, #FFFFFF)", border: "1px solid var(--color-border, #E8E5E0)", borderRadius: "12px", fontSize: "11px", color: "var(--color-text, #374151)", boxShadow: "0 4px 12px rgba(0,0,0,0.12)" },
-    labelStyle: { color: "var(--color-muted, #6B7280)", fontSize: "10px" },
+    contentStyle: {
+      background: "#17171A",
+      border: "1px solid rgba(99, 102, 241, 0.20)",
+      borderRadius: "10px",
+      fontSize: "11px",
+      color: "#F5F5F7",
+      boxShadow: "0 8px 24px rgba(0,0,0,0.40), 0 0 0 1px rgba(99,102,241,0.05)",
+      padding: "8px 10px",
+    },
+    labelStyle: { color: "#A8A8B2", fontSize: "10px", marginBottom: "4px", textTransform: "uppercase" as const, letterSpacing: "0.05em" },
+    itemStyle: { color: "#F5F5F7", fontSize: "11px" },
   };
 
   // --- Feature 1: Revenue Forecasting ---
@@ -365,12 +376,12 @@ export default function AnalyticsPage() {
 
   const activityIcon = (type: string) => {
     switch (type) {
-      case "lead": return <Zap size={10} className="text-gold" />;
-      case "payment": return <DollarSign size={10} className="text-success" />;
-      case "post": return <Film size={10} className="text-info" />;
-      case "deal": return <Trophy size={10} className="text-gold" />;
-      case "call": return <Phone size={10} className="text-purple-400" />;
-      default: return <Activity size={10} className="text-muted" />;
+      case "lead": return <Zap size={10} style={{ color: "#6366F1" }} />;
+      case "payment": return <DollarSign size={10} style={{ color: "#7FE5B8" }} />;
+      case "post": return <Film size={10} style={{ color: "#A78BFA" }} />;
+      case "deal": return <Trophy size={10} style={{ color: "#6366F1" }} />;
+      case "call": return <Phone size={10} style={{ color: "#A78BFA" }} />;
+      default: return <Activity size={10} style={{ color: "#6F6F7A" }} />;
     }
   };
 
@@ -441,10 +452,10 @@ export default function AnalyticsPage() {
       <div className="flex items-start justify-end flex-wrap gap-3">
         <div className="flex items-center gap-2 flex-wrap">
           {/* Feature 14: Custom Date Range Picker */}
-          <div className="flex items-center gap-1 bg-surface rounded-lg p-0.5">
+          <div className="flex items-center gap-1 bg-[#17171A] rounded-lg p-0.5 ring-1 ring-[#6366F1]/10">
             {(["7d", "30d", "90d", "custom"] as const).map(r => (
               <button key={r} onClick={() => setDateRange(r)}
-                className={`px-2.5 py-1 text-[10px] rounded-md transition-all ${dateRange === r ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"}`}>
+                className={`px-2.5 py-1 text-[10px] rounded-md transition-colors duration-150 ${dateRange === r ? "bg-[#6366F1] text-white font-medium shadow-[0_0_12px_rgba(99,102,241,0.3)]" : "text-muted hover:text-foreground"}`}>
                 {r === "custom" ? "Custom" : r}
               </button>
             ))}
@@ -500,7 +511,11 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Leads over time */}
         <div className="card">
-          <h2 className="section-header">Leads ({dateRange === "custom" ? "Custom" : dateRange})</h2>
+          <div className="mb-3">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Acquisition</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Leads · {dateRange === "custom" ? "Custom" : dateRange}</h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#6366F1]/15 via-[#6366F1]/5 to-transparent mb-3" />
           <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={leadsByDay}>
@@ -510,10 +525,10 @@ export default function AnalyticsPage() {
                     <stop offset="100%" stopColor="#6366F1" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
-                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
-                <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
-                <Tooltip {...chartTooltipStyle} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(99, 102, 241, 0.08)" />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                <YAxis tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                <Tooltip {...chartTooltipStyle} cursor={{ stroke: "#6366F1", strokeOpacity: 0.2, strokeDasharray: "3 3" }} />
                 <Area type="monotone" dataKey="count" stroke="#6366F1" fill="url(#accentGrad)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
@@ -522,16 +537,20 @@ export default function AnalyticsPage() {
 
         {/* Revenue */}
         <div className="card">
-          <h2 className="section-header">Revenue</h2>
+          <div className="mb-3">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Monetization</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Revenue</h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#6366F1]/15 via-[#6366F1]/5 to-transparent mb-3" />
           <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenueByMonth}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
-                <XAxis dataKey="month" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
-                <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
-                <Tooltip {...chartTooltipStyle} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(99, 102, 241, 0.08)" />
+                <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                <YAxis tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                <Tooltip {...chartTooltipStyle} cursor={{ fill: "rgba(99, 102, 241, 0.05)" }} />
                 <Bar dataKey="mrr" fill="#6366F1" radius={[4, 4, 0, 0]} name="MRR" />
-                <Bar dataKey="deals" fill="#38bdf8" radius={[4, 4, 0, 0]} name="Deal Revenue" />
+                <Bar dataKey="deals" fill="#A78BFA" radius={[4, 4, 0, 0]} name="Deal Revenue" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -553,17 +572,17 @@ export default function AnalyticsPage() {
                 <AreaChart data={[...revenueByMonth.map(r => ({ month: r.month, projected: r.mrr, conservative: r.mrr, optimistic: r.mrr })), ...revenueForecast]}>
                   <defs>
                     <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#10b981" stopOpacity={0.2} />
-                      <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                      <stop offset="0%" stopColor="#6366F1" stopOpacity={0.25} />
+                      <stop offset="100%" stopColor="#6366F1" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
-                  <XAxis dataKey="month" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
-                  <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
-                  <Tooltip {...chartTooltipStyle} formatter={(v) => formatCurrency(Number(v) || 0)} />
-                  <Area type="monotone" dataKey="optimistic" stroke="#10b981" fill="none" strokeWidth={1} strokeDasharray="4 4" name="Optimistic" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(99, 102, 241, 0.08)" />
+                  <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                  <YAxis tick={{ fontSize: 9, fill: "#6F6F7A" }} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
+                  <Tooltip {...chartTooltipStyle} cursor={{ stroke: "#6366F1", strokeOpacity: 0.2, strokeDasharray: "3 3" }} formatter={(v) => formatCurrency(Number(v) || 0)} />
+                  <Area type="monotone" dataKey="optimistic" stroke="#7FE5B8" fill="none" strokeWidth={1} strokeDasharray="4 4" name="Optimistic" />
                   <Area type="monotone" dataKey="projected" stroke="#6366F1" fill="url(#forecastGrad)" strokeWidth={2} name="Projected" />
-                  <Area type="monotone" dataKey="conservative" stroke="#f59e0b" fill="none" strokeWidth={1} strokeDasharray="4 4" name="Conservative" />
+                  <Area type="monotone" dataKey="conservative" stroke="#FFC062" fill="none" strokeWidth={1} strokeDasharray="4 4" name="Conservative" />
                   <Legend wrapperStyle={{ fontSize: "10px" }} />
                 </AreaChart>
               </ResponsiveContainer>
@@ -658,7 +677,11 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Lead sources pie */}
         <div className="card">
-          <h2 className="section-header">Lead Sources</h2>
+          <div className="mb-3">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Channels</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Lead Sources</h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#6366F1]/15 via-[#6366F1]/5 to-transparent mb-3" />
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -684,15 +707,19 @@ export default function AnalyticsPage() {
 
         {/* Industries bar */}
         <div className="card">
-          <h2 className="section-header">Top Industries</h2>
+          <div className="mb-3">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Verticals</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Top Industries</h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#6366F1]/15 via-[#6366F1]/5 to-transparent mb-3" />
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={leadsByIndustry} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
-                <XAxis type="number" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
-                <YAxis dataKey="industry" type="category" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} width={80} />
-                <Tooltip {...chartTooltipStyle} />
-                <Bar dataKey="count" fill="#38bdf8" radius={[0, 4, 4, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(99, 102, 241, 0.08)" />
+                <XAxis type="number" tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                <YAxis dataKey="industry" type="category" tick={{ fontSize: 9, fill: "#6F6F7A" }} width={80} />
+                <Tooltip {...chartTooltipStyle} cursor={{ fill: "rgba(99, 102, 241, 0.05)" }} />
+                <Bar dataKey="count" fill="#A78BFA" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -700,16 +727,20 @@ export default function AnalyticsPage() {
 
         {/* Outreach performance */}
         <div className="card">
-          <h2 className="section-header">Outreach Performance</h2>
+          <div className="mb-3">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Engagement</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Outreach Performance</h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#6366F1]/15 via-[#6366F1]/5 to-transparent mb-3" />
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={outreachByDay}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
-                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
-                <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
-                <Tooltip {...chartTooltipStyle} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(99, 102, 241, 0.08)" />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                <YAxis tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                <Tooltip {...chartTooltipStyle} cursor={{ stroke: "#6366F1", strokeOpacity: 0.2, strokeDasharray: "3 3" }} />
                 <Line type="monotone" dataKey="sent" stroke="#6366F1" strokeWidth={2} dot={false} name="Sent" />
-                <Line type="monotone" dataKey="replies" stroke="#10b981" strokeWidth={2} dot={false} name="Replies" />
+                <Line type="monotone" dataKey="replies" stroke="#7FE5B8" strokeWidth={2} dot={false} name="Replies" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -759,12 +790,12 @@ export default function AnalyticsPage() {
             <div className="h-48 mt-4">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={platformROI}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
-                  <XAxis dataKey="platform" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
-                  <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
-                  <Tooltip {...chartTooltipStyle} />
-                  <Bar dataKey="spend" fill="#f43f5e" radius={[4, 4, 0, 0]} name="Spend" />
-                  <Bar dataKey="revenue" fill="#10b981" radius={[4, 4, 0, 0]} name="Revenue" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(99, 102, 241, 0.08)" />
+                  <XAxis dataKey="platform" tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                  <YAxis tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                  <Tooltip {...chartTooltipStyle} cursor={{ fill: "rgba(99, 102, 241, 0.05)" }} />
+                  <Bar dataKey="spend" fill="#F26063" radius={[4, 4, 0, 0]} name="Spend" />
+                  <Bar dataKey="revenue" fill="#7FE5B8" radius={[4, 4, 0, 0]} name="Revenue" />
                   <Legend wrapperStyle={{ fontSize: "10px" }} />
                 </BarChart>
               </ResponsiveContainer>
@@ -1072,38 +1103,45 @@ export default function AnalyticsPage() {
 
       {/* Performance indicators */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-        <div className="card text-center p-3">
+        <div className="card text-center p-3 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 transition-colors duration-150">
           <div className="flex items-center justify-center gap-1 mb-1">
-            {leadGrowth >= 0 ? <ArrowUp size={12} className="text-success" /> : <ArrowDown size={12} className="text-danger" />}
-            <span className={`text-lg font-bold font-mono ${leadGrowth >= 0 ? "text-success" : "text-danger"}`}>{leadGrowth}%</span>
+            {leadGrowth >= 0
+              ? <ArrowUp size={12} style={{ color: "#7FE5B8" }} />
+              : <ArrowDown size={12} style={{ color: "#F26063" }} />}
+            <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]"
+                  style={{ color: leadGrowth >= 0 ? "#7FE5B8" : "#F26063" }}>{leadGrowth}%</span>
           </div>
-          <p className="text-[9px] text-muted uppercase tracking-wider">Lead Growth</p>
+          <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Lead Growth</p>
         </div>
-        <div className="card text-center p-3">
-          <span className="text-lg font-bold font-mono text-gold">{replyRate}%</span>
-          <p className="text-[9px] text-muted uppercase tracking-wider">Reply Rate</p>
+        <div className="card text-center p-3 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 transition-colors duration-150">
+          <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#6366F1" }}>{replyRate}%</span>
+          <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Reply Rate</p>
         </div>
-        <div className="card text-center p-3">
-          <span className="text-lg font-bold font-mono text-gold">{formatCurrency(stats.dealValue)}</span>
-          <p className="text-[9px] text-muted uppercase tracking-wider">Revenue Closed</p>
+        <div className="card text-center p-3 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 transition-colors duration-150">
+          <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#6366F1" }}>{formatCurrency(stats.dealValue)}</span>
+          <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Revenue Closed</p>
         </div>
-        <div className="card text-center p-3">
-          <span className="text-lg font-bold font-mono text-success">{stats.totalDeals}</span>
-          <p className="text-[9px] text-muted uppercase tracking-wider">Deals Won</p>
+        <div className="card text-center p-3 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 transition-colors duration-150">
+          <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#7FE5B8" }}>{stats.totalDeals}</span>
+          <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Deals Won</p>
         </div>
       </div>
 
       {/* Feature 15: Real-time Activity Feed */}
       <div className="card">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="section-header flex items-center gap-2 mb-0">
-            <Activity size={14} className="text-success" /> Real-time Activity Feed
-          </h2>
-          <div className="flex items-center gap-1.5 text-[9px] text-success">
-            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+          <div>
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Live Stream</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em] flex items-center gap-2">
+              <Activity size={14} style={{ color: "#7FE5B8" }} /> Real-time Activity Feed
+            </h2>
+          </div>
+          <div className="flex items-center gap-1.5 text-[9px]" style={{ color: "#7FE5B8" }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#7FE5B8" }} />
             Live
           </div>
         </div>
+        <div className="h-px bg-gradient-to-r from-[#6366F1]/15 via-[#6366F1]/5 to-transparent mb-3" />
         <div ref={activityRef} className="max-h-48 overflow-y-auto space-y-1.5">
           {activityFeed.length > 0 ? activityFeed.map(item => (
             <div key={item.id} className="flex items-center gap-2.5 p-2 rounded-lg bg-surface-light hover:bg-surface-light/80 transition-colors">

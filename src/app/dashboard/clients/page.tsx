@@ -165,11 +165,14 @@ export default function ClientsPage() {
     if (!c.stripe_subscription_id && c.contract_status !== "signed") return "trial";
     return "active";
   }, []);
-  const STATUS_STYLES: Record<LifecycleStatus, { bar: string; pill: string; label: string }> = {
-    active:  { bar: "bg-success", pill: "bg-success/10 text-success border-success/30", label: "Active" },
-    paused:  { bar: "bg-warning", pill: "bg-warning/10 text-warning border-warning/30", label: "Paused" },
-    churned: { bar: "bg-danger",  pill: "bg-danger/10 text-danger border-danger/30",   label: "Churned" },
-    trial:   { bar: "bg-info",    pill: "bg-info/10 text-info border-info/30",         label: "Trial" },
+  // Status pill styles — colored dot + tinted pill matched to brand status colors.
+  // Each row in the table gets a vertical accent bar in the same hue so the
+  // lifecycle reads at-a-glance without forcing the user to parse text.
+  const STATUS_STYLES: Record<LifecycleStatus, { bar: string; pill: string; dot: string; label: string }> = {
+    active:  { bar: "bg-success", pill: "bg-success/10 text-success border-success/30", dot: "bg-success shadow-[0_0_8px_rgba(127,229,184,0.5)]", label: "Active" },
+    paused:  { bar: "bg-warning", pill: "bg-warning/10 text-warning border-warning/30", dot: "bg-warning",                                            label: "Paused" },
+    churned: { bar: "bg-danger",  pill: "bg-danger/10 text-danger border-danger/30",    dot: "bg-danger",                                             label: "Churned" },
+    trial:   { bar: "bg-info",    pill: "bg-info/10 text-info border-info/30",          dot: "bg-info shadow-[0_0_8px_rgba(99,102,241,0.5)]",         label: "Trial" },
   };
 
   // --- Feature 1: Client Health Score helper ---
@@ -893,7 +896,8 @@ export default function ClientsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <p className="font-medium text-sm truncate">{c.business_name}</p>
-                      <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium border ${statusStyles.pill}`}>
+                      <span className={`inline-flex items-center gap-1 text-[8px] px-1.5 py-0.5 rounded-full font-medium border ${statusStyles.pill}`}>
+                        <span className={`w-1 h-1 rounded-full ${statusStyles.dot}`} aria-hidden="true" />
                         {statusStyles.label}
                       </span>
                     </div>
@@ -1015,7 +1019,21 @@ export default function ClientsPage() {
       )}
 
       {/* Enhanced Table View */}
-      {tab === "clients" && viewMode === "table" && (
+      {tab === "clients" && viewMode === "table" && filteredClients.length === 0 && (
+        <div className="card">
+          <EmptyState
+            type="no-clients"
+            title={clients.length === 0 ? "No clients yet" : "No clients match your filters"}
+            description={clients.length === 0 ? "Add your first client to start tracking contracts, invoices, and health scores." : "Try adjusting filters or clearing your search."}
+            action={clients.length === 0 ? (
+              <button onClick={() => setShowAddModal(true)} className="btn-primary text-xs flex items-center gap-1.5">
+                <Plus size={12} /> Add Client
+              </button>
+            ) : undefined}
+          />
+        </div>
+      )}
+      {tab === "clients" && viewMode === "table" && filteredClients.length > 0 && (
         <div className="space-y-0">
           <DataTable
             columns={[
@@ -1048,7 +1066,8 @@ export default function ClientsPage() {
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <p className="font-medium">{c.business_name}</p>
-                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium border ${styles.pill}`}>
+                        <span className={`inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full font-medium border ${styles.pill}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${styles.dot}`} aria-hidden="true" />
                           {styles.label}
                         </span>
                         {/* Feature 3: Tags inline */}

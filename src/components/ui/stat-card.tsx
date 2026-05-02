@@ -171,7 +171,7 @@ export default function StatCard({
     <div
       ref={ref}
       onMouseMove={handleMouseMove}
-      className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden rounded-2xl flex flex-col gap-1.5 transition-all duration-220 ease-out`}
+      className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden rounded-2xl flex flex-col gap-1.5 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 transition-all duration-220 ease-out`}
       // Apr 28 v9 fix: surface bg now uses themeTokens (CSS-var-backed)
       // so the card flips white on light theme. Was hardcoded
       // tokens.bg.surface1 (dark hex baked at import time, ignored
