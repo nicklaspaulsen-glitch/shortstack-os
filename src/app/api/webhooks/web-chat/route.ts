@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { upsertInboundMessage } from "@/lib/conversations";
+import { rateLimit } from "@/lib/upstash-rate-limit";
 
 // Web chat widget ingest → Conversations.
 //
@@ -14,14 +15,20 @@ import { upsertInboundMessage } from "@/lib/conversations";
 //     text:           "Hi, are you open?"
 //   }
 //
-// No secret — the endpoint is public by design (any visitor can write),
-// but we require agency_user_id to exist as a valid profile. Abuse is
-// rate-limited at the edge via IP (not implemented here — TODO).
+// Public by design — any visitor can write — but rate-limited per IP
+// (20 req/min) and per agency_user_id (200 req/min) via Upstash.
+// Soft-fails when Upstash is unconfigured so the widget still works.
 
 export const runtime = "nodejs";
 export const maxDuration = 10;
 
 export async function POST(request: NextRequest) {
+  // Rate-limit by IP: 20 messages per minute per visitor IP.
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const ipRl = await rateLimit(`web-chat:ip:${ip}`, 20, "1 m");
+  if (!ipRl.success) {
+    return NextResponse.json({ error: "Too many messages. Try again in a minute." }, { status: 429 });
+  }
   let payload: {
     agency_user_id?: string;
     visitor_id?: string;

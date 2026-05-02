@@ -1,4 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+
+/* ── Twilio signature validation ──────────────────────────────────────────────
+ * Applied on POST only. Returns false (→ 403) when:
+ *   1. TWILIO_AUTH_TOKEN is unset — fail-closed in production.
+ *   2. The x-twilio-signature header is missing or forged.
+ *
+ * The voice/inbound route was previously unprotected (CRITICAL — May 3).
+ * Any internet actor could POST arbitrary caller_phone/call_sid values and
+ * receive the full voice config dump (ElevenLabs voice_id, pricing tiers,
+ * routing rules, qualification questions). Fixed with Twilio HMAC-SHA1.
+ */
+function validateTwilioSignature(request: NextRequest, body: URLSearchParams): boolean {
+  const authToken = process.env.TWILIO_AUTH_TOKEN;
+  if (!authToken) {
+    console.error("[voice/inbound] TWILIO_AUTH_TOKEN not set — rejecting all POST requests");
+    return false;
+  }
+
+  const signature = request.headers.get("x-twilio-signature");
+  if (!signature) return false;
+
+  // Reconstruct the signed string: full URL + sorted POST params
+  const url = request.url;
+  const sorted = Array.from(body.entries()).sort(([a], [b]) => a.localeCompare(b));
+  let data = url;
+  for (const [key, val] of sorted) data += key + val;
+
+  const expected = crypto
+    .createHmac("sha1", authToken)
+    .update(Buffer.from(data, "utf-8"))
+    .digest("base64");
+
+  // Timing-safe compare
+  if (expected.length !== signature.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+}
 
 /* ── Types ── */
 interface InboundCallPayload {
@@ -65,7 +102,34 @@ const DEFAULT_VOICE_CONFIG: ElevenLabsVoiceConfig = {
 /* ── POST handler ── */
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as InboundCallPayload;
+    // Clone the request text before consuming it as JSON, so we can also
+    // validate the Twilio HMAC-SHA1 signature over the raw URL-encoded body.
+    // Twilio sends form-encoded POSTs, not JSON — handle both gracefully.
+    const contentType = request.headers.get("content-type") ?? "";
+    let body: InboundCallPayload;
+    let rawParams: URLSearchParams;
+
+    if (contentType.includes("application/x-www-form-urlencoded")) {
+      const text = await request.text();
+      rawParams = new URLSearchParams(text);
+      body = {
+        caller_phone: rawParams.get("From") ?? rawParams.get("caller_phone") ?? "",
+        caller_name: rawParams.get("CallerName") ?? rawParams.get("caller_name") ?? undefined,
+        call_sid: rawParams.get("CallSid") ?? rawParams.get("call_sid") ?? "",
+      };
+    } else {
+      body = (await request.json()) as InboundCallPayload;
+      rawParams = new URLSearchParams(
+        Object.entries(body as unknown as Record<string, string>).map(([k, v]) => [k, String(v ?? "")])
+      );
+    }
+
+    // Validate Twilio signature — fail-closed when TWILIO_AUTH_TOKEN is set.
+    if (!validateTwilioSignature(request, rawParams)) {
+      console.warn("[voice/inbound] Twilio signature validation failed — rejecting POST");
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const { caller_phone, caller_name, call_sid } = body;
 
     if (!caller_phone || !call_sid) {

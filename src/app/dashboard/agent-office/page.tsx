@@ -1,7 +1,8 @@
 "use client";
 
 /**
- * /dashboard/agent-office — the live pixel office.
+ * /dashboard/agent-office — live AI team office.
+ * Toggle between the SVG Kumo scene (2D, detailed) and the R3F 3D scene.
  *
  * Layout:
  *   ┌──────────────────────────────────────────────┐
@@ -23,7 +24,8 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
-import { Sparkles, Activity, Users, Phone, Mail, BarChart3 } from "lucide-react";
+import dynamic from "next/dynamic";
+import { Sparkles, Activity, Users, Phone, Mail, BarChart3, Boxes, LayoutGrid } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { useAuth } from "@/lib/auth-context";
 import { AGENTS, AGENT_BY_KEY } from "@/lib/pixel-office/agents";
@@ -33,9 +35,23 @@ import AgentSidePanel from "@/components/pixel-office/agent-side-panel";
 import OfficeEventFeed, {
   OnlineNow,
 } from "@/components/pixel-office/office-event-feed";
-// Apr 28 v12: swapped from PixiJS pixel canvas to the shared
-// Kumospace-style scene used in the dashboard tile too.
 import KumoScene from "@/components/agent-office/kumo-scene";
+
+// 3D scene: dynamically imported so Three.js doesn't bloat the initial bundle.
+const AgentScene3D = dynamic(
+  () => import("@/components/agent-office-3d/agent-scene-3d"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex aspect-video w-full items-center justify-center rounded-2xl border border-white/8 bg-[#070708]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#6366F1]/30 border-t-[#6366F1]" />
+          <p className="text-xs font-medium text-white/40 tracking-widest uppercase">Loading 3D scene…</p>
+        </div>
+      </div>
+    ),
+  }
+);
 
 interface Snapshot {
   /** Effective owner id resolved server-side. Used as the realtime channel partition key. */
@@ -78,6 +94,7 @@ export default function AgentOfficePage() {
   const [snapshotError, setSnapshotError] = useState<string | null>(null);
   const [selectedAgentKey, setSelectedAgentKey] = useState<string | null>(null);
   const [feed, setFeed] = useState<AgentAction[]>([]);
+  const [viewMode, setViewMode] = useState<"kumo" | "3d">("kumo");
 
   // Hydrate the snapshot once we know who's logged in.
   useEffect(() => {
@@ -211,6 +228,25 @@ export default function AgentOfficePage() {
         gradient="green"
         actions={
           <div className="flex flex-wrap items-center gap-2">
+            {/* 2D / 3D toggle */}
+            <div className="flex items-center rounded-lg border border-white/10 bg-white/5 p-0.5">
+              <button
+                onClick={() => setViewMode("kumo")}
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-[#6366F1] text-white shadow" : "text-white/45 hover:text-white/70"}`}
+                title="2D Pixel view"
+              >
+                <LayoutGrid size={10} />
+                2D
+              </button>
+              <button
+                onClick={() => setViewMode("3d")}
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "3d" ? "bg-[#6366F1] text-white shadow" : "text-white/45 hover:text-white/70"}`}
+                title="3D Scene view"
+              >
+                <Boxes size={10} />
+                3D
+              </button>
+            </div>
             <StatTile
               icon={<Phone size={11} />}
               label="Calls today"
@@ -255,13 +291,26 @@ export default function AgentOfficePage() {
       {/* Main scene + right rail */}
       <div className="flex flex-col gap-4 xl:flex-row xl:items-stretch">
         <div className="min-w-0 flex-1">
-          <KumoScene
-            variant="full"
-            recent={kumoRecent}
-            hovered={selectedAgentKey}
-            setHovered={(k) => setSelectedAgentKey(k)}
-            onAgentClick={(k) => setSelectedAgentKey(prev => prev === k ? null : k)}
-          />
+          {viewMode === "3d" ? (
+            <AgentScene3D
+              recent={kumoRecent}
+              hovered={selectedAgentKey}
+              setHovered={(k) => setSelectedAgentKey(k)}
+              onAgentClick={(k) =>
+                setSelectedAgentKey((prev) => (prev === k ? null : k))
+              }
+            />
+          ) : (
+            <KumoScene
+              variant="full"
+              recent={kumoRecent}
+              hovered={selectedAgentKey}
+              setHovered={(k) => setSelectedAgentKey(k)}
+              onAgentClick={(k) =>
+                setSelectedAgentKey((prev) => (prev === k ? null : k))
+              }
+            />
+          )}
         </div>
         <div className="flex w-full shrink-0 flex-col gap-3 xl:w-[320px]">
           <OnlineNow rows={snapshot?.online ?? []} />
