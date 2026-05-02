@@ -367,7 +367,7 @@ branding when those emails arrive.
 ## Tomorrow's todo file
 
 The active context lives at:
-`C:\Users\Nicklas\.claude\projects\C--Claude\memory\shortstack_tomorrow_apr27.md`
+`C:\Users\Nicklas\.claude\projects\C--Claude\memory\shortstack_tomorrow_may2.md`
 
 Always read the top of that file at session start — it has the
 prioritized "do this first" shortlist + everything in flight.
