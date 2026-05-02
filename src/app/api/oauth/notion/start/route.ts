@@ -34,7 +34,7 @@ export async function GET() {
     // Fail-closed but front-end-friendly. The integrations page should
     // detect ?notion=not_configured and show "Coming soon" / "Contact
     // admin" copy instead of a generic 500.
-    const back = new URL("/dashboard/integrations?notion=not_configured", baseUrl);
+    const back = new URL("/dashboard/integrations-hub?notion=not_configured", baseUrl);
     return NextResponse.redirect(back);
   }
 

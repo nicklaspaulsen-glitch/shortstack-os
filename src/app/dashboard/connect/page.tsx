@@ -45,7 +45,7 @@ export default function ConnectHubPage() {
         caption: "Socials, chat bots, webhooks, marketplace — one hub",
       }}
       quickActions={[
-        { label: "New Integration", href: "/dashboard/integrations", icon: Plus },
+        { label: "New Integration", href: "/dashboard/integrations-hub", icon: Plus },
         { label: "Install Extension", href: "/downloads/shortstack-extension.zip", icon: Puzzle },
         { label: "Configure Webhook", href: "/dashboard/webhooks", icon: Webhook },
         { label: "Browse Marketplace", href: "/dashboard/marketplace", icon: Store },
@@ -82,7 +82,7 @@ export default function ConnectHubPage() {
           slug: "integrations",
           label: "Socials",
           description: "IG, TikTok, LinkedIn, Facebook — one click each.",
-          href: "/dashboard/integrations",
+          href: "/dashboard/integrations-hub",
           icon: Link2,
         },
         {

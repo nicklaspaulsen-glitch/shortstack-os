@@ -509,7 +509,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
             <span>
               Transcription provider isn't configured.{" "}
               <a
-                href="/dashboard/integrations"
+                href="/dashboard/integrations-hub"
                 className="underline font-medium"
                 onClick={() => toast.dismiss(t.id)}
               >
@@ -875,7 +875,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
             <span>
               Upscaler isn&apos;t configured.{" "}
               <a
-                href="/dashboard/integrations"
+                href="/dashboard/integrations-hub"
                 className="underline font-medium"
                 onClick={() => toast.dismiss(t.id)}
               >
@@ -985,7 +985,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
             <span>
               Background remover isn&apos;t configured.{" "}
               <a
-                href="/dashboard/integrations"
+                href="/dashboard/integrations-hub"
                 className="underline font-medium"
                 onClick={() => toast.dismiss(t.id)}
               >

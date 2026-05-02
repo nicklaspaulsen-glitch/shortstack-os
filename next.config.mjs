@@ -62,6 +62,16 @@ const nextConfig = {
         destination: "/dashboard/integrations-hub",
         permanent: true,
       },
+      {
+        source: "/dashboard/workspaces",
+        destination: "/dashboard/settings",
+        permanent: true,
+      },
+      {
+        source: "/dashboard/workspaces/:path*",
+        destination: "/dashboard/settings",
+        permanent: true,
+      },
     ];
   },
   async headers() {

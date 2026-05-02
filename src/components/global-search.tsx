@@ -49,7 +49,7 @@ const NAV_PAGES: NavEntry[] = [
   { id: "email-templates", label: "Email Templates", href: "/dashboard/email-templates", keywords: "email template cold outreach" },
   { id: "spy", label: "Competitor Spy", href: "/dashboard/competitor", keywords: "analyze research competitor spy" },
   { id: "agenthq", label: "Agent HQ", href: "/dashboard/agent-supervisor", keywords: "supervisor nexus chief monitor agent" },
-  { id: "integrations", label: "Integrations", href: "/dashboard/integrations", keywords: "integrations zernio connect oauth platforms apps" },
+  { id: "integrations", label: "Integrations", href: "/dashboard/integrations-hub", keywords: "integrations zernio connect oauth platforms apps" },
   { id: "ai-studio", label: "AI Studio", href: "/dashboard/ai-studio", keywords: "ai studio image generate remove background upscale transcribe" },
   { id: "domains", label: "Domains", href: "/dashboard/domains", keywords: "domain buy godaddy dns register purchase" },
   { id: "ai-caller", label: "AI Caller", href: "/dashboard/eleven-agents", keywords: "eleven agents elevenlabs voice call ai caller" },

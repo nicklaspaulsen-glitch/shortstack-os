@@ -8,19 +8,19 @@ export async function GET(request: NextRequest) {
   const error = request.nextUrl.searchParams.get("error");
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
-  if (error || !code) return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=denied`);
+  if (error || !code) return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=denied`);
 
   // SECURITY: state must be a valid HMAC-signed payload issued by /api/oauth/linkedin
   // (rejects forged or replayed state). The signed payload includes the user.id
   // that initiated the flow — we re-check that the current session matches.
   const verified = verifyOAuthState(stateStr);
   if (!verified) {
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=invalid_state`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=invalid_state`);
   }
   const supabaseAuth = createServerSupabase();
   const { data: { user } } = await supabaseAuth.auth.getUser();
   if (!user || user.id !== verified.uid) {
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=auth_mismatch`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=auth_mismatch`);
   }
 
   const state = { client_id: verified.client_id };
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       }),
     });
     const tokenData = await tokenRes.json();
-    if (!tokenData.access_token) return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=token_failed`);
+    if (!tokenData.access_token) return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=token_failed`);
 
     // Get profile
     const profileRes = await fetch("https://api.linkedin.com/v2/userinfo", {
@@ -67,8 +67,8 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?connected=linkedin`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?connected=linkedin`);
   } catch (err) {
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=${encodeURIComponent(String(err))}`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=${encodeURIComponent(String(err))}`);
   }
 }

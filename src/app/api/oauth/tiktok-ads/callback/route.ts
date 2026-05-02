@@ -200,7 +200,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?connected=TikTok+Ads`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?connected=TikTok+Ads`);
   } catch (err) {
     return NextResponse.redirect(uiRedirectOnError("tiktok_ads", String(err)));
   }

@@ -16,7 +16,7 @@ import { verifyOAuthState } from "@/lib/oauth-state";
  *   3. Fetch the Discord user (identify scope) and their guilds list.
  *   4. Pick the guild that was just installed into (guild_id from query).
  *   5. Upsert a row into discord_integrations keyed on (user_id, guild_id).
- *   6. Redirect back to /dashboard/integrations?discord=connected.
+ *   6. Redirect back to /dashboard/integrations-hub?discord=connected.
  *
  * SECURITY (Apr 27): state is now HMAC-signed by /lib/discord-install-url.ts.
  * Prior to this fix, state was a raw user_id which let anyone with a
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   const redirectBack = (suffix: string) =>
-    NextResponse.redirect(`${baseUrl}/dashboard/integrations?${suffix}`);
+    NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?${suffix}`);
 
   if (error) return redirectBack(`discord_error=${encodeURIComponent(error)}`);
   if (!code || !stateStr) return redirectBack("discord_error=missing_params");

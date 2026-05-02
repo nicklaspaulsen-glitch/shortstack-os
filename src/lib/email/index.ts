@@ -270,7 +270,7 @@ export async function sendWelcomeEmail(
           <table style="width:100%;border-collapse:collapse;">
             <tr>
               <td style="padding:6px 0;"><a href="${appUrl}/dashboard/getting-started" style="color:#c8a855;font-size:12px;text-decoration:none;">Getting Started Guide</a></td>
-              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/integrations" style="color:#c8a855;font-size:12px;text-decoration:none;">Connect Integrations</a></td>
+              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/integrations-hub" style="color:#c8a855;font-size:12px;text-decoration:none;">Connect Integrations</a></td>
             </tr>
             <tr>
               <td style="padding:6px 0;"><a href="${appUrl}/dashboard/settings" style="color:#c8a855;font-size:12px;text-decoration:none;">Account Settings</a></td>

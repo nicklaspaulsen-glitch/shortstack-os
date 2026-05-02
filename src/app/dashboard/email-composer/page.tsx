@@ -984,7 +984,7 @@ export default function EmailComposerPage() {
                       <AlertTriangle size={10} /> Gmail isn&apos;t connected yet — the send will fail.
                     </p>
                     <Link
-                      href="/dashboard/integrations"
+                      href="/dashboard/integrations-hub"
                       className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-300 hover:bg-amber-400/25 transition-all font-semibold"
                     >
                       Connect Gmail
@@ -997,7 +997,7 @@ export default function EmailComposerPage() {
                       <AlertTriangle size={10} /> Outlook isn&apos;t connected yet — the send will fail.
                     </p>
                     <Link
-                      href="/dashboard/integrations"
+                      href="/dashboard/integrations-hub"
                       className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-300 hover:bg-amber-400/25 transition-all font-semibold"
                     >
                       Connect Outlook

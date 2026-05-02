@@ -160,7 +160,7 @@ export default function ContactSupportPage() {
               <ul className="mt-3 grid grid-cols-1 gap-1.5 text-[12px] sm:grid-cols-2">
                 <li>
                   <Link
-                    href="/dashboard/integrations"
+                    href="/dashboard/integrations-hub"
                     className="text-gold underline-offset-2 hover:underline"
                   >
                     Integrations status

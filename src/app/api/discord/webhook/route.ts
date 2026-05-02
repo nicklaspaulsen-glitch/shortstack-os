@@ -354,7 +354,7 @@ async function handleTrinityStatus(guildId: string | undefined) {
     "Trinity Status",
     userId
       ? "Live snapshot of your agency."
-      : "Trinity is installed but not yet linked to your agency account — visit /dashboard/integrations to finish setup.",
+      : "Trinity is installed but not yet linked to your agency account — visit /dashboard/integrations-hub to finish setup.",
     [
       { name: "Active Clients", value: `${clientsCount.count ?? 0}`, inline: true },
       { name: "Total MRR", value: `$${totalMrr.toLocaleString()}`, inline: true },
@@ -421,7 +421,7 @@ async function handleTrinityLead(
   if (!userId) {
     return embed(
       "Trinity not linked",
-      "This Discord server is not linked to a Trinity agency account yet. Visit /dashboard/integrations to connect."
+      "This Discord server is not linked to a Trinity agency account yet. Visit /dashboard/integrations-hub to connect."
     );
   }
 

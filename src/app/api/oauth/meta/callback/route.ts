@@ -11,20 +11,20 @@ export async function GET(request: NextRequest) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   if (error || !code) {
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=denied`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=denied`);
   }
 
   // Verify HMAC-signed state AND that the currently-authenticated user is
   // the same one that initiated the flow AND owns the target client_id.
   const state = verifyOAuthState(stateStr);
   if (!state) {
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=invalid_state`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=invalid_state`);
   }
 
   const sessionClient = createServerSupabase();
   const { data: { user: sessionUser } } = await sessionClient.auth.getUser();
   if (!sessionUser || sessionUser.id !== state.uid) {
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=session_mismatch`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=session_mismatch`);
   }
 
   const allowedForClient = await canUserWriteForClient(
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     state.client_id,
   );
   if (!allowedForClient) {
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=forbidden`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=forbidden`);
   }
 
   const appId = process.env.META_APP_ID;
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     const tokenData = await tokenRes.json();
 
     if (!tokenData.access_token) {
-      return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=token_failed`);
+      return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=token_failed`);
     }
 
     // Exchange for long-lived token (60 days)
@@ -148,8 +148,8 @@ export async function GET(request: NextRequest) {
     if (igAccount?.id) parts.push("Instagram");
     if (adAccountId) parts.push("Meta Ads");
     const connected = parts.join(" & ");
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?connected=${encodeURIComponent(connected)}`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?connected=${encodeURIComponent(connected)}`);
   } catch (err) {
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=${encodeURIComponent(String(err))}`);
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations-hub?error=${encodeURIComponent(String(err))}`);
   }
 }

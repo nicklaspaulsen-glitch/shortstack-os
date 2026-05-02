@@ -47,7 +47,7 @@ export default function AutomateHubPage() {
         { label: "Create Workflow", href: "/dashboard/workflows", icon: Plus },
         { label: "New Agent", href: "/dashboard/services", icon: Bot },
         { label: "Schedule Task", href: "/dashboard/automations", icon: Clock },
-        { label: "Add Integration", href: "/dashboard/integrations", icon: Link2 },
+        { label: "Add Integration", href: "/dashboard/integrations-hub", icon: Link2 },
       ]}
       stats={[
         { label: "Active Workflows", key: "active_workflows", icon: Zap, color: "text-blue-400" },
@@ -97,7 +97,7 @@ export default function AutomateHubPage() {
           slug: "integrations",
           label: "Integrations",
           description: "Connect your existing tools and socials.",
-          href: "/dashboard/integrations",
+          href: "/dashboard/integrations-hub",
           icon: Link2,
         },
         {

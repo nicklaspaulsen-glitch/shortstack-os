@@ -98,7 +98,7 @@ const TEAM_MEMBER_BLOCKED: string[] = [
   "/dashboard/workflows",
   "/dashboard/whatsapp",
   "/dashboard/eleven-agents",
-  "/dashboard/integrations",
+  "/dashboard/integrations-hub",
   "/dashboard/financials",
 ];
 const TEAM_MEMBER_DEFAULT = "/dashboard";

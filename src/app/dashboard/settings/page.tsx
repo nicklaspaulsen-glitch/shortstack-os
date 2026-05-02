@@ -200,7 +200,7 @@ export default function SettingsIndexPage() {
 
         <SettingsCard
           index={4}
-          href="/dashboard/integrations"
+          href="/dashboard/integrations-hub"
           title="Integrations"
           description="Stripe, Resend, Twilio, Nango, RunPod, ElevenLabs, and more."
           Icon={Plug}
