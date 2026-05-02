@@ -31,6 +31,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 
 // Lazy-load overlay/modal components — not needed on initial render
+const TopNavbar = dynamic(() => import("@/components/dashboard/top-navbar"), { ssr: false });
 const DashboardAmbient3D = dynamic(() => import("@/components/brand/dashboard-ambient-3d"), { ssr: false });
 const ClientChatWidget = dynamic(() => import("@/components/client-chat-widget"), { ssr: false });
 const VoiceAssistant = dynamic(() => import("@/components/voice-assistant"), { ssr: false });
@@ -420,6 +421,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {/* Managed client banner */}
           <ManagedClientBanner />
+
+          {/* P9 top navbar — breadcrumbs + Trinity Cmd+K quick-prompt */}
+          <TopNavbar />
 
           {/* Page content — Apr 28: "stagger-shatter" entry transition
               retired (user described as "weird flicker"). Replaced with
