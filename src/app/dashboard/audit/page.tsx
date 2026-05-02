@@ -87,6 +87,11 @@ export default function AuditPage() {
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null);
   const [showSensitiveOnly, setShowSensitiveOnly] = useState(false);
   const [retentionDays, setRetentionDays] = useState(90);
+  const [exportStartDate, setExportStartDate] = useState("");
+  const [exportEndDate, setExportEndDate] = useState("");
+  const [exportFormat, setExportFormat] = useState<"CSV" | "JSON" | "PDF Report">("CSV");
+  const [exportActionFilter, setExportActionFilter] = useState<ActionType | "all">("all");
+  const [exportUserFilter, setExportUserFilter] = useState("all");
 
   useEffect(() => {
     let cancelled = false;
@@ -178,9 +183,18 @@ export default function AuditPage() {
     }
   }
 
+  const exportFiltered = entries.filter(e => {
+    if (exportActionFilter !== "all" && e.action !== exportActionFilter) return false;
+    if (exportUserFilter !== "all" && e.user !== exportUserFilter) return false;
+    if (exportStartDate && e.timestamp < exportStartDate) return false;
+    if (exportEndDate && e.timestamp > exportEndDate + "T23:59:59") return false;
+    return true;
+  });
+
   function exportCSV() {
+    const rows = exportFiltered.length > 0 ? exportFiltered : filtered;
     const csv = "Timestamp,User,Action,Resource,Details,IP,Status\n" +
-      filtered.map(e => `"${e.timestamp}","${e.user}","${e.action}","${e.resource}","${e.details}","${e.ip}","${e.status}"`).join("\n");
+      rows.map(e => `"${e.timestamp}","${e.user}","${e.action}","${e.resource}","${e.details}","${e.ip}","${e.status}"`).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = "audit_log.csv"; a.click();
@@ -588,17 +602,20 @@ export default function AuditPage() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Start Date</label>
-                <input type="date" className="input w-full text-xs" />
+                <input type="date" value={exportStartDate} onChange={e => setExportStartDate(e.target.value)}
+                  className="input w-full text-xs" />
               </div>
               <div>
                 <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">End Date</label>
-                <input type="date" className="input w-full text-xs" />
+                <input type="date" value={exportEndDate} onChange={e => setExportEndDate(e.target.value)}
+                  className="input w-full text-xs" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Format</label>
-                <select className="input w-full text-xs">
+                <select value={exportFormat} onChange={e => setExportFormat(e.target.value as typeof exportFormat)}
+                  className="input w-full text-xs">
                   <option>CSV</option>
                   <option>JSON</option>
                   <option>PDF Report</option>
@@ -606,32 +623,35 @@ export default function AuditPage() {
               </div>
               <div>
                 <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Filter by Action</label>
-                <select className="input w-full text-xs">
-                  <option>All Actions</option>
+                <select value={exportActionFilter} onChange={e => setExportActionFilter(e.target.value as ActionType | "all")}
+                  className="input w-full text-xs">
+                  <option value="all">All Actions</option>
                   {ACTION_FILTERS.map(af => <option key={af} value={af}>{ACTION_STYLES[af].label}</option>)}
                 </select>
               </div>
             </div>
             <div>
               <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Filter by User</label>
-              <select className="input w-full text-xs">
-                <option>All Users</option>
+              <select value={exportUserFilter} onChange={e => setExportUserFilter(e.target.value)}
+                className="input w-full text-xs">
+                <option value="all">All Users</option>
                 {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
               </select>
             </div>
             <div className="p-3 rounded-lg bg-surface-light border border-border text-[10px] text-muted">
-              Estimated export size: <span className="font-bold text-gold">{filtered.length} entries</span> ({(filtered.length * 0.2).toFixed(1)} KB)
+              Estimated export size: <span className="font-bold text-gold">{exportFiltered.length} entries</span> ({(exportFiltered.length * 0.2).toFixed(1)} KB)
             </div>
             <div className="flex gap-2">
               <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
               <button
                 onClick={async () => {
+                  const rows = exportFiltered.length > 0 ? exportFiltered : filtered;
                   const csv = "Timestamp,User,Action,Resource,Details,IP,Status\n" +
-                    filtered.map(e => `"${e.timestamp}","${e.user}","${e.action}","${e.resource}","${e.details}","${e.ip}","${e.status}"`).join("\n");
+                    rows.map(e => `"${e.timestamp}","${e.user}","${e.action}","${e.resource}","${e.details}","${e.ip}","${e.status}"`).join("\n");
                   try {
                     await navigator.clipboard.writeText(csv);
                   } catch (err) {
-                    console.error("Copy to clipboard failed:", err);
+                    console.error("[audit/export] Copy to clipboard failed:", err);
                   }
                 }}
                 className="btn-secondary text-xs flex items-center gap-1.5"><Copy size={12} /> Copy to Clipboard</button>
