@@ -312,8 +312,12 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const key = url.searchParams.get("key") || request.headers.get("x-webhook-key");
-  const expectedKey = process.env.WEBHOOK_SECRET || process.env.CRON_SECRET;
+  const expectedKey = process.env.WEBHOOK_SECRET;
 
+  if (!expectedKey) {
+    console.error("[webhooks/inbound] WEBHOOK_SECRET unset — rejecting request");
+    return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
+  }
   if (!key || key !== expectedKey) {
     return NextResponse.json({ error: "Invalid webhook key" }, { status: 401 });
   }
