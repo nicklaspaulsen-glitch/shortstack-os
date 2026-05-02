@@ -85,13 +85,14 @@ export async function POST(): Promise<NextResponse> {
   const campaigns = await client.listCampaigns({ status: "active" });
 
   // Current per-platform daily budget totals.
-  const current: Record<UnifiedPlatform, number> = { meta: 0, google: 0, tiktok: 0 };
+  const current: Record<UnifiedPlatform, number> = { meta: 0, google: 0, tiktok: 0, linkedin: 0, pinterest: 0 };
   for (const c of campaigns) {
     if (c.dailyBudget !== null) current[c.platform] += c.dailyBudget;
   }
 
   const result: RebalanceResult = { applied: [], skipped: [] };
 
+  // linkedin/pinterest are read-only — exclude from rebalance mutations.
   for (const platform of ["meta", "google", "tiktok"] as const) {
     const target = Number(allocation[platform] || 0);
     if (target === 0) {

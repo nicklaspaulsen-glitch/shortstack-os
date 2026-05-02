@@ -13,7 +13,7 @@ import { UnifiedAdsClient } from "@/lib/ads/unified-client";
 export const dynamic = "force-dynamic";
 
 interface AllocationSlice {
-  platform: "meta" | "google" | "tiktok";
+  platform: "meta" | "google" | "tiktok" | "linkedin" | "pinterest";
   amount: number;
   pct: number;
 }
@@ -47,7 +47,7 @@ export async function GET(): Promise<NextResponse> {
   // Sum daily_budget per platform for active campaigns. Missing daily_budget
   // (lifetime-budget campaigns) gets a fallback estimate from total_spend
   // averaged across the last 7 days — but if we don't have that, just skip.
-  const totals = { meta: 0, google: 0, tiktok: 0 };
+  const totals: Record<AllocationSlice["platform"], number> = { meta: 0, google: 0, tiktok: 0, linkedin: 0, pinterest: 0 };
   for (const c of campaigns) {
     if (c.status !== "active") continue;
     if (c.dailyBudget !== null) {
@@ -55,10 +55,10 @@ export async function GET(): Promise<NextResponse> {
     }
   }
 
-  const total = totals.meta + totals.google + totals.tiktok;
+  const total = Object.values(totals).reduce((s, v) => s + v, 0);
   const current: AllocationSlice[] =
     total > 0
-      ? (Object.keys(totals) as Array<"meta" | "google" | "tiktok">)
+      ? (Object.keys(totals) as Array<AllocationSlice["platform"]>)
           .map((p) => ({ platform: p, amount: totals[p], pct: (totals[p] / total) * 100 }))
           .filter((s) => s.amount > 0)
       : [];

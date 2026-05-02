@@ -24,13 +24,15 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { metaAds, googleAds, tiktokAds, getPlatformCredentials } from "./platforms";
 
-export type UnifiedPlatform = "meta" | "google" | "tiktok";
+export type UnifiedPlatform = "meta" | "google" | "tiktok" | "linkedin" | "pinterest";
 
 /** Map UI-facing platform key to the internal `oauth_connections.platform`. */
 const PLATFORM_TO_OAUTH: Record<UnifiedPlatform, string> = {
   meta: "meta_ads",
   google: "google_ads",
   tiktok: "tiktok_ads",
+  linkedin: "linkedin_ads",
+  pinterest: "pinterest_ads",
 };
 
 export interface UnifiedCampaign {
@@ -82,6 +84,10 @@ function rowToCampaign(row: Record<string, unknown>): UnifiedCampaign {
       ? "google"
       : platformRaw === "tiktok_ads" || platformRaw === "tiktok"
       ? "tiktok"
+      : platformRaw === "linkedin_ads" || platformRaw === "linkedin"
+      ? "linkedin"
+      : platformRaw === "pinterest_ads" || platformRaw === "pinterest"
+      ? "pinterest"
       : "meta";
 
   const statusRaw = String(row.status || "").toLowerCase();
@@ -234,6 +240,15 @@ export class UnifiedAdsClient {
             error: "TikTok ad management is awaiting app approval.",
           };
         }
+      } else if (platform === "linkedin" || platform === "pinterest") {
+        // LinkedIn/Pinterest: managed via Zernio hosted API (no direct SDK).
+        // Budget mutations are not yet supported — display-only platforms.
+        // Wire through /api/ads/zernio/boost when Zernio adds write access.
+        console.warn(`[UnifiedAdsClient] ${platform} budget update not yet supported via Zernio write API`);
+        return {
+          success: false,
+          error: `${platform} budget management coming soon — connect via Zernio to read campaigns.`,
+        };
       }
 
       // Update cache so the UI reflects the change immediately.
@@ -289,6 +304,14 @@ export class UnifiedAdsClient {
             error: "TikTok ad management is awaiting app approval.",
           };
         }
+      } else if (platform === "linkedin" || platform === "pinterest") {
+        // LinkedIn/Pinterest: read-only via Zernio sync. Status mutations
+        // will be wired when Zernio exposes write endpoints.
+        console.warn(`[UnifiedAdsClient] ${platform} status update not yet supported via Zernio write API`);
+        return {
+          success: false,
+          error: `${platform} campaign management coming soon — campaigns are available in read-only mode.`,
+        };
       }
 
       await this.supabase
@@ -327,11 +350,13 @@ export class UnifiedAdsClient {
   }
 }
 
-/** Status filter helper — match UI status against DB-stored variants. */
+/** Status filter helper — match UI status against DB-stored variants.
+ *  Includes LinkedIn (ACTIVE/PAUSED/DRAFT/ARCHIVED) and Pinterest (ACTIVE/PAUSED/COMPLETED) variants.
+ */
 function statusVariants(status: "active" | "paused" | "ended"): string[] {
-  if (status === "active") return ["active", "ACTIVE", "ENABLED", "enabled"];
-  if (status === "paused") return ["paused", "PAUSED", "DISABLE", "DISABLED", "disabled"];
-  return ["ended", "ENDED", "completed", "COMPLETED"];
+  if (status === "active") return ["active", "ACTIVE", "ENABLED", "enabled", "RUNNING"];
+  if (status === "paused") return ["paused", "PAUSED", "DISABLE", "DISABLED", "disabled", "DRAFT", "draft"];
+  return ["ended", "ENDED", "completed", "COMPLETED", "ARCHIVED", "archived"];
 }
 
 function errMsg(err: unknown): string {

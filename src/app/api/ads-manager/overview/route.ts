@@ -12,7 +12,7 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
-import { UnifiedAdsClient } from "@/lib/ads/unified-client";
+import { UnifiedAdsClient, type UnifiedPlatform } from "@/lib/ads/unified-client";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +28,7 @@ interface PlatformTotals {
 
 interface OverviewResponse {
   totals: PlatformTotals;
-  perPlatform: Record<"meta" | "google" | "tiktok", PlatformTotals>;
+  perPlatform: Record<UnifiedPlatform, PlatformTotals>;
   dailySeries: Array<{
     date: string;
     spend: number;
@@ -39,12 +39,12 @@ interface OverviewResponse {
   topCampaigns: Array<{
     id: string;
     name: string;
-    platform: "meta" | "google" | "tiktok";
+    platform: UnifiedPlatform;
     spend: number;
     roas: number | null;
     status: string;
   }>;
-  bestPlatform: "meta" | "google" | "tiktok" | null;
+  bestPlatform: UnifiedPlatform | null;
 }
 
 function emptyTotals(): PlatformTotals {
@@ -83,6 +83,8 @@ export async function GET(): Promise<NextResponse> {
     meta: emptyTotals(),
     google: emptyTotals(),
     tiktok: emptyTotals(),
+    linkedin: emptyTotals(),
+    pinterest: emptyTotals(),
   };
 
   let weightedRoasSum = 0;
