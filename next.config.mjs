@@ -50,6 +50,20 @@ const nextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/dashboard/integrations",
+        destination: "/dashboard/integrations-hub",
+        permanent: true,
+      },
+      {
+        source: "/dashboard/integrations-marketplace",
+        destination: "/dashboard/integrations-hub",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       // Security headers for all routes

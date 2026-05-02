@@ -180,10 +180,6 @@ const navItems: NavItem[] = [
 
   // ── Automate (AI & workflows) ──
   { label: "AI Agents", href: "/dashboard/services", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], section: "Automate", sub: "AI" },
-  { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <NavIcon3D name="Crown" size={16} />, roles: ["admin"], sub: "AI" },
-  // Replaces the old Agent Room entry with the live pixel-art Agent
-  // Office. The label keeps the "Room" wording so muscle memory still
-  // works; the destination is the new /dashboard/agent-office surface.
   { label: "Agent Office", href: "/dashboard/agent-office", icon: <NavIcon3D name="UsersRound" size={16} />, roles: ["admin", "team_member"], sub: "AI" },
   { label: "Agent Controls", href: "/dashboard/agent-controls", icon: <NavIcon3D name="SlidersHorizontal" size={16} />, roles: ["admin"], sub: "AI" },
   { label: "Apps", href: "/dashboard/agent-desktop", icon: <NavIcon3D name="Monitor" size={16} />, roles: ["admin", "team_member"], sub: "AI" },
@@ -237,7 +233,6 @@ const navItems: NavItem[] = [
   { label: "Google Biz", href: "/dashboard/google-business", icon: <NavIcon3D name="Globe" size={16} />, roles: ["admin"], section: "Connect" },
   { label: "Discord", href: "/dashboard/discord", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"] },
   { label: "Notion", href: "/dashboard/notion-sync", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"] },
-  { label: "Socials", href: "/dashboard/integrations", icon: <NavIcon3D name="Link2" size={16} />, roles: ["admin"] },
   { label: "Integrations Hub", href: "/dashboard/integrations-hub", icon: <NavIcon3D name="Plug" size={16} />, roles: ["admin"] },
   { label: "Competitors", href: "/dashboard/competitive-monitor", icon: <NavIcon3D name="Target" size={16} />, roles: ["admin"] },
   { label: "Telegram Bot", href: "/dashboard/telegram-bot", icon: <NavIcon3D name="Bot" size={16} />, roles: ["admin"] },
