@@ -56,6 +56,7 @@ button,
 a,
 [role="button"] {
   touch-action: manipulation;
+  transition: all 150ms ease;
 }
 
 /* Apr 28 v6 — full crispness pass.
@@ -217,6 +218,10 @@ a[role="button"]:hover,
   --motion-hero-reveal: 480ms cubic-bezier(0.32, 0.72, 0, 1);
   --motion-page-transition: 320ms cubic-bezier(0.32, 0.72, 0, 1);
   --ease-out-expo-foundation: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Premium card shadow tokens — used by .hover-lift and inline card styles */
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px -4px rgba(0,0,0,0.12), 0 14px 32px -12px rgba(0,0,0,0.14);
+  --card-shadow-hover: 0 4px 24px rgba(99,102,241,0.12), 0 2px 8px rgba(0,0,0,0.12), 0 18px 40px -12px rgba(0,0,0,0.18);
 }
 
 * {
@@ -321,6 +326,10 @@ a[role="button"]:hover,
   --brand-lime-rgb: 99 102 241;
   --brand-indigo: #6366F1;
   --brand-indigo-rgb: 99 102 241;
+
+  /* Dark theme card shadows — deeper for OLED surfaces */
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.20), 0 4px 12px -4px rgba(0,0,0,0.30), 0 14px 32px -12px rgba(0,0,0,0.40);
+  --card-shadow-hover: 0 4px 24px rgba(99,102,241,0.18), 0 2px 8px rgba(0,0,0,0.28), 0 18px 40px -12px rgba(0,0,0,0.50);
 }
 
 /* ═══════════ LIGHT THEME OVERRIDES (kept for parity / explicit selector) ═══════════
@@ -1500,18 +1509,18 @@ body {
 
 /* Micro-interactions across UI */
 .hover-lift {
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease-out;
+  transition: transform 150ms ease, box-shadow 150ms ease;
 }
 .hover-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px -8px var(--led-color, rgba(201, 168, 76, 0.25));
+  transform: translateY(-1px);
+  box-shadow: var(--card-shadow-hover, 0 4px 24px rgba(99,102,241,0.12), 0 2px 8px rgba(0,0,0,0.12));
 }
 
 .hover-glow {
-  transition: box-shadow 0.25s ease-out;
+  transition: box-shadow 150ms ease;
 }
 .hover-glow:hover {
-  box-shadow: 0 0 12px -2px var(--led-color, rgba(201, 168, 76, 0.35));
+  box-shadow: 0 0 12px -2px rgba(var(--brand-accent-rgb, 99 102 241) / 0.35);
 }
 
 /* Subtle icon breathing on idle nav items — one at a time */

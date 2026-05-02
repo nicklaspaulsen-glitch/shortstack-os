@@ -22,7 +22,6 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Check, Plug, Loader, Unlink } from "lucide-react";
-import { SHORTSTACK_GOLD } from "@/components/logo";
 
 export type IntegrationStatus = "connected" | "not_connected" | "coming_soon";
 
@@ -121,8 +120,8 @@ export default function IntegrationCard({
   return (
     <div
       className={[
-        "group relative rounded-xl border bg-surface p-4 transition-all",
-        "hover:border-gold/30 hover:shadow-card-hover hover:-translate-y-[1px]",
+        "group relative rounded-xl border bg-surface p-4 hover-lift",
+        "hover:border-[rgba(99,102,241,0.25)]",
         isComingSoon ? "opacity-70" : "",
         "border-border",
       ].join(" ")}
@@ -191,11 +190,11 @@ export default function IntegrationCard({
             type="button"
             disabled={busy}
             onClick={() => onConnect(integration)}
-            className="flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-md text-black transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-md text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             style={{
-              background: SHORTSTACK_GOLD,
+              background: "#6366F1",
               boxShadow:
-                "0 1px 0 rgba(255,255,255,0.3) inset, 0 4px 10px -3px rgba(201,168,76,0.55)",
+                "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(99,102,241,0.45)",
             }}
           >
             {busy ? (

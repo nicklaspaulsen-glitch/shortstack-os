@@ -179,6 +179,8 @@ export default function StatCard({
       style={{
         background: themeTokens.bg.surface1,
         border: `1px solid var(--border-subtle, rgba(13,148,136,0.08))`,
+        borderLeftColor: accent,
+        borderLeftWidth: "2px",
         boxShadow: [
           "0 1px 0 rgba(255,255,255,0.04) inset",
           "0 2px 4px rgba(0,0,0,0.10)",
@@ -193,6 +195,9 @@ export default function StatCard({
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-2px) rotate(0.4deg)";
         e.currentTarget.style.borderColor = "var(--border-strong, rgba(13,148,136,0.20))";
+        // Re-apply left accent after borderColor override
+        e.currentTarget.style.borderLeftColor = accent;
+        e.currentTarget.style.borderLeftWidth = "2px";
         e.currentTarget.style.boxShadow = [
           "0 1px 0 rgba(255,255,255,0.06) inset",
           "0 4px 8px rgba(0,0,0,0.12)",
@@ -204,6 +209,9 @@ export default function StatCard({
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "translateY(0) rotate(0deg)";
         e.currentTarget.style.borderColor = "var(--border-subtle, rgba(13,148,136,0.08))";
+        // Restore left accent after borderColor reset
+        e.currentTarget.style.borderLeftColor = accent;
+        e.currentTarget.style.borderLeftWidth = "2px";
         e.currentTarget.style.boxShadow = [
           "0 1px 0 rgba(255,255,255,0.04) inset",
           "0 2px 4px rgba(0,0,0,0.10)",
@@ -212,6 +220,15 @@ export default function StatCard({
         ].join(", ");
       }}
     >
+      {/* Static inner gradient — subtle depth from top-left accent corner */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `linear-gradient(135deg, ${accent}08 0%, transparent 60%)`,
+        }}
+        aria-hidden
+      />
+
       {/* Mouse-tracked ambient glow on hover */}
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"

@@ -207,9 +207,15 @@ function ClientDashboard() {
 
   return (
     <div className="fade-in space-y-6 max-w-[1000px] mx-auto">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Welcome, {profile?.full_name}</h1>
-        <p className="text-sm text-muted mt-0.5">Your client portal</p>
+      <div className="relative inline-block">
+        <h1 className="font-display text-3xl font-bold tracking-tight">Welcome, {profile?.full_name}</h1>
+        {/* Acid Lime underline accent */}
+        <div
+          className="h-[2px] mt-1 rounded-full"
+          style={{ background: "linear-gradient(90deg, var(--brand-accent, #4F46E5) 0%, transparent 70%)" }}
+          aria-hidden
+        />
+        <p className="text-sm text-muted mt-1.5">Your client portal</p>
       </div>
 
       <TrinityOrb
@@ -223,24 +229,27 @@ function ClientDashboard() {
         ]}
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: "My Services", icon: <Briefcase size={22} />, color: "text-gold", route: "/dashboard/portal" },
-          { label: "Invoices", icon: <FileText size={22} />, color: "text-info", route: "/dashboard/portal/billing" },
-          { label: "Content", icon: <Sparkles size={22} />, color: "text-purple-400", route: "/dashboard/portal/content" },
-          { label: "Contact Us", icon: <Send size={22} />, color: "text-success", route: "/dashboard/portal/support" },
-        ].map((item, i) => (
-          <button
-            key={i}
-            onClick={() => router.push(item.route)}
-            className="rounded-2xl border border-border bg-surface p-6 text-center hover:bg-surface-light hover:border-border-light transition-all group"
-          >
-            <span className={`${item.color} inline-block mb-2 group-hover:scale-110 transition-transform`}>
-              {item.icon}
-            </span>
-            <span className="text-sm font-medium block">{item.label}</span>
-          </button>
-        ))}
+      <div>
+        <p className="text-xs font-medium uppercase tracking-widest text-muted mb-3">Quick access</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { label: "My Services", icon: <Briefcase size={22} />, color: "text-[var(--brand-accent)]", route: "/dashboard/portal" },
+            { label: "Invoices", icon: <FileText size={22} />, color: "text-info", route: "/dashboard/portal/billing" },
+            { label: "Content", icon: <Sparkles size={22} />, color: "text-[var(--brand-accent-soft)]", route: "/dashboard/portal/content" },
+            { label: "Contact Us", icon: <Send size={22} />, color: "text-success", route: "/dashboard/portal/support" },
+          ].map((item, i) => (
+            <button
+              key={i}
+              onClick={() => router.push(item.route)}
+              className="card-hover p-6 text-center group"
+            >
+              <span className={`${item.color} inline-block mb-2 group-hover:scale-110 transition-transform`}>
+                {item.icon}
+              </span>
+              <span className="text-sm font-medium block">{item.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
