@@ -163,13 +163,9 @@ export default function VoiceStudioPage() {
       <PageHero
         title="Voice Studio"
         subtitle="Clone your voice, browse curated presets, and route synthesised audio into the dialer, voicemail drops, SMS, and social DMs."
-        gradient="sunset"
+        gradient="gold"
+        eyebrow="Voice Studio"
         icon={<Mic size={28} />}
-        eyebrow={
-          <span className="inline-flex items-center gap-1 rounded-full border border-amber-300/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-amber-200">
-            <Sparkles size={10} /> New
-          </span>
-        }
         actions={
           <button
             type="button"
@@ -689,6 +685,9 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   const [langFilter, setLangFilter] = useState<string>("all");
   const [genderFilter, setGenderFilter] = useState<"all" | "female" | "male">("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  // Persist preview audio URLs and custom test texts across tab switches.
+  const [previewCache, setPreviewCache] = useState<Record<string, string>>({});
+  const [textCache, setTextCache] = useState<Record<string, string>>({});
 
   const languages = useMemo(() => {
     const langs = new Set(presets.map((p) => p.language || "en").filter(Boolean));
@@ -765,7 +764,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               className={[
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
                 genderFilter === g
-                  ? "border border-[#6366F1]/30 bg-[#6366F1]/10 text-[#A78BFA]"
+                  ? "border border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.08)] text-[#D4FF00]"
                   : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
               ].join(" ")}
             >
@@ -784,7 +783,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                 className={[
                   "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
                   categoryFilter === c
-                    ? "bg-[#6366F1] text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
+                    ? "border border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.1)] text-[#D4FF00] shadow-[0_0_10px_rgba(212,255,0,0.1)]"
                     : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
                 ].join(" ")}
               >
@@ -816,7 +815,14 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => (
-            <PresetCard key={p.id} preset={p} />
+            <PresetCard
+              key={p.id}
+              preset={p}
+              cachedUrl={previewCache[p.id] ?? null}
+              cachedText={textCache[p.id] ?? TEST_PROMPT_DEFAULT}
+              onUrlCached={(url) => setPreviewCache((prev) => ({ ...prev, [p.id]: url }))}
+              onTextChanged={(text) => setTextCache((prev) => ({ ...prev, [p.id]: text }))}
+            />
           ))}
         </div>
       )}
@@ -824,12 +830,22 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   );
 }
 
-function PresetCard({ preset }: { preset: VoiceClone }) {
+interface PresetCardProps {
+  preset: VoiceClone;
+  /** Previously generated audio URL — survives tab switches. */
+  cachedUrl: string | null;
+  /** Previously typed test phrase — survives tab switches. */
+  cachedText: string;
+  onUrlCached: (url: string) => void;
+  onTextChanged: (text: string) => void;
+}
+
+function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged }: PresetCardProps) {
   const [testing, setTesting] = useState(false);
-  const [testUrl, setTestUrl] = useState<string | null>(null);
+  const [testUrl, setTestUrl] = useState<string | null>(cachedUrl);
   const [error, setError] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [testText, setTestText] = useState(TEST_PROMPT_DEFAULT);
+  const [testText, setTestText] = useState(cachedText);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const onTest = useCallback(async () => {
@@ -845,20 +861,21 @@ function PresetCard({ preset }: { preset: VoiceClone }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Test failed (${res.status})`);
       setTestUrl(data.r2_url);
+      onUrlCached(data.r2_url);
     } catch (err) {
       console.error("[voice-studio/preset-test] failed:", err);
       setError(err instanceof Error ? err.message : "Test failed");
     } finally {
       setTesting(false);
     }
-  }, [preset.id, testText]);
+  }, [preset.id, testText, onUrlCached]);
 
   const category = (preset.consent_evidence?.category as string) || "preset";
   const lang = preset.language?.toUpperCase() || "EN";
 
   return (
     <div
-      className="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-5 transition-colors duration-150 hover:border-[#6366F1]/25"
+      className="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-5 transition-colors duration-150 hover:border-[rgba(212,255,0,0.2)]"
       onMouseEnter={() => {
         if (testUrl || testing) return;
         hoverTimerRef.current = setTimeout(() => { onTest(); }, 700);
@@ -869,14 +886,14 @@ function PresetCard({ preset }: { preset: VoiceClone }) {
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
-        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 text-[#A78BFA]">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.07)] text-[#D4FF00]">
           <Mic size={16} />
         </div>
         <div className="flex items-center gap-1.5">
           <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
             {lang}
           </span>
-          <span className="rounded-full border border-[#6366F1]/20 bg-[#6366F1]/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#A78BFA]">
+          <span className="rounded-full border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.07)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#D4FF00]/70">
             {category}
           </span>
         </div>
@@ -893,7 +910,7 @@ function PresetCard({ preset }: { preset: VoiceClone }) {
         <div className="mt-3 space-y-1.5">
           <textarea
             value={testText}
-            onChange={(e) => setTestText(e.target.value)}
+            onChange={(e) => { setTestText(e.target.value); onTextChanged(e.target.value); }}
             rows={3}
             maxLength={300}
             placeholder="Type what you want the voice to say…"
@@ -916,7 +933,7 @@ function PresetCard({ preset }: { preset: VoiceClone }) {
           <button
             type="button"
             onClick={() => setEditMode(true)}
-            className="flex-shrink-0 text-[10px] text-[#6366F1]/70 hover:text-[#6366F1] cursor-pointer"
+            className="flex-shrink-0 text-[10px] text-[rgba(212,255,0,0.55)] hover:text-[#D4FF00] cursor-pointer"
             aria-label="Edit test phrase"
           >
             Edit
