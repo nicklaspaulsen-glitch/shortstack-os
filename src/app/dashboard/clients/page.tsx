@@ -1424,32 +1424,32 @@ export default function ClientsPage() {
         <form onSubmit={(e) => { e.preventDefault(); addClient(new FormData(e.currentTarget)); }} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-muted mb-1">Business Name *</label>
-              <input name="business_name" className="input w-full" required />
+              <label htmlFor="client-business-name" className="block text-sm text-muted mb-1">Business Name *</label>
+              <input id="client-business-name" name="business_name" className="input w-full" required />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Contact Name *</label>
-              <input name="contact_name" className="input w-full" required />
+              <label htmlFor="client-contact-name" className="block text-sm text-muted mb-1">Contact Name *</label>
+              <input id="client-contact-name" name="contact_name" className="input w-full" required />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Email *</label>
-              <input name="email" type="email" className="input w-full" required />
+              <label htmlFor="client-email" className="block text-sm text-muted mb-1">Email *</label>
+              <input id="client-email" name="email" type="email" className="input w-full" required />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Phone</label>
-              <input name="phone" className="input w-full" />
+              <label htmlFor="client-phone" className="block text-sm text-muted mb-1">Phone</label>
+              <input id="client-phone" name="phone" className="input w-full" />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Website</label>
-              <input name="website" className="input w-full" />
+              <label htmlFor="client-website" className="block text-sm text-muted mb-1">Website</label>
+              <input id="client-website" name="website" className="input w-full" />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Industry</label>
-              <input name="industry" className="input w-full" />
+              <label htmlFor="client-industry" className="block text-sm text-muted mb-1">Industry</label>
+              <input id="client-industry" name="industry" className="input w-full" />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Package Tier</label>
-              <select name="package_tier" className="input w-full">
+              <label htmlFor="client-package-tier" className="block text-sm text-muted mb-1">Package Tier</label>
+              <select id="client-package-tier" name="package_tier" className="input w-full">
                 <option value="">Select...</option>
                 <option value="Starter">Starter</option>
                 <option value="Growth">Growth</option>
@@ -1457,13 +1457,13 @@ export default function ClientsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">MRR ($)</label>
-              <input name="mrr" type="number" step="0.01" className="input w-full" />
+              <label htmlFor="client-mrr" className="block text-sm text-muted mb-1">MRR ($)</label>
+              <input id="client-mrr" name="mrr" type="number" step="0.01" className="input w-full" />
             </div>
           </div>
           <div>
-            <label className="block text-sm text-muted mb-1">Services (comma separated)</label>
-            <input name="services" className="input w-full" placeholder="Social Media, Ads, Website" />
+            <label htmlFor="client-services" className="block text-sm text-muted mb-1">Services (comma separated)</label>
+            <input id="client-services" name="services" className="input w-full" placeholder="Social Media, Ads, Website" />
           </div>
           <div className="flex justify-end gap-3 pt-4">
             <button type="button" onClick={() => setShowAddModal(false)} className="btn-secondary">Cancel</button>

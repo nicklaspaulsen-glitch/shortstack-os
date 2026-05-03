@@ -32,8 +32,8 @@ export async function signIn(page: Page): Promise<void> {
  * Waits until the browser lands on /login.
  */
 export async function signOut(page: Page): Promise<void> {
-  // The sidebar renders a sign-out button at the bottom
-  await page.getByRole("button", { name: /sign out/i }).click();
+  // The sidebar renders two sign-out buttons (desktop + mobile); use the first.
+  await page.getByRole("button", { name: /sign out/i }).first().click();
   await page.waitForURL(/\/(login|$)/, { timeout: 10_000 });
 }
 

@@ -75,7 +75,8 @@ test.describe("dashboard journey", () => {
     // fall back to direct navigation in that case.
     const isVisible = await analyticsLink.isVisible().catch(() => false);
     if (isVisible) {
-      await analyticsLink.click();
+      // force:true bypasses pointer-events interception from NavIcon3D wrapper
+      await analyticsLink.click({ force: true });
       await page.waitForURL(/\/dashboard\/analytics/, { timeout: 15_000 });
     } else {
       await page.goto("/dashboard/analytics");
