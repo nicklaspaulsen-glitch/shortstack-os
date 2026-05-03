@@ -37,6 +37,8 @@ type EmailTemplateKind =
   | "client_welcome"
   | "team_invite"
   | "trial_signup"
+  | "plan_purchase"
+  | "plan_cancelled"
   | "magic_link"
   | "password_reset";
 
@@ -57,6 +59,8 @@ const KIND_LABELS: Record<EmailTemplateKind, string> = {
   client_welcome: "Client Welcome",
   team_invite: "Team Invite",
   trial_signup: "Trial Signup",
+  plan_purchase: "Plan Purchased",
+  plan_cancelled: "Plan Cancelled",
   magic_link: "Magic Link",
   password_reset: "Password Reset",
 };
@@ -68,6 +72,10 @@ const KIND_DESCRIPTIONS: Record<EmailTemplateKind, string> = {
     "Sent when you invite a teammate. They click the button, they're in.",
   trial_signup:
     "Sent when a prospect starts a trial. Nudge them to actually try the product.",
+  plan_purchase:
+    "Sent when a client picks a payment plan. Congratulate them and get them oriented fast.",
+  plan_cancelled:
+    "Sent when a client's subscription is cancelled. Warm off-ramp — keeps the door open.",
   magic_link:
     "Passwordless sign-in email. Overrides Supabase's default template.",
   password_reset:
@@ -90,6 +98,9 @@ const AVAILABLE_VARS: { key: string; example: string; note: string }[] = [
   { key: "magic_link_url", example: "https://...", note: "One-shot sign-in URL" },
   { key: "reset_url", example: "https://...", note: "One-shot password reset URL" },
   { key: "invite_url", example: "https://...", note: "One-shot team invite URL" },
+  { key: "plan_name", example: "Pro", note: "Plan tier name (plan_purchase + plan_cancelled)" },
+  { key: "plan_amount", example: "$297/mo", note: "Formatted plan price" },
+  { key: "billing_cycle", example: "monthly", note: "monthly or yearly" },
 ];
 
 // ── Helpers ──────────────────────────────────────────────────────────────

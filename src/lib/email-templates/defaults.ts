@@ -212,6 +212,111 @@ const MAGIC_LINK_PLAIN = `Sign in to {{agency_name}}.
 
 This link expires in 1 hour. Didn't request it? Ignore this email.`;
 
+const PLAN_PURCHASE_HTML = shellHtml(`
+  <tr>
+    <td style="padding:32px 32px 0;text-align:center;">
+      <img src="{{logo_url}}" alt="{{agency_name}}" style="max-width:160px;height:auto;display:inline-block;" />
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:24px 32px 0;">
+      <h1 style="font-family:${FONT};font-size:26px;font-weight:700;line-height:1.3;color:${TEXT_PRIMARY};margin:0 0 8px;">
+        You're in, {{client_first_name}}. 🎉
+      </h1>
+      <p style="font-family:${FONT};font-size:15px;line-height:1.5;color:{{brand_color}};font-weight:600;margin:0 0 20px;">
+        {{plan_name}} — {{plan_amount}}
+      </p>
+      <p style="font-family:${FONT};font-size:16px;line-height:1.65;color:${TEXT_SECONDARY};margin:0 0 16px;">
+        Your plan is live. Here's what that means for you:
+      </p>
+      <ul style="font-family:${FONT};font-size:16px;line-height:1.8;color:${TEXT_SECONDARY};margin:0 0 24px;padding-left:20px;">
+        <li>Your portal is ready: <a href="{{portal_url}}" style="color:{{brand_color}};font-weight:600;">log in here</a></li>
+        <li>First steps are all in the <a href="{{getting_started_url}}" style="color:{{brand_color}};font-weight:600;">getting-started guide</a></li>
+        <li>Any questions? Just reply &mdash; {{owner_first_name}} reads every one</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 32px 32px;text-align:center;">
+      <a href="{{portal_url}}" style="display:inline-block;background:{{brand_color}};color:#FFFFFF;padding:14px 32px;border-radius:10px;text-decoration:none;font-family:${FONT};font-size:15px;font-weight:600;">
+        {{cta_label}}
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 32px 32px;border-top:1px solid #E5E7EB;">
+      <p style="font-family:${FONT};font-size:14px;line-height:1.6;color:${TEXT_MUTED};margin:24px 0 0;text-align:center;">
+        Billing questions? Reply to this email. &mdash; {{owner_first_name}}
+      </p>
+    </td>
+  </tr>
+`);
+
+const PLAN_PURCHASE_PLAIN = `You're in, {{client_first_name}}.
+
+Plan: {{plan_name}} — {{plan_amount}}
+
+Your plan is live. Quick orientation:
+- Portal: {{portal_url}}
+- Getting started: {{getting_started_url}}
+- Questions? Reply to this email
+
+-- {{owner_first_name}}`;
+
+const PLAN_CANCELLED_HTML = shellHtml(`
+  <tr>
+    <td style="padding:32px 32px 0;text-align:center;">
+      <img src="{{logo_url}}" alt="{{agency_name}}" style="max-width:160px;height:auto;display:inline-block;" />
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:24px 32px 0;">
+      <h1 style="font-family:${FONT};font-size:24px;font-weight:700;line-height:1.3;color:${TEXT_PRIMARY};margin:0 0 16px;">
+        Your {{plan_name}} has been cancelled.
+      </h1>
+      <p style="font-family:${FONT};font-size:16px;line-height:1.65;color:${TEXT_SECONDARY};margin:0 0 16px;">
+        Hey {{client_first_name}}, your subscription to {{agency_name}} has been cancelled.
+        Here's what happens next:
+      </p>
+      <ul style="font-family:${FONT};font-size:16px;line-height:1.8;color:${TEXT_SECONDARY};margin:0 0 24px;padding-left:20px;">
+        <li>Your access stays active through the end of your current billing period</li>
+        <li>No further charges will be made</li>
+        <li>Your data and files are safe — we keep them for 30 days</li>
+      </ul>
+      <p style="font-family:${FONT};font-size:16px;line-height:1.65;color:${TEXT_SECONDARY};margin:0 0 8px;">
+        Changed your mind? Just reply and I'll get you back up in minutes.
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:8px 32px 32px;text-align:center;">
+      <a href="mailto:{{owner_email}}" style="display:inline-block;background:{{brand_color}};color:#FFFFFF;padding:14px 32px;border-radius:10px;text-decoration:none;font-family:${FONT};font-size:15px;font-weight:600;">
+        {{cta_label}}
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 32px 32px;border-top:1px solid #E5E7EB;">
+      <p style="font-family:${FONT};font-size:14px;line-height:1.6;color:${TEXT_MUTED};margin:24px 0 0;text-align:center;">
+        &mdash; {{owner_first_name}} from {{agency_name}}
+      </p>
+    </td>
+  </tr>
+`);
+
+const PLAN_CANCELLED_PLAIN = `Hey {{client_first_name}},
+
+Your {{plan_name}} subscription to {{agency_name}} has been cancelled.
+
+What happens next:
+- Access stays active through your current billing period
+- No further charges
+- Your data is kept for 30 days
+
+Changed your mind? Just reply and I'll get you back up right away.
+
+-- {{owner_first_name}}`;
+
 const PASSWORD_RESET_HTML = shellHtml(`
   <tr>
     <td style="padding:32px 32px 0;text-align:center;">
@@ -275,6 +380,26 @@ export const DEFAULT_TEMPLATES: Record<EmailTemplateKind, EmailTemplate> = {
     plain_body: TRIAL_SIGNUP_PLAIN,
     cta_label: "Open your account",
     cta_url_template: "{{login_url}}",
+    is_default: true,
+  },
+  plan_purchase: {
+    kind: "plan_purchase",
+    subject: "You're on {{plan_name}} — welcome to {{agency_name}}",
+    preview_text: "Your plan is live. Here's what to do first.",
+    html_body: PLAN_PURCHASE_HTML,
+    plain_body: PLAN_PURCHASE_PLAIN,
+    cta_label: "Open your portal",
+    cta_url_template: "{{portal_url}}",
+    is_default: true,
+  },
+  plan_cancelled: {
+    kind: "plan_cancelled",
+    subject: "Your {{agency_name}} subscription has been cancelled",
+    preview_text: "We've processed your cancellation. Here's what to expect.",
+    html_body: PLAN_CANCELLED_HTML,
+    plain_body: PLAN_CANCELLED_PLAIN,
+    cta_label: "Get back on board",
+    cta_url_template: "mailto:{{owner_email}}",
     is_default: true,
   },
   magic_link: {

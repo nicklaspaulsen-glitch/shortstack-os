@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendPaymentFailedEmail, sendWelcomeEmail } from "@/lib/email";
+import { sendBrandedEmail } from "@/lib/email-templates/send";
 import { type Stripe } from "stripe";
 import { getStripe } from "@/lib/stripe/client";
 import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
@@ -339,13 +340,24 @@ export async function POST(request: NextRequest) {
         await notifyOps(
           `🚨 Agency Subscription Cancelled!\n\n${agencyProfile.full_name || "Unknown"} (${agencyProfile.email || ""})\nSub: ${sub.id}\nTrigger retention!`,
         );
+
+        // Send cancellation email to the agency owner
+        if (agencyProfile.email) {
+          const planTier = (sub.metadata?.plan_tier as string | undefined) || "your plan";
+          sendBrandedEmail({
+            agency_owner_id: agencyProfile.id,
+            kind: "plan_cancelled",
+            to: agencyProfile.email,
+            extra: { plan_name: planTier },
+          }).catch(() => {});
+        }
         break;
       }
 
       // Otherwise check if it's a client subscription
       const { data: client } = await supabase
         .from("clients")
-        .select("id, business_name, profile_id")
+        .select("id, business_name, profile_id, email")
         .eq("stripe_customer_id", customerId)
         .single();
 
@@ -383,6 +395,17 @@ export async function POST(request: NextRequest) {
         await notifyOps(
           `🚨 Subscription Cancelled!\n\n${client.business_name} just cancelled. Trigger retention!`,
         );
+
+        // Send branded cancellation email to the client
+        if (client.email && client.profile_id) {
+          sendBrandedEmail({
+            agency_owner_id: client.profile_id,
+            kind: "plan_cancelled",
+            to: client.email,
+            client_id: client.id,
+            extra: { plan_name: "your plan" },
+          }).catch(() => {});
+        }
       }
       break;
     }
@@ -417,9 +440,23 @@ export async function POST(request: NextRequest) {
             },
           });
 
-          // Send branded welcome email with plan details
+          // Send branded plan-purchase email (congrats + onboarding)
           const { data: prof } = await supabase.from("profiles").select("full_name, email").eq("id", userId).single();
           if (prof?.email) {
+            const planAmount = session.amount_total
+              ? `$${(session.amount_total / 100).toFixed(0)}/mo`
+              : "";
+            sendBrandedEmail({
+              agency_owner_id: userId,
+              kind: "plan_purchase",
+              to: prof.email,
+              extra: {
+                plan_name: planTier,
+                plan_amount: planAmount,
+                billing_cycle: "monthly",
+              },
+            }).catch(() => {});
+            // Legacy fallback (keeps backward-compat while branded template is confirmed)
             sendWelcomeEmail(
               prof.email,
               prof.full_name || prof.email.split("@")[0] || "there",
@@ -445,6 +482,30 @@ export async function POST(request: NextRequest) {
               amount: session.amount_total ? session.amount_total / 100 : null,
             },
           });
+
+          // Send branded plan-purchase email to the client
+          const { data: clientRow } = await supabase
+            .from("clients")
+            .select("id, profile_id, email, contact_name")
+            .eq("id", clientId)
+            .maybeSingle();
+          if (clientRow?.email && clientRow.profile_id) {
+            const planAmount = session.amount_total
+              ? `$${(session.amount_total / 100).toFixed(0)}/mo`
+              : "";
+            const planLabel = session.metadata?.plan_name || planAmount || "your plan";
+            sendBrandedEmail({
+              agency_owner_id: clientRow.profile_id,
+              kind: "plan_purchase",
+              to: clientRow.email,
+              client_id: clientId,
+              extra: {
+                plan_name: planLabel,
+                plan_amount: planAmount,
+                billing_cycle: session.metadata?.billing_cycle || "monthly",
+              },
+            }).catch(() => {});
+          }
         }
       } else if (type === "website_subscription") {
         // Per-website subscription from the website builder pricing modal.

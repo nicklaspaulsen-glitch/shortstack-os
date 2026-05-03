@@ -11,6 +11,8 @@ export type EmailTemplateKind =
   | "client_welcome"
   | "team_invite"
   | "trial_signup"
+  | "plan_purchase"
+  | "plan_cancelled"
   | "magic_link"
   | "password_reset";
 
@@ -18,6 +20,8 @@ export const ALL_EMAIL_TEMPLATE_KINDS: EmailTemplateKind[] = [
   "client_welcome",
   "team_invite",
   "trial_signup",
+  "plan_purchase",
+  "plan_cancelled",
   "magic_link",
   "password_reset",
 ];

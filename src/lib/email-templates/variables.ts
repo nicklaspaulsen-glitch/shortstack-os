@@ -148,6 +148,11 @@ export async function resolveTemplateVars(
     reset_url: ctx.extra?.reset_url || `${baseUrl}/reset-password`,
     invite_url: ctx.extra?.invite_url || `${baseUrl}/accept-invite`,
 
+    // Plan / billing — resolved from extra when available (plan_purchase, plan_cancelled)
+    plan_name: ctx.extra?.plan_name || "",
+    plan_amount: ctx.extra?.plan_amount || "",
+    billing_cycle: ctx.extra?.billing_cycle || "monthly",
+
     // Misc
     current_year: String(new Date().getFullYear()),
   };
@@ -211,6 +216,9 @@ export function buildPreviewVars(ownerHints: {
     magic_link_url: `${baseUrl}/auth/magic?token=sample`,
     reset_url: `${baseUrl}/reset-password?token=sample`,
     invite_url: `${baseUrl}/accept-invite?token=sample`,
+    plan_name: "Pro",
+    plan_amount: "$297/mo",
+    billing_cycle: "monthly",
     current_year: String(new Date().getFullYear()),
   };
 }
