@@ -74,15 +74,27 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const { event, data } = body;
 
-  if (!event) {
+  if (!event || typeof event !== "string") {
     return NextResponse.json({ error: "event field required" }, { status: 400 });
   }
+
+  // Enforce the allowlist before the switch so unknown events can't reach
+  // the default branch and write arbitrary strings to the DB log.
+  type AllowedEvent = typeof ALLOWED_EVENTS[number];
+  const isKnownEvent = (ALLOWED_EVENTS as readonly string[]).includes(event);
+  if (!isKnownEvent) {
+    return NextResponse.json(
+      { error: `Unknown event "${event}". Allowed: ${ALLOWED_EVENTS.join(", ")}` },
+      { status: 400 },
+    );
+  }
+  const safeEvent = event as AllowedEvent;
 
   const supabase = createServiceClient();
   const results: string[] = [];
 
   try {
-    switch (event) {
+    switch (safeEvent) {
       case "lead.create": {
         const { error } = await supabase.from("leads").insert({
           business_name: data.business_name || data.name || "Unknown",
@@ -94,7 +106,8 @@ export async function POST(request: NextRequest) {
           industry: data.industry || null,
           city: data.city || data.location || null,
           status: "new",
-          lead_score: data.lead_score || 50,
+          // Clamp lead_score to 0-100 — reject out-of-range or non-numeric values
+          lead_score: Math.min(Math.max(Number(data.lead_score) || 50, 0), 100),
         });
         if (error) throw error;
         results.push("Lead created");
@@ -149,12 +162,13 @@ export async function POST(request: NextRequest) {
         const { error } = await supabase.from("deals").insert({
           client_id: data.client_id || null,
           lead_id: data.lead_id || null,
-          title: data.title || data.name || "Webhook Deal",
-          value: data.value || data.amount || 0,
+          title: String(data.title || data.name || "Webhook Deal").slice(0, 500),
+          // Clamp value to a sane range — reject absurd or non-numeric inputs
+          value: Math.min(Math.max(Number(data.value ?? data.amount) || 0, 0), 1_000_000_000),
           stage: data.stage || "discovery",
           status: "open",
           source: "webhook",
-          notes: data.notes || null,
+          notes: data.notes ? String(data.notes).slice(0, 2000) : null,
         });
         if (error) throw error;
         results.push("Deal created");

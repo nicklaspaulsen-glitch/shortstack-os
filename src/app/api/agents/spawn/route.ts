@@ -18,7 +18,17 @@ export async function POST(request: NextRequest) {
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { task, context, spawned_by } = await request.json();
+  const rawBody = await request.json();
+  // Cap task + context before injecting into LLM prompts — prevents token-bombing
+  // and adversarial prompt injection via oversized inputs.
+  const task: string = typeof rawBody.task === "string"
+    ? rawBody.task.slice(0, 2_000)
+    : "";
+  const context: string | undefined = typeof rawBody.context === "string"
+    ? rawBody.context.slice(0, 1_000)
+    : undefined;
+  const spawned_by: string | undefined = rawBody.spawned_by;
+
   if (!task) return NextResponse.json({ error: "Task description required" }, { status: 400 });
 
   const apiKey = process.env.ANTHROPIC_API_KEY;

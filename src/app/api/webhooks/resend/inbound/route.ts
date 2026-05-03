@@ -84,13 +84,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid bearer token" }, { status: 401 });
   }
   if (authResult === "missing") {
-    if (process.env.NODE_ENV === "development") {
+    // Fall open ONLY for local `next dev` — never for any Vercel deployment
+    // (preview or production). VERCEL_ENV is set by the Vercel build system
+    // to "development" | "preview" | "production", so its presence reliably
+    // indicates a deployed environment even if NODE_ENV reads "production".
+    const isLocalDev =
+      process.env.NODE_ENV === "development" && !process.env.VERCEL_ENV;
+    if (isLocalDev) {
       console.warn(
-        "[inbound-webhook] WEBHOOK_SECRET missing in development — accepting unsigned post.",
+        "[inbound-webhook] WEBHOOK_SECRET missing in local dev — accepting unsigned post.",
       );
     } else {
       console.error(
-        "[inbound-webhook] WEBHOOK_SECRET missing in production — rejecting request.",
+        "[inbound-webhook] WEBHOOK_SECRET missing — rejecting request." +
+          ` NODE_ENV=${process.env.NODE_ENV} VERCEL_ENV=${process.env.VERCEL_ENV ?? "unset"}`,
       );
       return NextResponse.json(
         { error: "Webhook secret not configured" },

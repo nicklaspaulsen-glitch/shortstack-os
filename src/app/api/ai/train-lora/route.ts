@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { isPrivateUrl } from "@/lib/security/ssrf-guard";
+
+/** Maximum reference images accepted in a single training job. */
+const MAX_IMAGES = 20;
 
 /**
  * LoRA Training — Fine-tune Stable Diffusion with client brand imagery on RunPod.
@@ -64,7 +68,7 @@ export async function POST(request: NextRequest) {
       const captions: string[] = [];
       let idx = 0;
 
-      while (true) {
+      while (idx < MAX_IMAGES) {
         const img = formData.get(`image_${idx}`) as File | null;
         if (!img) break;
 
@@ -76,13 +80,20 @@ export async function POST(request: NextRequest) {
         idx++;
       }
 
-      // Also accept image URLs
+      // Also accept image URLs — each URL is SSRF-checked before being forwarded
       const imageUrls = formData.get("image_urls") as string | null;
       if (imageUrls) {
         try {
-          const urls = JSON.parse(imageUrls) as string[];
-          for (const url of urls) {
-            images.push(url); // RunPod handler can accept URLs too
+          const urls = JSON.parse(imageUrls) as unknown[];
+          for (const rawUrl of urls) {
+            if (images.length >= MAX_IMAGES) break;
+            if (typeof rawUrl !== "string") continue;
+            // Reject private / internal network targets to prevent SSRF via RunPod
+            if (isPrivateUrl(rawUrl)) {
+              console.warn("[train-lora] blocked SSRF attempt via image_urls:", rawUrl);
+              continue;
+            }
+            images.push(rawUrl);
             captions.push(`${triggerWord}, high quality`);
           }
         } catch { /* ignore parse error */ }

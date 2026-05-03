@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-const N8N_URL = process.env.N8N_URL || "https://n8n-production-97d7.up.railway.app";
+// Do NOT fall back to a hardcoded URL — that would commit infrastructure
+// topology to git history and route traffic to the wrong instance if the
+// env var is accidentally unset.
+const N8N_URL = process.env.N8N_URL ?? "";
 const N8N_API_KEY = process.env.N8N_API_KEY || "";
 
 async function n8nFetch(path: string, options?: RequestInit) {
+  if (!N8N_URL) throw new Error("N8N_URL env var not configured");
   const res = await fetch(`${N8N_URL}/api/v1${path}`, {
     ...options,
     headers: {

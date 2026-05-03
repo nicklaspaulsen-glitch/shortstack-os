@@ -20,14 +20,21 @@ export async function POST(request: NextRequest) {
   const {
     prompt,           // "upbeat corporate background music with light drums and synth"
     duration = 15,    // seconds (max 30)
-    model = "medium", // small | medium | large
     temperature = 1.0,
     top_k = 250,
     top_p = 0.0,
     cfg_coef = 3.0,   // classifier-free guidance strength
   } = body;
 
-  if (!prompt) {
+  // Allowlist model sizes — prevents injecting arbitrary model IDs into the RunPod request
+  const VALID_MODELS = ["small", "medium", "large"] as const;
+  type MusicGenModel = typeof VALID_MODELS[number];
+  const rawModel: unknown = body.model ?? "medium";
+  const model: MusicGenModel = VALID_MODELS.includes(rawModel as MusicGenModel)
+    ? (rawModel as MusicGenModel)
+    : "medium";
+
+  if (!prompt || typeof prompt !== "string") {
     return NextResponse.json({ error: "Music prompt required" }, { status: 400 });
   }
 
@@ -84,7 +91,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ error: "Music generation failed" }, { status: 500 });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    console.error("[music-gen] generation failed:", err instanceof Error ? err.message : String(err));
+    return NextResponse.json({ error: "Music generation failed" }, { status: 500 });
   }
 }
 

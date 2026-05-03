@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Agent Orchestration Engine — chains agents together automatically
 // When one agent completes a task, it checks if any chain rules trigger the next agent
@@ -116,7 +117,29 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { agent, event, data: eventData, client_id } = await request.json();
+  // Resolve effective owner so we can scope the client_id ownership check.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  const { agent, event, data: eventData, client_id: rawClientId } = await request.json();
+
+  // Verify client_id belongs to this owner before writing it to trinity_log.
+  // Without this check a caller could log chain executions against another
+  // tenant's client row (cross-tenant IDOR on audit logs).
+  let client_id: string | null = null;
+  if (rawClientId) {
+    const { data: clientRow } = await supabase
+      .from("clients")
+      .select("id")
+      .eq("id", rawClientId)
+      .eq("user_id", ownerId)
+      .maybeSingle();
+    if (clientRow) {
+      client_id = rawClientId;
+    } else {
+      console.warn("[orchestrate] client_id not owned by caller — stripping:", rawClientId);
+    }
+  }
 
   // Find matching chain rules
   const matchingChains = AGENT_CHAINS.filter(

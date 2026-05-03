@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
+
+const InviteSchema = z.object({
+  email: z.string().email().max(254),
+  full_name: z.string().min(1).max(256).trim(),
+  password: z.string().min(8).max(128),
+  client_id: z.string().uuid().optional(),
+});
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -11,7 +19,12 @@ export async function POST(request: NextRequest) {
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
   if (profile?.role !== "admin") return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
-  const { email, full_name, password, client_id } = await request.json();
+  const body = await request.json();
+  const parsed = InviteSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+  }
+  const { email, full_name, password, client_id } = parsed.data;
 
   // Verify the target client belongs to this admin's agency before inviting a client user for it.
   if (client_id) {

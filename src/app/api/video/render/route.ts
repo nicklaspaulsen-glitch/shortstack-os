@@ -210,10 +210,10 @@ export async function POST(request: NextRequest) {
   const attempted: string[] = [];
   let lastError: string | undefined;
 
-  // Option 1: Remotion (self-hosted on Railway) — skip if plan_only
-  const remotionUrl =
-    process.env.REMOTION_RENDER_URL ||
-    "https://shortstack-remotion-production.up.railway.app";
+  // Option 1: Remotion (self-hosted on Railway) — skip if plan_only.
+  // Require explicit REMOTION_RENDER_URL — no hardcoded fallback so we
+  // don't commit infrastructure topology to git.
+  const remotionUrl = process.env.REMOTION_RENDER_URL ?? "";
   if (remotionUrl && !plan_only) {
     attempted.push("remotion");
     try {

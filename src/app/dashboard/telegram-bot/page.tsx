@@ -797,7 +797,7 @@ export default function TelegramBotPage() {
                 : "Where all routines send messages."}
             </p>
             <div className="mt-3 bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm font-mono text-muted">
-              {process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID || "Configured server-side"}
+              {"Configured server-side"}
             </div>
           </div>
 

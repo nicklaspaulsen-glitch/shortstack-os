@@ -42,11 +42,12 @@ export interface DiscordInstallUrlOptions {
  * Returns the Discord OAuth install URL, or null if DISCORD_CLIENT_ID is missing.
  */
 export function buildDiscordInstallUrl(opts: DiscordInstallUrlOptions): string | null {
+  // Use server-only env vars — NEXT_PUBLIC_DISCORD_APP_ID removed to prevent
+  // this server-side utility from silently falling back to a browser-bundled var.
   const clientId =
     opts.clientId ||
     process.env.DISCORD_CLIENT_ID ||
-    process.env.DISCORD_APP_ID ||
-    process.env.NEXT_PUBLIC_DISCORD_APP_ID;
+    process.env.DISCORD_APP_ID;
 
   if (!clientId) return null;
 

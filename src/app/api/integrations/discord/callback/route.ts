@@ -41,10 +41,11 @@ export async function GET(request: NextRequest) {
   if (!verified) return redirectBack("discord_error=invalid_state");
   const userId = verified.uid;
 
+  // Server route — use server-only vars only. NEXT_PUBLIC_DISCORD_APP_ID removed
+  // to avoid mixing browser-bundled variables into server-side auth code.
   const clientId =
     process.env.DISCORD_CLIENT_ID ||
-    process.env.DISCORD_APP_ID ||
-    process.env.NEXT_PUBLIC_DISCORD_APP_ID;
+    process.env.DISCORD_APP_ID;
   const clientSecret = process.env.DISCORD_CLIENT_SECRET;
 
   if (!clientId || !clientSecret) {

@@ -105,6 +105,30 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Strip the raw submission down to a known-safe allowlist before storing.
+  // Storing the full raw body would let anyone inject arbitrary keys/values
+  // into the leads.metadata column via the public form-submit endpoint.
+  const METADATA_FIELD_LIMIT = 20;
+  const METADATA_VALUE_MAX = 500;
+  const ALLOWED_METADATA_KEYS = new Set([
+    "full_name", "name", "your_name", "business_name",
+    "email", "phone", "message", "notes", "company",
+    "address", "city", "state", "country", "zip",
+    "website", "industry", "budget", "timeline",
+    "source", "utm_source", "utm_medium", "utm_campaign",
+  ]);
+  const safeMetadata: Record<string, string> = {};
+  let fieldCount = 0;
+  for (const [k, v] of Object.entries(data)) {
+    if (k === "website" || k === "honey_pot") continue; // honeypots — already checked above
+    if (k === "form_id" || k === "redirect_url") continue; // internal fields
+    if (fieldCount >= METADATA_FIELD_LIMIT) break;
+    if (ALLOWED_METADATA_KEYS.has(k)) {
+      safeMetadata[k] = String(v).slice(0, METADATA_VALUE_MAX);
+      fieldCount++;
+    }
+  }
+
   // Create lead in database (attributed to the form owner so their tenant sees it).
   // We capture the inserted row so we can fire-and-forget enrich it with
   // geo data — the form-submit response shouldn't block on a third-party IP API.
@@ -117,7 +141,7 @@ export async function POST(request: NextRequest) {
       phone,
       source: `form:${formId}`,
       status: "new",
-      metadata: data,
+      metadata: safeMetadata,
     })
     .select("id")
     .maybeSingle();
