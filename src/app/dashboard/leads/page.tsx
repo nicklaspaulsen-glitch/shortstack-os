@@ -5,7 +5,7 @@ import {
   Zap, MessageSquare, Search, Phone, Mail, Star,
   TrendingUp, Users, Target, ArrowDownRight,
   CheckCircle, AlertTriangle, Tag, Upload, Download, Flame,
-  Clock, UserPlus, BarChart3,
+  Clock, UserPlus, BarChart3, MapPin, Globe,
   RefreshCw, Bell, Layers, GitBranch, Loader, ChevronLeft, ChevronRight as ChevronRightIcon,
   X, FileSpreadsheet, Check
 } from "lucide-react";
@@ -467,6 +467,191 @@ function ScoreBreakdownBars({ breakdown }: { breakdown: ScoreBreakdown }) {
   );
 }
 
+// ====================== LEAD DETAIL PANEL (split-pane right side) ======================
+function LeadDetailPanel({
+  lead,
+  onScore,
+  scoring,
+  onClose,
+}: {
+  lead: Lead;
+  onScore: (lead: Lead) => void;
+  scoring: boolean;
+  onClose: () => void;
+}) {
+  const location = [lead.city, lead.state].filter(Boolean).join(", ");
+  const qualChecks = [
+    { label: "Phone number", ok: !!lead.phone },
+    { label: "Email address", ok: !!lead.email },
+    { label: "Website", ok: !!lead.website },
+    { label: "Google 4.0+", ok: (lead.google_rating ?? 0) >= 4.0 },
+    { label: "Has address", ok: !!lead.address },
+    { label: "AI Score 70+", ok: (lead.score ?? 0) >= 70 },
+  ];
+  const qualScore = qualChecks.filter((q) => q.ok).length;
+
+  return (
+    <div className="relative flex flex-col gap-3 rounded-xl border border-[rgba(212,255,0,0.12)] bg-[#15141A] p-4 shadow-2xl">
+      {/* Close */}
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute right-3 top-3 rounded-lg p-1 text-white/40 hover:text-white/80 hover:bg-white/5 transition-colors cursor-pointer"
+        aria-label="Close preview"
+      >
+        <X size={14} />
+      </button>
+
+      {/* Name + score */}
+      <div className="pr-6">
+        <h3 className="text-sm font-semibold text-white leading-snug">{lead.business_name}</h3>
+        {lead.industry && (
+          <span className="mt-1 inline-block rounded-full bg-white/5 border border-white/10 px-2 py-0.5 text-[10px] text-white/50">
+            {lead.industry}
+          </span>
+        )}
+      </div>
+
+      {/* Score row */}
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] text-white/40 uppercase tracking-wider">AI Score</span>
+        {lead.score !== null ? (
+          <span className={`text-sm font-bold ${lead.score >= 70 ? "text-[#D4FF00]" : lead.score >= 40 ? "text-yellow-400" : "text-red-400"}`}>
+            {lead.score}<span className="text-white/30">/100</span>
+          </span>
+        ) : (
+          <button
+            onClick={() => onScore(lead)}
+            disabled={scoring}
+            className="flex items-center gap-1 rounded-lg bg-[rgba(212,255,0,0.1)] border border-[rgba(212,255,0,0.2)] px-2.5 py-1 text-[10px] font-medium text-[#D4FF00] hover:bg-[rgba(212,255,0,0.15)] disabled:opacity-50 transition-colors cursor-pointer"
+          >
+            {scoring ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
+            Score with AI
+          </button>
+        )}
+      </div>
+
+      {/* Score breakdown bars */}
+      {lead.score_breakdown && <ScoreBreakdownBars breakdown={lead.score_breakdown} />}
+      {lead.score_reasoning && (
+        <p className="text-[10px] text-white/40 italic leading-relaxed">{lead.score_reasoning}</p>
+      )}
+
+      {/* Contact info */}
+      <div className="space-y-1.5 border-t border-white/[0.06] pt-3">
+        {lead.phone && (
+          <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-[11px] text-white/70 hover:text-[#D4FF00] transition-colors">
+            <Phone size={11} className="text-white/30 flex-shrink-0" />
+            <span className="truncate">{lead.phone}</span>
+          </a>
+        )}
+        {lead.email && (
+          <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-white/70 hover:text-[#D4FF00] transition-colors">
+            <Mail size={11} className="text-white/30 flex-shrink-0" />
+            <span className="truncate">{lead.email}</span>
+          </a>
+        )}
+        {location && (
+          <div className="flex items-center gap-2 text-[11px] text-white/50">
+            <MapPin size={11} className="text-white/30 flex-shrink-0" />
+            <span>{location}</span>
+          </div>
+        )}
+        {lead.website && (
+          <a
+            href={lead.website.startsWith("http") ? lead.website : `https://${lead.website}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-[11px] text-white/50 hover:text-[#D4FF00] transition-colors"
+          >
+            <Globe size={11} className="text-white/30 flex-shrink-0" />
+            <span className="truncate">{lead.website.replace(/^https?:\/\//i, "")}</span>
+          </a>
+        )}
+        {lead.google_rating && (
+          <div className="flex items-center gap-1 text-[11px] text-white/50">
+            <Star size={11} className="text-[#D4FF00] flex-shrink-0" />
+            <span>{lead.google_rating} rating</span>
+            {lead.review_count ? <span className="text-white/30">({lead.review_count} reviews)</span> : null}
+          </div>
+        )}
+      </div>
+
+      {/* Qualification checklist */}
+      <div className="border-t border-white/[0.06] pt-3">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-[10px] uppercase tracking-wider text-white/40">Qualification</span>
+          <span className="text-[10px] font-semibold text-[#D4FF00]">{qualScore}/{qualChecks.length}</span>
+        </div>
+        <div className="grid grid-cols-2 gap-1">
+          {qualChecks.map((q) => (
+            <div key={q.label} className="flex items-center gap-1.5 text-[10px]">
+              {q.ok
+                ? <CheckCircle size={9} className="text-[#D4FF00] flex-shrink-0" />
+                : <div className="w-2.5 h-2.5 rounded-full border border-white/20 flex-shrink-0" />}
+              <span className={q.ok ? "text-white/70" : "text-white/30"}>{q.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick action buttons */}
+      <div className="flex gap-2 border-t border-white/[0.06] pt-3">
+        <a
+          href={lead.phone ? `tel:${lead.phone}` : undefined}
+          onClick={(e) => { if (!lead.phone) e.preventDefault(); }}
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-medium transition-colors ${
+            lead.phone
+              ? "border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.06)] text-[#D4FF00] hover:bg-[rgba(212,255,0,0.12)]"
+              : "border-white/10 bg-white/[0.03] text-white/25 cursor-not-allowed"
+          }`}
+          title={lead.phone || "No phone"}
+        >
+          <Phone size={10} /> Call
+        </a>
+        <a
+          href={lead.email ? `mailto:${lead.email}` : undefined}
+          onClick={(e) => { if (!lead.email) e.preventDefault(); }}
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-medium transition-colors ${
+            lead.email
+              ? "border-white/15 bg-white/5 text-white/70 hover:bg-white/10"
+              : "border-white/10 bg-white/[0.03] text-white/25 cursor-not-allowed"
+          }`}
+          title={lead.email || "No email"}
+        >
+          <Mail size={10} /> Email
+        </a>
+        <a
+          href="/dashboard/dm-controller"
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] py-1.5 text-[11px] font-medium text-white/50 hover:bg-white/8 hover:text-white/70 transition-colors"
+        >
+          <MessageSquare size={10} /> DM
+        </a>
+      </div>
+
+      {/* Source + status row */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        {lead.source && (
+          <span className="rounded-full bg-white/5 border border-white/10 px-2 py-0.5 text-[10px] text-white/40">
+            via {lead.source}
+          </span>
+        )}
+        {lead.status && (
+          <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
+            lead.status === "converted" ? "bg-purple-400/10 text-purple-400" :
+            lead.status === "booked" ? "bg-green-400/10 text-green-400" :
+            lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
+            lead.status === "contacted" ? "bg-yellow-400/10 text-yellow-400" :
+            "bg-white/5 text-white/40"
+          }`}>
+            {lead.status}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ====================== MAIN PAGE ======================
 export default function LeadEnginePage() {
   const [activeTab, setActiveTab] = useState<MainTab>("leads");
@@ -476,6 +661,8 @@ export default function LeadEnginePage() {
   const [tagInput, setTagInput] = useState("");
   const [hotAlerts, setHotAlerts] = useState(true);
   const [expandedLead, setExpandedLead] = useState<string | null>(null);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [sortByScore, setSortByScore] = useState(false);
   const [highPriorityOnly, setHighPriorityOnly] = useState(false);
   const [scoringLeads, setScoringLeads] = useState<Set<string>>(new Set());
@@ -719,8 +906,9 @@ export default function LeadEnginePage() {
             </button>
           </div>
 
-          {/* Lead Table */}
-          <div className="space-y-1.5">
+          {/* Split-pane: table (flex-1) + detail panel (sticky right, lg+ only) */}
+          <div className="flex items-start gap-4">
+          <div className="min-w-0 flex-1 space-y-1.5">
             <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-2 px-3">
               <span className="col-span-3">Business</span>
               <span className="col-span-2">Contact</span>
@@ -752,8 +940,20 @@ export default function LeadEnginePage() {
             )}
             {!loading && leads.map(lead => (
               <div key={lead.id}>
-                <div onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
-                  className="grid grid-cols-12 items-center py-1.5 px-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer text-[10px]">
+                <div
+                  onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
+                  onMouseEnter={() => {
+                    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+                    hoverTimerRef.current = setTimeout(() => setSelectedLead(lead), 180);
+                  }}
+                  onMouseLeave={() => {
+                    if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
+                  }}
+                  className={`grid grid-cols-12 items-center py-1.5 px-3 rounded-lg border transition-all cursor-pointer text-[10px] ${
+                    selectedLead?.id === lead.id
+                      ? "bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.15)]"
+                      : "bg-surface-light border-border hover:border-[rgba(212,255,0,0.1)]"
+                  }`}>
                   <div className="col-span-3">
                     <p className="text-xs font-semibold">{lead.business_name}</p>
                     <p className="text-[9px] text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
@@ -878,7 +1078,21 @@ export default function LeadEnginePage() {
                 )}
               </div>
             ))}
-          </div>
+          </div>{/* end min-w-0 flex-1 table */}
+
+          {/* Side detail panel — desktop only */}
+          {selectedLead && (
+            <div className="hidden lg:block w-[280px] xl:w-[300px] flex-shrink-0 sticky top-16 self-start">
+              <LeadDetailPanel
+                lead={selectedLead}
+                onScore={scoreOneLead}
+                scoring={scoringLeads.has(selectedLead.id)}
+                onClose={() => setSelectedLead(null)}
+              />
+            </div>
+          )}
+
+          </div>{/* end split-pane flex */}
 
           {/* Pagination */}
           {!loading && totalPages > 1 && (
