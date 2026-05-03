@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dns from "dns";
+import https from "https";
+import type { LookupFunction } from "net";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 // Webhook Trigger System — sends events to Zapier/Make.com/custom URLs
@@ -17,80 +19,86 @@ export async function POST(request: NextRequest) {
 
   const supabase = createServiceClient();
 
-  // Get all configured webhook URLs for this event
-  const urls: string[] = [];
+  // Each entry is either a user-supplied URL (pinned to its pre-verified IP)
+  // or an env-configured URL (trusted operator config, uses regular fetch).
+  interface PinnedTarget { url: string; pinnedIp: string; pinnedFamily: 4 | 6 }
+  interface TrustedTarget { url: string }
+  type WebhookTarget = { kind: "pinned" } & PinnedTarget | { kind: "trusted" } & TrustedTarget;
+  const targets: WebhookTarget[] = [];
 
-  // Validate webhook_url to prevent SSRF — Apr 28 audit hardened the
-  // allowlist. Previously only blocked an explicit list of hostnames
-  // (`localhost`, `127.0.0.1`, `[::1]`, `*.internal`) — left RFC1918
-  // private ranges (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16) and
-  // IPv6 ULA wide open. An authenticated user could POST a webhook
-  // pointing at any internal/private network address.
+  // ── User-supplied webhook_url ──────────────────────────────────────────
+  // Three-layer SSRF defence:
+  //   Layer 1 — reject IP literals and obvious private hostnames
+  //   Layer 2 — DNS resolve + verify every resolved address is public
+  //   Layer 3 — IP pinning: the TCP connection goes to the pre-verified IP,
+  //             bypassing OS DNS entirely so DNS-rebinding is impossible
+  //             even if the attacker flips their record between check & send
   if (webhook_url) {
     try {
       const parsed = new URL(webhook_url);
       if (parsed.protocol !== "https:") {
         return NextResponse.json({ error: "webhook_url must use HTTPS" }, { status: 400 });
       }
-      // Layer 1: reject obvious private/internal hostnames and IP literals.
+      // Layer 1: reject IP literals and obvious private hostnames.
       if (isPrivateOrInternal(parsed.hostname)) {
         return NextResponse.json({ error: "Invalid webhook_url target" }, { status: 400 });
       }
-      // Layer 2: DNS-rebinding defense. Resolve the hostname and verify the
-      // resulting IP is not private. Without this, an attacker who controls DNS
-      // can register a public hostname that initially resolves to a real IP
-      // (fooling layer 1), then flip the DNS record to 169.254.169.254 (cloud
-      // metadata) or an RFC1918 address before the actual fetch fires.
-      //
-      // Note: A strict TOCTOU-free fix would pin the resolved IP in a custom
-      // HTTP agent. That complexity is deferred. This layer closes the most
-      // common rebinding window and logs every rejection for audit.
-      const resolvedIp = await resolveAndCheck(parsed.hostname);
-      if (resolvedIp === null) {
+      // Layer 2: DNS resolution — verify the hostname doesn't point private.
+      const resolved = await resolveAndCheck(parsed.hostname);
+      if (resolved === null) {
         console.warn(`[webhooks/trigger] SSRF: DNS lookup returned no address for "${parsed.hostname}" — rejecting`);
         return NextResponse.json({ error: "Invalid webhook_url: hostname could not be resolved" }, { status: 400 });
       }
-      if (resolvedIp === "PRIVATE") {
+      if (resolved === "PRIVATE") {
         // Detailed log already emitted inside resolveAndCheck.
         return NextResponse.json({ error: "Invalid webhook_url target" }, { status: 400 });
       }
-      urls.push(webhook_url);
+      // Layer 3: store the pre-verified IP so pinnedPost can bypass DNS.
+      targets.push({ kind: "pinned", url: webhook_url, pinnedIp: resolved.address, pinnedFamily: resolved.family });
     } catch (err) {
-      // Catch URL parse failures; DNS errors are handled inside resolveAndCheck.
-      if ((err as { status?: number }).status) throw err; // re-throw NextResponse errors
+      if ((err as { status?: number }).status) throw err; // re-throw NextResponse-shaped errors
       return NextResponse.json({ error: "Invalid webhook_url" }, { status: 400 });
     }
   }
 
-  // Check for env-configured Zapier/Make.com webhook URLs. Apr 28 audit:
-  // the previous code treated MAKE_API_KEY (a misnomer — it was actually
-  // expected to hold a webhook URL) as a fetch target via a fragile
-  // `startsWith("https://")` check. If anyone ever set an actual API
-  // key in that var, fetches would silently skip; if a misconfig set it
-  // to a URL, fanouts would fire there. Renamed to MAKE_WEBHOOK_URL with
-  // back-compat for the legacy var, and validate as a URL.
+  // ── Env-configured Zapier / Make.com URLs ─────────────────────────────
+  // These are set by operators, not end-users, so they are trusted.
+  // We still validate format + layer-1 hostname check; no DNS pinning needed.
   const zapierUrl = process.env.ZAPIER_WEBHOOK_URL;
   const makeUrl = process.env.MAKE_WEBHOOK_URL || process.env.MAKE_API_KEY;
-  if (zapierUrl && isValidExternalHttpsUrl(zapierUrl)) urls.push(zapierUrl);
-  if (makeUrl && isValidExternalHttpsUrl(makeUrl)) urls.push(makeUrl);
+  if (zapierUrl && isValidExternalHttpsUrl(zapierUrl)) targets.push({ kind: "trusted", url: zapierUrl });
+  if (makeUrl && isValidExternalHttpsUrl(makeUrl)) targets.push({ kind: "trusted", url: makeUrl });
 
   const results: Array<{ url: string; status: number; ok: boolean }> = [];
+  const payloadStr = JSON.stringify({
+    event,
+    timestamp: new Date().toISOString(),
+    source: "shortstack_os",
+    data,
+  });
 
-  for (const url of urls) {
+  for (const target of targets) {
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          event,
-          timestamp: new Date().toISOString(),
-          source: "shortstack_os",
-          data,
-        }),
-      });
-      results.push({ url: url.substring(0, 50) + "...", status: res.status, ok: res.ok });
+      let status: number;
+      let ok: boolean;
+      if (target.kind === "pinned") {
+        // IP-pinned dispatch — closes the DNS-rebinding TOCTOU window.
+        const r = await pinnedPost(target.url, target.pinnedIp, target.pinnedFamily, payloadStr);
+        status = r.status;
+        ok = r.ok;
+      } else {
+        // Operator-configured URL — trusted, use built-in fetch.
+        const res = await fetch(target.url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: payloadStr,
+        });
+        status = res.status;
+        ok = res.ok;
+      }
+      results.push({ url: target.url.substring(0, 50) + "...", status, ok });
     } catch {
-      results.push({ url: url.substring(0, 50) + "...", status: 0, ok: false });
+      results.push({ url: target.url.substring(0, 50) + "...", status: 0, ok: false });
     }
   }
 
@@ -105,18 +113,24 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ success: true, event, triggered: results.length, results });
 }
 
+/** Resolved, safe address ready for connection pinning. */
+interface SafeAddress {
+  address: string;
+  family: 4 | 6;
+}
+
 /**
  * Resolve `hostname` to its addresses (both IPv4 and IPv6) and check
  * whether any of them fall in a private/loopback/link-local range.
  * Returns:
- *   - `"PRIVATE"` if ANY resolved address is blocked
- *   - the primary (IPv4) address string if all resolved addresses are safe
- *   - `null` if DNS lookup produced no result at all (caller should reject)
+ *   - `SafeAddress`  — all resolved addresses are safe; use this for IP pinning
+ *   - `"PRIVATE"`    — at least one address is blocked (reject the URL)
+ *   - `null`         — hostname could not be resolved at all (reject the URL)
  *
  * Checks both address families so a dual-stack host cannot sneak through
  * on its IPv6 address after passing the IPv4 check.
  */
-async function resolveAndCheck(hostname: string): Promise<string | null> {
+async function resolveAndCheck(hostname: string): Promise<SafeAddress | "PRIVATE" | null> {
   let v4addr: string | null = null;
   let v6addr: string | null = null;
 
@@ -143,7 +157,61 @@ async function resolveAndCheck(hostname: string): Promise<string | null> {
     return "PRIVATE";
   }
 
-  return v4addr ?? v6addr!;
+  // Prefer IPv4 for the pinned connection.
+  return v4addr ? { address: v4addr, family: 4 } : { address: v6addr!, family: 6 };
+}
+
+/**
+ * POST JSON payload to a pre-validated webhook URL with IP pinning.
+ *
+ * Uses Node's `https.request()` with a custom `lookup` function that
+ * returns the pre-verified IP directly, bypassing the OS DNS resolver
+ * entirely. This closes the TOCTOU DNS-rebinding window: no matter how
+ * quickly an attacker flips their DNS record after passing the validation
+ * check, the outgoing TCP connection always goes to the same IP that was
+ * verified.
+ */
+async function pinnedPost(
+  url: string,
+  pinnedIp: string,
+  pinnedFamily: 4 | 6,
+  payload: string,
+  timeoutMs = 8000,
+): Promise<{ status: number; ok: boolean }> {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+    const port = parsed.port ? Number(parsed.port) : 443;
+
+    const lookup: LookupFunction = (_host, _opts, callback) => {
+      // Return the pre-verified IP — bypasses OS DNS entirely.
+      callback(null, pinnedIp, pinnedFamily);
+    };
+
+    const req = https.request(
+      {
+        hostname: parsed.hostname,
+        port,
+        path: (parsed.pathname || "/") + parsed.search,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(payload),
+        },
+        lookup,
+        timeout: timeoutMs,
+      },
+      (res) => {
+        res.resume(); // drain response so socket is released promptly
+        const status = res.statusCode ?? 0;
+        resolve({ status, ok: status >= 200 && status < 300 });
+      },
+    );
+
+    req.on("timeout", () => req.destroy(new Error(`webhook timed out after ${timeoutMs}ms`)));
+    req.on("error", reject);
+    req.write(payload);
+    req.end();
+  });
 }
 
 /**
