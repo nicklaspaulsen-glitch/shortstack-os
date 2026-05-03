@@ -82,6 +82,8 @@ export const resendProvider: EmailProviderImpl = {
     if (msg.replyTo) body.reply_to = msg.replyTo;
     const tagArr = tagsToResendArray(msg.tags);
     if (tagArr) body.tags = tagArr;
+    // Custom headers (e.g. List-Unsubscribe for bulk/cold sends).
+    if (msg.headers && Object.keys(msg.headers).length > 0) body.headers = msg.headers;
     const atts = normalizeAttachments(msg.attachments);
     if (atts) body.attachments = atts;
 

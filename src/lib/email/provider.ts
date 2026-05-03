@@ -36,6 +36,15 @@ export interface EmailMessage {
    * `X-Tag-<name>: <value>` headers.
    */
   tags?: Record<string, string>;
+  /**
+   * Raw email headers injected verbatim into the outgoing message.
+   * Use for compliance headers such as `List-Unsubscribe` on bulk sends.
+   * Each provider forwards these headers in whatever way its API supports
+   * (Resend: `headers` body field; Postal: `headers` body field; SMTP:
+   * nodemailer `headers` option). Tag headers (`X-Tag-*`) from the `tags`
+   * field are merged in separately and take lower precedence.
+   */
+  headers?: Record<string, string>;
   attachments?: Array<{
     filename: string;
     /** Either a Buffer (preferred) or base64-encoded string. */

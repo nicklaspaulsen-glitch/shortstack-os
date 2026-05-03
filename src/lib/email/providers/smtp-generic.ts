@@ -125,6 +125,14 @@ export const smtpGenericProvider: EmailProviderImpl = {
     const transport = getTransport(cfg);
     const from = msg.from || process.env.SMTP_FROM || DEFAULT_FROM;
 
+    // Merge tag-derived X-Tag-* headers with any explicit custom headers.
+    // Explicit headers take precedence over tag-derived ones.
+    const tagHeaders = tagsToHeaders(msg.tags);
+    const mergedHeaders: Record<string, string> | undefined =
+      tagHeaders || msg.headers
+        ? { ...tagHeaders, ...msg.headers }
+        : undefined;
+
     const info = await transport.sendMail({
       from,
       to: toRecipientList(msg.to),
@@ -132,7 +140,7 @@ export const smtpGenericProvider: EmailProviderImpl = {
       html: msg.html,
       text: msg.text,
       replyTo: msg.replyTo,
-      headers: tagsToHeaders(msg.tags),
+      headers: mergedHeaders,
       attachments: normalizeAttachments(msg.attachments),
     });
 

@@ -137,8 +137,10 @@ export const postalProvider: EmailProviderImpl = {
     if (msg.html) body.html_body = msg.html;
     if (msg.text) body.plain_body = msg.text;
     if (msg.replyTo) body.reply_to = msg.replyTo;
-    const headers = tagsToHeaders(msg.tags);
-    if (headers) body.headers = headers;
+    // Merge tag-derived headers with any explicit custom headers (explicit wins).
+    const tagHeaders = tagsToHeaders(msg.tags);
+    const mergedHeaders: Record<string, string> = { ...tagHeaders, ...msg.headers };
+    if (Object.keys(mergedHeaders).length > 0) body.headers = mergedHeaders;
     const atts = normalizeAttachments(msg.attachments);
     if (atts) body.attachments = atts;
 
