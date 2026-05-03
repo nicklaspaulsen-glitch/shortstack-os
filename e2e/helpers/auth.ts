@@ -34,11 +34,12 @@ export async function signIn(page: Page): Promise<void> {
 export async function signOut(page: Page): Promise<void> {
   // Start listening BEFORE clicking so we don't race the window.location.href
   // redirect that fires after supabase.auth.signOut() resolves.
+  // Use :visible so we skip the hidden collapsed/expanded twin in the DOM.
   await Promise.all([
     page.waitForURL((url) => !url.pathname.startsWith("/dashboard"), {
       timeout: 15_000,
     }),
-    page.getByRole("button", { name: /sign out/i }).first().click(),
+    page.locator('button[aria-label="Sign Out"]:visible').first().click(),
   ]);
 }
 
