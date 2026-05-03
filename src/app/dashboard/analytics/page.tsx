@@ -390,13 +390,14 @@ export default function AnalyticsPage() {
       {/* Hero Header */}
       <PageHero
         icon={<BarChart3 size={22} />}
+        eyebrow="Performance Dashboard"
         title="Analytics"
         subtitle="See what's working — leads, revenue, and content ROI at a glance."
-        gradient="blue"
+        gradient="gold"
         actions={
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors duration-150"
+            className="flex items-center gap-2 rounded-lg border border-[rgba(212,255,0,0.15)] bg-[rgba(212,255,0,0.06)] px-3 py-1.5 text-xs font-medium text-[#D4FF00] hover:bg-[rgba(212,255,0,0.12)] transition-colors duration-150"
           >
             <Download size={13} /> Export PDF
           </button>
@@ -489,12 +490,14 @@ export default function AnalyticsPage() {
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_1fr]">
           {/* MRR hero cell — full left column */}
           <motion.div
-            className="flex flex-col justify-between rounded-xl border border-[#6366F1]/15 bg-[#1F1E26] p-5 min-h-[120px]"
+            className="relative flex flex-col justify-between rounded-xl border border-[rgba(212,255,0,0.15)] bg-[#1F1E26] p-5 min-h-[120px] overflow-hidden"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{ y: -2 }}
           >
+            {/* Lime accent glow behind the number */}
+            <div className="pointer-events-none absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-[#D4FF00] opacity-[0.04] blur-2xl" />
             <div className="flex items-center gap-2 text-[#9F9DAA]">
               <DollarSign size={14} />
               <span className="text-[10px] font-medium uppercase tracking-[0.14em]">Monthly Recurring Revenue</span>
@@ -503,7 +506,7 @@ export default function AnalyticsPage() {
               <p className="font-display text-4xl font-bold text-[#F5F4F1] tracking-[-0.03em] tabular-nums">
                 {formatCurrency(stats.totalMRR)}
               </p>
-              <p className="mt-1 text-[11px] text-[#6F6D7A]">{stats.activeClients} active client{stats.activeClients !== 1 ? "s" : ""}</p>
+              <p className="mt-1 text-[11px] text-[#D4FF00]/50">{stats.activeClients} active client{stats.activeClients !== 1 ? "s" : ""}</p>
             </div>
           </motion.div>
 

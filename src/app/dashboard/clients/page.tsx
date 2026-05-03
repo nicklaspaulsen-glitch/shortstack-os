@@ -576,9 +576,10 @@ export default function ClientsPage() {
     <div className="space-y-4">
       <PageHero
         icon={<Users size={22} />}
+        eyebrow="Account Management"
         title="Client Portal"
         subtitle="Manage clients, contracts, and invoices."
-        gradient="blue"
+        gradient="gold"
       />
       <TableSkeleton rows={8} />
     </div>
@@ -588,6 +589,7 @@ export default function ClientsPage() {
     <MotionPage className="space-y-4">
       <PageHero
         icon={<Users size={22} />}
+        eyebrow="Account Management"
         title="Client Portal"
         subtitle={
           callerRole === "admin" || callerRole === "founder"
@@ -596,7 +598,7 @@ export default function ClientsPage() {
               : "Showing clients for your agency only."
             : "Manage clients, contracts, and invoices."
         }
-        gradient="blue"
+        gradient="gold"
         actions={
           <div className="flex items-center gap-2">
             {(callerRole === "admin" || callerRole === "founder") && (
@@ -622,7 +624,7 @@ export default function ClientsPage() {
               </div>
             )}
             <button onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white text-sm font-medium hover:bg-white/25 transition-all">
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[rgba(212,255,0,0.1)] border border-[rgba(212,255,0,0.2)] text-[#D4FF00] text-sm font-semibold hover:bg-[rgba(212,255,0,0.18)] transition-all">
               <Plus size={16} /> Add Client
             </button>
           </div>

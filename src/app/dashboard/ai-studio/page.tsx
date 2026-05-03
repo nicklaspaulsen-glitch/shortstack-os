@@ -143,9 +143,10 @@ export default function AIStudioPage() {
       <PageHero
         className="mb-6"
         icon={<Sparkles size={28} />}
+        eyebrow="Creative Suite"
         title="AI Studio"
         subtitle="Generate images, upscale photos, clone voices. All in one place."
-        gradient="ocean"
+        gradient="gold"
         actions={
           <div className="flex flex-wrap items-center justify-end gap-2">
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
@@ -155,16 +156,16 @@ export default function AIStudioPage() {
                   setActiveTool("image-gen");
                   setCreationWizardOpen(true);
                 }}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#6366F1] to-[#A78BFA] text-white text-xs font-bold shadow-lg shadow-[#6366F1]/20 hover:shadow-[#6366F1]/40 hover-lift transition-all"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#D4FF00] to-[#6366F1] text-black text-xs font-bold shadow-lg shadow-[#D4FF00]/15 hover:shadow-[#D4FF00]/30 hover-lift transition-all"
               >
                 <Sparkles size={12} className="animate-pulse" />
                 + New with AI
-                <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider">
+                <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider text-white/80">
                   Recommended
                 </span>
               </button>
             )}
-            <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
+            <span className="text-[10px] text-[#D4FF00]/70 bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] px-2 py-1 rounded-lg">
               9 tools available
             </span>
           </div>
@@ -420,7 +421,7 @@ export default function AIStudioPage() {
                 // gold border + 2x ring + denser bg so the active tile
                 // visibly pops out of the grid on click.
                 active
-                  ? "border-[#6366F1] ring-2 ring-[#6366F1]/40 bg-[#6366F1]/[0.12] shadow-lg shadow-[#6366F1]/10"
+                  ? "border-[rgba(212,255,0,0.35)] ring-2 ring-[rgba(212,255,0,0.12)] bg-[rgba(212,255,0,0.05)] shadow-lg shadow-[rgba(212,255,0,0.08)]"
                   : ["image-gen", "voice-clone", "transcribe"].includes(tool.id)
                     ? "ring-1 ring-[#6366F1]/20 border-[#6366F1]/20 bg-surface hover:bg-surface-light"
                     : "border-border bg-surface hover:bg-surface-light"
