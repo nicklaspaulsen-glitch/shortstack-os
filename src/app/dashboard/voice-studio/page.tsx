@@ -677,7 +677,10 @@ function inferGender(preset: VoiceClone): "female" | "male" | "neutral" {
   return "neutral";
 }
 
-const PRESET_CATEGORIES = ["all", "professional", "casual", "character", "narration", "sales"] as const;
+// These must match the `category` field values defined in
+// src/lib/voice/preset-library.ts — the filter reads
+// `consent_evidence.category` from each seeded preset row.
+const PRESET_CATEGORIES = ["all", "warm", "authoritative", "youthful", "narrator", "casual", "british"] as const;
 type PresetCategory = (typeof PRESET_CATEGORIES)[number];
 
 function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; loading?: boolean; onRefresh?: () => void }) {
@@ -787,11 +790,11 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                     : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
                 ].join(" ")}
               >
-                {c === "all" ? "All categories" : c.charAt(0).toUpperCase() + c.slice(1)}
+                {c === "all" ? "All" : c.charAt(0).toUpperCase() + c.slice(1)}
               </button>
             ))}
           </div>
-          {languages.length > 2 && (
+          {languages.length > 1 && (
             <select
               value={langFilter}
               onChange={(e) => setLangFilter(e.target.value)}
