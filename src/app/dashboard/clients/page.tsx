@@ -578,7 +578,7 @@ export default function ClientsPage() {
         icon={<Users size={22} />}
         title="Client Portal"
         subtitle="Manage clients, contracts, and invoices."
-        gradient="gold"
+        gradient="blue"
       />
       <TableSkeleton rows={8} />
     </div>
@@ -596,7 +596,7 @@ export default function ClientsPage() {
               : "Showing clients for your agency only."
             : "Manage clients, contracts, and invoices."
         }
-        gradient="gold"
+        gradient="blue"
         actions={
           <div className="flex items-center gap-2">
             {(callerRole === "admin" || callerRole === "founder") && (
@@ -661,7 +661,7 @@ export default function ClientsPage() {
             key={t}
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
-              tab === t ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+              tab === t ? "bg-[#6366F1] text-white font-medium" : "text-muted hover:text-foreground"
             }`}
           >
             {t === "billing" && <CreditCard size={14} />}
@@ -688,10 +688,10 @@ export default function ClientsPage() {
 
             {/* Feature 9: Advanced Filters Toggle */}
             <button onClick={() => setShowFilters(!showFilters)}
-              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-gold/10 text-gold border-gold/30" : ""}`}>
+              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[#6366F1]/15 text-[#6366F1] border-[#6366F1]/30" : ""}`}>
               <Filter size={14} /> Filters
               {(filterIndustry || filterStatus !== "all" || filterTag || filterMrrMin || filterMrrMax) && (
-                <span className="w-1.5 h-1.5 rounded-full bg-gold" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1]" />
               )}
             </button>
 
@@ -707,7 +707,7 @@ export default function ClientsPage() {
               ]).map(s => (
                 <button key={s.field} onClick={() => handleSort(s.field)}
                   className={`px-2 py-1 text-[10px] rounded-md transition-all flex items-center gap-0.5 ${
-                    sortField === s.field ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+                    sortField === s.field ? "bg-[#6366F1] text-white font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {s.label}
                   {sortField === s.field && (
@@ -720,11 +720,11 @@ export default function ClientsPage() {
             {/* Feature 15: View Mode Toggle */}
             <div className="flex items-center gap-0.5 bg-surface rounded-lg p-0.5">
               <button onClick={() => setViewMode("table")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-gold text-black" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#6366F1] text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutList size={14} />
               </button>
               <button onClick={() => setViewMode("card")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-gold text-black" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#6366F1] text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutGrid size={14} />
               </button>
             </div>
@@ -874,7 +874,7 @@ export default function ClientsPage() {
               status === "churned" ? "card-accent-danger"  :
               "card-accent-gold"; // trial
             return (
-              <motion.div key={c.id} className={`card card-accent ${accentClass} p-4 hover:border-gold/30 transition-all cursor-pointer group relative`}
+              <motion.div key={c.id} className={`card card-accent ${accentClass} p-4 ${c.mrr > 0 ? "hover:border-[#6366F1]/25" : "hover:border-white/8"} transition-all cursor-pointer group relative`}
                 variants={{
                   hidden: { opacity: 0, y: 16 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },

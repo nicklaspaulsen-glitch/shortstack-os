@@ -5,6 +5,7 @@ import {
   Mic,
   Upload,
   Play,
+  Pause,
   Loader2,
   AlertTriangle,
   Trash2,
@@ -17,6 +18,7 @@ import {
   Library,
   Headphones,
   RefreshCw,
+  Search,
 } from "lucide-react";
 import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
@@ -686,6 +688,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   const [categoryFilter, setCategoryFilter] = useState<PresetCategory>("all");
   const [langFilter, setLangFilter] = useState<string>("all");
   const [genderFilter, setGenderFilter] = useState<"all" | "female" | "male">("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const languages = useMemo(() => {
     const langs = new Set(presets.map((p) => p.language || "en").filter(Boolean));
@@ -693,14 +696,16 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   }, [presets]);
 
   const filtered = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
     return presets.filter((p) => {
       const cat = (p.consent_evidence?.category as string) || "preset";
       if (categoryFilter !== "all" && cat !== categoryFilter) return false;
       if (langFilter !== "all" && (p.language || "en") !== langFilter) return false;
       if (genderFilter !== "all" && inferGender(p) !== genderFilter) return false;
+      if (q && !`${p.label} ${p.description ?? ""}`.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [presets, categoryFilter, langFilter, genderFilter]);
+  }, [presets, categoryFilter, langFilter, genderFilter, searchQuery]);
 
   if (loading) {
     return (
@@ -738,6 +743,17 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
     <div className="space-y-4">
       {/* Filter bar */}
       <div className="space-y-2.5 rounded-xl border border-white/8 bg-white/[0.03] p-3">
+        {/* Search row */}
+        <div className="relative">
+          <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search presets…"
+            className="w-full rounded-lg border border-white/10 bg-black/30 py-1.5 pl-8 pr-3 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50"
+          />
+        </div>
         {/* Gender row */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="w-14 flex-shrink-0 text-[10px] uppercase tracking-wider text-white/30">Gender</span>
@@ -749,7 +765,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               className={[
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
                 genderFilter === g
-                  ? "border border-[#D4FF00]/30 bg-[#D4FF00]/10 text-[#D4FF00]"
+                  ? "border border-[#6366F1]/30 bg-[#6366F1]/10 text-[#A78BFA]"
                   : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
               ].join(" ")}
             >
@@ -941,7 +957,11 @@ function PresetCard({ preset }: { preset: VoiceClone }) {
 }
 
 // ── Renders ─────────────────────────────────────────────────────
+const R2_BASE = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ?? "";
+
 function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
+  const [playingId, setPlayingId] = useState<string | null>(null);
+
   if (renders.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 p-12 text-center">
@@ -956,35 +976,62 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
   }
   return (
     <div className="space-y-3">
-      {renders.map((r) => (
-        <div
-          key={r.id}
-          className="rounded-xl border border-white/10 bg-white/5 p-4"
-        >
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="flex-1 min-w-[200px]">
-              <p className="text-sm text-white">{r.text_preview}</p>
-              <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-white/50">
-                <span>
-                  {new Date(r.rendered_at).toLocaleString(undefined, {
-                    dateStyle: "short",
-                    timeStyle: "short",
-                  })}
-                </span>
-                {r.duration_seconds !== null && (
-                  <span>· {Math.round(r.duration_seconds)}s</span>
-                )}
-                <span>· used {r.use_count}×</span>
-                {r.context && (
-                  <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 uppercase tracking-wider text-white/60">
-                    {r.context}
+      {renders.map((r) => {
+        const audioUrl = r.r2_key ? `${R2_BASE}/${r.r2_key}` : null;
+        const isOpen = playingId === r.id;
+        return (
+          <div
+            key={r.id}
+            className="rounded-xl border border-white/10 bg-white/5 p-4"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="flex-1 min-w-[200px]">
+                <p className="text-sm text-white">{r.text_preview}</p>
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-white/50">
+                  <span>
+                    {new Date(r.rendered_at).toLocaleString(undefined, {
+                      dateStyle: "short",
+                      timeStyle: "short",
+                    })}
                   </span>
-                )}
+                  {r.duration_seconds !== null && (
+                    <span>· {Math.round(r.duration_seconds)}s</span>
+                  )}
+                  <span>· used {r.use_count}×</span>
+                  {r.context && (
+                    <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 uppercase tracking-wider text-white/60">
+                      {r.context}
+                    </span>
+                  )}
+                </div>
               </div>
+              {audioUrl && (
+                <button
+                  type="button"
+                  onClick={() => setPlayingId(isOpen ? null : r.id)}
+                  className="flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/70 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer"
+                  aria-label={isOpen ? "Close audio player" : "Play render"}
+                >
+                  {isOpen ? <Pause size={12} /> : <Play size={12} />}
+                  {isOpen ? "Close" : "Play"}
+                </button>
+              )}
             </div>
+            {isOpen && audioUrl && (
+              <div className="mt-3 rounded-lg border border-white/10 bg-black/30 p-2">
+                {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                <audio
+                  src={audioUrl}
+                  controls
+                  autoPlay
+                  className="w-full"
+                  style={{ height: 32 }}
+                />
+              </div>
+            )}
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

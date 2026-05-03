@@ -489,7 +489,7 @@ export default function AnalyticsPage() {
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_1fr]">
           {/* MRR hero cell — full left column */}
           <motion.div
-            className="flex flex-col justify-between rounded-xl border border-[#D4FF00]/10 bg-[#1F1E26] p-5 min-h-[120px]"
+            className="flex flex-col justify-between rounded-xl border border-[#6366F1]/15 bg-[#1F1E26] p-5 min-h-[120px]"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -559,7 +559,7 @@ export default function AnalyticsPage() {
         {/* Leads over time */}
         <div className="card">
           <div className="mb-4 flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/60" />
+            <div className="h-4 w-0.5 rounded-full bg-[#6366F1]/60" />
             <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Leads</h3>
           </div>
           <div className="mb-3">
@@ -589,7 +589,7 @@ export default function AnalyticsPage() {
         {/* Revenue */}
         <div className="card">
           <div className="mb-4 flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/60" />
+            <div className="h-4 w-0.5 rounded-full bg-[#6366F1]/60" />
             <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Revenue</h3>
           </div>
           <div className="mb-3">
@@ -708,7 +708,13 @@ export default function AnalyticsPage() {
             <AlertTriangle size={14} className="text-warning" /> Client Churn Risk
           </h2>
           <div className="space-y-2 mt-3">
-            {churnRiskClients.map(client => (
+            {churnRiskClients.length === 0 ? (
+              <div className="text-center py-5 text-muted">
+                <AlertTriangle size={18} className="mx-auto mb-2 opacity-30" />
+                <p className="text-[11px] font-medium text-[#6F6D7A]">No churn signals detected</p>
+                <p className="text-[9px] text-[#6F6D7A]/70 mt-1">Clients with low engagement or missed payments appear here</p>
+              </div>
+            ) : churnRiskClients.map(client => (
               <div key={client.name} className="flex items-center gap-3 p-2 rounded-lg bg-surface-light">
                 <div className={`w-2 h-2 rounded-full shrink-0 ${
                   client.risk === "high" ? "bg-danger" : client.risk === "medium" ? "bg-warning" : "bg-success"
@@ -728,12 +734,14 @@ export default function AnalyticsPage() {
               </div>
             ))}
           </div>
-          <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
-            <span className="text-[10px] text-muted">At-risk MRR</span>
-            <span className="text-sm font-bold text-danger">
-              {formatCurrency(churnRiskClients.filter(c => c.risk !== "low").reduce((s, c) => s + c.mrr, 0))}
-            </span>
-          </div>
+          {churnRiskClients.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+              <span className="text-[10px] text-muted">At-risk MRR</span>
+              <span className="text-sm font-bold text-danger">
+                {formatCurrency(churnRiskClients.filter(c => c.risk !== "low").reduce((s, c) => s + c.mrr, 0))}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -792,7 +800,7 @@ export default function AnalyticsPage() {
         {/* Outreach performance */}
         <div className="card">
           <div className="mb-4 flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/60" />
+            <div className="h-4 w-0.5 rounded-full bg-[#6366F1]/60" />
             <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Outreach</h3>
           </div>
           <div className="mb-3">
@@ -838,7 +846,15 @@ export default function AnalyticsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {platformROI.map(p => (
+                  {platformROI.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="py-8 text-center">
+                        <Target size={16} className="mx-auto mb-2 opacity-30 text-muted" />
+                        <p className="text-[11px] text-[#6F6D7A]">No platform data yet</p>
+                        <p className="text-[9px] text-[#6F6D7A]/70 mt-0.5">Connect ad platforms to see ROI comparison</p>
+                      </td>
+                    </tr>
+                  ) : platformROI.map(p => (
                     <tr key={p.platform} className="border-b border-border/50 hover:bg-surface-light transition-colors">
                       <td className="py-2.5 font-medium">{p.platform}</td>
                       <td className="py-2.5 text-right text-muted">{formatCurrency(p.spend)}</td>
@@ -900,8 +916,8 @@ export default function AnalyticsPage() {
                         <td key={h} className="py-0.5 px-0.5">
                           <div className="h-7 rounded-md flex items-center justify-center text-[9px] font-bold transition-all hover:scale-105"
                             style={{
-                              background: `rgba(201, 168, 76, ${intensity * 0.6 + 0.05})`,
-                              color: intensity > 0.5 ? "#000" : "var(--color-muted, #9CA3AF)",
+                              background: `rgba(99, 102, 241, ${intensity * 0.65 + 0.04})`,
+                              color: intensity > 0.55 ? "#fff" : "var(--color-muted, #9CA3AF)",
                             }}>
                             {val}
                           </div>
@@ -979,25 +995,31 @@ export default function AnalyticsPage() {
             <Trophy size={14} className="text-gold" /> Team Leaderboard
           </h2>
           <div className="space-y-2 mt-3">
-            {teamMembers.map((member, i) => (
+            {teamMembers.length === 0 ? (
+              <div className="text-center py-5 text-muted">
+                <Trophy size={18} className="mx-auto mb-2 opacity-30" />
+                <p className="text-[11px] font-medium text-[#6F6D7A]">No team activity yet</p>
+                <p className="text-[9px] text-[#6F6D7A]/70 mt-1">Team member performance will appear here as activity is logged</p>
+              </div>
+            ) : teamMembers.map((member, i) => (
               <div key={member.name} className="flex items-center gap-3 p-2 rounded-lg bg-surface-light">
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                  i === 0 ? "bg-gold/20 text-gold" : i === 1 ? "bg-gray-300/20 text-gray-400" : i === 2 ? "bg-orange-300/20 text-orange-400" : "bg-surface text-muted"
+                  i === 0 ? "bg-[#6366F1]/20 text-[#6366F1]" : i === 1 ? "bg-gray-300/20 text-gray-400" : i === 2 ? "bg-[#A78BFA]/20 text-[#A78BFA]" : "bg-surface text-muted"
                 }`}>
                   {i + 1}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="text-xs font-medium">{member.name}</p>
-                    {i === 0 && <Star size={10} className="text-gold" />}
+                    {i === 0 && <Star size={10} className="text-[#6366F1]" />}
                   </div>
                   <p className="text-[9px] text-muted">{member.leads} leads / {member.deals} deals / {member.calls} calls</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-xs font-bold text-gold">{formatCurrency(member.revenue)}</p>
+                  <p className="text-xs font-bold text-[#6366F1]">{formatCurrency(member.revenue)}</p>
                   <div className="flex items-center gap-1 justify-end">
                     <div className="w-10 bg-surface rounded-full h-1.5">
-                      <div className="h-full rounded-full bg-gold" style={{ width: `${member.score}%` }} />
+                      <div className="h-full rounded-full bg-[#6366F1]" style={{ width: `${member.score}%` }} />
                     </div>
                     <span className="text-[9px] text-muted">{member.score}</span>
                   </div>
@@ -1016,7 +1038,13 @@ export default function AnalyticsPage() {
             <DollarSign size={14} className="text-gold" /> Client Lifetime Value
           </h2>
           <div className="space-y-3 mt-3">
-            {clvData.map(tier => (
+            {clvData.length === 0 ? (
+              <div className="text-center py-5 text-muted">
+                <DollarSign size={18} className="mx-auto mb-2 opacity-30" />
+                <p className="text-[11px] font-medium text-[#6F6D7A]">No CLV data yet</p>
+                <p className="text-[9px] text-[#6F6D7A]/70 mt-1">Lifetime value tiers appear once clients have billing history</p>
+              </div>
+            ) : clvData.map(tier => (
               <div key={tier.name} className="p-3 rounded-lg bg-surface-light">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-medium">{tier.name}</span>
@@ -1025,7 +1053,7 @@ export default function AnalyticsPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <p className="text-[9px] text-muted uppercase">Avg CLV</p>
-                    <p className="text-sm font-bold text-gold">{formatCurrency(tier.avgCLV)}</p>
+                    <p className="text-sm font-bold text-[#6366F1]">{formatCurrency(tier.avgCLV)}</p>
                   </div>
                   <div>
                     <p className="text-[9px] text-muted uppercase">Avg Lifetime</p>
@@ -1035,12 +1063,14 @@ export default function AnalyticsPage() {
               </div>
             ))}
           </div>
-          <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
-            <span className="text-[10px] text-muted">Total portfolio CLV</span>
-            <span className="text-sm font-bold text-gold">
-              {formatCurrency(clvData.reduce((s, t) => s + (t.avgCLV * t.count), 0))}
-            </span>
-          </div>
+          {clvData.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+              <span className="text-[10px] text-muted">Total portfolio CLV</span>
+              <span className="text-sm font-bold text-[#6366F1]">
+                {formatCurrency(clvData.reduce((s, t) => s + (t.avgCLV * t.count), 0))}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Revenue by Service */}
@@ -1048,32 +1078,42 @@ export default function AnalyticsPage() {
           <h2 className="section-header flex items-center gap-2">
             <BarChart3 size={14} className="text-gold" /> Revenue by Service
           </h2>
-          <div className="h-48 mt-3">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={revenueByService} dataKey="revenue" nameKey="service" cx="50%" cy="50%" outerRadius={70} innerRadius={40} paddingAngle={2}>
-                  {revenueByService.map((_, i) => (
-                    <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip {...chartTooltipStyle} formatter={(v) => formatCurrency(Number(v) || 0)} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="space-y-1.5 mt-2">
-            {revenueByService.map((s, i) => (
-              <div key={s.service} className="flex items-center justify-between text-[10px]">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-sm" style={{ background: CHART_COLORS[i % CHART_COLORS.length] }} />
-                  <span className="text-muted">{s.service}</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="font-mono font-medium">{formatCurrency(s.revenue)}</span>
-                  <span className="text-muted">{s.clients} clients</span>
-                </div>
+          {revenueByService.length === 0 ? (
+            <div className="text-center py-8 text-muted mt-3">
+              <BarChart3 size={18} className="mx-auto mb-2 opacity-30" />
+              <p className="text-[11px] font-medium text-[#6F6D7A]">No service data yet</p>
+              <p className="text-[9px] text-[#6F6D7A]/70 mt-1">Revenue breakdown by service type appears once deals are tagged</p>
+            </div>
+          ) : (
+            <>
+              <div className="h-48 mt-3">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={revenueByService} dataKey="revenue" nameKey="service" cx="50%" cy="50%" outerRadius={70} innerRadius={40} paddingAngle={2}>
+                      {revenueByService.map((_, i) => (
+                        <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip {...chartTooltipStyle} formatter={(v) => formatCurrency(Number(v) || 0)} />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-            ))}
-          </div>
+              <div className="space-y-1.5 mt-2">
+                {revenueByService.map((s, i) => (
+                  <div key={s.service} className="flex items-center justify-between text-[10px]">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-sm" style={{ background: CHART_COLORS[i % CHART_COLORS.length] }} />
+                      <span className="text-muted">{s.service}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono font-medium">{formatCurrency(s.revenue)}</span>
+                      <span className="text-muted">{s.clients} clients</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -1102,8 +1142,8 @@ export default function AnalyticsPage() {
                     </div>
                     <div className="flex flex-col items-center gap-1">
                       <span className="text-[9px] font-medium">You</span>
-                      <div className={`w-8 rounded-t-md ${isAbove ? "bg-gold" : "bg-danger"}`} style={{ height: `${yourPct}%` }} />
-                      <span className={`text-[9px] font-mono font-bold ${isAbove ? "text-gold" : "text-danger"}`}>{b.yours}%</span>
+                      <div className={`w-8 rounded-t-md ${isAbove ? "bg-[#6366F1]" : "bg-danger"}`} style={{ height: `${yourPct}%` }} />
+                      <span className={`text-[9px] font-mono font-bold ${isAbove ? "text-[#6366F1]" : "text-danger"}`}>{b.yours}%</span>
                     </div>
                   </div>
                   {isAbove ? (

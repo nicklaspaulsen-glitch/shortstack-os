@@ -155,7 +155,7 @@ export default function AIStudioPage() {
                   setActiveTool("image-gen");
                   setCreationWizardOpen(true);
                 }}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold shadow-lg shadow-gold/20 hover:shadow-gold/40 hover-lift transition-all"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#6366F1] to-[#A78BFA] text-white text-xs font-bold shadow-lg shadow-[#6366F1]/20 hover:shadow-[#6366F1]/40 hover-lift transition-all"
               >
                 <Sparkles size={12} className="animate-pulse" />
                 + New with AI
@@ -191,11 +191,11 @@ export default function AIStudioPage() {
                         key={t.id}
                         onClick={() => { setGuidedIntent(t.id); setActiveTool(t.id); }}
                         className={`relative text-left p-4 rounded-xl border transition-all ${
-                          selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
+                          selected ? "border-[#6366F1] bg-[#6366F1]/10 shadow-lg shadow-[#6366F1]/10" : "border-border hover:border-[#6366F1]/30 bg-surface-light"
                         }`}
                       >
                         {"badge" in t && t.badge && (
-                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400">
+                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[#6366F1]/15 text-[#A78BFA]">
                             {t.badge}
                           </span>
                         )}
@@ -232,12 +232,12 @@ export default function AIStudioPage() {
                       : "e.g., A minimalist logo mockup on a black marble surface, studio lighting"
                   }
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#6366F1]/50 focus:ring-2 focus:ring-[#6366F1]/20 transition-all resize-none"
                   autoFocus
                 />
               ) : (
-                <div className="card bg-gold/[0.04] border-gold/20 text-center py-8">
-                  <Upload size={28} className="mx-auto mb-2 text-gold" />
+                <div className="card bg-[#6366F1]/[0.04] border-[#6366F1]/20 text-center py-8">
+                  <Upload size={28} className="mx-auto mb-2 text-[#A78BFA]" />
                   <p className="text-sm font-semibold">
                     {TOOLS.find(t => t.id === guidedIntent)?.name} uses files — hit Finish to open the tool.
                   </p>
@@ -250,7 +250,7 @@ export default function AIStudioPage() {
               description: "We'll take you to the tool with everything pre-filled.",
               icon: <Wand2 size={18} />,
               component: (
-                <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+                <div className="card bg-[#6366F1]/[0.04] border-[#6366F1]/20 space-y-2">
                   <div className="flex items-center gap-2">
                     {(() => {
                       const t = TOOLS.find(x => x.id === guidedIntent);
@@ -271,7 +271,7 @@ export default function AIStudioPage() {
                   </div>
                   {guidedPrompt && (
                     <p className="text-[11px] text-muted pt-2 border-t border-border/50 line-clamp-3">
-                      <span className="text-gold font-semibold">Prompt:</span> {guidedPrompt}
+                      <span className="text-[#A78BFA] font-semibold">Prompt:</span> {guidedPrompt}
                     </p>
                   )}
                 </div>
@@ -313,7 +313,7 @@ export default function AIStudioPage() {
           />
         </div>
         <div className="relative text-center px-4">
-          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+          <p className="text-[11px] uppercase tracking-widest text-[#A78BFA]/80 font-semibold">
             Example generations
           </p>
           <h3 className="text-lg font-bold text-foreground mt-1">
@@ -354,10 +354,10 @@ export default function AIStudioPage() {
 
       {/* Wizard results — show inline once produced so they don't disappear when modal closes */}
       {wizardImages.length > 0 && (
-        <div className="bg-surface border border-gold/30 rounded-2xl p-4 mb-6">
+        <div className="bg-surface border border-[#6366F1]/30 rounded-2xl p-4 mb-6">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Sparkles size={14} className="text-gold" />
+              <Sparkles size={14} className="text-[#A78BFA]" />
               <h3 className="text-sm font-semibold text-foreground">Latest wizard generation</h3>
               <span className="text-[10px] text-muted">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
             </div>
@@ -420,12 +420,14 @@ export default function AIStudioPage() {
                 // gold border + 2x ring + denser bg so the active tile
                 // visibly pops out of the grid on click.
                 active
-                  ? "border-gold ring-2 ring-gold/40 bg-gold/[0.12] shadow-lg shadow-gold/10"
-                  : "border-border bg-surface hover:bg-surface-light"
+                  ? "border-[#6366F1] ring-2 ring-[#6366F1]/40 bg-[#6366F1]/[0.12] shadow-lg shadow-[#6366F1]/10"
+                  : ["image-gen", "voice-clone", "transcribe"].includes(tool.id)
+                    ? "ring-1 ring-[#6366F1]/20 border-[#6366F1]/20 bg-surface hover:bg-surface-light"
+                    : "border-border bg-surface hover:bg-surface-light"
               }`}
             >
               {"badge" in tool && tool.badge && (
-                <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400">
+                <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[#6366F1]/15 text-[#A78BFA]">
                   {tool.badge}
                 </span>
               )}
