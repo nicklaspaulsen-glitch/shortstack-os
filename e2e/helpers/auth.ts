@@ -32,12 +32,14 @@ export async function signIn(page: Page): Promise<void> {
  * Waits until the browser lands on /login.
  */
 export async function signOut(page: Page): Promise<void> {
-  // The sidebar renders two sign-out buttons (desktop + mobile); use the first.
-  await page.getByRole("button", { name: /sign out/i }).first().click();
-  // Wait until we leave the dashboard — could redirect to /login or root
-  await page.waitForURL((url) => !url.pathname.startsWith("/dashboard"), {
-    timeout: 10_000,
-  });
+  // Start listening BEFORE clicking so we don't race the window.location.href
+  // redirect that fires after supabase.auth.signOut() resolves.
+  await Promise.all([
+    page.waitForURL((url) => !url.pathname.startsWith("/dashboard"), {
+      timeout: 15_000,
+    }),
+    page.getByRole("button", { name: /sign out/i }).first().click(),
+  ]);
 }
 
 /** Assert the user is on a dashboard page. */
