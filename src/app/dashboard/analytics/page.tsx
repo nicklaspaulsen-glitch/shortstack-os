@@ -626,10 +626,13 @@ export default function AnalyticsPage() {
 
       {/* Feature 1: Revenue Forecasting */}
       <div className="card">
-        <button onClick={() => toggleSection("forecast")} className="flex items-center justify-between w-full">
-          <h2 className="section-header flex items-center gap-2 mb-0">
-            <TrendingUp size={14} className="text-gold" /> Revenue Forecast (Next 3 Months)
-          </h2>
+        <button onClick={() => toggleSection("forecast")} className="flex items-center justify-between w-full group">
+          <div className="flex items-center gap-3">
+            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/40 shrink-0 group-hover:bg-[#D4FF00]/70 transition-colors duration-150" />
+            <h2 className="section-header flex items-center gap-2 mb-0">
+              <TrendingUp size={14} className="text-gold" /> Revenue Forecast (Next 3 Months)
+            </h2>
+          </div>
           {expandedSection === "forecast" ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
         </button>
         {expandedSection === "forecast" && (
@@ -828,10 +831,13 @@ export default function AnalyticsPage() {
 
       {/* Feature 3: Platform ROI Comparison */}
       <div className="card">
-        <button onClick={() => toggleSection("roi")} className="flex items-center justify-between w-full">
-          <h2 className="section-header flex items-center gap-2 mb-0">
-            <Target size={14} className="text-gold" /> Platform ROI Comparison
-          </h2>
+        <button onClick={() => toggleSection("roi")} className="flex items-center justify-between w-full group">
+          <div className="flex items-center gap-3">
+            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/40 shrink-0 group-hover:bg-[#D4FF00]/70 transition-colors duration-150" />
+            <h2 className="section-header flex items-center gap-2 mb-0">
+              <Target size={14} className="text-gold" /> Platform ROI Comparison
+            </h2>
+          </div>
           {expandedSection === "roi" ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
         </button>
         {expandedSection === "roi" && (
@@ -1122,10 +1128,13 @@ export default function AnalyticsPage() {
 
       {/* Feature 9: Engagement Benchmarks */}
       <div className="card">
-        <button onClick={() => toggleSection("benchmarks")} className="flex items-center justify-between w-full">
-          <h2 className="section-header flex items-center gap-2 mb-0">
-            <BarChart3 size={14} className="text-gold" /> Engagement Rate Benchmarks
-          </h2>
+        <button onClick={() => toggleSection("benchmarks")} className="flex items-center justify-between w-full group">
+          <div className="flex items-center gap-3">
+            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/40 shrink-0 group-hover:bg-[#D4FF00]/70 transition-colors duration-150" />
+            <h2 className="section-header flex items-center gap-2 mb-0">
+              <BarChart3 size={14} className="text-gold" /> Engagement Rate Benchmarks
+            </h2>
+          </div>
           {expandedSection === "benchmarks" ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
         </button>
         {expandedSection === "benchmarks" && (
@@ -1163,10 +1172,13 @@ export default function AnalyticsPage() {
 
       {/* Feature 12: Monthly Trends Comparison */}
       <div className="card">
-        <button onClick={() => toggleSection("monthly")} className="flex items-center justify-between w-full">
-          <h2 className="section-header flex items-center gap-2 mb-0">
-            <Calendar size={14} className="text-gold" /> Monthly Trends Comparison
-          </h2>
+        <button onClick={() => toggleSection("monthly")} className="flex items-center justify-between w-full group">
+          <div className="flex items-center gap-3">
+            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/40 shrink-0 group-hover:bg-[#D4FF00]/70 transition-colors duration-150" />
+            <h2 className="section-header flex items-center gap-2 mb-0">
+              <Calendar size={14} className="text-gold" /> Monthly Trends Comparison
+            </h2>
+          </div>
           {expandedSection === "monthly" ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
         </button>
         {expandedSection === "monthly" && (

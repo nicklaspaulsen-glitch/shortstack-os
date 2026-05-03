@@ -728,9 +728,9 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
   return (
     <div>
       <div className="flex items-center gap-2 mb-4">
-        <Palette size={16} className="text-indigo-400" />
+        <Palette size={16} className="text-[#6366F1]" />
         <h2 className="text-sm font-bold text-foreground">Image Generator</h2>
-        <span className="text-[9px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
+        <span className="text-[9px] bg-[#6366F1]/10 text-[#6366F1] px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
       </div>
 
       {setupRequired && (
@@ -763,7 +763,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 <button key={s.value} onClick={() => setStyle(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     style === s.value
-                      ? "bg-indigo-500 text-white font-semibold"
+                      ? "bg-[#6366F1] text-white font-semibold"
                       : "bg-surface-light text-muted"
                   }`}>{s.label}</button>
               ))}
@@ -777,7 +777,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 <button key={s.value} onClick={() => setSize(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     size === s.value
-                      ? "bg-indigo-500 text-white font-semibold"
+                      ? "bg-[#6366F1] text-white font-semibold"
                       : "bg-surface-light text-muted"
                   }`}>{s.label}</button>
               ))}
@@ -785,7 +785,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
           </div>
 
           <button onClick={handleGenerate} disabled={processing || !prompt.trim()}
-            className="w-full px-4 py-2.5 bg-indigo-500 text-white text-xs font-semibold rounded-lg hover:bg-indigo-600 disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full px-4 py-2.5 bg-[#6366F1] text-white text-xs font-semibold rounded-lg hover:bg-[#5E5BFF] disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
             Generate Image
           </button>
@@ -804,7 +804,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                   />
                   <div className="flex items-center justify-center gap-3 mt-1">
                     <a href={img} target="_blank" rel="noopener noreferrer" download={`generated-${i + 1}.png`}
-                      className="inline-flex items-center gap-1 text-[10px] text-indigo-400 hover:underline">
+                      className="inline-flex items-center gap-1 text-[10px] text-[#6366F1] hover:underline">
                       <Download size={10} /> Download
                     </a>
                     <button
@@ -825,7 +825,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                           setHandoffingIdx(null);
                         }
                       }}
-                      className="inline-flex items-center gap-1 text-[10px] text-indigo-400 hover:underline disabled:opacity-40"
+                      className="inline-flex items-center gap-1 text-[10px] text-[#6366F1] hover:underline disabled:opacity-40"
                     >
                       {handoffingIdx === i
                         ? <Loader2 size={10} className="animate-spin" />

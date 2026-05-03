@@ -648,11 +648,18 @@ export default function ClientsPage() {
           </>
         }
       >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard label="Active Clients" value={activeClients.length} icon={<Users size={18} />} />
-          <StatCard label="Total MRR" value={formatCurrency(totalMRR)} icon={<DollarSign size={18} />} />
-          <StatCard label="Avg Health Score" value={`${avgHealth}%`} icon={<Heart size={18} />} changeType={avgHealth > 75 ? "positive" : avgHealth > 50 ? "neutral" : "negative"} />
-          <StatCard label="Active Contracts" value={contracts.filter((c) => c.status === "signed").length} icon={<FileText size={18} />} />
+        {/* Editorial bento layout — MRR as the feature cell */}
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2">
+              <StatCard label="Total MRR" value={formatCurrency(totalMRR)} icon={<DollarSign size={18} />} size="bento-2x1" />
+            </div>
+            <StatCard label="Active Clients" value={activeClients.length} icon={<Users size={18} />} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <StatCard label="Avg Health Score" value={`${avgHealth}%`} icon={<Heart size={18} />} changeType={avgHealth > 75 ? "positive" : avgHealth > 50 ? "neutral" : "negative"} />
+            <StatCard label="Active Contracts" value={contracts.filter((c) => c.status === "signed").length} icon={<FileText size={18} />} />
+          </div>
         </div>
       </CollapsibleStats>
 
