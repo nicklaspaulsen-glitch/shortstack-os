@@ -237,7 +237,7 @@ export default function VoiceStudioPage() {
           {!loading && tab === "my_voices" && (
             <MyVoicesTab clones={mine} onChange={refresh} />
           )}
-          {tab === "presets" && <PresetsTab presets={presets} loading={loading} />}
+          {tab === "presets" && <PresetsTab presets={presets} loading={loading} onRefresh={refresh} />}
           {!loading && tab === "renders" && <RendersTab renders={renders} />}
         </div>
       </div>
@@ -669,12 +669,23 @@ function StatusChip({ status }: { status: VoiceClone["status"] }) {
 }
 
 // ── Presets ─────────────────────────────────────────────────────
+function inferGender(preset: VoiceClone): "female" | "male" | "neutral" {
+  const eg = ((preset.consent_evidence?.gender as string) || "").toLowerCase();
+  if (eg === "female" || eg === "f") return "female";
+  if (eg === "male" || eg === "m") return "male";
+  const text = `${preset.label} ${preset.description ?? ""}`.toLowerCase();
+  if (/\b(female|woman|girl|her|she)\b/.test(text)) return "female";
+  if (/\b(male|man|boy|his|he)\b/.test(text)) return "male";
+  return "neutral";
+}
+
 const PRESET_CATEGORIES = ["all", "professional", "casual", "character", "narration", "sales"] as const;
 type PresetCategory = (typeof PRESET_CATEGORIES)[number];
 
-function PresetsTab({ presets, loading }: { presets: VoiceClone[]; loading?: boolean }) {
+function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; loading?: boolean; onRefresh?: () => void }) {
   const [categoryFilter, setCategoryFilter] = useState<PresetCategory>("all");
   const [langFilter, setLangFilter] = useState<string>("all");
+  const [genderFilter, setGenderFilter] = useState<"all" | "female" | "male">("all");
 
   const languages = useMemo(() => {
     const langs = new Set(presets.map((p) => p.language || "en").filter(Boolean));
@@ -686,9 +697,10 @@ function PresetsTab({ presets, loading }: { presets: VoiceClone[]; loading?: boo
       const cat = (p.consent_evidence?.category as string) || "preset";
       if (categoryFilter !== "all" && cat !== categoryFilter) return false;
       if (langFilter !== "all" && (p.language || "en") !== langFilter) return false;
+      if (genderFilter !== "all" && inferGender(p) !== genderFilter) return false;
       return true;
     });
-  }, [presets, categoryFilter, langFilter]);
+  }, [presets, categoryFilter, langFilter, genderFilter]);
 
   if (loading) {
     return (
@@ -706,8 +718,18 @@ function PresetsTab({ presets, loading }: { presets: VoiceClone[]; loading?: boo
         <Library size={28} className="text-white/40" />
         <h3 className="mt-3 text-base font-medium text-white">No presets yet</h3>
         <p className="mt-1 max-w-sm text-sm text-white/60">
-          Preset voices are seeded on first dashboard load. Refresh to reload.
+          Preset voices are seeded automatically on first dashboard load. Hit the button below if none appeared.
         </p>
+        {onRefresh && (
+          <button
+            type="button"
+            onClick={onRefresh}
+            className="mt-4 flex items-center gap-2 rounded-lg bg-[#6366F1] px-4 py-2 text-sm font-medium text-white hover:bg-[#5E5BFF] transition-colors cursor-pointer"
+          >
+            <RefreshCw size={14} />
+            Seed preset library
+          </button>
+        )}
       </div>
     );
   }
@@ -715,38 +737,60 @@ function PresetsTab({ presets, loading }: { presets: VoiceClone[]; loading?: boo
   return (
     <div className="space-y-4">
       {/* Filter bar */}
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="flex flex-wrap gap-1.5">
-          {PRESET_CATEGORIES.map((c) => (
+      <div className="space-y-2.5 rounded-xl border border-white/8 bg-white/[0.03] p-3">
+        {/* Gender row */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="w-14 flex-shrink-0 text-[10px] uppercase tracking-wider text-white/30">Gender</span>
+          {(["all", "female", "male"] as const).map((g) => (
             <button
-              key={c}
+              key={g}
               type="button"
-              onClick={() => setCategoryFilter(c)}
+              onClick={() => setGenderFilter(g)}
               className={[
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
-                categoryFilter === c
-                  ? "bg-[#6366F1] text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
+                genderFilter === g
+                  ? "border border-[#D4FF00]/30 bg-[#D4FF00]/10 text-[#D4FF00]"
                   : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
               ].join(" ")}
             >
-              {c === "all" ? "All categories" : c.charAt(0).toUpperCase() + c.slice(1)}
+              {g === "all" ? "All" : g.charAt(0).toUpperCase() + g.slice(1)}
             </button>
           ))}
         </div>
-        {languages.length > 2 && (
-          <select
-            value={langFilter}
-            onChange={(e) => setLangFilter(e.target.value)}
-            className="ml-auto rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50 cursor-pointer"
-          >
-            {languages.map((l) => (
-              <option key={l} value={l} className="bg-[#17171A]">
-                {l === "all" ? "All languages" : l.toUpperCase()}
-              </option>
+        {/* Category + language row */}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap gap-1.5">
+            {PRESET_CATEGORIES.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setCategoryFilter(c)}
+                className={[
+                  "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
+                  categoryFilter === c
+                    ? "bg-[#6366F1] text-white shadow-[0_0_10px_rgba(99,102,241,0.4)]"
+                    : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
+                ].join(" ")}
+              >
+                {c === "all" ? "All categories" : c.charAt(0).toUpperCase() + c.slice(1)}
+              </button>
             ))}
-          </select>
-        )}
-        <span className="ml-auto text-xs text-white/40">{filtered.length} of {presets.length} presets</span>
+          </div>
+          {languages.length > 2 && (
+            <select
+              value={langFilter}
+              onChange={(e) => setLangFilter(e.target.value)}
+              className="ml-auto rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50 cursor-pointer"
+            >
+              {languages.map((l) => (
+                <option key={l} value={l} className="bg-[#17171A]">
+                  {l === "all" ? "All languages" : l.toUpperCase()}
+                </option>
+              ))}
+            </select>
+          )}
+          <span className="ml-auto text-xs text-white/40">{filtered.length} of {presets.length} presets</span>
+        </div>
       </div>
 
       {filtered.length === 0 ? (
@@ -770,6 +814,7 @@ function PresetCard({ preset }: { preset: VoiceClone }) {
   const [error, setError] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [testText, setTestText] = useState(TEST_PROMPT_DEFAULT);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const onTest = useCallback(async () => {
     setTesting(true);
@@ -796,7 +841,16 @@ function PresetCard({ preset }: { preset: VoiceClone }) {
   const lang = preset.language?.toUpperCase() || "EN";
 
   return (
-    <div className="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-5 transition-colors duration-150 hover:border-[#6366F1]/25">
+    <div
+      className="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-5 transition-colors duration-150 hover:border-[#6366F1]/25"
+      onMouseEnter={() => {
+        if (testUrl || testing) return;
+        hoverTimerRef.current = setTimeout(() => { onTest(); }, 700);
+      }}
+      onMouseLeave={() => {
+        if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
+      }}
+    >
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[#6366F1]/30 bg-[#6366F1]/10 text-[#A78BFA]">
@@ -867,8 +921,11 @@ function PresetCard({ preset }: { preset: VoiceClone }) {
           ) : (
             <Play size={12} />
           )}
-          {testing ? "Generating…" : "Preview"}
+          {testing ? "Generating…" : testUrl ? "Re-preview" : "Preview"}
         </button>
+        {!testUrl && !testing && (
+          <span className="text-[10px] text-white/20 italic select-none">hover to preview</span>
+        )}
       </div>
 
       {/* Audio player */}

@@ -393,6 +393,14 @@ export default function AnalyticsPage() {
         title="Analytics"
         subtitle="See what's working — leads, revenue, and content ROI at a glance."
         gradient="blue"
+        actions={
+          <button
+            onClick={() => window.print()}
+            className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors duration-150"
+          >
+            <Download size={13} /> Export PDF
+          </button>
+        }
       />
       {/* Loading skeleton */}
       {isLoading && (
@@ -476,41 +484,84 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Key metrics */}
-      <motion.div
-        className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2.5"
-        initial="hidden"
-        animate="visible"
-        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
-      >
-        {[
-          { node: <StatCard label="Total Leads" value={stats.totalLeads.toLocaleString()} icon={<Zap size={14} />}
-            change={leadGrowth > 0 ? `+${leadGrowth}%` : `${leadGrowth}%`} changeType={leadGrowth >= 0 ? "positive" : "negative"} /> },
-          { node: <StatCard label="MRR" value={formatCurrency(stats.totalMRR)} icon={<DollarSign size={14} />} changeType="positive" /> },
-          { node: <StatCard label="Active Clients" value={stats.activeClients} icon={<Users size={14} />}
-            change={`${stats.totalClients} total`} /> },
-          { node: <StatCard label="DMs Sent" value={stats.dmsSent} icon={<MessageSquare size={14} />}
-            change={`${replyRate}% reply rate`} changeType={replyRate >= 5 ? "positive" : "neutral"} /> },
-          { node: <StatCard label="Calls Booked" value={stats.callsBooked} icon={<Phone size={14} />} /> },
-          { node: <StatCard label="Content" value={stats.contentPublished} icon={<Film size={14} />} change="published" /> },
-        ].map((c, i) => (
+      {/* Hero KPI bento */}
+      <div className="rounded-2xl border border-white/8 bg-[#15141A] p-5">
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_1fr]">
+          {/* MRR hero cell — full left column */}
           <motion.div
-            key={i}
-            variants={{
-              hidden: { opacity: 0, y: 16 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
-            }}
-            whileHover={{ y: -3 }}
+            className="flex flex-col justify-between rounded-xl border border-[#D4FF00]/10 bg-[#1F1E26] p-5 min-h-[120px]"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ y: -2 }}
           >
-            {c.node}
+            <div className="flex items-center gap-2 text-[#9F9DAA]">
+              <DollarSign size={14} />
+              <span className="text-[10px] font-medium uppercase tracking-[0.14em]">Monthly Recurring Revenue</span>
+            </div>
+            <div>
+              <p className="font-display text-4xl font-bold text-[#F5F4F1] tracking-[-0.03em] tabular-nums">
+                {formatCurrency(stats.totalMRR)}
+              </p>
+              <p className="mt-1 text-[11px] text-[#6F6D7A]">{stats.activeClients} active client{stats.activeClients !== 1 ? "s" : ""}</p>
+            </div>
           </motion.div>
-        ))}
-      </motion.div>
+
+          {/* 3 smaller stat cells */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {[
+              {
+                label: "Total Leads",
+                value: stats.totalLeads.toLocaleString(),
+                sub: leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last month` : "No prior data",
+                subColor: leadGrowth >= 0 ? "#7FE5B8" : "#F26063",
+                icon: <Zap size={13} />,
+              },
+              {
+                label: "DMs Sent",
+                value: stats.dmsSent.toLocaleString(),
+                sub: `${replyRate}% reply rate`,
+                subColor: replyRate >= 5 ? "#7FE5B8" : "#9F9DAA",
+                icon: <MessageSquare size={13} />,
+              },
+              {
+                label: "Calls Booked",
+                value: stats.callsBooked.toLocaleString(),
+                sub: `${stats.contentPublished} content published`,
+                subColor: "#9F9DAA",
+                icon: <Phone size={13} />,
+              },
+            ].map((cell, i) => (
+              <motion.div
+                key={cell.label}
+                className="flex flex-col justify-between rounded-xl border border-white/5 bg-[#1F1E26] p-4"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.05 * (i + 1), ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -2 }}
+              >
+                <div className="flex items-center gap-1.5 text-[#6F6D7A]">
+                  {cell.icon}
+                  <span className="text-[9px] font-medium uppercase tracking-[0.14em]">{cell.label}</span>
+                </div>
+                <div>
+                  <p className="font-display text-2xl font-bold text-[#F5F4F1] tabular-nums">{cell.value}</p>
+                  <p className="mt-0.5 text-[10px]" style={{ color: cell.subColor }}>{cell.sub}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* Charts row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Leads over time */}
         <div className="card">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/60" />
+            <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Leads</h3>
+          </div>
           <div className="mb-3">
             <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Acquisition</span>
             <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Leads · {dateRange === "custom" ? "Custom" : dateRange}</h2>
@@ -537,22 +588,35 @@ export default function AnalyticsPage() {
 
         {/* Revenue */}
         <div className="card">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/60" />
+            <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Revenue</h3>
+          </div>
           <div className="mb-3">
             <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Monetization</span>
             <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Revenue</h2>
           </div>
           <div className="h-px bg-gradient-to-r from-[#6366F1]/15 via-[#6366F1]/5 to-transparent mb-3" />
           <div className="h-52">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueByMonth}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(99, 102, 241, 0.08)" />
-                <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#6F6F7A" }} />
-                <YAxis tick={{ fontSize: 9, fill: "#6F6F7A" }} />
-                <Tooltip {...chartTooltipStyle} cursor={{ fill: "rgba(99, 102, 241, 0.05)" }} />
-                <Bar dataKey="mrr" fill="#6366F1" radius={[4, 4, 0, 0]} name="MRR" />
-                <Bar dataKey="deals" fill="#A78BFA" radius={[4, 4, 0, 0]} name="Deal Revenue" />
-              </BarChart>
-            </ResponsiveContainer>
+            {(() => {
+              const comparisonData = revenueByMonth.map((d, i) => ({
+                ...d,
+                previousMrr: revenueByMonth[i > 0 ? i - 1 : 0]?.mrr ?? 0,
+              }));
+              return (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={comparisonData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(99, 102, 241, 0.08)" />
+                    <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                    <YAxis tick={{ fontSize: 9, fill: "#6F6F7A" }} />
+                    <Tooltip {...chartTooltipStyle} cursor={{ stroke: "#6366F1", strokeOpacity: 0.2, strokeDasharray: "3 3" }} />
+                    <Line type="monotone" dataKey="mrr" stroke="#6366F1" strokeWidth={2} dot={false} name="MRR" />
+                    <Line type="monotone" dataKey="deals" stroke="#A78BFA" strokeWidth={2} dot={false} name="Deal Revenue" />
+                    <Line type="monotone" dataKey="previousMrr" stroke="#6F6D7A" strokeWidth={1} strokeDasharray="4 4" dot={false} name="Prev period" />
+                  </LineChart>
+                </ResponsiveContainer>
+              );
+            })()}
           </div>
         </div>
       </div>
@@ -727,6 +791,10 @@ export default function AnalyticsPage() {
 
         {/* Outreach performance */}
         <div className="card">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/60" />
+            <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Outreach</h3>
+          </div>
           <div className="mb-3">
             <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Engagement</span>
             <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Outreach Performance</h2>

@@ -40,6 +40,24 @@ const TAG_PRESETS: ClientTag[] = [
   { label: "Needs Attention", color: "#f59e0b" },
 ];
 
+function HealthArc({ score }: { score: number }) {
+  const pct = Math.min(100, Math.max(0, score ?? 0));
+  const r = 16, circ = 2 * Math.PI * r;
+  const dash = (pct / 100) * circ;
+  const color = pct >= 70 ? "#7FE5B8" : pct >= 40 ? "#FFC062" : "#F26063";
+  return (
+    <svg width="42" height="42" viewBox="0 0 42 42" className="-rotate-90">
+      <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="3" />
+      <circle cx="21" cy="21" r={r} fill="none" stroke={color} strokeWidth="3"
+        strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
+      <text x="21" y="21" textAnchor="middle" dominantBaseline="central"
+        className="rotate-90" style={{ fill: color, fontSize: 10, fontWeight: 700, transform: "rotate(90deg)", transformOrigin: "21px 21px" }}>
+        {pct}
+      </text>
+    </svg>
+  );
+}
+
 export default function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [contracts, setContracts] = useState<Contract[]>([]);
@@ -888,10 +906,8 @@ export default function ClientsPage() {
 
                 {/* Feature 1: Health indicator */}
                 <div className="flex items-start gap-3 mb-3 mt-1">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold ${
-                    c.health_score > 75 ? "bg-success/10 text-success" : c.health_score > 50 ? "bg-warning/10 text-warning" : "bg-danger/10 text-danger"
-                  }`}>
-                    {c.health_score}
+                  <div className="shrink-0">
+                    <HealthArc score={c.health_score} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
@@ -1034,7 +1050,7 @@ export default function ClientsPage() {
         </div>
       )}
       {tab === "clients" && viewMode === "table" && filteredClients.length > 0 && (
-        <div className="space-y-0">
+        <div className="space-y-0 [&_tbody_tr:hover]:border-l-2 [&_tbody_tr:hover]:border-l-[#D4FF00]/40">
           <DataTable
             columns={[
               { key: "select", label: (
@@ -1172,15 +1188,35 @@ export default function ClientsPage() {
             emptyMessage="No clients match your filters."
           />
 
-          {/* Feature 5: Expanded Activity Timeline */}
+          {/* Feature 5: Expanded Detail Panel */}
           {expandedRow && (() => {
             const client = clients.find(c => c.id === expandedRow);
             if (!client) return null;
             const revenue = getClientRevenue(expandedRow);
             const note = clientNotes[expandedRow];
             return (
-              <div className="card p-4 -mt-1 rounded-t-none border-t-0 bg-surface-light/50">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-[#15141A] border border-white/[0.08] border-t-0 rounded-b-xl px-4 pb-4">
+                <div className="grid grid-cols-2 gap-4 pt-3 sm:grid-cols-4">
+                  <div className="rounded-xl border border-white/[0.08] bg-[#1F1E26] p-3">
+                    <div className="text-[10px] uppercase tracking-wider text-white/50">MRR</div>
+                    <div className="mt-1 text-lg font-bold text-[#F5F4F1]">{formatCurrency(revenue.mrr ?? 0)}</div>
+                  </div>
+                  <div className="rounded-xl border border-white/[0.08] bg-[#1F1E26] p-3">
+                    <div className="text-[10px] uppercase tracking-wider text-white/50">Health</div>
+                    <div className={`mt-1 text-lg font-bold ${client.health_score >= 70 ? "text-[#7FE5B8]" : client.health_score >= 40 ? "text-[#FFC062]" : "text-[#F26063]"}`}>{client.health_score ?? "—"}%</div>
+                  </div>
+                  <div className="rounded-xl border border-white/[0.08] bg-[#1F1E26] p-3">
+                    <div className="text-[10px] uppercase tracking-wider text-white/50">Package</div>
+                    <div className="mt-1 text-sm font-semibold text-[#F5F4F1]">{client.package_tier ?? "—"}</div>
+                  </div>
+                  <div className="rounded-xl border border-white/[0.08] bg-[#1F1E26] p-3">
+                    <div className="text-[10px] uppercase tracking-wider text-white/50">Since</div>
+                    <div className="mt-1 text-sm text-[#9F9DAA]">{formatDate(client.created_at ?? "")}</div>
+                  </div>
+                </div>
+
+                {/* Legacy activity + revenue + notes below the tiles */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                   {/* Activity Timeline */}
                   <div>
                     <h4 className="text-[10px] text-muted uppercase tracking-wider mb-2">Recent Activity</h4>
@@ -1188,7 +1224,7 @@ export default function ClientsPage() {
                       {[
                         { action: "Invoice sent", time: "2 hours ago", icon: <FileText size={10} className="text-info" /> },
                         { action: "Content published", time: "1 day ago", icon: <CheckCircle size={10} className="text-success" /> },
-                        { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-purple-400" /> },
+                        { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-[#6366F1]" /> },
                         { action: "Contract signed", time: "1 week ago", icon: <FileText size={10} className="text-gold" /> },
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-2 text-[10px]">

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import dns from "dns";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 // Webhook Trigger System — sends events to Zapier/Make.com/custom URLs
@@ -31,11 +32,32 @@ export async function POST(request: NextRequest) {
       if (parsed.protocol !== "https:") {
         return NextResponse.json({ error: "webhook_url must use HTTPS" }, { status: 400 });
       }
+      // Layer 1: reject obvious private/internal hostnames and IP literals.
       if (isPrivateOrInternal(parsed.hostname)) {
         return NextResponse.json({ error: "Invalid webhook_url target" }, { status: 400 });
       }
+      // Layer 2: DNS-rebinding defense. Resolve the hostname and verify the
+      // resulting IP is not private. Without this, an attacker who controls DNS
+      // can register a public hostname that initially resolves to a real IP
+      // (fooling layer 1), then flip the DNS record to 169.254.169.254 (cloud
+      // metadata) or an RFC1918 address before the actual fetch fires.
+      //
+      // Note: A strict TOCTOU-free fix would pin the resolved IP in a custom
+      // HTTP agent. That complexity is deferred. This layer closes the most
+      // common rebinding window and logs every rejection for audit.
+      const resolvedIp = await resolveAndCheck(parsed.hostname);
+      if (resolvedIp === null) {
+        console.warn(`[webhooks/trigger] SSRF: DNS lookup failed for "${parsed.hostname}" — rejecting`);
+        return NextResponse.json({ error: "Invalid webhook_url: hostname could not be resolved" }, { status: 400 });
+      }
+      if (typeof resolvedIp === "string" && resolvedIp === "PRIVATE") {
+        console.warn(`[webhooks/trigger] SSRF: resolved IP for "${parsed.hostname}" is private — rejecting`);
+        return NextResponse.json({ error: "Invalid webhook_url target" }, { status: 400 });
+      }
       urls.push(webhook_url);
-    } catch {
+    } catch (err) {
+      // Catch URL parse failures; DNS errors are handled inside resolveAndCheck.
+      if ((err as { status?: number }).status) throw err; // re-throw NextResponse errors
       return NextResponse.json({ error: "Invalid webhook_url" }, { status: 400 });
     }
   }
@@ -84,12 +106,29 @@ export async function POST(request: NextRequest) {
 }
 
 /**
+ * Resolve `hostname` to an IP and check whether it's private.
+ * Returns:
+ *   - `"PRIVATE"` if the resolved IP falls in a blocked range
+ *   - the resolved IP string if it's safe
+ *   - `null` if DNS lookup failed (caller should reject)
+ */
+async function resolveAndCheck(hostname: string): Promise<string | null> {
+  try {
+    const { address } = await dns.promises.lookup(hostname, { family: 4 });
+    if (isPrivateOrInternal(address)) return "PRIVATE";
+    return address;
+  } catch {
+    // DNS failure — could be NXDOMAIN or a transient error.
+    // Fail closed: treat as invalid.
+    return null;
+  }
+}
+
+/**
  * Reject hostnames that resolve to private / link-local / loopback
  * networks. Block list covers RFC1918 IPv4, IPv6 ULA, link-local,
  * loopback, and the cloud metadata endpoint. Pure string matching —
- * does NOT do DNS resolution, so a hostname that resolves to a private
- * IP via DNS rebinding can still bypass this. For full rebinding
- * defense we'd need to resolve + check at fetch time.
+ * used as layer 1; resolveAndCheck() is layer 2 (DNS rebinding defense).
  */
 function isPrivateOrInternal(hostname: string): boolean {
   const host = hostname.toLowerCase();
