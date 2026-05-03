@@ -104,7 +104,7 @@ export default function ProductionPage() {
         icon={<Kanban size={28} />}
         title="Content Production"
         subtitle="Pipeline, assignments, reviews & approvals."
-        gradient="blue"
+        gradient="gold"
         actions={
           <button onClick={() => setShowSubmit(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
             <Plus size={12} /> New Request

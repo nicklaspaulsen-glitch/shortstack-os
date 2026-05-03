@@ -273,7 +273,7 @@ export default function ApiDocsPage() {
         icon={<FileText size={28} />}
         title="API Documentation"
         subtitle="Complete reference for the Trinity API."
-        gradient="blue"
+        gradient="gold"
         actions={
           <div className="flex items-center gap-2 text-[10px] text-white">
             <span className="px-2 py-1 bg-white/10 rounded border border-white/20">v2.4.0</span>

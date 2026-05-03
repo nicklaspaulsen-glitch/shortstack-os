@@ -177,7 +177,7 @@ export default function RoiCalculatorPage() {
         title="ROI Calculator"
         subtitle="Prove the value of your marketing spend with scenario-based ROI math."
         icon={<Calculator size={22} />}
-        gradient="ocean"
+        gradient="gold"
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

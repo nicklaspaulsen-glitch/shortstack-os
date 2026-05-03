@@ -81,7 +81,7 @@ export default function GoogleBusinessPage() {
         icon={<GlobeIcon size={28} />}
         title="Google Business"
         subtitle="Listings, reviews, posts & local SEO."
-        gradient="blue"
+        gradient="gold"
         actions={
           <button className="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white text-xs hover:bg-white/20 transition-all flex items-center gap-1.5">
             <RefreshCw size={12} /> Refresh

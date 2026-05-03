@@ -324,7 +324,7 @@ export default async function AdminConsolePage() {
         icon={<Terminal size={26} />}
         title="Admin Console"
         subtitle="Internal dev-tools dashboard — env vars, DB health, errors, webhooks, and cron jobs."
-        gradient="blue"
+        gradient="gold"
         eyebrow="Admin · /dashboard/console"
         sparkles={false}
       />

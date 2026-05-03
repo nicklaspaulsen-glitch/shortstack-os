@@ -763,7 +763,7 @@ export default function OutreachHubPage() {
         icon={<Send size={22} />}
         title="Outreach Hub"
         subtitle="Build targeted outreach campaigns across email, SMS, calls & DMs — target B2B or B2C leads by industry, niche, and location."
-        gradient="blue"
+        gradient="gold"
         actions={
           <button onClick={handleSave} disabled={saving}
             className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all disabled:opacity-40">

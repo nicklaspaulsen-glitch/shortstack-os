@@ -489,7 +489,7 @@ export default function PhoneEmailPage() {
         icon={<Phone size={28} />}
         title="Sender Management"
         subtitle="Phone & email sender pool with smart rotation."
-        gradient="green"
+        gradient="gold"
       />
 
       {/* ════════════════════ ROTATION STATS CARD ════════════════════ */}

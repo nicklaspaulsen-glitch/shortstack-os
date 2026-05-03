@@ -36,7 +36,7 @@ export default function SocialStudioPage() {
       <PageHero
         title="Social Studio"
         subtitle="Plan, post, and grow across every platform"
-        gradient="ocean"
+        gradient="gold"
         icon={<Megaphone size={20} />}
         eyebrow="MVP"
       />

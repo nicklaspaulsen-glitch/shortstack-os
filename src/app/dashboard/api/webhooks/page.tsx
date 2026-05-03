@@ -159,7 +159,7 @@ export default function WebhooksPage() {
         icon={<Webhook size={28} />}
         title="Webhooks"
         subtitle="Subscribe to events. We sign every payload with HMAC-SHA256 and retry with backoff."
-        gradient="ocean"
+        gradient="gold"
         actions={
           <button
             onClick={() => setShowCreate((v) => !v)}

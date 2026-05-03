@@ -148,7 +148,7 @@ export default function DedupPage() {
         title="Lead Deduplication"
         subtitle="Finds leads sharing the same phone or business name — preview, then merge."
         icon={<Copy className="w-6 h-6" />}
-        gradient="green"
+        gradient="gold"
         actions={
           <button
             onClick={load}

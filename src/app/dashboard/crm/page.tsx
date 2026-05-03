@@ -892,7 +892,7 @@ export default function CRMPage() {
         icon={<Users size={22} />}
         title="CRM"
         subtitle="Your full contact database — track leads, log activity, score prospects, and close deals with AI-powered enrichment and bulk actions."
-        gradient="blue"
+        gradient="gold"
       />
       {/* ── Stats Dashboard ── */}
       <div className="card p-0 overflow-hidden">

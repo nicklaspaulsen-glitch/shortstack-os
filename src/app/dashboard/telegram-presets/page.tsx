@@ -371,7 +371,7 @@ export default function TelegramPresetsPage() {
         icon={<TelegramIcon size={28} />}
         title="Telegram Presets"
         subtitle="300 ready-to-send messages across 14 categories. Fork, edit, and send to any chat."
-        gradient="blue"
+        gradient="gold"
         actions={
           <>
             <span className="text-xs text-white bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">

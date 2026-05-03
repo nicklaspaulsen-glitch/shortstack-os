@@ -841,7 +841,7 @@ export default function EmailComposerPage() {
         icon={<Mail size={28} />}
         title="Email Composer"
         subtitle="Emails that open and convert. AI drafts subject lines, bodies, and send times."
-        gradient="blue"
+        gradient="gold"
         actions={
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />

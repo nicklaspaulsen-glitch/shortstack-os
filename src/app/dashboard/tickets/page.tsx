@@ -103,7 +103,7 @@ export default function ContactSupportPage() {
         title="Contact Support"
         subtitle="Pick the channel that fits the question — every one is monitored by a real human."
         icon={<LifeBuoy size={20} />}
-        gradient="blue"
+        gradient="gold"
       />
 
       <div className="mx-auto max-w-5xl space-y-6 px-6 pb-12 pt-5">

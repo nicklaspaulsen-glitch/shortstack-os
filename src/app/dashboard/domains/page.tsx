@@ -399,7 +399,7 @@ export default function DomainsPage() {
         icon={<Globe2 size={28} />}
         title="Domains"
         subtitle="Search, buy & manage domains via GoDaddy. Connect them to your Vercel deployments."
-        gradient="ocean"
+        gradient="gold"
         actions={
           <div className="flex items-center gap-2">
             {usage && (

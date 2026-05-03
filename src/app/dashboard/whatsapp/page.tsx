@@ -225,7 +225,7 @@ export default function WhatsAppPage() {
         title="WhatsApp Campaigns"
         subtitle="Send templated WhatsApp messages to your clients — schedule or send now."
         icon={<MessageCircle className="w-6 h-6" />}
-        gradient="green"
+        gradient="gold"
         actions={
           <button
             onClick={() => setShowCompose(true)}

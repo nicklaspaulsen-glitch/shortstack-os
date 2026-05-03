@@ -480,7 +480,7 @@ export default function FinancialsPage() {
         icon={<PiggyBank size={22} />}
         title="Financials"
         subtitle="Revenue, expenses, invoicing, and financial planning."
-        gradient="green"
+        gradient="gold"
       />
       <div className="flex items-center justify-end">
         <div className="flex gap-2">

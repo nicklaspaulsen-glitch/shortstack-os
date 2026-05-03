@@ -1276,7 +1276,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         icon={<Sparkles size={28} />}
         title="Script Lab"
         subtitle="AI scripts with viral research & frameworks."
-        gradient="ocean"
+        gradient="gold"
         actions={
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />

@@ -145,7 +145,7 @@ export default function SMSTemplatesPage() {
         icon={<Smartphone size={28} />}
         title="SMS Templates"
         subtitle={`${templates.length} templates with compliance & analytics.`}
-        gradient="green"
+        gradient="gold"
         actions={
           <>
             <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">

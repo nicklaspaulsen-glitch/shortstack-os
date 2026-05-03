@@ -531,7 +531,7 @@ export default function InboxPage() {
           icon={<Inbox size={28} />}
           title="Inbox"
           subtitle="All your generated content, scripts & exports."
-          gradient="blue"
+          gradient="gold"
           actions={
             <>
               <div className="flex items-center gap-0.5 bg-white/10 rounded-lg p-0.5">

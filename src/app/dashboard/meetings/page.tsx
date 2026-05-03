@@ -147,7 +147,7 @@ export default function MeetingsPage() {
         icon={<Mic size={22} />}
         title="Meetings"
         subtitle={`${meetings.length} recorded — transcripts, action items, and decisions on every call.`}
-        gradient="green"
+        gradient="gold"
         actions={
           <Link
             href="/dashboard/meetings/new"

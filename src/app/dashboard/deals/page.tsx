@@ -161,7 +161,7 @@ export default function DealsPage() {
         icon={<CreditCard size={28} />}
         title="Deals Pipeline"
         subtitle="Track deals from prospect to close with AI scoring, drag-drop kanban, revenue forecasting, and commission tracking."
-        gradient="green"
+        gradient="gold"
         actions={
           <button onClick={() => setShowCreateModal(!showCreateModal)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
             <Plus size={12} /> New Deal

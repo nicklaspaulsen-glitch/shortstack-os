@@ -196,7 +196,7 @@ export default function ServicesPage() {
         title="Service Catalog"
         subtitle="Define productized services once — attach them to proposals, invoices, and deals."
         icon={<Package size={22} />}
-        gradient="blue"
+        gradient="gold"
         actions={
           <button onClick={() => setShowCreate((v) => !v)}
             className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">

@@ -458,7 +458,7 @@ export default function ContentLibraryPage() {
         icon={<FolderOpen size={28} />}
         title="Content Library"
         subtitle="Centralized media library for client assets."
-        gradient="ocean"
+        gradient="gold"
         actions={
           <>
             <button onClick={() => setShowCollections(!showCollections)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1">

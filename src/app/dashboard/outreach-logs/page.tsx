@@ -539,7 +539,7 @@ export default function OutreachLogsPage() {
         icon={<Send size={22} />}
         title="Outreach Logs"
         subtitle="Full communication history — calls, emails, SMS, DMs with transcripts & details."
-        gradient="blue"
+        gradient="gold"
       />
       <div className="flex items-center justify-end">
         <div className="flex gap-2">

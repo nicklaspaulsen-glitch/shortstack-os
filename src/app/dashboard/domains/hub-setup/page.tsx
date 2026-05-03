@@ -140,7 +140,7 @@ function HubSetupInner() {
         icon={<Sparkles size={28} />}
         title="Launch your brand"
         subtitle="One click provisions email, phone, website, portal, and chat — all on your new domain."
-        gradient="ocean"
+        gradient="gold"
       />
 
       {/* Domain input card — hidden if prefilled */}

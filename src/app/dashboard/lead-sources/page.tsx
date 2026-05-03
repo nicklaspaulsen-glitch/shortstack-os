@@ -154,7 +154,7 @@ export default function LeadSourcesPage() {
         title="Lead Sources"
         subtitle="Track where every lead comes from and what each source is worth."
         icon={<Filter size={22} />}
-        gradient="green"
+        gradient="gold"
         actions={
           <button onClick={() => setShowCreate((v) => !v)}
             className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">

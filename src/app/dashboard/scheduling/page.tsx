@@ -265,7 +265,7 @@ export default function SchedulingPage() {
         icon={<Calendar size={28} />}
         title="AI Smart Scheduler"
         subtitle="Intelligent booking pages with AI conflict detection, smart availability, and client prep cards — share a link, skip the back-and-forth."
-        gradient="blue"
+        gradient="gold"
         actions={
           <>
             <div className="flex items-center gap-1.5 text-[10px] bg-white/10 text-white px-2.5 py-1 rounded-md border border-white/20">

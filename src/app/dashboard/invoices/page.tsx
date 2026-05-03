@@ -131,7 +131,7 @@ export default function InvoicesPage() {
         icon={<CreditCard size={22} />}
         title="Invoices"
         subtitle={`${invoicesData.length} invoices — track payments, reminders, and recurring billing.`}
-        gradient="green"
+        gradient="gold"
         actions={
           <div className="flex gap-2">
             <Link

@@ -1002,7 +1002,7 @@ export default function LandingPagesPage() {
         icon={<LayoutTemplate size={28} />}
         title="AI Landing Page Generator"
         subtitle="High-converting pages with AI-powered content."
-        gradient="green"
+        gradient="gold"
         actions={
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />

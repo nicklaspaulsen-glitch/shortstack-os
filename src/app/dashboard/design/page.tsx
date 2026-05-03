@@ -856,7 +856,7 @@ export default function DesignStudioPage() {
         icon={<PenTool size={28} />}
         title="Design Studio"
         subtitle="AI designs, palettes & batch generation."
-        gradient="ocean"
+        gradient="gold"
         actions={
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />

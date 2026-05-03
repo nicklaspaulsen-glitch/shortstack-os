@@ -203,7 +203,7 @@ export default function AgentOfficePage() {
           title="Agent Office"
           subtitle="Sign in to watch your AI team work."
           icon={<Sparkles size={26} />}
-          gradient="green"
+          gradient="gold"
         />
       </div>
     );
@@ -225,7 +225,7 @@ export default function AgentOfficePage() {
         title="Agent Office"
         subtitle="A pixel-art view of your AI team. Each character is driven by real database events — when something happens, that agent walks over and works on it."
         icon={<Sparkles size={26} />}
-        gradient="green"
+        gradient="gold"
         actions={
           <div className="flex flex-wrap items-center gap-2">
             {/* 2D / 3D toggle */}

@@ -384,7 +384,7 @@ export default function WorkspaceFilesPage() {
       <PageHero
         title="Workspace files"
         subtitle="Drive-style storage on Cloudflare R2 — briefs, thumbnails, videos, contracts, and brand assets in one place."
-        gradient="ocean"
+        gradient="gold"
         eyebrow="Workspace"
         icon={<Sparkles size={20} />}
         actions={

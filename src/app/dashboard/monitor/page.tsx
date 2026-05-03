@@ -127,7 +127,7 @@ export default function MonitorPage() {
         title="System Monitor"
         subtitle="Live status board — auto-refreshes every 30 seconds."
         icon={<Activity className="w-6 h-6" />}
-        gradient="ocean"
+        gradient="gold"
         actions={
           <div className="flex items-center gap-3">
             <span className="text-xs text-white/50 tabular-nums">Next refresh in {countdown}s</span>

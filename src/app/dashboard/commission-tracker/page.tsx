@@ -188,7 +188,7 @@ export default function CommissionTrackerPage() {
         title="Commission Tracker"
         subtitle="Track, approve, and pay sales commissions for your team."
         icon={<DollarSign size={22} />}
-        gradient="green"
+        gradient="gold"
         actions={
           <div className="flex items-center gap-2">
             <button

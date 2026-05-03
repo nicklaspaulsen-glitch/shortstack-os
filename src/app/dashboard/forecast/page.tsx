@@ -119,7 +119,7 @@ export default function ForecastPage() {
         title="Revenue Forecast"
         subtitle="Weighted pipeline by close date — next 6 months."
         icon={<TrendingUp size={22} />}
-        gradient="green"
+        gradient="gold"
       />
 
       {loading ? <TableSkeleton rows={8} /> : error ? (

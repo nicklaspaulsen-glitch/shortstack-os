@@ -188,7 +188,7 @@ export default function CustomDashboardPage() {
         title="Custom Dashboard"
         subtitle="Drag widgets onto your personal dashboard — your key metrics, your layout."
         icon={<LayoutDashboard className="w-6 h-6" />}
-        gradient="green"
+        gradient="gold"
         actions={
           <div className="flex items-center gap-2">
             <button

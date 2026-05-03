@@ -88,7 +88,7 @@ export default function AgentDesktopPage() {
         title="Agent Desktop"
         subtitle="All deployed AI agents and integrations — status, heartbeat, and controls."
         icon={<Monitor className="w-6 h-6" />}
-        gradient="blue"
+        gradient="gold"
         actions={
           <button
             onClick={load}

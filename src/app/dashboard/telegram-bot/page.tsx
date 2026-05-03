@@ -486,7 +486,7 @@ export default function TelegramBotPage() {
         icon={<TelegramIcon size={28} />}
         title="Telegram Bot"
         subtitle="Manage what your bot sends you and when."
-        gradient="blue"
+        gradient="gold"
         actions={
           <>
             <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${botConnected ? "bg-emerald-500/30 text-white border border-emerald-300/40" : "bg-red-500/20 text-white border border-red-300/30"}`}>
