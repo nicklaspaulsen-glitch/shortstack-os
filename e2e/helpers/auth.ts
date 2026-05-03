@@ -34,7 +34,10 @@ export async function signIn(page: Page): Promise<void> {
 export async function signOut(page: Page): Promise<void> {
   // The sidebar renders two sign-out buttons (desktop + mobile); use the first.
   await page.getByRole("button", { name: /sign out/i }).first().click();
-  await page.waitForURL(/\/(login|$)/, { timeout: 10_000 });
+  // Wait until we leave the dashboard — could redirect to /login or root
+  await page.waitForURL((url) => !url.pathname.startsWith("/dashboard"), {
+    timeout: 10_000,
+  });
 }
 
 /** Assert the user is on a dashboard page. */
