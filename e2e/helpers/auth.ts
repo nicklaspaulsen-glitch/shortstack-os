@@ -32,15 +32,23 @@ export async function signIn(page: Page): Promise<void> {
  * Waits until the browser lands on /login.
  */
 export async function signOut(page: Page): Promise<void> {
-  // Start listening BEFORE clicking so we don't race the window.location.href
+  // `signIn` waits only for the URL to change to /dashboard — React may still
+  // be hydrating. Wait for 'load' (all scripts fetched + executed) so the
+  // sidebar's onClick handler is actually attached before we click.
+  // Soft-fail: if the page never fully settles (Supabase realtime keep-alive),
+  // proceed anyway rather than timing out here.
+  await page.waitForLoadState("load", { timeout: 10_000 }).catch(() => {});
+
+  const btn = page.locator('button[aria-label="Sign Out"]');
+  await btn.waitFor({ state: "visible", timeout: 10_000 });
+
+  // Start listening BEFORE clicking to avoid racing the window.location.href
   // redirect that fires after supabase.auth.signOut() resolves.
-  // The sidebar is a ternary (collapsed vs expanded) so exactly one sign-out
-  // button exists in the DOM at a time — no :visible or .first() needed.
   await Promise.all([
     page.waitForURL((url) => !url.pathname.startsWith("/dashboard"), {
-      timeout: 15_000,
+      timeout: 30_000,
     }),
-    page.locator('button[aria-label="Sign Out"]').click(),
+    btn.click(),
   ]);
 }
 
