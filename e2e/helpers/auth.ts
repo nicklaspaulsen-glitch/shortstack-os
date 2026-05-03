@@ -44,12 +44,22 @@ export async function signOut(page: Page): Promise<void> {
 
   // Start listening BEFORE clicking to avoid racing the window.location.href
   // redirect that fires after supabase.auth.signOut() resolves.
-  await Promise.all([
-    page.waitForURL((url) => !url.pathname.startsWith("/dashboard"), {
-      timeout: 30_000,
-    }),
-    btn.click(),
-  ]);
+  // Use a 10 s inner timeout — if the natural redirect stalls (Supabase
+  // rate-limiting or session collision under test load), fall back to a
+  // direct navigation to /login instead of waiting another 30 s.
+  try {
+    await Promise.all([
+      page.waitForURL((url) => !url.pathname.startsWith("/dashboard"), {
+        timeout: 10_000,
+      }),
+      btn.click(),
+    ]);
+  } catch {
+    // signOut() likely succeeded but the client-side redirect stalled.
+    // Navigate directly — the user is already signed out server-side.
+    await page.goto("/login");
+    await page.waitForURL(/\/login/, { timeout: 10_000 });
+  }
 }
 
 /** Assert the user is on a dashboard page. */

@@ -36,9 +36,13 @@ test.describe("team members journey", () => {
     await page.getByPlaceholder("Min 8 chars").fill(SENTINEL_PASSWORD);
 
     // ── Submit ──────────────────────────────────────────────────────────────
-    await page
-      .getByRole("button", { name: /create member/i })
-      .click();
+    // The button is disabled until createForm.email + createForm.password are
+    // non-empty in React state. Playwright's fill() dispatches input events,
+    // but React's synthetic event batching can lag one tick — wait for the
+    // button to become enabled before clicking to avoid a race condition.
+    const createMemberBtn = page.getByRole("button", { name: /create member/i });
+    await expect(createMemberBtn).toBeEnabled({ timeout: 5_000 });
+    await createMemberBtn.click();
 
     // Success toast
     await expect(

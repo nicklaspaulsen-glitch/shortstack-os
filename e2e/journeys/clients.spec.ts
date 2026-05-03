@@ -31,14 +31,13 @@ test.describe("clients journey", () => {
     ).toBeVisible({ timeout: 8_000 });
 
     // ── Fill the form ───────────────────────────────────────────────────────
-    await page.getByLabel(/business name/i).fill(SENTINEL_NAME);
-    await page.getByLabel(/contact name/i).fill(CONTACT_NAME);
-
-    // The email field inside the modal (scoped to avoid matching the login page)
-    const modal = page.locator('[role="dialog"], .modal, [class*="rounded-2xl"]').filter({
-      has: page.getByRole("heading", { name: /add client/i }),
-    });
-    await modal.getByLabel(/email/i).fill(SENTINEL_EMAIL);
+    // Target inputs by their stable IDs — labels contain a nested <span>*</span>
+    // which can make getByLabel fragile. Also wait for the first input to be
+    // interactive so any modal mount animation has completed.
+    await page.locator("#client-business-name").waitFor({ state: "visible", timeout: 8_000 });
+    await page.locator("#client-business-name").fill(SENTINEL_NAME);
+    await page.locator("#client-contact-name").fill(CONTACT_NAME);
+    await page.locator("#client-email").fill(SENTINEL_EMAIL);
 
     // ── Submit ──────────────────────────────────────────────────────────────
     await page
