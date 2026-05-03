@@ -4,15 +4,17 @@
  * Schedule: 0 3 * * * (daily at 03:00 UTC; see vercel.json)
  *
  * Pulls yesterday's metrics from each connected platform (Meta + Google +
- * TikTok) for every user with an active oauth_connection, and upserts into
- * `ads_metrics_cache`. The dashboard reads from that cache so page loads stay
- * fast and we don't hit upstream rate limits.
+ * TikTok via direct OAuth; LinkedIn + Pinterest via Zernio hosted OAuth) for
+ * every user with an active connection, and upserts into `ads_metrics_cache`.
+ * The dashboard reads from that cache so page loads stay fast and we don't
+ * hit upstream rate limits.
  *
  * Auth: Bearer CRON_SECRET. Fail-closed if env var is missing.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { metaAds, googleAds, tiktokAds } from "@/lib/ads/platforms";
+import { listCampaigns as zernioListCampaigns } from "@/lib/services/zernio-ads";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -134,6 +136,66 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       } catch (err) {
         summary.errors.push(
           `[${userId}/${conn.platform}] fetch failed: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
+    }
+  }
+
+  // ── LinkedIn + Pinterest via Zernio ──────────────────────────────────
+  // Agencies connect LinkedIn/Pinterest through Zernio's hosted OAuth.
+  // Zernio profile IDs are stored in social_accounts (platform="zernio").
+  // We join to clients to recover the owning agency's user_id so rows land
+  // in the right partition of ads_metrics_cache.
+  const { data: zernioAccts } = await supabase
+    .from("social_accounts")
+    .select("client_id, account_id, clients!inner(profile_id)")
+    .eq("platform", "zernio")
+    .not("account_id", "is", null);
+
+  for (const acct of zernioAccts || []) {
+    const profileId = acct.account_id;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const userId = (acct.clients as any)?.profile_id as string | undefined;
+    if (!profileId || !userId) continue;
+
+    for (const platform of ["linkedin", "pinterest"] as const) {
+      try {
+        const campaigns = await zernioListCampaigns({ profileId, platform });
+        const rows = campaigns.map((c) => ({
+          user_id: userId,
+          platform,
+          campaign_id: c.id,
+          campaign_name: c.name,
+          date: dateStr,
+          spend_cents: Math.round(c.total_spend * 100),
+          impressions: c.impressions,
+          clicks: c.clicks,
+          conversions: c.conversions,
+          cpa_cents:
+            c.cpa !== null ? Math.round(c.cpa * 100) : null,
+          roas: c.roas,
+          raw_metrics: {
+            ctr: c.ctr,
+            status: c.status,
+            objective: c.objective,
+            source: "zernio",
+          },
+          fetched_at: new Date().toISOString(),
+        }));
+        if (rows.length === 0) continue;
+        const { error: upsertErr } = await supabase
+          .from("ads_metrics_cache")
+          .upsert(rows, { onConflict: "user_id,platform,campaign_id,date" });
+        if (upsertErr) {
+          summary.errors.push(
+            `[zernio/${acct.client_id}/${platform}] upsert: ${upsertErr.message}`,
+          );
+        } else {
+          summary.rowsUpserted += rows.length;
+        }
+      } catch (err) {
+        summary.errors.push(
+          `[zernio/${acct.client_id}/${platform}] fetch: ${err instanceof Error ? err.message : String(err)}`,
         );
       }
     }
