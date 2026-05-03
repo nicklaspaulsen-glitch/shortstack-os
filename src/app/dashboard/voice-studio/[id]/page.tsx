@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import {
   Mic,
   Play,
+  Pause,
   Loader2,
   AlertTriangle,
   Trash2,
@@ -15,9 +16,12 @@ import {
   Send,
   CheckCircle2,
   RefreshCw,
+  Clock,
 } from "lucide-react";
 import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
+
+const R2_BASE = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ?? "";
 
 interface VoiceClone {
   id: string;
@@ -101,6 +105,8 @@ export default function VoiceCloneDetailPage() {
   const [testUrl, setTestUrl] = useState<string | null>(null);
   const [testing, setTesting] = useState(false);
   const [polling, setPolling] = useState(false);
+  const [playingSampleId, setPlayingSampleId] = useState<string | null>(null);
+  const [playingRenderId, setPlayingRenderId] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     if (!cloneId) return;
@@ -342,7 +348,7 @@ export default function VoiceCloneDetailPage() {
                   value={testText}
                   onChange={(e) => setTestText(e.target.value)}
                   rows={3}
-                  className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-amber-400/60 focus:outline-none"
+                  className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#6366F1]/60 focus:outline-none"
                   placeholder="Test text..."
                 />
                 <div className="mt-3 flex items-center gap-2">
@@ -350,7 +356,7 @@ export default function VoiceCloneDetailPage() {
                     type="button"
                     onClick={onTest}
                     disabled={testing || testText.trim().length === 0}
-                    className="flex items-center gap-1.5 rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-medium text-black hover:bg-amber-400 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
+                    className="flex items-center gap-1.5 rounded-lg bg-[#6366F1] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#A78BFA] disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
                   >
                     {testing ? (
                       <Loader2 size={12} className="animate-spin" />
@@ -395,20 +401,63 @@ export default function VoiceCloneDetailPage() {
                 </p>
               ) : (
                 <ul className="mt-3 space-y-2">
-                  {samples.map((s) => (
-                    <li
-                      key={s.id}
-                      className="flex items-center justify-between rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-xs text-white/70"
-                    >
-                      <span className="truncate font-mono">{s.r2_key}</span>
-                      <span className="ml-2 text-white/50">
-                        {new Date(s.uploaded_at).toLocaleString(undefined, {
-                          dateStyle: "short",
-                          timeStyle: "short",
-                        })}
-                      </span>
-                    </li>
-                  ))}
+                  {samples.map((s) => {
+                    const audioUrl = s.r2_key ? `${R2_BASE}/${s.r2_key}` : null;
+                    const isPlaying = playingSampleId === s.id;
+                    return (
+                      <li
+                        key={s.id}
+                        className="rounded-lg border border-white/10 bg-black/20 px-3 py-2.5 text-xs"
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-2 min-w-0">
+                            {audioUrl ? (
+                              <button
+                                type="button"
+                                onClick={() => setPlayingSampleId(isPlaying ? null : s.id)}
+                                className="flex-shrink-0 w-6 h-6 rounded-full bg-[#6366F1]/20 hover:bg-[#6366F1]/40 flex items-center justify-center transition-colors"
+                                aria-label={isPlaying ? "Pause" : "Play"}
+                              >
+                                {isPlaying ? <Pause size={10} className="text-[#A78BFA]" /> : <Play size={10} className="text-[#6366F1]" />}
+                              </button>
+                            ) : (
+                              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+                                <Mic size={10} className="text-white/40" />
+                              </div>
+                            )}
+                            <span className="truncate font-mono text-white/50 text-[10px]">{s.r2_key}</span>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0 text-white/40">
+                            {s.duration_seconds != null && (
+                              <span className="flex items-center gap-1">
+                                <Clock size={9} />
+                                {s.duration_seconds.toFixed(1)}s
+                              </span>
+                            )}
+                            <span>
+                              {new Date(s.uploaded_at).toLocaleString(undefined, {
+                                dateStyle: "short",
+                                timeStyle: "short",
+                              })}
+                            </span>
+                          </div>
+                        </div>
+                        {isPlaying && audioUrl && (
+                          <div className="mt-2">
+                            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                            <audio
+                              key={s.id}
+                              src={audioUrl}
+                              controls
+                              autoPlay
+                              className="w-full h-8"
+                              onEnded={() => setPlayingSampleId(null)}
+                            />
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </section>
@@ -424,21 +473,58 @@ export default function VoiceCloneDetailPage() {
                 </p>
               ) : (
                 <ul className="mt-3 space-y-2">
-                  {renders.map((r) => (
-                    <li
-                      key={r.id}
-                      className="rounded-lg border border-white/10 bg-black/20 p-3 text-xs text-white/70"
-                    >
-                      <div className="text-white">{r.text_preview}</div>
-                      <div className="mt-1 text-[11px] text-white/50">
-                        {new Date(r.rendered_at).toLocaleString(undefined, {
-                          dateStyle: "short",
-                          timeStyle: "short",
-                        })}{" "}
-                        · used {r.use_count}× {r.context && `· ${r.context}`}
-                      </div>
-                    </li>
-                  ))}
+                  {renders.map((r) => {
+                    const audioUrl = r.r2_key ? `${R2_BASE}/${r.r2_key}` : null;
+                    const isPlaying = playingRenderId === r.id;
+                    return (
+                      <li
+                        key={r.id}
+                        className="rounded-lg border border-white/10 bg-black/20 p-3 text-xs"
+                      >
+                        <div className="flex items-start gap-3">
+                          {audioUrl ? (
+                            <button
+                              type="button"
+                              onClick={() => setPlayingRenderId(isPlaying ? null : r.id)}
+                              className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-[#6366F1]/20 hover:bg-[#6366F1]/40 flex items-center justify-center transition-colors"
+                              aria-label={isPlaying ? "Pause" : "Play"}
+                            >
+                              {isPlaying ? <Pause size={10} className="text-[#A78BFA]" /> : <Play size={10} className="text-[#6366F1]" />}
+                            </button>
+                          ) : (
+                            <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+                              <Play size={10} className="text-white/30" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white/90 leading-snug">{r.text_preview}</p>
+                            <p className="mt-1 text-[10px] text-white/40">
+                              {new Date(r.rendered_at).toLocaleString(undefined, {
+                                dateStyle: "short",
+                                timeStyle: "short",
+                              })}
+                              {" · used "}{r.use_count}×
+                              {r.duration_seconds != null && ` · ${r.duration_seconds.toFixed(1)}s`}
+                              {r.context && ` · ${r.context}`}
+                            </p>
+                          </div>
+                        </div>
+                        {isPlaying && audioUrl && (
+                          <div className="mt-2 pl-9">
+                            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                            <audio
+                              key={r.id}
+                              src={audioUrl}
+                              controls
+                              autoPlay
+                              className="w-full h-8"
+                              onEnded={() => setPlayingRenderId(null)}
+                            />
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </section>
