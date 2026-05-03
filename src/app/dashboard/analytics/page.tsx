@@ -464,7 +464,7 @@ export default function AnalyticsPage() {
           <div className="flex items-center gap-1 bg-[#17171A] rounded-lg p-0.5 ring-1 ring-[#6366F1]/10">
             {(["7d", "30d", "90d", "custom"] as const).map(r => (
               <button key={r} onClick={() => setDateRange(r)}
-                className={`px-2.5 py-1 text-[10px] rounded-md transition-colors duration-150 ${dateRange === r ? "bg-[#6366F1] text-white font-medium shadow-[0_0_12px_rgba(99,102,241,0.3)]" : "text-muted hover:text-foreground"}`}>
+                className={`px-2.5 py-1 text-[10px] rounded-md transition-colors duration-150 ${dateRange === r ? "bg-[#D4FF00] text-[#0A0A0B] font-medium shadow-[0_0_8px_rgba(212,255,0,0.25)]" : "text-muted hover:text-foreground"}`}>
                 {r === "custom" ? "Custom" : r}
               </button>
             ))}
@@ -490,14 +490,14 @@ export default function AnalyticsPage() {
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_1fr]">
           {/* MRR hero cell — full left column */}
           <motion.div
-            className="relative flex flex-col justify-between rounded-xl border border-[rgba(212,255,0,0.15)] bg-[#1F1E26] p-5 min-h-[120px] overflow-hidden"
+            className="relative flex flex-col justify-between rounded-xl border border-[rgba(212,255,0,0.22)] bg-[#1F1E26] p-5 min-h-[120px] overflow-hidden"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{ y: -2 }}
           >
             {/* Lime accent glow behind the number */}
-            <div className="pointer-events-none absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-[#D4FF00] opacity-[0.04] blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-[#D4FF00] opacity-[0.06] blur-2xl" />
             <div className="flex items-center gap-2 text-[#9F9DAA]">
               <DollarSign size={14} />
               <span className="text-[10px] font-medium uppercase tracking-[0.14em]">Monthly Recurring Revenue</span>
@@ -562,7 +562,7 @@ export default function AnalyticsPage() {
         {/* Leads over time */}
         <div className="card">
           <div className="mb-4 flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#6366F1]/60" />
+            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/50" />
             <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Leads</h3>
           </div>
           <div className="mb-3">
@@ -575,15 +575,15 @@ export default function AnalyticsPage() {
               <AreaChart data={leadsByDay}>
                 <defs>
                   <linearGradient id="accentGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#6366F1" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="#6366F1" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#D4FF00" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="#D4FF00" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(99, 102, 241, 0.08)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(212, 255, 0, 0.06)" />
                 <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#6F6F7A" }} />
                 <YAxis tick={{ fontSize: 9, fill: "#6F6F7A" }} />
-                <Tooltip {...chartTooltipStyle} cursor={{ stroke: "#6366F1", strokeOpacity: 0.2, strokeDasharray: "3 3" }} />
-                <Area type="monotone" dataKey="count" stroke="#6366F1" fill="url(#accentGrad)" strokeWidth={2} />
+                <Tooltip {...chartTooltipStyle} cursor={{ stroke: "#D4FF00", strokeOpacity: 0.2, strokeDasharray: "3 3" }} />
+                <Area type="monotone" dataKey="count" stroke="#D4FF00" fill="url(#accentGrad)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -592,7 +592,7 @@ export default function AnalyticsPage() {
         {/* Revenue */}
         <div className="card">
           <div className="mb-4 flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#6366F1]/60" />
+            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/50" />
             <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Revenue</h3>
           </div>
           <div className="mb-3">
@@ -639,8 +639,8 @@ export default function AnalyticsPage() {
                 <AreaChart data={[...revenueByMonth.map(r => ({ month: r.month, projected: r.mrr, conservative: r.mrr, optimistic: r.mrr })), ...revenueForecast]}>
                   <defs>
                     <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#6366F1" stopOpacity={0.25} />
-                      <stop offset="100%" stopColor="#6366F1" stopOpacity={0} />
+                      <stop offset="0%" stopColor="#D4FF00" stopOpacity={0.25} />
+                      <stop offset="100%" stopColor="#D4FF00" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(99, 102, 241, 0.08)" />
@@ -648,7 +648,7 @@ export default function AnalyticsPage() {
                   <YAxis tick={{ fontSize: 9, fill: "#6F6F7A" }} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
                   <Tooltip {...chartTooltipStyle} cursor={{ stroke: "#6366F1", strokeOpacity: 0.2, strokeDasharray: "3 3" }} formatter={(v) => formatCurrency(Number(v) || 0)} />
                   <Area type="monotone" dataKey="optimistic" stroke="#7FE5B8" fill="none" strokeWidth={1} strokeDasharray="4 4" name="Optimistic" />
-                  <Area type="monotone" dataKey="projected" stroke="#6366F1" fill="url(#forecastGrad)" strokeWidth={2} name="Projected" />
+                  <Area type="monotone" dataKey="projected" stroke="#D4FF00" fill="url(#forecastGrad)" strokeWidth={2} name="Projected" />
                   <Area type="monotone" dataKey="conservative" stroke="#FFC062" fill="none" strokeWidth={1} strokeDasharray="4 4" name="Conservative" />
                   <Legend wrapperStyle={{ fontSize: "10px" }} />
                 </AreaChart>
@@ -803,7 +803,7 @@ export default function AnalyticsPage() {
         {/* Outreach performance */}
         <div className="card">
           <div className="mb-4 flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#6366F1]/60" />
+            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/50" />
             <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Outreach</h3>
           </div>
           <div className="mb-3">
@@ -1214,7 +1214,7 @@ export default function AnalyticsPage() {
 
       {/* Performance indicators */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-        <div className="card text-center p-3 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 transition-colors duration-150">
+        <div className="card text-center p-3 ring-1 ring-[rgba(212,255,0,0.08)] hover:ring-[rgba(212,255,0,0.15)] transition-colors duration-150">
           <div className="flex items-center justify-center gap-1 mb-1">
             {leadGrowth >= 0
               ? <ArrowUp size={12} style={{ color: "#7FE5B8" }} />
@@ -1224,15 +1224,15 @@ export default function AnalyticsPage() {
           </div>
           <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Lead Growth</p>
         </div>
-        <div className="card text-center p-3 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 transition-colors duration-150">
-          <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#6366F1" }}>{replyRate}%</span>
+        <div className="card text-center p-3 ring-1 ring-[rgba(212,255,0,0.08)] hover:ring-[rgba(212,255,0,0.15)] transition-colors duration-150">
+          <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#D4FF00" }}>{replyRate}%</span>
           <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Reply Rate</p>
         </div>
-        <div className="card text-center p-3 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 transition-colors duration-150">
-          <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#6366F1" }}>{formatCurrency(stats.dealValue)}</span>
+        <div className="card text-center p-3 ring-1 ring-[rgba(212,255,0,0.08)] hover:ring-[rgba(212,255,0,0.15)] transition-colors duration-150">
+          <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#D4FF00" }}>{formatCurrency(stats.dealValue)}</span>
           <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Revenue Closed</p>
         </div>
-        <div className="card text-center p-3 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 transition-colors duration-150">
+        <div className="card text-center p-3 ring-1 ring-[rgba(212,255,0,0.08)] hover:ring-[rgba(212,255,0,0.15)] transition-colors duration-150">
           <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#7FE5B8" }}>{stats.totalDeals}</span>
           <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Deals Won</p>
         </div>

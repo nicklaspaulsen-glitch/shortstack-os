@@ -192,11 +192,11 @@ export default function AIStudioPage() {
                         key={t.id}
                         onClick={() => { setGuidedIntent(t.id); setActiveTool(t.id); }}
                         className={`relative text-left p-4 rounded-xl border transition-all ${
-                          selected ? "border-[#6366F1] bg-[#6366F1]/10 shadow-lg shadow-[#6366F1]/10" : "border-border hover:border-[#6366F1]/30 bg-surface-light"
+                          selected ? "border-[rgba(212,255,0,0.4)] bg-[rgba(212,255,0,0.06)] shadow-lg shadow-[rgba(212,255,0,0.1)]" : "border-border hover:border-[#6366F1]/30 bg-surface-light"
                         }`}
                       >
                         {"badge" in t && t.badge && (
-                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[#6366F1]/15 text-[#A78BFA]">
+                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.1)] text-[#D4FF00]">
                             {t.badge}
                           </span>
                         )}
@@ -233,12 +233,12 @@ export default function AIStudioPage() {
                       : "e.g., A minimalist logo mockup on a black marble surface, studio lighting"
                   }
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#6366F1]/50 focus:ring-2 focus:ring-[#6366F1]/20 transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(212,255,0,0.45)] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] transition-all resize-none"
                   autoFocus
                 />
               ) : (
-                <div className="card bg-[#6366F1]/[0.04] border-[#6366F1]/20 text-center py-8">
-                  <Upload size={28} className="mx-auto mb-2 text-[#A78BFA]" />
+                <div className="card bg-[rgba(212,255,0,0.03)] border-[rgba(212,255,0,0.15)] text-center py-8">
+                  <Upload size={28} className="mx-auto mb-2 text-[#D4FF00]" />
                   <p className="text-sm font-semibold">
                     {TOOLS.find(t => t.id === guidedIntent)?.name} uses files — hit Finish to open the tool.
                   </p>
@@ -251,7 +251,7 @@ export default function AIStudioPage() {
               description: "We'll take you to the tool with everything pre-filled.",
               icon: <Wand2 size={18} />,
               component: (
-                <div className="card bg-[#6366F1]/[0.04] border-[#6366F1]/20 space-y-2">
+                <div className="card bg-[rgba(212,255,0,0.03)] border-[rgba(212,255,0,0.15)] space-y-2">
                   <div className="flex items-center gap-2">
                     {(() => {
                       const t = TOOLS.find(x => x.id === guidedIntent);
@@ -423,12 +423,12 @@ export default function AIStudioPage() {
                 active
                   ? "border-[rgba(212,255,0,0.35)] ring-2 ring-[rgba(212,255,0,0.12)] bg-[rgba(212,255,0,0.05)] shadow-lg shadow-[rgba(212,255,0,0.08)]"
                   : ["image-gen", "voice-clone", "transcribe"].includes(tool.id)
-                    ? "ring-1 ring-[#6366F1]/20 border-[#6366F1]/20 bg-surface hover:bg-surface-light"
+                    ? "ring-1 ring-[rgba(212,255,0,0.14)] border-[rgba(212,255,0,0.14)] bg-surface hover:bg-surface-light"
                     : "border-border bg-surface hover:bg-surface-light"
               }`}
             >
               {"badge" in tool && tool.badge && (
-                <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[#6366F1]/15 text-[#A78BFA]">
+                <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.1)] text-[#D4FF00]">
                   {tool.badge}
                 </span>
               )}

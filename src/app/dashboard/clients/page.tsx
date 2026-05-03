@@ -663,7 +663,7 @@ export default function ClientsPage() {
             key={t}
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
-              tab === t ? "bg-[#6366F1] text-white font-medium" : "text-muted hover:text-foreground"
+              tab === t ? "bg-[#D4FF00] text-[#0A0A0B] font-medium" : "text-muted hover:text-foreground"
             }`}
           >
             {t === "billing" && <CreditCard size={14} />}
@@ -690,10 +690,10 @@ export default function ClientsPage() {
 
             {/* Feature 9: Advanced Filters Toggle */}
             <button onClick={() => setShowFilters(!showFilters)}
-              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[#6366F1]/15 text-[#6366F1] border-[#6366F1]/30" : ""}`}>
+              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(212,255,0,0.1)] text-[#D4FF00] border-[rgba(212,255,0,0.25)]" : ""}`}>
               <Filter size={14} /> Filters
               {(filterIndustry || filterStatus !== "all" || filterTag || filterMrrMin || filterMrrMax) && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#D4FF00]" />
               )}
             </button>
 
@@ -709,7 +709,7 @@ export default function ClientsPage() {
               ]).map(s => (
                 <button key={s.field} onClick={() => handleSort(s.field)}
                   className={`px-2 py-1 text-[10px] rounded-md transition-all flex items-center gap-0.5 ${
-                    sortField === s.field ? "bg-[#6366F1] text-white font-medium" : "text-muted hover:text-foreground"
+                    sortField === s.field ? "bg-[#D4FF00] text-[#0A0A0B] font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {s.label}
                   {sortField === s.field && (
@@ -722,11 +722,11 @@ export default function ClientsPage() {
             {/* Feature 15: View Mode Toggle */}
             <div className="flex items-center gap-0.5 bg-surface rounded-lg p-0.5">
               <button onClick={() => setViewMode("table")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#6366F1] text-white" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#D4FF00] text-[#0A0A0B]" : "text-muted hover:text-foreground"}`}>
                 <LayoutList size={14} />
               </button>
               <button onClick={() => setViewMode("card")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#6366F1] text-white" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#D4FF00] text-[#0A0A0B]" : "text-muted hover:text-foreground"}`}>
                 <LayoutGrid size={14} />
               </button>
             </div>
