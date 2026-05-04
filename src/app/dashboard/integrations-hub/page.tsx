@@ -1,12 +1,12 @@
 /**
- * Integrations Hub — Nango-powered tenant OAuth dashboard.
+ * Integrations Hub — Nango-powered tenant OAuth dashboard + API-key integrations.
  *
  * NOTE: This page is intentionally separate from `/dashboard/integrations`,
  * which is the legacy Zernio-based social-accounts dashboard. The two pages
  * coexist during the migration; once every legacy provider is on Nango we'll
  * collapse them into one.
  *
- * Flow:
+ * Flow (Nango providers):
  *   1. Page mounts → GET /api/integrations/nango/connections to learn which
  *      integrations the current user has already connected.
  *   2. User clicks "Connect" on a card → <ConnectModal /> opens with the
@@ -17,15 +17,17 @@
  *   4. On success → POST /api/integrations/nango/finalize to write the row
  *      into `oauth_connections_nango`. Re-fetch connections so the card
  *      flips to "Connected".
- *   5. On disconnect → POST /api/integrations/nango/disconnect/{id}; the
- *      Google Ads disconnect endpoint already exists from the foundation PR.
- *      Other providers will get parallel disconnect routes as they ship.
+ *   5. On disconnect → POST /api/integrations/nango/disconnect/{id}.
+ *
+ * Flow (API-key / Zernio providers):
+ *   Status comes from GET /api/integrations/health. "Connect" opens an info
+ *   panel explaining how to configure the provider (env var or Zernio dashboard).
  */
 
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Plug, Sparkles, RefreshCw } from "lucide-react";
+import { Plug, Sparkles, RefreshCw, ExternalLink, Key } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
@@ -42,15 +44,30 @@ import {
 import { NANGO_INTEGRATIONS } from "@/lib/nango/shared";
 
 // ────────────────────────────────────────────────────────────────────────
-// Hardcoded integrations catalogue
+// Extended local type — augments the card's IntegrationCardData with
+// routing metadata used by the page only. The card receives the base
+// IntegrationCardData type (supertype), so this is structurally safe.
 // ────────────────────────────────────────────────────────────────────────
-//
-// We keep this local + hand-curated for now. Each entry mirrors what's
-// configured in the Nango dashboard; when we shipped each provider we'll
-// promote `comingSoon` → `false`. Once we have >10 integrations this list
-// should move to a server route that pulls from Nango's config API.
 
-const INTEGRATIONS: ReadonlyArray<IntegrationCardData> = [
+type ConnectKind = "nango" | "zernio" | "api-key";
+
+interface ExtendedIntegrationData extends IntegrationCardData {
+  /** How this integration authenticates. Drives the connect-click handler. */
+  connectKind: ConnectKind;
+  /** Health API `id` field for api-key and zernio providers. */
+  healthId?: string;
+  /** Primary env var(s) the user needs to set for api-key providers. */
+  requiredEnv?: string[];
+  /** External URL to open on "Configure" (for Zernio, settings pages, etc.) */
+  configUrl?: string;
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// Integration catalogue
+// ────────────────────────────────────────────────────────────────────────
+
+const INTEGRATIONS: ReadonlyArray<ExtendedIntegrationData> = [
+  // ── Nango OAuth providers ────────────────────────────────────────────
   {
     id: NANGO_INTEGRATIONS.GOOGLE_ADS,
     name: "Google",
@@ -58,6 +75,7 @@ const INTEGRATIONS: ReadonlyArray<IntegrationCardData> = [
     description: "Calendar, Drive, Gmail",
     logo: "/logos/google.svg",
     scopes: ["Read calendar", "Send emails", "Access Drive files"],
+    connectKind: "nango",
   },
   {
     id: NANGO_INTEGRATIONS.FACEBOOK,
@@ -65,11 +83,8 @@ const INTEGRATIONS: ReadonlyArray<IntegrationCardData> = [
     category: "Marketing",
     description: "Pages, Ads, Insights",
     logo: "/logos/meta.svg",
-    scopes: [
-      "Manage ads",
-      "Read page engagement",
-      "Publish posts",
-    ],
+    scopes: ["Manage ads", "Read page engagement", "Publish posts"],
+    connectKind: "nango",
   },
   {
     id: NANGO_INTEGRATIONS.APIFY,
@@ -78,32 +93,133 @@ const INTEGRATIONS: ReadonlyArray<IntegrationCardData> = [
     description: "Web scraping & lead data",
     logo: "/logos/apify.svg",
     scopes: ["Run scrapers", "Read datasets"],
+    connectKind: "nango",
   },
-  {
-    id: "tiktok-business",
-    name: "TikTok Business (coming soon)",
-    category: "Marketing",
-    description: "TikTok Ads Manager",
-    logo: "/logos/tiktok.svg",
-    scopes: ["Manage ad campaigns"],
-    comingSoon: true,
-  },
-  {
-    id: "linkedin",
-    name: "LinkedIn (coming soon)",
-    category: "Marketing",
-    description: "Posts, Ads, Insights",
-    logo: "/logos/linkedin.svg",
-    comingSoon: true,
-  },
-] as const;
 
-// "All" plus every distinct category from the catalogue, in their first-seen
-// order (stable, predictable filter pill order across renders).
+  // ── Zernio social providers ─────────────────────────────────────────
+  {
+    id: "social_tiktok",
+    name: "TikTok",
+    category: "Marketing",
+    description: "Organic posts, analytics",
+    logo: "/logos/tiktok.svg",
+    scopes: ["Post videos", "Read analytics"],
+    connectKind: "zernio",
+    healthId: "social_tiktok",
+    configUrl: "https://zernio.com/dashboard",
+  },
+  {
+    id: "social_linkedin",
+    name: "LinkedIn",
+    category: "Marketing",
+    description: "Posts, company pages, insights",
+    logo: "/logos/linkedin.svg",
+    scopes: ["Publish posts", "Read analytics"],
+    connectKind: "zernio",
+    healthId: "social_linkedin",
+    configUrl: "https://zernio.com/dashboard",
+  },
+  {
+    id: "social_youtube",
+    name: "YouTube",
+    category: "Marketing",
+    description: "Channel management & analytics",
+    scopes: ["Upload videos", "Read analytics"],
+    connectKind: "zernio",
+    healthId: "social_youtube",
+    configUrl: "https://zernio.com/dashboard",
+  },
+  {
+    id: "social_instagram",
+    name: "Instagram",
+    category: "Marketing",
+    description: "Posts, stories, reels, insights",
+    scopes: ["Publish posts", "Read analytics"],
+    connectKind: "zernio",
+    healthId: "social_instagram",
+    configUrl: "https://zernio.com/dashboard",
+  },
+
+  // ── API-key providers ────────────────────────────────────────────────
+  {
+    id: "calendly",
+    name: "Calendly",
+    category: "Productivity",
+    description: "Scheduling & booking automation",
+    scopes: ["Read scheduled events", "View booking data"],
+    connectKind: "api-key",
+    healthId: "calendly",
+    requiredEnv: ["CALENDLY_API_TOKEN"],
+    configUrl: "https://calendly.com/integrations/api_webhooks",
+  },
+  {
+    id: "notion",
+    name: "Notion",
+    category: "Productivity",
+    description: "Notes, docs & databases",
+    scopes: ["Read pages", "Write pages", "Query databases"],
+    connectKind: "api-key",
+    healthId: "notion",
+    requiredEnv: ["NOTION_API_KEY"],
+    configUrl: "https://www.notion.so/my-integrations",
+  },
+  {
+    id: "whatsapp",
+    name: "WhatsApp Business",
+    category: "Messaging",
+    description: "WhatsApp Cloud API messaging",
+    scopes: ["Send messages", "Receive inbound messages"],
+    connectKind: "api-key",
+    healthId: "whatsapp",
+    requiredEnv: ["WHATSAPP_ACCESS_TOKEN", "WHATSAPP_PHONE_NUMBER_ID"],
+    configUrl: "https://developers.facebook.com/apps/",
+  },
+  {
+    id: "twilio",
+    name: "Twilio",
+    category: "Messaging",
+    description: "SMS, voice calls & dial automation",
+    scopes: ["Send SMS", "Make voice calls", "Read call logs"],
+    connectKind: "api-key",
+    healthId: "twilio",
+    requiredEnv: ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"],
+    configUrl: "https://console.twilio.com",
+  },
+  {
+    id: "stripe",
+    name: "Stripe",
+    category: "Payments",
+    description: "Client billing & subscriptions",
+    scopes: ["Read balance", "Create invoices", "Manage subscriptions"],
+    connectKind: "api-key",
+    healthId: "stripe",
+    requiredEnv: ["STRIPE_SECRET_KEY"],
+    configUrl: "https://dashboard.stripe.com/apikeys",
+  },
+  {
+    id: "email_marketing",
+    name: "Resend / Mailchimp",
+    category: "Marketing",
+    description: "Transactional & marketing email",
+    scopes: ["Send emails", "Read domain stats"],
+    connectKind: "api-key",
+    healthId: "email_marketing",
+    requiredEnv: ["RESEND_API_KEY"],
+    configUrl: "https://resend.com/api-keys",
+  },
+];
+
+// Set of integration IDs that are NOT managed by Nango — status comes from
+// the health API instead.
+const NON_NANGO_IDS = new Set<string>(
+  INTEGRATIONS.filter((i) => i.connectKind !== "nango").map((i) => i.id),
+);
+
+// "All" plus every distinct category from the catalogue.
 const FILTER_CATEGORIES: ReadonlyArray<string> = [
   "All",
   ...Array.from(new Set(INTEGRATIONS.map((i) => i.category))),
-] as const;
+];
 
 // ────────────────────────────────────────────────────────────────────────
 // API types
@@ -121,12 +237,138 @@ interface ConnectionsResponse {
   connections: NangoConnectionRow[];
 }
 
-// Disconnect endpoint paths keyed by integration id. We'll grow this map as
-// each provider gets its own disconnect route during the migration.
+interface HealthResult {
+  id: string;
+  status: "connected" | "not_configured" | "error";
+  detail?: string;
+}
+
+interface HealthResponse {
+  success: boolean;
+  results: HealthResult[];
+}
+
+// Disconnect endpoint paths keyed by integration id.
 const DISCONNECT_ROUTES: Record<string, string> = {
   [NANGO_INTEGRATIONS.GOOGLE_ADS]:
     "/api/integrations/nango/disconnect/google-ads",
 };
+
+// ────────────────────────────────────────────────────────────────────────
+// API-key setup info panel
+// ────────────────────────────────────────────────────────────────────────
+
+interface ApiKeyPanelProps {
+  integration: ExtendedIntegrationData;
+  onClose: () => void;
+}
+
+function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
+  const isZernio = integration.connectKind === "zernio";
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Connect ${integration.name}`}
+    >
+      <div
+        className="absolute inset-0 bg-black/70 backdrop-blur-md"
+        onClick={onClose}
+      />
+      <div className="relative z-10 w-full max-w-md mx-4 bg-[#15141A] border border-[rgba(212,255,0,0.12)] rounded-2xl p-6 shadow-2xl">
+        <div className="flex items-center gap-3 mb-4">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            style={{ background: "rgba(212,255,0,0.08)" }}
+          >
+            {isZernio ? (
+              <ExternalLink size={18} className="text-[#D4FF00]" />
+            ) : (
+              <Key size={18} className="text-[#D4FF00]" />
+            )}
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold text-[#F5F4F1]">
+              Connect {integration.name}
+            </h2>
+            <p className="text-[11px] text-[#9F9DAA]">
+              {isZernio ? "Via Zernio dashboard" : "Requires API credentials"}
+            </p>
+          </div>
+        </div>
+
+        {isZernio ? (
+          <div className="space-y-3 text-[12px] text-[#9F9DAA]">
+            <p>
+              {integration.name} accounts are managed through{" "}
+              <strong className="text-[#F5F4F1]">Zernio</strong>. Connect your
+              account there — ShortStack will automatically detect it.
+            </p>
+            <ol className="list-decimal list-inside space-y-1.5 pl-1">
+              <li>
+                Open{" "}
+                <a
+                  href="https://zernio.com/dashboard"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#5E5BFF] underline underline-offset-2"
+                >
+                  zernio.com/dashboard
+                </a>
+              </li>
+              <li>Connect your {integration.name} account</li>
+              <li>Return here and click Refresh</li>
+            </ol>
+          </div>
+        ) : (
+          <div className="space-y-3 text-[12px] text-[#9F9DAA]">
+            <p>
+              Add the following environment variable(s) to your Vercel project,
+              then redeploy.
+            </p>
+            <div className="space-y-1.5">
+              {(integration.requiredEnv ?? []).map((envVar) => (
+                <code
+                  key={envVar}
+                  className="block w-full bg-[#0A0A0B] border border-[rgba(212,255,0,0.1)] rounded-lg px-3 py-2 text-[#D4FF00] text-[11px] font-mono"
+                >
+                  {envVar}
+                </code>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-5 flex items-center gap-2">
+          {integration.configUrl && (
+            <a
+              href={integration.configUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold px-3 py-2 rounded-lg text-white transition-all"
+              style={{
+                background: "#6366F1",
+                boxShadow:
+                  "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(99,102,241,0.45)",
+              }}
+            >
+              <ExternalLink size={11} />
+              {isZernio ? "Open Zernio" : "Get API Key"}
+            </a>
+          )}
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 text-[11px] font-medium px-3 py-2 rounded-lg border border-[rgba(212,255,0,0.12)] text-[#9F9DAA] hover:text-[#F5F4F1] transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ────────────────────────────────────────────────────────────────────────
 // Page component
@@ -135,16 +377,15 @@ const DISCONNECT_ROUTES: Record<string, string> = {
 export default function IntegrationsHubPage() {
   const { user, loading: authLoading } = useAuth();
 
-  // Parallel async state for connections + the active modal + busy markers
-  // per integration. Using a Set for `busyIds` so multiple cards can be in
-  // flight simultaneously (e.g. user connects Google then quickly clicks
-  // Apify before the first finalize comes back).
   const [connections, setConnections] = useState<NangoConnectionRow[]>([]);
   const [loadingConnections, setLoadingConnections] = useState(true);
+  const [healthStatuses, setHealthStatuses] = useState<Map<string, "connected" | "not_configured" | "error">>(new Map());
   const [busyIds, setBusyIds] = useState<Set<string>>(new Set());
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const [modalIntegration, setModalIntegration] =
-    useState<IntegrationCardData | null>(null);
+    useState<ExtendedIntegrationData | null>(null);
+  const [apiKeyPanelIntegration, setApiKeyPanelIntegration] =
+    useState<ExtendedIntegrationData | null>(null);
 
   const setBusy = useCallback((id: string, busy: boolean) => {
     setBusyIds((prev) => {
@@ -161,9 +402,6 @@ export default function IntegrationsHubPage() {
         credentials: "include",
       });
       if (res.status === 401) {
-        // The page sits behind /dashboard which requires auth, so a 401 here
-        // means the session expired mid-flight. Don't show a toast — the
-        // dashboard layout will redirect.
         setConnections([]);
         return;
       }
@@ -183,6 +421,23 @@ export default function IntegrationsHubPage() {
     }
   }, []);
 
+  const fetchHealthStatuses = useCallback(async () => {
+    try {
+      const res = await fetch("/api/integrations/health", {
+        credentials: "include",
+      });
+      if (!res.ok) return; // non-blocking — health failures don't block the page
+      const data = (await res.json()) as HealthResponse;
+      const map = new Map<string, "connected" | "not_configured" | "error">();
+      for (const result of data.results ?? []) {
+        map.set(result.id, result.status);
+      }
+      setHealthStatuses(map);
+    } catch (err) {
+      console.error("[integrations-hub] health fetch error", err);
+    }
+  }, []);
+
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
@@ -190,18 +445,23 @@ export default function IntegrationsHubPage() {
       return;
     }
     void fetchConnections();
-  }, [authLoading, user, fetchConnections]);
+    void fetchHealthStatuses();
+  }, [authLoading, user, fetchConnections, fetchHealthStatuses]);
 
-  // Status lookup by integration id — derived once per render so the cards
-  // stay in lockstep with `connections` without each cell doing its own scan.
   const connectionByIntegration = useMemo(() => {
     const map = new Map<string, NangoConnectionRow>();
     for (const c of connections) map.set(c.integration_id, c);
     return map;
   }, [connections]);
 
-  function statusFor(integration: IntegrationCardData): IntegrationStatus {
+  function statusFor(integration: ExtendedIntegrationData): IntegrationStatus {
     if (integration.comingSoon) return "coming_soon";
+    if (NON_NANGO_IDS.has(integration.id)) {
+      const health = integration.healthId
+        ? healthStatuses.get(integration.healthId)
+        : undefined;
+      return health === "connected" ? "connected" : "not_connected";
+    }
     return connectionByIntegration.has(integration.id)
       ? "connected"
       : "not_connected";
@@ -213,17 +473,19 @@ export default function IntegrationsHubPage() {
   }, [activeFilter]);
 
   // ── Connect flow ─────────────────────────────────────────────────────
-  // Triple-step:
-  //   open modal → user authorizes in popup → finalize on the server.
-  // We `setBusy(id, true)` on Authorize click so the card spinner is
-  // accurate even while the modal is still open.
 
   function handleConnectClick(integration: IntegrationCardData) {
+    const ext = integration as ExtendedIntegrationData;
     if (!user) {
       toast.error("Please sign in first");
       return;
     }
-    setModalIntegration(integration);
+    if (ext.connectKind === "nango") {
+      setModalIntegration(ext);
+      return;
+    }
+    // API-key and Zernio providers: open the info panel
+    setApiKeyPanelIntegration(ext);
   }
 
   async function handleAuthorize() {
@@ -239,7 +501,6 @@ export default function IntegrationsHubPage() {
         connectionId: `${user.id}-${integration.id}`,
       });
 
-      // Persist to oauth_connections_nango.
       const finalizeRes = await fetch(
         "/api/integrations/nango/finalize",
         {
@@ -264,9 +525,7 @@ export default function IntegrationsHubPage() {
       await fetchConnections();
     } catch (err) {
       if (err instanceof ConnectIntegrationError) {
-        if (err.type === "user_cancelled") {
-          // Silent — user explicitly bailed, no need to nag.
-        } else {
+        if (err.type !== "user_cancelled") {
           console.error("[integrations-hub] connect error", err);
           toast.error(err.message || "Connection failed");
         }
@@ -284,11 +543,17 @@ export default function IntegrationsHubPage() {
   // ── Disconnect flow ──────────────────────────────────────────────────
 
   async function handleDisconnect(integration: IntegrationCardData) {
+    const ext = integration as ExtendedIntegrationData;
+    if (ext.connectKind !== "nango") {
+      toast.error(
+        `To disconnect ${integration.name}, remove the env var(s) from your Vercel project and redeploy.`,
+        { duration: 6000 },
+      );
+      return;
+    }
+
     const route = DISCONNECT_ROUTES[integration.id];
     if (!route) {
-      // Fallback for integrations whose dedicated disconnect route hasn't
-      // shipped yet — wipe just the local row so the UI doesn't lie.
-      // TODO: remove once every integration has a parallel /disconnect route.
       toast.error(
         `Disconnect for ${integration.name} isn't wired up yet — coming soon.`,
       );
@@ -319,8 +584,22 @@ export default function IntegrationsHubPage() {
 
   // ── Stats ────────────────────────────────────────────────────────────
 
-  const connectedCount = connections.length;
+  const connectedCount = useMemo(() => {
+    let count = connections.length;
+    for (const integration of INTEGRATIONS) {
+      if (
+        NON_NANGO_IDS.has(integration.id) &&
+        integration.healthId &&
+        healthStatuses.get(integration.healthId) === "connected"
+      ) {
+        count++;
+      }
+    }
+    return count;
+  }, [connections, healthStatuses]);
+
   const availableCount = INTEGRATIONS.filter((i) => !i.comingSoon).length;
+
   const lastSyncLabel = useMemo(() => {
     if (connections.length === 0) return "Never";
     const latest = connections.reduce<string | null>((acc, c) => {
@@ -339,15 +618,16 @@ export default function IntegrationsHubPage() {
       <PageHero
         icon={<Plug size={28} />}
         title="Integrations Hub"
-        subtitle="Connect your tools and let AI work across them. One OAuth, secured by Nango."
+        subtitle="Connect your tools and let AI work across them. OAuth via Nango · Social via Zernio · API keys for the rest."
         gradient="purple"
-        eyebrow="Powered by Nango"
+        eyebrow="All your integrations"
         actions={
           <button
             type="button"
             onClick={() => {
               setLoadingConnections(true);
               void fetchConnections();
+              void fetchHealthStatuses();
             }}
             disabled={loadingConnections}
             className="flex items-center gap-1.5 text-[10px] bg-white/10 border border-white/20 text-white px-2.5 py-1 rounded-md hover:bg-white/20 transition-all disabled:opacity-50"
@@ -364,18 +644,18 @@ export default function IntegrationsHubPage() {
       {/* Hero stat tiles */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard
-          label="Connected accounts"
+          label="Connected"
           value={connectedCount}
           icon={<Plug size={14} />}
         />
         <StatCard
-          label="Available integrations"
+          label="Available"
           value={availableCount}
           icon={<Sparkles size={14} />}
         />
         <StatCard
           label="Powered by"
-          value="Nango"
+          value="Nango + Zernio"
           icon={<Sparkles size={14} />}
           premium
         />
@@ -383,7 +663,11 @@ export default function IntegrationsHubPage() {
       </div>
 
       {/* Category filter pills */}
-      <div className="flex items-center gap-2 flex-wrap" role="tablist" aria-label="Integration category filter">
+      <div
+        className="flex items-center gap-2 flex-wrap"
+        role="tablist"
+        aria-label="Integration category filter"
+      >
         {FILTER_CATEGORIES.map((cat) => {
           const active = cat === activeFilter;
           return (
@@ -436,7 +720,7 @@ export default function IntegrationsHubPage() {
         </div>
       </div>
 
-      {/* Connect confirmation modal */}
+      {/* Nango connect confirmation modal */}
       {modalIntegration && (
         <ConnectModal
           integrationName={modalIntegration.name}
@@ -449,6 +733,14 @@ export default function IntegrationsHubPage() {
           onCancel={() => setModalIntegration(null)}
         />
       )}
+
+      {/* API-key / Zernio setup info panel */}
+      {apiKeyPanelIntegration && (
+        <ApiKeyPanel
+          integration={apiKeyPanelIntegration}
+          onClose={() => setApiKeyPanelIntegration(null)}
+        />
+      )}
     </div>
   );
 }
@@ -457,9 +749,6 @@ export default function IntegrationsHubPage() {
 // Helpers
 // ────────────────────────────────────────────────────────────────────────
 
-/** Tiny inline relative-time formatter — keeps the "last sync" tile readable
- *  without pulling in a date library. Coarse buckets are intentional;
- *  precision below "minutes ago" doesn't help an operator. */
 function relativeTime(iso: string): string {
   const then = new Date(iso).getTime();
   if (!Number.isFinite(then)) return "Just now";
