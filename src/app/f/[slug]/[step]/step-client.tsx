@@ -14,6 +14,39 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import createDOMPurify, { type Config as DOMPurifyConfig, type WindowLike } from "dompurify";
+
+// ── DOMPurify initialisation (SSR-safe) ───────────────────────────────────────
+// DOMPurify 3.x needs a DOM window. In the browser it uses the global; in Node.js
+// (Next.js SSR pre-render) we provide a JSDOM window so the server can also emit
+// sanitized HTML rather than a blank stub that flashes in on hydration.
+function buildDOMPurify() {
+  if (typeof window !== "undefined") {
+    return createDOMPurify(window as unknown as WindowLike);
+  }
+  // @types/jsdom not installed — type the minimal shape we actually use.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { JSDOM } = require("jsdom") as { JSDOM: new (html: string) => { window: unknown } };
+  return createDOMPurify(new JSDOM("").window as unknown as WindowLike);
+}
+
+const purify = buildDOMPurify();
+
+const PURIFY_CONFIG: DOMPurifyConfig = {
+  ALLOWED_TAGS: [
+    "p","br","strong","b","em","i","u","s","mark",
+    "h1","h2","h3","h4","h5","h6",
+    "ul","ol","li","dl","dt","dd",
+    "a","img","figure","figcaption",
+    "blockquote","pre","code","kbd",
+    "table","thead","tbody","tr","th","td",
+    "span","div","hr",
+  ],
+  ALLOWED_ATTR: ["href","src","srcset","alt","class","style","target","rel","width","height","colspan","rowspan"],
+  ALLOW_DATA_ATTR: false,
+  FORBID_TAGS: ["script","style","object","embed","iframe","form","input","button","select","textarea"],
+  FORCE_BODY: true,
+};
 
 interface PageDoc {
   headline?: string;
@@ -115,20 +148,12 @@ export default function StepClientShell({
   const ctaTarget = pageDoc.cta_target ?? null;
   const bodyHtml = typeof pageDoc.body_html === "string" ? pageDoc.body_html : null;
 
-  // Sanitiser: strip script blocks, all event handlers, javascript: URLs,
-  // and dangerous embed elements. Authors who want richer HTML embeds must
-  // use a website_projects page instead.
+  // Sanitise body HTML with DOMPurify (replaces the former regex approach which
+  // was bypassable via nested tag tricks and entity encoding).  Authors who want
+  // arbitrary embeds / iframes must use a website_projects page instead.
   const safeHtml = useMemo(() => {
     if (!bodyHtml) return null;
-    return bodyHtml
-      .replace(/<script[\s\S]*?<\/script>/gi, "")
-      .replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, "")
-      .replace(/\s+on\w+\s*=\s*[^\s>]*/gi, "")
-      .replace(/javascript\s*:/gi, "data:blocked:")
-      .replace(/<iframe[\s\S]*?>/gi, "")
-      .replace(/<object[\s\S]*?>/gi, "")
-      .replace(/<embed[\s\S]*?>/gi, "")
-      .replace(/src\s*=\s*["']data:/gi, 'src="data:blocked:');
+    return purify.sanitize(bodyHtml, PURIFY_CONFIG);
   }, [bodyHtml]);
 
   return (
