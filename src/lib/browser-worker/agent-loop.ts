@@ -20,6 +20,7 @@
 // chromium browser is provided by Vercel's serverless runtime, so we only
 // need the driver bindings, not the test runner.
 import { chromium, type Browser, type BrowserContext, type Page } from "playwright-core";
+import { CamofoxPage, type IPage } from "./camofox-client";
 import type Anthropic from "@anthropic-ai/sdk";
 import { anthropic } from "@/lib/ai/claude-helpers";
 import { uploadToR2 } from "@/lib/server/r2-client";
@@ -184,7 +185,7 @@ function isUrlAllowed(url: string, allowlist?: string[]): boolean {
 }
 
 /** Detect password field — used to enforce the allow_passwords gate. */
-async function isPasswordField(page: Page, selector: string): Promise<boolean> {
+async function isPasswordField(page: IPage, selector: string): Promise<boolean> {
   try {
     return await page.$eval(selector, (el) => {
       const t = (el as HTMLInputElement).type;
@@ -196,7 +197,7 @@ async function isPasswordField(page: Page, selector: string): Promise<boolean> {
 }
 
 interface ExecuteToolArgs {
-  page: Page;
+  page: IPage;
   toolName: BrowserToolName;
   input: Record<string, unknown>;
   allowPasswords: boolean;
@@ -387,6 +388,7 @@ export async function runBrowserAgent(
 
   let browser: Browser | null = null;
   let ctx: BrowserContext | null = null;
+  let camofoxPage: CamofoxPage | null = null;
   let totalCost = 0;
   let stepsTaken = 0;
   let finalResult: RunBrowserAgentResult = {
@@ -399,25 +401,51 @@ export async function runBrowserAgent(
   const history: RecordingEntry[] = [];
 
   try {
-    browser = await chromium.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-dev-shm-usage"],
-    });
-    ctx = await browser.newContext({ viewport: { width: 1366, height: 768 } });
-    const page = await ctx.newPage();
+    // ── Browser initialisation ──────────────────────────────────────────────
+    // When CAMOFOX_API_URL is set, route through the camofox Firefox-based
+    // anti-detection browser (HTTP REST) instead of local-headless Chromium.
+    // This is opt-in for tasks that need fingerprint evasion (scraping, ad
+    // verification, competitive research). All tool dispatching works through
+    // the shared IPage duck-type interface so executeTool is backend-agnostic.
+    let page: IPage;
 
-    if (opts.startUrl) {
-      if (!isUrlAllowed(opts.startUrl, domainAllowlist)) {
-        finalResult = {
-          status: "failed",
-          resultText: "",
-          stepsTaken: 0,
-          costUsd: 0,
-          errorMessage: `start_url ${opts.startUrl} not in domain allowlist`,
-        };
-        return finalResult;
+    if (process.env.CAMOFOX_API_URL) {
+      camofoxPage = await CamofoxPage.create(process.env.CAMOFOX_API_URL);
+      page = camofoxPage;
+      if (opts.startUrl) {
+        if (!isUrlAllowed(opts.startUrl, domainAllowlist)) {
+          finalResult = {
+            status: "failed",
+            resultText: "",
+            stepsTaken: 0,
+            costUsd: 0,
+            errorMessage: `start_url ${opts.startUrl} not in domain allowlist`,
+          };
+          return finalResult;
+        }
+        await page.goto(opts.startUrl, { waitUntil: "domcontentloaded", timeout: 20000 });
       }
-      await page.goto(opts.startUrl, { waitUntil: "domcontentloaded", timeout: 20000 });
+    } else {
+      browser = await chromium.launch({
+        headless: true,
+        args: ["--no-sandbox", "--disable-dev-shm-usage"],
+      });
+      ctx = await browser.newContext({ viewport: { width: 1366, height: 768 } });
+      // Playwright's Page satisfies IPage structurally; cast is safe.
+      page = (await ctx.newPage()) as unknown as IPage;
+      if (opts.startUrl) {
+        if (!isUrlAllowed(opts.startUrl, domainAllowlist)) {
+          finalResult = {
+            status: "failed",
+            resultText: "",
+            stepsTaken: 0,
+            costUsd: 0,
+            errorMessage: `start_url ${opts.startUrl} not in domain allowlist`,
+          };
+          return finalResult;
+        }
+        await page.goto(opts.startUrl, { waitUntil: "domcontentloaded", timeout: 20000 });
+      }
     }
 
     for (let step = 0; step < maxSteps; step++) {
@@ -426,7 +454,13 @@ export async function runBrowserAgent(
       // 1) Snapshot.
       const screenshotBuf = await page.screenshot({ fullPage: false, type: "png" });
       const screenshotBase64 = Buffer.from(screenshotBuf).toString("base64");
-      const snapshot = await extractInteractableElements(page);
+      // When running camofox, prefer its native accessibility-tree snapshot
+      // (reads the AT server-side — no JS injection, better anti-detect).
+      // Otherwise fall back to the Playwright evaluate()-based extractor.
+      const snapshot =
+        camofoxPage !== null
+          ? await camofoxPage.getSnapshot()
+          : await extractInteractableElements(page as unknown as Page);
       const screenshotR2Key = await uploadStepScreenshot(opts.taskId, step, Buffer.from(screenshotBuf));
 
       // 2) Ask Claude what to do next.
@@ -572,6 +606,7 @@ export async function runBrowserAgent(
     console.error("[browser-worker] loop error", err);
   } finally {
     try {
+      if (camofoxPage) await camofoxPage.close();
       if (ctx) await ctx.close();
       if (browser) await browser.close();
     } catch (err) {
