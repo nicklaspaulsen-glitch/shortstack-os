@@ -149,40 +149,126 @@ export class UnifiedAdsClient {
   ) {}
 
   /**
-   * List campaigns from the cached `ad_campaigns` table (refreshed nightly
-   * by /api/cron/refresh-ads-metrics, or on-demand via the per-platform
-   * /api/ads/{platform}/campaigns endpoints).
+   * List campaigns from the cache layer (refreshed nightly by
+   * /api/cron/refresh-ads-metrics, or on-demand via /api/ads/{platform}/campaigns).
+   *
+   * Read path per platform:
+   *   - meta / google / tiktok → `ad_campaigns` table
+   *   - linkedin / pinterest   → `ads_metrics_cache` (populated by Zernio sync)
+   *
+   * When no platform filter is supplied both tables are queried and results merged.
    */
   async listCampaigns(filters: UnifiedListFilters = {}): Promise<UnifiedCampaign[]> {
-    let query = this.supabase
-      .from("ad_campaigns")
+    const isZernioOnly =
+      filters.platform === "linkedin" || filters.platform === "pinterest";
+    const isAllPlatforms = !filters.platform;
+
+    // ── ad_campaigns (Meta / Google / TikTok) ──────────────────────────
+    const adCampaigns: UnifiedCampaign[] = [];
+    if (!isZernioOnly) {
+      let query = this.supabase
+        .from("ad_campaigns")
+        .select("*")
+        .eq("user_id", this.userId)
+        .order("total_spend", { ascending: false });
+
+      if (filters.platform) {
+        const oauthPlatform = PLATFORM_TO_OAUTH[filters.platform];
+        query = query.in("platform", [filters.platform, oauthPlatform]);
+      } else {
+        // When all platforms are requested, explicitly scope this table to
+        // meta/google/tiktok — linkedin/pinterest come from ads_metrics_cache.
+        query = query.in("platform", [
+          "meta", "meta_ads",
+          "google", "google_ads",
+          "tiktok", "tiktok_ads",
+        ]);
+      }
+
+      if (filters.status && filters.status !== "all") {
+        // Match both UI-facing status and platform-native variants.
+        const variants = statusVariants(filters.status);
+        query = query.in("status", variants);
+      }
+      if (filters.fromDate) {
+        query = query.gte("start_date", filters.fromDate);
+      }
+      if (filters.toDate) {
+        query = query.or(`end_date.is.null,end_date.lte.${filters.toDate}`);
+      }
+
+      const { data, error } = await query;
+      if (error) {
+        console.error("[UnifiedAdsClient] listCampaigns (ad_campaigns) error:", error);
+      } else {
+        const rows = (data || []) as Array<Record<string, unknown>>;
+        adCampaigns.push(...rows.map(rowToCampaign));
+      }
+    }
+
+    // ── ads_metrics_cache (LinkedIn / Pinterest via Zernio) ─────────────
+    const zernioCampaigns: UnifiedCampaign[] =
+      isZernioOnly || isAllPlatforms
+        ? await this.listFromMetricsCache(filters)
+        : [];
+
+    return [...adCampaigns, ...zernioCampaigns];
+  }
+
+  /**
+   * Read LinkedIn/Pinterest campaigns from `ads_metrics_cache`, which is
+   * populated by the nightly Zernio sync in /api/cron/refresh-ads-metrics.
+   * Each campaign may have multiple date-partitioned rows — we take the most
+   * recent row per campaign as the source of truth for current status/metrics.
+   */
+  private async listFromMetricsCache(
+    filters: UnifiedListFilters,
+  ): Promise<UnifiedCampaign[]> {
+    const platforms =
+      filters.platform === "linkedin"
+        ? ["linkedin"]
+        : filters.platform === "pinterest"
+        ? ["pinterest"]
+        : ["linkedin", "pinterest"];
+
+    // Fetch most-recent row per (platform, campaign_id). The JS client doesn't
+    // support DISTINCT ON, so we order by date DESC and deduplicate in-memory.
+    const { data, error } = await this.supabase
+      .from("ads_metrics_cache")
       .select("*")
       .eq("user_id", this.userId)
-      .order("total_spend", { ascending: false });
+      .in("platform", platforms)
+      .order("platform")
+      .order("campaign_id")
+      .order("date", { ascending: false });
 
-    if (filters.platform) {
-      const oauthPlatform = PLATFORM_TO_OAUTH[filters.platform];
-      query = query.in("platform", [filters.platform, oauthPlatform]);
-    }
-    if (filters.status && filters.status !== "all") {
-      // Match both UI-facing status and platform-native variants.
-      const variants = statusVariants(filters.status);
-      query = query.in("status", variants);
-    }
-    if (filters.fromDate) {
-      query = query.gte("start_date", filters.fromDate);
-    }
-    if (filters.toDate) {
-      query = query.or(`end_date.is.null,end_date.lte.${filters.toDate}`);
-    }
-
-    const { data, error } = await query;
     if (error) {
-      console.error("[UnifiedAdsClient] listCampaigns error:", error);
+      console.error("[UnifiedAdsClient] listFromMetricsCache error:", error);
       return [];
     }
+
+    // Deduplicate: keep the first occurrence of each (platform, campaign_id)
+    // pair — the ordering guarantees the most-recent date row comes first.
+    const seen = new Set<string>();
     const rows = (data || []) as Array<Record<string, unknown>>;
-    return rows.map(rowToCampaign);
+    const deduped = rows.filter((row) => {
+      const key = `${row.platform}:${row.campaign_id}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    const campaigns = deduped
+      .map(cacheRowToCampaign)
+      .filter((c): c is UnifiedCampaign => c !== null);
+
+    // Apply status filter in-memory — status lives inside raw_metrics JSONB
+    // and was already normalised by cacheRowToCampaign.
+    if (filters.status && filters.status !== "all") {
+      return campaigns.filter((c) => c.status === filters.status);
+    }
+
+    return campaigns;
   }
 
   /** Pause a campaign on the upstream platform. */
@@ -381,6 +467,75 @@ function statusVariants(status: "active" | "paused" | "ended"): string[] {
     "deleted", "DELETED",     // Meta / Google / TikTok hard-delete
     "removed", "REMOVED",     // Google REMOVED
   ];
+}
+
+/**
+ * Normalise a row from `ads_metrics_cache` (LinkedIn/Pinterest via Zernio)
+ * into a UnifiedCampaign. Schema differs from `ad_campaigns`: monetary values
+ * are stored in cents, and status/objective/ctr live inside `raw_metrics` JSONB.
+ */
+function cacheRowToCampaign(row: Record<string, unknown>): UnifiedCampaign | null {
+  const platformRaw = String(row.platform || "");
+  if (platformRaw !== "linkedin" && platformRaw !== "pinterest") return null;
+  const platform = platformRaw as "linkedin" | "pinterest";
+
+  const rawMetrics = (
+    row.raw_metrics !== null && typeof row.raw_metrics === "object"
+      ? row.raw_metrics
+      : {}
+  ) as Record<string, unknown>;
+
+  const spendCents = Number(row.spend_cents ?? 0);
+  const cpaCents =
+    row.cpa_cents !== null && row.cpa_cents !== undefined
+      ? Number(row.cpa_cents)
+      : null;
+  const conversions = Number(row.conversions ?? 0);
+  // Prefer the stored cpa_cents; fall back to derived cpa from spend/conversions.
+  const cpa =
+    cpaCents !== null
+      ? cpaCents / 100
+      : conversions > 0
+      ? spendCents / 100 / conversions
+      : null;
+
+  const statusRaw = String(rawMetrics.status || "").toLowerCase();
+  const status: UnifiedCampaign["status"] =
+    statusRaw === "active" || statusRaw === "enabled" || statusRaw === "running"
+      ? "active"
+      : statusRaw === "paused" || statusRaw === "disable" || statusRaw === "disabled"
+      ? "paused"
+      : statusRaw === "ended" ||
+        statusRaw === "completed" ||
+        statusRaw === "archived" ||
+        statusRaw === "canceled" ||
+        statusRaw === "cancelled"
+      ? "ended"
+      : statusRaw === "draft"
+      ? "draft"
+      : "unknown";
+
+  return {
+    id: String(row.campaign_id || ""),
+    externalId: String(row.campaign_id || ""),
+    platform,
+    name: String(row.campaign_name || ""),
+    status,
+    objective: rawMetrics.objective ? String(rawMetrics.objective) : null,
+    // daily_budget is not stored in ads_metrics_cache (Zernio metrics sync).
+    dailyBudget: null,
+    totalSpend: spendCents / 100,
+    impressions: Number(row.impressions ?? 0),
+    clicks: Number(row.clicks ?? 0),
+    conversions,
+    ctr: Number(rawMetrics.ctr ?? 0),
+    cpa,
+    roas: row.roas !== null && row.roas !== undefined ? Number(row.roas) : null,
+    // start_date / end_date are not stored in ads_metrics_cache.
+    startDate: null,
+    endDate: null,
+    lastSyncedAt: row.fetched_at ? String(row.fetched_at) : null,
+  };
 }
 
 function errMsg(err: unknown): string {

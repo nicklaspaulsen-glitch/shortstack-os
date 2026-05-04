@@ -6,7 +6,7 @@
  * and the nightly `/api/cron/refresh-ads-metrics` job.
  *
  * Query params:
- *   - platform: meta | google | tiktok | all (default: all)
+ *   - platform: meta | google | tiktok | linkedin | pinterest | all (default: all)
  *   - status: active | paused | ended | all (default: all)
  *   - from: ISO date — campaign start_date >= from
  *   - to: ISO date — campaign end_date <= to (or open-ended)
@@ -59,7 +59,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   const platformParam = params.get("platform");
   const platform: UnifiedPlatform | undefined =
-    platformParam === "meta" || platformParam === "google" || platformParam === "tiktok"
+    platformParam === "meta" ||
+    platformParam === "google" ||
+    platformParam === "tiktok" ||
+    platformParam === "linkedin" ||
+    platformParam === "pinterest"
       ? platformParam
       : undefined;
 
