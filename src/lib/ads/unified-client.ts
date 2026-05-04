@@ -92,12 +92,17 @@ function rowToCampaign(row: Record<string, unknown>): UnifiedCampaign {
 
   const statusRaw = String(row.status || "").toLowerCase();
   const status: UnifiedCampaign["status"] =
-    statusRaw === "active" || statusRaw === "enabled"
+    // active: Meta ACTIVE, Google ENABLED, TikTok RUNNING, LinkedIn ACTIVE, Pinterest ACTIVE
+    statusRaw === "active" || statusRaw === "enabled" || statusRaw === "running"
       ? "active"
+      // paused: Meta/TikTok PAUSED, Google PAUSED, TikTok DISABLE/DISABLED, LinkedIn PAUSED
       : statusRaw === "paused" || statusRaw === "disable" || statusRaw === "disabled"
       ? "paused"
-      : statusRaw === "ended" || statusRaw === "completed"
+      // ended: any terminal state — completed, archived, canceled (LinkedIn), cancelled (alt spelling)
+      : statusRaw === "ended" || statusRaw === "completed" || statusRaw === "archived"
+        || statusRaw === "canceled" || statusRaw === "cancelled"
       ? "ended"
+      // draft: LinkedIn DRAFT (not yet submitted / pending review)
       : statusRaw === "draft"
       ? "draft"
       : "unknown";
@@ -351,12 +356,31 @@ export class UnifiedAdsClient {
 }
 
 /** Status filter helper — match UI status against DB-stored variants.
- *  Includes LinkedIn (ACTIVE/PAUSED/DRAFT/ARCHIVED) and Pinterest (ACTIVE/PAUSED/COMPLETED) variants.
+ *
+ * DB rows may store platform-native status strings (e.g., "ACTIVE", "PAUSED",
+ * "ENABLE", "DRAFT") rather than the normalised form, so queries need to
+ * match both.
+ *
+ * Platform coverage:
+ *   Meta      — ACTIVE | PAUSED | DELETED
+ *   Google    — ENABLED | PAUSED | REMOVED
+ *   TikTok    — ENABLE | DISABLE | DELETED
+ *   LinkedIn  — ACTIVE | PAUSED | DRAFT | CANCELED | ARCHIVED
+ *   Pinterest — ACTIVE | PAUSED | COMPLETED | ARCHIVED
  */
 function statusVariants(status: "active" | "paused" | "ended"): string[] {
   if (status === "active") return ["active", "ACTIVE", "ENABLED", "enabled", "RUNNING"];
   if (status === "paused") return ["paused", "PAUSED", "DISABLE", "DISABLED", "disabled", "DRAFT", "draft"];
-  return ["ended", "ENDED", "completed", "COMPLETED", "ARCHIVED", "archived"];
+  // "ended" — all terminal states across platforms
+  return [
+    "ended", "ENDED",
+    "completed", "COMPLETED",
+    "archived", "ARCHIVED",
+    "canceled", "CANCELED",   // LinkedIn (US spelling)
+    "cancelled", "CANCELLED", // alt spelling guard
+    "deleted", "DELETED",     // Meta / Google / TikTok hard-delete
+    "removed", "REMOVED",     // Google REMOVED
+  ];
 }
 
 function errMsg(err: unknown): string {
