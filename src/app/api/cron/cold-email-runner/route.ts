@@ -22,6 +22,7 @@ import {
   validateEmail,
   type EmailValidationResult,
 } from "@/lib/integrations/email-validator";
+import { pingCron } from "@/lib/cron-ping";
 
 export const maxDuration = 300;
 
@@ -60,6 +61,8 @@ export async function GET(request: NextRequest) {
   if (!isVercelCron && !hasBearer) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const done = await pingCron("cold-email-runner");
 
   const supabase = createServiceClient();
 
@@ -112,6 +115,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  await done("complete");
   return NextResponse.json({
     processed: jobs.length,
     researched,

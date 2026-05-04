@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient, createSupabaseFromToken } from "@/lib/supabase/server";
 import { generateDailyBriefing } from "@/lib/services/daily-briefing";
+import { heartbeat } from "@/lib/cron-ping";
 
 export const maxDuration = 120;
 
@@ -56,5 +57,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  await heartbeat("daily-briefing");
   return NextResponse.json({ success: true, generated, failed });
 }

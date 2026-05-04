@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
+import { pingCron } from "@/lib/cron-ping";
 
 export const maxDuration = 300;
 
@@ -11,6 +12,8 @@ export async function GET(request: NextRequest) {
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const done = await pingCron("outreach");
 
   const supabase = createServiceClient();
   const twilioSid = process.env.TWILIO_ACCOUNT_SID;
@@ -405,6 +408,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  await done("complete");
   return NextResponse.json({
     success: true,
     emailsSent,

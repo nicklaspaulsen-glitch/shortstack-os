@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Voicemail, Plus, Play, Pause, Trash2, Upload, Loader2, Phone, X,
+  Voicemail, Plus, Play, Pause, Trash2, Upload, Loader2, Phone, X, ShieldAlert,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
@@ -29,6 +29,7 @@ export default function VoicemailDropPage() {
   const [dropTo, setDropTo] = useState("");
   const [dropFrom, setDropFrom] = useState("");
   const [dropping, setDropping] = useState(false);
+  const [tcpaConsent, setTcpaConsent] = useState(false);
 
   const fetchTemplates = useCallback(async () => {
     setLoading(true);
@@ -106,6 +107,7 @@ export default function VoicemailDropPage() {
   async function handleDrop() {
     if (!showDrop) return;
     if (!dropTo.trim()) { toast.error("Recipient phone required"); return; }
+    if (!tcpaConsent) { toast.error("Confirm TCPA consent before dropping a voicemail"); return; }
     setDropping(true);
     try {
       const res = await fetch("/api/voicemail/drop", {
@@ -123,6 +125,7 @@ export default function VoicemailDropPage() {
       setShowDrop(null);
       setDropTo("");
       setDropFrom("");
+      setTcpaConsent(false);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Drop failed");
     } finally {
@@ -232,21 +235,33 @@ export default function VoicemailDropPage() {
                   className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm font-mono placeholder:text-white/30"
                 />
               </div>
-              <p className="text-[11px] text-white/40">
-                The call will be initiated immediately. When the call connects (or hits voicemail),
-                the recorded audio plays automatically via Twilio TwiML.
+              {/* TCPA compliance gate — required before any voicemail drop */}
+              <label className="flex items-start gap-2.5 cursor-pointer rounded-lg bg-amber-500/5 border border-amber-500/20 p-3">
+                <input
+                  type="checkbox"
+                  checked={tcpaConsent}
+                  onChange={(e) => setTcpaConsent(e.target.checked)}
+                  className="mt-0.5 accent-amber-400 shrink-0"
+                />
+                <span className="text-[11px] text-amber-200/70 leading-relaxed">
+                  <ShieldAlert className="inline w-3 h-3 mr-1 text-amber-400" />
+                  I confirm I have prior express written consent to contact this recipient by phone (TCPA). Dropping a voicemail without consent may violate US federal law.
+                </span>
+              </label>
+              <p className="text-[11px] text-white/30">
+                The call is initiated immediately. When answered or routed to voicemail, the pre-recorded audio plays via Twilio TwiML.
               </p>
             </div>
             <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-white/8">
               <button
-                onClick={() => setShowDrop(null)}
+                onClick={() => { setShowDrop(null); setTcpaConsent(false); }}
                 className="px-4 py-2 rounded-lg text-sm font-medium text-white/60 hover:text-white bg-white/5 hover:bg-white/10"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDrop}
-                disabled={dropping || !dropTo.trim()}
+                disabled={dropping || !dropTo.trim() || !tcpaConsent}
                 className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold bg-gold text-black disabled:opacity-50"
               >
                 {dropping ? <Loader2 className="w-4 h-4 animate-spin" /> : <Phone className="w-4 h-4" />}

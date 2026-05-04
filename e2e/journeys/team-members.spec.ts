@@ -31,15 +31,29 @@ test.describe("team members journey", () => {
     ).toBeVisible({ timeout: 8_000 });
 
     // ── Fill the form ───────────────────────────────────────────────────────
-    await page.getByPlaceholder("member@yourco.com").fill(SENTINEL_EMAIL);
-    await page.getByPlaceholder("Jane Smith").fill(SENTINEL_NAME);
-    await page.getByPlaceholder("Min 8 chars").fill(SENTINEL_PASSWORD);
+    // Click each input before filling to ensure React controlled-input events
+    // fire correctly. React's synthetic onChange is wired to the native
+    // `input` event — Playwright's fill() triggers it, but clicking first
+    // ensures focus is properly set and React's event delegation picks up each
+    // change immediately.
+    const emailInput = page.getByPlaceholder("member@yourco.com");
+    await emailInput.click();
+    await emailInput.fill(SENTINEL_EMAIL);
+
+    const nameInput = page.getByPlaceholder("Jane Smith");
+    await nameInput.click();
+    await nameInput.fill(SENTINEL_NAME);
+
+    const passwordInput = page.getByPlaceholder("Min 8 chars");
+    await passwordInput.click();
+    await passwordInput.fill(SENTINEL_PASSWORD);
+    // Tab out of the password field: fires blur → React flushes any pending
+    // batched state updates → button disabled prop re-evaluates.
+    await page.keyboard.press("Tab");
 
     // ── Submit ──────────────────────────────────────────────────────────────
-    // The button is disabled until createForm.email + createForm.password are
-    // non-empty in React state. Playwright's fill() dispatches input events,
-    // but React's synthetic event batching can lag one tick — wait for the
-    // button to become enabled before clicking to avoid a race condition.
+    // Wait for React to re-render with non-empty email + password before
+    // clicking. The 5 s timeout is generous — the re-render is usually <50 ms.
     const createMemberBtn = page.getByRole("button", { name: /create member/i });
     await expect(createMemberBtn).toBeEnabled({ timeout: 5_000 });
     await createMemberBtn.click();

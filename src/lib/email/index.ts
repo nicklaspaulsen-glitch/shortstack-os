@@ -382,6 +382,64 @@ export async function sendPaymentFailedEmail(
   });
 }
 
+// ── Unsubscribe link helpers ─────────────────────────────────────────────────
+// CAN-SPAM (§7704(a)(3)) + GDPR Art.21 require a working unsubscribe
+// mechanism in every commercial email. Drop `unsubscribeFooterHtml(email)` or
+// `unsubscribeFooterText(email)` into any bulk/outreach email body.
+
+/**
+ * Generate a signed one-click unsubscribe link for a recipient email address.
+ *
+ * The token is HMAC-SHA256(email, UNSUBSCRIBE_SECRET) truncated to 32 hex
+ * chars. The secret falls back to CRON_SECRET so no extra env var is needed
+ * during initial setup.
+ *
+ * @example
+ *   const link = generateUnsubscribeLink("user@example.com");
+ *   // → "https://app.shortstack.work/api/unsubscribe?email=user%40...&token=abc..."
+ */
+export function generateUnsubscribeLink(email: string): string {
+  const { createHmac } = require("crypto") as typeof import("crypto");
+  const secret =
+    process.env.UNSUBSCRIBE_SECRET ||
+    process.env.CRON_SECRET ||
+    "dev-unsub-secret";
+  const token = createHmac("sha256", secret)
+    .update(email.toLowerCase().trim())
+    .digest("hex")
+    .slice(0, 32);
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
+  return `${appUrl}/api/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
+}
+
+/**
+ * HTML footer snippet with branded unsubscribe link.
+ * Append to any outreach or marketing email body.
+ */
+export function unsubscribeFooterHtml(email: string): string {
+  const link = generateUnsubscribeLink(email);
+  return `
+    <div style="margin-top:32px;padding-top:16px;border-top:1px solid #222;text-align:center;">
+      <p style="color:#555;font-size:11px;line-height:1.6;margin:0;">
+        You received this email because your contact was added to an outreach campaign.<br/>
+        <a href="${link}" style="color:#D4FF00;text-decoration:underline;">Unsubscribe</a>
+        &nbsp;·&nbsp;
+        <a href="https://app.shortstack.work/privacy" style="color:#D4FF00;text-decoration:underline;">Privacy Policy</a>
+      </p>
+    </div>
+  `;
+}
+
+/**
+ * Plain-text footer snippet with unsubscribe URL.
+ * Append to any outreach or marketing plain-text email body.
+ */
+export function unsubscribeFooterText(email: string): string {
+  const link = generateUnsubscribeLink(email);
+  return `\n\n---\nTo unsubscribe: ${link}\nPrivacy: https://app.shortstack.work/privacy`;
+}
+
 // ── Telegram fallback ───────────────────────────────────────────────────
 
 async function notifyTelegram(text: string): Promise<void> {
