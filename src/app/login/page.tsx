@@ -43,6 +43,7 @@ function LoginForm() {
   const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -112,7 +113,7 @@ function LoginForm() {
         const role = planParam ? "admin" : "client";
         const { error: signUpErr } = await supabase.auth.signUp({
           email, password,
-          options: { data: { full_name: fullName, role } },
+          options: { data: { full_name: fullName, role, marketing_emails: marketingOptIn } },
         });
         if (signUpErr) throw signUpErr;
 
@@ -438,6 +439,21 @@ function LoginForm() {
                         <p className="mt-1.5 text-[11px] text-status-success">Passwords match</p>
                       )}
                     </div>
+                  )}
+
+                  {isSignUp && (
+                    <label className="flex items-start gap-2.5 cursor-pointer group select-none">
+                      <input
+                        type="checkbox"
+                        checked={marketingOptIn}
+                        onChange={(e) => setMarketingOptIn(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 shrink-0 rounded border border-border-subtle bg-bg-base text-brand-lime accent-brand-lime focus:ring-2 focus:ring-brand-lime/30 cursor-pointer"
+                      />
+                      <span className="text-[11.5px] text-text-muted group-hover:text-text-secondary transition-colors duration-220 leading-relaxed">
+                        Send me product updates, tips, and early-access previews.
+                        You can unsubscribe any time.
+                      </span>
+                    </label>
                   )}
 
                   <button
