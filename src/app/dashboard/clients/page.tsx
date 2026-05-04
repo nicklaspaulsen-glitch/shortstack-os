@@ -20,7 +20,7 @@ import {
 import { useAppStore } from "@/lib/store";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import PageHero from "@/components/ui/page-hero";
+
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -574,35 +574,42 @@ export default function ClientsPage() {
 
   if (loading) return (
     <div className="space-y-4">
-      <PageHero
-        icon={<Users size={22} />}
-        eyebrow="Account Management"
-        title="Client Portal"
-        subtitle="Manage clients, contracts, and invoices."
-        gradient="gold"
-      />
+      <div className="animate-pulse h-28 rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.04)]" />
       <TableSkeleton rows={8} />
     </div>
   );
 
   return (
     <MotionPage className="space-y-4">
-      <PageHero
-        icon={<Users size={22} />}
-        eyebrow="Account Management"
-        title="Client Portal"
-        subtitle={
-          callerRole === "admin" || callerRole === "founder"
-            ? scope === "all"
-              ? `Showing all ${clients.length} clients across the platform.`
-              : "Showing clients for your agency only."
-            : "Manage clients, contracts, and invoices."
-        }
-        gradient="gold"
-        actions={
-          <div className="flex items-center gap-2">
+      {/* ── Custom hero: OLED dark, no PageHero generic gradient ── */}
+      <div className="relative rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.05)] px-6 py-6 overflow-hidden">
+        {/* Subtle indigo radial glow — brand complement, not lime */}
+        <div
+          className="absolute top-0 right-1/4 w-72 h-28 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at center, rgba(99,102,241,0.07) 0%, transparent 70%)" }}
+        />
+        <div className="relative z-10 flex items-start justify-between gap-6 flex-wrap">
+          <div>
+            <p className="text-[9px] uppercase tracking-[0.24em] text-[#6366F1] font-semibold mb-3">
+              Account Management
+            </p>
+            <h1
+              className="font-display font-bold text-[#F5F4F1] tracking-[-0.04em] leading-none mb-2"
+              style={{ fontSize: "clamp(26px,3.5vw,40px)" }}
+            >
+              Clients
+            </h1>
+            <p className="text-sm text-[#9F9DAA]">
+              {callerRole === "admin" || callerRole === "founder"
+                ? scope === "all"
+                  ? `${clients.length} clients across the platform`
+                  : "Your agency clients"
+                : "Manage clients, contracts, and invoices"}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
             {(callerRole === "admin" || callerRole === "founder") && (
-              <div className="flex items-center bg-[#15141A] border border-[rgba(212,255,0,0.1)] rounded-xl p-0.5">
+              <div className="flex items-center bg-[#15141A] border border-[rgba(255,255,255,0.06)] rounded-xl p-0.5">
                 <button
                   onClick={() => setScope("all")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
@@ -623,45 +630,57 @@ export default function ClientsPage() {
                 </button>
               </div>
             )}
-            <button onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[rgba(212,255,0,0.1)] border border-[rgba(212,255,0,0.2)] text-[#D4FF00] text-sm font-semibold hover:bg-[rgba(212,255,0,0.18)] transition-all">
-              <Plus size={16} /> Add Client
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] text-[#D4FF00] text-sm font-semibold hover:bg-[rgba(212,255,0,0.14)] transition-all"
+            >
+              <Plus size={15} /> Add Client
             </button>
           </div>
-        }
-      />
-
-      {/* Stats — collapsible (state persists) */}
-      <CollapsibleStats
-        storageKey="clients"
-        icon={<Users size={14} className="text-gold" />}
-        title="Client Stats"
-        summary={
-          <>
-            <span><span className="text-foreground font-semibold">{activeClients.length}</span> active</span>
-            <span className="opacity-30">·</span>
-            <span>MRR <span className="text-gold font-semibold">{formatCurrency(totalMRR)}</span></span>
-            <span className="opacity-30">·</span>
-            <span>Health <span className={avgHealth > 75 ? "text-success font-semibold" : avgHealth > 50 ? "text-warning font-semibold" : "text-danger font-semibold"}>{avgHealth}%</span></span>
-            <span className="opacity-30">·</span>
-            <span><span className="text-foreground font-semibold">{contracts.filter((c) => c.status === "signed").length}</span> contracts</span>
-          </>
-        }
-      >
-        {/* Editorial bento layout — MRR as the feature cell */}
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="md:col-span-2">
-              <StatCard label="Total MRR" value={formatCurrency(totalMRR)} icon={<DollarSign size={18} />} size="bento-2x1" />
-            </div>
-            <StatCard label="Active Clients" value={activeClients.length} icon={<Users size={18} />} />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <StatCard label="Avg Health Score" value={`${avgHealth}%`} icon={<Heart size={18} />} changeType={avgHealth > 75 ? "positive" : avgHealth > 50 ? "neutral" : "negative"} />
-            <StatCard label="Active Contracts" value={contracts.filter((c) => c.status === "signed").length} icon={<FileText size={18} />} />
-          </div>
         </div>
-      </CollapsibleStats>
+      </div>
+
+      {/* ── Scorecard strip — 4 cells, divide-x, MRR gets the one lime ── */}
+      <div className="rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.06)] grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[rgba(255,255,255,0.05)]">
+        <div className="px-5 py-4 flex flex-col gap-1.5">
+          <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Total MRR</span>
+          <span
+            className="font-display text-2xl font-bold tracking-[-0.03em] text-[#D4FF00]"
+            style={{ fontVariantNumeric: "tabular-nums" }}
+          >
+            {formatCurrency(totalMRR)}
+          </span>
+        </div>
+        <div className="px-5 py-4 flex flex-col gap-1.5">
+          <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Active Clients</span>
+          <span
+            className="font-display text-2xl font-bold tracking-[-0.03em] text-[#F5F4F1]"
+            style={{ fontVariantNumeric: "tabular-nums" }}
+          >
+            {activeClients.length}
+          </span>
+        </div>
+        <div className="px-5 py-4 flex flex-col gap-1.5">
+          <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Avg Health</span>
+          <span
+            className={`font-display text-2xl font-bold tracking-[-0.03em] ${
+              avgHealth >= 70 ? "text-[#7FE5B8]" : avgHealth >= 40 ? "text-[#FFC062]" : "text-[#F26063]"
+            }`}
+            style={{ fontVariantNumeric: "tabular-nums" }}
+          >
+            {avgHealth}%
+          </span>
+        </div>
+        <div className="px-5 py-4 flex flex-col gap-1.5">
+          <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Contracts Signed</span>
+          <span
+            className="font-display text-2xl font-bold tracking-[-0.03em] text-[#F5F4F1]"
+            style={{ fontVariantNumeric: "tabular-nums" }}
+          >
+            {contracts.filter((c) => c.status === "signed").length}
+          </span>
+        </div>
+      </div>
 
       {/* Tabs (sticky) */}
       <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(212,255,0,0.08)] rounded-xl p-1 w-fit shadow-lg shadow-black/20">

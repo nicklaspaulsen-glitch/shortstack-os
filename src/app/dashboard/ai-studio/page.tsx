@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import PageHero from "@/components/ui/page-hero";
+
 import { MotionPage } from "@/components/motion/motion-page";
 import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
@@ -153,43 +153,74 @@ export default function AIStudioPage() {
   }, []);
 
   return (
-    <MotionPage className="p-6 max-w-7xl mx-auto">
-      <PageHero
-        className="mb-6"
-        icon={<Sparkles size={28} />}
-        eyebrow="Creative Suite"
-        title="AI Studio"
-        subtitle="Generate images, upscale photos, clone voices. All in one place."
-        gradient="gold"
-        actions={
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-            {advancedMode && (
-              <button
-                onClick={() => {
-                  setActiveTool("image-gen");
-                  setCreationWizardOpen(true);
-                }}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D4FF00] text-[#0A0A0B] text-xs font-bold shadow-lg shadow-[#D4FF00]/15 hover:shadow-[#D4FF00]/30 hover-lift transition-all"
-              >
-                <Sparkles size={12} className="animate-pulse" />
-                + New with AI
-                <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider text-white/80">
-                  Recommended
-                </span>
-              </button>
-            )}
-            <span className="text-[10px] text-[#9F9DAA] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] px-2 py-1 rounded-lg">
-              9 tools available
-            </span>
-          </div>
-        }
-      />
+    <MotionPage className="p-0">
 
-      {/* Guided Mode — simple routing flow */}
+      {/* ── HERO ZONE ─────────────────────────────────────────────── */}
+      <div className="relative overflow-hidden border-b border-[rgba(255,255,255,0.04)]">
+        {/* Ambient rolling preview — ghost-opacity backdrop */}
+        <div className="absolute inset-0 z-0 pointer-events-none" style={{ opacity: 0.07 }}>
+          <RollingPreview
+            items={AI_STUDIO_PREVIEW_FALLBACK}
+            rows={2}
+            aspectRatio="16:9"
+            opacity={1}
+            speed="slow"
+          />
+        </div>
+        {/* Radial vignette so text is always readable */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 80% 100% at 50% 50%, transparent 10%, #0A0A0B 75%)" }}
+        />
+        {/* Hero content */}
+        <div className="relative z-20 px-6 pt-10 pb-8 max-w-7xl mx-auto">
+          <div className="flex items-start justify-between gap-6">
+            {/* Headline */}
+            <div>
+              <p className="text-[9px] uppercase tracking-[0.24em] text-[#6366F1] font-semibold mb-3">
+                Creative Suite
+              </p>
+              <h1
+                className="font-display font-bold text-[#F5F4F1] tracking-[-0.04em] leading-none mb-3"
+                style={{ fontSize: "clamp(36px,5vw,58px)" }}
+              >
+                AI Studio
+              </h1>
+              <p className="text-sm text-[#9F9DAA] max-w-[280px] leading-relaxed">
+                9 tools. Generate images, transcribe audio,
+                clone voices — all under one roof.
+              </p>
+            </div>
+            {/* Controls */}
+            <div className="flex items-center gap-2 flex-shrink-0 pt-1">
+              <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+              {advancedMode && (
+                <button
+                  onClick={() => {
+                    setActiveTool("image-gen");
+                    setCreationWizardOpen(true);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D4FF00] text-[#0A0A0B] text-xs font-bold shadow-lg shadow-[#D4FF00]/15 hover:brightness-105 transition-all"
+                >
+                  <Sparkles size={12} />
+                  New with AI
+                </button>
+              )}
+              <span className="text-[9px] text-[#6F6D7A] bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.06)] px-2 py-1 rounded-md">
+                9 tools
+              </span>
+            </div>
+          </div>
+        </div>
+        {/* Bottom lime hairline */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D4FF00]/18 to-transparent" />
+      </div>
+
+      {/* ── GUIDED MODE ─────────────────────────────────────────── */}
       {!advancedMode && (
+        <div className="px-6 py-6 max-w-7xl mx-auto">
         <Wizard
-          className="mb-6"
+          className=""
           steps={[
             {
               id: "intent",
@@ -312,38 +343,167 @@ export default function AIStudioPage() {
           onCancel={() => setAdvancedMode(true)}
           cancelLabel="Advanced mode"
         />
+        </div>
       )}
 
+      {/* ── ADVANCED MODE ─────────────────────────────────────────── */}
       {advancedMode && (
-      <>
-      {/* Rolling preview of AI-generated examples */}
-      <div className="relative rounded-2xl overflow-hidden border border-[rgba(212,255,0,0.08)] bg-[#15141A] py-8 mb-6 shadow-lg shadow-black/20">
-        {/* Vignette mask so the marquee fades into the card */}
-        <div className="pointer-events-none absolute inset-0 z-10" style={{
-          background: "radial-gradient(ellipse 80% 100% at 50% 50%, transparent 30%, #15141A 90%)"
-        }} />
-        <div className="absolute inset-0 pointer-events-none">
-          <RollingPreview
-            items={AI_STUDIO_PREVIEW_FALLBACK}
-            rows={2}
-            aspectRatio="16:9"
-            opacity={0.28}
-            speed="medium"
-          />
+      <div className="px-6 py-5 max-w-7xl mx-auto">
+
+        {/* Wizard image results — inline strip above the workspace */}
+        {wizardImages.length > 0 && (
+          <div className="mb-5 rounded-2xl border border-[#6366F1]/18 bg-[rgba(99,102,241,0.04)] p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Sparkles size={13} className="text-[#A78BFA]" />
+                <span className="text-sm font-semibold text-[#F5F4F1]">Latest generation</span>
+                <span className="text-[10px] text-[#9F9DAA]">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
+              </div>
+              <button onClick={() => setWizardImages([])} className="text-[9px] text-[#6F6D7A] hover:text-[#F5F4F1] transition-colors">
+                Clear
+              </button>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {wizardImages.map((img, i) => (
+                <a key={i} href={img.url} target="_blank" rel="noopener noreferrer"
+                  className="block bg-black rounded-xl overflow-hidden hover:ring-1 hover:ring-[#6366F1]/40 transition-all">
+                  <SafeThumb
+                    src={img.url}
+                    alt={`Wizard output ${i + 1}`}
+                    className="w-full"
+                    style={{ aspectRatio: `${img.width} / ${img.height}` }}
+                    wrapperClassName="w-full"
+                  />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Category filter pills */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-1">
+            {(["all", "visual", "audio", "utility"] as ToolCategory[]).map(cat => (
+              <button
+                key={cat}
+                onClick={() => setToolCategory(cat)}
+                className={`text-[9px] font-semibold px-2.5 py-1.5 rounded-lg transition-all capitalize ${
+                  toolCategory === cat
+                    ? "bg-[#D4FF00] text-[#0A0A0B]"
+                    : "text-[#6F6D7A] bg-[rgba(255,255,255,0.04)] hover:text-[#9F9DAA] border border-[rgba(255,255,255,0.05)]"
+                }`}
+              >
+                {cat === "all" ? "All 9" : cat}
+              </button>
+            ))}
+          </div>
+          <span className="text-[9px] text-[#6F6D7A]">
+            {TOOLS.filter(t => toolCategory === "all" || TOOL_CATEGORIES[t.id] === toolCategory).length} tools
+          </span>
         </div>
-        <div className="relative z-20 text-center px-4">
-          <p className="text-[10px] uppercase tracking-[0.22em] text-[#A78BFA]/70 font-semibold mb-1">
-            Example outputs
-          </p>
-          <h3 className="font-display text-xl font-bold text-[#F5F4F1] tracking-[-0.02em]">
-            From a one-line prompt to a hero image
-          </h3>
-          <p className="text-[11px] text-[#9F9DAA] max-w-sm mx-auto mt-1.5 leading-relaxed">
-            FLUX, SDXL, DALL-E, upscale, remove-bg, voice clone — all under one roof
-          </p>
+
+        {/* COMMAND CENTER: compact tool rail left + workspace right */}
+        <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-4 items-start">
+
+          {/* Left: vertical tool list */}
+          <div className="rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.06)] overflow-hidden">
+            <div className="px-3 pt-3 pb-1">
+              <p className="text-[8px] uppercase tracking-[0.2em] text-[#6F6D7A] font-semibold px-1 mb-2">Tools</p>
+            </div>
+            <div className="px-2 pb-3 space-y-0.5">
+              {TOOLS.filter(t => toolCategory === "all" || TOOL_CATEGORIES[t.id] === toolCategory).map((tool, i) => {
+                const Icon = tool.icon;
+                const active = activeTool === tool.id;
+                return (
+                  <motion.button
+                    key={tool.id}
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: i * 0.025, ease: [0.22, 1, 0.36, 1] }}
+                    onClick={() => {
+                      setActiveTool(tool.id);
+                      setTimeout(() => toolPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), 0);
+                    }}
+                    className={`w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl transition-all duration-150 ${
+                      active
+                        ? "bg-[rgba(212,255,0,0.07)] border border-[rgba(212,255,0,0.18)]"
+                        : "hover:bg-[rgba(255,255,255,0.03)] border border-transparent"
+                    }`}
+                  >
+                    <div
+                      className="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
+                      style={{ background: `${tool.color}${active ? "28" : "18"}` }}
+                    >
+                      <Icon size={12} style={{ color: active ? "#D4FF00" : tool.color }} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#D4FF00]" : "text-[#F5F4F1]"}`}>
+                        {tool.name}
+                      </p>
+                      <p className="text-[8px] font-mono text-[#6F6D7A] truncate">{tool.tag}</p>
+                    </div>
+                    {"badge" in tool && tool.badge && (
+                      <span className="text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(212,255,0,0.1)] text-[#D4FF00] shrink-0">
+                        Biz+
+                      </span>
+                    )}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Right: active tool workspace */}
+          <div
+            ref={toolPanelRef}
+            className="rounded-2xl bg-[#0E0D14] border border-[rgba(212,255,0,0.10)] overflow-hidden shadow-2xl shadow-black/40"
+          >
+            {/* Tool header */}
+            <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[rgba(255,255,255,0.05)]">
+              {(() => {
+                const t = TOOLS.find(x => x.id === activeTool);
+                if (!t) return null;
+                const Icon = t.icon;
+                return (
+                  <>
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${t.color}22` }}>
+                      <Icon size={14} style={{ color: t.color }} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-bold text-[#F5F4F1] leading-tight">{t.name}</p>
+                      <p className="text-[9px] font-mono text-[#6F6D7A]">{t.tag}</p>
+                    </div>
+                    {"badge" in t && t.badge && (
+                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border border-[rgba(212,255,0,0.2)]">
+                        {t.badge}
+                      </span>
+                    )}
+                  </>
+                );
+              })()}
+              {/* Lime tick — one chromatic moment per zone */}
+              <div className="w-1 h-4 rounded-full bg-[#D4FF00]/35 shrink-0" />
+            </div>
+
+            {/* Tool content */}
+            <div className="p-5">
+              {activeTool === "transcribe" && <TranscribeTool processing={processing} setProcessing={setProcessing} history={history} setHistory={setHistory} />}
+              {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} initial={imageGenInit} />}
+              {activeTool === "upscale" && <UpscaleTool processing={processing} setProcessing={setProcessing} />}
+              {activeTool === "remove-bg" && <RemoveBgTool processing={processing} setProcessing={setProcessing} />}
+              {activeTool === "img-to-video" && <ImgToVideoTool processing={processing} setProcessing={setProcessing} />}
+              {activeTool === "music-gen" && <MusicGenTool processing={processing} setProcessing={setProcessing} />}
+              {activeTool === "voice-clone" && <VoiceCloneTool processing={processing} setProcessing={setProcessing} />}
+              {activeTool === "train-lora" && <TrainLoraTool processing={processing} setProcessing={setProcessing} />}
+              {activeTool === "batch-gen" && <BatchGenTool processing={processing} setProcessing={setProcessing} />}
+            </div>
+          </div>
+
         </div>
       </div>
+      )}
 
+      {/* Modals — outside the conditional so z-index is always clean */}
       <ImageCreationWizard
         open={creationWizardOpen}
         onClose={() => setCreationWizardOpen(false)}
@@ -357,7 +517,6 @@ export default function AIStudioPage() {
           });
         }}
       />
-
       <ImageWizard
         open={wizardOpen}
         onClose={() => {
@@ -369,151 +528,6 @@ export default function AIStudioPage() {
           setActiveTool("image-gen");
         }}
       />
-
-      {/* Wizard results — show inline once produced so they don't disappear when modal closes */}
-      {wizardImages.length > 0 && (
-        <div className="bg-surface border border-[#6366F1]/30 rounded-2xl p-4 mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Sparkles size={14} className="text-[#A78BFA]" />
-              <h3 className="text-sm font-semibold text-foreground">Latest wizard generation</h3>
-              <span className="text-[10px] text-muted">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
-            </div>
-            <button
-              onClick={() => setWizardImages([])}
-              className="text-[10px] text-muted hover:text-foreground"
-            >
-              Clear
-            </button>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {wizardImages.map((img, i) => (
-              <a key={i} href={img.url} target="_blank" rel="noopener noreferrer" className="block bg-black rounded-lg overflow-hidden">
-                <SafeThumb
-                  src={img.url}
-                  alt={`Wizard ${i + 1}`}
-                  className="w-full"
-                  style={{ aspectRatio: `${img.width} / ${img.height}` }}
-                  wrapperClassName="w-full"
-                />
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Tool grid — eyebrow header + category filter pills */}
-      <div className="flex items-end justify-between mb-3">
-        <div>
-          <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Creative Tools</span>
-          <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Choose your tool</h2>
-        </div>
-        <div className="flex items-center gap-1">
-          {(["all", "visual", "audio", "utility"] as ToolCategory[]).map(cat => (
-            <button
-              key={cat}
-              onClick={() => setToolCategory(cat)}
-              className={`text-[9px] font-medium px-2.5 py-1 rounded-md transition-all duration-150 capitalize ${
-                toolCategory === cat
-                  ? "bg-[#D4FF00] text-[#0A0A0B]"
-                  : "text-[#6F6D7A] bg-[rgba(255,255,255,0.04)] hover:text-[#9F9DAA]"
-              }`}
-            >
-              {cat === "all" ? "All" : cat}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="h-px bg-gradient-to-r from-[#D4FF00]/15 via-[#D4FF00]/5 to-transparent mb-4" />
-
-      {/* Tool grid — 3×3 so all 9 tools fill evenly */}
-      <motion.div
-        className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6"
-        initial="hidden"
-        animate="visible"
-        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
-      >
-        {TOOLS.filter(tool => toolCategory === "all" || TOOL_CATEGORIES[tool.id] === toolCategory).map(tool => {
-          const Icon = tool.icon;
-          const active = activeTool === tool.id;
-          return (
-            <motion.button
-              key={tool.id}
-              variants={{
-                hidden: { opacity: 0, y: 12 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
-              }}
-              whileHover={{ y: -3, boxShadow: `0 0 20px ${tool.color}22` }}
-              onClick={() => {
-                setActiveTool(tool.id);
-                // Scroll the tool panel into view so users actually see
-                // their click "do" something. setTimeout(0) lets React
-                // commit the new panel render first, then we scroll.
-                setTimeout(() => {
-                  toolPanelRef.current?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                }, 0);
-              }}
-              className={`relative text-left p-3.5 rounded-xl border transition-all duration-200 ${
-                active
-                  ? "border-[rgba(212,255,0,0.40)] ring-2 ring-[rgba(212,255,0,0.14)] bg-[rgba(212,255,0,0.06)] shadow-lg shadow-[rgba(212,255,0,0.10)]"
-                  : ["image-gen", "voice-clone", "transcribe"].includes(tool.id)
-                    ? "ring-1 ring-[rgba(212,255,0,0.12)] border-[rgba(212,255,0,0.12)] bg-surface hover:bg-surface-light hover:border-[rgba(212,255,0,0.25)]"
-                    : "border-border bg-surface hover:bg-surface-light hover:border-white/12"
-              }`}
-            >
-              {"badge" in tool && tool.badge && (
-                <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.1)] text-[#D4FF00]">
-                  {tool.badge}
-                </span>
-              )}
-              <div className="flex items-center gap-2 mb-1.5">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${tool.color}18` }}>
-                  <Icon size={14} style={{ color: tool.color }} />
-                </div>
-                <span className="text-xs font-semibold text-foreground">{tool.name}</span>
-              </div>
-              <p className="text-[10px] text-muted leading-relaxed">{tool.desc}</p>
-              <span className="inline-block mt-1.5 text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface-light text-muted">
-                {tool.tag}
-              </span>
-            </motion.button>
-          );
-        })}
-      </motion.div>
-
-      {/* Active tool panel — ref'd by the tile-click handler so the
-          page auto-scrolls here when the user picks a different tool.
-          The scroll-margin-top keeps a comfortable gap below the
-          sticky-ish nav after the smooth scroll lands. */}
-      <div
-        ref={toolPanelRef}
-        className="bg-[#15141A] border border-[rgba(212,255,0,0.10)] rounded-2xl scroll-mt-6 shadow-xl shadow-black/30 overflow-hidden"
-      >
-        {/* Tool panel eyebrow header */}
-        <div className="px-5 pt-5 pb-0">
-          <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Active Tool</span>
-          <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">
-            {TOOLS.find(t => t.id === activeTool)?.name ?? "Tool"}
-          </h2>
-          <div className="h-px bg-gradient-to-r from-[#D4FF00]/15 via-[#D4FF00]/5 to-transparent mt-2 mb-4" />
-        </div>
-        <div className="px-5 pb-5">
-          {activeTool === "transcribe" && <TranscribeTool processing={processing} setProcessing={setProcessing} history={history} setHistory={setHistory} />}
-          {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} initial={imageGenInit} />}
-          {activeTool === "upscale" && <UpscaleTool processing={processing} setProcessing={setProcessing} />}
-          {activeTool === "remove-bg" && <RemoveBgTool processing={processing} setProcessing={setProcessing} />}
-          {activeTool === "img-to-video" && <ImgToVideoTool processing={processing} setProcessing={setProcessing} />}
-          {activeTool === "music-gen" && <MusicGenTool processing={processing} setProcessing={setProcessing} />}
-          {activeTool === "voice-clone" && <VoiceCloneTool processing={processing} setProcessing={setProcessing} />}
-          {activeTool === "train-lora" && <TrainLoraTool processing={processing} setProcessing={setProcessing} />}
-          {activeTool === "batch-gen" && <BatchGenTool processing={processing} setProcessing={setProcessing} />}
-        </div>
-      </div>
-      </>
-      )}
     </MotionPage>
   );
 }

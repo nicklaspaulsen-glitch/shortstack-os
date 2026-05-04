@@ -21,8 +21,6 @@ import {
   Search,
 } from "lucide-react";
 import Link from "next/link";
-import PageHero from "@/components/ui/page-hero";
-import StatCard from "@/components/ui/stat-card";
 
 // ── Types ──────────────────────────────────────────────────────────
 interface VoiceClone {
@@ -160,43 +158,64 @@ export default function VoiceStudioPage() {
 
   return (
     <div className="min-h-screen pb-12">
-      <PageHero
-        title="Voice Studio"
-        subtitle="Clone your voice, browse curated presets, and route synthesised audio into the dialer, voicemail drops, SMS, and social DMs."
-        gradient="gold"
-        eyebrow="Voice Studio"
-        icon={<Mic size={28} />}
-        actions={
-          <button
-            type="button"
-            onClick={refresh}
-            className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10"
-          >
-            <RefreshCw size={12} /> Refresh
-          </button>
-        }
-      />
+      {/* ── Custom hero: OLED dark, no PageHero generic gradient ── */}
+      <div className="relative rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.05)] overflow-hidden">
+        {/* Subtle indigo glow top-right */}
+        <div
+          className="absolute top-0 right-1/3 w-80 h-24 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at center, rgba(99,102,241,0.08) 0%, transparent 70%)" }}
+        />
+        {/* Lime micro-line bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D4FF00]/12 to-transparent" />
 
-      <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <StatCard
-            label="Your clones"
-            value={stats.mineCount}
-            icon={<Mic size={16} />}
-          />
-          <StatCard
-            label="Preset library"
-            value={stats.presetCount}
-            icon={<Library size={16} />}
-          />
-          <StatCard
-            label="Renders this month"
-            value={stats.rendersThisMonth}
-            icon={<Headphones size={16} />}
-          />
+        {/* Top row — eyebrow + title + actions */}
+        <div className="relative z-10 px-6 pt-5 pb-4 flex items-start justify-between gap-6 flex-wrap">
+          <div>
+            <p className="text-[9px] uppercase tracking-[0.24em] text-[#6366F1] font-semibold mb-2">Voice Studio</p>
+            <h1
+              className="font-display font-bold text-[#F5F4F1] tracking-[-0.04em] leading-none mb-1.5"
+              style={{ fontSize: "clamp(26px,3.5vw,40px)" }}
+            >
+              Voice Studio
+            </h1>
+            <p className="text-sm text-[#9F9DAA]">Clone your voice, browse presets, and route audio into the dialer, voicemail, SMS, and DMs.</p>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0 pt-1">
+            <button
+              type="button"
+              onClick={refresh}
+              className="flex items-center gap-2 rounded-xl border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] px-3 py-1.5 text-xs font-medium text-[#9F9DAA] hover:text-[#F5F4F1] hover:bg-[rgba(255,255,255,0.08)] transition-colors duration-150"
+            >
+              <RefreshCw size={12} /> Refresh
+            </button>
+          </div>
         </div>
 
-        <div className="mt-6 border-b border-white/10">
+        {/* Bottom row — 3-cell scorecard strip */}
+        <div className="relative z-10 border-t border-[rgba(255,255,255,0.05)] grid grid-cols-3 divide-x divide-[rgba(255,255,255,0.05)]">
+          <div className="px-5 py-3.5 flex flex-col gap-1">
+            <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Your Clones</span>
+            <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#D4FF00]" style={{ fontVariantNumeric: "tabular-nums" }}>
+              {stats.mineCount}
+            </span>
+          </div>
+          <div className="px-5 py-3.5 flex flex-col gap-1">
+            <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Preset Library</span>
+            <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#F5F4F1]" style={{ fontVariantNumeric: "tabular-nums" }}>
+              {stats.presetCount}
+            </span>
+          </div>
+          <div className="px-5 py-3.5 flex flex-col gap-1">
+            <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Renders This Month</span>
+            <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#F5F4F1]" style={{ fontVariantNumeric: "tabular-nums" }}>
+              {stats.rendersThisMonth}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
+        <div className="border-b border-white/10">
           <nav className="flex gap-1 overflow-x-auto" aria-label="Voice Studio tabs">
             {TAB_ORDER.map((t) => {
               const isActive = tab === t;
