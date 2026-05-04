@@ -550,10 +550,6 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Leads over time */}
         <div className="card">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/50" />
-            <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Leads</h3>
-          </div>
           <div className="mb-3">
             <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Acquisition</span>
             <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Leads · {dateRange === "custom" ? "Custom" : dateRange}</h2>
@@ -580,10 +576,6 @@ export default function AnalyticsPage() {
 
         {/* Revenue */}
         <div className="card">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/50" />
-            <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Revenue</h3>
-          </div>
           <div className="mb-3">
             <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Monetization</span>
             <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Revenue</h2>
@@ -616,11 +608,9 @@ export default function AnalyticsPage() {
       {/* Feature 1: Revenue Forecasting */}
       <div className="card">
         <button onClick={() => toggleSection("forecast")} className="flex items-center justify-between w-full group">
-          <div className="flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/40 shrink-0 group-hover:bg-[#D4FF00]/70 transition-colors duration-150" />
-            <h2 className="section-header flex items-center gap-2 mb-0">
-              <TrendingUp size={14} className="text-gold" /> Revenue Forecast (Next 3 Months)
-            </h2>
+          <div className="flex items-center gap-2">
+            <TrendingUp size={14} className="text-[#6366F1]/70" />
+            <h2 className="font-display text-base text-[#F5F4F1] tracking-[-0.01em]">Revenue Forecast</h2>
           </div>
           {expandedSection === "forecast" ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
         </button>
@@ -650,7 +640,7 @@ export default function AnalyticsPage() {
               {revenueForecast.map(f => (
                 <div key={f.month} className="bg-surface-light rounded-lg p-3 text-center">
                   <p className="text-[10px] text-muted uppercase tracking-wider">{f.month} Forecast</p>
-                  <p className="text-lg font-bold text-gold mt-1">{formatCurrency(f.projected)}</p>
+                  <p className="text-lg font-bold text-[#D4FF00] mt-1">{formatCurrency(f.projected)}</p>
                   <p className="text-[9px] text-muted">{formatCurrency(f.conservative)} - {formatCurrency(f.optimistic)}</p>
                 </div>
               ))}
@@ -695,7 +685,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
             <span className="text-[10px] text-muted">Overall conversion</span>
-            <span className="text-sm font-bold text-gold">
+            <span className="text-sm font-bold text-[#D4FF00]">
               {funnelData[0].value > 0 ? ((funnelData[funnelData.length - 1].value / funnelData[0].value) * 100).toFixed(1) : 0}%
             </span>
           </div>
@@ -804,10 +794,6 @@ export default function AnalyticsPage() {
 
         {/* Outreach performance */}
         <div className="card">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/50" />
-            <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-white/60">Outreach</h3>
-          </div>
           <div className="mb-3">
             <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Engagement</span>
             <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Outreach Performance</h2>
@@ -831,11 +817,9 @@ export default function AnalyticsPage() {
       {/* Feature 3: Platform ROI Comparison */}
       <div className="card">
         <button onClick={() => toggleSection("roi")} className="flex items-center justify-between w-full group">
-          <div className="flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/40 shrink-0 group-hover:bg-[#D4FF00]/70 transition-colors duration-150" />
-            <h2 className="section-header flex items-center gap-2 mb-0">
-              <Target size={14} className="text-gold" /> Platform ROI Comparison
-            </h2>
+          <div className="flex items-center gap-2">
+            <Target size={14} className="text-[#6366F1]/70" />
+            <h2 className="font-display text-base text-[#F5F4F1] tracking-[-0.01em]">Platform ROI</h2>
           </div>
           {expandedSection === "roi" ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
         </button>
@@ -1193,11 +1177,9 @@ export default function AnalyticsPage() {
       {/* Feature 9: Engagement Benchmarks */}
       <div className="card">
         <button onClick={() => toggleSection("benchmarks")} className="flex items-center justify-between w-full group">
-          <div className="flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/40 shrink-0 group-hover:bg-[#D4FF00]/70 transition-colors duration-150" />
-            <h2 className="section-header flex items-center gap-2 mb-0">
-              <BarChart3 size={14} className="text-gold" /> Engagement Rate Benchmarks
-            </h2>
+          <div className="flex items-center gap-2">
+            <BarChart3 size={14} className="text-[#6366F1]/70" />
+            <h2 className="font-display text-base text-[#F5F4F1] tracking-[-0.01em]">Engagement Benchmarks</h2>
           </div>
           {expandedSection === "benchmarks" ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
         </button>
@@ -1237,11 +1219,9 @@ export default function AnalyticsPage() {
       {/* Feature 12: Monthly Trends Comparison */}
       <div className="card">
         <button onClick={() => toggleSection("monthly")} className="flex items-center justify-between w-full group">
-          <div className="flex items-center gap-3">
-            <div className="h-4 w-0.5 rounded-full bg-[#D4FF00]/40 shrink-0 group-hover:bg-[#D4FF00]/70 transition-colors duration-150" />
-            <h2 className="section-header flex items-center gap-2 mb-0">
-              <Calendar size={14} className="text-gold" /> Monthly Trends Comparison
-            </h2>
+          <div className="flex items-center gap-2">
+            <Calendar size={14} className="text-[#6366F1]/70" />
+            <h2 className="font-display text-base text-[#F5F4F1] tracking-[-0.01em]">Monthly Trends</h2>
           </div>
           {expandedSection === "monthly" ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
         </button>

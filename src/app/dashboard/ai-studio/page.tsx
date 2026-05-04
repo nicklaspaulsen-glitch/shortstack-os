@@ -65,6 +65,19 @@ const TOOLS = [
 
 type ToolId = typeof TOOLS[number]["id"];
 
+const TOOL_CATEGORIES: Record<ToolId, "visual" | "audio" | "utility"> = {
+  transcribe: "audio",
+  "image-gen": "visual",
+  upscale: "visual",
+  "remove-bg": "visual",
+  "img-to-video": "visual",
+  "music-gen": "audio",
+  "voice-clone": "audio",
+  "train-lora": "utility",
+  "batch-gen": "utility",
+};
+type ToolCategory = "all" | "visual" | "audio" | "utility";
+
 export default function AIStudioPage() {
   const supabaseMain = useMemo(() => createClient(), []);
   const [activeTool, setActiveTool] = useState<ToolId>("transcribe");
@@ -93,6 +106,7 @@ export default function AIStudioPage() {
   const [guidedStep, setGuidedStep] = useState(0);
   const [guidedIntent, setGuidedIntent] = useState<ToolId>("image-gen");
   const [guidedPrompt, setGuidedPrompt] = useState("");
+  const [toolCategory, setToolCategory] = useState<ToolCategory>("all");
 
   // Auto-open the legacy modal only on advanced-mode first visit
   useEffect(() => {
@@ -156,7 +170,7 @@ export default function AIStudioPage() {
                   setActiveTool("image-gen");
                   setCreationWizardOpen(true);
                 }}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#D4FF00] to-[#6366F1] text-black text-xs font-bold shadow-lg shadow-[#D4FF00]/15 hover:shadow-[#D4FF00]/30 hover-lift transition-all"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D4FF00] text-[#0A0A0B] text-xs font-bold shadow-lg shadow-[#D4FF00]/15 hover:shadow-[#D4FF00]/30 hover-lift transition-all"
               >
                 <Sparkles size={12} className="animate-pulse" />
                 + New with AI
@@ -165,7 +179,7 @@ export default function AIStudioPage() {
                 </span>
               </button>
             )}
-            <span className="text-[10px] text-[#D4FF00]/70 bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] px-2 py-1 rounded-lg">
+            <span className="text-[10px] text-[#9F9DAA] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] px-2 py-1 rounded-lg">
               9 tools available
             </span>
           </div>
@@ -388,10 +402,27 @@ export default function AIStudioPage() {
         </div>
       )}
 
-      {/* Tool grid — eyebrow header */}
-      <div className="mb-3">
-        <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Creative Tools</span>
-        <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Choose your tool</h2>
+      {/* Tool grid — eyebrow header + category filter pills */}
+      <div className="flex items-end justify-between mb-3">
+        <div>
+          <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Creative Tools</span>
+          <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Choose your tool</h2>
+        </div>
+        <div className="flex items-center gap-1">
+          {(["all", "visual", "audio", "utility"] as ToolCategory[]).map(cat => (
+            <button
+              key={cat}
+              onClick={() => setToolCategory(cat)}
+              className={`text-[9px] font-medium px-2.5 py-1 rounded-md transition-all duration-150 capitalize ${
+                toolCategory === cat
+                  ? "bg-[#D4FF00] text-[#0A0A0B]"
+                  : "text-[#6F6D7A] bg-[rgba(255,255,255,0.04)] hover:text-[#9F9DAA]"
+              }`}
+            >
+              {cat === "all" ? "All" : cat}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="h-px bg-gradient-to-r from-[#D4FF00]/15 via-[#D4FF00]/5 to-transparent mb-4" />
 
@@ -402,7 +433,7 @@ export default function AIStudioPage() {
         animate="visible"
         variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
       >
-        {TOOLS.map(tool => {
+        {TOOLS.filter(tool => toolCategory === "all" || TOOL_CATEGORIES[tool.id] === toolCategory).map(tool => {
           const Icon = tool.icon;
           const active = activeTool === tool.id;
           return (
@@ -412,7 +443,7 @@ export default function AIStudioPage() {
                 hidden: { opacity: 0, y: 12 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
               }}
-              whileHover={{ y: -3 }}
+              whileHover={{ y: -3, boxShadow: `0 0 20px ${tool.color}22` }}
               onClick={() => {
                 setActiveTool(tool.id);
                 // Scroll the tool panel into view so users actually see

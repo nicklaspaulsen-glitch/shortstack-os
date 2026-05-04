@@ -664,10 +664,12 @@ export default function ClientsPage() {
       </CollapsibleStats>
 
       {/* Tabs (sticky) */}
-      <div className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(212,255,0,0.08)] rounded-xl p-1 w-fit shadow-lg shadow-black/20">
+      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(212,255,0,0.08)] rounded-xl p-1 w-fit shadow-lg shadow-black/20">
         {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}
+            role="tab"
+            aria-selected={tab === t}
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
               tab === t ? "bg-[#D4FF00] text-[#0A0A0B] font-medium" : "text-muted hover:text-foreground"
