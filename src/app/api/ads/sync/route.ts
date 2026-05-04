@@ -3,7 +3,7 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { syncPlatformCampaigns } from "@/lib/ads/platforms";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
-const PLATFORMS = ["meta_ads", "google_ads", "tiktok_ads"] as const;
+const PLATFORMS = ["meta_ads", "google_ads", "tiktok_ads", "linkedin_ads", "pinterest_ads"] as const;
 
 // POST — Sync campaign data from ad platforms
 export async function POST(request: NextRequest) {
