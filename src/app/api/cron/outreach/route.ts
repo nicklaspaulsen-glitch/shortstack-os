@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { sendEmail } from "@/lib/email";
+import { sendEmail, unsubscribeFooterHtml } from "@/lib/email";
 import { pingCron } from "@/lib/cron-ping";
 
 export const maxDuration = 300;
@@ -123,7 +123,8 @@ export async function GET(request: NextRequest) {
   if (emailLeads) {
     const emailPromises = emailLeads.map(async (lead) => {
       const subject = `Quick question about ${lead.business_name}`;
-      const body = `Hi,<br><br>I came across <b>${lead.business_name}</b> and noticed you might benefit from better online visibility.<br><br>We help ${lead.industry || "local"} businesses get more clients through social media, ads, and SEO.<br><br>Would you be open to a quick 10-minute call this week?<br><br>Best,<br>The ShortStack Team`;
+      const bodyCore = `Hi,<br><br>I came across <b>${lead.business_name}</b> and noticed you might benefit from better online visibility.<br><br>We help ${lead.industry || "local"} businesses get more clients through social media, ads, and SEO.<br><br>Would you be open to a quick 10-minute call this week?<br><br>Best,<br>The ShortStack Team`;
+      const body = bodyCore + unsubscribeFooterHtml(lead.email!);
 
       let delivered = false;
       try {

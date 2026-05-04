@@ -14,7 +14,7 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { sendMessage } from "@/lib/email";
+import { sendMessage, generateUnsubscribeLink } from "@/lib/email";
 import { fireWebhookEvent } from "@/lib/api/webhook-events";
 import { researchLead, type LeadInput, type ResearchDepth } from "@/lib/cold-email/researcher";
 import { personalizeEmail } from "@/lib/cold-email/personalize";
@@ -342,17 +342,15 @@ async function runSendBatch(
     }
 
     try {
-      const fromAddr = process.env.SMTP_FROM || "growth@mail.shortstack.work";
-      const unsubDomain = fromAddr.includes("@") ? fromAddr.split("@")[1] : "mail.shortstack.work";
-      const unsubEmail = process.env.COLD_EMAIL_UNSUBSCRIBE_EMAIL || `unsubscribe@${unsubDomain}`;
+      const unsubLink = generateUnsubscribeLink(lead.email);
       await sendMessage({
         to: lead.email,
         subject: c.generated_subject,
-        html: htmlEscapeBody(c.generated_body, lead.email),
-        text: c.generated_body,
+        html: htmlEscapeBody(c.generated_body, lead.email, unsubLink),
+        text: c.generated_body + `\n\n---\nTo unsubscribe: ${unsubLink}`,
         headers: {
-          // RFC 2369 — enables one-click unsubscribe in Gmail / Apple Mail.
-          "List-Unsubscribe": `<mailto:${unsubEmail}?subject=unsubscribe%20${encodeURIComponent(lead.email)}>`,
+          // RFC 2369 + RFC 8058 — one-click unsubscribe in Gmail / Apple Mail.
+          "List-Unsubscribe": `<${unsubLink}>`,
           "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
           // Mark as bulk to avoid inbox-overload classification.
           "Precedence": "bulk",
@@ -490,13 +488,12 @@ async function getOrCacheEmailValidation(
 
 /**
  * Wraps plain-text email body in minimal HTML and appends a CAN-SPAM
- * compliant footer (physical address + unsubscribe link).
+ * compliant footer (physical address + HMAC-signed one-click unsubscribe link).
  *
- * Physical address is read from COLD_EMAIL_PHYSICAL_ADDRESS env var.
- * Unsubscribe email from COLD_EMAIL_UNSUBSCRIBE_EMAIL env var.
- * Both must be set to a real value before bulk sends go live.
+ * Physical address: COLD_EMAIL_PHYSICAL_ADDRESS env var (set before bulk sends).
+ * unsubLink: pre-computed HMAC URL from generateUnsubscribeLink(recipientEmail).
  */
-function htmlEscapeBody(plain: string, recipientEmail: string): string {
+function htmlEscapeBody(plain: string, recipientEmail: string, unsubLink: string): string {
   const escaped = plain
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -512,10 +509,8 @@ function htmlEscapeBody(plain: string, recipientEmail: string): string {
     "ShortStack OS, 1234 Business Ave, Suite 100, City, ST 00000"
   ).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-  const fromAddr = process.env.SMTP_FROM || "growth@mail.shortstack.work";
-  const unsubDomain = fromAddr.includes("@") ? fromAddr.split("@")[1] : "mail.shortstack.work";
-  const unsubEmail = process.env.COLD_EMAIL_UNSUBSCRIBE_EMAIL || `unsubscribe@${unsubDomain}`;
-  const unsubHref = `mailto:${unsubEmail}?subject=unsubscribe%20${encodeURIComponent(recipientEmail)}`;
+  // HTML-encode the unsubscribe URL for use in href attribute
+  const safeUnsubHref = unsubLink.replace(/&/g, "&amp;");
 
   const footer = `
 <div style="margin-top:32px;padding-top:16px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;line-height:1.6;">
@@ -523,9 +518,10 @@ function htmlEscapeBody(plain: string, recipientEmail: string): string {
   <p style="margin:0;">
     You received this because your company matched our outreach criteria.
     To stop receiving emails from us,
-    <a href="${unsubHref}" style="color:#6b7280;text-decoration:underline;">unsubscribe here</a>.
+    <a href="${safeUnsubHref}" style="color:#6b7280;text-decoration:underline;">unsubscribe here</a>.
   </p>
 </div>`;
 
+  void recipientEmail; // previously used for mailto: — now supplied as unsubLink
   return `<div style="font-family:-apple-system,Helvetica,sans-serif;font-size:14px;color:#111;">${paragraphs}${footer}</div>`;
 }
