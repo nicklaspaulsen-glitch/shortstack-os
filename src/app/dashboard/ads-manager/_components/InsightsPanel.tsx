@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { PLATFORM_COLORS, type InsightsResponse, type SuggestionRow } from "./types";
+import AuditScoreCard from "./AuditScoreCard";
 
 const SUGGESTION_LABELS: Record<SuggestionRow["suggestion_type"], string> = {
   reallocate: "Reallocate budget",
@@ -133,6 +134,9 @@ export default function InsightsPanel() {
 
   return (
     <div className="space-y-6">
+      {/* ── Account health scorecard (claude-ads 200+ checks) ── */}
+      <AuditScoreCard />
+
       <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
