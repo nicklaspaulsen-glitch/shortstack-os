@@ -207,7 +207,7 @@ export default function VoiceStudioPage() {
                   onClick={() => setTab(t)}
                   className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
                     isActive
-                      ? "border-orange-400 text-orange-200"
+                      ? "border-[#D4FF00] text-[#D4FF00]"
                       : "border-transparent text-white/60 hover:text-white"
                   }`}
                   aria-current={isActive ? "page" : undefined}
@@ -825,6 +825,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               cachedText={textCache[p.id] ?? TEST_PROMPT_DEFAULT}
               onUrlCached={(url) => setPreviewCache((prev) => ({ ...prev, [p.id]: url }))}
               onTextChanged={(text) => setTextCache((prev) => ({ ...prev, [p.id]: text }))}
+              onSaved={onRefresh}
             />
           ))}
         </div>
@@ -841,20 +842,27 @@ interface PresetCardProps {
   cachedText: string;
   onUrlCached: (url: string) => void;
   onTextChanged: (text: string) => void;
+  /** Called after the preset is saved to My Voices so the parent can refresh. */
+  onSaved?: () => void;
 }
 
-function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged }: PresetCardProps) {
+function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged, onSaved }: PresetCardProps) {
   const [testing, setTesting] = useState(false);
   const [testUrl, setTestUrl] = useState<string | null>(cachedUrl);
   const [error, setError] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [testText, setTestText] = useState(cachedText);
+  const [isHovering, setIsHovering] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Keep previous audio URL while re-generating so the player doesn't vanish.
+  const prevUrlRef = useRef<string | null>(cachedUrl);
 
   const onTest = useCallback(async () => {
     setTesting(true);
     setError(null);
-    setTestUrl(null);
+    // Don't wipe testUrl here — keep the old audio until the new one arrives.
     try {
       const res = await fetch(`/api/voice/clones/${preset.id}/test`, {
         method: "POST",
@@ -863,6 +871,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged 
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Test failed (${res.status})`);
+      prevUrlRef.current = data.r2_url;
       setTestUrl(data.r2_url);
       onUrlCached(data.r2_url);
     } catch (err) {
@@ -873,6 +882,23 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged 
     }
   }, [preset.id, testText, onUrlCached]);
 
+  const onSave = useCallback(async () => {
+    setSaving(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/voice/presets/${preset.id}/use`, { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save");
+      setSaved(true);
+      onSaved?.();
+    } catch (err) {
+      console.error("[voice-studio/preset-save] failed:", err);
+      setError(err instanceof Error ? err.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  }, [preset.id, onSaved]);
+
   const category = (preset.consent_evidence?.category as string) || "preset";
   const lang = preset.language?.toUpperCase() || "EN";
 
@@ -880,10 +906,12 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged 
     <div
       className="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-5 transition-colors duration-150 hover:border-[rgba(212,255,0,0.2)]"
       onMouseEnter={() => {
+        setIsHovering(true);
         if (testUrl || testing) return;
         hoverTimerRef.current = setTimeout(() => { onTest(); }, 700);
       }}
       onMouseLeave={() => {
+        setIsHovering(false);
         if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
       }}
     >
@@ -921,13 +949,22 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged 
           />
           <div className="flex items-center justify-between">
             <span className="text-[10px] text-white/30">{testText.length}/300</span>
-            <button
-              type="button"
-              onClick={() => setEditMode(false)}
-              className="text-[10px] text-white/40 hover:text-white/70 cursor-pointer"
-            >
-              Done
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => { setEditMode(false); onTest(); }}
+                className="text-[10px] text-[rgba(212,255,0,0.7)] hover:text-[#D4FF00] cursor-pointer"
+              >
+                Preview
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditMode(false)}
+                className="text-[10px] text-white/40 hover:text-white/70 cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
           </div>
         </div>
       ) : (
@@ -950,7 +987,14 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged 
           type="button"
           onClick={onTest}
           disabled={testing}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40 transition-colors duration-150 cursor-pointer"
+          className={[
+            "flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer",
+            // Pulse border when hover detected but audio not yet loading
+            isHovering && !testing && !testUrl
+              ? "border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.05)] text-[#D4FF00]/80 animate-pulse"
+              : "border-white/15 bg-white/5 text-white hover:bg-white/10",
+            "disabled:cursor-not-allowed disabled:opacity-40",
+          ].join(" ")}
         >
           {testing ? (
             <Loader2 size={12} className="animate-spin" />
@@ -959,16 +1003,35 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged 
           )}
           {testing ? "Generating…" : testUrl ? "Re-preview" : "Preview"}
         </button>
-        {!testUrl && !testing && (
-          <span className="text-[10px] text-white/20 italic select-none">hover to preview</span>
-        )}
+
+        {/* Save to My Voices */}
+        <button
+          type="button"
+          onClick={onSave}
+          disabled={saving || saved}
+          title={saved ? "Already in My Voices" : "Save to My Voices"}
+          className={[
+            "flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed",
+            saved
+              ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.07)] text-[#D4FF00]/70"
+              : "border-white/15 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white",
+          ].join(" ")}
+        >
+          {saving ? <Loader2 size={12} className="animate-spin" /> : saved ? <CheckCircle2 size={12} /> : <Sparkles size={12} />}
+          {saved ? "Saved" : "Use"}
+        </button>
       </div>
 
-      {/* Audio player */}
-      {testUrl && (
-        <div className="mt-3 rounded-lg border border-white/10 bg-black/30 p-2">
+      {/* Audio player — kept visible while re-generating (prevUrlRef) */}
+      {(testUrl || (testing && prevUrlRef.current)) && (
+        <div className="relative mt-3 rounded-lg border border-white/10 bg-black/30 p-2">
           {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-          <audio src={testUrl} controls className="w-full" style={{ height: 32 }} />
+          <audio src={testUrl ?? prevUrlRef.current ?? ""} controls className="w-full" style={{ height: 32 }} />
+          {testing && (
+            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
+              <Loader2 size={16} className="animate-spin text-[#D4FF00]" />
+            </div>
+          )}
         </div>
       )}
       {error && <p className="mt-2 text-xs text-[#F26063]">{error}</p>}
