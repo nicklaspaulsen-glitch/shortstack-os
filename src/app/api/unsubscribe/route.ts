@@ -21,7 +21,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 const SECRET =
   process.env.UNSUBSCRIBE_SECRET || process.env.CRON_SECRET || "dev-unsub-secret";
 
-export function generateUnsubscribeToken(email: string): string {
+function generateUnsubscribeToken(email: string): string {
   return createHmac("sha256", SECRET)
     .update(email.toLowerCase().trim())
     .digest("hex")
