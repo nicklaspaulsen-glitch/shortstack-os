@@ -37,7 +37,7 @@ import PageHero from "@/components/ui/page-hero";
 const FALLBACK_VERSION = "1.4.0";
 const GH_RELEASES = "https://github.com/shortstack/shortstack-os/releases/latest";
 const SUPPORT_MAILTO =
-  "mailto:support@shortstack.dev?subject=Desktop%20app%20download%20unavailable";
+  "mailto:support@shortstack.work?subject=Desktop%20app%20download%20unavailable";
 
 type Platform = "windows" | "mac" | "linux";
 

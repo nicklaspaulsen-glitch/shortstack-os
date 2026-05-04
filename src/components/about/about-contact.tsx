@@ -31,7 +31,7 @@ export default function AboutContact() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <motion.a
-            href="mailto:hello@shortstack.os"
+            href="mailto:hello@shortstack.work"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -56,7 +56,7 @@ export default function AboutContact() {
             <div>
               <div className="text-white font-semibold">Email</div>
               <div className="text-sm text-gray-500 group-hover:text-gray-300 transition-colors">
-                hello@shortstack.os
+                hello@shortstack.work
               </div>
             </div>
           </motion.a>
