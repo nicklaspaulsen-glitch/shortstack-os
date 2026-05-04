@@ -303,26 +303,29 @@ export default function AIStudioPage() {
       {advancedMode && (
       <>
       {/* Rolling preview of AI-generated examples */}
-      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
+      <div className="relative rounded-2xl overflow-hidden border border-[rgba(212,255,0,0.08)] bg-[#15141A] py-8 mb-6 shadow-lg shadow-black/20">
+        {/* Vignette mask so the marquee fades into the card */}
+        <div className="pointer-events-none absolute inset-0 z-10" style={{
+          background: "radial-gradient(ellipse 80% 100% at 50% 50%, transparent 30%, #15141A 90%)"
+        }} />
         <div className="absolute inset-0 pointer-events-none">
           <RollingPreview
             items={AI_STUDIO_PREVIEW_FALLBACK}
             rows={2}
             aspectRatio="16:9"
-            opacity={0.35}
+            opacity={0.28}
             speed="medium"
           />
         </div>
-        <div className="relative text-center px-4">
-          <p className="text-[11px] uppercase tracking-widest text-[#A78BFA]/80 font-semibold">
-            Example generations
+        <div className="relative z-20 text-center px-4">
+          <p className="text-[10px] uppercase tracking-[0.22em] text-[#A78BFA]/70 font-semibold mb-1">
+            Example outputs
           </p>
-          <h3 className="text-lg font-bold text-foreground mt-1">
+          <h3 className="font-display text-xl font-bold text-[#F5F4F1] tracking-[-0.02em]">
             From a one-line prompt to a hero image
           </h3>
-          <p className="text-xs text-muted max-w-md mx-auto mt-1">
-            FLUX, SDXL, DALL-E, upscale, remove-bg, voice clone — everything
-            under one roof with your brand LoRA baked in.
+          <p className="text-[11px] text-[#9F9DAA] max-w-sm mx-auto mt-1.5 leading-relaxed">
+            FLUX, SDXL, DALL-E, upscale, remove-bg, voice clone — all under one roof
           </p>
         </div>
       </div>
@@ -415,16 +418,12 @@ export default function AIStudioPage() {
                   });
                 }, 0);
               }}
-              className={`relative text-left p-3 rounded-xl border transition-all ${
-                // Active state was border-gold/30 + bg-gold/[0.04] — too
-                // subtle to read as "you picked this". Bumped to a full
-                // gold border + 2x ring + denser bg so the active tile
-                // visibly pops out of the grid on click.
+              className={`relative text-left p-3.5 rounded-xl border transition-all duration-200 ${
                 active
-                  ? "border-[rgba(212,255,0,0.35)] ring-2 ring-[rgba(212,255,0,0.12)] bg-[rgba(212,255,0,0.05)] shadow-lg shadow-[rgba(212,255,0,0.08)]"
+                  ? "border-[rgba(212,255,0,0.40)] ring-2 ring-[rgba(212,255,0,0.14)] bg-[rgba(212,255,0,0.06)] shadow-lg shadow-[rgba(212,255,0,0.10)]"
                   : ["image-gen", "voice-clone", "transcribe"].includes(tool.id)
-                    ? "ring-1 ring-[rgba(212,255,0,0.14)] border-[rgba(212,255,0,0.14)] bg-surface hover:bg-surface-light"
-                    : "border-border bg-surface hover:bg-surface-light"
+                    ? "ring-1 ring-[rgba(212,255,0,0.12)] border-[rgba(212,255,0,0.12)] bg-surface hover:bg-surface-light hover:border-[rgba(212,255,0,0.25)]"
+                    : "border-border bg-surface hover:bg-surface-light hover:border-white/12"
               }`}
             >
               {"badge" in tool && tool.badge && (
@@ -453,7 +452,7 @@ export default function AIStudioPage() {
           sticky-ish nav after the smooth scroll lands. */}
       <div
         ref={toolPanelRef}
-        className="bg-surface border border-border rounded-2xl p-5 scroll-mt-6"
+        className="bg-[#15141A] border border-[rgba(212,255,0,0.10)] rounded-2xl p-5 scroll-mt-6 shadow-xl shadow-black/30"
       >
         {activeTool === "transcribe" && <TranscribeTool processing={processing} setProcessing={setProcessing} history={history} setHistory={setHistory} />}
         {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} initial={imageGenInit} />}

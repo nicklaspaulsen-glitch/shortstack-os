@@ -602,11 +602,11 @@ export default function ClientsPage() {
         actions={
           <div className="flex items-center gap-2">
             {(callerRole === "admin" || callerRole === "founder") && (
-              <div className="flex items-center bg-white/10 border border-white/20 rounded-xl p-0.5">
+              <div className="flex items-center bg-[#15141A] border border-[rgba(212,255,0,0.1)] rounded-xl p-0.5">
                 <button
                   onClick={() => setScope("all")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    scope === "all" ? "bg-white text-black" : "text-white/70 hover:text-white"
+                    scope === "all" ? "bg-[#D4FF00] text-[#0A0A0B]" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
                   }`}
                   title="See every client across every agency"
                 >
@@ -615,7 +615,7 @@ export default function ClientsPage() {
                 <button
                   onClick={() => setScope("mine")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    scope === "mine" ? "bg-white text-black" : "text-white/70 hover:text-white"
+                    scope === "mine" ? "bg-[#D4FF00] text-[#0A0A0B]" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
                   }`}
                   title="See only the clients you personally added"
                 >
@@ -664,7 +664,7 @@ export default function ClientsPage() {
       </CollapsibleStats>
 
       {/* Tabs (sticky) */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 bg-surface rounded-lg p-1 w-fit">
+      <div className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(212,255,0,0.08)] rounded-xl p-1 w-fit shadow-lg shadow-black/20">
         {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}

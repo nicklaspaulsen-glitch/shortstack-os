@@ -7,7 +7,7 @@ import { formatCurrency, formatRelativeTime } from "@/lib/utils";
 import {
   BarChart3, Users, DollarSign, Zap, Film, Phone, MessageSquare, ArrowUp, ArrowDown,
   TrendingUp, AlertTriangle, Target, Trophy, Calendar, Download, Activity,
-  ChevronDown, ChevronRight, Flame, Star, Clock, Filter
+  ChevronDown, ChevronRight, Flame, Star, Clock, Filter, CheckCircle
 } from "lucide-react";
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
@@ -260,14 +260,8 @@ export default function AnalyticsPage() {
   }, []);
 
   // --- Feature 3: Platform ROI ---
-  const platformROI = useMemo(() => [
-    // TODO: Pull from real ad platform data once connected
-    { platform: "Meta", spend: 0, revenue: 0, roi: 0, leads: 0, cpl: 0 },
-    { platform: "TikTok", spend: 0, revenue: 0, roi: 0, leads: 0, cpl: 0 },
-    { platform: "Google", spend: 0, revenue: 0, roi: 0, leads: 0, cpl: 0 },
-    { platform: "LinkedIn", spend: 0, revenue: 0, roi: 0, leads: 0, cpl: 0 },
-    { platform: "Email", spend: 0, revenue: 0, roi: 0, leads: 0, cpl: 0 },
-  ], []);
+  // Populated from real ad platform data once connected via integrations.
+  const platformROI = useMemo((): Array<{ platform: string; spend: number; revenue: number; roi: number; leads: number; cpl: number }> => [], []);
 
   // --- Feature 4: Content Heatmap ---
   const contentHeatmap = useMemo(() => {
@@ -281,6 +275,11 @@ export default function AnalyticsPage() {
       return row;
     });
   }, []);
+
+  const hasContentHeatmapData = useMemo(() => {
+    const hours = ["9am", "12pm", "3pm", "6pm", "9pm"];
+    return contentHeatmap.some(row => hours.some(h => (row[h] as number) > 0));
+  }, [contentHeatmap]);
 
   // --- Feature 5: Funnel Data ---
   const funnelData = useMemo(() => [
@@ -308,12 +307,8 @@ export default function AnalyticsPage() {
   ], []);
 
   // --- Feature 8: Client Lifetime Value ---
-  const clvData = useMemo(() => [
-    // TODO: Compute from real client billing history
-    { name: "Enterprise", avgCLV: 0, avgMonths: 0, count: 0 },
-    { name: "Growth", avgCLV: 0, avgMonths: 0, count: 0 },
-    { name: "Starter", avgCLV: 0, avgMonths: 0, count: 0 },
-  ], []);
+  // Computed from real client billing history once clients have payment records.
+  const clvData = useMemo((): Array<{ name: string; avgCLV: number; avgMonths: number; count: number }> => [], []);
 
   // --- Feature 9: Engagement Benchmarks ---
   const benchmarks = useMemo(() => [
@@ -325,14 +320,8 @@ export default function AnalyticsPage() {
   ], [replyRate, stats]);
 
   // --- Feature 10: Revenue by Service ---
-  const revenueByService = useMemo(() => [
-    // TODO: Pull from real service/invoice categories
-    { service: "Social Media Mgmt", revenue: 0, clients: 0 },
-    { service: "Paid Ads", revenue: 0, clients: 0 },
-    { service: "Content Creation", revenue: 0, clients: 0 },
-    { service: "Web Development", revenue: 0, clients: 0 },
-    { service: "SEO", revenue: 0, clients: 0 },
-  ], []);
+  // Pulled from real service/invoice categories once deals are tagged.
+  const revenueByService = useMemo((): Array<{ service: string; revenue: number; clients: number }> => [], []);
 
   // --- Feature 11: Campaign Attribution ---
   const campaignData = useMemo((): Array<{ campaign: string; conversions: number; spend: number; revenue: number; roas: number }> => [], []);
@@ -715,10 +704,12 @@ export default function AnalyticsPage() {
           </h2>
           <div className="space-y-2 mt-3">
             {churnRiskClients.length === 0 ? (
-              <div className="text-center py-5 text-muted">
-                <AlertTriangle size={18} className="mx-auto mb-2 opacity-30" />
-                <p className="text-[11px] font-medium text-[#6F6D7A]">No churn signals detected</p>
-                <p className="text-[9px] text-[#6F6D7A]/70 mt-1">Clients with low engagement or missed payments appear here</p>
+              <div className="flex flex-col items-center gap-2 py-7 text-center">
+                <div className="w-8 h-8 rounded-full bg-[rgba(127,229,184,0.06)] border border-[rgba(127,229,184,0.15)] flex items-center justify-center">
+                  <CheckCircle size={14} className="text-[#7FE5B8]/60" />
+                </div>
+                <p className="text-[11px] font-medium text-[#9F9DAA]">All clients healthy</p>
+                <p className="text-[9px] text-[#6F6D7A] max-w-[200px] mx-auto leading-relaxed">No churn signals detected. At-risk clients appear here when engagement drops.</p>
               </div>
             ) : churnRiskClients.map(client => (
               <div key={client.name} className="flex items-center gap-3 p-2 rounded-lg bg-surface-light">
@@ -858,9 +849,16 @@ export default function AnalyticsPage() {
                   {platformROI.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="py-8 text-center">
-                        <Target size={16} className="mx-auto mb-2 opacity-30 text-muted" />
-                        <p className="text-[11px] text-[#6F6D7A]">No platform data yet</p>
-                        <p className="text-[9px] text-[#6F6D7A]/70 mt-0.5">Connect ad platforms to see ROI comparison</p>
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center">
+                            <Target size={14} className="text-[#D4FF00]/40" />
+                          </div>
+                          <p className="text-[11px] font-medium text-[#9F9DAA]">No ad platform data yet</p>
+                          <p className="text-[9px] text-[#6F6D7A] max-w-[200px] mx-auto leading-relaxed">Connect Meta, Google, or TikTok to see spend, revenue, and ROI side-by-side</p>
+                          <Link href="/dashboard/integrations" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#D4FF00] hover:text-[#D4FF00]/80 transition-colors">
+                            Connect platforms <ArrowUp size={9} className="rotate-45" />
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ) : platformROI.map(p => (
@@ -904,41 +902,54 @@ export default function AnalyticsPage() {
           <h2 className="section-header flex items-center gap-2">
             <Flame size={14} className="text-orange-400" /> Content Performance Heatmap
           </h2>
-          <div className="mt-3 overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr>
-                  <th className="text-[9px] text-muted font-medium py-1 text-left w-12"></th>
-                  {["9am", "12pm", "3pm", "6pm", "9pm"].map(h => (
-                    <th key={h} className="text-[9px] text-muted font-medium py-1 text-center">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {contentHeatmap.map(row => (
-                  <tr key={row.day as string}>
-                    <td className="text-[9px] text-muted py-0.5 font-medium">{row.day as string}</td>
-                    {["9am", "12pm", "3pm", "6pm", "9pm"].map(h => {
-                      const val = row[h] as number;
-                      const intensity = val / 100;
-                      return (
-                        <td key={h} className="py-0.5 px-0.5">
-                          <div className="h-7 rounded-md flex items-center justify-center text-[9px] font-bold transition-all hover:scale-105"
-                            style={{
-                              background: `rgba(99, 102, 241, ${intensity * 0.65 + 0.04})`,
-                              color: intensity > 0.55 ? "#fff" : "var(--color-muted, #9CA3AF)",
-                            }}>
-                            {val}
-                          </div>
-                        </td>
-                      );
-                    })}
+          {!hasContentHeatmapData ? (
+            <div className="flex flex-col items-center gap-2 py-7 text-center mt-3">
+              <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center">
+                <Flame size={14} className="text-[#D4FF00]/40" />
+              </div>
+              <p className="text-[11px] font-medium text-[#9F9DAA]">No engagement data yet</p>
+              <p className="text-[9px] text-[#6F6D7A] max-w-[220px] mx-auto leading-relaxed">Post timing performance appears once content is published and tracked</p>
+              <Link href="/dashboard/content" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#D4FF00] hover:text-[#D4FF00]/80 transition-colors">
+                Create content <ArrowUp size={9} className="rotate-45" />
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-3 overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr>
+                    <th className="text-[9px] text-muted font-medium py-1 text-left w-12"></th>
+                    {["9am", "12pm", "3pm", "6pm", "9pm"].map(h => (
+                      <th key={h} className="text-[9px] text-muted font-medium py-1 text-center">{h}</th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <p className="text-[9px] text-muted mt-2 text-center">Engagement score by day and time (higher = better performance)</p>
-          </div>
+                </thead>
+                <tbody>
+                  {contentHeatmap.map(row => (
+                    <tr key={row.day as string}>
+                      <td className="text-[9px] text-muted py-0.5 font-medium">{row.day as string}</td>
+                      {["9am", "12pm", "3pm", "6pm", "9pm"].map(h => {
+                        const val = row[h] as number;
+                        const intensity = val / 100;
+                        return (
+                          <td key={h} className="py-0.5 px-0.5">
+                            <div className="h-7 rounded-md flex items-center justify-center text-[9px] font-bold transition-all hover:scale-105"
+                              style={{
+                                background: `rgba(99, 102, 241, ${intensity * 0.65 + 0.04})`,
+                                color: intensity > 0.55 ? "#fff" : "var(--color-muted, #9CA3AF)",
+                              }}>
+                              {val}
+                            </div>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="text-[9px] text-muted mt-2 text-center">Engagement score by day and time (higher = better performance)</p>
+            </div>
+          )}
         </div>
 
         {/* Campaign Attribution */}
@@ -963,7 +974,13 @@ export default function AnalyticsPage() {
                 </div>
               </div>
             )) : (
-              <p className="text-xs text-muted text-center py-4">No campaign data yet. Attribution data will appear once campaigns are tracked.</p>
+              <div className="flex flex-col items-center gap-2 py-7 text-center">
+                <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center">
+                  <Target size={14} className="text-[#D4FF00]/40" />
+                </div>
+                <p className="text-[11px] font-medium text-[#9F9DAA]">No campaign data yet</p>
+                <p className="text-[9px] text-[#6F6D7A] max-w-[200px] mx-auto leading-relaxed">Campaign attribution appears once campaigns are live and conversions are tracked</p>
+              </div>
             )}
           </div>
         </div>
@@ -1005,10 +1022,15 @@ export default function AnalyticsPage() {
           </h2>
           <div className="space-y-2 mt-3">
             {teamMembers.length === 0 ? (
-              <div className="text-center py-5 text-muted">
-                <Trophy size={18} className="mx-auto mb-2 opacity-30" />
-                <p className="text-[11px] font-medium text-[#6F6D7A]">No team activity yet</p>
-                <p className="text-[9px] text-[#6F6D7A]/70 mt-1">Team member performance will appear here as activity is logged</p>
+              <div className="flex flex-col items-center gap-2 py-7 text-center">
+                <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center">
+                  <Trophy size={14} className="text-[#D4FF00]/40" />
+                </div>
+                <p className="text-[11px] font-medium text-[#9F9DAA]">No team activity yet</p>
+                <p className="text-[9px] text-[#6F6D7A] max-w-[200px] mx-auto leading-relaxed">Performance leaderboard appears once team members are active in the system</p>
+                <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#D4FF00] hover:text-[#D4FF00]/80 transition-colors">
+                  Invite team <ArrowUp size={9} className="rotate-45" />
+                </Link>
               </div>
             ) : teamMembers.map((member, i) => (
               <div key={member.name} className="flex items-center gap-3 p-2 rounded-lg bg-surface-light">
@@ -1048,10 +1070,15 @@ export default function AnalyticsPage() {
           </h2>
           <div className="space-y-3 mt-3">
             {clvData.length === 0 ? (
-              <div className="text-center py-5 text-muted">
-                <DollarSign size={18} className="mx-auto mb-2 opacity-30" />
-                <p className="text-[11px] font-medium text-[#6F6D7A]">No CLV data yet</p>
-                <p className="text-[9px] text-[#6F6D7A]/70 mt-1">Lifetime value tiers appear once clients have billing history</p>
+              <div className="flex flex-col items-center gap-2 py-7 text-center">
+                <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center">
+                  <DollarSign size={14} className="text-[#D4FF00]/40" />
+                </div>
+                <p className="text-[11px] font-medium text-[#9F9DAA]">No CLV data yet</p>
+                <p className="text-[9px] text-[#6F6D7A] max-w-[200px] mx-auto leading-relaxed">Client lifetime value tiers appear once clients have payment records attached</p>
+                <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#D4FF00] hover:text-[#D4FF00]/80 transition-colors">
+                  Add clients <ArrowUp size={9} className="rotate-45" />
+                </Link>
               </div>
             ) : clvData.map(tier => (
               <div key={tier.name} className="p-3 rounded-lg bg-surface-light">
@@ -1088,10 +1115,15 @@ export default function AnalyticsPage() {
             <BarChart3 size={14} className="text-gold" /> Revenue by Service
           </h2>
           {revenueByService.length === 0 ? (
-            <div className="text-center py-8 text-muted mt-3">
-              <BarChart3 size={18} className="mx-auto mb-2 opacity-30" />
-              <p className="text-[11px] font-medium text-[#6F6D7A]">No service data yet</p>
-              <p className="text-[9px] text-[#6F6D7A]/70 mt-1">Revenue breakdown by service type appears once deals are tagged</p>
+            <div className="flex flex-col items-center gap-2 py-7 text-center mt-3">
+              <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center">
+                <BarChart3 size={14} className="text-[#D4FF00]/40" />
+              </div>
+              <p className="text-[11px] font-medium text-[#9F9DAA]">No service breakdown yet</p>
+              <p className="text-[9px] text-[#6F6D7A] max-w-[200px] mx-auto leading-relaxed">Revenue by service type appears once deals are tagged to a service category</p>
+              <Link href="/dashboard/deals" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#D4FF00] hover:text-[#D4FF00]/80 transition-colors">
+                View deals <ArrowUp size={9} className="rotate-45" />
+              </Link>
             </div>
           ) : (
             <>
