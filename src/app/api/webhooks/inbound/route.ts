@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
       .from("clients")
       .select("id")
       .eq("id", data.client_id)
-      .eq("user_id", webhookOwnerId)
+      .eq("profile_id", webhookOwnerId)
       .maybeSingle();
     if (!clientRow) {
       console.error("[webhooks/inbound] cross-tenant block: client_id not owned by WEBHOOK_OWNER_USER_ID", {
