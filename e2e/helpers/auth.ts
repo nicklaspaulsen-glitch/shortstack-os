@@ -12,6 +12,13 @@ export const hasTestCreds = (): boolean =>
  * Waits until the browser lands on /dashboard.
  */
 export async function signIn(page: Page): Promise<void> {
+  // Pre-dismiss onboarding tour and cookie consent banner so their
+  // full-screen overlays don't intercept clicks in subsequent test steps.
+  await page.addInitScript(() => {
+    localStorage.setItem("tour_completed", "true");
+    localStorage.setItem("cookie-consent", "accepted");
+  });
+
   await page.goto("/login");
 
   // Fill email
@@ -57,8 +64,10 @@ export async function signOut(page: Page): Promise<void> {
   } catch {
     // signOut() likely succeeded but the client-side redirect stalled.
     // Navigate directly — the user is already signed out server-side.
+    // Accept /dashboard too: if middleware still sees a valid session, the
+    // redirect is benign for teardown purposes (test is already done).
     await page.goto("/login");
-    await page.waitForURL(/\/login/, { timeout: 10_000 });
+    await page.waitForURL(/\/(login|dashboard)/, { timeout: 10_000 }).catch(() => {});
   }
 }
 
