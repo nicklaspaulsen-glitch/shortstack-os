@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { heartbeat } from "@/lib/cron-ping";
 
 export const maxDuration = 30;
 
@@ -29,6 +30,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  await heartbeat("ai-handoff-cleanup");
   return NextResponse.json({
     success: true,
     deleted: count || 0,

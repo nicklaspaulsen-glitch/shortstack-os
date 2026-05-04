@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { generatePersonalBrandIdeas } from "@/lib/services/content-ai";
+import { pingCron } from "@/lib/cron-ping";
 
 // Generates a fresh batch of long-form + short-form personal brand content
 // ideas via the generatePersonalBrandIdeas() service and inserts them into
@@ -16,6 +17,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const done = await pingCron("personal-brand");
   const supabase = createServiceClient();
   const batchDate = new Date().toISOString().split("T")[0];
 
@@ -49,6 +51,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    await done("complete");
     return NextResponse.json({
       success: true,
       longFormCount: ideas.longForm.length,
@@ -56,6 +59,7 @@ export async function GET(request: NextRequest) {
       batchDate,
     });
   } catch (err) {
+    await done("fail");
     return NextResponse.json({ success: false, error: String(err) }, { status: 500 });
   }
 }
