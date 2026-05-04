@@ -388,9 +388,16 @@ export default function AIStudioPage() {
         </div>
       )}
 
-      {/* Tool grid */}
+      {/* Tool grid — eyebrow header */}
+      <div className="mb-3">
+        <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Creative Tools</span>
+        <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">Choose your tool</h2>
+      </div>
+      <div className="h-px bg-gradient-to-r from-[#D4FF00]/15 via-[#D4FF00]/5 to-transparent mb-4" />
+
+      {/* Tool grid — 3×3 so all 9 tools fill evenly */}
       <motion.div
-        className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"
+        className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6"
         initial="hidden"
         animate="visible"
         variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
@@ -452,17 +459,27 @@ export default function AIStudioPage() {
           sticky-ish nav after the smooth scroll lands. */}
       <div
         ref={toolPanelRef}
-        className="bg-[#15141A] border border-[rgba(212,255,0,0.10)] rounded-2xl p-5 scroll-mt-6 shadow-xl shadow-black/30"
+        className="bg-[#15141A] border border-[rgba(212,255,0,0.10)] rounded-2xl scroll-mt-6 shadow-xl shadow-black/30 overflow-hidden"
       >
-        {activeTool === "transcribe" && <TranscribeTool processing={processing} setProcessing={setProcessing} history={history} setHistory={setHistory} />}
-        {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} initial={imageGenInit} />}
-        {activeTool === "upscale" && <UpscaleTool processing={processing} setProcessing={setProcessing} />}
-        {activeTool === "remove-bg" && <RemoveBgTool processing={processing} setProcessing={setProcessing} />}
-        {activeTool === "img-to-video" && <ImgToVideoTool processing={processing} setProcessing={setProcessing} />}
-        {activeTool === "music-gen" && <MusicGenTool processing={processing} setProcessing={setProcessing} />}
-        {activeTool === "voice-clone" && <VoiceCloneTool processing={processing} setProcessing={setProcessing} />}
-        {activeTool === "train-lora" && <TrainLoraTool processing={processing} setProcessing={setProcessing} />}
-        {activeTool === "batch-gen" && <BatchGenTool processing={processing} setProcessing={setProcessing} />}
+        {/* Tool panel eyebrow header */}
+        <div className="px-5 pt-5 pb-0">
+          <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Active Tool</span>
+          <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em]">
+            {TOOLS.find(t => t.id === activeTool)?.name ?? "Tool"}
+          </h2>
+          <div className="h-px bg-gradient-to-r from-[#D4FF00]/15 via-[#D4FF00]/5 to-transparent mt-2 mb-4" />
+        </div>
+        <div className="px-5 pb-5">
+          {activeTool === "transcribe" && <TranscribeTool processing={processing} setProcessing={setProcessing} history={history} setHistory={setHistory} />}
+          {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} initial={imageGenInit} />}
+          {activeTool === "upscale" && <UpscaleTool processing={processing} setProcessing={setProcessing} />}
+          {activeTool === "remove-bg" && <RemoveBgTool processing={processing} setProcessing={setProcessing} />}
+          {activeTool === "img-to-video" && <ImgToVideoTool processing={processing} setProcessing={setProcessing} />}
+          {activeTool === "music-gen" && <MusicGenTool processing={processing} setProcessing={setProcessing} />}
+          {activeTool === "voice-clone" && <VoiceCloneTool processing={processing} setProcessing={setProcessing} />}
+          {activeTool === "train-lora" && <TrainLoraTool processing={processing} setProcessing={setProcessing} />}
+          {activeTool === "batch-gen" && <BatchGenTool processing={processing} setProcessing={setProcessing} />}
+        </div>
       </div>
       </>
       )}

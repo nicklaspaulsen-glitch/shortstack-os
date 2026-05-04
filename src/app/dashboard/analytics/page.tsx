@@ -663,10 +663,14 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Funnel Visualization */}
         <div className="card">
-          <h2 className="section-header flex items-center gap-2">
-            <Filter size={14} className="text-gold" /> Conversion Funnel
-          </h2>
-          <div className="space-y-2 mt-3">
+          <div className="mb-4">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Sales Pipeline</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em] flex items-center gap-2">
+              <Filter size={14} className="text-[#D4FF00]/70" /> Conversion Funnel
+            </h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#D4FF00]/15 via-[#D4FF00]/5 to-transparent mb-3" />
+          <div className="space-y-2">
             {funnelData.map((stage, i) => {
               const maxVal = funnelData[0].value;
               const pct = maxVal > 0 ? (stage.value / maxVal) * 100 : 0;
@@ -699,10 +703,14 @@ export default function AnalyticsPage() {
 
         {/* Churn Risk Scores */}
         <div className="card">
-          <h2 className="section-header flex items-center gap-2">
-            <AlertTriangle size={14} className="text-warning" /> Client Churn Risk
-          </h2>
-          <div className="space-y-2 mt-3">
+          <div className="mb-4">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Retention Signals</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em] flex items-center gap-2">
+              <AlertTriangle size={14} className="text-[#F26063]/80" /> Churn Risk
+            </h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#F26063]/15 via-[#F26063]/5 to-transparent mb-3" />
+          <div className="space-y-2">
             {churnRiskClients.length === 0 ? (
               <div className="flex flex-col items-center gap-2 py-7 text-center">
                 <div className="w-8 h-8 rounded-full bg-[rgba(127,229,184,0.06)] border border-[rgba(127,229,184,0.15)] flex items-center justify-center">
@@ -899,9 +907,13 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Content Performance Heatmap */}
         <div className="card">
-          <h2 className="section-header flex items-center gap-2">
-            <Flame size={14} className="text-orange-400" /> Content Performance Heatmap
-          </h2>
+          <div className="mb-4">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Posting Schedule</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em] flex items-center gap-2">
+              <Flame size={14} className="text-[#FFC062]/80" /> Content Heatmap
+            </h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#FFC062]/15 via-[#FFC062]/5 to-transparent mb-3" />
           {!hasContentHeatmapData ? (
             <div className="flex flex-col items-center gap-2 py-7 text-center mt-3">
               <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center">
@@ -954,10 +966,14 @@ export default function AnalyticsPage() {
 
         {/* Campaign Attribution */}
         <div className="card">
-          <h2 className="section-header flex items-center gap-2">
-            <Target size={14} className="text-info" /> Campaign Attribution
-          </h2>
-          <div className="space-y-2 mt-3">
+          <div className="mb-4">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Source Attribution</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em] flex items-center gap-2">
+              <Target size={14} className="text-[#6366F1]/80" /> Campaign ROAS
+            </h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#6366F1]/15 via-[#6366F1]/5 to-transparent mb-3" />
+          <div className="space-y-2">
             {campaignData.length > 0 ? campaignData.map((c, i) => (
               <div key={c.campaign} className="flex items-center gap-3 p-2 rounded-lg bg-surface-light hover:bg-surface-light/80 transition-colors">
                 <div className="w-5 h-5 rounded flex items-center justify-center text-[9px] font-bold"
@@ -990,10 +1006,14 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Goal Tracker */}
         <div className="card">
-          <h2 className="section-header flex items-center gap-2">
-            <Target size={14} className="text-gold" /> Monthly Goals
-          </h2>
-          <div className="space-y-3 mt-3">
+          <div className="mb-4">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Progress Tracking</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em] flex items-center gap-2">
+              <Target size={14} className="text-[#D4FF00]/70" /> Monthly Goals
+            </h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#D4FF00]/15 via-[#D4FF00]/5 to-transparent mb-3" />
+          <div className="space-y-3">
             {goals.map(goal => {
               const pct = goal.target > 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
               return (
@@ -1017,10 +1037,14 @@ export default function AnalyticsPage() {
 
         {/* Team Leaderboard */}
         <div className="card">
-          <h2 className="section-header flex items-center gap-2">
-            <Trophy size={14} className="text-gold" /> Team Leaderboard
-          </h2>
-          <div className="space-y-2 mt-3">
+          <div className="mb-4">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Team Performance</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em] flex items-center gap-2">
+              <Trophy size={14} className="text-[#D4FF00]/70" /> Leaderboard
+            </h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#D4FF00]/15 via-[#D4FF00]/5 to-transparent mb-3" />
+          <div className="space-y-2">
             {teamMembers.length === 0 ? (
               <div className="flex flex-col items-center gap-2 py-7 text-center">
                 <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center">
@@ -1065,10 +1089,14 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Client Lifetime Value */}
         <div className="card">
-          <h2 className="section-header flex items-center gap-2">
-            <DollarSign size={14} className="text-gold" /> Client Lifetime Value
-          </h2>
-          <div className="space-y-3 mt-3">
+          <div className="mb-4">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Revenue Health</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em] flex items-center gap-2">
+              <DollarSign size={14} className="text-[#D4FF00]/70" /> Client Lifetime Value
+            </h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#D4FF00]/15 via-[#D4FF00]/5 to-transparent mb-3" />
+          <div className="space-y-3">
             {clvData.length === 0 ? (
               <div className="flex flex-col items-center gap-2 py-7 text-center">
                 <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center">
@@ -1111,9 +1139,13 @@ export default function AnalyticsPage() {
 
         {/* Revenue by Service */}
         <div className="card">
-          <h2 className="section-header flex items-center gap-2">
-            <BarChart3 size={14} className="text-gold" /> Revenue by Service
-          </h2>
+          <div className="mb-4">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#A8A8B2]">Service Mix</span>
+            <h2 className="font-display text-base text-[#F5F5F7] tracking-[-0.01em] flex items-center gap-2">
+              <BarChart3 size={14} className="text-[#D4FF00]/70" /> Revenue by Service
+            </h2>
+          </div>
+          <div className="h-px bg-gradient-to-r from-[#D4FF00]/15 via-[#D4FF00]/5 to-transparent mb-3" />
           {revenueByService.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-7 text-center mt-3">
               <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center">
@@ -1256,30 +1288,44 @@ export default function AnalyticsPage() {
         )}
       </div>
 
-      {/* Performance indicators */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-        <div className="card text-center p-3 ring-1 ring-[rgba(212,255,0,0.08)] hover:ring-[rgba(212,255,0,0.15)] transition-colors duration-150">
-          <div className="flex items-center justify-center gap-1 mb-1">
-            {leadGrowth >= 0
-              ? <ArrowUp size={12} style={{ color: "#7FE5B8" }} />
-              : <ArrowDown size={12} style={{ color: "#F26063" }} />}
-            <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]"
-                  style={{ color: leadGrowth >= 0 ? "#7FE5B8" : "#F26063" }}>{leadGrowth}%</span>
+      {/* Performance scorecard — editorial strip with hierarchy */}
+      <div className="relative rounded-2xl border border-[rgba(212,255,0,0.12)] bg-[#15141A] overflow-hidden">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-[rgba(212,255,0,0.07)]">
+          {/* Revenue Closed — hero metric, gets the lime accent */}
+          <div className="p-5 flex flex-col gap-1 col-span-2 md:col-span-1">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">Revenue Closed</span>
+            <span className="font-display text-2xl font-bold tabular-nums tracking-[-0.03em] text-[#D4FF00]">
+              {formatCurrency(stats.dealValue)}
+            </span>
+            <span className="text-[10px] text-[#6F6D7A]">{stats.totalDeals} deal{stats.totalDeals !== 1 ? "s" : ""} won</span>
           </div>
-          <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Lead Growth</p>
+          {/* Lead Growth */}
+          <div className="p-5 flex flex-col gap-1">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">Lead Growth</span>
+            <div className="flex items-baseline gap-1.5">
+              {leadGrowth >= 0
+                ? <ArrowUp size={13} style={{ color: "#7FE5B8" }} />
+                : <ArrowDown size={13} style={{ color: "#F26063" }} />}
+              <span className="font-display text-xl font-bold tabular-nums tracking-[-0.02em]"
+                    style={{ color: leadGrowth >= 0 ? "#7FE5B8" : "#F26063" }}>{leadGrowth}%</span>
+            </div>
+            <span className="text-[10px] text-[#6F6D7A]">vs last month</span>
+          </div>
+          {/* Reply Rate */}
+          <div className="p-5 flex flex-col gap-1">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">Reply Rate</span>
+            <span className="font-display text-xl font-bold tabular-nums tracking-[-0.02em] text-[#D4FF00]">{replyRate}%</span>
+            <span className="text-[10px] text-[#6F6D7A]">{stats.dmsSent.toLocaleString()} DMs sent</span>
+          </div>
+          {/* Active Clients */}
+          <div className="p-5 flex flex-col gap-1">
+            <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">Active Clients</span>
+            <span className="font-display text-xl font-bold tabular-nums tracking-[-0.02em] text-[#F5F4F1]">{stats.activeClients}</span>
+            <span className="text-[10px] text-[#6F6D7A]">{formatCurrency(stats.totalMRR)} MRR</span>
+          </div>
         </div>
-        <div className="card text-center p-3 ring-1 ring-[rgba(212,255,0,0.08)] hover:ring-[rgba(212,255,0,0.15)] transition-colors duration-150">
-          <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#D4FF00" }}>{replyRate}%</span>
-          <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Reply Rate</p>
-        </div>
-        <div className="card text-center p-3 ring-1 ring-[rgba(212,255,0,0.08)] hover:ring-[rgba(212,255,0,0.15)] transition-colors duration-150">
-          <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#D4FF00" }}>{formatCurrency(stats.dealValue)}</span>
-          <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Revenue Closed</p>
-        </div>
-        <div className="card text-center p-3 ring-1 ring-[rgba(212,255,0,0.08)] hover:ring-[rgba(212,255,0,0.15)] transition-colors duration-150">
-          <span className="font-display text-lg font-semibold tabular-nums tracking-[-0.02em]" style={{ color: "#7FE5B8" }}>{stats.totalDeals}</span>
-          <p className="text-[9px] text-[#A8A8B2] uppercase tracking-[0.18em]">Deals Won</p>
-        </div>
+        {/* Lime accent line at bottom */}
+        <div className="h-px bg-gradient-to-r from-[#D4FF00]/25 via-[#D4FF00]/8 to-transparent" />
       </div>
 
       {/* Feature 15: Real-time Activity Feed */}

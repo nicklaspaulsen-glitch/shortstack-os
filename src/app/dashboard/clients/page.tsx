@@ -940,19 +940,19 @@ export default function ClientsPage() {
                   </div>
                 )}
 
-                {/* Stats grid */}
-                <div className="grid grid-cols-3 gap-2 mb-3">
-                  <div className="text-center">
-                    <p className="text-[9px] text-muted">MRR</p>
-                    <p className="text-xs font-bold text-gold">{formatCurrency(c.mrr)}</p>
+                {/* Stats grid — bordered editorial layout */}
+                <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(212,255,0,0.08)] overflow-hidden">
+                  <div className="px-3 py-2 flex flex-col gap-0.5">
+                    <p className="text-[9px] text-muted uppercase tracking-[0.1em]">MRR</p>
+                    <p className="text-xs font-bold text-[#D4FF00]">{formatCurrency(c.mrr)}</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-[9px] text-muted">Total Paid</p>
-                    <p className="text-xs font-bold">{formatCurrency(revenue.totalPaid)}</p>
+                  <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-[rgba(212,255,0,0.08)]">
+                    <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Paid</p>
+                    <p className="text-xs font-bold text-[#F5F4F1]">{formatCurrency(revenue.totalPaid)}</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-[9px] text-muted">Outstanding</p>
-                    <p className={`text-xs font-bold ${revenue.outstanding > 0 ? "text-danger" : "text-muted"}`}>
+                  <div className="px-3 py-2 flex flex-col gap-0.5">
+                    <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Owed</p>
+                    <p className={`text-xs font-bold ${revenue.outstanding > 0 ? "text-[#F26063]" : "text-muted"}`}>
                       {formatCurrency(revenue.outstanding)}
                     </p>
                   </div>
@@ -965,7 +965,7 @@ export default function ClientsPage() {
                     <span className="text-[9px] font-mono font-medium">{onboarding}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-success" : onboarding >= 60 ? "bg-gold" : "bg-warning"}`}
+                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-[#7FE5B8]" : onboarding >= 60 ? "bg-[#D4FF00]" : "bg-[#FFC062]"}`}
                       style={{ width: `${onboarding}%` }} />
                   </div>
                 </div>
