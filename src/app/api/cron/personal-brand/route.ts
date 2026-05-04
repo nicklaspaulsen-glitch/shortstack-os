@@ -4,8 +4,8 @@ import { generatePersonalBrandIdeas } from "@/lib/services/content-ai";
 import { pingCron } from "@/lib/cron-ping";
 
 // Generates a fresh batch of long-form + short-form personal brand content
-// ideas via the generatePersonalBrandIdeas() service and inserts them into
-// the personal_brand_ideas table.
+// ideas for every active admin via generatePersonalBrandIdeas() and inserts
+// them into personal_brand_ideas keyed by user_id for multi-tenant isolation.
 //
 // Schedule: "0 8 * * 0" — every Sunday 08:00 UTC = 09:00 CET (set in
 // vercel.json Apr 27).
@@ -21,45 +21,70 @@ export async function GET(request: NextRequest) {
   const supabase = createServiceClient();
   const batchDate = new Date().toISOString().split("T")[0];
 
-  try {
-    const ideas = await generatePersonalBrandIdeas();
+  // Pull every active admin — one idea batch per owner.
+  const { data: admins, error: adminsError } = await supabase
+    .from("profiles")
+    .select("id, full_name")
+    .eq("role", "admin")
+    .eq("is_active", true);
 
-    // Insert long-form ideas
-    for (const idea of ideas.longForm) {
-      await supabase.from("personal_brand_ideas").insert({
-        idea_type: "long_form",
-        title: idea.title,
-        hook: idea.hook,
-        outline: idea.outline,
-        thumbnail_concept: idea.thumbnail_concept,
-        estimated_length: idea.estimated_length,
-        target_keyword: idea.target_keyword,
-        batch_date: batchDate,
-      });
-    }
-
-    // Insert short-form ideas
-    for (const idea of ideas.shortForm) {
-      await supabase.from("personal_brand_ideas").insert({
-        idea_type: "short_form",
-        title: idea.title,
-        hook: idea.hook,
-        core_concept: idea.core_concept,
-        platform_recommendation: idea.platform_recommendation,
-        trending_angle: idea.trending_angle,
-        batch_date: batchDate,
-      });
-    }
-
-    await done("complete");
-    return NextResponse.json({
-      success: true,
-      longFormCount: ideas.longForm.length,
-      shortFormCount: ideas.shortForm.length,
-      batchDate,
-    });
-  } catch (err) {
+  if (adminsError) {
     await done("fail");
-    return NextResponse.json({ success: false, error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: adminsError.message }, { status: 500 });
   }
+
+  let totalLong = 0;
+  let totalShort = 0;
+  let failed = 0;
+
+  for (const admin of admins ?? []) {
+    try {
+      const ideas = await generatePersonalBrandIdeas();
+
+      // Insert long-form ideas scoped to this owner.
+      for (const idea of ideas.longForm) {
+        await supabase.from("personal_brand_ideas").insert({
+          user_id: admin.id,
+          idea_type: "long_form",
+          title: idea.title,
+          hook: idea.hook,
+          outline: idea.outline,
+          thumbnail_concept: idea.thumbnail_concept,
+          estimated_length: idea.estimated_length,
+          target_keyword: idea.target_keyword,
+          batch_date: batchDate,
+        });
+      }
+
+      // Insert short-form ideas scoped to this owner.
+      for (const idea of ideas.shortForm) {
+        await supabase.from("personal_brand_ideas").insert({
+          user_id: admin.id,
+          idea_type: "short_form",
+          title: idea.title,
+          hook: idea.hook,
+          core_concept: idea.core_concept,
+          platform_recommendation: idea.platform_recommendation,
+          trending_angle: idea.trending_angle,
+          batch_date: batchDate,
+        });
+      }
+
+      totalLong += ideas.longForm.length;
+      totalShort += ideas.shortForm.length;
+    } catch (err) {
+      console.error(`[cron/personal-brand] failed for user ${admin.id}:`, err);
+      failed++;
+    }
+  }
+
+  await done("complete");
+  return NextResponse.json({
+    success: true,
+    admins: admins?.length ?? 0,
+    longFormCount: totalLong,
+    shortFormCount: totalShort,
+    failed,
+    batchDate,
+  });
 }

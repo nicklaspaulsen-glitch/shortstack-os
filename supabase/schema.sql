@@ -333,6 +333,7 @@ CREATE TABLE publish_queue (
 
 CREATE TABLE personal_brand_ideas (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE, -- owner; NULL = legacy pre-migration rows
   idea_type brand_idea_type NOT NULL,
   title TEXT NOT NULL,
   hook TEXT,
@@ -350,6 +351,7 @@ CREATE TABLE personal_brand_ideas (
 );
 
 CREATE INDEX idx_personal_brand_batch ON personal_brand_ideas(batch_date);
+CREATE INDEX idx_personal_brand_user ON personal_brand_ideas(user_id);
 
 -- ============================================
 -- SECTION 5: ADS MANAGER
@@ -607,8 +609,17 @@ CREATE POLICY "content_requests_all" ON content_requests FOR ALL
 CREATE POLICY "publish_queue_admin" ON publish_queue FOR ALL
   USING (get_user_role(auth.uid()) = 'admin');
 
-CREATE POLICY "personal_brand_admin" ON personal_brand_ideas FOR ALL
-  USING (get_user_role(auth.uid()) = 'admin');
+-- Admins see only their own ideas (user_id = auth.uid()).
+-- Legacy rows with user_id IS NULL remain readable until backfilled.
+CREATE POLICY "personal_brand_own" ON personal_brand_ideas FOR ALL
+  USING (
+    get_user_role(auth.uid()) = 'admin'
+    AND (user_id = auth.uid() OR user_id IS NULL)
+  )
+  WITH CHECK (
+    get_user_role(auth.uid()) = 'admin'
+    AND user_id = auth.uid()
+  );
 
 -- Campaigns
 CREATE POLICY "campaigns_admin" ON campaigns FOR ALL
