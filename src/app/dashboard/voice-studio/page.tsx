@@ -365,10 +365,10 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
   }, [files, label, description, consentKind, signedBy, onCreated]);
 
   return (
-    <div className="rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-950/30 to-orange-950/20 p-6">
+    <div className="rounded-xl border border-[rgba(212,255,0,0.12)] bg-gradient-to-br from-[rgba(212,255,0,0.04)] to-transparent p-6">
       <div className="flex items-start gap-4">
-        <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-2.5">
-          <Upload size={20} className="text-amber-200" />
+        <div className="rounded-lg border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.07)] p-2.5">
+          <Upload size={20} className="text-[#D4FF00]" />
         </div>
         <div className="flex-1 space-y-4">
           <div>
@@ -391,7 +391,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-amber-400/40 bg-amber-500/5 px-4 py-6 text-sm text-amber-100 hover:border-amber-400 hover:bg-amber-500/10"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.03)] px-4 py-6 text-sm text-[#D4FF00]/80 hover:border-[rgba(212,255,0,0.45)] hover:bg-[rgba(212,255,0,0.06)] transition-colors"
           >
             <Upload size={16} />
             {files.length === 0
@@ -405,14 +405,14 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="Label (e.g. 'My voice — natural')"
-              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-amber-400/60 focus:outline-none"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(212,255,0,0.4)] focus:outline-none"
             />
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description (optional)"
-              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-amber-400/60 focus:outline-none"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(212,255,0,0.4)] focus:outline-none"
             />
           </div>
 
@@ -437,7 +437,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                   onClick={() => setConsentKind(opt.key)}
                   className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
                     consentKind === opt.key
-                      ? "border-amber-400/60 bg-amber-500/10 text-amber-100"
+                      ? "border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.08)] text-[#D4FF00]"
                       : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
                   }`}
                 >
@@ -451,20 +451,20 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                 value={signedBy}
                 onChange={(e) => setSignedBy(e.target.value)}
                 placeholder="Signed by (legal name)"
-                className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-amber-400/60 focus:outline-none"
+                className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(212,255,0,0.4)] focus:outline-none"
               />
             )}
           </div>
 
           <div className="flex items-center justify-between gap-4">
             {submitMsg && (
-              <div className="text-sm text-amber-200">{submitMsg}</div>
+              <div className="text-sm text-[#D4FF00]/80">{submitMsg}</div>
             )}
             <button
               type="button"
               onClick={onSubmit}
               disabled={submitting}
-              className="ml-auto flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-black hover:bg-amber-400 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
+              className="ml-auto flex items-center gap-2 rounded-lg bg-[#D4FF00] px-4 py-2 text-sm font-medium text-[#0A0A0B] hover:bg-[#D4FF00]/90 transition-colors disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
             >
               {submitting ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -554,14 +554,14 @@ function CloneRow({
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-5">
       <div className="flex flex-wrap items-start gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-amber-400/40 bg-amber-500/10 text-amber-200">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.07)] text-[#D4FF00]">
           <Mic size={20} />
         </div>
         <div className="flex-1 min-w-[180px]">
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={`/dashboard/voice-studio/${clone.id}`}
-              className="text-sm font-semibold text-white hover:text-amber-200"
+              className="text-sm font-semibold text-white hover:text-[#D4FF00] transition-colors"
             >
               {clone.label}
             </Link>
