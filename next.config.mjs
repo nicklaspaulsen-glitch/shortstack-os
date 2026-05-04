@@ -22,7 +22,7 @@ const nextConfig = {
   //    function bundle regardless of import chain, keeping us under
   //    Vercel's 250MB function ceiling.
   experimental: {
-    serverComponentsExternalPackages: ["playwright-core", "puppeteer-core"],
+    serverComponentsExternalPackages: ["playwright-core", "puppeteer-core", "jsdom"],
     outputFileTracingExcludes: {
       "*": [
         "node_modules/electron/**",

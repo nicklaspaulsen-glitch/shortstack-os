@@ -16,21 +16,17 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import createDOMPurify, { type Config as DOMPurifyConfig, type WindowLike } from "dompurify";
 
-// ── DOMPurify initialisation (SSR-safe) ───────────────────────────────────────
-// DOMPurify 3.x needs a DOM window. In the browser it uses the global; in Node.js
-// (Next.js SSR pre-render) we provide a JSDOM window so the server can also emit
-// sanitized HTML rather than a blank stub that flashes in on hydration.
-function buildDOMPurify() {
-  if (typeof window !== "undefined") {
-    return createDOMPurify(window as unknown as WindowLike);
-  }
-  // @types/jsdom not installed — type the minimal shape we actually use.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { JSDOM } = require("jsdom") as { JSDOM: new (html: string) => { window: unknown } };
-  return createDOMPurify(new JSDOM("").window as unknown as WindowLike);
+// ── DOMPurify initialisation (browser-only) ──────────────────────────────────
+// This is a "use client" component, so window is always available at runtime.
+// During Next.js SSR pre-render we skip sanitization (returning null); the
+// client hydration pass immediately replaces the blank body with DOMPurify-
+// sanitized HTML. body_html is stored sanitized at write time so the brief
+// SSR pass is low-risk. We do NOT require("jsdom") here — jsdom → undici →
+// node:* scheme modules blow the webpack client bundle.
+function getPurify(): ReturnType<typeof createDOMPurify> | null {
+  if (typeof window === "undefined") return null;
+  return createDOMPurify(window as unknown as WindowLike);
 }
-
-const purify = buildDOMPurify();
 
 const PURIFY_CONFIG: DOMPurifyConfig = {
   ALLOWED_TAGS: [
@@ -148,11 +144,13 @@ export default function StepClientShell({
   const ctaTarget = pageDoc.cta_target ?? null;
   const bodyHtml = typeof pageDoc.body_html === "string" ? pageDoc.body_html : null;
 
-  // Sanitise body HTML with DOMPurify (replaces the former regex approach which
-  // was bypassable via nested tag tricks and entity encoding).  Authors who want
-  // arbitrary embeds / iframes must use a website_projects page instead.
+  // Sanitise body HTML with DOMPurify — browser-only (SSR returns null, hydration
+  // re-runs with the real window). Authors who want iframes/embeds must use a
+  // website_projects page instead.
   const safeHtml = useMemo(() => {
     if (!bodyHtml) return null;
+    const purify = getPurify();
+    if (!purify) return null; // SSR pre-render — client hydration will sanitize
     return purify.sanitize(bodyHtml, PURIFY_CONFIG);
   }, [bodyHtml]);
 
