@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { WEBHOOK_EVENTS } from "@/lib/api/webhook-events";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 const VALID_EVENTS = new Set<string>(WEBHOOK_EVENTS);
 
@@ -70,6 +71,16 @@ export async function POST(request: NextRequest) {
     }
   } catch {
     return NextResponse.json({ error: "url is not a valid URL" }, { status: 400 });
+  }
+
+  // SSRF guard — blocks internal/private addresses from being registered.
+  // allowHttp: true because customers may run self-hosted receivers on HTTP.
+  const ssrfErr = checkFetchUrl(url, { allowHttp: true });
+  if (ssrfErr) {
+    return NextResponse.json(
+      { error: `Invalid webhook URL: ${ssrfErr}` },
+      { status: 400 },
+    );
   }
 
   const eventsRaw = Array.isArray(body.events) ? body.events : [];

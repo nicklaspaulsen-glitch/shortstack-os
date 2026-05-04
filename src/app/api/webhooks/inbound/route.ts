@@ -93,6 +93,28 @@ export async function POST(request: NextRequest) {
   const supabase = createServiceClient();
   const results: string[] = [];
 
+  // ── Cross-tenant write protection (interim fix, TODO batch-3: per-tenant keys)
+  // When WEBHOOK_OWNER_USER_ID is set in env, validate that any caller-supplied
+  // client_id belongs to that agency before accepting the write.  Without this
+  // guard a webhook-key holder could plant deal/note/task rows against any tenant.
+  const webhookOwnerId = process.env.WEBHOOK_OWNER_USER_ID ?? null;
+  const CLIENT_ID_EVENTS = new Set(["deal.create", "note.add", "task.create", "invoice.paid"]);
+  if (webhookOwnerId && CLIENT_ID_EVENTS.has(safeEvent) && data.client_id) {
+    const { data: clientRow } = await supabase
+      .from("clients")
+      .select("id")
+      .eq("id", data.client_id)
+      .eq("user_id", webhookOwnerId)
+      .maybeSingle();
+    if (!clientRow) {
+      console.error("[webhooks/inbound] cross-tenant block: client_id not owned by WEBHOOK_OWNER_USER_ID", {
+        event: safeEvent,
+        client_id: data.client_id,
+      });
+      return NextResponse.json({ error: "Forbidden: invalid client_id" }, { status: 403 });
+    }
+  }
+
   try {
     switch (safeEvent) {
       case "lead.create": {

@@ -85,6 +85,35 @@ const nextConfig = {
           { key: "Referrer-Policy", value: "origin-when-cross-origin" },
           { key: "X-XSS-Protection", value: "1; mode=block" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          // HSTS — forces HTTPS for 1 year, all subdomains, preload-eligible.
+          { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains; preload" },
+          // CSP — Next.js 14 App Router needs unsafe-inline for inline scripts.
+          // Primary value here is locking connect-src (exfil prevention) and
+          // frame-src (clickjacking). Tighten to nonces in Next 15 migration.
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              // Next.js inline scripts + Stripe + Vercel Analytics
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://va.vercel-scripts.com",
+              // Tailwind/global CSS inline styles
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com data:",
+              // Images: R2 public bucket, Supabase storage, Unsplash, data URIs
+              "img-src 'self' data: blob: https:",
+              // API connections: Supabase (REST + Realtime), Stripe, Anthropic, AI providers,
+              // Telegram notifications, Vercel Insights
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://api.anthropic.com https://api.openai.com https://api.elevenlabs.io https://api.telegram.org https://vitals.vercel-insights.com",
+              // Audio/video for Voice Studio previews
+              "media-src 'self' blob: https:",
+              // Workers for Next.js background tasks
+              "worker-src 'self' blob:",
+              // Stripe.js payment iframe
+              "frame-src https://js.stripe.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+            ].join("; "),
+          },
         ],
       },
       // Cache static assets aggressively (fonts, images, icons)
