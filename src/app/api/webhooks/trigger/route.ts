@@ -247,9 +247,12 @@ function isPrivateOrInternal(hostname: string): boolean {
   // IPv6 — strip optional brackets so both literals and DNS results match.
   const bare = host.startsWith("[") && host.endsWith("]") ? host.slice(1, -1) : host;
   if (bare === "::1") return true;                                    // loopback
+  if (bare === "::") return true;                                     // unspecified
   if (bare.startsWith("fc") || bare.startsWith("fd")) return true;   // ULA fc00::/7
   if (bare.startsWith("fe80")) return true;                           // link-local
   if (bare.startsWith("::ffff:")) return true;                        // IPv4-mapped IPv6
+  if (bare.startsWith("2002:")) return true;                          // 6to4 — encodes IPv4 in bits [16:47]; e.g. 2002:7f00:1:: → 127.0.0.1
+  if (bare.startsWith("64:ff9b:")) return true;                       // NAT64 IANA well-known prefix (RFC 6052) — maps to IPv4
   return false;
 }
 
