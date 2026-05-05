@@ -65,3 +65,6 @@ public/downloads/*.zip
 !public/downloads/manifest.json
 !public/downloads/README.md
 
+
+# Design exploration previews (generated, not source)
+design-previews/
