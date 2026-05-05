@@ -1,3 +1,22 @@
+// ORPHAN CRON — NOT wired into vercel.json (never fires in production)
+//
+// Status (checked 2026-05-05):
+//   • This is the ONLY route that sends a Telegram daily brief via sendTelegramMessage().
+//     /api/cron/daily-briefing (which IS scheduled at "0 7 * * *") only writes to the
+//     daily_briefings DB table — it does NOT send Telegram.
+//   • Schema safe: ghl_sync_status + ghl_synced_at still exist in src/lib/types.ts:67-68,
+//     so the query at line 38 will not error if this cron is re-enabled.
+//   • Stale copy in the brief text:
+//       - "imported to GHL" label (line ~55) — GHL sync is still active but label may confuse
+//       - "/80 target" DM target (line ~58) — legacy 80-DM-per-day figure, update if changed
+//
+// Decision needed (pick one):
+//   (a) RE-ENABLE: add to vercel.json crons → { "path": "/api/cron/daily-brief", "schedule": "0 9 * * *" }
+//       Then update the stale copy above. Also consider deduplicating health-check / outreach
+//       fan-out (they're already scheduled directly in vercel.json at their own cadence).
+//   (b) DELETE: if a Telegram brief is no longer wanted, remove this file.
+//       No other route sends the Telegram morning summary.
+
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendTelegramMessage } from "@/lib/services/trinity";
