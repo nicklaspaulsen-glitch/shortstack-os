@@ -16,6 +16,10 @@ test.describe("clients journey", () => {
   });
 
   test("add client and clean up", async ({ page }) => {
+    // Production round-trips are slow: signIn ≈ 20s, API ≈ 5s, cleanup ≈ 10s.
+    // Give this test its own budget well above the global 60s default.
+    test.setTimeout(120_000);
+
     await signIn(page);
     await page.goto("/dashboard/clients");
 
@@ -49,37 +53,42 @@ test.describe("clients journey", () => {
       .last();
     await submitBtn.evaluate((el) => (el as HTMLButtonElement).click());
 
-    // Success toast
-    await expect(page.getByText(/client added/i)).toBeVisible({ timeout: 10_000 });
+    // Success toast — production API can be slow; use a generous timeout.
+    await expect(page.getByText(/client added/i)).toBeVisible({ timeout: 20_000 });
 
     // ── Verify new client appears in the table ──────────────────────────────
-    await expect(page.getByText(SENTINEL_NAME).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(SENTINEL_NAME).first()).toBeVisible({ timeout: 15_000 });
 
-    // ── Clean up: deactivate (archive) the sentinel client ─────────────────
-    // Select the row checkbox for the sentinel client
-    const row = page.locator("tr, [data-testid='client-row'], .client-card").filter({
-      has: page.getByText(SENTINEL_NAME),
-    }).first();
+    // ── Clean up: delete the sentinel client ──────────────────────────────
+    // The clients DataTable uses a custom <button> element for row selection
+    // (not a native input[type="checkbox"]). Strategy:
+    //   1. Find the sentinel's <tr> row.
+    //   2. Click the first button in the row — that is the selection toggle
+    //      rendered by the "select" column.
+    //   3. The bulk-actions bar appears with Email / SMS / Deactivate / Delete.
+    //   4. Register the dialog handler BEFORE clicking Delete, because
+    //      handleBulkAction("delete") fires window.confirm synchronously.
+    //   5. Confirm the dialog to complete the delete.
+    const sentinelRow = page
+      .locator("tr")
+      .filter({ has: page.getByText(SENTINEL_NAME) })
+      .first();
 
-    // Try selecting via checkbox on the row if present
-    const checkbox = row.locator('input[type="checkbox"]').first();
-    const hasCheckbox = await checkbox.count();
-    if (hasCheckbox > 0) {
-      await checkbox.check();
-      // Use bulk action dropdown to deactivate
-      await page.getByRole("button", { name: /bulk action|action/i }).first().click();
-      await page.getByRole("option", { name: /deactivate/i }).click();
-      // Confirm the browser dialog if one appears
+    if (await sentinelRow.count() > 0) {
+      // Click the selection toggle (first button = custom checkbox substitute)
+      await sentinelRow.locator("button").first().click();
+
+      // Register dialog handler BEFORE clicking Delete — confirm fires
+      // synchronously inside the click handler and we must be listening first.
       page.on("dialog", (d) => d.accept());
-    } else {
-      // Fallback: try opening the client record to deactivate it.
-      // Guard with a count check — if there's no matching button (card UI
-      // without an explicit "manage" CTA), skip cleanup gracefully.
-      // The sentinel uses an @example.com address so it's harmless if left.
-      const viewBtn = row.getByRole("button", { name: /view|open|manage/i }).first();
-      if (await viewBtn.count() > 0) {
-        await viewBtn.click();
+
+      const deleteBtn = page.getByRole("button", { name: /^delete$/i }).first();
+      if (await deleteBtn.count() > 0) {
+        await deleteBtn.click();
+        await expect(page.getByText(SENTINEL_NAME)).not.toBeVisible({ timeout: 10_000 });
       }
     }
+    // If the delete path is unavailable, the sentinel is harmless —
+    // it uses an @example.com address and has no real permissions.
   });
 });

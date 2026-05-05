@@ -708,8 +708,29 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   const [genderFilter, setGenderFilter] = useState<"all" | "female" | "male">("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   // Persist preview audio URLs and custom test texts across tab switches.
+  // Seeded from consent_evidence.preview_url so presets with stored ElevenLabs
+  // preview URLs play instantly without requiring a live TTS API call.
   const [previewCache, setPreviewCache] = useState<Record<string, string>>({});
   const [textCache, setTextCache] = useState<Record<string, string>>({});
+
+  // Seed previewCache from stored preview_url whenever the preset list loads or
+  // refreshes. Never overwrites URLs that were already generated in this session.
+  useEffect(() => {
+    if (presets.length === 0) return;
+    setPreviewCache((prev) => {
+      let changed = false;
+      const next = { ...prev };
+      for (const p of presets) {
+        if (next[p.id]) continue; // already populated — keep the existing URL
+        const stored = p.consent_evidence?.preview_url;
+        if (typeof stored === "string" && stored) {
+          next[p.id] = stored;
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [presets]);
 
   const languages = useMemo(() => {
     const langs = new Set(presets.map((p) => p.language || "en").filter(Boolean));

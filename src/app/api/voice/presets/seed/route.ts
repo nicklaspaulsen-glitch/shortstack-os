@@ -37,6 +37,7 @@ export async function POST() {
       ok: true,
       inserted: result.inserted,
       existing: result.existing,
+      backfilled: result.backfilled,
     });
   } catch (err) {
     const reason = err instanceof Error ? err.message : "unknown_error";

@@ -46,7 +46,10 @@ export async function signOut(page: Page): Promise<void> {
   // proceed anyway rather than timing out here.
   await page.waitForLoadState("load", { timeout: 10_000 }).catch(() => {});
 
-  const btn = page.locator('button[aria-label="Sign Out"]');
+  // Use .first() — the sidebar renders TWO sign-out buttons (expanded + collapsed
+  // views). Playwright's waitFor on a multi-match locator waits for ALL matches
+  // to be visible, which never happens since only one variant is shown at a time.
+  const btn = page.locator('button[aria-label="Sign Out"]').first();
   await btn.waitFor({ state: "visible", timeout: 10_000 });
 
   // Start listening BEFORE clicking to avoid racing the window.location.href

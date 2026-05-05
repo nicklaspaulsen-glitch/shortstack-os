@@ -128,6 +128,39 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
 ];
 
 /**
+ * Fetch ElevenLabs preview URLs for all presets in a single parallel batch.
+ * Returns a map of elevenLabsVoiceId → preview_url. Soft-fails: if the API
+ * key is absent or any request fails, that entry is simply absent from the
+ * map and the caller falls back gracefully.
+ */
+async function fetchElevenLabsPreviewUrls(
+  voiceIds: string[],
+): Promise<Record<string, string>> {
+  const apiKey = process.env.ELEVENLABS_API_KEY;
+  if (!apiKey) return {};
+
+  const out: Record<string, string> = {};
+
+  await Promise.allSettled(
+    voiceIds.map(async (id) => {
+      try {
+        const res = await fetch(`https://api.elevenlabs.io/v1/voices/${id}`, {
+          headers: { "xi-api-key": apiKey },
+          signal: AbortSignal.timeout(5_000),
+        });
+        if (!res.ok) return;
+        const data = (await res.json()) as { preview_url?: string };
+        if (data.preview_url) out[id] = data.preview_url;
+      } catch {
+        // Soft-fail — missing preview_url is not blocking.
+      }
+    }),
+  );
+
+  return out;
+}
+
+/**
  * Idempotent preset seeder. Called from `/api/voice/presets/seed` (admin) and
  * lazily from the dashboard mount when no preset rows exist yet for the
  * current agency owner.
@@ -138,19 +171,25 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
  * surfaces them all to other tenants without leaking ownership semantics.
  *
  * Re-runs are safe: we look up by (agency_owner_id, provider_voice_id) and
- * skip rows that already exist.
+ * skip rows that already exist. Existing rows that are missing preview_url in
+ * consent_evidence are back-filled in the same pass.
  */
 export async function ensurePresetsSeeded(
   service: SupabaseClient,
   agencyOwnerId: string,
-): Promise<{ inserted: number; existing: number }> {
+): Promise<{ inserted: number; existing: number; backfilled: number }> {
   let inserted = 0;
   let existing = 0;
+  let backfilled = 0;
+
+  // Fetch ElevenLabs preview URLs once for all voice IDs in the library.
+  const uniqueVoiceIds = Array.from(new Set(PRESETS.map((p) => p.elevenLabsVoiceId)));
+  const previewUrls = await fetchElevenLabsPreviewUrls(uniqueVoiceIds);
 
   for (const preset of PRESETS) {
     const { data: row } = await service
       .from("voice_clones")
-      .select("id")
+      .select("id, consent_evidence")
       .eq("agency_owner_id", agencyOwnerId)
       .eq("owner_subject_kind", "preset")
       .eq("provider_voice_id", preset.slug)
@@ -158,8 +197,34 @@ export async function ensurePresetsSeeded(
 
     if (row) {
       existing += 1;
+
+      // Back-fill preview_url into consent_evidence if it's missing.
+      const evidence = (row.consent_evidence ?? {}) as Record<string, unknown>;
+      const storedUrl = evidence.preview_url as string | undefined;
+      const fetchedUrl = previewUrls[preset.elevenLabsVoiceId];
+
+      if (!storedUrl && fetchedUrl) {
+        const { error: updateErr } = await service
+          .from("voice_clones")
+          .update({
+            consent_evidence: { ...evidence, preview_url: fetchedUrl },
+          })
+          .eq("id", row.id);
+
+        if (!updateErr) {
+          backfilled += 1;
+        } else {
+          console.error(
+            `[voice/preset-library] back-fill preview_url failed for ${preset.slug}:`,
+            updateErr.message,
+          );
+        }
+      }
+
       continue;
     }
+
+    const previewUrl = previewUrls[preset.elevenLabsVoiceId];
 
     const { error } = await service.from("voice_clones").insert({
       agency_owner_id: agencyOwnerId,
@@ -176,6 +241,7 @@ export async function ensurePresetsSeeded(
         source: "elevenlabs_public_voice",
         elevenlabs_voice_id: preset.elevenLabsVoiceId,
         category: preset.category,
+        ...(previewUrl ? { preview_url: previewUrl } : {}),
       },
       ready_at: new Date().toISOString(),
     });
@@ -191,7 +257,7 @@ export async function ensurePresetsSeeded(
     }
   }
 
-  return { inserted, existing };
+  return { inserted, existing, backfilled };
 }
 
 /**

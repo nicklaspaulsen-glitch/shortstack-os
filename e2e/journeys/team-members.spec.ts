@@ -16,6 +16,10 @@ test.describe("team members journey", () => {
   });
 
   test("invite team member and clean up", async ({ page }) => {
+    // Production round-trips are slow: signIn ≈ 20s, API ≈ 5s, cleanup ≈ 10s.
+    // Give this test its own budget well above the global 60s default.
+    test.setTimeout(120_000);
+
     await signIn(page);
     await page.goto("/dashboard/team");
 
@@ -58,13 +62,13 @@ test.describe("team members journey", () => {
     await expect(createMemberBtn).toBeEnabled({ timeout: 5_000 });
     await createMemberBtn.click();
 
-    // Success toast
+    // Success toast — Supabase user creation can take several seconds in production.
     await expect(
       page.getByText(/team member created/i),
-    ).toBeVisible({ timeout: 15_000 });
+    ).toBeVisible({ timeout: 25_000 });
 
     // ── Verify the new member appears in the list ───────────────────────────
-    await expect(page.getByText(SENTINEL_EMAIL).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(SENTINEL_EMAIL).first()).toBeVisible({ timeout: 15_000 });
 
     // ── Clean up: remove the sentinel member ───────────────────────────────
     // Find the member row and click its edit/delete control
