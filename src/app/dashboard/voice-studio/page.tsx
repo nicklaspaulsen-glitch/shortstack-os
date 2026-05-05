@@ -119,19 +119,22 @@ export default function VoiceStudioPage() {
   }, [refresh]);
 
   // Renders pulled lazily on tab switch.
+  // Previously used a serial `for…await` loop (N+1 fetches). Now fires all
+  // clone-detail requests in parallel with Promise.all — same result, far
+  // faster when the user has multiple voice clones.
   const loadRenders = useCallback(async () => {
     try {
-      const all: VoiceRenderRow[] = [];
-      for (const clone of mine) {
-        const res = await fetch(`/api/voice/clones/${clone.id}`);
-        if (res.ok) {
-          const data = await res.json();
-          for (const r of data.renders || []) {
-            all.push({ ...r, clone_id: clone.id });
-          }
-        }
-      }
-      all.sort((a, b) => b.rendered_at.localeCompare(a.rendered_at));
+      const results = await Promise.all(
+        mine.map(async (clone) => {
+          const res = await fetch(`/api/voice/clones/${clone.id}`);
+          if (!res.ok) return [] as VoiceRenderRow[];
+          const data: { renders?: VoiceRenderRow[] } = await res.json();
+          return (data.renders || []).map((r) => ({ ...r, clone_id: clone.id }));
+        })
+      );
+      const all = results.flat().sort((a, b) =>
+        b.rendered_at.localeCompare(a.rendered_at)
+      );
       setRenders(all);
     } catch {
       // best-effort, leave whatever we had

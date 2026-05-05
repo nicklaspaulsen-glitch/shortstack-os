@@ -72,6 +72,11 @@ const nextConfig = {
         destination: "/dashboard/settings",
         permanent: true,
       },
+      {
+        source: "/dashboard/settings/team",
+        destination: "/dashboard/team",
+        permanent: true,
+      },
     ];
   },
   async headers() {
@@ -96,14 +101,21 @@ const nextConfig = {
               "default-src 'self'",
               // Next.js inline scripts + Stripe + Vercel Analytics
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://va.vercel-scripts.com",
-              // Tailwind/global CSS inline styles
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com data:",
+              // Tailwind/global CSS inline styles + Satoshi font (fontshare) + Google Fonts
+              // NOTE: api.fontshare.com was missing — caused Satoshi to silently fall back to
+              // system fonts across the entire product. Fixed May 2026.
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com",
+              // font-src: fontshare serves the actual font files in addition to the CSS
+              "font-src 'self' https://fonts.gstatic.com https://api.fontshare.com data:",
               // Images: R2 public bucket, Supabase storage, Unsplash, data URIs
               "img-src 'self' data: blob: https:",
               // API connections: Supabase (REST + Realtime), Stripe, Anthropic, AI providers,
-              // Telegram notifications, Vercel Insights
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://api.anthropic.com https://api.openai.com https://api.elevenlabs.io https://api.telegram.org https://vitals.vercel-insights.com",
+              // Telegram notifications, Vercel Insights.
+              // raw.githack.com / raw.githubusercontent.com: Three.js / React Three Fiber loads
+              // HDR environment maps at runtime (e.g. <Environment preset="city" />) from
+              // pmndrs/drei-assets CDN. Missing this caused a crash on root page for all visitors.
+              // Fixed May 2026.
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://api.anthropic.com https://api.openai.com https://api.elevenlabs.io https://api.telegram.org https://vitals.vercel-insights.com https://raw.githack.com https://raw.githubusercontent.com",
               // Audio/video for Voice Studio previews
               "media-src 'self' blob: https:",
               // Workers for Next.js background tasks

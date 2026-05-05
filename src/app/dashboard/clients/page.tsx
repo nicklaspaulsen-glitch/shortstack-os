@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Client, Contract, Invoice } from "@/lib/types";
@@ -101,6 +101,10 @@ export default function ClientsPage() {
   // own agency. Stored locally so the choice persists across re-renders.
   const [callerRole, setCallerRole] = useState<string | null>(null);
   const [scope, setScope] = useState<"all" | "mine">("all");
+  // Ref that always holds the current filteredAndSortedClients list so that
+  // selectAllClients can read it without being declared after the useMemo
+  // (which would cause a TDZ ReferenceError) and without stale-closure bugs.
+  const filteredAndSortedClientsRef = useRef<Client[]>([]);
 
   // codex round-1: use a ref-box so fetchData reads `cancelled.current`
   // at await-resume time rather than from a stale snapshot parameter.
@@ -150,6 +154,18 @@ export default function ClientsPage() {
       setClients(clientsData);
       setContracts(contractsRes.data || []);
       setInvoices(invoicesRes.data || []);
+      // Hydrate local tag + note state from DB columns so edits survive refresh.
+      const savedTags: Record<string, ClientTag[]> = {};
+      const savedNotes: Record<string, string> = {};
+      clientsData.forEach(c => {
+        if (c.notes) savedNotes[c.id] = c.notes;
+        const meta = c.metadata as Record<string, unknown> | undefined;
+        if (meta?.tags && Array.isArray(meta.tags)) {
+          savedTags[c.id] = meta.tags as ClientTag[];
+        }
+      });
+      setClientTags(savedTags);
+      setClientNotes(savedNotes);
     } catch (err) {
       if (!cancelled.current) {
         console.error("[Clients] fetchData error:", err);
@@ -264,20 +280,44 @@ export default function ClientsPage() {
     setClientTags(prev => {
       const current = prev[clientId] || [];
       const exists = current.find(t => t.label === tag.label);
-      if (exists) {
-        return { ...prev, [clientId]: current.filter(t => t.label !== tag.label) };
-      }
-      return { ...prev, [clientId]: [...current, tag] };
+      const updated = exists
+        ? current.filter(t => t.label !== tag.label)
+        : [...current, tag];
+      // Persist to clients.metadata JSONB (no migration needed — metadata is
+      // already Record<string, unknown>). Fire-and-forget; optimistic UI above.
+      const client = clients.find(c => c.id === clientId);
+      const existingMeta = ((client?.metadata || {}) as Record<string, unknown>);
+      supabase
+        .from("clients")
+        .update({ metadata: { ...existingMeta, tags: updated } })
+        .eq("id", clientId)
+        .then(({ error }: { error: unknown }) => {
+          if (error) console.error("[Clients] toggleTag DB write failed:", error);
+        });
+      return { ...prev, [clientId]: updated };
     });
-  }, []);
+  }, [clients, supabase]);
 
   // --- Feature 8: Client Notes ---
   const saveNote = useCallback((clientId: string) => {
-    setClientNotes(prev => ({ ...prev, [clientId]: noteText }));
+    const text = noteText;
+    setClientNotes(prev => ({ ...prev, [clientId]: text }));
     setEditingNote(null);
     setNoteText("");
-    toast.success("Note saved");
-  }, [noteText]);
+    // Persist to clients.notes column; optimistic UI already applied above.
+    supabase
+      .from("clients")
+      .update({ notes: text })
+      .eq("id", clientId)
+      .then(({ error }: { error: unknown }) => {
+        if (error) {
+          console.error("[Clients] saveNote DB write failed:", error);
+          toast.error("Note save failed — try again");
+        } else {
+          toast.success("Note saved");
+        }
+      });
+  }, [noteText, supabase]);
 
   // --- Feature 4: Bulk Actions ---
   const toggleSelectClient = useCallback((clientId: string) => {
@@ -289,10 +329,13 @@ export default function ClientsPage() {
     });
   }, []);
   const selectAllClients = useCallback(() => {
-    if (selectedClients.size === filteredAndSortedClients.length) {
+    // Read via ref so this callback doesn't depend on a const declared later
+    // in the function (which would cause a Temporal Dead Zone ReferenceError).
+    const list = filteredAndSortedClientsRef.current;
+    if (selectedClients.size === list.length) {
       setSelectedClients(new Set());
     } else {
-      setSelectedClients(new Set(filteredAndSortedClients.map(c => c.id)));
+      setSelectedClients(new Set(list.map(c => c.id)));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedClients.size]);
@@ -371,7 +414,8 @@ export default function ClientsPage() {
       c.package_tier || "", c.mrr?.toString() || "0", c.health_score?.toString() || "0",
       c.is_active ? "Active" : "Inactive", c.created_at || ""
     ]);
-    const csv = [headers.join(","), ...rows.map(r => r.map(v => `"${v}"`).join(","))].join("\n");
+    // Escape internal double-quotes per RFC 4180 before wrapping in quotes.
+    const csv = [headers.join(","), ...rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))].join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -454,6 +498,8 @@ export default function ClientsPage() {
     return result;
   }, [clients, searchQuery, filterStatus, filterIndustry, filterMrrMin, filterMrrMax, filterTag, clientTags, sortField, sortDir, activityFilter, getLastActivity]);
 
+  // Keep ref in sync every render so selectAllClients always sees current list.
+  filteredAndSortedClientsRef.current = filteredAndSortedClients;
   // Keep backward compat alias
   const filteredClients = filteredAndSortedClients;
 

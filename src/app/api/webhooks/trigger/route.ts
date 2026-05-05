@@ -120,44 +120,52 @@ interface SafeAddress {
 }
 
 /**
- * Resolve `hostname` to its addresses (both IPv4 and IPv6) and check
+ * Resolve `hostname` to ALL its addresses (both IPv4 and IPv6) and check
  * whether any of them fall in a private/loopback/link-local range.
  * Returns:
- *   - `SafeAddress`  — all resolved addresses are safe; use this for IP pinning
+ *   - `SafeAddress`  — ALL resolved addresses are safe; use this for IP pinning
  *   - `"PRIVATE"`    — at least one address is blocked (reject the URL)
  *   - `null`         — hostname could not be resolved at all (reject the URL)
  *
- * Checks both address families so a dual-stack host cannot sneak through
- * on its IPv6 address after passing the IPv4 check.
+ * Uses resolve4/resolve6 (not lookup) so we see every A/AAAA record.
+ * dns.promises.lookup only returns one address, which means a host with
+ * both a public IP and a private IP in its DNS records could bypass the
+ * check if the OS resolver returns the public one during validation but
+ * the private one during the actual connection. resolve4/resolve6 return
+ * the full record set so we can reject if ANY address is private.
  */
 async function resolveAndCheck(hostname: string): Promise<SafeAddress | "PRIVATE" | null> {
-  let v4addr: string | null = null;
-  let v6addr: string | null = null;
+  let v4addrs: string[] = [];
+  let v6addrs: string[] = [];
 
   try {
-    const res = await dns.promises.lookup(hostname, { family: 4 });
-    v4addr = res.address;
+    v4addrs = await dns.promises.resolve4(hostname);
   } catch { /* no A record — may still have AAAA */ }
 
   try {
-    const res = await dns.promises.lookup(hostname, { family: 6 });
-    v6addr = res.address;
+    v6addrs = await dns.promises.resolve6(hostname);
   } catch { /* no AAAA record */ }
 
   // Must resolve to at least one address; fail closed otherwise.
-  if (!v4addr && !v6addr) return null;
+  if (v4addrs.length === 0 && v6addrs.length === 0) return null;
 
-  // Reject if ANY resolved address is private.
-  if (v4addr && isPrivateOrInternal(v4addr)) {
-    console.warn(`[webhooks/trigger] SSRF: resolved IPv4 for "${hostname}" (${v4addr}) is private — rejecting`);
-    return "PRIVATE";
+  // Reject if ANY resolved address across BOTH families is private.
+  for (const addr of v4addrs) {
+    if (isPrivateOrInternal(addr)) {
+      console.warn(`[webhooks/trigger] SSRF: resolved IPv4 for "${hostname}" (${addr}) is private — rejecting`);
+      return "PRIVATE";
+    }
   }
-  if (v6addr && isPrivateOrInternal(v6addr)) {
-    console.warn(`[webhooks/trigger] SSRF: resolved IPv6 for "${hostname}" (${v6addr}) is private — rejecting`);
-    return "PRIVATE";
+  for (const addr of v6addrs) {
+    if (isPrivateOrInternal(addr)) {
+      console.warn(`[webhooks/trigger] SSRF: resolved IPv6 for "${hostname}" (${addr}) is private — rejecting`);
+      return "PRIVATE";
+    }
   }
 
-  // Prefer IPv4 for the pinned connection.
+  // Prefer IPv4 for the pinned connection; use first address in each family.
+  const v4addr = v4addrs[0] ?? null;
+  const v6addr = v6addrs[0] ?? null;
   return v4addr ? { address: v4addr, family: 4 } : { address: v6addr!, family: 6 };
 }
 

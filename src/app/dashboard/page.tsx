@@ -15,6 +15,7 @@ import TrinityHero3D from "@/components/dashboard-home/trinity-hero-3d";
 import AgentOfficeTile from "@/components/dashboard-home/agent-office-tile";
 import DashboardHeroStrip from "@/components/dashboard-home/dashboard-hero-strip";
 import BentoGrid from "@/components/dashboard-home/bento-grid";
+import OnboardingChecklist from "@/components/dashboard-home/onboarding-checklist";
 import type { BentoData } from "@/components/dashboard-home/types";
 
 /**
@@ -110,6 +111,12 @@ export default function DashboardPage() {
   return (
     <div className="fade-in space-y-4 max-w-[1400px] mx-auto">
       <UsageNudgeBanner planTier={profile?.plan_tier} />
+
+      {/* Getting-started checklist — shown to new users until all 5 items
+          are complete OR the user dismisses it. Hides itself via localStorage
+          (14-day auto-expire). completedFromApi can be wired to real data
+          once the dashboard-bento API surface exposes setup flags. */}
+      <OnboardingChecklist />
 
       <DashboardHeroStrip firstName={firstName} microStats={microStats} />
 

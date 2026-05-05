@@ -167,6 +167,7 @@ export default function AnalyticsPage() {
         { count: totalDeals }, { data: deals },
         { count: dmsSent }, { count: replies }, { count: callsBooked }, { count: contentPublished },
         { data: recentLeads }, { data: outreach },
+        { data: lastMonthInvoices }, { data: revenueHistoryInvoices },
       ] = await Promise.all([
         supabase.from("leads").select("*", { count: "exact", head: true }),
         supabase.from("leads").select("*", { count: "exact", head: true }).gte("scraped_at", thisMonth),
@@ -182,17 +183,22 @@ export default function AnalyticsPage() {
         supabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("status", "published"),
         supabase.from("leads").select("scraped_at, source, industry, status").gte("scraped_at", rangeStart).order("scraped_at"),
         supabase.from("outreach_log").select("sent_at, status, platform").gte("sent_at", rangeStart).order("sent_at"),
+        // Invoice queries for lastMonthMRR and revenueByMonth chart
+        supabase.from("invoices").select("amount, paid_at").eq("status", "paid").gte("paid_at", lastMonth).lte("paid_at", lastMonthEnd),
+        supabase.from("invoices").select("amount, paid_at").eq("status", "paid").gte("paid_at", new Date(now.getFullYear(), now.getMonth() - 5, 1).toISOString()),
       ]);
 
       const totalMRR = clients?.reduce((s: number, c: Record<string, number>) => s + (c.mrr || 0), 0) || 0;
       const dealValue = deals?.reduce((s: number, d: Record<string, number>) => s + (d.amount || 0), 0) || 0;
+      // lastMonthMRR: cash received from paid invoices in the prior calendar month
+      const lastMonthMRR = (lastMonthInvoices || []).reduce((s: number, i: Record<string, number>) => s + (i.amount || 0), 0);
 
       if (cancelled.current) return;
 
       setStats({
         totalLeads: totalLeads || 0, leadsThisMonth: leadsThisMonth || 0, leadsLastMonth: leadsLastMonth || 0,
         totalClients: totalClients || 0, activeClients: activeClients || 0,
-        totalMRR, lastMonthMRR: 0,
+        totalMRR, lastMonthMRR,
         totalDeals: totalDeals || 0, dealValue,
         dmsSent: dmsSent || 0, replies: replies || 0, callsBooked: callsBooked || 0,
         contentPublished: contentPublished || 0,
@@ -226,7 +232,19 @@ export default function AnalyticsPage() {
       });
       setOutreachByDay(Object.entries(outMap).map(([date, v]) => ({ date, ...v })));
 
-      setRevenueByMonth([]);
+      // Build revenueByMonth from invoice payments (past 6 months) + won deals
+      const monthMap: Record<string, { mrr: number; deals: number }> = {};
+      (revenueHistoryInvoices || []).forEach((inv: Record<string, string | number>) => {
+        const month = new Date(String(inv.paid_at)).toLocaleString("en-US", { month: "short", year: "2-digit" });
+        if (!monthMap[month]) monthMap[month] = { mrr: 0, deals: 0 };
+        monthMap[month].mrr += Number(inv.amount) || 0;
+      });
+      (deals || []).forEach((deal: Record<string, string | number>) => {
+        const month = new Date(String(deal.created_at)).toLocaleString("en-US", { month: "short", year: "2-digit" });
+        if (!monthMap[month]) monthMap[month] = { mrr: 0, deals: 0 };
+        monthMap[month].deals += Number(deal.amount) || 0;
+      });
+      setRevenueByMonth(Object.entries(monthMap).map(([month, v]) => ({ month, ...v })));
     } catch (err) {
       console.error("[analytics] fetch failed:", err);
       if (!cancelled.current) {
@@ -290,14 +308,14 @@ export default function AnalyticsPage() {
     { name: "Closed Won", value: stats.totalDeals || 0, fill: "#7FE5B8" },
   ], [stats]);
 
-  const [goals] = useState<GoalEntry[]>([
+  const goals = useMemo<GoalEntry[]>(() => [
     { label: "Monthly Revenue", current: stats.totalMRR, target: 50000, unit: "$" },
     { label: "New Clients", current: stats.activeClients, target: 25, unit: "" },
     { label: "Leads Generated", current: stats.leadsThisMonth, target: 200, unit: "" },
     { label: "Content Published", current: stats.contentPublished, target: 30, unit: "" },
     { label: "Calls Booked", current: stats.callsBooked, target: 40, unit: "" },
     { label: "Reply Rate", current: replyRate, target: 10, unit: "%" },
-  ]);
+  ], [stats.totalMRR, stats.activeClients, stats.leadsThisMonth, stats.contentPublished, stats.callsBooked, replyRate]);
 
   const teamMembers = useMemo((): TeamMember[] => [], []);
 
