@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -200,7 +200,7 @@ export default function AIStudioPage() {
                     setActiveTool("image-gen");
                     setCreationWizardOpen(true);
                   }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D4FF00] text-[#0A0A0B] text-xs font-bold shadow-lg shadow-[#D4FF00]/15 hover:brightness-105 transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-bold shadow-lg shadow-[rgba(99,102,241,0.15)] hover:brightness-105 transition-all"
                 >
                   <Sparkles size={12} />
                   New with AI
@@ -213,7 +213,7 @@ export default function AIStudioPage() {
           </div>
         </div>
         {/* Bottom lime hairline */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D4FF00]/18 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#6366F1]/18 to-transparent" />
       </div>
 
       {/* ── GUIDED MODE ─────────────────────────────────────────── */}
@@ -237,11 +237,11 @@ export default function AIStudioPage() {
                         key={t.id}
                         onClick={() => { setGuidedIntent(t.id); setActiveTool(t.id); }}
                         className={`relative text-left p-4 rounded-xl border transition-all ${
-                          selected ? "border-[rgba(212,255,0,0.4)] bg-[rgba(212,255,0,0.06)] shadow-lg shadow-[rgba(212,255,0,0.1)]" : "border-border hover:border-[#6366F1]/30 bg-surface-light"
+                          selected ? "border-[rgba(99,102,241,0.4)] bg-[rgba(99,102,241,0.06)] shadow-lg shadow-[rgba(99,102,241,0.1)]" : "border-border hover:border-[#6366F1]/30 bg-surface-light"
                         }`}
                       >
                         {"badge" in t && t.badge && (
-                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.1)] text-[#D4FF00]">
+                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(99,102,241,0.1)] text-[#6366F1]">
                             {t.badge}
                           </span>
                         )}
@@ -278,12 +278,12 @@ export default function AIStudioPage() {
                       : "e.g., A minimalist logo mockup on a black marble surface, studio lighting"
                   }
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(212,255,0,0.45)] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(99,102,241,0.45)] focus:ring-2 focus:ring-[rgba(99,102,241,0.12)] transition-all resize-none"
                   autoFocus
                 />
               ) : (
-                <div className="card bg-[rgba(212,255,0,0.03)] border-[rgba(212,255,0,0.15)] text-center py-8">
-                  <Upload size={28} className="mx-auto mb-2 text-[#D4FF00]" />
+                <div className="card bg-[rgba(99,102,241,0.03)] border-[rgba(99,102,241,0.15)] text-center py-8">
+                  <Upload size={28} className="mx-auto mb-2 text-[#6366F1]" />
                   <p className="text-sm font-semibold">
                     {TOOLS.find(t => t.id === guidedIntent)?.name} uses files — hit Finish to open the tool.
                   </p>
@@ -296,7 +296,7 @@ export default function AIStudioPage() {
               description: "We'll take you to the tool with everything pre-filled.",
               icon: <Wand2 size={18} />,
               component: (
-                <div className="card bg-[rgba(212,255,0,0.03)] border-[rgba(212,255,0,0.15)] space-y-2">
+                <div className="card bg-[rgba(99,102,241,0.03)] border-[rgba(99,102,241,0.15)] space-y-2">
                   <div className="flex items-center gap-2">
                     {(() => {
                       const t = TOOLS.find(x => x.id === guidedIntent);
@@ -389,7 +389,7 @@ export default function AIStudioPage() {
                 onClick={() => setToolCategory(cat)}
                 className={`text-[9px] font-semibold px-2.5 py-1.5 rounded-lg transition-all capitalize ${
                   toolCategory === cat
-                    ? "bg-[#D4FF00] text-[#0A0A0B]"
+                    ? "bg-[#6366F1] text-white"
                     : "text-[#6F6D7A] bg-[rgba(255,255,255,0.04)] hover:text-[#9F9DAA] border border-[rgba(255,255,255,0.05)]"
                 }`}
               >
@@ -426,7 +426,7 @@ export default function AIStudioPage() {
                     }}
                     className={`w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl transition-all duration-150 ${
                       active
-                        ? "bg-[rgba(212,255,0,0.07)] border border-[rgba(212,255,0,0.18)]"
+                        ? "bg-[rgba(99,102,241,0.07)] border border-[rgba(99,102,241,0.18)]"
                         : "hover:bg-[rgba(255,255,255,0.03)] border border-transparent"
                     }`}
                   >
@@ -434,16 +434,16 @@ export default function AIStudioPage() {
                       className="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
                       style={{ background: `${tool.color}${active ? "28" : "18"}` }}
                     >
-                      <Icon size={12} style={{ color: active ? "#D4FF00" : tool.color }} />
+                      <Icon size={12} style={{ color: active ? "#6366F1" : tool.color }} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#D4FF00]" : "text-[#F5F4F1]"}`}>
+                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#6366F1]" : "text-[#F5F4F1]"}`}>
                         {tool.name}
                       </p>
                       <p className="text-[8px] font-mono text-[#6F6D7A] truncate">{tool.tag}</p>
                     </div>
                     {"badge" in tool && tool.badge && (
-                      <span className="text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(212,255,0,0.1)] text-[#D4FF00] shrink-0">
+                      <span className="text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(99,102,241,0.1)] text-[#6366F1] shrink-0">
                         Biz+
                       </span>
                     )}
@@ -456,7 +456,7 @@ export default function AIStudioPage() {
           {/* Right: active tool workspace */}
           <div
             ref={toolPanelRef}
-            className="rounded-2xl bg-[#0E0D14] border border-[rgba(212,255,0,0.10)] overflow-hidden shadow-2xl shadow-black/40"
+            className="rounded-2xl bg-[#0E0D14] border border-[rgba(99,102,241,0.10)] overflow-hidden shadow-2xl shadow-black/40"
           >
             {/* Tool header */}
             <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[rgba(255,255,255,0.05)]">
@@ -474,7 +474,7 @@ export default function AIStudioPage() {
                       <p className="text-[9px] font-mono text-[#6F6D7A]">{t.tag}</p>
                     </div>
                     {"badge" in t && t.badge && (
-                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border border-[rgba(212,255,0,0.2)]">
+                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(99,102,241,0.08)] text-[#6366F1] border border-[rgba(99,102,241,0.2)]">
                         {t.badge}
                       </span>
                     )}
@@ -482,7 +482,7 @@ export default function AIStudioPage() {
                 );
               })()}
               {/* Lime tick — one chromatic moment per zone */}
-              <div className="w-1 h-4 rounded-full bg-[#D4FF00]/35 shrink-0" />
+              <div className="w-1 h-4 rounded-full bg-[#6366F1]/35 shrink-0" />
             </div>
 
             {/* Tool content */}
@@ -1182,15 +1182,15 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-4">
-        <Film size={16} className="text-purple-400" />
+        <Film size={16} className="text-[#A78BFA]" />
         <h2 className="text-sm font-bold text-foreground">Image to Video</h2>
-        <span className="text-[9px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
+        <span className="text-[9px] bg-[rgba(99,102,241,0.08)] text-[#A78BFA] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-purple-400/30 transition-all">
+            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(99,102,241,0.3)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { setFile(f); setPreview(URL.createObjectURL(f)); setResult(null); } }} />
             {preview ? (
               /* eslint-disable-next-line @next/next/no-img-element */
@@ -1207,19 +1207,19 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
             <div className="flex items-center gap-3">
               <span className="text-[10px] text-muted w-16">Motion:</span>
               <input type="range" min={1} max={255} value={motion} onChange={e => setMotion(Number(e.target.value))}
-                className="flex-1 h-1 accent-purple-500" />
+                className="flex-1 h-1 accent-[#6366F1]" />
               <span className="text-[10px] text-muted w-8">{motion}</span>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-[10px] text-muted w-16">FPS:</span>
               {[6, 12, 24].map(f => (
                 <button key={f} onClick={() => setFps(f)}
-                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-purple-500 text-white" : "bg-surface-light text-muted"}`}>{f}</button>
+                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-[#6366F1] text-white" : "bg-surface-light text-muted"}`}>{f}</button>
               ))}
             </div>
           </div>
           <button onClick={handleGenerate} disabled={processing || !file}
-            className="w-full mt-3 px-4 py-2.5 bg-purple-500 text-white text-xs font-semibold rounded-lg hover:bg-purple-600 disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full mt-3 px-4 py-2.5 bg-[#6366F1] text-white text-xs font-semibold rounded-lg hover:bg-[#4F46E5] disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
             Animate Image
           </button>
@@ -1555,15 +1555,15 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-4">
-        <Brain size={16} className="text-purple-400" />
+        <Brain size={16} className="text-[#A78BFA]" />
         <h2 className="text-sm font-bold text-foreground">Brand LoRA Training</h2>
-        <span className="text-[9px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full">Business+ Only</span>
+        <span className="text-[9px] bg-[rgba(99,102,241,0.08)] text-[#A78BFA] px-2 py-0.5 rounded-full">Business+ Only</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-purple-400/30 transition-all">
+            className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(99,102,241,0.3)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
             <Layers size={24} className="mx-auto mb-2 text-muted" />
             <p className="text-xs text-foreground font-medium">
@@ -1600,12 +1600,12 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-muted">Steps:</span>
             <input type="range" min={500} max={5000} step={100} value={steps} onChange={e => setSteps(Number(e.target.value))}
-              className="flex-1 h-1 accent-purple-500" />
+              className="flex-1 h-1 accent-[#6366F1]" />
             <span className="text-xs text-foreground font-mono">{steps}</span>
           </div>
 
           <button onClick={handleTrain} disabled={processing || images.length < 5}
-            className="w-full px-4 py-2.5 bg-purple-500 text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full px-4 py-2.5 bg-[#6366F1] text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} />}
             Start Training (~{Math.ceil(steps / 100)} min)
           </button>
@@ -1621,15 +1621,15 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
               { step: 4, text: "Use the trained LoRA in Design Studio & Thumbnail Generator" },
             ].map(({ step, text }) => (
               <div key={step} className="flex items-start gap-2">
-                <div className="w-5 h-5 rounded-full bg-purple-500/10 flex items-center justify-center shrink-0">
-                  <span className="text-[9px] font-bold text-purple-400">{step}</span>
+                <div className="w-5 h-5 rounded-full bg-[rgba(99,102,241,0.08)] flex items-center justify-center shrink-0">
+                  <span className="text-[9px] font-bold text-[#A78BFA]">{step}</span>
                 </div>
                 <p className="text-[10px] text-muted leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
           {trainingStatus && (
-            <div className="mt-4 p-3 rounded-lg bg-purple-500/10 text-xs text-purple-400">
+            <div className="mt-4 p-3 rounded-lg bg-[rgba(99,102,241,0.08)] text-xs text-[#A78BFA]">
               {trainingStatus}
             </div>
           )}
@@ -1961,3 +1961,4 @@ function formatTime(seconds: number): string {
   const s = Math.floor(seconds % 60);
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
+

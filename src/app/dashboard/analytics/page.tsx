@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -363,7 +363,7 @@ export default function AnalyticsPage() {
         <div className="absolute top-0 right-1/3 w-80 h-24 pointer-events-none"
           style={{ background: "radial-gradient(ellipse at center, rgba(99,102,241,0.08) 0%, transparent 70%)" }} />
         {/* Lime micro-line bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D4FF00]/12 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#6366F1]/12 to-transparent" />
 
         {/* Top row — eyebrow + title + action */}
         <div className="relative z-10 px-6 pt-5 pb-4 flex items-start justify-between gap-6 flex-wrap">
@@ -376,7 +376,7 @@ export default function AnalyticsPage() {
           <div className="flex items-center gap-2 flex-shrink-0 pt-1">
             <button
               onClick={handleExport}
-              className="flex items-center gap-2 rounded-xl border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.06)] px-3 py-1.5 text-xs font-semibold text-[#D4FF00] hover:bg-[rgba(212,255,0,0.12)] transition-colors duration-150"
+              className="flex items-center gap-2 rounded-xl border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.06)] px-3 py-1.5 text-xs font-semibold text-[#6366F1] hover:bg-[rgba(99,102,241,0.12)] transition-colors duration-150"
             >
               <Download size={13} /> Export
             </button>
@@ -387,7 +387,7 @@ export default function AnalyticsPage() {
         <div className="relative z-10 border-t border-[rgba(255,255,255,0.05)] grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[rgba(255,255,255,0.05)]">
           <div className="px-5 py-3.5 flex flex-col gap-1">
             <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Total MRR</span>
-            <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#D4FF00]"
+            <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#6366F1]"
               style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(stats.totalMRR)}</span>
           </div>
           <div className="px-5 py-3.5 flex flex-col gap-1">
@@ -471,7 +471,7 @@ export default function AnalyticsPage() {
                   onClick={() => setDateRange(r)}
                   className={`px-3 py-1 text-[10px] rounded-md transition-colors duration-150 ${
                     dateRange === r
-                      ? "bg-[#D4FF00] text-[#0A0A0B] font-semibold"
+                      ? "bg-[#6366F1] text-white font-semibold"
                       : "text-[#6F6D7A] hover:text-[#F5F4F1]"
                   }`}
                 >
@@ -503,20 +503,20 @@ export default function AnalyticsPage() {
 
             {/* Left — MRR hero. The lime zone. */}
             <motion.div
-              className="relative rounded-2xl border border-[rgba(212,255,0,0.16)] bg-[rgba(212,255,0,0.025)] px-8 py-8 overflow-hidden"
+              className="relative rounded-2xl border border-[rgba(99,102,241,0.16)] bg-[rgba(99,102,241,0.025)] px-8 py-8 overflow-hidden"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Ambient glow — intentional not decorative */}
-              <div className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 rounded-full bg-[#D4FF00] opacity-[0.05] blur-3xl" />
-              <div className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#D4FF00] opacity-[0.03] blur-2xl" />
+              <div className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 rounded-full bg-[#6366F1] opacity-[0.05] blur-3xl" />
+              <div className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#6366F1] opacity-[0.03] blur-2xl" />
 
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A] mb-3">
                 Monthly Recurring Revenue
               </p>
               <p
-                className="font-display font-bold leading-none text-[#D4FF00]"
+                className="font-display font-bold leading-none text-[#6366F1]"
                 style={{ fontSize: "clamp(40px,6vw,68px)", letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums" }}
               >
                 {formatCurrency(stats.totalMRR)}
@@ -589,17 +589,17 @@ export default function AnalyticsPage() {
                     <AreaChart data={leadsByDay} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
                       <defs>
                         <linearGradient id="limeAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#D4FF00" stopOpacity={0.15} />
-                          <stop offset="85%" stopColor="#D4FF00" stopOpacity={0} />
+                          <stop offset="0%" stopColor="#6366F1" stopOpacity={0.15} />
+                          <stop offset="85%" stopColor="#6366F1" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.04)" vertical={false} />
                       <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
                       <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={28} />
-                      <Tooltip {...TT} cursor={{ stroke: "rgba(212,255,0,0.15)", strokeDasharray: "2 4" }} />
+                      <Tooltip {...TT} cursor={{ stroke: "rgba(99,102,241,0.15)", strokeDasharray: "2 4" }} />
                       <Area
                         type="monotone" dataKey="count" name="Leads"
-                        stroke="#D4FF00" strokeWidth={1.5}
+                        stroke="#6366F1" strokeWidth={1.5}
                         fill="url(#limeAreaGrad)"
                       />
                     </AreaChart>
@@ -879,7 +879,7 @@ export default function AnalyticsPage() {
               <div className="px-6 py-5 flex flex-col gap-1.5">
                 <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">Revenue Closed</span>
                 <span
-                  className="font-display text-2xl font-bold tracking-[-0.03em] text-[#D4FF00]"
+                  className="font-display text-2xl font-bold tracking-[-0.03em] text-[#6366F1]"
                   style={{ fontVariantNumeric: "tabular-nums" }}
                 >
                   {formatCurrency(stats.dealValue)}
@@ -919,7 +919,7 @@ export default function AnalyticsPage() {
                 <span className="text-[10px] text-[#6F6D7A]">{formatCurrency(stats.totalMRR)} MRR</span>
               </div>
             </div>
-            <div className="h-px bg-gradient-to-r from-[#D4FF00]/20 via-[#D4FF00]/6 to-transparent" />
+            <div className="h-px bg-gradient-to-r from-[#6366F1]/20 via-[#6366F1]/6 to-transparent" />
           </div>
 
           {/* ── Zone 6: Real-time activity feed ──────────────────────────── */}
@@ -1002,8 +1002,8 @@ export default function AnalyticsPage() {
                       >
                         <defs>
                           <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#D4FF00" stopOpacity={0.15} />
-                            <stop offset="85%" stopColor="#D4FF00" stopOpacity={0} />
+                            <stop offset="0%" stopColor="#6366F1" stopOpacity={0.15} />
+                            <stop offset="85%" stopColor="#6366F1" stopOpacity={0} />
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.04)" vertical={false} />
@@ -1011,7 +1011,7 @@ export default function AnalyticsPage() {
                         <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={32} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
                         <Tooltip {...TT} formatter={(v) => formatCurrency(Number(v) || 0)} />
                         <Area type="monotone" dataKey="optimistic" stroke="#7FE5B8" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Optimistic" />
-                        <Area type="monotone" dataKey="projected" stroke="#D4FF00" fill="url(#forecastGrad)" strokeWidth={1.5} name="Projected" />
+                        <Area type="monotone" dataKey="projected" stroke="#6366F1" fill="url(#forecastGrad)" strokeWidth={1.5} name="Projected" />
                         <Area type="monotone" dataKey="conservative" stroke="#6366F1" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Conservative" />
                       </AreaChart>
                     </ResponsiveContainer>
@@ -1069,7 +1069,7 @@ export default function AnalyticsPage() {
                     <tr>
                       <td colSpan={5} className="py-8 text-center">
                         <p className="text-[11px] text-[#6F6D7A]">No ad platform data yet</p>
-                        <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-[#D4FF00] hover:opacity-80 transition-opacity">
+                        <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-[#6366F1] hover:opacity-80 transition-opacity">
                           Connect platforms <ArrowUp size={9} className="rotate-45" />
                         </Link>
                       </td>
@@ -1199,7 +1199,7 @@ export default function AnalyticsPage() {
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <Trophy size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-[#9F9DAA]">No team activity yet</p>
-                  <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#D4FF00] hover:opacity-80 transition-opacity">
+                  <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#6366F1] hover:opacity-80 transition-opacity">
                     Invite team <ArrowUp size={9} className="rotate-45" />
                   </Link>
                 </div>
@@ -1211,7 +1211,7 @@ export default function AnalyticsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <p className="text-xs font-medium text-[#F5F4F1]">{member.name}</p>
-                      {i === 0 && <Star size={9} className="text-[#D4FF00]" />}
+                      {i === 0 && <Star size={9} className="text-[#6366F1]" />}
                     </div>
                     <p className="text-[9px] text-[#6F6D7A]">{member.leads} leads · {member.deals} deals · {member.calls} calls</p>
                   </div>
@@ -1321,7 +1321,7 @@ export default function AnalyticsPage() {
                   <DollarSign size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-[#9F9DAA]">No CLV data yet</p>
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
-                  <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#D4FF00] hover:opacity-80 transition-opacity">
+                  <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#6366F1] hover:opacity-80 transition-opacity">
                     Add clients <ArrowUp size={9} className="rotate-45" />
                   </Link>
                 </div>
@@ -1389,3 +1389,4 @@ export default function AnalyticsPage() {
     </MotionPage>
   );
 }
+

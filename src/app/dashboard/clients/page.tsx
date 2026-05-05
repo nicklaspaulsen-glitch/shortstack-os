@@ -613,7 +613,7 @@ export default function ClientsPage() {
                 <button
                   onClick={() => setScope("all")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    scope === "all" ? "bg-[#D4FF00] text-[#0A0A0B]" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
+                    scope === "all" ? "bg-[#6366F1] text-white" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
                   }`}
                   title="See every client across every agency"
                 >
@@ -622,7 +622,7 @@ export default function ClientsPage() {
                 <button
                   onClick={() => setScope("mine")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    scope === "mine" ? "bg-[#D4FF00] text-[#0A0A0B]" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
+                    scope === "mine" ? "bg-[#6366F1] text-white" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
                   }`}
                   title="See only the clients you personally added"
                 >
@@ -632,7 +632,7 @@ export default function ClientsPage() {
             )}
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] text-[#D4FF00] text-sm font-semibold hover:bg-[rgba(212,255,0,0.14)] transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.2)] text-[#6366F1] text-sm font-semibold hover:bg-[rgba(99,102,241,0.14)] transition-all"
             >
               <Plus size={15} /> Add Client
             </button>
@@ -645,7 +645,7 @@ export default function ClientsPage() {
         <div className="px-5 py-4 flex flex-col gap-1.5">
           <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Total MRR</span>
           <span
-            className="font-display text-2xl font-bold tracking-[-0.03em] text-[#D4FF00]"
+            className="font-display text-2xl font-bold tracking-[-0.03em] text-[#6366F1]"
             style={{ fontVariantNumeric: "tabular-nums" }}
           >
             {formatCurrency(totalMRR)}
@@ -683,7 +683,7 @@ export default function ClientsPage() {
       </div>
 
       {/* Tabs (sticky) */}
-      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(212,255,0,0.08)] rounded-xl p-1 w-fit shadow-lg shadow-black/20">
+      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(99,102,241,0.08)] rounded-xl p-1 w-fit shadow-lg shadow-black/20">
         {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}
@@ -691,7 +691,7 @@ export default function ClientsPage() {
             aria-selected={tab === t}
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
-              tab === t ? "bg-[#D4FF00] text-[#0A0A0B] font-medium" : "text-muted hover:text-foreground"
+              tab === t ? "bg-[#6366F1] text-white font-medium" : "text-muted hover:text-foreground"
             }`}
           >
             {t === "billing" && <CreditCard size={14} />}
@@ -718,10 +718,10 @@ export default function ClientsPage() {
 
             {/* Feature 9: Advanced Filters Toggle */}
             <button onClick={() => setShowFilters(!showFilters)}
-              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(212,255,0,0.1)] text-[#D4FF00] border-[rgba(212,255,0,0.25)]" : ""}`}>
+              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(99,102,241,0.1)] text-[#6366F1] border-[rgba(99,102,241,0.25)]" : ""}`}>
               <Filter size={14} /> Filters
               {(filterIndustry || filterStatus !== "all" || filterTag || filterMrrMin || filterMrrMax) && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#D4FF00]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1]" />
               )}
             </button>
 
@@ -737,7 +737,7 @@ export default function ClientsPage() {
               ]).map(s => (
                 <button key={s.field} onClick={() => handleSort(s.field)}
                   className={`px-2 py-1 text-[10px] rounded-md transition-all flex items-center gap-0.5 ${
-                    sortField === s.field ? "bg-[#D4FF00] text-[#0A0A0B] font-medium" : "text-muted hover:text-foreground"
+                    sortField === s.field ? "bg-[#6366F1] text-white font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {s.label}
                   {sortField === s.field && (
@@ -750,11 +750,11 @@ export default function ClientsPage() {
             {/* Feature 15: View Mode Toggle */}
             <div className="flex items-center gap-0.5 bg-surface rounded-lg p-0.5">
               <button onClick={() => setViewMode("table")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#D4FF00] text-[#0A0A0B]" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#6366F1] text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutList size={14} />
               </button>
               <button onClick={() => setViewMode("card")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#D4FF00] text-[#0A0A0B]" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#6366F1] text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutGrid size={14} />
               </button>
             </div>
@@ -962,12 +962,12 @@ export default function ClientsPage() {
                 )}
 
                 {/* Stats grid — bordered editorial layout */}
-                <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(212,255,0,0.08)] overflow-hidden">
+                <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(99,102,241,0.08)] overflow-hidden">
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">MRR</p>
-                    <p className="text-xs font-bold text-[#D4FF00]">{formatCurrency(c.mrr)}</p>
+                    <p className="text-xs font-bold text-[#6366F1]">{formatCurrency(c.mrr)}</p>
                   </div>
-                  <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-[rgba(212,255,0,0.08)]">
+                  <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-[rgba(99,102,241,0.08)]">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Paid</p>
                     <p className="text-xs font-bold text-[#F5F4F1]">{formatCurrency(revenue.totalPaid)}</p>
                   </div>
@@ -986,7 +986,7 @@ export default function ClientsPage() {
                     <span className="text-[9px] font-mono font-medium">{onboarding}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-[#7FE5B8]" : onboarding >= 60 ? "bg-[#D4FF00]" : "bg-[#FFC062]"}`}
+                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-[#7FE5B8]" : onboarding >= 60 ? "bg-[#6366F1]" : "bg-[#FFC062]"}`}
                       style={{ width: `${onboarding}%` }} />
                   </div>
                 </div>
@@ -1080,7 +1080,7 @@ export default function ClientsPage() {
         </div>
       )}
       {tab === "clients" && viewMode === "table" && filteredClients.length > 0 && (
-        <div className="space-y-0 [&_tbody_tr:hover]:border-l-2 [&_tbody_tr:hover]:border-l-[#D4FF00]/40">
+        <div className="space-y-0 [&_tbody_tr:hover]:border-l-2 [&_tbody_tr:hover]:border-l-[#6366F1]/40">
           <DataTable
             columns={[
               { key: "select", label: (
@@ -1874,3 +1874,4 @@ export default function ClientsPage() {
     </MotionPage>
   );
 }
+
