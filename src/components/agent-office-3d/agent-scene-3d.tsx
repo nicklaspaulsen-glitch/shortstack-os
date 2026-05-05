@@ -69,7 +69,7 @@ const AGENT_POSITIONS: Record<string, [number, number, number]> = {
 /** Hex accent per agent, matching agents.ts brandColor. */
 const AGENT_HEX: Record<string, string> = {
   echo:   "#5E5BFF",
-  lyra:   "#D4FF00",
+  lyra:   "#6366F1",
   sage:   "#7FE5B8",
   reef:   "#3EDDC7",
   onyx:   "#FF8A4C",

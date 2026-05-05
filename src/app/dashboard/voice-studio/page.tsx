@@ -166,7 +166,7 @@ export default function VoiceStudioPage() {
           style={{ background: "radial-gradient(ellipse at center, rgba(99,102,241,0.08) 0%, transparent 70%)" }}
         />
         {/* Lime micro-line bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D4FF00]/12 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#6366F1]/12 to-transparent" />
 
         {/* Top row — eyebrow + title + actions */}
         <div className="relative z-10 px-6 pt-5 pb-4 flex items-start justify-between gap-6 flex-wrap">
@@ -195,7 +195,7 @@ export default function VoiceStudioPage() {
         <div className="relative z-10 border-t border-[rgba(255,255,255,0.05)] grid grid-cols-3 divide-x divide-[rgba(255,255,255,0.05)]">
           <div className="px-5 py-3.5 flex flex-col gap-1">
             <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Your Clones</span>
-            <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#D4FF00]" style={{ fontVariantNumeric: "tabular-nums" }}>
+            <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#6366F1]" style={{ fontVariantNumeric: "tabular-nums" }}>
               {stats.mineCount}
             </span>
           </div>
@@ -226,7 +226,7 @@ export default function VoiceStudioPage() {
                   onClick={() => setTab(t)}
                   className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
                     isActive
-                      ? "border-[#D4FF00] text-[#D4FF00]"
+                      ? "border-[#6366F1] text-[#6366F1]"
                       : "border-transparent text-white/60 hover:text-white"
                   }`}
                   aria-current={isActive ? "page" : undefined}
@@ -384,10 +384,10 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
   }, [files, label, description, consentKind, signedBy, onCreated]);
 
   return (
-    <div className="rounded-xl border border-[rgba(212,255,0,0.12)] bg-gradient-to-br from-[rgba(212,255,0,0.04)] to-transparent p-6">
+    <div className="rounded-xl border border-[rgba(99,102,241,0.12)] bg-gradient-to-br from-[rgba(99,102,241,0.04)] to-transparent p-6">
       <div className="flex items-start gap-4">
-        <div className="rounded-lg border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.07)] p-2.5">
-          <Upload size={20} className="text-[#D4FF00]" />
+        <div className="rounded-lg border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] p-2.5">
+          <Upload size={20} className="text-[#6366F1]" />
         </div>
         <div className="flex-1 space-y-4">
           <div>
@@ -410,7 +410,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.03)] px-4 py-6 text-sm text-[#D4FF00]/80 hover:border-[rgba(212,255,0,0.45)] hover:bg-[rgba(212,255,0,0.06)] transition-colors"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[rgba(99,102,241,0.25)] bg-[rgba(99,102,241,0.03)] px-4 py-6 text-sm text-[#6366F1]/80 hover:border-[rgba(99,102,241,0.45)] hover:bg-[rgba(99,102,241,0.06)] transition-colors"
           >
             <Upload size={16} />
             {files.length === 0
@@ -424,14 +424,14 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="Label (e.g. 'My voice — natural')"
-              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(212,255,0,0.4)] focus:outline-none"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(99,102,241,0.4)] focus:outline-none"
             />
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description (optional)"
-              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(212,255,0,0.4)] focus:outline-none"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(99,102,241,0.4)] focus:outline-none"
             />
           </div>
 
@@ -456,7 +456,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                   onClick={() => setConsentKind(opt.key)}
                   className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
                     consentKind === opt.key
-                      ? "border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.08)] text-[#D4FF00]"
+                      ? "border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.08)] text-[#6366F1]"
                       : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
                   }`}
                 >
@@ -470,20 +470,20 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                 value={signedBy}
                 onChange={(e) => setSignedBy(e.target.value)}
                 placeholder="Signed by (legal name)"
-                className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(212,255,0,0.4)] focus:outline-none"
+                className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(99,102,241,0.4)] focus:outline-none"
               />
             )}
           </div>
 
           <div className="flex items-center justify-between gap-4">
             {submitMsg && (
-              <div className="text-sm text-[#D4FF00]/80">{submitMsg}</div>
+              <div className="text-sm text-[#6366F1]/80">{submitMsg}</div>
             )}
             <button
               type="button"
               onClick={onSubmit}
               disabled={submitting}
-              className="ml-auto flex items-center gap-2 rounded-lg bg-[#D4FF00] px-4 py-2 text-sm font-medium text-[#0A0A0B] hover:bg-[#D4FF00]/90 transition-colors disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
+              className="ml-auto flex items-center gap-2 rounded-lg bg-[#6366F1] px-4 py-2 text-sm font-medium text-white hover:bg-[#6366F1]/90 transition-colors disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
             >
               {submitting ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -573,14 +573,14 @@ function CloneRow({
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-5">
       <div className="flex flex-wrap items-start gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.07)] text-[#D4FF00]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]">
           <Mic size={20} />
         </div>
         <div className="flex-1 min-w-[180px]">
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={`/dashboard/voice-studio/${clone.id}`}
-              className="text-sm font-semibold text-white hover:text-[#D4FF00] transition-colors"
+              className="text-sm font-semibold text-white hover:text-[#6366F1] transition-colors"
             >
               {clone.label}
             </Link>
@@ -807,7 +807,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               className={[
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
                 genderFilter === g
-                  ? "border border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.08)] text-[#D4FF00]"
+                  ? "border border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.08)] text-[#6366F1]"
                   : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
               ].join(" ")}
             >
@@ -826,7 +826,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                 className={[
                   "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
                   categoryFilter === c
-                    ? "border border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.1)] text-[#D4FF00] shadow-[0_0_10px_rgba(212,255,0,0.1)]"
+                    ? "border border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.1)] text-[#6366F1] shadow-[0_0_10px_rgba(99,102,241,0.1)]"
                     : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
                 ].join(" ")}
               >
@@ -944,7 +944,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
 
   return (
     <div
-      className="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-5 transition-colors duration-150 hover:border-[rgba(212,255,0,0.2)]"
+      className="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-5 transition-colors duration-150 hover:border-[rgba(99,102,241,0.2)]"
       onMouseEnter={() => {
         setIsHovering(true);
         if (testUrl || testing) return;
@@ -957,14 +957,14 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
-        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.07)] text-[#D4FF00]">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]">
           <Mic size={16} />
         </div>
         <div className="flex items-center gap-1.5">
           <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
             {lang}
           </span>
-          <span className="rounded-full border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.07)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#D4FF00]/70">
+          <span className="rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#6366F1]/70">
             {category}
           </span>
         </div>
@@ -993,7 +993,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               <button
                 type="button"
                 onClick={() => { setEditMode(false); onTest(); }}
-                className="text-[10px] text-[rgba(212,255,0,0.7)] hover:text-[#D4FF00] cursor-pointer"
+                className="text-[10px] text-[rgba(99,102,241,0.7)] hover:text-[#6366F1] cursor-pointer"
               >
                 Preview
               </button>
@@ -1013,7 +1013,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           <button
             type="button"
             onClick={() => setEditMode(true)}
-            className="flex-shrink-0 text-[10px] text-[rgba(212,255,0,0.55)] hover:text-[#D4FF00] cursor-pointer"
+            className="flex-shrink-0 text-[10px] text-[rgba(99,102,241,0.55)] hover:text-[#6366F1] cursor-pointer"
             aria-label="Edit test phrase"
           >
             Edit
@@ -1031,7 +1031,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             "flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer",
             // Pulse border when hover detected but audio not yet loading
             isHovering && !testing && !testUrl
-              ? "border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.05)] text-[#D4FF00]/80 animate-pulse"
+              ? "border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.05)] text-[#6366F1]/80 animate-pulse"
               : "border-white/15 bg-white/5 text-white hover:bg-white/10",
             "disabled:cursor-not-allowed disabled:opacity-40",
           ].join(" ")}
@@ -1053,7 +1053,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           className={[
             "flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed",
             saved
-              ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.07)] text-[#D4FF00]/70"
+              ? "border-[rgba(99,102,241,0.25)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]/70"
               : "border-white/15 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white",
           ].join(" ")}
         >
@@ -1069,7 +1069,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           <audio src={testUrl ?? prevUrlRef.current ?? ""} controls className="w-full" style={{ height: 32 }} />
           {testing && (
             <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
-              <Loader2 size={16} className="animate-spin text-[#D4FF00]" />
+              <Loader2 size={16} className="animate-spin text-[#6366F1]" />
             </div>
           )}
         </div>

@@ -20,7 +20,7 @@ export default function NotFound() {
         className="pointer-events-none absolute inset-0 opacity-[0.07]"
         style={{
           backgroundImage:
-            "linear-gradient(to right, rgba(212,255,0,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(212,255,0,0.4) 1px, transparent 1px)",
+            "linear-gradient(to right, rgba(99,102,241,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(99,102,241,0.4) 1px, transparent 1px)",
           backgroundSize: "64px 64px",
           maskImage: "radial-gradient(closest-side at 50% 45%, black 30%, transparent 80%)",
           WebkitMaskImage: "radial-gradient(closest-side at 50% 45%, black 30%, transparent 80%)",
@@ -76,7 +76,7 @@ export default function NotFound() {
         >
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-brand-lime text-bg-base text-[14px] font-semibold hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation shadow-[0_0_0_1px_rgba(212,255,0,0.3),0_0_24px_-6px_rgba(212,255,0,0.45)] hover:shadow-[0_0_0_1px_rgba(212,255,0,0.45),0_0_32px_-4px_rgba(212,255,0,0.6)]"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-brand-lime text-bg-base text-[14px] font-semibold hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation shadow-[0_0_0_1px_rgba(99,102,241,0.3),0_0_24px_-6px_rgba(99,102,241,0.45)] hover:shadow-[0_0_0_1px_rgba(99,102,241,0.45),0_0_32px_-4px_rgba(99,102,241,0.6)]"
           >
             <ArrowLeft size={15} />
             Back to dashboard

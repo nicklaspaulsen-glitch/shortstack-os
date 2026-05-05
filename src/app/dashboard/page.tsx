@@ -181,13 +181,13 @@ function RouterPrefetch({ router }: { router: ReturnType<typeof useRouter> }) {
  */
 function BentoFallback() {
   return (
-    <div className="rounded-2xl border border-[rgba(212,255,0,0.08)] bg-[#15141A] p-12 flex flex-col items-center justify-center text-center gap-4">
+    <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] bg-[#15141A] p-12 flex flex-col items-center justify-center text-center gap-4">
       <p className="font-editorial text-base text-[#9F9DAA] max-w-md">
         Couldn&apos;t reach the dashboard service. Refresh the page or check the system status if this keeps happening.
       </p>
       <Link
         href="/dashboard/monitor"
-        className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#D4FF00] text-[#0A0A0B]"
+        className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#6366F1] text-white"
       >
         Check system status
       </Link>

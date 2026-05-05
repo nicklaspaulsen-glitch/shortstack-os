@@ -77,13 +77,13 @@ export default function LoadingMark({
       aria-live="polite"
     >
       <div className="relative">
-        {/* Breathing lime halo behind the mark */}
+        {/* Breathing indigo halo behind the mark */}
         <span
           aria-hidden
           className="absolute inset-0 -z-10 rounded-full blur-2xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(212,255,0,0.4), transparent 70%)",
+              "radial-gradient(closest-side, rgba(99,102,241,0.4), transparent 70%)",
             animation: "limePulse 2.4s ease-in-out infinite",
           }}
         />

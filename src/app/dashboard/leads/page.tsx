@@ -491,7 +491,7 @@ function LeadDetailPanel({
   const qualScore = qualChecks.filter((q) => q.ok).length;
 
   return (
-    <div className="relative flex flex-col gap-3 rounded-xl border border-[rgba(212,255,0,0.12)] bg-[#15141A] p-4 shadow-2xl">
+    <div className="relative flex flex-col gap-3 rounded-xl border border-[rgba(99,102,241,0.12)] bg-[#15141A] p-4 shadow-2xl">
       {/* Close */}
       <button
         type="button"
@@ -516,14 +516,14 @@ function LeadDetailPanel({
       <div className="flex items-center justify-between">
         <span className="text-[10px] text-white/40 uppercase tracking-wider">AI Score</span>
         {lead.score !== null ? (
-          <span className={`text-sm font-bold ${lead.score >= 70 ? "text-[#D4FF00]" : lead.score >= 40 ? "text-yellow-400" : "text-red-400"}`}>
+          <span className={`text-sm font-bold ${lead.score >= 70 ? "text-[#6366F1]" : lead.score >= 40 ? "text-yellow-400" : "text-red-400"}`}>
             {lead.score}<span className="text-white/30">/100</span>
           </span>
         ) : (
           <button
             onClick={() => onScore(lead)}
             disabled={scoring}
-            className="flex items-center gap-1 rounded-lg bg-[rgba(212,255,0,0.1)] border border-[rgba(212,255,0,0.2)] px-2.5 py-1 text-[10px] font-medium text-[#D4FF00] hover:bg-[rgba(212,255,0,0.15)] disabled:opacity-50 transition-colors cursor-pointer"
+            className="flex items-center gap-1 rounded-lg bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.2)] px-2.5 py-1 text-[10px] font-medium text-[#6366F1] hover:bg-[rgba(99,102,241,0.15)] disabled:opacity-50 transition-colors cursor-pointer"
           >
             {scoring ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
             Score with AI
@@ -540,13 +540,13 @@ function LeadDetailPanel({
       {/* Contact info */}
       <div className="space-y-1.5 border-t border-white/[0.06] pt-3">
         {lead.phone && (
-          <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-[11px] text-white/70 hover:text-[#D4FF00] transition-colors">
+          <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-[11px] text-white/70 hover:text-[#6366F1] transition-colors">
             <Phone size={11} className="text-white/30 flex-shrink-0" />
             <span className="truncate">{lead.phone}</span>
           </a>
         )}
         {lead.email && (
-          <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-white/70 hover:text-[#D4FF00] transition-colors">
+          <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-white/70 hover:text-[#6366F1] transition-colors">
             <Mail size={11} className="text-white/30 flex-shrink-0" />
             <span className="truncate">{lead.email}</span>
           </a>
@@ -562,7 +562,7 @@ function LeadDetailPanel({
             href={lead.website.startsWith("http") ? lead.website : `https://${lead.website}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-[11px] text-white/50 hover:text-[#D4FF00] transition-colors"
+            className="flex items-center gap-2 text-[11px] text-white/50 hover:text-[#6366F1] transition-colors"
           >
             <Globe size={11} className="text-white/30 flex-shrink-0" />
             <span className="truncate">{lead.website.replace(/^https?:\/\//i, "")}</span>
@@ -570,7 +570,7 @@ function LeadDetailPanel({
         )}
         {lead.google_rating && (
           <div className="flex items-center gap-1 text-[11px] text-white/50">
-            <Star size={11} className="text-[#D4FF00] flex-shrink-0" />
+            <Star size={11} className="text-[#6366F1] flex-shrink-0" />
             <span>{lead.google_rating} rating</span>
             {lead.review_count ? <span className="text-white/30">({lead.review_count} reviews)</span> : null}
           </div>
@@ -581,13 +581,13 @@ function LeadDetailPanel({
       <div className="border-t border-white/[0.06] pt-3">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[10px] uppercase tracking-wider text-white/40">Qualification</span>
-          <span className="text-[10px] font-semibold text-[#D4FF00]">{qualScore}/{qualChecks.length}</span>
+          <span className="text-[10px] font-semibold text-[#6366F1]">{qualScore}/{qualChecks.length}</span>
         </div>
         <div className="grid grid-cols-2 gap-1">
           {qualChecks.map((q) => (
             <div key={q.label} className="flex items-center gap-1.5 text-[10px]">
               {q.ok
-                ? <CheckCircle size={9} className="text-[#D4FF00] flex-shrink-0" />
+                ? <CheckCircle size={9} className="text-[#6366F1] flex-shrink-0" />
                 : <div className="w-2.5 h-2.5 rounded-full border border-white/20 flex-shrink-0" />}
               <span className={q.ok ? "text-white/70" : "text-white/30"}>{q.label}</span>
             </div>
@@ -602,7 +602,7 @@ function LeadDetailPanel({
           onClick={(e) => { if (!lead.phone) e.preventDefault(); }}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-medium transition-colors ${
             lead.phone
-              ? "border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.06)] text-[#D4FF00] hover:bg-[rgba(212,255,0,0.12)]"
+              ? "border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.06)] text-[#6366F1] hover:bg-[rgba(99,102,241,0.12)]"
               : "border-white/10 bg-white/[0.03] text-white/25 cursor-not-allowed"
           }`}
           title={lead.phone || "No phone"}
@@ -951,8 +951,8 @@ export default function LeadEnginePage() {
                   }}
                   className={`grid grid-cols-12 items-center py-1.5 px-3 rounded-lg border transition-all cursor-pointer text-[10px] ${
                     selectedLead?.id === lead.id
-                      ? "bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.15)]"
-                      : "bg-surface-light border-border hover:border-[rgba(212,255,0,0.1)]"
+                      ? "bg-[rgba(99,102,241,0.04)] border-[rgba(99,102,241,0.15)]"
+                      : "bg-surface-light border-border hover:border-[rgba(99,102,241,0.1)]"
                   }`}>
                   <div className="col-span-3">
                     <p className="text-xs font-semibold">{lead.business_name}</p>

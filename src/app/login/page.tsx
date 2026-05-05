@@ -243,7 +243,7 @@ function LoginForm() {
         className="pointer-events-none absolute inset-0 opacity-90"
         style={{
           backgroundImage:
-            "radial-gradient(900px 600px at 0% 0%, rgba(212,255,0,0.04), transparent 60%), radial-gradient(900px 600px at 100% 100%, rgba(63,13,45,0.20), transparent 60%)",
+            "radial-gradient(900px 600px at 0% 0%, rgba(99,102,241,0.04), transparent 60%), radial-gradient(900px 600px at 100% 100%, rgba(63,13,45,0.20), transparent 60%)",
         }}
       />
 
@@ -328,7 +328,7 @@ function LoginForm() {
                         type="submit"
                         disabled={loading}
                         ref={submitBtnRef}
-                        className="w-full text-[14px] font-medium py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(212,255,0,0.3),0_0_24px_-6px_rgba(212,255,0,0.45)]"
+                        className="w-full text-[14px] font-medium py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(99,102,241,0.3),0_0_24px_-6px_rgba(99,102,241,0.45)]"
                       >
                         {loading ? <Loader size={14} className="animate-spin" /> : <Mail size={14} />}
                         {loading ? "Sending..." : "Send reset link"}
@@ -460,7 +460,7 @@ function LoginForm() {
                     type="submit"
                     disabled={loading}
                     ref={submitBtnRef}
-                    className="w-full text-[14px] font-semibold py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(212,255,0,0.3),0_0_24px_-6px_rgba(212,255,0,0.45)] hover:shadow-[0_0_0_1px_rgba(212,255,0,0.45),0_0_32px_-4px_rgba(212,255,0,0.6)]"
+                    className="w-full text-[14px] font-semibold py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(99,102,241,0.3),0_0_24px_-6px_rgba(99,102,241,0.45)] hover:shadow-[0_0_0_1px_rgba(99,102,241,0.45),0_0_32px_-4px_rgba(99,102,241,0.6)]"
                     style={{ willChange: "transform" }}
                   >
                     {loading ? <Loader size={14} className="animate-spin" /> : <ArrowRight size={14} />}

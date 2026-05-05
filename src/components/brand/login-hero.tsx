@@ -55,12 +55,12 @@ export default function LoginHero() {
 
   return (
     <div className="relative flex flex-col justify-between h-full p-10 md:p-14 lg:p-20 overflow-hidden">
-      {/* Decorative lime-tinted radial glow — sits behind the type, never on top */}
+      {/* Decorative indigo radial glow — sits behind the type, never on top */}
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 -left-40 w-[640px] h-[640px] rounded-full opacity-[0.08] blur-3xl"
         style={{
-          background: "radial-gradient(closest-side, rgba(212,255,0,0.6), transparent 70%)",
+          background: "radial-gradient(closest-side, rgba(99,102,241,0.6), transparent 70%)",
         }}
       />
       {/* Faint plum glow lower-right for editorial complement */}
