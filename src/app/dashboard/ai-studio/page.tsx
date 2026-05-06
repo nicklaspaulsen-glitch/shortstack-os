@@ -10,7 +10,7 @@ import {
   Target, Edit3, Type as TypeIcon, Ratio, Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { MotionPage } from "@/components/motion/motion-page";
 import ImageWizard from "@/components/image-wizard";
@@ -492,18 +492,27 @@ export default function AIStudioPage() {
               <div className="w-1 h-4 rounded-full bg-[#6366F1]/35 shrink-0" />
             </div>
 
-            {/* Tool content */}
-            <div className="p-5">
-              {activeTool === "transcribe" && <TranscribeTool processing={processing} setProcessing={setProcessing} history={history} setHistory={setHistory} />}
-              {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} initial={imageGenInit} />}
-              {activeTool === "upscale" && <UpscaleTool processing={processing} setProcessing={setProcessing} />}
-              {activeTool === "remove-bg" && <RemoveBgTool processing={processing} setProcessing={setProcessing} />}
-              {activeTool === "img-to-video" && <ImgToVideoTool processing={processing} setProcessing={setProcessing} />}
-              {activeTool === "music-gen" && <MusicGenTool processing={processing} setProcessing={setProcessing} />}
-              {activeTool === "voice-clone" && <VoiceCloneTool processing={processing} setProcessing={setProcessing} />}
-              {activeTool === "train-lora" && <TrainLoraTool processing={processing} setProcessing={setProcessing} />}
-              {activeTool === "batch-gen" && <BatchGenTool processing={processing} setProcessing={setProcessing} />}
-            </div>
+            {/* Tool content — AnimatePresence fades panel on tool switch */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTool}
+                className="p-5"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {activeTool === "transcribe" && <TranscribeTool processing={processing} setProcessing={setProcessing} history={history} setHistory={setHistory} />}
+                {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} initial={imageGenInit} />}
+                {activeTool === "upscale" && <UpscaleTool processing={processing} setProcessing={setProcessing} />}
+                {activeTool === "remove-bg" && <RemoveBgTool processing={processing} setProcessing={setProcessing} />}
+                {activeTool === "img-to-video" && <ImgToVideoTool processing={processing} setProcessing={setProcessing} />}
+                {activeTool === "music-gen" && <MusicGenTool processing={processing} setProcessing={setProcessing} />}
+                {activeTool === "voice-clone" && <VoiceCloneTool processing={processing} setProcessing={setProcessing} />}
+                {activeTool === "train-lora" && <TrainLoraTool processing={processing} setProcessing={setProcessing} />}
+                {activeTool === "batch-gen" && <BatchGenTool processing={processing} setProcessing={setProcessing} />}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
         </div>
