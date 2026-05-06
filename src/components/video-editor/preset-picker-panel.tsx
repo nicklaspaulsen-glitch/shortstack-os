@@ -645,18 +645,21 @@ function Chips({
   options,
   value,
   onChange,
+  groupId,
 }: {
   options: string[];
   value: string;
   onChange: (v: string) => void;
+  groupId?: string;
 }) {
+  const gid = groupId ?? options.slice(0, 3).join("-");
   return (
     <div className="flex flex-wrap gap-1 mb-2">
-      <Chip active={value === "all"} onClick={() => onChange("all")}>
+      <Chip active={value === "all"} onClick={() => onChange("all")} layoutId={`chip-${gid}`}>
         All
       </Chip>
       {options.map((o) => (
-        <Chip key={o} active={value === o} onClick={() => onChange(o)}>
+        <Chip key={o} active={value === o} onClick={() => onChange(o)} layoutId={`chip-${gid}`}>
           {o}
         </Chip>
       ))}
@@ -668,22 +671,34 @@ function Chip({
   active,
   onClick,
   children,
+  layoutId,
 }: {
   active: boolean;
   onClick: () => void;
   children: ReactNode;
+  layoutId?: string;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-full px-2 py-0.5 text-[9px] transition ${
-        active
-          ? "bg-white text-black"
-          : "bg-surface-light/60 text-muted hover:text-foreground"
+      className={`relative rounded-full px-2 py-0.5 text-[9px] transition-colors cursor-pointer ${
+        active ? "text-foreground" : "text-muted hover:text-foreground"
       }`}
     >
-      {children}
+      {active && layoutId && (
+        <motion.span
+          layoutId={layoutId}
+          className="absolute inset-0 rounded-full bg-white/90"
+          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+        />
+      )}
+      {active && !layoutId && (
+        <span className="absolute inset-0 rounded-full bg-white/90" />
+      )}
+      <span className="relative" style={{ color: active ? "#0a0a0b" : undefined }}>
+        {children}
+      </span>
     </button>
   );
 }
