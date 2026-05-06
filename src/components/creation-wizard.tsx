@@ -14,6 +14,7 @@
  */
 
 import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Check, Sparkles, X, Zap, Image as ImageIcon, Type, Palette, Film, Music, Wand2, RefreshCw } from "lucide-react";
 import { mergeNonEmpty } from "@/lib/merge-patch";
 import { EmojiIcon } from "@/lib/ui/emoji-icon-map";
@@ -172,9 +173,10 @@ export default function CreationWizard({
               <span>{Math.round(progress)}%</span>
             </div>
             <div className="h-1 rounded-full bg-surface-light overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-gold to-amber-400 transition-all duration-500"
-                style={{ width: `${progress}%` }}
+              <motion.div
+                className="h-full bg-gradient-to-r from-[#6366F1] to-[#A78BFA]"
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
               />
             </div>
           </div>
@@ -215,7 +217,15 @@ export default function CreationWizard({
         <div className="flex-1 overflow-hidden flex">
           {/* Left: input */}
           <div className="flex-1 p-6 overflow-y-auto min-w-0">
-            <div className="max-w-xl mx-auto">
+            <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={`wizard-step-${stepIdx}`}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
+              className="max-w-xl mx-auto"
+            >
               <div className="flex items-start gap-3 mb-5">
                 {currentStep.icon && (
                   <div className="w-9 h-9 rounded-xl bg-gold/10 flex items-center justify-center text-gold shrink-0">
@@ -269,7 +279,8 @@ export default function CreationWizard({
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Right: live preview */}
