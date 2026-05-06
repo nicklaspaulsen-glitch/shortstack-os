@@ -63,12 +63,12 @@ const PROMPT_CATEGORIES = [
 // Changing the "style" here adjusts the downstream prompt enhancement, it does
 // NOT change the actual model endpoint (that still goes through /api/video/render).
 const MODELS = [
-  { id: "cinematic", name: "Cinematic", sub: "Film-like grade", icon: Film },
-  { id: "realistic", name: "Realistic", sub: "Documentary", icon: Camera },
-  { id: "animated", name: "Animated", sub: "3D / Pixar", icon: Palette },
-  { id: "anime", name: "Anime", sub: "Japanese", icon: Sparkles },
-  { id: "vintage", name: "Vintage", sub: "Film grain", icon: Layers },
-  { id: "dreamy", name: "Dreamy", sub: "Soft, ethereal", icon: Wand2 },
+  { id: "cinematic", name: "Cinematic", sub: "Film-like grade", icon: Film,    preview: "linear-gradient(90deg,#0d0d14 0%,#1a2340 40%,#3d5a7a 70%,#8fa8be 100%)" },
+  { id: "realistic", name: "Realistic", sub: "Documentary",     icon: Camera,  preview: "linear-gradient(90deg,#2d1e12 0%,#6b4226 40%,#b5855a 70%,#d4a96a 100%)" },
+  { id: "animated",  name: "Animated",  sub: "3D / Pixar",      icon: Palette, preview: "linear-gradient(90deg,#4158D0 0%,#C850C0 50%,#FFCC70 100%)" },
+  { id: "anime",     name: "Anime",     sub: "Japanese",         icon: Sparkles,preview: "linear-gradient(90deg,#5665E9 0%,#9251AE 40%,#F95B8E 100%)" },
+  { id: "vintage",   name: "Vintage",   sub: "Film grain",       icon: Layers,  preview: "linear-gradient(90deg,#2C1810 0%,#7A3D1A 40%,#C4832A 70%,#E8C875 100%)" },
+  { id: "dreamy",    name: "Dreamy",    sub: "Soft, ethereal",   icon: Wand2,   preview: "linear-gradient(90deg,#A18CD1 0%,#FBC2EB 50%,#A1C4FD 100%)" },
 ];
 
 const ASPECTS = [
@@ -619,7 +619,21 @@ export default function AIVideoPage() {
                           className="hf-tile min-w-[68px]"
                           data-active={style === m.id}
                           title={`${m.name} — ${m.sub}`}
+                          style={{ overflow: "hidden" }}
                         >
+                          {/* Aesthetic gradient stripe — each style gets a unique palette signature */}
+                          <span
+                            aria-hidden="true"
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              height: 4,
+                              background: m.preview,
+                              opacity: 0.85,
+                            }}
+                          />
                           <Icon size={15} strokeWidth={1.5} />
                           <div className="text-center leading-tight">
                             <p className="text-[10px] font-medium">{m.name}</p>
