@@ -78,3 +78,38 @@ export async function signOut(page: Page): Promise<void> {
 export async function expectDashboard(page: Page): Promise<void> {
   await expect(page).toHaveURL(/\/dashboard/, { timeout: 10_000 });
 }
+
+/**
+ * Alias for signIn — used by journey specs that import loginAs.
+ * Skips automatically when E2E credentials are not configured.
+ */
+export async function loginAs(page: Page): Promise<void> {
+  if (!hasTestCreds()) {
+    // Skip gracefully when no creds are configured rather than failing
+    console.warn("[auth] E2E_TEST_EMAIL / E2E_TEST_PASSWORD not set — skipping login");
+    return;
+  }
+  await signIn(page);
+}
+
+/**
+ * Dismisses the onboarding tour overlay and cookie consent banner
+ * if they are visible, so they don't block subsequent clicks.
+ * Safe to call even when neither overlay is present.
+ */
+export async function dismissTourIfPresent(page: Page): Promise<void> {
+  // Ensure localStorage flags are set so the overlays don't respawn
+  await page.evaluate(() => {
+    localStorage.setItem("tour_completed", "true");
+    localStorage.setItem("cookie-consent", "accepted");
+  }).catch(() => {});
+
+  // Try to click the tour dismiss button if the overlay is already showing
+  const dismissBtn = page
+    .getByRole("button", { name: /skip tour|dismiss|got it|close/i })
+    .first();
+  if (await dismissBtn.isVisible({ timeout: 800 }).catch(() => false)) {
+    await dismissBtn.click().catch(() => {});
+    await page.waitForTimeout(200);
+  }
+}
