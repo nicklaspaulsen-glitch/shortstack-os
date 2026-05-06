@@ -40,22 +40,126 @@ interface Props {
   height?: number;
 }
 
-const PROMPT_TEMPLATES: Array<{ label: string; prompt: string }> = [
+interface ThumbnailTemplate {
+  id: string;
+  label: string;
+  aspect: "16:9" | "9:16" | "1:1";
+  emoji: string;
+  /** Tailwind gradient applied to the card swatch */
+  gradient: string;
+  /** Text color on the swatch (must contrast with gradient) */
+  textColor: string;
+  prompt: string;
+}
+
+const THUMBNAIL_TEMPLATES: ThumbnailTemplate[] = [
   {
-    label: "YouTube tutorial",
-    prompt: "Bold, modern YouTube thumbnail. Person looking surprised, large gold text reading the headline, clean dark background, subtle gradient.",
+    id: "yt-drama",
+    label: "YouTube Drama",
+    aspect: "16:9",
+    emoji: "😱",
+    gradient: "from-red-700 to-orange-500",
+    textColor: "#fff",
+    prompt: "Bold YouTube thumbnail. Close-up shocked face, huge impactful bold red text, arrow pointing right, dark dramatic background with orange lighting.",
   },
   {
-    label: "Tech news",
-    prompt: "Tech news thumbnail. Sleek minimalist layout, neon accents, futuristic typography, central product render with soft rim light.",
+    id: "tiktok-challenge",
+    label: "TikTok Challenge",
+    aspect: "9:16",
+    emoji: "🕺",
+    gradient: "from-fuchsia-600 to-pink-400",
+    textColor: "#fff",
+    prompt: "Vertical TikTok thumbnail. Energetic pose mid-dance, neon pink and purple gradient background, bold lowercase sans-serif headline at top, confetti particles.",
   },
   {
-    label: "Lifestyle vlog",
-    prompt: "Warm lifestyle vlog thumbnail. Sunset palette, candid lifestyle photo, friendly serif headline, soft film grain.",
+    id: "podcast-cover",
+    label: "Podcast Cover",
+    aspect: "1:1",
+    emoji: "🎙️",
+    gradient: "from-slate-800 to-indigo-900",
+    textColor: "#c8a855",
+    prompt: "Square podcast cover art. Professional headshot on right, bold show name in serif font on left, deep navy background, subtle microphone graphic, clean minimal layout.",
   },
   {
-    label: "Course preview",
-    prompt: "Educational course preview. Clean modern design, instructor portrait on left, large bold value-prop text on right, dark navy background, gold highlights.",
+    id: "tech-tutorial",
+    label: "Tech Tutorial",
+    aspect: "16:9",
+    emoji: "💻",
+    gradient: "from-sky-600 to-cyan-400",
+    textColor: "#fff",
+    prompt: "Clean tech tutorial thumbnail. Dark code editor screenshot, bright cyan accent, bold how-to headline, laptop or monitor graphic, professional and modern.",
+  },
+  {
+    id: "fitness-motivation",
+    label: "Fitness Before/After",
+    aspect: "9:16",
+    emoji: "💪",
+    gradient: "from-emerald-600 to-lime-400",
+    textColor: "#0b0d12",
+    prompt: "Fitness transformation thumbnail. Split before-and-after portrait, bold green RESULTS text overlay, athletic background, high-contrast dramatic lighting.",
+  },
+  {
+    id: "recipe-reveal",
+    label: "Recipe Reveal",
+    aspect: "16:9",
+    emoji: "🍽️",
+    gradient: "from-amber-600 to-yellow-400",
+    textColor: "#0b0d12",
+    prompt: "Food recipe thumbnail. Extreme close-up of a finished dish with steam, warm golden bokeh background, handwritten-style font showing dish name, appetizing and vibrant.",
+  },
+  {
+    id: "travel-vlog",
+    label: "Travel Vlog",
+    aspect: "16:9",
+    emoji: "✈️",
+    gradient: "from-blue-500 to-teal-400",
+    textColor: "#fff",
+    prompt: "Cinematic travel thumbnail. Wide landscape aerial photo, vlogger silhouette in foreground, clean bold location name typography, golden-hour warm tones.",
+  },
+  {
+    id: "finance-tips",
+    label: "Finance Tips",
+    aspect: "16:9",
+    emoji: "💰",
+    gradient: "from-green-800 to-emerald-500",
+    textColor: "#c8a855",
+    prompt: "Finance / money thumbnail. Rising chart graphic, dollar bills or coins, bold MONEY headline, dark professional background, gold accents, authoritative clean layout.",
+  },
+  {
+    id: "gaming-highlight",
+    label: "Gaming Highlight",
+    aspect: "16:9",
+    emoji: "🎮",
+    gradient: "from-purple-700 to-pink-500",
+    textColor: "#fff",
+    prompt: "Gaming highlight thumbnail. Screenshot of intense game moment, neon purple and pink glow effects, player name and EPIC PLAY text, controller graphic, high-energy.",
+  },
+  {
+    id: "business-coaching",
+    label: "Business Coaching",
+    aspect: "16:9",
+    emoji: "🚀",
+    gradient: "from-slate-700 to-blue-600",
+    textColor: "#fff",
+    prompt: "Business coaching thumbnail. Professional headshot, confident pose, large bold value statement, clean white and navy layout, authority and trust signals, minimal.",
+  },
+  {
+    id: "music-release",
+    label: "Music Release",
+    aspect: "1:1",
+    emoji: "🎵",
+    gradient: "from-violet-700 to-fuchsia-500",
+    textColor: "#fff",
+    prompt: "Square music release cover. Abstract artistic background with light trails, artist silhouette, album title in large elegant typography, dark moody atmosphere.",
+  },
+  {
+    id: "real-estate",
+    label: "Real Estate Tour",
+    aspect: "16:9",
+    emoji: "🏡",
+    gradient: "from-orange-500 to-amber-300",
+    textColor: "#0b0d12",
+    prompt: "Real estate YouTube thumbnail. Beautiful exterior house photo at golden hour, bold price or location text overlay, realtor logo corner, professional and inviting.",
   },
 ];
 
@@ -70,11 +174,13 @@ export default function AiFirstStarter({
   const [options, setOptions] = useState<Array<{ url: string; idx: number }>>([]);
   const [pickedIdx, setPickedIdx] = useState<number | null>(null);
 
-  const generate = async () => {
-    if (!prompt.trim()) {
+  const generate = async (overridePrompt?: string) => {
+    const p = (overridePrompt ?? prompt).trim();
+    if (!p) {
       toast.error("Describe your thumbnail first");
       return;
     }
+    if (overridePrompt) setPrompt(overridePrompt);
     setBusy(true);
     setOptions([]);
     try {
@@ -82,10 +188,10 @@ export default function AiFirstStarter({
       // image-gen route. We add subtle prompt variation per call so the 4
       // options aren't identical.
       const variants = [
-        prompt,
-        `${prompt} — alternate angle, different lighting`,
-        `${prompt} — bolder typography, higher contrast`,
-        `${prompt} — minimal version, more whitespace`,
+        p,
+        `${p} — alternate angle, different lighting`,
+        `${p} — bolder typography, higher contrast`,
+        `${p} — minimal version, more whitespace`,
       ];
 
       const settled = await Promise.allSettled(
@@ -207,25 +313,34 @@ export default function AiFirstStarter({
           />
         </div>
 
-        {/* Quick templates */}
+        {/* Template library grid — 12 clickable visual cards */}
         {options.length === 0 && !busy && (
           <div className="mb-4">
             <p className="text-[10.5px] uppercase tracking-wider text-neutral-500 mb-2">
-              Or start from a template
+              Start from a template — click to generate instantly
             </p>
-            <div className="flex flex-wrap gap-1.5">
-              {PROMPT_TEMPLATES.map((t) => (
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5">
+              {THUMBNAIL_TEMPLATES.map((t) => (
                 <button
-                  key={t.label}
-                  onClick={() => setPrompt(t.prompt)}
-                  className="text-[11px] font-semibold px-3 py-1.5 rounded-md transition"
-                  style={{
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    color: "rgba(255,255,255,0.7)",
-                  }}
+                  key={t.id}
+                  onClick={() => generate(t.prompt)}
+                  className={`group relative rounded-lg overflow-hidden text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30`}
+                  style={{ border: "1px solid rgba(255,255,255,0.08)" }}
+                  title={t.prompt}
                 >
-                  {t.label}
+                  {/* Gradient swatch */}
+                  <div className={`h-8 bg-gradient-to-br ${t.gradient} flex items-center justify-center text-base`}>
+                    {t.emoji}
+                  </div>
+                  {/* Label + aspect */}
+                  <div className="px-1.5 py-1 bg-neutral-900/90">
+                    <p className="text-[9.5px] font-semibold text-neutral-200 truncate leading-tight">
+                      {t.label}
+                    </p>
+                    <p className="text-[8px] text-neutral-500 mt-0.5">{t.aspect}</p>
+                  </div>
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
               ))}
             </div>
@@ -235,7 +350,7 @@ export default function AiFirstStarter({
         {/* Generate button or option grid */}
         {options.length === 0 ? (
           <button
-            onClick={generate}
+            onClick={() => generate()}
             disabled={busy || !prompt.trim()}
             className="w-full py-3 rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center justify-center gap-2"
             style={{
