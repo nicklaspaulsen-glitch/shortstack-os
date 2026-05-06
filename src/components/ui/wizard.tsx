@@ -41,6 +41,7 @@
  */
 
 import React, { useEffect, useState, useCallback } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -351,33 +352,42 @@ export function Wizard({
         </div>
       )}
 
-      {/* Step header + body */}
-      <div className="px-4 md:px-8 py-6 min-h-[22rem]" key={current.id}>
-        <div className="max-w-3xl mx-auto wizard-step-enter">
-          <div className="flex items-start gap-3 mb-5">
-            {current.icon && (
-              <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-gold shrink-0">
-                {current.icon}
+      {/* Step header + body — AnimatePresence waits for exit before entering next */}
+      <div className="px-4 md:px-8 py-6 min-h-[22rem] overflow-hidden">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={current.id}
+            className="max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
+          >
+            <div className="flex items-start gap-3 mb-5">
+              {current.icon && (
+                <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-gold shrink-0">
+                  {current.icon}
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg md:text-xl font-bold text-foreground leading-tight">
+                  {current.title}
+                </h2>
+                {current.description && (
+                  <p className="text-xs md:text-sm text-muted mt-1 leading-relaxed">
+                    {current.description}
+                  </p>
+                )}
               </div>
-            )}
-            <div className="flex-1 min-w-0">
-              <h2 className="text-lg md:text-xl font-bold text-foreground leading-tight">
-                {current.title}
-              </h2>
-              {current.description && (
-                <p className="text-xs md:text-sm text-muted mt-1 leading-relaxed">
-                  {current.description}
-                </p>
+              {current.optional && (
+                <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light text-muted border border-border shrink-0 mt-1">
+                  Optional
+                </span>
               )}
             </div>
-            {current.optional && (
-              <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light text-muted border border-border shrink-0 mt-1">
-                Optional
-              </span>
-            )}
-          </div>
-          <div className="space-y-3">{current.component}</div>
-        </div>
+            <div className="space-y-3">{current.component}</div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Footer */}
@@ -450,22 +460,6 @@ export function Wizard({
         </button>
       </div>
 
-      {/* Animation keyframes — scoped to the step body */}
-      <style jsx>{`
-        .wizard-step-enter {
-          animation: wizard-slide 0.28s ease-out;
-        }
-        @keyframes wizard-slide {
-          from {
-            opacity: 0;
-            transform: translateX(8px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-      `}</style>
     </div>
   );
 }
