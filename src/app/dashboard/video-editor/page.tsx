@@ -3322,16 +3322,14 @@ export default function VideoEditorPage() {
           to   { transform: scaleY(1.0); }
         }
       `}</style>
-      {/* Minimal top bar — chrome fades into the background */}
-      <div className="flex items-center justify-between gap-4 px-1 pt-1">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold/20 to-amber-500/10 border border-gold/20 flex items-center justify-center text-gold shrink-0">
-            <Film size={16} />
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-base font-semibold tracking-tight truncate">Video Editor</h1>
-            <p className="text-[10px] text-muted truncate">AI writes the script, GPU renders the cuts</p>
-          </div>
+      {/* Higgsfield-style slim header */}
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809] -mx-4 sm:-mx-6 mb-4">
+        <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
+          <Film size={13} className="text-[#6366F1]" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Video Editor</h1>
+          <p className="text-[9px] text-[#6F6D7A]">AI writes the script · GPU renders the cuts</p>
         </div>
         <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
       </div>
