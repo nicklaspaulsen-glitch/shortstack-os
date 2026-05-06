@@ -1235,6 +1235,37 @@ export default function WebsitesPage() {
                       </p>
                     </div>
 
+                    {/* Status pipeline timeline */}
+                    {(() => {
+                      const STEPS = ["draft", "generating", "preview", "live"] as const;
+                      const stepIdx = STEPS.indexOf(status as typeof STEPS[number]);
+                      const currentIdx = stepIdx === -1 ? 0 : stepIdx;
+                      const stepColors = ["text-muted", "text-blue-400", "text-amber-400", "text-green-400"] as const;
+                      const activeColor = stepColors[currentIdx] || stepColors[0];
+                      return (
+                        <div className="flex items-center gap-0.5">
+                          {STEPS.map((step, i) => {
+                            const done = i < currentIdx;
+                            const active = i === currentIdx;
+                            return (
+                              <div key={step} className="flex items-center gap-0.5 flex-1">
+                                <div
+                                  className={`h-1 rounded-full flex-1 transition-all ${
+                                    done ? "bg-indigo-500/60" : active ? "bg-indigo-500/30" : "bg-white/8"
+                                  }`}
+                                />
+                                {i === STEPS.length - 1 && (
+                                  <span className={`text-[8px] shrink-0 ml-1 ${active ? activeColor : done ? "text-green-400" : "text-muted/40"}`}>
+                                    {STATUS_LABEL[status] || status}
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
+
                     {(p.preview_url || p.vercel_url || p.custom_domain) && (
                       <a
                         href={p.custom_domain ? `https://${p.custom_domain}` : (p.preview_url || p.vercel_url || "#")}
