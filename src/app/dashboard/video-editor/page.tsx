@@ -218,25 +218,25 @@ const MUSIC_MOODS: MoodOption[] = [
   { id: "none",         name: "No Music",        icon: VolumeX,    tint: "text-muted",      bg: "bg-surface-light" },
 ];
 
-const CAPTION_STYLES = [
-  { id: "none", name: "No Captions" },
-  { id: "bottom_bar", name: "Bottom Bar" },
-  { id: "word_highlight", name: "Word-by-Word Highlight" },
-  { id: "centered_bold", name: "Centered Bold" },
-  { id: "karaoke", name: "Karaoke Style" },
-  { id: "typewriter", name: "Typewriter Effect" },
-  { id: "bounce", name: "Bounce Animation" },
-  { id: "gradient_text", name: "Gradient Text" },
-  { id: "neon_glow", name: "Neon Glow Text" },
-  { id: "handwritten", name: "Handwritten Style" },
-  { id: "subtitle_bar", name: "Subtitle Bar (Netflix)" },
-  { id: "pop_in", name: "Pop-In Words" },
-  { id: "classic_white", name: "Classic White" },
-  { id: "bold_impact", name: "Bold Impact" },
-  { id: "karaoke_gold", name: "Karaoke Gold" },
-  { id: "subtitle_pro", name: "Subtitle Pro" },
-  { id: "tiktok_style", name: "TikTok Style" },
-  { id: "minimal_gray", name: "Minimal" },
+const CAPTION_STYLES: { id: string; name: string; previewBg: string; previewCss: React.CSSProperties }[] = [
+  { id: "none",           name: "No Captions",           previewBg: "#111", previewCss: { color: "rgba(255,255,255,0.25)", fontStyle: "italic", fontSize: 11 } },
+  { id: "bottom_bar",     name: "Bottom Bar",            previewBg: "#000", previewCss: { color: "#fff", background: "rgba(0,0,0,0.75)", padding: "1px 6px", fontSize: 11, fontWeight: 400 } },
+  { id: "word_highlight", name: "Word-by-Word",          previewBg: "#111", previewCss: { color: "#FFD700", fontWeight: 900, fontSize: 13, letterSpacing: 0 } },
+  { id: "centered_bold",  name: "Centered Bold",         previewBg: "#0a0a0a", previewCss: { color: "#fff", fontWeight: 900, fontSize: 14, textAlign: "center", textShadow: "0 2px 8px rgba(0,0,0,0.8)" } },
+  { id: "karaoke",        name: "Karaoke",               previewBg: "#0d0020", previewCss: { color: "#c084fc", fontWeight: 700, fontSize: 12, letterSpacing: 1 } },
+  { id: "typewriter",     name: "Typewriter",            previewBg: "#1a1a1a", previewCss: { color: "#d1fae5", fontFamily: "monospace", fontSize: 11, letterSpacing: 2 } },
+  { id: "bounce",         name: "Bounce",                previewBg: "#111827", previewCss: { color: "#fbbf24", fontWeight: 900, fontSize: 14, textShadow: "0 4px 0 rgba(0,0,0,0.4)" } },
+  { id: "gradient_text",  name: "Gradient Text",         previewBg: "#0a0a0a", previewCss: { background: "linear-gradient(90deg,#6366F1,#ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontWeight: 800, fontSize: 13 } },
+  { id: "neon_glow",      name: "Neon Glow",             previewBg: "#050505", previewCss: { color: "#67e8f9", fontWeight: 700, fontSize: 12, textShadow: "0 0 8px #67e8f9, 0 0 20px #22d3ee" } },
+  { id: "handwritten",    name: "Handwritten",           previewBg: "#1c1917", previewCss: { color: "#fef3c7", fontFamily: "cursive", fontSize: 13, fontStyle: "italic" } },
+  { id: "subtitle_bar",   name: "Netflix Style",         previewBg: "#000", previewCss: { color: "#fff", background: "rgba(0,0,0,0.85)", padding: "1px 8px", fontSize: 11, fontWeight: 500 } },
+  { id: "pop_in",         name: "Pop-In Words",          previewBg: "#111", previewCss: { color: "#fff", fontWeight: 900, fontSize: 15, letterSpacing: -0.5 } },
+  { id: "classic_white",  name: "Classic White",         previewBg: "#0a0a0a", previewCss: { color: "#ffffff", fontSize: 12, fontWeight: 400, textShadow: "1px 1px 3px rgba(0,0,0,0.9)" } },
+  { id: "bold_impact",    name: "Bold Impact",           previewBg: "#000", previewCss: { color: "#fff", fontWeight: 900, fontSize: 16, textTransform: "uppercase" as const, letterSpacing: -0.5 } },
+  { id: "karaoke_gold",   name: "Karaoke Gold",          previewBg: "#0a0800", previewCss: { color: "#fbbf24", fontWeight: 800, fontSize: 13, textShadow: "0 0 10px rgba(251,191,36,0.5)" } },
+  { id: "subtitle_pro",   name: "Subtitle Pro",          previewBg: "#0a0a0a", previewCss: { color: "#f5f5f5", fontSize: 11, fontWeight: 500, background: "rgba(10,10,10,0.7)", padding: "1px 6px", borderRadius: 2 } },
+  { id: "tiktok_style",   name: "TikTok Style",          previewBg: "#000", previewCss: { color: "#FFD700", fontWeight: 900, fontSize: 14, WebkitTextStroke: "1.5px #000", letterSpacing: -0.5 } },
+  { id: "minimal_gray",   name: "Minimal",               previewBg: "#111", previewCss: { color: "rgba(255,255,255,0.6)", fontSize: 11, fontWeight: 300, letterSpacing: 0.5 } },
 ];
 
 const MOTION_GRAPHICS = [
@@ -6499,10 +6499,23 @@ export default function VideoEditorPage() {
                   <div className="space-y-1">
                     {CAPTION_STYLES.map(c => (
                       <button key={c.id} onClick={() => setConfig({ ...config, caption_style: c.id })}
-                        className={`w-full text-left text-[10px] px-2.5 py-1.5 rounded-lg border transition-all ${
-                          config.caption_style === c.id ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted hover:text-foreground"
+                        className={`w-full text-left text-[10px] rounded-lg border transition-all flex items-center overflow-hidden ${
+                          config.caption_style === c.id
+                            ? "border-[rgba(99,102,241,0.30)] bg-[rgba(99,102,241,0.05)]"
+                            : "border-border hover:border-[rgba(99,102,241,0.15)]"
                         }`}>
-                        {c.name}
+                        {/* Mini CSS-only style preview */}
+                        <div
+                          className="flex-shrink-0 w-16 h-8 flex items-center justify-center select-none"
+                          style={{ background: c.previewBg }}
+                        >
+                          <span style={c.previewCss}>Abc</span>
+                        </div>
+                        <span className={`flex-1 px-2.5 py-1.5 ${
+                          config.caption_style === c.id ? "text-[#6366F1]" : "text-muted"
+                        }`}>
+                          {c.name}
+                        </span>
                       </button>
                     ))}
                   </div>
