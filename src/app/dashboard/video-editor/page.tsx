@@ -1437,6 +1437,8 @@ export default function VideoEditorPage() {
   const [guidedFootageSource, setGuidedFootageSource] = useState<"upload" | "record" | "ai">("upload");
   // Whether the "more video types" section is expanded in the wizard type step
   const [videoTypesExpanded, setVideoTypesExpanded] = useState(false);
+  // Whether the Director's Brief tip card is expanded on the topic step
+  const [briefTipOpen, setBriefTipOpen] = useState(false);
   const [config, setConfig] = useState({
     type: "reel",
     title: "",
@@ -3350,16 +3352,67 @@ export default function VideoEditorPage() {
               description: "A single sentence works. This becomes the script title and drives everything downstream.",
               icon: <Type size={18} />,
               canProceed: config.title.trim().length > 0,
-              component: (
-                <textarea
-                  value={config.title}
-                  onChange={e => setConfig(prev => ({ ...prev, title: e.target.value, script: e.target.value }))}
-                  placeholder="e.g., 30-second hook for my new course launch"
-                  rows={3}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
-                  autoFocus
-                />
-              ),
+              component: (() => (
+                <div className="space-y-3">
+                  <textarea
+                    value={config.title}
+                    onChange={e => setConfig(prev => ({ ...prev, title: e.target.value, script: e.target.value }))}
+                    placeholder="e.g., 30-second hook for my new course launch"
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+                    autoFocus
+                  />
+                  {/* Director's Brief tip card */}
+                  <div className="rounded-xl border border-border/50 overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setBriefTipOpen(v => !v)}
+                      className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-surface-light transition-colors cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2 text-[11px] text-muted">
+                        <span className="text-[13px]">🎬</span>
+                        <span>What makes a great brief?</span>
+                      </span>
+                      <ChevronDown
+                        size={12}
+                        className={`text-muted/60 transition-transform duration-200 ${briefTipOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {briefTipOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-4 pb-3 pt-1 border-t border-border/40">
+                            <p className="text-[11px] text-muted mb-2.5">The best briefs combine these four ingredients:</p>
+                            <div className="grid grid-cols-2 gap-1.5">
+                              {[
+                                { icon: "👤", label: "Subject", hint: "who or what" },
+                                { icon: "⚡", label: "Action", hint: "what it does" },
+                                { icon: "💡", label: "Lighting", hint: "mood & tone" },
+                                { icon: "🎯", label: "Hook", hint: "opening moment" },
+                              ].map(item => (
+                                <div key={item.label} className="flex items-start gap-2 px-2.5 py-2 rounded-lg bg-surface-light/60">
+                                  <span className="text-[11px] leading-none mt-0.5">{item.icon}</span>
+                                  <div>
+                                    <p className="text-[11px] font-semibold text-text-primary">{item.label}</p>
+                                    <p className="text-[10px] text-muted">{item.hint}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            <p className="text-[10px] text-muted/70 mt-2.5 italic">Example: "Drone over golden wheat fields at golden hour revealing a farmhouse, cinematic push-in, hopeful mood"</p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+              ))(),
             },
             {
               id: "footage",
