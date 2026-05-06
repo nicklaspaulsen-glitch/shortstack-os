@@ -990,10 +990,54 @@ export default function WebsitesPage() {
                   <TrendingUp size={9} /> {t.cvr}
                 </span>
 
-                {/* Bottom overlay content */}
-                <div className="absolute bottom-0 left-0 right-0 p-3">
+                {/* Bottom overlay content — hidden when wireframe preview is shown */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 transition-opacity duration-200 group-hover:opacity-0">
                   <p className="text-[13px] font-bold text-white drop-shadow-sm">{t.name}</p>
                   <p className="text-[10px] text-white/80 mt-0.5 line-clamp-2">{t.tagline}</p>
+                </div>
+
+                {/* Wireframe mini-preview — slides up from bottom on hover */}
+                <div className="absolute inset-x-0 bottom-0 h-[72%] translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out pointer-events-none">
+                  <div className="absolute inset-0 bg-black/88 backdrop-blur-sm" />
+                  <div className="relative h-full flex flex-col p-2.5 gap-2">
+                    {/* Mini wireframe sketch */}
+                    <div className="flex-1 rounded-lg border border-white/10 overflow-hidden flex flex-col gap-1 p-1.5 bg-white/[0.03]">
+                      {/* Nav bar */}
+                      <div className="flex items-center gap-1 pb-1 border-b border-white/8">
+                        <div className="h-1.5 w-6 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.9 }} />
+                        <div className="flex-1" />
+                        {[...Array(3)].map((_, i) => (
+                          <div key={i} className="h-1 w-3 rounded-full bg-white/20" />
+                        ))}
+                      </div>
+                      {/* Hero block */}
+                      <div className="h-5 rounded flex items-center justify-center" style={{ backgroundColor: `${t.preset.brand_primary}22` }}>
+                        <div className="h-1 w-10 rounded-full" style={{ backgroundColor: `${t.preset.brand_primary}99` }} />
+                      </div>
+                      {/* Feature row */}
+                      <div className="flex gap-1">
+                        {[...Array(3)].map((_, i) => (
+                          <div key={i} className="flex-1 h-3 rounded bg-white/[0.06] border border-white/5" />
+                        ))}
+                      </div>
+                      {/* CTA strip */}
+                      <div className="flex items-center justify-center gap-1">
+                        <div className="h-2.5 w-10 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.85 }} />
+                        <div className="h-2.5 w-6 rounded-full bg-white/15" />
+                      </div>
+                    </div>
+                    {/* Section chips */}
+                    <div className="flex flex-wrap gap-1 shrink-0">
+                      {t.preset.sections.slice(0, 5).map((s) => (
+                        <span
+                          key={s}
+                          className="text-[8px] px-1.5 py-0.5 rounded-full bg-white/[0.08] text-white/60 border border-white/10 capitalize"
+                        >
+                          {s.replace(/_/g, " ")}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
