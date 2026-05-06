@@ -741,13 +741,22 @@ export default function AIVideoPage() {
               <p className="text-sm font-light">Your generations will appear here.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            <motion.div
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
+              initial="hidden"
+              animate="visible"
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.06 } } }}
+            >
               {results.map(result => {
                 const isVertical = result.aspect_ratio === "9:16";
                 const isSquare = result.aspect_ratio === "1:1";
                 const aspectClass = isVertical ? "aspect-[9/16]" : isSquare ? "aspect-square" : "aspect-video";
                 return (
-                  <div key={result.id} className={`hf-thumb ${aspectClass} group`}>
+                  <motion.div
+                    key={result.id}
+                    className={`hf-thumb ${aspectClass} group`}
+                    variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } } }}
+                  >
                     {result.url ? (
                       <SafeThumb
                         src={result.url}
@@ -851,10 +860,10 @@ export default function AIVideoPage() {
                         <pre className="whitespace-pre-wrap font-sans leading-snug mt-1.5">{result.plan}</pre>
                       </details>
                     )}
-                  </div>
+                  </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
           )}
         </>
       )}
