@@ -1030,28 +1030,25 @@ export default function Sidebar() {
                   const hubHref = SECTION_HUB_HREF[group.section!];
                   const hubActive = hubHref ? pathname === hubHref : false;
                   if (hubHref) {
-                    // Hub-bearing section: label is a clickable Link that
-                    // routes to /dashboard/<section>. Editorial Bodoni Moda
-                    // italic treatment with a tiny arrow makes it visibly
-                    // distinct as both a label AND a navigable hub link.
+                    // Hub-bearing section: pill badge that's also a clickable
+                    // Link routing to /dashboard/<section>.
                     return (
-                      <div className="w-full flex items-center gap-1.5 px-3 pt-2.5 pb-1 group/sec">
+                      <div className="w-full flex items-center justify-between gap-1.5 px-2.5 pt-2.5 pb-1 group/sec">
                         <Link
                           href={hubHref}
-                          className={`group/hub flex items-center gap-1 rounded px-1 py-0.5 font-editorial text-[11px] uppercase tracking-[0.18em] transition-colors duration-220 ease-out-expo-foundation ${
-                            hubActive
-                              ? "text-brand-lime bg-[rgba(94,91,255,0.08)]"
-                              : "text-text-muted hover:text-brand-lime hover:bg-[rgba(94,91,255,0.04)]"
-                          }`}
                           title={`Open ${group.section} hub →`}
+                          className={`group/hub inline-flex items-center gap-0.5 text-[9px] font-semibold px-2 py-[3px] rounded-full border transition-all duration-220 ease-out-expo-foundation ${
+                            hubActive
+                              ? "bg-[rgba(99,102,241,0.18)] border-[rgba(99,102,241,0.35)] text-brand-accent"
+                              : "bg-[rgba(99,102,241,0.07)] border-border-subtle text-text-muted hover:bg-[rgba(99,102,241,0.14)] hover:border-[rgba(99,102,241,0.25)] hover:text-text-primary"
+                          }`}
                         >
-                          <span>{group.section}</span>
+                          {group.section}
                           <ArrowUpRight
-                            size={9}
-                            className="opacity-60 transition-all duration-220 ease-out-expo-foundation group-hover/hub:opacity-100 group-hover/hub:-translate-y-0.5 group-hover/hub:translate-x-0.5"
+                            size={7}
+                            className="opacity-60 transition-transform duration-220 group-hover/hub:opacity-100 group-hover/hub:-translate-y-px group-hover/hub:translate-x-px"
                           />
                         </Link>
-                        <div className="flex-1 h-px bg-border-subtle" />
                         <button
                           type="button"
                           onClick={() => toggleSection(group.section!)}
@@ -1069,12 +1066,11 @@ export default function Sidebar() {
                   return (
                     <button
                       onClick={() => toggleSection(group.section!)}
-                      className="w-full flex items-center gap-2 px-3 pt-2.5 pb-1 group/sec cursor-pointer"
+                      className="w-full flex items-center justify-between gap-1.5 px-2.5 pt-2.5 pb-1 group/sec cursor-pointer"
                     >
-                      <span className="font-editorial text-[11px] text-text-muted uppercase tracking-[0.18em] group-hover/sec:text-text-primary transition-colors duration-220">
+                      <span className="inline-flex items-center text-[9px] font-semibold px-2 py-[3px] rounded-full border border-border-subtle bg-[rgba(99,102,241,0.07)] text-text-muted group-hover/sec:bg-[rgba(99,102,241,0.12)] group-hover/sec:text-text-primary group-hover/sec:border-[rgba(99,102,241,0.2)] transition-all duration-220">
                         {group.section}
                       </span>
-                      <div className="flex-1 h-px bg-border-subtle" />
                       <ChevronDown
                         size={10}
                         className={`text-text-muted group-hover/sec:text-text-primary transition-transform duration-220 ${expanded ? "" : "-rotate-90"}`}
