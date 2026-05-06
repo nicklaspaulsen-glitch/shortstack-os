@@ -26,6 +26,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
   Play,
@@ -485,83 +486,93 @@ export function PresetPickerPanel({
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-2">
-        {tab === "sfx" && (
-          <SfxTab
-            query={query}
-            filter={filter}
-            setFilter={setFilter}
-            favs={favs}
-            onToggleFav={(id) => toggleFav("sfx", id)}
-            onDrop={(id, sfx) => fireDropWithRecent("sfx", id, { url: sfx.url, duration_ms: sfx.duration_ms, name: sfx.name, category: sfx.category })}
-            startDrag={(id, sfx) => startDrag("sfx", id, { url: sfx.url, duration_ms: sfx.duration_ms, name: sfx.name, category: sfx.category })}
-          />
-        )}
-        {tab === "music" && (
-          <MusicTab
-            query={query}
-            filter={filter}
-            setFilter={setFilter}
-            favs={favs}
-            onToggleFav={(id) => toggleFav("music", id)}
-            onDrop={(id, t) => fireDropWithRecent("music", id, { url: t.url, bpm: t.bpm, mood: t.mood, genre: t.genre, duration_sec: t.duration_sec, title: t.title })}
-            startDrag={(id, t) => startDrag("music", id, { url: t.url, bpm: t.bpm, mood: t.mood, genre: t.genre, duration_sec: t.duration_sec, title: t.title })}
-          />
-        )}
-        {tab === "vfx" && (
-          <VfxTab
-            query={query}
-            filter={filter}
-            setFilter={setFilter}
-            favs={favs}
-            onToggleFav={(id) => toggleFav("vfx", id)}
-            onDrop={(id, fx) => fireDropWithRecent("vfx", id, { name: fx.name, category: fx.category })}
-            startDrag={(id, fx) => startDrag("vfx", id, { name: fx.name, category: fx.category })}
-          />
-        )}
-        {tab === "transition" && (
-          <TransitionTab
-            query={query}
-            filter={filter}
-            setFilter={setFilter}
-            favs={favs}
-            onToggleFav={(id) => toggleFav("transition", id)}
-            onDrop={(id, t) => fireDropWithRecent("transition", id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
-            startDrag={(id, t) => startDrag("transition", id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
-          />
-        )}
-        {tab === "broll" && (
-          <BrollTab
-            query={query}
-            filter={filter}
-            setFilter={setFilter}
-            candidates={brollCandidates && brollCandidates.length > 0 ? brollCandidates : FALLBACK_BROLL}
-            favs={favs}
-            onToggleFav={(id) => toggleFav("broll", id)}
-            onDrop={(id, c) => fireDropWithRecent("broll", id, { preview_url: c.preview_url, thumbnail_url: c.thumbnail_url, label: c.label, duration_sec: c.duration_sec })}
-            startDrag={(id, c) => startDrag("broll", id, { preview_url: c.preview_url, thumbnail_url: c.thumbnail_url, label: c.label, duration_sec: c.duration_sec })}
-          />
-        )}
-        {tab === "font" && (
-          <FontTab
-            query={query}
-            filter={filter}
-            setFilter={setFilter}
-            favs={favs}
-            onToggleFav={(id) => toggleFav("font", id)}
-            onApply={(font) => onApplyFont?.(font)}
-            startDrag={(id, f) => startDrag("font", id, { family: f.family, url: f.url })}
-          />
-        )}
-        {tab === "fav" && (
-          <FavouritesTab
-            query={query}
-            favs={favs}
-            onToggleFav={toggleFav}
-            onDrop={fireDrop}
-            onApplyFont={onApplyFont}
-            startDrag={startDrag}
-          />
-        )}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={tab}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {tab === "sfx" && (
+              <SfxTab
+                query={query}
+                filter={filter}
+                setFilter={setFilter}
+                favs={favs}
+                onToggleFav={(id) => toggleFav("sfx", id)}
+                onDrop={(id, sfx) => fireDropWithRecent("sfx", id, { url: sfx.url, duration_ms: sfx.duration_ms, name: sfx.name, category: sfx.category })}
+                startDrag={(id, sfx) => startDrag("sfx", id, { url: sfx.url, duration_ms: sfx.duration_ms, name: sfx.name, category: sfx.category })}
+              />
+            )}
+            {tab === "music" && (
+              <MusicTab
+                query={query}
+                filter={filter}
+                setFilter={setFilter}
+                favs={favs}
+                onToggleFav={(id) => toggleFav("music", id)}
+                onDrop={(id, t) => fireDropWithRecent("music", id, { url: t.url, bpm: t.bpm, mood: t.mood, genre: t.genre, duration_sec: t.duration_sec, title: t.title })}
+                startDrag={(id, t) => startDrag("music", id, { url: t.url, bpm: t.bpm, mood: t.mood, genre: t.genre, duration_sec: t.duration_sec, title: t.title })}
+              />
+            )}
+            {tab === "vfx" && (
+              <VfxTab
+                query={query}
+                filter={filter}
+                setFilter={setFilter}
+                favs={favs}
+                onToggleFav={(id) => toggleFav("vfx", id)}
+                onDrop={(id, fx) => fireDropWithRecent("vfx", id, { name: fx.name, category: fx.category })}
+                startDrag={(id, fx) => startDrag("vfx", id, { name: fx.name, category: fx.category })}
+              />
+            )}
+            {tab === "transition" && (
+              <TransitionTab
+                query={query}
+                filter={filter}
+                setFilter={setFilter}
+                favs={favs}
+                onToggleFav={(id) => toggleFav("transition", id)}
+                onDrop={(id, t) => fireDropWithRecent("transition", id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
+                startDrag={(id, t) => startDrag("transition", id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
+              />
+            )}
+            {tab === "broll" && (
+              <BrollTab
+                query={query}
+                filter={filter}
+                setFilter={setFilter}
+                candidates={brollCandidates && brollCandidates.length > 0 ? brollCandidates : FALLBACK_BROLL}
+                favs={favs}
+                onToggleFav={(id) => toggleFav("broll", id)}
+                onDrop={(id, c) => fireDropWithRecent("broll", id, { preview_url: c.preview_url, thumbnail_url: c.thumbnail_url, label: c.label, duration_sec: c.duration_sec })}
+                startDrag={(id, c) => startDrag("broll", id, { preview_url: c.preview_url, thumbnail_url: c.thumbnail_url, label: c.label, duration_sec: c.duration_sec })}
+              />
+            )}
+            {tab === "font" && (
+              <FontTab
+                query={query}
+                filter={filter}
+                setFilter={setFilter}
+                favs={favs}
+                onToggleFav={(id) => toggleFav("font", id)}
+                onApply={(font) => onApplyFont?.(font)}
+                startDrag={(id, f) => startDrag("font", id, { family: f.family, url: f.url })}
+              />
+            )}
+            {tab === "fav" && (
+              <FavouritesTab
+                query={query}
+                favs={favs}
+                onToggleFav={toggleFav}
+                onDrop={fireDrop}
+                onApplyFont={onApplyFont}
+                startDrag={startDrag}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Footer hint */}
@@ -599,18 +610,31 @@ function TabBtn({
     <button
       type="button"
       onClick={() => onSelect(id)}
-      className={`flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition ${
+      className={`relative flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors ${
         active
-          ? "bg-gold/20 text-gold"
+          ? highlight ? "text-gold" : "text-[#6366F1]"
           : highlight
             ? "text-gold/70 hover:bg-surface-light hover:text-gold"
             : "text-muted hover:bg-surface-light hover:text-foreground"
       }`}
       aria-pressed={active}
     >
-      {icon}
-      <span>{label}</span>
-      <span className="text-[8px] bg-surface-light rounded px-1">{count}</span>
+      {active && (
+        <motion.span
+          layoutId="preset-tab-indicator"
+          className={`absolute inset-0 rounded ${
+            highlight
+              ? "bg-[rgba(212,160,23,0.12)] border border-[rgba(212,160,23,0.25)]"
+              : "bg-[rgba(99,102,241,0.12)] border border-[rgba(99,102,241,0.22)]"
+          }`}
+          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+        />
+      )}
+      <span className="relative flex items-center gap-1">
+        {icon}
+        <span>{label}</span>
+        <span className="text-[8px] bg-surface-light rounded px-1">{count}</span>
+      </span>
     </button>
   );
 }
