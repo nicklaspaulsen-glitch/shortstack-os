@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -631,6 +632,33 @@ export default function AIVideoPage() {
               </button>
             </div>
           </div>
+
+          {/* Full-width progress bar — only visible during generation */}
+          <AnimatePresence>
+            {generating && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
+                className="overflow-hidden"
+              >
+                <div className="space-y-2 py-1">
+                  <div className="flex items-center justify-between text-[10px] text-white/45">
+                    <span>Estimated 45–90 seconds · Frame {Math.round((progress / 100) * numFrames)}/{numFrames}</span>
+                    <span>{Math.round(progress)}%</span>
+                  </div>
+                  <div className="h-1 rounded-full bg-white/8 overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full bg-gradient-to-r from-[#6366F1] to-[#A78BFA]"
+                      animate={{ width: `${progress}%` }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Advanced settings — collapsed by default, hover/click to expand */}
           <div>
