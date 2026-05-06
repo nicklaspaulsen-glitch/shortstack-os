@@ -43,12 +43,12 @@ const PROMPT_CATEGORIES = [
     prompt: "Product showcase: sleek smartphone rotating on a dark reflective surface, studio lighting, dramatic shadows, 4K cinematic close-up revealing every detail",
   },
   {
-    label: "Cinematic",
+    label: "Cinematic landscape",
     icon: "🎬",
     prompt: "Drone flying low over golden wheat fields at magic hour, long shadows stretching across the land, slow push-in revealing a farmhouse in the distance, 4K wide angle",
   },
   {
-    label: "Abstract",
+    label: "Abstract art",
     icon: "🎨",
     prompt: "Abstract liquid metal morphing into geometric shapes, iridescent surface, slow motion, dark void background, ultra high definition macro lens",
   },
@@ -532,18 +532,9 @@ export default function AIVideoPage() {
         <>
           {/* HERO — huge prompt, dominant generate CTA, minimal chrome */}
           <div className="hf-canvas rounded-3xl p-8 sm:p-10 relative overflow-hidden">
-            {/* Prompt textarea — the real star */}
-            <textarea
-              value={prompt}
-              onChange={e => setPrompt(e.target.value)}
-              placeholder="Describe your scene..."
-              className="hf-prompt"
-              autoFocus
-            />
-
-            {/* Category chips — labeled, instant-read, fill a strong prompt */}
+            {/* Category chips — above textarea, disappear once user starts typing */}
             {!prompt && (
-              <div className="mt-4 flex flex-wrap gap-1.5">
+              <div className="mb-3 flex flex-wrap gap-1.5">
                 {PROMPT_CATEGORIES.map((cat) => (
                   <button
                     key={cat.label}
@@ -557,6 +548,15 @@ export default function AIVideoPage() {
                 ))}
               </div>
             )}
+
+            {/* Prompt textarea — the real star */}
+            <textarea
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+              placeholder="Describe your scene..."
+              className="hf-prompt"
+              autoFocus
+            />
 
             {/* Bottom rail — model picker + aspect picker + generate button */}
             <div className="mt-7 flex items-end justify-between flex-wrap gap-5">
