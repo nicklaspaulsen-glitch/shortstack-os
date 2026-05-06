@@ -28,6 +28,7 @@ import {
   Activity, Lock,
   type LucideIcon,
 } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
@@ -1434,6 +1435,8 @@ export default function VideoEditorPage() {
   const [advancedMode, setAdvancedMode] = useAdvancedMode("video-editor");
   const [guidedStep, setGuidedStep] = useState(0);
   const [guidedFootageSource, setGuidedFootageSource] = useState<"upload" | "record" | "ai">("upload");
+  // Whether the "more video types" section is expanded in the wizard type step
+  const [videoTypesExpanded, setVideoTypesExpanded] = useState(false);
   const [config, setConfig] = useState({
     type: "reel",
     title: "",
@@ -3282,30 +3285,64 @@ export default function VideoEditorPage() {
               title: "What kind of video?",
               description: "This sets the aspect ratio and default length.",
               icon: <Film size={18} />,
-              component: (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-                  {VIDEO_TYPES.slice(0, 4).map(vt => {
-                    const selected = config.type === vt.id;
-                    return (
-                      <button
-                        key={vt.id}
-                        onClick={() => setConfig(prev => ({ ...prev, type: vt.id, aspect_ratio: vt.aspect, duration: vt.duration }))}
-                        className={`text-left p-4 rounded-xl border transition-all ${
-                          selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
-                        }`}
-                      >
-                        <div className={`w-full rounded-lg mb-2 bg-gradient-to-br from-gold/30 to-amber-400/20 flex items-center justify-center ${
-                          vt.aspect === "9:16" ? "h-20" : vt.aspect === "1:1" ? "h-16" : "h-14"
-                        }`}>
-                          <span className="text-gold">{vt.icon}</span>
-                        </div>
-                        <p className="text-xs font-bold">{vt.name}</p>
-                        <p className="text-[10px] text-muted">{vt.aspect} · ~{vt.duration}s</p>
-                      </button>
-                    );
-                  })}
-                </div>
-              ),
+              component: (() => {
+                const PRIMARY = VIDEO_TYPES.slice(0, 5);
+                const EXTRA = VIDEO_TYPES.slice(5);
+                const TypeCard = ({ vt }: { vt: typeof VIDEO_TYPES[0] }) => {
+                  const selected = config.type === vt.id;
+                  return (
+                    <button
+                      key={vt.id}
+                      type="button"
+                      onClick={() => setConfig(prev => ({ ...prev, type: vt.id, aspect_ratio: vt.aspect, duration: vt.duration }))}
+                      className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
+                        selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
+                      }`}
+                    >
+                      <div className={`w-full rounded-lg mb-2 bg-gradient-to-br from-gold/30 to-amber-400/20 flex items-center justify-center ${
+                        vt.aspect === "9:16" ? "h-20" : vt.aspect === "1:1" ? "h-16" : "h-14"
+                      }`}>
+                        <span className="text-gold">{vt.icon}</span>
+                      </div>
+                      <p className="text-xs font-bold">{vt.name}</p>
+                      <p className="text-[10px] text-muted">{vt.aspect} · ~{vt.duration}s</p>
+                    </button>
+                  );
+                };
+                return (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+                      {PRIMARY.map(vt => <TypeCard key={vt.id} vt={vt} />)}
+                    </div>
+                    <AnimatePresence>
+                      {videoTypesExpanded && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5 pt-1">
+                            {EXTRA.map(vt => <TypeCard key={vt.id} vt={vt} />)}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    <button
+                      type="button"
+                      onClick={() => setVideoTypesExpanded(v => !v)}
+                      className="flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground transition-colors cursor-pointer"
+                    >
+                      <ChevronDown
+                        size={12}
+                        className={`transition-transform duration-200 ${videoTypesExpanded ? "rotate-180" : ""}`}
+                      />
+                      {videoTypesExpanded ? "Show less" : `+${EXTRA.length} more types`}
+                    </button>
+                  </div>
+                );
+              })(),
             },
             {
               id: "topic",
