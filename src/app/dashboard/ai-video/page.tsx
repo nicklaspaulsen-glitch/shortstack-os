@@ -77,6 +77,28 @@ const ASPECTS = [
   { id: "1:1", label: "Square", w: 48, h: 48 },
 ];
 
+/** CSS device silhouettes for the aspect ratio picker — phone / monitor / square. */
+const DEVICE_FRAMES: Record<string, JSX.Element> = {
+  "9:16": (
+    <svg width="14" height="22" viewBox="0 0 14 22" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="0.65" y="0.65" width="12.7" height="20.7" rx="2.5" />
+      <line x1="4.5" y1="19.5" x2="9.5" y2="19.5" />
+    </svg>
+  ),
+  "16:9": (
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="0.65" y="0.65" width="20.7" height="13.7" rx="1.5" />
+      <line x1="9" y1="14.35" x2="13" y2="14.35" />
+      <line x1="7" y1="15.35" x2="15" y2="15.35" />
+    </svg>
+  ),
+  "1:1": (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="0.65" y="0.65" width="16.7" height="16.7" rx="3" />
+    </svg>
+  ),
+};
+
 interface GenerationResult {
   id: string;
   prompt: string;
@@ -598,14 +620,10 @@ export default function AIVideoPage() {
                         data-active={aspectRatio === ar.id}
                         title={`${ar.id} ${ar.label}`}
                       >
-                        <div
-                          className="hf-aspect-frame flex items-center justify-center"
-                          style={{
-                            width: Math.min(ar.w, 28),
-                            height: Math.min(ar.h, 28),
-                          }}
-                        />
-                        <p className="text-[10px] font-medium">{ar.id}</p>
+                        <div className="flex items-center justify-center h-6 w-6">
+                          {DEVICE_FRAMES[ar.id]}
+                        </div>
+                        <p className="text-[10px] font-medium">{ar.label}</p>
                       </button>
                     ))}
                   </div>
