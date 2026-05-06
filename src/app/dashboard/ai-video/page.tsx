@@ -83,6 +83,7 @@ interface GenerationResult {
   status: "generating" | "completed" | "failed" | "plan";
   url?: string;
   plan?: string;
+  error?: string;
   aspect_ratio: string;
   style?: string;
   created_at: string;
@@ -440,11 +441,10 @@ export default function AIVideoPage() {
 
       const data = await res.json();
       if (res.status === 402) {
-        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
-        toast.error(
-          data.error ||
-            `Plan limit hit (${data.plan_tier}: ${data.current}/${data.limit}). Upgrade to continue.`,
-        );
+        const errMsg = data.error ||
+          `Plan limit hit (${data.plan_tier}: ${data.current}/${data.limit}). Upgrade to continue.`;
+        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed", error: errMsg } : r));
+        toast.error(errMsg);
       } else if (data.success && data.url) {
         setResults(prev => prev.map(r => r.id === id ? { ...r, status: "completed", url: data.url } : r));
         toast.success("Video generated");
@@ -452,16 +452,16 @@ export default function AIVideoPage() {
         setResults(prev => prev.map(r => r.id === id ? { ...r, status: "plan", plan: data.plan } : r));
         toast.success("Video plan created");
       } else {
-        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
         const attemptedMsg = Array.isArray(data.attempted) && data.attempted.length > 0
           ? `Video render failed. Tried: ${data.attempted.join(", ")}`
           : (data.error || "Generation failed");
+        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed", error: attemptedMsg } : r));
         toast.error(attemptedMsg);
       }
     } catch (err) {
       console.error("[ai-video] generateVideo error:", err);
       clearInterval(progressInterval);
-      setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
+      setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed", error: "Connection error" } : r));
       toast.error("Connection error");
     }
     setGenerating(false);
@@ -761,9 +761,24 @@ export default function AIVideoPage() {
                           </div>
                         )}
                         {result.status === "failed" && (
-                          <div className="text-center px-3 text-red-300/70">
-                            <AlertCircle size={16} className="mx-auto mb-1.5" />
+                          <div className="flex flex-col items-center gap-2 px-3 text-red-300/70 group/fail">
+                            <AlertCircle size={16} />
                             <p className="text-[10px] font-light">Failed</p>
+                            {result.error && (
+                              <p className="text-[9px] text-center text-red-300/50 line-clamp-3 opacity-0 group-hover/fail:opacity-100 transition-opacity duration-150">
+                                {result.error}
+                              </p>
+                            )}
+                            <button
+                              onClick={() => {
+                                setPrompt(result.prompt);
+                                setAspectRatio(result.aspect_ratio);
+                                window.scrollTo({ top: 0, behavior: "smooth" });
+                              }}
+                              className="text-[9px] px-2 py-0.5 rounded-full bg-red-400/10 text-red-300/70 hover:bg-red-400/20 hover:text-red-200 transition-all opacity-0 group-hover/fail:opacity-100"
+                            >
+                              Retry
+                            </button>
                           </div>
                         )}
                       </div>
@@ -850,7 +865,9 @@ export default function AIVideoPage() {
                       </span>
                     )}
                     {result.status === "failed" && (
-                      <span className="text-[8px] text-danger">Failed</span>
+                      <span className="text-[8px] text-danger flex items-center gap-1" title={result.error}>
+                        <AlertCircle size={8} /> Failed{result.error ? ` — ${result.error.slice(0, 40)}` : ""}
+                      </span>
                     )}
                   </div>
                 </div>
