@@ -155,112 +155,48 @@ export default function AIStudioPage() {
   return (
     <MotionPage className="p-0">
 
-      {/* ── HERO ZONE ─────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden border-b border-[rgba(255,255,255,0.04)]">
-        {/* Ambient rolling preview — ghost-opacity backdrop */}
-        <div className="absolute inset-0 z-0 pointer-events-none" style={{ opacity: 0.07 }}>
-          <RollingPreview
-            items={AI_STUDIO_PREVIEW_FALLBACK}
-            rows={2}
-            aspectRatio="16:9"
-            opacity={1}
-            speed="slow"
-          />
+      {/* ── SLIM HEADER — Higgsfield-style compact chrome ─────────── */}
+      {/* Single-line bar: icon + title + stat chips + controls. No hero, no scroll. */}
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809]">
+        <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
+          <Layers size={13} className="text-[#6366F1]" />
         </div>
-        {/* Radial vignette so text is always readable */}
-        <div
-          className="absolute inset-0 z-10 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 80% 100% at 50% 50%, transparent 10%, #0A0A0B 75%)" }}
-        />
-        {/* Hero content */}
-        <div className="relative z-20 px-6 pt-10 pb-8 max-w-7xl mx-auto">
-          <div className="flex items-start justify-between gap-6">
-            {/* Headline */}
-            <div>
-              <p className="text-[9px] uppercase tracking-[0.24em] text-[#6366F1] font-semibold mb-3">
-                Creative Suite
-              </p>
-              <h1
-                className="font-display font-bold text-[#F5F4F1] tracking-[-0.04em] leading-none mb-3"
-                style={{ fontSize: "clamp(36px,5vw,58px)" }}
-              >
-                AI Studio
-              </h1>
-              <p className="text-sm text-[#9F9DAA] max-w-[280px] leading-relaxed">
-                9 tools. Generate images, transcribe audio,
-                clone voices — all under one roof.
-              </p>
-            </div>
-            {/* Controls */}
-            <div className="flex items-center gap-2 flex-shrink-0 pt-1">
-              <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-              {advancedMode && (
-                <button
-                  onClick={() => {
-                    setActiveTool("image-gen");
-                    setCreationWizardOpen(true);
-                  }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-bold shadow-lg shadow-[rgba(99,102,241,0.15)] hover:brightness-105 transition-all"
-                >
-                  <Sparkles size={12} />
-                  New with AI
-                </button>
-              )}
-              <span className="text-[9px] text-[#6F6D7A] bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.06)] px-2 py-1 rounded-md">
-                9 tools
-              </span>
-            </div>
-          </div>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">AI Studio</h1>
+          <p className="text-[9px] text-[#6F6D7A]">Creative Suite · 9 tools</p>
         </div>
-        {/* Bottom lime hairline */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#6366F1]/18 to-transparent" />
-      </div>
-
-      {/* ── SCORECARD STRIP ─────────────────────────────────────── */}
-      <motion.div
-        className="grid grid-cols-3 divide-x divide-[rgba(99,102,241,0.08)] border-b border-[rgba(99,102,241,0.08)] bg-[rgba(99,102,241,0.02)]"
-        initial="hidden"
-        animate="visible"
-        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
-      >
-        {[
-          {
-            label: "Session runs",
-            value: history.length.toString(),
-            sub: `${history.filter(j => j.status === "completed").length} completed`,
-            color: "#6366F1",
-          },
-          {
-            label: "Active tool",
-            value: TOOLS.find(t => t.id === activeTool)?.name ?? "—",
-            sub: TOOLS.find(t => t.id === activeTool)?.tag ?? "",
-            color: "#F5F4F1",
-          },
-          {
-            label: "Tools available",
-            value: "9",
-            sub: "Image · Audio · Utility",
-            color: "#7FE5B8",
-          },
-        ].map(({ label, value, sub, color }) => (
-          <motion.div
-            key={label}
-            className="px-6 py-3 flex flex-col gap-0.5"
-            variants={{
-              hidden: { opacity: 0, y: 8 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
-            }}
+        {/* Live stat chips */}
+        {history.length > 0 && (
+          <motion.span
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.15)] text-[#A78BFA]"
           >
-            <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">{label}</span>
-            <span className="font-display text-xl font-bold tracking-[-0.02em]" style={{ color, fontVariantNumeric: "tabular-nums" }}>{value}</span>
-            {sub && <span className="text-[9px] text-[#6F6D7A]">{sub}</span>}
-          </motion.div>
-        ))}
-      </motion.div>
+            <span className="w-1 h-1 rounded-full bg-[#6366F1] animate-pulse" />
+            {history.filter(j => j.status === "completed").length} done
+          </motion.span>
+        )}
+        <span className="hidden md:flex items-center gap-1 text-[9px] text-[#6F6D7A] px-2 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
+          {TOOLS.find(t => t.id === activeTool)?.name ?? "—"}
+        </span>
+        <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+        {advancedMode && (
+          <button
+            onClick={() => {
+              setActiveTool("image-gen");
+              setCreationWizardOpen(true);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-bold shadow-lg shadow-[rgba(99,102,241,0.15)] hover:brightness-105 transition-all"
+          >
+            <Sparkles size={12} />
+            New with AI
+          </button>
+        )}
+      </div>
 
       {/* ── GUIDED MODE ─────────────────────────────────────────── */}
       {!advancedMode && (
-        <div className="px-6 py-6 max-w-7xl mx-auto">
+        <div className="px-6 py-6 max-w-4xl mx-auto">
         <Wizard
           className=""
           steps={[
@@ -390,7 +326,7 @@ export default function AIStudioPage() {
 
       {/* ── ADVANCED MODE ─────────────────────────────────────────── */}
       {advancedMode && (
-      <div className="px-6 py-5 max-w-7xl mx-auto">
+      <div className="px-4 py-4 min-h-[calc(100vh-120px)]">
 
         {/* Wizard image results — inline strip above the workspace */}
         {wizardImages.length > 0 && (
@@ -444,8 +380,8 @@ export default function AIStudioPage() {
           </span>
         </div>
 
-        {/* COMMAND CENTER: compact tool rail left + workspace right */}
-        <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-4 items-start">
+        {/* COMMAND CENTER: compact tool rail left + workspace right — Higgsfield split pane */}
+        <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-3 items-start">
 
           {/* Left: vertical tool list */}
           <div className="rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.06)] overflow-hidden">
