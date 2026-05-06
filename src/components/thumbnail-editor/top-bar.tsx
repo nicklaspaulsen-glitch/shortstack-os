@@ -62,8 +62,15 @@ export default function TopBar(props: TopBarProps) {
   const [exportQuality, setExportQuality] = useState(0.92);
 
   return (
-    <div className="h-12 bg-neutral-900 border-b border-neutral-800 flex items-center px-3 gap-2 text-sm text-neutral-200">
-      <span className="font-semibold text-neutral-100 mr-2">Thumbnail Pro</span>
+    <div className="bg-[#080809] border-b border-[rgba(99,102,241,0.08)] flex items-center px-3 py-2.5 gap-2 text-sm text-neutral-200">
+      {/* Higgsfield-style slim header: icon badge + title + subtitle */}
+      <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
+        <ImageIcon size={13} className="text-[#6366F1]" />
+      </div>
+      <div className="flex flex-col min-w-0 mr-2">
+        <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Thumbnail Generator</h1>
+        <p className="text-[9px] text-[#6F6D7A] leading-tight">Layer Editor · Pro</p>
+      </div>
 
       <IconBtn
         icon={<Undo2 className="w-4 h-4" />}
@@ -78,7 +85,7 @@ export default function TopBar(props: TopBarProps) {
         onClick={props.onRedo}
       />
 
-      <span className="w-px h-6 bg-neutral-800 mx-1" />
+      <span className="w-px h-6 bg-[rgba(99,102,241,0.12)] mx-1" />
 
       {/* Add layer quick actions */}
       <IconBtn
@@ -92,7 +99,7 @@ export default function TopBar(props: TopBarProps) {
         title="Add rectangle"
         onClick={() => props.onAddShape("rect")}
       />
-      <label className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded hover:bg-neutral-800 cursor-pointer">
+      <label className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded hover:bg-[rgba(99,102,241,0.08)] cursor-pointer">
         <Upload className="w-4 h-4" />
         <span>Upload</span>
         <input
@@ -115,7 +122,7 @@ export default function TopBar(props: TopBarProps) {
         />
       )}
 
-      <span className="w-px h-6 bg-neutral-800 mx-1" />
+      <span className="w-px h-6 bg-[rgba(99,102,241,0.12)] mx-1" />
 
       {/* AI actions */}
       <button
@@ -128,21 +135,21 @@ export default function TopBar(props: TopBarProps) {
       <button
         type="button"
         onClick={props.onAIRemove}
-        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-neutral-800 hover:bg-neutral-700"
+        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(99,102,241,0.10)] border border-[rgba(255,255,255,0.05)] transition-colors"
       >
         <Eraser className="w-4 h-4" /> AI Erase
       </button>
       <button
         type="button"
         onClick={props.onAIUpscale}
-        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-neutral-800 hover:bg-neutral-700"
+        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(99,102,241,0.10)] border border-[rgba(255,255,255,0.05)] transition-colors"
       >
         <Sparkles className="w-4 h-4" /> Upscale
       </button>
       <button
         type="button"
         onClick={props.onTextToLayer}
-        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-neutral-800 hover:bg-neutral-700"
+        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(99,102,241,0.10)] border border-[rgba(255,255,255,0.05)] transition-colors"
       >
         <Wand2 className="w-4 h-4" /> Text → Layer
       </button>
@@ -150,7 +157,7 @@ export default function TopBar(props: TopBarProps) {
         <button
           type="button"
           onClick={props.onStockPhotos}
-          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-neutral-800 hover:bg-neutral-700"
+          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(99,102,241,0.10)] border border-[rgba(255,255,255,0.05)] transition-colors"
           title="Insert stock photo (Pexels / Unsplash)"
         >
           <ImagePlus className="w-4 h-4" /> Stock
@@ -173,7 +180,7 @@ export default function TopBar(props: TopBarProps) {
         active={props.showGrid}
       />
 
-      <span className="w-px h-6 bg-neutral-800 mx-1" />
+      <span className="w-px h-6 bg-[rgba(99,102,241,0.12)] mx-1" />
 
       <IconBtn
         icon={<ZoomOut className="w-4 h-4" />}
@@ -194,34 +201,34 @@ export default function TopBar(props: TopBarProps) {
         onClick={props.onFit}
       />
 
-      <span className="w-px h-6 bg-neutral-800 mx-1" />
+      <span className="w-px h-6 bg-[rgba(99,102,241,0.12)] mx-1" />
 
       {/* Presets */}
       <div className="relative">
         <button
           type="button"
           onClick={() => setPresetsOpen(!presetsOpen)}
-          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-neutral-800 hover:bg-neutral-700"
+          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(99,102,241,0.10)] border border-[rgba(255,255,255,0.05)] transition-colors"
         >
           Presets <ChevronDown className="w-3 h-3" />
         </button>
         {presetsOpen && (
           <div
-            className="absolute right-0 top-full mt-1 bg-neutral-900 border border-neutral-700 rounded shadow-lg z-50 min-w-[220px]"
+            className="absolute right-0 top-full mt-1 bg-[#101012] border border-[rgba(99,102,241,0.15)] rounded shadow-lg z-50 min-w-[220px]"
             onMouseLeave={() => setPresetsOpen(false)}
           >
             {DEFAULT_PRESETS.map((p) => (
               <button
                 key={p.id}
                 type="button"
-                className="block w-full text-left px-3 py-2 text-xs hover:bg-neutral-800"
+                className="block w-full text-left px-3 py-2 text-xs hover:bg-[rgba(99,102,241,0.08)]"
                 onClick={() => {
                   props.onPickPreset(p);
                   setPresetsOpen(false);
                 }}
               >
-                <div className="text-neutral-100">{p.name}</div>
-                <div className="text-neutral-500">
+                <div className="text-[#F5F4F1]">{p.name}</div>
+                <div className="text-[#6F6D7A]">
                   {p.width} × {p.height}
                 </div>
               </button>
@@ -235,20 +242,20 @@ export default function TopBar(props: TopBarProps) {
         <button
           type="button"
           onClick={() => setExportOpen(!exportOpen)}
-          className="inline-flex items-center gap-1 px-3 py-1 rounded text-xs bg-blue-600 hover:bg-blue-500 text-white"
+          className="inline-flex items-center gap-1 px-3 py-1 rounded text-xs bg-[#6366F1] hover:bg-[#4F46E5] text-white transition-colors"
         >
           <Download className="w-4 h-4" /> Export
         </button>
         {exportOpen && (
           <div
-            className="absolute right-0 top-full mt-1 bg-neutral-900 border border-neutral-700 rounded shadow-lg z-50 p-3 min-w-[240px]"
+            className="absolute right-0 top-full mt-1 bg-[#101012] border border-[rgba(99,102,241,0.15)] rounded shadow-lg z-50 p-3 min-w-[240px]"
             onMouseLeave={() => setExportOpen(false)}
           >
-            <label className="text-xs text-neutral-400 block mb-1">
+            <label className="text-xs text-[#A8A8B2] block mb-1">
               Format
             </label>
             <select
-              className="w-full bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs mb-2"
+              className="w-full bg-[#17171A] border border-[rgba(99,102,241,0.12)] rounded px-2 py-1 text-xs mb-2"
               value={exportFormat}
               onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
             >
@@ -259,7 +266,7 @@ export default function TopBar(props: TopBarProps) {
             </select>
             {(exportFormat === "jpg" || exportFormat === "webp") && (
               <>
-                <label className="text-xs text-neutral-400 block mb-1">
+                <label className="text-xs text-[#A8A8B2] block mb-1">
                   Quality ({Math.round(exportQuality * 100)})
                 </label>
                 <input
@@ -279,7 +286,7 @@ export default function TopBar(props: TopBarProps) {
                 props.onExport(exportFormat, exportQuality);
                 setExportOpen(false);
               }}
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white rounded py-1.5 text-xs"
+              className="w-full bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded py-1.5 text-xs transition-colors"
             >
               Download
             </button>
@@ -310,8 +317,8 @@ function IconBtn({ icon, title, onClick, disabled, active, label }: IconBtnProps
         disabled
           ? "text-neutral-600 cursor-not-allowed"
           : active
-            ? "bg-blue-600 text-white"
-            : "text-neutral-300 hover:bg-neutral-800"
+            ? "bg-[rgba(99,102,241,0.20)] text-[#6366F1] border border-[rgba(99,102,241,0.30)]"
+            : "text-neutral-300 hover:bg-[rgba(99,102,241,0.08)]"
       }`}
     >
       {icon}
