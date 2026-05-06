@@ -33,6 +33,31 @@ const PROMPT_IDEAS = [
   "Colorful paint splashing in slow motion against white background",
 ];
 
+// Named prompt categories — chips fill a strong, production-ready prompt on click.
+// Each label is ≤12 chars so chips stay compact in one row on mobile.
+const PROMPT_CATEGORIES = [
+  {
+    label: "Product demo",
+    icon: "🎯",
+    prompt: "Product showcase: sleek smartphone rotating on a dark reflective surface, studio lighting, dramatic shadows, 4K cinematic close-up revealing every detail",
+  },
+  {
+    label: "Cinematic",
+    icon: "🎬",
+    prompt: "Drone flying low over golden wheat fields at magic hour, long shadows stretching across the land, slow push-in revealing a farmhouse in the distance, 4K wide angle",
+  },
+  {
+    label: "Abstract",
+    icon: "🎨",
+    prompt: "Abstract liquid metal morphing into geometric shapes, iridescent surface, slow motion, dark void background, ultra high definition macro lens",
+  },
+  {
+    label: "Social ad",
+    icon: "📱",
+    prompt: "Vertical social ad: confident person holding a product, clean white background, warm natural light, quick dynamic cuts between close-up and lifestyle shots, 9:16 format",
+  },
+];
+
 // Icon-first model picker — all backed by the same Higgsfield/RunPod pipeline.
 // Changing the "style" here adjusts the downstream prompt enhancement, it does
 // NOT change the actual model endpoint (that still goes through /api/video/render).
@@ -155,15 +180,17 @@ export default function AIVideoPage() {
             autoFocus
           />
           <div>
-            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Need inspiration? Try one</p>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Quick start</p>
             <div className="flex flex-wrap gap-1.5">
-              {PROMPT_IDEAS.slice(0, 4).map((idea, i) => (
+              {PROMPT_CATEGORIES.map((cat) => (
                 <button
-                  key={i}
-                  onClick={() => setPrompt(idea)}
-                  className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-gold/10 hover:border-gold/30 px-2.5 py-1 rounded-full border border-border/50 transition-all"
+                  key={cat.label}
+                  type="button"
+                  onClick={() => setPrompt(cat.prompt)}
+                  className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-[rgba(99,102,241,0.08)] hover:border-[rgba(99,102,241,0.3)] px-3 py-1.5 rounded-full border border-border/50 transition-all cursor-pointer"
                 >
-                  {idea.slice(0, 45)}…
+                  <span className="text-[10px] leading-none">{cat.icon}</span>
+                  {cat.label}
                 </button>
               ))}
             </div>
@@ -513,16 +540,18 @@ export default function AIVideoPage() {
               autoFocus
             />
 
-            {/* Inspiration chips — low-key, tucked under the prompt */}
+            {/* Category chips — labeled, instant-read, fill a strong prompt */}
             {!prompt && (
               <div className="mt-4 flex flex-wrap gap-1.5">
-                {PROMPT_IDEAS.slice(0, 4).map((idea, i) => (
+                {PROMPT_CATEGORIES.map((cat) => (
                   <button
-                    key={i}
-                    onClick={() => setPrompt(idea)}
-                    className="text-[10px] text-white/40 hover:text-white/80 px-2.5 py-1 rounded-full border border-white/8 hover:border-white/20 transition-all"
+                    key={cat.label}
+                    type="button"
+                    onClick={() => setPrompt(cat.prompt)}
+                    className="inline-flex items-center gap-1.5 text-[11px] text-white/45 hover:text-white/90 px-3 py-1.5 rounded-full border border-white/10 hover:border-[rgba(99,102,241,0.4)] hover:bg-[rgba(99,102,241,0.1)] transition-all cursor-pointer"
                   >
-                    {idea.slice(0, 48)}…
+                    <span className="text-[10px] leading-none">{cat.icon}</span>
+                    {cat.label}
                   </button>
                 ))}
               </div>
