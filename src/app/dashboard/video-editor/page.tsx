@@ -7563,16 +7563,27 @@ export default function VideoEditorPage() {
         >
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-semibold truncate">
-              {config.title || "Untitled video"}
-              <span className="text-muted font-normal ml-2">
-                · {selectedType.aspect} · {config.duration}s
-              </span>
+              {generating ? (
+                <span className="flex items-center gap-1.5 text-gold">
+                  <Film size={10} className="shrink-0" />
+                  Rendering your Reel — ~{config.duration <= 30 ? "90 sec" : "3 min"}
+                  <span className="text-[9px] text-muted font-normal ml-1">{Math.round(renderProgress)}%</span>
+                </span>
+              ) : (
+                <>
+                  {config.title || "Untitled video"}
+                  <span className="text-muted font-normal ml-2">
+                    · {selectedType.aspect} · {config.duration}s
+                  </span>
+                </>
+              )}
             </p>
             {generating && (
               <div className="mt-1 w-full h-1 bg-surface-light rounded-full overflow-hidden">
-                <div
-                  className="h-1 bg-gradient-gold transition-all duration-300"
-                  style={{ width: `${renderProgress}%` }}
+                <motion.div
+                  className="h-1 bg-gradient-to-r from-[#6366F1] to-[#A78BFA]"
+                  animate={{ width: `${renderProgress}%` }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                 />
               </div>
             )}
