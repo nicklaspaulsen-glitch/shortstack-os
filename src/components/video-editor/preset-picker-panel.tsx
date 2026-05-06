@@ -99,6 +99,17 @@ export interface PresetPickerPanelProps {
 
 type Tab = PresetKind;
 
+/* ─────────────────────────── Recent presets ─────────────────────────── */
+
+const RECENT_PRESETS_KEY = "ss-preset-recent";
+
+interface RecentPreset {
+  kind: Exclude<PresetKind, "fav">;
+  id: string;
+  label: string;
+  payload: Record<string, unknown>;
+}
+
 /* ─────────────────────────── Favourites state ─────────────────────────── */
 
 interface FavRow {
@@ -243,6 +254,16 @@ export function PresetPickerPanel({
   const [favs, setFavs] = useState<Set<string>>(new Set());
   const [favLoaded, setFavLoaded] = useState(false);
 
+  /** Last 3 applied presets, newest first. Persisted to localStorage. */
+  const [recentPresets, setRecentPresets] = useState<RecentPreset[]>(() => {
+    try {
+      const raw = localStorage.getItem(RECENT_PRESETS_KEY);
+      return raw ? (JSON.parse(raw) as RecentPreset[]) : [];
+    } catch {
+      return [];
+    }
+  });
+
   // Reset filters on tab switch.
   useEffect(() => {
     setQuery("");
@@ -353,6 +374,29 @@ export function PresetPickerPanel({
     [onDropOnTimeline],
   );
 
+  /** Wraps fireDrop to also record the preset in the recent-presets list. */
+  const fireDropWithRecent = useCallback(
+    (kind: Exclude<PresetKind, "fav">, id: string, payload: Record<string, unknown>) => {
+      fireDrop(kind, id, payload);
+      const label =
+        (payload.name as string | undefined) ||
+        (payload.title as string | undefined) ||
+        (payload.label as string | undefined) ||
+        id;
+      setRecentPresets((prev) => {
+        const deduped = prev.filter((r) => !(r.kind === kind && r.id === id));
+        const next = [{ kind, id, label, payload }, ...deduped].slice(0, 3);
+        try {
+          localStorage.setItem(RECENT_PRESETS_KEY, JSON.stringify(next));
+        } catch {
+          /* storage may be unavailable in some iframe contexts */
+        }
+        return next;
+      });
+    },
+    [fireDrop],
+  );
+
   /* ─────────────────── Render ─────────────────── */
 
   if (!open) return null;
@@ -411,6 +455,34 @@ export function PresetPickerPanel({
         </div>
       </div>
 
+      {/* Recently used strip — shows last 3 applied presets with clock icon */}
+      {recentPresets.length > 0 && (
+        <div className="px-2 pt-1.5 pb-1 border-b border-border bg-surface/30">
+          <p className="text-[8.5px] uppercase tracking-[0.14em] text-muted mb-1 font-medium">
+            Recently used
+          </p>
+          <div className="flex flex-wrap gap-1">
+            {recentPresets.map((r) => (
+              <button
+                key={`${r.kind}::${r.id}`}
+                type="button"
+                onClick={() => fireDrop(r.kind, r.id, r.payload)}
+                title={`Re-apply ${r.label} (${r.kind})`}
+                className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-border hover:border-[rgba(99,102,241,0.4)] hover:bg-[rgba(99,102,241,0.08)] text-muted hover:text-foreground transition-all cursor-pointer"
+              >
+                {/* Clock icon — inline SVG to avoid adding another lucide import */}
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span className="max-w-[80px] truncate">{r.label}</span>
+                <span className="text-[8px] text-muted/60">{r.kind}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-2">
         {tab === "sfx" && (
@@ -420,7 +492,7 @@ export function PresetPickerPanel({
             setFilter={setFilter}
             favs={favs}
             onToggleFav={(id) => toggleFav("sfx", id)}
-            onDrop={(id, sfx) => fireDrop("sfx", id, { url: sfx.url, duration_ms: sfx.duration_ms, name: sfx.name, category: sfx.category })}
+            onDrop={(id, sfx) => fireDropWithRecent("sfx", id, { url: sfx.url, duration_ms: sfx.duration_ms, name: sfx.name, category: sfx.category })}
             startDrag={(id, sfx) => startDrag("sfx", id, { url: sfx.url, duration_ms: sfx.duration_ms, name: sfx.name, category: sfx.category })}
           />
         )}
@@ -431,7 +503,7 @@ export function PresetPickerPanel({
             setFilter={setFilter}
             favs={favs}
             onToggleFav={(id) => toggleFav("music", id)}
-            onDrop={(id, t) => fireDrop("music", id, { url: t.url, bpm: t.bpm, mood: t.mood, genre: t.genre, duration_sec: t.duration_sec, title: t.title })}
+            onDrop={(id, t) => fireDropWithRecent("music", id, { url: t.url, bpm: t.bpm, mood: t.mood, genre: t.genre, duration_sec: t.duration_sec, title: t.title })}
             startDrag={(id, t) => startDrag("music", id, { url: t.url, bpm: t.bpm, mood: t.mood, genre: t.genre, duration_sec: t.duration_sec, title: t.title })}
           />
         )}
@@ -442,7 +514,7 @@ export function PresetPickerPanel({
             setFilter={setFilter}
             favs={favs}
             onToggleFav={(id) => toggleFav("vfx", id)}
-            onDrop={(id, fx) => fireDrop("vfx", id, { name: fx.name, category: fx.category })}
+            onDrop={(id, fx) => fireDropWithRecent("vfx", id, { name: fx.name, category: fx.category })}
             startDrag={(id, fx) => startDrag("vfx", id, { name: fx.name, category: fx.category })}
           />
         )}
@@ -453,7 +525,7 @@ export function PresetPickerPanel({
             setFilter={setFilter}
             favs={favs}
             onToggleFav={(id) => toggleFav("transition", id)}
-            onDrop={(id, t) => fireDrop("transition", id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
+            onDrop={(id, t) => fireDropWithRecent("transition", id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
             startDrag={(id, t) => startDrag("transition", id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
           />
         )}
@@ -465,7 +537,7 @@ export function PresetPickerPanel({
             candidates={brollCandidates && brollCandidates.length > 0 ? brollCandidates : FALLBACK_BROLL}
             favs={favs}
             onToggleFav={(id) => toggleFav("broll", id)}
-            onDrop={(id, c) => fireDrop("broll", id, { preview_url: c.preview_url, thumbnail_url: c.thumbnail_url, label: c.label, duration_sec: c.duration_sec })}
+            onDrop={(id, c) => fireDropWithRecent("broll", id, { preview_url: c.preview_url, thumbnail_url: c.thumbnail_url, label: c.label, duration_sec: c.duration_sec })}
             startDrag={(id, c) => startDrag("broll", id, { preview_url: c.preview_url, thumbnail_url: c.thumbnail_url, label: c.label, duration_sec: c.duration_sec })}
           />
         )}
