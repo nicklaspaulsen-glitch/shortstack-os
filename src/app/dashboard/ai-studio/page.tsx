@@ -216,6 +216,48 @@ export default function AIStudioPage() {
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#6366F1]/18 to-transparent" />
       </div>
 
+      {/* ── SCORECARD STRIP ─────────────────────────────────────── */}
+      <motion.div
+        className="grid grid-cols-3 divide-x divide-[rgba(99,102,241,0.08)] border-b border-[rgba(99,102,241,0.08)] bg-[rgba(99,102,241,0.02)]"
+        initial="hidden"
+        animate="visible"
+        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
+      >
+        {[
+          {
+            label: "Session runs",
+            value: history.length.toString(),
+            sub: `${history.filter(j => j.status === "completed").length} completed`,
+            color: "#6366F1",
+          },
+          {
+            label: "Active tool",
+            value: TOOLS.find(t => t.id === activeTool)?.name ?? "—",
+            sub: TOOLS.find(t => t.id === activeTool)?.tag ?? "",
+            color: "#F5F4F1",
+          },
+          {
+            label: "Tools available",
+            value: "9",
+            sub: "Image · Audio · Utility",
+            color: "#7FE5B8",
+          },
+        ].map(({ label, value, sub, color }) => (
+          <motion.div
+            key={label}
+            className="px-6 py-3 flex flex-col gap-0.5"
+            variants={{
+              hidden: { opacity: 0, y: 8 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+            }}
+          >
+            <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">{label}</span>
+            <span className="font-display text-xl font-bold tracking-[-0.02em]" style={{ color, fontVariantNumeric: "tabular-nums" }}>{value}</span>
+            {sub && <span className="text-[9px] text-[#6F6D7A]">{sub}</span>}
+          </motion.div>
+        ))}
+      </motion.div>
+
       {/* ── GUIDED MODE ─────────────────────────────────────────── */}
       {!advancedMode && (
         <div className="px-6 py-6 max-w-7xl mx-auto">
