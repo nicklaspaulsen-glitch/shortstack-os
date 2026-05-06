@@ -871,6 +871,38 @@ export default function Sidebar() {
         </div>
       )}
 
+      {/* Core quick-strip — tier-1 icon pills always accessible above the scroll area.
+          Six icons for Dashboard/Inbox/Clients/Analytics/CRM/Calendar.
+          Compact enough to fit in 56px collapsed width as a vertical column too. */}
+      {!collapsed && (() => {
+        const TIER1 = navItems.filter(i => i.tier === 1 && (!userRole || i.roles.includes(userRole)));
+        if (TIER1.length === 0) return null;
+        return (
+          <div className="px-2 pb-1 pt-0.5">
+            <div className="flex items-center gap-1 bg-surface-light/40 rounded-lg px-1 py-1 border border-border-subtle">
+              {TIER1.map(item => {
+                const isActive = isItemActive(item.href, pathname);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    title={item.label}
+                    aria-label={item.label}
+                    className={`flex-1 flex items-center justify-center py-1 rounded-md transition-all duration-150 ${
+                      isActive
+                        ? "bg-[rgba(94,91,255,0.15)] text-brand-accent"
+                        : "text-text-muted hover:text-text-primary hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    {item.icon}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Navigation — collapsible sections with smart sub-groups.
           When the user has defined custom_groups, use those as the primary
           layout (plus "Other" for any remaining items). */}
