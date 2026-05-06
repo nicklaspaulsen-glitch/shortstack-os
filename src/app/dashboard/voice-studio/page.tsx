@@ -21,6 +21,7 @@ import {
   Search,
 } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 // ── Types ──────────────────────────────────────────────────────────
 interface VoiceClone {
@@ -821,21 +822,29 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
         {/* Category + language row */}
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex flex-wrap gap-1.5">
-            {PRESET_CATEGORIES.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setCategoryFilter(c)}
-                className={[
-                  "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
-                  categoryFilter === c
-                    ? "border border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.1)] text-[#6366F1] shadow-[0_0_10px_rgba(99,102,241,0.1)]"
-                    : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
-                ].join(" ")}
-              >
-                {c === "all" ? "All" : c.charAt(0).toUpperCase() + c.slice(1)}
-              </button>
-            ))}
+            {PRESET_CATEGORIES.map((c) => {
+              const isActive = categoryFilter === c;
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setCategoryFilter(c)}
+                  className="relative rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1]/60"
+                  style={{ color: isActive ? "#6366F1" : "rgba(255,255,255,0.55)" }}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="voice-category-pill"
+                      className="absolute inset-0 rounded-full border border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.08)]"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative">
+                    {c === "all" ? "All" : c.charAt(0).toUpperCase() + c.slice(1)}
+                  </span>
+                </button>
+              );
+            })}
           </div>
           {languages.length > 1 && (
             <select
