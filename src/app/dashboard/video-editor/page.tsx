@@ -3359,10 +3359,18 @@ export default function VideoEditorPage() {
                         selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
                       }`}
                     >
-                      <div className={`w-full rounded-lg mb-2 bg-gradient-to-br from-gold/30 to-amber-400/20 flex items-center justify-center ${
-                        vt.aspect === "9:16" ? "h-20" : vt.aspect === "1:1" ? "h-16" : "h-14"
-                      }`}>
-                        <span className="text-gold">{vt.icon}</span>
+                      <div className="w-full h-20 flex items-center justify-center rounded-lg mb-2 overflow-hidden">
+                        <div
+                          className="rounded-md bg-gradient-to-br from-gold/30 to-amber-400/20 flex items-center justify-center"
+                          style={{
+                            aspectRatio: vt.aspect.replace(":", " / "),
+                            height: "100%",
+                            width: "auto",
+                            maxWidth: "100%",
+                          }}
+                        >
+                          <span className="text-gold">{vt.icon}</span>
+                        </div>
                       </div>
                       <p className="text-xs font-bold">{vt.name}</p>
                       <p className="text-[10px] text-muted">{vt.aspect} · ~{vt.duration}s</p>
