@@ -5988,7 +5988,7 @@ export default function VideoEditorPage() {
                           }`}
                         >
                           <div
-                            className="rounded-md py-3 px-2 text-center mb-1.5"
+                            className="rounded-md py-3 px-2 text-center mb-1.5 space-y-0.5"
                             style={{
                               background: c.css_preview.bg === "transparent" ? "rgba(0,0,0,0.35)" : c.css_preview.bg,
                               color: c.css_preview.color,
@@ -6000,7 +6000,8 @@ export default function VideoEditorPage() {
                               letterSpacing: "0.5px",
                             }}
                           >
-                            YOUR TEXT HERE
+                            <div>This video went</div>
+                            <div>viral overnight</div>
                           </div>
                           <p className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{c.name}</p>
                           <p className="text-[8px] text-muted">{c.desc}</p>
