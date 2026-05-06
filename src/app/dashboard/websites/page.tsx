@@ -1,6 +1,7 @@
 ﻿"use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { motion } from "framer-motion";
 import {
   Globe, Sparkles, Loader, ExternalLink, Copy, Eye, Plus,
   Palette, Layout, Trash2, Wand2, Briefcase, Users, Store,
@@ -318,6 +319,19 @@ export default function WebsitesPage() {
   const [regenerating, setRegenerating] = useState(false);
   const [deploying, setDeploying] = useState(false);
   const [viewport, setViewport] = useState<ViewportMode>("desktop");
+
+  // Template gallery niche filter
+  const [nicheFilter, setNicheFilter] = useState<string>("all");
+  const NICHE_FILTERS = useMemo(() => {
+    const niches = NICHE_TEMPLATES.map((t) => t.niche);
+    return ["All", ...niches];
+  }, []);
+  const filteredTemplates = useMemo(() =>
+    nicheFilter === "all"
+      ? NICHE_TEMPLATES
+      : NICHE_TEMPLATES.filter((t) => t.niche === nicheFilter),
+    [nicheFilter],
+  );
 
   // Pricing modal
   const [pricingFor, setPricingFor] = useState<WebsiteProject | null>(null);
@@ -922,8 +936,34 @@ export default function WebsitesPage() {
           </button>
         </div>
 
+        {/* Niche filter tabs — spring indicator via layoutId */}
+        <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter templates by niche">
+          {NICHE_FILTERS.map((niche) => {
+            const filterKey = niche === "All" ? "all" : niche;
+            const isActive = nicheFilter === filterKey;
+            return (
+              <button
+                key={niche}
+                type="button"
+                onClick={() => setNicheFilter(filterKey)}
+                className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1]/60"
+                style={{ color: isActive ? "#6366F1" : "rgba(255,255,255,0.45)" }}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="niche-filter-pill"
+                    className="absolute inset-0 rounded-full border border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.08)]"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="relative">{niche}</span>
+              </button>
+            );
+          })}
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 [perspective:1200px]">
-          {NICHE_TEMPLATES.map((t) => (
+          {filteredTemplates.map((t) => (
             <button
               key={t.id}
               onClick={() => pickTemplate(t)}
