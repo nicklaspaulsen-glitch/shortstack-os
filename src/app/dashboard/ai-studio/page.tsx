@@ -424,26 +424,33 @@ export default function AIStudioPage() {
                       setActiveTool(tool.id);
                       setTimeout(() => toolPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), 0);
                     }}
-                    className={`w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl transition-all duration-150 ${
+                    className={`relative w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl border ${
                       active
-                        ? "bg-[rgba(99,102,241,0.07)] border border-[rgba(99,102,241,0.18)]"
-                        : "hover:bg-[rgba(255,255,255,0.03)] border border-transparent"
+                        ? "border-[rgba(99,102,241,0.18)]"
+                        : "hover:bg-[rgba(255,255,255,0.03)] border-transparent"
                     }`}
                   >
+                    {active && (
+                      <motion.div
+                        layoutId="tool-active-bg"
+                        className="absolute inset-0 rounded-xl bg-[rgba(99,102,241,0.07)]"
+                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      />
+                    )}
                     <div
-                      className="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
+                      className="relative z-10 w-6 h-6 rounded-md flex items-center justify-center shrink-0"
                       style={{ background: `${tool.color}${active ? "28" : "18"}` }}
                     >
                       <Icon size={12} style={{ color: active ? "#6366F1" : tool.color }} />
                     </div>
-                    <div className="min-w-0 flex-1">
+                    <div className="relative z-10 min-w-0 flex-1">
                       <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#6366F1]" : "text-[#F5F4F1]"}`}>
                         {tool.name}
                       </p>
                       <p className="text-[8px] font-mono text-[#6F6D7A] truncate">{tool.tag}</p>
                     </div>
                     {"badge" in tool && tool.badge && (
-                      <span className="text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(99,102,241,0.1)] text-[#6366F1] shrink-0">
+                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(99,102,241,0.1)] text-[#6366F1] shrink-0">
                         Biz+
                       </span>
                     )}

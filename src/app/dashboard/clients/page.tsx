@@ -687,8 +687,16 @@ export default function ClientsPage() {
       </div>
 
       {/* ── Scorecard strip — 4 cells, divide-x, MRR gets the one lime ── */}
-      <div className="rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.06)] grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[rgba(255,255,255,0.05)]">
-        <div className="px-5 py-4 flex flex-col gap-1.5">
+      <motion.div
+        className="rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.06)] grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[rgba(255,255,255,0.05)]"
+        initial="hidden"
+        animate="visible"
+        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
+      >
+        <motion.div
+          className="px-5 py-4 flex flex-col gap-1.5"
+          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
+        >
           <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Total MRR</span>
           <span
             className="font-display text-2xl font-bold tracking-[-0.03em] text-[#6366F1]"
@@ -696,8 +704,11 @@ export default function ClientsPage() {
           >
             {formatCurrency(totalMRR)}
           </span>
-        </div>
-        <div className="px-5 py-4 flex flex-col gap-1.5">
+        </motion.div>
+        <motion.div
+          className="px-5 py-4 flex flex-col gap-1.5"
+          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
+        >
           <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Active Clients</span>
           <span
             className="font-display text-2xl font-bold tracking-[-0.03em] text-[#F5F4F1]"
@@ -705,8 +716,11 @@ export default function ClientsPage() {
           >
             {activeClients.length}
           </span>
-        </div>
-        <div className="px-5 py-4 flex flex-col gap-1.5">
+        </motion.div>
+        <motion.div
+          className="px-5 py-4 flex flex-col gap-1.5"
+          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
+        >
           <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Avg Health</span>
           <span
             className={`font-display text-2xl font-bold tracking-[-0.03em] ${
@@ -716,8 +730,11 @@ export default function ClientsPage() {
           >
             {avgHealth}%
           </span>
-        </div>
-        <div className="px-5 py-4 flex flex-col gap-1.5">
+        </motion.div>
+        <motion.div
+          className="px-5 py-4 flex flex-col gap-1.5"
+          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
+        >
           <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Contracts Signed</span>
           <span
             className="font-display text-2xl font-bold tracking-[-0.03em] text-[#F5F4F1]"
@@ -725,8 +742,8 @@ export default function ClientsPage() {
           >
             {contracts.filter((c) => c.status === "signed").length}
           </span>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Tabs (sticky) */}
       <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(99,102,241,0.08)] rounded-xl p-1 w-fit shadow-lg shadow-black/20">

@@ -92,7 +92,7 @@ import {
   FlaskConical,
   Mic,
 } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
 
 interface NavItem {
@@ -343,6 +343,7 @@ export default function Sidebar() {
   // for case-insensitive substring match against label + section + sub.
   // Sections collapse to show only matches; non-matching rows hide.
   const [navFilter, setNavFilter] = useState("");
+  const filterInputRef = useRef<HTMLInputElement>(null);
 
   // Tier v2: show/hide tier-3 "Advanced" items. Persisted to localStorage
   // so users who unlock the full list don't have to click every session.
@@ -491,6 +492,19 @@ export default function Sidebar() {
       cancelled = true;
     };
   }, [authLoading, userRole]);
+
+  // Cmd+K (or Ctrl+K) focuses the sidebar filter input from anywhere.
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        filterInputRef.current?.focus();
+        filterInputRef.current?.select();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   const filteredNav = navItems.filter((item) => {
     if (!userRole || !item.roles.includes(userRole)) return false;
@@ -833,15 +847,16 @@ export default function Sidebar() {
           <div className="relative">
             <Search size={11} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
             <input
+              ref={filterInputRef}
               type="search"
               value={navFilter}
               onChange={(e) => setNavFilter(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Escape") setNavFilter("");
               }}
-              placeholder="Filter…"
+              placeholder="Filter… (⌘K)"
               className="w-full pl-7 pr-7 py-1.5 text-[11px] bg-surface-light/50 border border-border-subtle rounded-md text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/40 focus:bg-surface-light"
-              aria-label="Filter sidebar"
+              aria-label="Filter sidebar (Cmd+K)"
             />
             {navFilter && (
               <button

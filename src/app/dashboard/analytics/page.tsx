@@ -402,28 +402,45 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Bottom row — 4-cell scorecard strip */}
-        <div className="relative z-10 border-t border-[rgba(255,255,255,0.05)] grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[rgba(255,255,255,0.05)]">
-          <div className="px-5 py-3.5 flex flex-col gap-1">
+        <motion.div
+          className="relative z-10 border-t border-[rgba(255,255,255,0.05)] grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[rgba(255,255,255,0.05)]"
+          initial="hidden"
+          animate="visible"
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
+        >
+          <motion.div
+            className="px-5 py-3.5 flex flex-col gap-1"
+            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
+          >
             <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Total MRR</span>
             <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#6366F1]"
               style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(stats.totalMRR)}</span>
-          </div>
-          <div className="px-5 py-3.5 flex flex-col gap-1">
+          </motion.div>
+          <motion.div
+            className="px-5 py-3.5 flex flex-col gap-1"
+            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
+          >
             <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Leads This Month</span>
             <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#F5F4F1]"
               style={{ fontVariantNumeric: "tabular-nums" }}>{stats.leadsThisMonth.toLocaleString()}</span>
-          </div>
-          <div className="px-5 py-3.5 flex flex-col gap-1">
+          </motion.div>
+          <motion.div
+            className="px-5 py-3.5 flex flex-col gap-1"
+            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
+          >
             <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Deals Won</span>
             <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#7FE5B8]"
               style={{ fontVariantNumeric: "tabular-nums" }}>{stats.totalDeals.toLocaleString()}</span>
-          </div>
-          <div className="px-5 py-3.5 flex flex-col gap-1">
+          </motion.div>
+          <motion.div
+            className="px-5 py-3.5 flex flex-col gap-1"
+            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
+          >
             <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Reply Rate</span>
             <span className={`font-display text-xl font-bold tracking-[-0.03em] ${replyRate >= 5 ? "text-[#7FE5B8]" : replyRate >= 2 ? "text-[#FFC062]" : "text-[#F5F4F1]"}`}
               style={{ fontVariantNumeric: "tabular-nums" }}>{replyRate}%</span>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* ── Loading ──────────────────────────────────────────────────────── */}
