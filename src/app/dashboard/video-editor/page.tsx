@@ -187,6 +187,53 @@ const STYLES = [
   { id: "cyberpunk", name: "Cyberpunk", desc: "Futuristic neon dystopia" },
 ];
 
+// Play a short AudioContext tone that suggests the vibe of a music mood.
+// Module-level so it is never re-created on re-renders.
+function playMoodTone(moodId: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    type AudioCtxConstructor = typeof AudioContext;
+    const AudioCtx: AudioCtxConstructor | undefined =
+      (window as unknown as { AudioContext?: AudioCtxConstructor; webkitAudioContext?: AudioCtxConstructor }).AudioContext ??
+      (window as unknown as { AudioContext?: AudioCtxConstructor; webkitAudioContext?: AudioCtxConstructor }).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const MOOD_MAP: Record<string, { freq: number; type: OscillatorType }> = {
+      upbeat:       { freq: 523, type: "sine" },
+      motivational: { freq: 659, type: "sine" },
+      chill:        { freq: 294, type: "sine" },
+      dramatic:     { freq: 196, type: "sawtooth" },
+      corporate:    { freq: 392, type: "sine" },
+      trendy:       { freq: 784, type: "sine" },
+      emotional:    { freq: 349, type: "sine" },
+      lofi:         { freq: 220, type: "sine" },
+      cinematic:    { freq: 165, type: "sawtooth" },
+      edm:          { freq: 880, type: "square" },
+      "hip-hop":    { freq: 175, type: "sawtooth" },
+      acoustic:     { freq: 440, type: "sine" },
+      jazz:         { freq: 370, type: "sine" },
+      ambient:      { freq: 247, type: "sine" },
+      epic:         { freq: 131, type: "sawtooth" },
+      funk:         { freq: 622, type: "sine" },
+    };
+    const { freq, type } = MOOD_MAP[moodId] ?? { freq: 440, type: "sine" as OscillatorType };
+    if (freq === 0) return;
+    osc.frequency.value = freq;
+    osc.type = type;
+    gain.gain.value = 0.05;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
+    osc.stop(ctx.currentTime + 0.35);
+    setTimeout(() => { void ctx.close(); }, 600);
+  } catch {
+    // silently no-op if AudioContext is unavailable or blocked
+  }
+}
+
 // Music moods — each gets a lucide icon + a color tint so the grid feels
 // like a designed product instead of an emoji picker. Tints are tailwind
 // arbitrary-value classes so every tile can have its own hue without a
@@ -1842,6 +1889,8 @@ export default function VideoEditorPage() {
   const [selectedMusicId, setSelectedMusicId] = useState<string>("");
   const [musicMoodFilter, setMusicMoodFilter] = useState<string>("all");
   const [musicBpmFilter, setMusicBpmFilter] = useState<string>("all"); // "all" | "slow" | "medium" | "fast"
+  // Track which mood tile the user is hovering (to show waveform + play tone)
+  const [hoveredMood, setHoveredMood] = useState<string | null>(null);
 
   // Collapsible panels for the new asset sections
   const [openAssetPanels, setOpenAssetPanels] = useState<Record<string, boolean>>({
@@ -3266,6 +3315,13 @@ export default function VideoEditorPage() {
 
   return (
     <div className="fade-in space-y-5">
+      {/* Keyframe for music mood waveform bar animation */}
+      <style>{`
+        @keyframes moodWaveBar {
+          from { transform: scaleY(0.4); }
+          to   { transform: scaleY(1.0); }
+        }
+      `}</style>
       {/* Minimal top bar — chrome fades into the background */}
       <div className="flex items-center justify-between gap-4 px-1 pt-1">
         <div className="flex items-center gap-3 min-w-0">
@@ -6488,11 +6544,34 @@ export default function VideoEditorPage() {
                   <div className="grid grid-cols-4 gap-1.5">
                     {MUSIC_MOODS.map(m => {
                       const active = config.music_mood === m.id;
+                      const isHovered = hoveredMood === m.id;
                       const Icon = m.icon;
+                      // Per-mood bar heights (0–1) so each waveform looks distinct
+                      const WAVEFORM_HEIGHTS: Record<string, number[]> = {
+                        upbeat:       [0.5, 1.0, 0.7, 0.9, 0.6],
+                        motivational: [0.8, 0.5, 1.0, 0.6, 0.9],
+                        chill:        [0.3, 0.5, 0.4, 0.6, 0.3],
+                        dramatic:     [0.9, 0.4, 1.0, 0.5, 0.8],
+                        corporate:    [0.6, 0.6, 0.6, 0.6, 0.6],
+                        trendy:       [0.7, 1.0, 0.5, 0.8, 1.0],
+                        emotional:    [0.4, 0.7, 0.9, 0.6, 0.4],
+                        lofi:         [0.4, 0.5, 0.3, 0.6, 0.4],
+                        cinematic:    [0.3, 0.6, 1.0, 0.7, 0.5],
+                        edm:          [1.0, 0.5, 1.0, 0.5, 1.0],
+                        "hip-hop":    [1.0, 0.4, 0.8, 0.3, 0.9],
+                        acoustic:     [0.5, 0.8, 0.6, 0.7, 0.5],
+                        jazz:         [0.6, 0.9, 0.5, 0.8, 0.7],
+                        ambient:      [0.3, 0.4, 0.5, 0.4, 0.3],
+                        epic:         [0.5, 0.8, 1.0, 0.9, 0.7],
+                        funk:         [0.8, 0.5, 1.0, 0.4, 0.7],
+                      };
+                      const bars = WAVEFORM_HEIGHTS[m.id] ?? [0.5, 0.8, 0.6, 0.9, 0.5];
                       return (
                         <button
                           key={m.id}
                           onClick={() => setConfig({ ...config, music_mood: m.id })}
+                          onMouseEnter={() => { setHoveredMood(m.id); if (m.id !== "none") playMoodTone(m.id); }}
+                          onMouseLeave={() => setHoveredMood(null)}
                           className={`group flex flex-col items-center gap-1 rounded-lg border p-2 transition-all ${
                             active
                               ? "border-gold/40 bg-gold/[0.08] text-gold shadow-[0_0_0_1px_rgba(201,168,76,0.15)]"
@@ -6501,11 +6580,27 @@ export default function VideoEditorPage() {
                           title={m.name}
                         >
                           <span
-                            className={`flex h-7 w-7 items-center justify-center rounded-md transition ${
+                            className={`flex h-7 w-7 items-center justify-center rounded-md transition-all ${
                               active ? "bg-gold/15" : m.bg
                             }`}
                           >
-                            <Icon size={13} className={active ? "text-gold" : m.tint} />
+                            {isHovered && m.id !== "none" ? (
+                              /* Animated waveform bars — pure CSS, no server call */
+                              <span className="flex items-end gap-[2px] h-4 w-full justify-center">
+                                {bars.map((h, i) => (
+                                  <span
+                                    key={i}
+                                    className={`w-[3px] rounded-[1px] ${active ? "bg-current" : "bg-current opacity-80"}`}
+                                    style={{
+                                      height: `${h * 14}px`,
+                                      animation: `moodWaveBar 0.7s ease-in-out ${i * 0.11}s infinite alternate`,
+                                    }}
+                                  />
+                                ))}
+                              </span>
+                            ) : (
+                              <Icon size={13} className={active ? "text-gold" : m.tint} />
+                            )}
                           </span>
                           <p className="text-[8.5px] leading-tight">{m.name}</p>
                         </button>
