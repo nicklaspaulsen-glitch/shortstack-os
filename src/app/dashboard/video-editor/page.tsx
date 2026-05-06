@@ -1439,6 +1439,8 @@ export default function VideoEditorPage() {
   const [videoTypesExpanded, setVideoTypesExpanded] = useState(false);
   // Whether the Director's Brief tip card is expanded on the topic step
   const [briefTipOpen, setBriefTipOpen] = useState(false);
+  // Whether all 20 visual styles are shown (collapsed to 6 by default)
+  const [stylesExpanded, setStylesExpanded] = useState(false);
   const [config, setConfig] = useState({
     type: "reel",
     title: "",
@@ -6264,7 +6266,7 @@ export default function VideoEditorPage() {
             <div className="card">
               <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-gold" /> Visual Style</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {STYLES.map(s => (
+                {(stylesExpanded ? STYLES : STYLES.slice(0, 6)).map(s => (
                   <button key={s.id} onClick={() => setConfig({ ...config, style: s.id })}
                     className={`p-2 rounded-xl border text-left transition-all ${
                       config.style === s.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
@@ -6273,6 +6275,23 @@ export default function VideoEditorPage() {
                     <p className="text-[8px] text-muted">{s.desc}</p>
                   </button>
                 ))}
+                {!stylesExpanded && (
+                  <button
+                    onClick={() => setStylesExpanded(true)}
+                    className="p-2 rounded-xl border border-dashed border-[rgba(99,102,241,0.2)] text-left transition-all hover:border-[rgba(99,102,241,0.4)] hover:bg-[rgba(99,102,241,0.03)] col-span-2"
+                  >
+                    <p className="text-[10px] font-semibold text-muted">+{STYLES.length - 6} more styles</p>
+                    <p className="text-[8px] text-muted/60">Browse all</p>
+                  </button>
+                )}
+                {stylesExpanded && (
+                  <button
+                    onClick={() => setStylesExpanded(false)}
+                    className="p-2 rounded-xl border border-dashed border-[rgba(99,102,241,0.12)] text-left transition-all hover:border-[rgba(99,102,241,0.25)] col-span-2 md:col-span-4"
+                  >
+                    <p className="text-[10px] text-muted">Show fewer</p>
+                  </button>
+                )}
               </div>
             </div>
             </>
