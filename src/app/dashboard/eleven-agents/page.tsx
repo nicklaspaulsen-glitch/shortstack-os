@@ -7,6 +7,7 @@ import {
   BarChart3, FileText, Mic, Users, AlertTriangle, Volume2,
   TrendingUp, Calendar, Shield, ArrowRight, Copy
 } from "lucide-react";
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
 
 /* ── Types ── */
@@ -270,13 +271,16 @@ export default function ElevenAgentsPage() {
           { label: "Qualified", value: qualifiedCalls, color: "text-green-400" },
           { label: "Success Rate", value: `${avgSuccessRate}%`, color: avgSuccessRate >= 30 ? "text-green-400" : "text-yellow-400" },
           { label: "Active Agents", value: agents.filter(a => a.status === "active").length, color: "text-purple-400" },
-          { label: "Avg Duration", value: agents.length ? `${Math.round(agents.reduce((s, a) => s + a.avgDuration, 0) / agents.length)}s` : "—", color: "text-foreground" },
+          { label: "Avg Duration", value: agents.length ? `${Math.round(agents.reduce((s, a) => s + a.avgDuration, 0) / agents.length)}s` : "---", color: "text-foreground" },
           { label: "Cost Today", value: `$${totalCost.toFixed(2)}`, color: "text-cyan-400" },
         ].map((s, i) => (
-          <div key={i} className="card p-3 text-center">
-            <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
-            <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
-          </div>
+          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <div className="p-3">
+              <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
+              <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
+            </div>
+          </motion.div>
         ))}
       </div>
 
@@ -310,7 +314,7 @@ export default function ElevenAgentsPage() {
           )}
 
           {/* ── Live Agents from ElevenLabs API ── */}
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-semibold flex items-center gap-2">
                 <Phone size={14} /> Your Agents
@@ -413,10 +417,10 @@ export default function ElevenAgentsPage() {
                 </button>
               </div>
             ) : null}
-          </div>
+          </motion.div>
 
           {/* ── Demo Agents (local state) ── */}
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-semibold flex items-center gap-2"><Phone size={14} /> Quick Agent Profiles <span className="text-[9px] text-muted font-normal">(local config)</span></h2>
             </div>
@@ -448,10 +452,10 @@ export default function ElevenAgentsPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* ── Recent Conversations from API ── */}
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass rounded-xl p-4">
             <h2 className="text-sm font-semibold mb-3">Recent Conversations {liveConversations.length > 0 && <span className="text-[9px] text-muted font-normal">({liveConversations.length} from API)</span>}</h2>
             {liveConversations.length > 0 ? (
               <div className="space-y-1.5">
@@ -478,7 +482,7 @@ export default function ElevenAgentsPage() {
                 <p className="text-[10px] text-muted mt-1">Create an agent and make calls to see live data here.</p>
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -581,7 +585,7 @@ export default function ElevenAgentsPage() {
       {/* ═══ TRANSCRIPTS TAB ═══ */}
       {activeTab === "Transcripts" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <FileText size={14} className="text-gold" />
               <h2 className="text-sm font-semibold">Call Transcript Viewer</h2>
@@ -591,27 +595,27 @@ export default function ElevenAgentsPage() {
               <p className="text-xs text-muted">No transcripts available yet.</p>
               <p className="text-[10px] text-muted mt-1">Make calls with an agent to see transcripts here.</p>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* ═══ SENTIMENT TAB ═══ */}
       {activeTab === "Sentiment" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
             <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendingUp size={14} className="text-gold" /> Sentiment Analysis</h2>
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <TrendingUp size={24} className="text-muted mb-2" />
               <p className="text-xs text-muted">No sentiment data yet.</p>
               <p className="text-[10px] text-muted mt-1">Sentiment is tracked automatically as calls complete.</p>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* ═══ VOICES TAB ═══ */}
       {activeTab === "Voices" && (
-        <div className="card p-4">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold flex items-center gap-2">
               <Mic size={14} className="text-gold" /> ElevenLabs Voices
@@ -665,7 +669,7 @@ export default function ElevenAgentsPage() {
               </div>
             ) : null}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ SCRIPTS TAB ═══ */}
@@ -690,7 +694,7 @@ export default function ElevenAgentsPage() {
       {/* ═══ A/B TESTS TAB ═══ */}
       {activeTab === "A/B Tests" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
             <h2 className="text-sm font-semibold mb-3">A/B Script Testing</h2>
             <div className="grid grid-cols-3 gap-3 mb-4">
               <input value={abTestName} onChange={e => setAbTestName(e.target.value)} className="input text-xs" placeholder="Test name" />
@@ -727,17 +731,17 @@ export default function ElevenAgentsPage() {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* ═══ SCHEDULING TAB ═══ */}
       {activeTab === "Scheduling" && (
-        <div className="card p-4">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Calendar size={14} className="text-gold" /> Call Scheduling</h2>
           <div className="space-y-2">
             {scheduledCalls.map(s => (
-              <div key={s.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+              <div key={s.id} className="flex items-center gap-3 p-3 rounded-lg glass-md">
                 <Clock size={14} className="text-gold shrink-0" />
                 <div className="flex-1">
                   <p className="text-[11px] font-medium">{s.list}</p>
@@ -748,25 +752,25 @@ export default function ElevenAgentsPage() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ CONTACTS TAB ═══ */}
       {activeTab === "Contacts" && (
-        <div className="card p-4">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-gold" /> Contact Lists</h2>
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <Users size={24} className="text-muted mb-2" />
             <p className="text-xs text-muted">No contact lists yet.</p>
             <p className="text-[10px] text-muted mt-1">Upload a contact list to start calling.</p>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ ANALYTICS TAB ═══ */}
       {activeTab === "Analytics" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
             <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-gold" /> Call Analytics</h2>
             <div className="space-y-3">
               <div>
@@ -790,13 +794,13 @@ export default function ElevenAgentsPage() {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* ═══ COMPLIANCE TAB ═══ */}
       {activeTab === "Compliance" && (
-        <div className="card p-4">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Shield size={14} className="text-gold" /> Compliance Settings</h2>
           <div className="space-y-3">
             {[
@@ -823,12 +827,12 @@ export default function ElevenAgentsPage() {
               <p className="text-[10px] text-muted">Ensure all AI voice agents comply with local and federal regulations. Always disclose that the call is from an AI system when required by law.</p>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ TRANSFER RULES TAB ═══ */}
       {activeTab === "Transfer Rules" && (
-        <div className="card p-4">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><ArrowRight size={14} className="text-gold" /> Call Transfer Rules</h2>
           <div className="space-y-2">
             {transferRules.map(rule => (
@@ -846,7 +850,7 @@ export default function ElevenAgentsPage() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

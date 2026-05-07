@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { BookOpen, Plus, Users, DollarSign, Eye, EyeOff, Trash2, Pencil, Lock } from "lucide-react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import Link from "next/link";
@@ -148,7 +149,7 @@ export default function CoursesPage() {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white/5 rounded-xl h-52 animate-pulse" />
+              <div key={i} className="glass rounded-xl h-52 animate-pulse" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
@@ -159,10 +160,11 @@ export default function CoursesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filtered.map(course => (
+            {filtered.map((course, i) => (
               <CourseCard
                 key={course.id}
                 course={course}
+                index={i}
                 onDelete={handleDelete}
                 onTogglePublish={handleTogglePublish}
               />
@@ -174,7 +176,7 @@ export default function CoursesPage() {
       {/* Create modal */}
       {showCreate && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-6 w-full max-w-md">
+          <div className="glass rounded-2xl p-6 w-full max-w-md">
             <h2 className="text-lg font-semibold text-white mb-4">New Course</h2>
             <div className="space-y-4">
               <div>
@@ -183,7 +185,7 @@ export default function CoursesPage() {
                   value={newTitle}
                   onChange={e => setNewTitle(e.target.value)}
                   placeholder="e.g. 12-Week Fitness Program"
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500"
+                  className="w-full glass rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500"
                 />
               </div>
               <div>
@@ -193,7 +195,7 @@ export default function CoursesPage() {
                   onChange={e => setNewDescription(e.target.value)}
                   rows={2}
                   placeholder="Brief description…"
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500 resize-none"
+                  className="w-full glass rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500 resize-none"
                 />
               </div>
               <div className="flex items-center gap-3">
@@ -214,7 +216,7 @@ export default function CoursesPage() {
                       value={newPrice}
                       onChange={e => setNewPrice(e.target.value)}
                       placeholder="0.00"
-                      className="w-24 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-white text-sm focus:outline-none focus:border-purple-500"
+                      className="w-24 glass rounded-lg px-2 py-1.5 text-white text-sm focus:outline-none focus:border-purple-500"
                     />
                   </div>
                 )}
@@ -244,15 +246,22 @@ export default function CoursesPage() {
 
 function CourseCard({
   course,
+  index,
   onDelete,
   onTogglePublish,
 }: {
   course: Course;
+  index: number;
   onDelete: (id: string) => void;
   onTogglePublish: (c: Course) => void;
 }) {
   return (
-    <div className="group bg-white/5 hover:bg-white/8 border border-white/10 rounded-xl overflow-hidden transition-all">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06, duration: 0.4 }}
+      whileHover={{ y: -4, scale: 1.01 }}
+      className="group glass rounded-xl overflow-hidden">
       {/* Thumbnail */}
       <div className="relative h-36 bg-gradient-to-br from-purple-900/40 to-indigo-900/40 flex items-center justify-center">
         {course.thumbnail_url ? (
@@ -330,6 +339,6 @@ function CourseCard({
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

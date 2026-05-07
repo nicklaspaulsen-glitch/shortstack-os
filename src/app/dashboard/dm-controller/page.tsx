@@ -10,6 +10,7 @@ import {
   PauseCircle, Wand2, CircleDot, UserCheck, Calendar,
   Loader2, X, ChevronRight, FileText, Lightbulb, Star, Flag,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
@@ -554,11 +555,11 @@ export default function DMControllerPage() {
 
       {/* Stat strip */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-        <StatTile label="Total Sent"           value={totalSent.toLocaleString()}    icon={<Send size={12} />}           tone="gold"  />
-        <StatTile label="Reply Rate"           value={`${replyRate}%`}               icon={<MessageSquare size={12} />}  tone="green" />
-        <StatTile label="Positive Replies"     value={`${positiveReplyRate}%`}       icon={<ThumbsUp size={12} />}       tone="blue"  />
-        <StatTile label="Booked Calls"         value={totalBooked.toLocaleString()}  icon={<UserCheck size={12} />}      tone="purple"/>
-        <StatTile label="Active Campaigns"     value={campaigns.filter(c => c.status === "running").length} icon={<Target size={12} />} tone="pink" />
+        <StatTile label="Total Sent"           value={totalSent.toLocaleString()}    icon={<Send size={12} />}           tone="gold"   index={0} />
+        <StatTile label="Reply Rate"           value={`${replyRate}%`}               icon={<MessageSquare size={12} />}  tone="green"  index={1} />
+        <StatTile label="Positive Replies"     value={`${positiveReplyRate}%`}       icon={<ThumbsUp size={12} />}       tone="blue"   index={2} />
+        <StatTile label="Booked Calls"         value={totalBooked.toLocaleString()}  icon={<UserCheck size={12} />}      tone="purple" index={3} />
+        <StatTile label="Active Campaigns"     value={campaigns.filter(c => c.status === "running").length} icon={<Target size={12} />} tone="pink" index={4} />
       </div>
 
       {/* Compliance stripe */}
@@ -1204,22 +1205,20 @@ export default function DMControllerPage() {
       {activeTab === "analytics" && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="card p-3 text-center">
-              <p className="text-2xl font-bold font-mono">{totalSent}</p>
-              <p className="text-[10px] text-muted">Sent today</p>
-            </div>
-            <div className="card p-3 text-center">
-              <p className="text-2xl font-bold font-mono text-green-400">{replyRate}%</p>
-              <p className="text-[10px] text-muted">Reply Rate</p>
-            </div>
-            <div className="card p-3 text-center">
-              <p className="text-2xl font-bold font-mono text-blue-400">{positiveReplyRate}%</p>
-              <p className="text-[10px] text-muted">Positive Reply Rate</p>
-            </div>
-            <div className="card p-3 text-center">
-              <p className="text-2xl font-bold font-mono text-gold">{totalBooked}</p>
-              <p className="text-[10px] text-muted">Booked Calls</p>
-            </div>
+            {[
+              { val: totalSent, label: "Sent today", color: "" },
+              { val: `${replyRate}%`, label: "Reply Rate", color: "text-green-400" },
+              { val: `${positiveReplyRate}%`, label: "Positive Reply Rate", color: "text-blue-400" },
+              { val: totalBooked, label: "Booked Calls", color: "text-gold" },
+            ].map((s, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div className="p-3">
+                  <p className={cn("text-2xl font-bold font-mono", s.color)}>{s.val}</p>
+                  <p className="text-[10px] text-muted">{s.label}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* Per-platform breakdown */}
@@ -1614,7 +1613,7 @@ export default function DMControllerPage() {
 /*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
-function StatTile({ label, value, icon, tone }: { label: string; value: string | number; icon?: React.ReactNode; tone?: "gold" | "green" | "blue" | "purple" | "pink" }) {
+function StatTile({ label, value, icon, tone, index }: { label: string; value: string | number; icon?: React.ReactNode; tone?: "gold" | "green" | "blue" | "purple" | "pink"; index?: number }) {
   const toneClass = {
     gold:   "text-gold",
     green:  "text-green-400",
@@ -1623,13 +1622,21 @@ function StatTile({ label, value, icon, tone }: { label: string; value: string |
     pink:   "text-pink-400",
   }[tone || "gold"];
   return (
-    <div className="card p-3">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-[9px] text-muted uppercase tracking-wider">{label}</span>
-        {icon && <span className={cn("opacity-70", toneClass)}>{icon}</span>}
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: (index ?? 0) * 0.06, duration: 0.4 }}
+      className="glass rounded-xl overflow-hidden"
+    >
+      <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[9px] text-muted uppercase tracking-wider">{label}</span>
+          {icon && <span className={cn("opacity-70", toneClass)}>{icon}</span>}
+        </div>
+        <p className={cn("text-xl font-bold font-mono", toneClass)}>{value}</p>
       </div>
-      <p className={cn("text-xl font-bold font-mono", toneClass)}>{value}</p>
-    </div>
+    </motion.div>
   );
 }
 

@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
 import {
   LayoutDashboard, Plus, Trash2, Loader2, Save, GripVertical,
@@ -36,6 +37,7 @@ function getWidgetDef(id: WidgetId) {
 
 function WidgetCard({
   instance,
+  index,
   onRemove,
   onDragStart,
   onDragOver,
@@ -43,6 +45,7 @@ function WidgetCard({
   isDragOver,
 }: {
   instance: WidgetInstance;
+  index: number;
   onRemove: () => void;
   onDragStart: (e: React.DragEvent) => void;
   onDragOver: (e: React.DragEvent) => void;
@@ -51,36 +54,43 @@ function WidgetCard({
 }) {
   const def = getWidgetDef(instance.widgetId);
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06, duration: 0.4 }}
+      whileHover={{ y: -4, scale: 1.01 }}
       draggable
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDrop={onDrop}
-      className={`rounded-xl border bg-gradient-to-br ${def.bg} p-4 flex flex-col gap-3 cursor-grab active:cursor-grabbing transition-all select-none ${
-        isDragOver ? "border-[#6366F1]/60 scale-[1.02]" : "border-white/10"
+      className={`glass rounded-xl overflow-hidden cursor-grab active:cursor-grabbing transition-all select-none ${
+        isDragOver ? "border-[#6366F1]/60 scale-[1.02]" : ""
       }`}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <GripVertical className="w-4 h-4 text-white/20 shrink-0" />
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: `${def.color}20`, color: def.color }}
-          >
-            {def.icon}
+      <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+      <div className="p-4 flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <GripVertical className="w-4 h-4 text-white/20 shrink-0" />
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ background: `${def.color}20`, color: def.color }}
+            >
+              {def.icon}
+            </div>
+            <span className="text-xs font-semibold text-white/70">{def.label}</span>
           </div>
-          <span className="text-xs font-semibold text-white/70">{def.label}</span>
+          <button
+            onClick={onRemove}
+            className="w-6 h-6 rounded-md flex items-center justify-center text-white/20 hover:text-red-400 hover:bg-red-400/10 transition-all"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
         </div>
-        <button
-          onClick={onRemove}
-          className="w-6 h-6 rounded-md flex items-center justify-center text-white/20 hover:text-red-400 hover:bg-red-400/10 transition-all"
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-        </button>
+        <p className="text-2xl font-bold text-white/30 pl-6">--</p>
+        <p className="text-[10px] text-white/30 pl-6 uppercase tracking-wider">No data yet</p>
       </div>
-      <p className="text-2xl font-bold text-white/30 pl-6">–</p>
-      <p className="text-[10px] text-white/30 pl-6 uppercase tracking-wider">No data yet</p>
-    </div>
+    </motion.div>
   );
 }
 
@@ -212,7 +222,7 @@ export default function CustomDashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Widget picker sidebar */}
-        <div className="lg:col-span-1 rounded-xl border border-white/8 bg-white/3 p-4 flex flex-col gap-3 h-fit">
+        <div className="lg:col-span-1 glass rounded-xl p-4 flex flex-col gap-3 h-fit">
           <p className="text-xs font-semibold uppercase tracking-widest text-white/40">
             Add Widgets
           </p>
@@ -221,7 +231,7 @@ export default function CustomDashboardPage() {
               <button
                 key={wt.id}
                 onClick={() => addWidget(wt.id)}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-white/3 hover:bg-white/8 border border-white/6 hover:border-white/12 transition-all text-left"
+                className="flex items-center gap-2.5 px-3 py-2 rounded-lg glass-md hover:bg-white/8 hover:border-white/12 transition-all text-left"
               >
                 <div
                   className="w-7 h-7 rounded-md flex items-center justify-center shrink-0"
@@ -256,6 +266,7 @@ export default function CustomDashboardPage() {
                 <WidgetCard
                   key={w.instanceId}
                   instance={w}
+                  index={idx}
                   onRemove={() => removeWidget(w.instanceId)}
                   onDragStart={handleDragStart(idx)}
                   onDragOver={handleDragOver(idx)}
