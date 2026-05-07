@@ -222,25 +222,25 @@ The visual foundation is locked. Authoritative source:
 mirrors the same hex values via `tailwind.config.ts`; CSS variables in
 `src/app/globals.css` mirror them again at `:root`.
 
-Direction: **Editorial Bento × OLED Dark × 3D Depth × Liquid-Glass Accents**.
+Direction: **Prism Split × OLED Dark × Sharp Corners × Red/White/Black**.
 
 ### Locked color palette
-- **Brand: INDIGO** `#6366F1` — the primary accent on dark surfaces.
-  Three variants: `#6366F1` (indigo-500, default), `#A78BFA`
-  (violet-400, hover/highlight), `#4F46E5` (indigo-600, AA on light).
-  Do **not** introduce gold/amber/lime accents in new pages.
-- **Surfaces:** `--bg-base #070708` (near-black OLED),
+- **Brand: PRISM RED** `#FF2D2D` — the primary accent on dark surfaces.
+  Three variants: `#FF2D2D` (hero red, default), `#FF6B6B`
+  (soft, hover/highlight), `#CC2424` (dim, AA on light surfaces).
+  Do **not** introduce indigo/gold/amber/lime accents in new pages.
+- **Surfaces:** `--bg-base #050507` (near-black OLED),
   `--bg-surface-1 #101012`, `--bg-surface-2 #17171A`,
   `--bg-surface-3 #26262B`.
-- **Borders:** every border carries a faint indigo tint —
-  `--border-subtle rgba(99,102,241,0.07)` /
-  `--border-strong rgba(99,102,241,0.16)`.
-- **Text:** `--text-primary #F5F5F7` (soft off-white, never pure
-  `#FFFFFF`), `--text-secondary #A8A8B2`, `--text-muted #6F6F7A`.
-- **Editorial charcoal:** `--brand-plum #1F1F23` (replaces old deep-plum
-  `#3F0D2D` — used for subtle raised surfaces and badge backgrounds).
+- **Borders:** white-tinted (not color-tinted) —
+  `--border-subtle rgba(255,255,255,0.07)` /
+  `--border-strong rgba(255,255,255,0.16)`.
+- **Text:** `--text-primary #F0F0F4` (soft off-white, never pure
+  `#FFFFFF`), `--text-secondary #A8A8B2`, `--text-muted #4A4A5A`.
+- **Editorial charcoal:** `--brand-plum #1F1F23` (used for subtle
+  raised surfaces and badge backgrounds).
 - **Accent alias:** `--brand-lime` is a back-compat alias that resolves
-  to `#6366F1` (same as `--brand-accent`). Do not use it in new code.
+  to `#FF2D2D` (same as `--brand-accent`). Do not use it in new code.
 
 ### Font stack (locked)
 - **Satoshi** — display only (page titles, hero numbers, big counters).
@@ -258,7 +258,7 @@ Direction: **Editorial Bento × OLED Dark × 3D Depth × Liquid-Glass Accents**.
 - `prefers-reduced-motion: reduce` → cap to 100ms, disable transforms.
 
 ### Stack 3D mark
-The signature brand mark — three indigo-edged stacked rectangular blocks
+The signature brand mark — three red-edged stacked rectangular blocks
 at slight rotation. Component: `src/components/brand/stack-3d.tsx`.
 Use exactly this pattern, do not invent variations:
 ```tsx
@@ -277,16 +277,16 @@ pointer-events: none. The component itself is server-safe.
 
 ### Existing color names (back-compat shim)
 The 100+ pages still use the original Tailwind class names. Those stay
-registered in `tailwind.config.ts` and now point to the indigo palette:
-- `text-gold-*` / `bg-gold-*` / `border-gold-*` → indigo scale
-- `text-amber-*` / `bg-amber-*` / `border-amber-*` → indigo scale
+registered in `tailwind.config.ts` and now point to the prism red palette:
+- `text-gold-*` / `bg-gold-*` / `border-gold-*` → prism red scale
+- `text-amber-*` / `bg-amber-*` / `border-amber-*` → prism red scale
 - `text-purple-*` / `bg-purple-*` / `border-purple-*` → charcoal/plum scale
-- `text-indigo-*` / `bg-indigo-*` / `border-indigo-*` → indigo scale
-- `bg-brand-lime` / `text-brand-lime` / `border-brand-lime` → indigo scale
+- `text-indigo-*` / `bg-indigo-*` / `border-indigo-*` → prism red scale
+- `bg-brand-lime` / `text-brand-lime` / `border-brand-lime` → prism red scale
 
 For **new code**, reference the canonical brand-foundation classes
 (`bg-brand-accent`, `border-border-subtle`, `text-text-primary`, etc.) or
-import `tokens` from `@/lib/brand/tokens` (`tokens.brand.accent = "#6366F1"`).
+import `tokens` from `@/lib/brand/tokens` (`tokens.brand.accent = "#FF2D2D"`).
 Do not introduce new uses of the legacy `gold`/`amber`/`purple`/`lime`
 shade names.
 
