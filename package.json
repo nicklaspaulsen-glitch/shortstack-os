@@ -79,6 +79,7 @@
     "@aws-sdk/s3-request-presigner": "^3.1037.0",
     "@iconify-icons/solar": "^1.2.3",
     "@iconify/react": "^6.0.2",
+    "@mendable/firecrawl-js": "^4.22.2",
     "@nangohq/frontend": "^0.70.1",
     "@nangohq/node": "^0.70.1",
     "@react-three/drei": "9.114.3",
