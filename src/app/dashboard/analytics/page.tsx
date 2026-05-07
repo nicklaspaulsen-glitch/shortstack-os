@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
 import { StatSkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import PageHero from "@/components/ui/page-hero";
 import Link from "next/link";
 
 const CHART_COLORS = ["#6366F1", "#A78BFA", "#7FE5B8", "#F26063", "#FFC062", "#4F46E5"];
@@ -375,38 +376,38 @@ export default function AnalyticsPage() {
   return (
     <MotionPage className="space-y-4">
 
-      {/* ── Slim compact header (Higgsfield pattern) ── */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809] rounded-xl">
-        <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
-          <BarChart3 size={13} className="text-[#6366F1]" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Analytics</h1>
-          <p className="text-[9px] text-[#6F6D7A]">Leads · Revenue · Content ROI</p>
-        </div>
-        {stats.totalMRR > 0 && (
-          <motion.span
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.15)] text-[#A78BFA]"
-          >
-            <span className="w-1 h-1 rounded-full bg-[#6366F1] animate-pulse" />
-            {formatCurrency(stats.totalMRR)} MRR
-          </motion.span>
-        )}
-        {!isLoading && (
-          <span className="hidden md:flex items-center gap-1 text-[9px] text-[#6F6D7A] px-2 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
-            {replyRate}% reply rate
-          </span>
-        )}
-        <button
-          onClick={handleExport}
-          className="flex items-center gap-1.5 rounded-lg border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.06)] px-2.5 py-1.5 text-[10px] font-semibold text-[#6366F1] hover:bg-[rgba(99,102,241,0.12)] transition-colors duration-150 shrink-0"
-        >
-          <Download size={11} /> Export
-        </button>
-      </div>
+      <PageHero
+        title="Analytics"
+        subtitle="Leads · Revenue · Content ROI"
+        icon={<BarChart3 size={28} />}
+        gradient="blue"
+        actions={
+          <div className="flex items-center gap-2">
+            {stats.totalMRR > 0 && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.15)] text-[#A78BFA]"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
+                {formatCurrency(stats.totalMRR)} MRR
+              </motion.span>
+            )}
+            {!isLoading && (
+              <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
+                {replyRate}% reply rate
+              </span>
+            )}
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-1.5 rounded-lg border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.06)] px-3 py-1.5 text-xs font-semibold text-[#6366F1] hover:bg-[rgba(99,102,241,0.12)] transition-colors duration-150"
+            >
+              <Download size={13} /> Export
+            </button>
+          </div>
+        }
+      />
 
       {/* ── Loading ──────────────────────────────────────────────────────── */}
       {isLoading && (

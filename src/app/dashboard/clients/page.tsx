@@ -24,6 +24,7 @@ import { motion } from "framer-motion";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageHero from "@/components/ui/page-hero";
 
 // --- Types for new features ---
 type ClientTag = { label: string; color: string };
@@ -624,66 +625,66 @@ export default function ClientsPage() {
 
   return (
     <MotionPage className="space-y-4">
-      {/* ── Higgsfield compact header — 52px slim bar ── */}
-      <div className="flex items-center gap-3 flex-wrap px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809]">
-        <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
-          <Users size={13} className="text-[#6366F1]" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Clients</h1>
-          <p className="text-[9px] text-[#6F6D7A]">
-            {callerRole === "admin" || callerRole === "founder"
-              ? scope === "all"
-                ? `${clients.length} clients across the platform`
-                : "Your agency clients"
-              : "Accounts · Contracts · Invoices"}
-          </p>
-        </div>
-        {/* Stat chips */}
-        {clients.length > 0 && (
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.18)] text-[10px] font-medium text-[#6366F1]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
-              {clients.length}
-            </span>
-            {totalMRR > 0 && (
-              <span className="px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[10px] font-medium text-[#9F9DAA]">
-                {formatCurrency(totalMRR)}
-              </span>
+      <PageHero
+        title="Clients"
+        subtitle={
+          callerRole === "admin" || callerRole === "founder"
+            ? scope === "all"
+              ? `${clients.length} clients across the platform`
+              : "Your agency clients"
+            : "Accounts · Contracts · Invoices"
+        }
+        icon={<Users size={28} />}
+        gradient="purple"
+        actions={
+          <div className="flex items-center gap-2">
+            {/* Stat chips */}
+            {clients.length > 0 && (
+              <div className="hidden sm:flex items-center gap-1.5">
+                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.18)] text-[10px] font-medium text-[#6366F1]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
+                  {clients.length}
+                </span>
+                {totalMRR > 0 && (
+                  <span className="px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[10px] font-medium text-[#A8A8B2]">
+                    {formatCurrency(totalMRR)}
+                  </span>
+                )}
+              </div>
             )}
-          </div>
-        )}
-        {/* Scope switcher (admin/founder only) */}
-        {(callerRole === "admin" || callerRole === "founder") && (
-          <div className="flex items-center bg-[#15141A] border border-[rgba(255,255,255,0.06)] rounded-lg p-0.5 shrink-0">
+            {/* Scope switcher (admin/founder only) */}
+            {(callerRole === "admin" || callerRole === "founder") && (
+              <div className="flex items-center bg-[#15141A] border border-[rgba(255,255,255,0.06)] rounded-lg p-0.5">
+                <button
+                  onClick={() => setScope("all")}
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                    scope === "all" ? "bg-[#6366F1] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
+                  }`}
+                  title="See every client across every agency"
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setScope("mine")}
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                    scope === "mine" ? "bg-[#6366F1] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
+                  }`}
+                  title="See only the clients you personally added"
+                >
+                  Mine
+                </button>
+              </div>
+            )}
+            {/* Add Client CTA */}
             <button
-              onClick={() => setScope("all")}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
-                scope === "all" ? "bg-[#6366F1] text-white" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
-              }`}
-              title="See every client across every agency"
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-semibold hover:bg-[#4F46E5] transition-all"
             >
-              All
-            </button>
-            <button
-              onClick={() => setScope("mine")}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
-                scope === "mine" ? "bg-[#6366F1] text-white" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
-              }`}
-              title="See only the clients you personally added"
-            >
-              Mine
+              <Plus size={13} /> Add Client
             </button>
           </div>
-        )}
-        {/* Add Client CTA */}
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-[11px] font-semibold hover:bg-[#4F46E5] transition-all shrink-0"
-        >
-          <Plus size={12} /> Add Client
-        </button>
-      </div>
+        }
+      />
 
       {/* Tabs (sticky) */}
       <div className="overflow-x-auto max-w-full">

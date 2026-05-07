@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { MotionPage } from "@/components/motion/motion-page";
+import PageHero from "@/components/ui/page-hero";
 import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
@@ -155,44 +156,44 @@ export default function AIStudioPage() {
   return (
     <MotionPage className="p-0">
 
-      {/* ── SLIM HEADER — Higgsfield-style compact chrome ─────────── */}
-      {/* Single-line bar: icon + title + stat chips + controls. No hero, no scroll. */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809]">
-        <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
-          <Layers size={13} className="text-[#6366F1]" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">AI Studio</h1>
-          <p className="text-[9px] text-[#6F6D7A]">Creative Suite · 9 tools</p>
-        </div>
-        {/* Live stat chips */}
-        {history.length > 0 && (
-          <motion.span
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.15)] text-[#A78BFA]"
-          >
-            <span className="w-1 h-1 rounded-full bg-[#6366F1] animate-pulse" />
-            {history.filter(j => j.status === "completed").length} done
-          </motion.span>
-        )}
-        <span className="hidden md:flex items-center gap-1 text-[9px] text-[#6F6D7A] px-2 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
-          {TOOLS.find(t => t.id === activeTool)?.name ?? "—"}
-        </span>
-        <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-        {advancedMode && (
-          <button
-            onClick={() => {
-              setActiveTool("image-gen");
-              setCreationWizardOpen(true);
-            }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-bold shadow-lg shadow-[rgba(99,102,241,0.15)] hover:brightness-105 transition-all"
-          >
-            <Sparkles size={12} />
-            New with AI
-          </button>
-        )}
-      </div>
+      <PageHero
+        title="AI Studio"
+        subtitle="Creative Suite · 9 tools"
+        icon={<Layers size={28} />}
+        gradient="blue"
+        actions={
+          <div className="flex items-center gap-2">
+            {/* Live completion chip */}
+            {history.length > 0 && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.15)] text-[#A78BFA]"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
+                {history.filter(j => j.status === "completed").length} done
+              </motion.span>
+            )}
+            {/* Active tool chip */}
+            <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
+              {TOOLS.find(t => t.id === activeTool)?.name ?? "—"}
+            </span>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            {advancedMode && (
+              <button
+                onClick={() => {
+                  setActiveTool("image-gen");
+                  setCreationWizardOpen(true);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-bold shadow-lg shadow-[rgba(99,102,241,0.15)] hover:brightness-105 transition-all"
+              >
+                <Sparkles size={13} />
+                New with AI
+              </button>
+            )}
+          </div>
+        }
+      />
 
       {/* ── GUIDED MODE ─────────────────────────────────────────── */}
       {!advancedMode && (
