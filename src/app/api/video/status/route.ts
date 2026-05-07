@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-// Poll RunPod job status for async video generation (Mochi / Higgsfield)
+// Poll job status for async video generation (Mochi/RunPod or fal.ai)
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -10,6 +10,48 @@ export async function GET(request: NextRequest) {
   const jobId = request.nextUrl.searchParams.get("job_id");
   if (!jobId) return NextResponse.json({ error: "job_id required" }, { status: 400 });
 
+  const source = request.nextUrl.searchParams.get("source"); // "fal" | null (RunPod default)
+
+  // fal.ai async job polling
+  if (source === "fal") {
+    const falKey = process.env.FAL_KEY;
+    if (!falKey) {
+      return NextResponse.json({ error: "FAL_KEY not configured" }, { status: 500 });
+    }
+    const falModel = request.nextUrl.searchParams.get("fal_model") || "fal-ai/ltx-video";
+
+    const res = await fetch(
+      `https://queue.fal.run/${falModel}/requests/${jobId}/status?logs=0`,
+      { headers: { Authorization: `Key ${falKey}` } }
+    );
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: `fal.ai status HTTP ${res.status}` },
+        { status: 502 }
+      );
+    }
+    const job = (await res.json()) as {
+      status?: string;
+      output?: { video?: { url?: string }; url?: string };
+      error?: string;
+    };
+
+    let url: string | null = null;
+    if (job.status === "COMPLETED" && job.output) {
+      url = job.output.video?.url || job.output.url || null;
+    }
+
+    return NextResponse.json({
+      job_id: jobId,
+      source: "fal",
+      fal_model: falModel,
+      status: job.status ?? "UNKNOWN",
+      url,
+      error: job.error || null,
+    });
+  }
+
+  // RunPod/Mochi polling (default)
   const videoUrl = process.env.HIGGSFIELD_URL;
   const runpodKey = process.env.RUNPOD_API_KEY;
   if (!videoUrl || !runpodKey) {
@@ -29,6 +71,7 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({
     job_id: jobId,
+    source: "mochi",
     status: job.status,
     url: videoResultUrl,
     error: job.error || null,

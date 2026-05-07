@@ -369,6 +369,83 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Option 2.5: fal.ai open-source video gen (LTX-Video → CogVideoX → Wan2.1)
+  // Free/cheap open-source models hosted on fal.ai — no RunPod dependency
+  const falKey = process.env.FAL_KEY;
+  if (falKey && !plan_only) {
+    const FAL_MODELS = [
+      { id: "fal-ai/ltx-video",    name: "LTX-Video"  },
+      { id: "fal-ai/cogvideox-5b", name: "CogVideoX"  },
+      { id: "fal-ai/wan/t2v/480p", name: "Wan2.1-T2V" },
+    ] as const;
+
+    for (const model of FAL_MODELS) {
+      attempted.push(`fal-${model.name}`);
+      try {
+        const falPrompt =
+          (script && script.length > 20 ? script.slice(0, 500) : "") ||
+          `${title || "Untitled"} — ${style || "modern"} style`;
+
+        const res = await fetch(`https://queue.fal.run/${model.id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Key ${falKey}`,
+          },
+          body: JSON.stringify({
+            prompt: falPrompt,
+            negative_prompt:
+              "blurry, low quality, watermark, text overlay, frozen, no motion, amateur",
+            num_inference_steps: 50,
+          }),
+        });
+
+        if (!res.ok) {
+          lastError = `fal.ai ${model.name}: HTTP ${res.status}`;
+          continue;
+        }
+
+        const job = (await res.json()) as {
+          request_id?: string;
+          status?: string;
+          output?: { video?: { url?: string }; url?: string };
+        };
+
+        // Synchronous completion (rare but possible for short queues)
+        if (job.status === "COMPLETED" && job.output) {
+          const url =
+            job.output.video?.url || job.output.url || null;
+          if (url) {
+            return NextResponse.json({
+              success: true,
+              source: "fal",
+              fal_model: model.id,
+              url,
+              status: "completed",
+            });
+          }
+        }
+
+        // Async: fal returns a request_id for polling
+        if (job.request_id) {
+          return NextResponse.json({
+            success: true,
+            source: "fal",
+            fal_model: model.id,
+            job_id: job.request_id,
+            status_url: `/api/video/status?source=fal&fal_model=${encodeURIComponent(model.id)}&job_id=${job.request_id}`,
+            status: job.status || "IN_QUEUE",
+          });
+        }
+
+        lastError = `fal.ai ${model.name}: no request_id returned`;
+      } catch (err) {
+        lastError = `fal.ai ${model.name}: ${err instanceof Error ? err.message : String(err)}`;
+        console.error(`[video/render] fal.ai ${model.name} failed:`, err);
+      }
+    }
+  }
+
   // Option 3: Generate video plan with AI (self-hosted LLM first, Claude fallback)
   // Try self-hosted LLM first to save Claude tokens
   const llmUrl = process.env.RUNPOD_LLM_URL;
