@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useRef, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import { tokens, themeTokens } from "@/lib/brand/tokens";
 
 /**
@@ -31,6 +32,8 @@ interface StatCardProps {
   accentColor?: string;
   /** Optional array of recent values for an inline sparkline. */
   sparkline?: number[];
+  /** Stagger index for entrance animation delay. */
+  index?: number;
 }
 
 function useAnimatedNumber(target: number, duration = 1200, enabled = false) {
@@ -124,6 +127,7 @@ export default function StatCard({
   size = "bento-1x1",
   accentColor,
   sparkline,
+  index = 0,
 }: StatCardProps) {
   const accent = accentColor ?? tokens.brand.lime;
   const changeColor = {
@@ -168,10 +172,10 @@ export default function StatCard({
   );
 
   return (
-    <div
+    <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
-      className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden rounded-2xl flex flex-col gap-1.5 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 transition-all duration-220 ease-out`}
+      className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden rounded-2xl flex flex-col gap-1.5 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 tilt-3d`}
       // Apr 28 v9 fix: surface bg now uses themeTokens (CSS-var-backed)
       // so the card flips white on light theme. Was hardcoded
       // tokens.bg.surface1 (dark hex baked at import time, ignored
@@ -187,10 +191,10 @@ export default function StatCard({
           "0 12px 28px -12px rgba(0,0,0,0.18)",
           `0 0 24px -8px ${accent}22`,
         ].join(", "),
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(12px)",
-        transition: "opacity 480ms cubic-bezier(0.32,0.72,0,1), transform 480ms cubic-bezier(0.32,0.72,0,1), box-shadow 220ms cubic-bezier(0.32,0.72,0,1)",
       }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 12 }}
+      transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1], delay: index * 0.06 }}
       data-premium={premium ? "true" : undefined}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-2px) rotate(0.4deg)";
@@ -274,6 +278,6 @@ export default function StatCard({
           <Sparkline data={sparkline} color={accent} />
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

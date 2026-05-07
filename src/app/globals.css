@@ -1523,6 +1523,76 @@ body {
   box-shadow: 0 0 12px -2px rgba(var(--brand-accent-rgb, 99 102 241) / 0.35);
 }
 
+/* ═══════════ GLASS PANEL SYSTEM ═══════════ */
+.glass {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.glass-md {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+.glass-strong {
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid rgba(255,255,255,0.14);
+}
+/* Indigo-tinted glass for brand surfaces */
+.glass-indigo {
+  background: rgba(99,102,241,0.06);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(99,102,241,0.15);
+  box-shadow: 0 0 0 1px rgba(99,102,241,0.08) inset, 0 8px 32px rgba(99,102,241,0.08);
+}
+
+/* ═══════════ 3D PERSPECTIVE TILT ═══════════ */
+/* Apply to any card for subtle depth on hover */
+.tilt-3d {
+  transition: transform 0.3s cubic-bezier(0.32,0.72,0,1), box-shadow 0.3s cubic-bezier(0.32,0.72,0,1);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-3d:hover {
+  transform: perspective(800px) rotateX(-2deg) translateY(-1px);
+  box-shadow: 0 4px 24px rgba(99,102,241,0.15), 0 2px 8px rgba(0,0,0,0.3), 0 20px 48px -12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* ═══════════ AMBIENT RADIAL OVERLAYS ═══════════ */
+/* Drop inside relative containers for atmospheric depth */
+.ambient-indigo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(99,102,241,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.ambient-radial::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 30% 40%, rgba(255,255,255,0.04) 0%, transparent 60%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ═══════════ PREMIUM DROP SHADOWS ═══════════ */
+.shadow-glass {
+  box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 2px 4px rgba(0,0,0,0.2), 0 8px 24px -4px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+}
+.shadow-glass-indigo {
+  box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 2px 4px rgba(0,0,0,0.2), 0 8px 24px -4px rgba(99,102,241,0.12), 0 20px 48px -12px rgba(0,0,0,0.4), 0 0 0 1px rgba(99,102,241,0.10);
+}
+.shadow-lift {
+  box-shadow: 0 4px 24px rgba(99,102,241,0.18), 0 2px 8px rgba(0,0,0,0.28), 0 18px 40px -12px rgba(0,0,0,0.50);
+}
+
 /* Subtle icon breathing on idle nav items — one at a time */
 .nav-icon-alive {
   animation: iconShimmer 6s ease-in-out infinite;

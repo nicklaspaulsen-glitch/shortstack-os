@@ -360,16 +360,16 @@ export default function PageHero({
       {/* Content */}
       <motion.div
         className={`relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-5 ${VARIANT_PADDING[variant]}`}
-        initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: reduceMotion ? 0.1 : 0.48,
-          ease: [0.32, 0.72, 0, 1],
+        initial={reduceMotion ? false : "hidden"}
+        animate="visible"
+        variants={reduceMotion ? {} : {
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.06, delayChildren: 0.04 } },
         }}
       >
         <div className="flex items-start gap-4 min-w-0 flex-1">
           {icon && (
-            <div
+            <motion.div
               className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"
               style={{
                 background: treatment.iconBg,
@@ -378,28 +378,40 @@ export default function PageHero({
                 boxShadow:
                   "0 2px 6px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.06) inset",
               }}
+              variants={reduceMotion ? {} : {
+                hidden: { opacity: 0, y: 10 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
+              }}
             >
               {icon}
-            </div>
+            </motion.div>
           )}
           <div className="min-w-0">
             {eyebrow && (
-              <div
+              <motion.div
                 className="font-editorial text-sm mb-2"
                 style={{ color: treatment.accent, opacity: 0.95 }}
+                variants={reduceMotion ? {} : {
+                  hidden: { opacity: 0, y: 10 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
+                }}
               >
                 {eyebrow}
-              </div>
+              </motion.div>
             )}
-            <h1
+            <motion.h1
               className={`${VARIANT_TITLE_CLASS[variant]} tracking-[-0.025em]`}
               style={{
                 color: tokens.text.primary,
                 textShadow: "0 1px 2px rgba(0,0,0,0.45)",
               }}
+              variants={reduceMotion ? {} : {
+                hidden: { opacity: 0, y: 10 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
+              }}
             >
               {title}
-            </h1>
+            </motion.h1>
             {/* Thin lime gradient line under the title — only on hero variant
              * to keep default/compact pages from feeling over-decorated. */}
             {variant === "hero" && (
@@ -410,17 +422,27 @@ export default function PageHero({
               />
             )}
             {subtitle && (
-              <p
+              <motion.p
                 className="text-sm mt-2 max-w-2xl"
                 style={{ color: tokens.text.secondary }}
+                variants={reduceMotion ? {} : {
+                  hidden: { opacity: 0, y: 10 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
+                }}
               >
                 {subtitle}
-              </p>
+              </motion.p>
             )}
           </div>
         </div>
 
-        <div className="flex items-start gap-3 shrink-0 max-w-full md:ml-auto">
+        <motion.div
+          className="flex items-start gap-3 shrink-0 max-w-full md:ml-auto"
+          variants={reduceMotion ? {} : {
+            hidden: { opacity: 0, y: 10 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
+          }}
+        >
           {actions && (
             <div className="relative z-20 flex flex-wrap items-center justify-end gap-2 shrink-0 max-w-full">
               {actions}
@@ -435,7 +457,7 @@ export default function PageHero({
               <Stack3D size={variant === "hero" ? "md" : "sm"} />
             </div>
           )}
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );
