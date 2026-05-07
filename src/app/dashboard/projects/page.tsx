@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
 import {
   Kanban, Plus, Loader2, X, Trash2, Calendar, User, MessageSquare,
 } from "lucide-react";
@@ -512,7 +513,7 @@ export default function ProjectsPage() {
 
       {/* ── Empty state ──────────────────────────────────── */}
       {!loadingBoards && boards.length === 0 && (
-        <div className="card py-10">
+        <div className="glass rounded-xl py-10">
           <EmptyState
             icon={<Kanban size={48} />}
             title="Create your first board"
@@ -621,13 +622,16 @@ export default function ProjectsPage() {
                         isDragTarget ? "bg-gold/5 ring-1 ring-gold/20" : ""
                       }`}
                     >
-                      {columnTasks.map((task) => {
+                      {columnTasks.map((task, taskIdx) => {
                         const overdue = isOverdue(task.due_date);
                         const pri = PRIORITY_META[task.priority];
                         const assignee = getAssigneeInitial(task.assignee_profile_id);
                         return (
-                          <div
+                          <motion.div
                             key={task.id}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: taskIdx * 0.04 }}
                             draggable
                             onDragStart={() => {
                               setDraggedTaskId(task.id);
@@ -646,7 +650,7 @@ export default function ProjectsPage() {
                               if (justDraggedRef.current) return;
                               openTaskPanel(task);
                             }}
-                            className="p-3 rounded-lg bg-surface-light border border-border hover:border-gold/30 transition-all cursor-grab active:cursor-grabbing"
+                            className="p-3 rounded-lg glass-md hover:border-indigo-400/30 transition-all cursor-grab active:cursor-grabbing"
                           >
                             <p className="text-[12px] font-semibold leading-snug mb-2 break-words">
                               {task.title}
@@ -678,7 +682,7 @@ export default function ProjectsPage() {
                                 </span>
                               )}
                             </div>
-                          </div>
+                          </motion.div>
                         );
                       })}
 
@@ -690,7 +694,7 @@ export default function ProjectsPage() {
 
                       {/* Inline add-task */}
                       {addingTaskColumn === col.key ? (
-                        <div className="p-2 rounded-lg bg-surface-light border border-gold/30">
+                        <div className="p-2 rounded-lg glass border-indigo-400/30">
                           <input
                             autoFocus
                             value={newTaskTitle}
@@ -737,8 +741,11 @@ export default function ProjectsPage() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
           onClick={() => setShowNewBoard(false)}
         >
-          <div
-            className="card w-full max-w-md space-y-3 p-5"
+          <motion.div
+            initial={{ opacity: 0, y: 12, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="glass rounded-xl w-full max-w-md space-y-3 p-5"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -771,7 +778,7 @@ export default function ProjectsPage() {
                 Create
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -781,8 +788,11 @@ export default function ProjectsPage() {
           className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 pt-24"
           onClick={() => setQuickTaskOpen(false)}
         >
-          <div
-            className="card w-full max-w-lg space-y-3 p-4"
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.25 }}
+            className="glass rounded-xl w-full max-w-lg space-y-3 p-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -821,7 +831,7 @@ export default function ProjectsPage() {
                 Add task
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -831,7 +841,10 @@ export default function ProjectsPage() {
           className="fixed inset-0 z-40 bg-black/60 flex justify-end"
           onClick={() => setSelectedTask(null)}
         >
-          <div
+          <motion.div
+            initial={{ x: 40, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.3 }}
             className="w-full max-w-md h-full bg-surface border-l border-border overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
@@ -960,7 +973,7 @@ export default function ProjectsPage() {
                 ) : (
                   <div className="space-y-2">
                     {taskComments.map((c) => (
-                      <div key={c.id} className="bg-surface-light rounded-lg p-2.5">
+                      <div key={c.id} className="glass-md rounded-lg p-2.5">
                         <div className="flex items-center gap-1.5 mb-1">
                           <User size={10} className="text-muted" />
                           <span className="text-[9px] text-muted">
@@ -992,7 +1005,7 @@ export default function ProjectsPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

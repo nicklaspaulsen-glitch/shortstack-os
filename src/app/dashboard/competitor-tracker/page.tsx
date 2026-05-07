@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
@@ -119,9 +120,6 @@ export default function CompetitorTrackerPage() {
     if (!c.website) { toast.error("No website set"); return; }
     setChecking(c.id);
     try {
-      // Fetch via a CORS proxy or direct — will work for same-origin servers;
-      // for cross-origin we use the no-cors mode and extract what we can from opaque response.
-      // We use a simple approach: fetch through our own API route equivalent via native fetch.
       const resp = await fetch(
         `/api/scrape?url=${encodeURIComponent(c.website)}`,
         { signal: AbortSignal.timeout(10000) }
@@ -134,7 +132,6 @@ export default function CompetitorTrackerPage() {
         const json = await resp.json().catch(() => null);
         if (json) { title = json.title || null; description = json.description || null; }
       } else {
-        // Fallback: direct fetch (works if no CORS issue)
         const raw = await fetch(c.website, { signal: AbortSignal.timeout(8000) }).catch(() => null);
         if (raw) {
           const html = await raw.text().catch(() => "");
@@ -205,11 +202,15 @@ export default function CompetitorTrackerPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-24 rounded-xl bg-white/5 animate-pulse" />
+            <div key={i} className="h-24 rounded-xl glass-md animate-pulse" />
           ))}
         </div>
       ) : competitors.length === 0 ? (
-        <div className="rounded-xl border border-white/10 bg-white/5 p-12 text-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="glass rounded-xl p-12 text-center"
+        >
           <Crosshair size={40} className="mx-auto mb-4 text-white/20" />
           <p className="text-white/60 mb-4">No competitors tracked yet.</p>
           <button
@@ -218,17 +219,21 @@ export default function CompetitorTrackerPage() {
           >
             <Plus size={14} className="inline mr-1" /> Add Competitor
           </button>
-        </div>
+        </motion.div>
       ) : (
         <div className="space-y-3">
-          {competitors.map(c => {
+          {competitors.map((c, i) => {
             const latest = c.snapshot_history?.[0];
             const prev = c.snapshot_history?.[1] || null;
             const diff = latest ? getDiff(prev, latest) : null;
             return (
-              <div
+              <motion.div
                 key={c.id}
-                className="rounded-xl border border-white/10 bg-white/5 hover:bg-white/[0.08] p-4 transition-colors"
+                className="glass rounded-xl p-4"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                whileHover={{ y: -4, scale: 1.01 }}
               >
                 <div className="flex items-start gap-4">
                   <div className="flex-1 min-w-0">
@@ -296,7 +301,7 @@ export default function CompetitorTrackerPage() {
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -321,7 +326,7 @@ export default function CompetitorTrackerPage() {
                 value={form[key]}
                 onChange={e => setF(key, e.target.value)}
                 placeholder={placeholder}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-400/50"
+                className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
               />
             </div>
           ))}

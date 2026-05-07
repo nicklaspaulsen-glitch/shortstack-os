@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Mic,
   Plus,
@@ -30,6 +31,8 @@ interface MeetingRow {
   summary: string | null;
   created_at: string;
 }
+
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
 
 function formatDuration(seconds: number | null): string {
   if (!seconds) return "—";
@@ -159,7 +162,12 @@ export default function MeetingsPage() {
       />
 
       {/* Killer-feature banner */}
-      <div className="card p-4 border-gold/20 bg-gradient-to-r from-gold/5 to-transparent">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="glass rounded-xl p-4 border-indigo-500/20 bg-gradient-to-r from-indigo-500/5 to-transparent"
+      >
         <div className="flex items-center gap-2 text-[11px] font-semibold mb-1">
           <Sparkles size={11} className="text-gold" /> AI Notetaker
         </div>
@@ -169,10 +177,15 @@ export default function MeetingsPage() {
           push the summary into the linked contact&apos;s CRM activity feed in one click.
           Replaces Otter ($16/mo) + Fathom ($24/mo).
         </p>
-      </div>
+      </motion.div>
 
       {/* Quick-create */}
-      <div className="card p-4 space-y-3">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.06, duration: 0.4 }}
+        className="glass rounded-xl p-4 space-y-3"
+      >
         <div className="flex gap-3 items-center">
           <input
             value={newTitle}
@@ -224,7 +237,7 @@ export default function MeetingsPage() {
             <Upload size={9} /> Upload audio file
           </Link>
         </div>
-      </div>
+      </motion.div>
 
       {loading ? (
         <p className="text-[11px] text-muted flex items-center gap-1.5">
@@ -243,27 +256,36 @@ export default function MeetingsPage() {
         />
       ) : (
         <div className="space-y-2">
-          {meetings.map((m) => (
-            <Link
+          {meetings.map((m, i) => (
+            <motion.div
               key={m.id}
-              href={`/dashboard/meetings/${m.id}`}
-              className="flex items-center justify-between p-4 rounded-xl bg-surface-light border border-border hover:border-gold/20 transition-all"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05, duration: 0.4 }}
+              whileHover={{ y: -4, scale: 1.01 }}
+              className="glass rounded-xl overflow-hidden"
             >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center flex-shrink-0">
-                  <Mic size={16} className="text-gold" />
+              <div style={{ height: 3, background: RAINBOW }} />
+              <Link
+                href={`/dashboard/meetings/${m.id}`}
+                className="flex items-center justify-between p-4"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center flex-shrink-0">
+                    <Mic size={16} className="text-gold" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold truncate">{m.title}</p>
+                    <p className="text-[10px] text-muted truncate">
+                      {new Date(m.created_at).toLocaleString()} · {formatDuration(m.duration_seconds)}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold truncate">{m.title}</p>
-                  <p className="text-[10px] text-muted truncate">
-                    {new Date(m.created_at).toLocaleString()} · {formatDuration(m.duration_seconds)}
-                  </p>
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  {statusBadge(m.status)}
                 </div>
-              </div>
-              <div className="flex items-center gap-3 flex-shrink-0">
-                {statusBadge(m.status)}
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
           ))}
         </div>
       )}

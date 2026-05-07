@@ -7,6 +7,7 @@ import {
   validateFile,
 } from "@/lib/file-types";
 import { useAuth } from "@/lib/auth-context";
+import { motion } from "framer-motion";
 import {
   FolderOpen, Upload, Search, Grid, List, Image as ImageIcon,
   Video, Music, FileText, File, Palette, Tag, Trash2, Eye,
@@ -514,7 +515,7 @@ export default function ContentLibraryPage() {
         tabIndex={0}
         onKeyDown={e => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
         className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
-          dragging ? "border-gold bg-gold/5" : "border-white/10 hover:border-white/20"
+          dragging ? "border-gold bg-gold/5" : "glass border-white/10 hover:border-white/20"
         }`}
       >
         {uploading ? (
@@ -533,7 +534,7 @@ export default function ContentLibraryPage() {
 
       {/* Collections Panel */}
       {showCollections && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Layers size={16} className="text-gold" />
@@ -562,7 +563,7 @@ export default function ContentLibraryPage() {
               {collections.map(c => (
                 <div
                   key={c.id}
-                  className={`card cursor-pointer hover:border-white/20 transition-all p-3 relative group ${
+                  className={`glass-md rounded-xl cursor-pointer hover:border-white/20 transition-all p-3 relative group ${
                     collectionFilter === c.id ? "border border-gold/40 bg-gold/5" : ""
                   }`}
                   onClick={() => setCollectionFilter(collectionFilter === c.id ? "all" : c.id)}
@@ -643,7 +644,7 @@ export default function ContentLibraryPage() {
 
       {/* Bulk Actions */}
       {selectedAssets.size > 0 && (
-        <div className="card flex items-center gap-3 border border-gold/20">
+        <div className="glass rounded-xl p-4 flex items-center gap-3 border border-gold/20">
           <button onClick={selectAll} className="text-xs text-muted hover:text-white flex items-center gap-1">
             <CheckSquare size={14} /> {selectedAssets.size} selected
           </button>
@@ -669,7 +670,7 @@ export default function ContentLibraryPage() {
 
       {/* Empty State */}
       {filteredAssets.length === 0 && !uploading && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <EmptyState
             type={assets.length === 0 ? "no-files" : "no-content"}
             title={assets.length === 0 ? "No assets yet" : "No matching assets"}
@@ -683,10 +684,14 @@ export default function ContentLibraryPage() {
       {/* Asset Grid */}
       {filteredAssets.length > 0 && viewMode === "grid" && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
-          {filteredAssets.map(asset => (
-            <div
+          {filteredAssets.map((asset, i) => (
+            <motion.div
               key={asset.id}
-              className={`card group cursor-pointer transition-all hover:border-white/20 relative ${
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.04, duration: 0.4 }}
+              whileHover={{ y: -4, scale: 1.01 }}
+              className={`glass-md rounded-xl p-3 group cursor-pointer transition-all hover:border-white/20 relative ${
                 selectedAssets.has(asset.id) ? "border border-gold/40 bg-gold/5" : ""
               }`}
             >
@@ -734,14 +739,14 @@ export default function ContentLibraryPage() {
                   <span className="px-1.5 py-0.5 rounded bg-white/5 text-[9px] text-muted">+{asset.tags.length - 2}</span>
                 )}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
 
       {/* Asset List */}
       {filteredAssets.length > 0 && viewMode === "list" && (
-        <div className="card overflow-hidden">
+        <div className="glass rounded-xl overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/10">
@@ -758,9 +763,12 @@ export default function ContentLibraryPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredAssets.map(asset => (
-                <tr
+              {filteredAssets.map((asset, i) => (
+                <motion.tr
                   key={asset.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
                   className={`border-b border-white/5 hover:bg-white/5 transition-colors ${
                     selectedAssets.has(asset.id) ? "bg-gold/5" : ""
                   }`}
@@ -796,7 +804,7 @@ export default function ContentLibraryPage() {
                       </button>
                     </div>
                   </td>
-                </tr>
+                </motion.tr>
               ))}
             </tbody>
           </table>
@@ -805,28 +813,32 @@ export default function ContentLibraryPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="card">
-          <p className="text-[10px] text-muted uppercase tracking-wider">Total Assets</p>
-          <p className="text-xl font-bold">{assets.length}</p>
-        </div>
-        <div className="card">
-          <p className="text-[10px] text-muted uppercase tracking-wider">Images</p>
-          <p className="text-xl font-bold text-blue-400">{assets.filter(a => a.type === "image").length}</p>
-        </div>
-        <div className="card">
-          <p className="text-[10px] text-muted uppercase tracking-wider">Videos</p>
-          <p className="text-xl font-bold text-purple-400">{assets.filter(a => a.type === "video").length}</p>
-        </div>
-        <div className="card">
-          <p className="text-[10px] text-muted uppercase tracking-wider">Collections</p>
-          <p className="text-xl font-bold text-gold">{collections.length}</p>
-        </div>
+        {[
+          { label: "Total Assets", value: assets.length, color: undefined },
+          { label: "Images", value: assets.filter(a => a.type === "image").length, color: "text-blue-400" },
+          { label: "Videos", value: assets.filter(a => a.type === "video").length, color: "text-purple-400" },
+          { label: "Collections", value: collections.length, color: "text-gold" },
+        ].map((tile, i) => (
+          <motion.div
+            key={tile.label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06, duration: 0.4 }}
+            className="glass rounded-xl overflow-hidden"
+          >
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-4">
+              <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+              <p className={`text-xl font-bold ${tile.color || ""}`}>{tile.value}</p>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* Preview Modal */}
       {previewAsset && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => { setPreviewAsset(null); setEditText(null); }}>
-          <div className="card max-w-lg w-full" onClick={e => e.stopPropagation()}>
+          <div className="glass rounded-xl p-4 max-w-lg w-full" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold">{previewAsset.name}</h3>
               <button onClick={() => { setPreviewAsset(null); setEditText(null); }} className="text-muted hover:text-white" aria-label="Close asset preview"><X size={16} /></button>
