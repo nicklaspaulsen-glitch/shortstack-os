@@ -173,6 +173,22 @@ const config: Config = {
           800: "#991414",
           900: "#660E0E",
         },
+        // Blue alias — redirected to prism red accent so old `text-blue-*` /
+        // `bg-blue-*` / `border-blue-*` class names render red instead of
+        // Tailwind's default #3B82F6.
+        blue: {
+          50: "#FFF5F5",
+          100: "#FFE0E0",
+          200: "#FFB3B3",
+          300: "#FF8080",
+          400: "#FF5252",
+          500: "#FF2D2D",
+          600: "#E02020",
+          700: "#CC1A1A",
+          800: "#991414",
+          900: "#660E0E",
+          950: "#4D0A0A",
+        },
       },
       fontFamily: {
         // Body — kept as default font-sans so existing pages don't change.
