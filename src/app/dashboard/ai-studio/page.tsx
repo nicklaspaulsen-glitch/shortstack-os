@@ -1272,9 +1272,9 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-4">
-        <Music size={16} className="text-yellow-400" />
+        <Music size={16} className="text-indigo-400" />
         <h2 className="text-sm font-bold text-foreground">AI Music Generator</h2>
-        <span className="text-[9px] bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded-full">MusicGen</span>
+        <span className="text-[9px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full">MusicGen</span>
         <span className="text-[9px] text-muted ml-auto">Royalty-free output</span>
       </div>
 
@@ -1288,7 +1288,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
             <div className="flex flex-wrap gap-1.5">
               {moods.map(m => (
                 <button key={m} onClick={() => setMood(m)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${mood === m ? "bg-yellow-500 text-black font-semibold" : "bg-surface-light text-muted"}`}>{m}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${mood === m ? "bg-indigo-500 text-white font-semibold" : "bg-surface-light text-muted"}`}>{m}</button>
               ))}
             </div>
           </div>
@@ -1298,7 +1298,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
             <div className="flex flex-wrap gap-1.5">
               {genres.map(g => (
                 <button key={g} onClick={() => setGenre(g)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${genre === g ? "bg-yellow-500 text-black font-semibold" : "bg-surface-light text-muted"}`}>{g}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${genre === g ? "bg-indigo-500 text-white font-semibold" : "bg-surface-light text-muted"}`}>{g}</button>
               ))}
             </div>
           </div>
@@ -1306,12 +1306,12 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-muted">Duration:</span>
             <input type="range" min={5} max={30} value={duration} onChange={e => setDuration(Number(e.target.value))}
-              className="flex-1 h-1 accent-yellow-500" />
+              className="flex-1 h-1 accent-indigo-500" />
             <span className="text-xs text-foreground font-mono">{duration}s</span>
           </div>
 
           <button onClick={handleGenerate} disabled={processing || !prompt}
-            className="w-full px-4 py-2.5 bg-yellow-500 text-black text-xs font-semibold rounded-lg hover:bg-yellow-400 disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full px-4 py-2.5 bg-indigo-500 text-white text-xs font-semibold rounded-lg hover:bg-indigo-400 disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Music size={12} />}
             Generate Music
           </button>
@@ -1320,12 +1320,12 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
         <div className="bg-surface-light rounded-xl p-4 min-h-[200px] flex flex-col items-center justify-center">
           {result ? (
             <div className="w-full text-center space-y-3">
-              <div className="w-16 h-16 mx-auto rounded-full bg-yellow-500/10 flex items-center justify-center">
-                <Music size={24} className="text-yellow-400" />
+              <div className="w-16 h-16 mx-auto rounded-full bg-indigo-500/10 flex items-center justify-center">
+                <Music size={24} className="text-indigo-400" />
               </div>
               <audio src={result} controls className="w-full" />
               <a href={result} download="ai-music.wav"
-                className="inline-flex items-center gap-1 text-[10px] text-yellow-400 hover:underline">
+                className="inline-flex items-center gap-1 text-[10px] text-indigo-400 hover:underline">
                 <Download size={10} /> Download WAV
               </a>
             </div>
