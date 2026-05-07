@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   Code, Copy, Shield, ChevronDown, ChevronRight,
   Play, Terminal, Key, AlertTriangle, Download, Clock,
@@ -291,10 +292,13 @@ export default function ApiDocsPage() {
           { label: "SDKs", value: SDK_DOWNLOADS.length, color: "text-purple-400" },
           { label: "API Version", value: "v2.4", color: "text-cyan-400" },
         ].map((s, i) => (
-          <div key={i} className="card p-3 text-center">
-            <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
-            <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
-          </div>
+          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3 text-center">
+              <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
+              <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
+            </div>
+          </motion.div>
         ))}
       </div>
 
@@ -313,7 +317,7 @@ export default function ApiDocsPage() {
       {/* ═══ EXPLORER TAB ═══ */}
       {activeTab === "Explorer" && (
         <div className="space-y-4">
-          <div className="card p-4 space-y-3">
+          <div className="glass rounded-xl p-4 space-y-3">
             <div className="flex items-center gap-2 mb-1">
               <Play size={14} className="text-gold" />
               <h2 className="text-sm font-semibold">Interactive API Explorer</h2>
@@ -403,7 +407,7 @@ export default function ApiDocsPage() {
           {filteredCategories.map(cat => {
             const isOpen = expandedSections[cat.name] !== false;
             return (
-              <div key={cat.name} className="card overflow-hidden p-0">
+              <motion.div key={cat.name} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 }} className="glass rounded-xl overflow-hidden p-0">
                 <button onClick={() => toggleSection(cat.name)}
                   className="w-full flex items-center gap-2.5 p-3 hover:bg-white/[0.02] transition-colors">
                   {isOpen ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
@@ -453,7 +457,7 @@ export default function ApiDocsPage() {
                     })}
                   </div>
                 )}
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -462,7 +466,7 @@ export default function ApiDocsPage() {
       {/* ═══ AUTH GUIDE TAB ═══ */}
       {activeTab === "Auth Guide" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <Shield size={14} className="text-gold" />
               <h2 className="text-sm font-semibold">Authentication Guide</h2>
@@ -496,7 +500,7 @@ export default function ApiDocsPage() {
       {/* ═══ RATE LIMITS TAB ═══ */}
       {activeTab === "Rate Limits" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <Clock size={14} className="text-gold" />
               <h2 className="text-sm font-semibold">Rate Limiting</h2>
@@ -539,7 +543,7 @@ Retry-After: 30`}</pre>
       {/* ═══ CODE EXAMPLES TAB ═══ */}
       {activeTab === "Code Examples" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Terminal size={14} className="text-gold" />
@@ -636,7 +640,7 @@ print(data['content'])`}
       {/* ═══ ERRORS TAB ═══ */}
       {activeTab === "Errors" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <AlertTriangle size={14} className="text-gold" />
               <h2 className="text-sm font-semibold">Error Code Reference</h2>
@@ -673,7 +677,7 @@ print(data['content'])`}
       {/* ═══ WEBHOOKS TAB ═══ */}
       {activeTab === "Webhooks" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <Zap size={14} className="text-gold" />
               <h2 className="text-sm font-semibold">Webhook Documentation</h2>
@@ -740,7 +744,7 @@ const valid = signature === expected;`}</pre>
       {activeTab === "Changelog" && (
         <div className="space-y-3">
           {CHANGELOG.map((entry, i) => (
-            <div key={i} className="card p-4">
+            <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="glass rounded-xl p-4">
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-xs font-bold font-mono text-gold">{entry.version}</span>
                 <span className="text-[10px] text-muted">{entry.date}</span>
@@ -754,7 +758,7 @@ const valid = signature === expected;`}</pre>
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
@@ -762,7 +766,7 @@ const valid = signature === expected;`}</pre>
       {/* ═══ SDKs TAB ═══ */}
       {activeTab === "SDKs" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <Download size={14} className="text-gold" />
               <h2 className="text-sm font-semibold">SDK Downloads</h2>
@@ -809,7 +813,7 @@ const valid = signature === expected;`}</pre>
 
           {/* Just-created key banner */}
           {justCreatedKey && (
-            <div className="card p-4 border-green-500/30 bg-green-500/5">
+            <div className="glass rounded-xl p-4 border-green-500/30 bg-green-500/5">
               <div className="flex items-start gap-3">
                 <CheckCircle size={16} className="text-green-400 mt-0.5 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
@@ -836,18 +840,21 @@ const valid = signature === expected;`}</pre>
               { label: "Revoked", value: apiKeys.filter(k => !k.is_active).length, color: "text-red-400", icon: <Shield size={13} className="text-red-400" /> },
               { label: "Full Access", value: apiKeys.filter(k => k.permissions === "full" && k.is_active).length, color: "text-orange-400", icon: <AlertTriangle size={13} className="text-orange-400" /> },
             ].map((s, i) => (
-              <div key={i} className="card p-3">
-                <div className="flex items-center gap-2 mb-1">
-                  {s.icon}
-                  <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div className="p-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    {s.icon}
+                    <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
+                  </div>
+                  <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
                 </div>
-                <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Key Management Card */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Key size={14} className="text-gold" />
@@ -1046,7 +1053,7 @@ const valid = signature === expected;`}</pre>
           {/* Security & Usage Info */}
           <div className="grid grid-cols-2 gap-4">
             {/* Security Best Practices */}
-            <div className="card p-4">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Shield size={13} className="text-gold" />
                 <h3 className="text-xs font-semibold">Security Best Practices</h3>
@@ -1068,7 +1075,7 @@ const valid = signature === expected;`}</pre>
             </div>
 
             {/* Rate Limits by Permission */}
-            <div className="card p-4">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Activity size={13} className="text-gold" />
                 <h3 className="text-xs font-semibold">Rate Limits by Permission Level</h3>
@@ -1096,7 +1103,7 @@ const valid = signature === expected;`}</pre>
           </div>
 
           {/* Quick Start Code */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <Terminal size={13} className="text-gold" />
               <h3 className="text-xs font-semibold">Quick Start</h3>

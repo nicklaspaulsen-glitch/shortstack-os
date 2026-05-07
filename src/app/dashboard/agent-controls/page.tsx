@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { SlidersHorizontal, Save, Eye, Check, AlertCircle } from "lucide-react";
@@ -122,14 +123,14 @@ export default function AgentControlsPage() {
 
       {/* Diff panel */}
       {showDiff && changed.length > 0 && (
-        <div className="card-premium p-4 space-y-3">
+        <div className="glass rounded-xl p-4 space-y-3">
           <h3 className="text-sm font-semibold text-white mb-2">Pending changes</h3>
-          {changed.map(row => (
-            <div key={row.key} className="text-xs font-mono space-y-1">
+          {changed.map((row, idx) => (
+            <motion.div key={row.key} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="text-xs font-mono space-y-1">
               <div className="text-muted">{row.key}</div>
               <div className="text-red-400 bg-red-500/10 px-2 py-1 rounded">− {JSON.stringify(parseValue(row.value))}</div>
               <div className="text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">+ {JSON.stringify(edits[row.key])}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
@@ -138,26 +139,26 @@ export default function AgentControlsPage() {
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="card-premium p-5 animate-pulse">
+            <div key={i} className="glass rounded-xl p-5 animate-pulse">
               <div className="h-4 bg-white/10 rounded w-1/4 mb-2" />
               <div className="h-3 bg-white/5 rounded w-1/2" />
             </div>
           ))}
         </div>
       ) : rows.length === 0 ? (
-        <div className="card-premium p-10 text-center text-muted">
+        <div className="glass rounded-xl p-10 text-center text-muted">
           <SlidersHorizontal className="w-10 h-10 mx-auto mb-3 opacity-30" />
           <p>No config rows found in system_config.</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {rows.map(row => {
+          {rows.map((row, idx) => {
             const type = inferType(parseValue(row.value));
             const cur = edits[row.key];
             const isDirty = JSON.stringify(parseValue(row.value)) !== JSON.stringify(cur);
 
             return (
-              <div key={row.key} className={`card-premium p-5 transition-all ${isDirty ? "ring-1 ring-purple-500/40" : ""}`}>
+              <motion.div key={row.key} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className={`glass rounded-xl p-5 transition-all ${isDirty ? "ring-1 ring-purple-500/40" : ""}`}>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -211,7 +212,7 @@ export default function AgentControlsPage() {
                     )}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

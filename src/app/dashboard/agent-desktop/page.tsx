@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { Monitor, RefreshCw, Activity, AlertTriangle, CheckCircle, XCircle, Clock } from "lucide-react";
@@ -107,11 +108,14 @@ export default function AgentDesktopPage() {
           { label: "Degraded", count: counts.degraded, cls: "text-amber-400" },
           { label: "Down", count: counts.down, cls: "text-red-400" },
           { label: "Unknown", count: counts.unknown, cls: "text-slate-400" },
-        ].map(({ label, count, cls }) => (
-          <div key={label} className="card-premium p-4 text-center">
-            <div className={`text-2xl font-bold ${cls}`}>{count}</div>
-            <div className="text-xs text-muted mt-0.5">{label}</div>
-          </div>
+        ].map(({ label, count, cls }, i) => (
+          <motion.div key={label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-4 text-center">
+              <div className={`text-2xl font-bold ${cls}`}>{count}</div>
+              <div className="text-xs text-muted mt-0.5">{label}</div>
+            </div>
+          </motion.div>
         ))}
       </div>
 
@@ -119,21 +123,21 @@ export default function AgentDesktopPage() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="card-premium p-5 animate-pulse">
+            <div key={i} className="glass rounded-xl p-5 animate-pulse">
               <div className="h-4 bg-white/10 rounded w-1/2 mb-3" />
               <div className="h-3 bg-white/5 rounded w-1/3" />
             </div>
           ))}
         </div>
       ) : agents.length === 0 ? (
-        <div className="card-premium p-10 text-center text-muted">
+        <div className="glass rounded-xl p-10 text-center text-muted">
           <Monitor className="w-10 h-10 mx-auto mb-3 opacity-30" />
           <p>No agents found in system_health table.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {agents.map(agent => (
-            <div key={agent.id} className="card-premium p-5 flex flex-col gap-3">
+          {agents.map((agent, idx) => (
+            <motion.div key={agent.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-5 flex flex-col gap-3">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2 min-w-0">
                   {/* Brand icon for the integration. getPlatformIcon
@@ -188,7 +192,7 @@ export default function AgentDesktopPage() {
                   Logs
                 </Link>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Bot, Send, History, CheckCircle, XCircle,
   BarChart3, Shield, ArrowRight,
@@ -193,7 +194,7 @@ export default function TrinityPage() {
 
       {/* ═══ CHAT TAB ═══ */}
       {tab === "Chat" && (
-        <div className="card p-0 flex flex-col" style={{ height: "calc(100vh - 280px)", minHeight: 400 }}>
+        <div className="glass rounded-xl p-0 flex flex-col" style={{ height: "calc(100vh - 280px)", minHeight: 400 }}>
           <div className="flex-1 overflow-y-auto p-5 space-y-3">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -240,26 +241,22 @@ export default function TrinityPage() {
       {tab === "Dashboard" && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="card p-3 text-center">
-              <p className="text-[9px] text-muted uppercase">Total Agents</p>
-              <p className="text-xl font-bold text-gold">{agents.length}</p>
-            </div>
-            <div className="card p-3 text-center">
-              <p className="text-[9px] text-muted uppercase">Active Now</p>
-              <p className="text-xl font-bold text-emerald-400">{activeAgentCount}</p>
-            </div>
-            <div className="card p-3 text-center">
-              <p className="text-[9px] text-muted uppercase">Actions Today</p>
-              <p className="text-xl font-bold text-foreground">{totalActionsToday}</p>
-            </div>
-            <div className="card p-3 text-center">
-              <p className="text-[9px] text-muted uppercase">Errors</p>
-              <p className={`text-xl font-bold ${errorAgentCount > 0 ? "text-red-400" : "text-emerald-400"}`}>
-                {errorAgentCount}
-              </p>
-            </div>
+            {[
+              { label: "Total Agents", value: agents.length, cls: "text-gold" },
+              { label: "Active Now", value: activeAgentCount, cls: "text-emerald-400" },
+              { label: "Actions Today", value: totalActionsToday, cls: "text-foreground" },
+              { label: "Errors", value: errorAgentCount, cls: errorAgentCount > 0 ? "text-red-400" : "text-emerald-400" },
+            ].map((s, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div className="p-3 text-center">
+                  <p className="text-[9px] text-muted uppercase">{s.label}</p>
+                  <p className={`text-xl font-bold ${s.cls}`}>{s.value}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-bold mb-3">Response Time Comparison (ms)</h3>
             <div className="flex items-end gap-2 h-28">
               {[
@@ -280,7 +277,7 @@ export default function TrinityPage() {
 
       {/* ═══ AGENTS TAB ═══ */}
       {tab === "Agents" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-gold" /> Agent Status Grid</h2>
           {agents.length === 0 ? (
             <p className="text-xs text-muted text-center py-8">No agents have run yet. Trigger a command in the Chat tab to populate agent activity.</p>
@@ -308,7 +305,7 @@ export default function TrinityPage() {
 
       {/* ═══ OUTPUTS TAB ═══ */}
       {tab === "Outputs" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Eye size={14} className="text-gold" /> Combined Output Viewer</h2>
           <div className="space-y-2">
             {history.length === 0 ? (
@@ -331,7 +328,7 @@ export default function TrinityPage() {
 
       {/* ═══ QUEUE TAB ═══ */}
       {tab === "Queue" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Layers size={14} className="text-gold" /> Unified Task Queue</h2>
           <div className="space-y-2">
             {queue.length === 0 ? (
@@ -362,12 +359,22 @@ export default function TrinityPage() {
         return (
           <div className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">Events (Month)</p><p className="text-xl font-bold text-gold">{history.length}</p></div>
-              <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">Agents</p><p className="text-xl font-bold text-foreground">{costByAgent.length}</p></div>
-              <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">This Month</p><p className="text-xl font-bold text-foreground">${costTotal.toFixed(2)}</p></div>
-              <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">Per Task Avg</p><p className="text-xl font-bold text-foreground">${perTaskAvg.toFixed(2)}</p></div>
+              {[
+                { label: "Events (Month)", value: history.length, cls: "text-gold" },
+                { label: "Agents", value: costByAgent.length, cls: "text-foreground" },
+                { label: "This Month", value: `$${costTotal.toFixed(2)}`, cls: "text-foreground" },
+                { label: "Per Task Avg", value: `$${perTaskAvg.toFixed(2)}`, cls: "text-foreground" },
+              ].map((s, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-3 text-center">
+                    <p className="text-[9px] text-muted uppercase">{s.label}</p>
+                    <p className={`text-xl font-bold ${s.cls}`}>{s.value}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h3 className="text-xs font-bold mb-3">Cost by Agent</h3>
               <div className="space-y-2">
                 {costByAgent.length === 0 ? (
@@ -394,7 +401,7 @@ export default function TrinityPage() {
 
       {/* ═══ QUALITY TAB ═══ */}
       {tab === "Quality" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Star size={14} className="text-gold" /> Quality Comparison</h2>
           {agents.length === 0 ? (
             <p className="text-xs text-muted text-center py-8">No agent quality data yet.</p>
@@ -417,16 +424,16 @@ export default function TrinityPage() {
 
       {/* ═══ FALLBACK TAB ═══ */}
       {tab === "Fallback" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-gold" /> Fallback Chain Editor</h2>
           <div className="space-y-2">
             {FALLBACK_CHAIN.map((f, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
+              <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
                 <div className="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded text-[10px] font-medium">{f.primary}</div>
                 <ArrowRight size={12} className="text-muted" />
                 <div className="bg-amber-500/10 text-amber-400 px-2 py-1 rounded text-[10px] font-medium">{f.fallback}</div>
                 <span className="text-[9px] text-muted ml-auto">{f.trigger}</span>
-              </div>
+              </motion.div>
             ))}
           </div>
           <p className="text-[9px] text-muted mt-3">Trinity automatically falls back to secondary providers when primary services are unavailable.</p>
@@ -435,16 +442,16 @@ export default function TrinityPage() {
 
       {/* ═══ HISTORY TAB ═══ */}
       {tab === "History" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><History size={14} className="text-gold" /> Action History</h2>
           <div className="space-y-1.5">
             {history.length === 0 ? (
               <p className="text-xs text-muted text-center py-8">No actions recorded yet.</p>
             ) : (
-              history.map(h => {
+              history.map((h, idx) => {
                 const ok = h.status === "completed" || h.status === "success";
                 return (
-                  <div key={h.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
+                  <motion.div key={h.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
                     {ok ? <CheckCircle size={12} className="text-emerald-400 shrink-0" /> : <XCircle size={12} className="text-red-400 shrink-0" />}
                     <div className="flex-1 min-w-0">
                       <p className="text-xs truncate">{h.description}</p>
@@ -453,7 +460,7 @@ export default function TrinityPage() {
                         {h.created_at ? ` \u00B7 ${new Date(h.created_at).toLocaleString()}` : ""}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })
             )}
@@ -464,28 +471,26 @@ export default function TrinityPage() {
       {/* ═══ ANALYTICS TAB ═══ */}
       {tab === "Analytics" && (
         <div className="space-y-4">
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-gold" /> Trinity Analytics</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="bg-surface-light rounded-xl p-3 text-center">
-                <p className="text-xl font-bold text-gold">{history.length}</p>
-                <p className="text-[9px] text-muted">Tasks This Month</p>
-              </div>
-              <div className="bg-surface-light rounded-xl p-3 text-center">
-                <p className="text-xl font-bold text-emerald-400">{successRateAvg}%</p>
-                <p className="text-[9px] text-muted">Success Rate</p>
-              </div>
-              <div className="bg-surface-light rounded-xl p-3 text-center">
-                <p className="text-xl font-bold text-blue-400">{queue.length}</p>
-                <p className="text-[9px] text-muted">In Queue</p>
-              </div>
-              <div className="bg-surface-light rounded-xl p-3 text-center">
-                <p className="text-xl font-bold text-foreground">${costTotal.toFixed(2)}</p>
-                <p className="text-[9px] text-muted">Monthly Cost</p>
-              </div>
+              {[
+                { label: "Tasks This Month", value: history.length, cls: "text-gold" },
+                { label: "Success Rate", value: `${successRateAvg}%`, cls: "text-emerald-400" },
+                { label: "In Queue", value: queue.length, cls: "text-blue-400" },
+                { label: "Monthly Cost", value: `$${costTotal.toFixed(2)}`, cls: "text-foreground" },
+              ].map((s, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-3 text-center">
+                    <p className={`text-xl font-bold ${s.cls}`}>{s.value}</p>
+                    <p className="text-[9px] text-muted">{s.label}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-bold mb-3">Agent Weighting Controls</h3>
             <p className="text-[10px] text-muted mb-3">Adjust priority weighting for each agent in the Trinity orchestration layer.</p>
             <div className="space-y-2">
