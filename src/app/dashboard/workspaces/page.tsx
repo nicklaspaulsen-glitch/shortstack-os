@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { LayoutGrid, Plus, Check, X, Loader2, Users, CheckCircle } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { CardSkeleton } from "@/components/ui/skeleton";
@@ -112,7 +113,12 @@ export default function WorkspacesPage() {
       />
 
       {showCreate && (
-        <div className="card p-5 border border-white/10 space-y-4">
+        <motion.div
+          className="glass rounded-xl p-5 space-y-4"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
           <p className="font-semibold text-white text-sm">New Workspace</p>
           <div className="flex flex-wrap gap-3">
             <input className="input flex-1 min-w-[180px] text-sm" placeholder="Workspace name"
@@ -132,7 +138,7 @@ export default function WorkspacesPage() {
               <X size={13} /> Cancel
             </button>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {loading ? (
@@ -140,7 +146,12 @@ export default function WorkspacesPage() {
           {[0,1,2].map((i) => <CardSkeleton key={i} />)}
         </div>
       ) : workspaces.length === 0 ? (
-        <div className="card p-12 flex flex-col items-center gap-4 text-center">
+        <motion.div
+          className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
           <LayoutGrid size={40} className="text-muted opacity-30" />
           <p className="text-white font-semibold">No workspaces yet</p>
           <p className="text-muted text-sm max-w-xs">Create your first workspace to start isolating data per brand or client.</p>
@@ -148,25 +159,31 @@ export default function WorkspacesPage() {
             className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
             <Plus size={15} /> Create first workspace
           </button>
-        </div>
+        </motion.div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {workspaces.map((w) => {
+          {workspaces.map((w, i) => {
             const isActive = activeId === w.id;
             return (
-              <div key={w.id}
-                className={`card p-5 flex flex-col gap-3 transition-all ${isActive ? "border border-yellow-500/40 bg-yellow-500/5" : "hover:border-white/10"}`}>
+              <motion.div
+                key={w.id}
+                className={`glass rounded-xl p-5 flex flex-col gap-3 transition-all ${isActive ? "border border-[#6366F1]/40 bg-[#6366F1]/5" : ""}`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05, duration: 0.4 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+              >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-white font-semibold truncate">{w.name}</p>
                       {w.is_default && (
-                        <span className="text-[10px] bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 px-1.5 py-0.5 rounded-full shrink-0">Default</span>
+                        <span className="text-[10px] bg-[#6366F1]/10 text-[#A78BFA] border border-[#6366F1]/20 px-1.5 py-0.5 rounded-full shrink-0">Default</span>
                       )}
                     </div>
                     <p className="text-muted text-xs mt-0.5 font-mono">{w.slug}</p>
                   </div>
-                  {isActive && <CheckCircle size={18} className="text-yellow-400 shrink-0 mt-0.5" />}
+                  {isActive && <CheckCircle size={18} className="text-[#6366F1] shrink-0 mt-0.5" />}
                 </div>
                 {w.description && <p className="text-muted text-xs line-clamp-2">{w.description}</p>}
                 <div className="flex items-center gap-3 text-xs text-muted mt-auto">
@@ -176,14 +193,14 @@ export default function WorkspacesPage() {
                 </div>
                 {!isActive && (
                   <button onClick={() => switchWorkspace(w.id)}
-                    className="btn-ghost text-sm py-1.5 rounded-lg w-full border border-white/10 hover:border-white/20 mt-1">
+                    className="btn-ghost text-sm py-1.5 rounded-lg w-full border border-white/10 hover:border-[#6366F1]/30 mt-1">
                     Switch to this workspace
                   </button>
                 )}
                 {isActive && (
-                  <div className="text-center text-xs text-yellow-400/80 py-1">Currently active</div>
+                  <div className="text-center text-xs text-[#A78BFA] py-1">Currently active</div>
                 )}
-              </div>
+              </motion.div>
             );
           })}
         </div>

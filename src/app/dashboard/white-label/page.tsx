@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
@@ -280,7 +281,14 @@ export default function WhiteLabelPage() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="rounded-xl border border-white/8 bg-white/3 p-5 flex flex-col gap-4">
+        <motion.div
+          className="glass rounded-xl overflow-hidden flex flex-col"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0, duration: 0.4 }}
+        >
+          <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+          <div className="p-5 flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Branding</p>
           <Field label="Brand Name" hint="Replaces ShortStack across the platform">
             <Input
@@ -304,9 +312,17 @@ export default function WhiteLabelPage() {
           <Field label="Favicon URL" hint="16x16 or 32x32 .ico or .png">
             <Input value={config.favicon_url} onChange={(v) => set("favicon_url", v)} placeholder="https://cdn.yourbrand.com/favicon.ico" />
           </Field>
-        </div>
+          </div>
+        </motion.div>
 
-        <div className="rounded-xl border border-white/8 bg-white/3 p-5 flex flex-col gap-4">
+        <motion.div
+          className="glass rounded-xl overflow-hidden flex flex-col"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.06, duration: 0.4 }}
+        >
+          <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+          <div className="p-5 flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Colors</p>
           <Field label="Primary Color" hint="Main accent color -- buttons, highlights">
             <div className="flex gap-3 items-center">
@@ -321,7 +337,7 @@ export default function WhiteLabelPage() {
             </div>
           </Field>
 
-          <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/8">
+          <div className="flex items-center justify-between p-3 rounded-lg glass-md">
             <div>
               <p className="text-sm text-white font-medium">Show Powered by ShortStack</p>
               <p className="text-xs text-white/40">Display attribution in the footer</p>
@@ -330,9 +346,17 @@ export default function WhiteLabelPage() {
               {config.show_powered_by ? <ToggleRight className="w-8 h-8 text-[#6366F1]" /> : <ToggleLeft className="w-8 h-8 text-white/30" />}
             </button>
           </div>
-        </div>
+          </div>
+        </motion.div>
 
-        <div className="rounded-xl border border-white/8 bg-white/3 p-5 flex flex-col gap-4 md:col-span-2">
+        <motion.div
+          className="glass rounded-xl overflow-hidden flex flex-col md:col-span-2"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12, duration: 0.4 }}
+        >
+          <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+          <div className="p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Custom Domain</p>
             {config.custom_domain && (
@@ -419,9 +443,17 @@ export default function WhiteLabelPage() {
               )}
             </>
           )}
-        </div>
+          </div>
+        </motion.div>
 
-        <div className="rounded-xl border border-white/8 bg-white/3 p-5 flex flex-col gap-4 md:col-span-2">
+        <motion.div
+          className="glass rounded-xl overflow-hidden flex flex-col md:col-span-2"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18, duration: 0.4 }}
+        >
+          <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+          <div className="p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Resell Billing</p>
             {stripeStatus && (
@@ -431,7 +463,7 @@ export default function WhiteLabelPage() {
             )}
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/8">
+          <div className="flex items-center justify-between p-3 rounded-lg glass-md">
             <div>
               <p className="text-sm text-white font-medium">Enable Reselling</p>
               <p className="text-xs text-white/40">
@@ -470,9 +502,17 @@ export default function WhiteLabelPage() {
               Connect your Stripe account to enable resell billing
             </a>
           )}
-        </div>
+          </div>
+        </motion.div>
 
-        <div className="rounded-xl border border-white/8 bg-white/3 p-5 flex flex-col gap-4 md:col-span-2">
+        <motion.div
+          className="glass rounded-xl overflow-hidden flex flex-col md:col-span-2"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.24, duration: 0.4 }}
+        >
+          <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+          <div className="p-5 flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Email and Portal Copy</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Email From Name" hint="Sender name shown in client email notifications">
@@ -509,7 +549,8 @@ export default function WhiteLabelPage() {
               />
             </div>
           </Field>
-        </div>
+          </div>
+        </motion.div>
       </div>
 
       <div className="flex justify-end">

@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   Building2, Plus, X, Loader2, Mail, Pause, Play, Trash2,
   Users, DollarSign, CheckCircle2, AlertCircle,
@@ -152,9 +153,22 @@ export default function SubaccountsPage() {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <StatCard label="Total Subaccounts" value={stats.total} icon={<Users className="w-4 h-4" />} />
-        <StatCard label="Active" value={stats.active} icon={<CheckCircle2 className="w-4 h-4" />} />
-        <StatCard label="Monthly Recurring Revenue" value={formatMrr(stats.mrr_cents)} icon={<DollarSign className="w-4 h-4" />} premium />
+        {[
+          { label: "Total Subaccounts", value: stats.total, icon: <Users className="w-4 h-4" /> },
+          { label: "Active", value: stats.active, icon: <CheckCircle2 className="w-4 h-4" /> },
+          { label: "Monthly Recurring Revenue", value: formatMrr(stats.mrr_cents), icon: <DollarSign className="w-4 h-4" />, premium: true },
+        ].map((tile, i) => (
+          <motion.div
+            key={tile.label}
+            className="glass rounded-xl overflow-hidden"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06, duration: 0.4 }}
+          >
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <StatCard label={tile.label} value={tile.value} icon={tile.icon} premium={tile.premium} />
+          </motion.div>
+        ))}
       </div>
 
       {loading ? (
@@ -177,7 +191,7 @@ export default function SubaccountsPage() {
           </button>
         </div>
       ) : (
-        <div className="rounded-xl border border-white/8 bg-white/3 overflow-hidden">
+        <div className="glass rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-white/3 text-xs uppercase tracking-widest text-white/40">
               <tr>
@@ -189,8 +203,14 @@ export default function SubaccountsPage() {
               </tr>
             </thead>
             <tbody>
-              {subs.map((sub) => (
-                <tr key={sub.id} className="border-t border-white/5 hover:bg-white/3 transition-all">
+              {subs.map((sub, i) => (
+                <motion.tr
+                  key={sub.id}
+                  className="border-t border-white/5 hover:bg-white/3 transition-all"
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                >
                   <td className="px-4 py-3">
                     <p className="text-white font-medium">{sub.name}</p>
                     <p className="text-xs text-white/40 flex items-center gap-1 mt-0.5">
@@ -224,7 +244,7 @@ export default function SubaccountsPage() {
                       )}
                     </div>
                   </td>
-                </tr>
+                </motion.tr>
               ))}
             </tbody>
           </table>
