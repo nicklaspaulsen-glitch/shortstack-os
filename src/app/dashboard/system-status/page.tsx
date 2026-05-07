@@ -18,6 +18,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -260,8 +261,8 @@ export default function SystemStatusPage() {
 
       {/* Groups */}
       <div className="space-y-4">
-        {groups.map((group) => (
-          <div key={group.category} className="rounded-2xl border border-border bg-surface p-5">
+        {groups.map((group, gi) => (
+          <motion.div key={group.category} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: gi * 0.06, duration: 0.4 }} className="glass rounded-2xl p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Zap size={14} className="text-gold" />
@@ -272,12 +273,15 @@ export default function SystemStatusPage() {
               </span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {group.checks.map((check) => {
+              {group.checks.map((check, ci) => {
                 const meta = STATUS_META[check.status];
                 const Icon = meta.icon;
                 return (
-                  <div
+                  <motion.div
                     key={check.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: ci * 0.04 }}
                     className={`rounded-xl border p-3 ${meta.border} ${meta.bg}`}
                   >
                     <div className="flex items-start gap-3">
@@ -320,16 +324,16 @@ export default function SystemStatusPage() {
                         )}
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
       {/* Quick-action footer */}
-      <div className="rounded-2xl border border-border bg-surface p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div className="glass rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="text-[11px] text-muted">
           Missing env vars? Add them in Vercel → Project Settings → Environment Variables, then redeploy.
         </div>

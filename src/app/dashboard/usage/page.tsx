@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, type PlanTier, isValidPlanTier } from "@/lib/plan-config";
 import Link from "next/link";
@@ -253,84 +254,35 @@ export default function UsagePage() {
 
       {/* ── Stats Strip ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {/* Tokens Used */}
-        <div className="card p-4 flex flex-col gap-1">
-          <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted font-medium">
-            <Activity size={10} />
-            Tokens Used
-          </div>
-          {loading ? (
-            <div className="h-6 w-20 bg-surface-light animate-pulse rounded" />
-          ) : (
-            <div className="text-2xl font-bold text-foreground">
-              {fmt(used)}
+        {[
+          { icon: <Activity size={10} />, label: "Tokens Used", value: loading ? null : fmt(used), sub: "this month" },
+          { icon: <Zap size={10} />, label: "Remaining", value: loading ? null : (isUnlimited ? "∞" : fmt(remaining)), sub: isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`, valueClass: isUnlimited ? "text-gold" : remaining < effectiveLimit * 0.1 ? "text-red-400" : "text-foreground" },
+          { icon: <Clock size={10} />, label: "Resets In", value: loading ? null : String(tokenData.days_remaining), sub: "days" },
+          { icon: <TrendingUp size={10} />, label: "Daily Avg", value: loading ? null : fmtShort(tokenData.daily_average), sub: "tokens / day" },
+        ].map((stat, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3 flex flex-col gap-1">
+              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted font-medium">
+                {stat.icon}
+                {stat.label}
+              </div>
+              {stat.value === null ? (
+                <div className="h-6 w-20 bg-surface-light animate-pulse rounded" />
+              ) : (
+                <div className={`text-2xl font-bold ${stat.valueClass ?? "text-foreground"}`}>
+                  {stat.value}
+                </div>
+              )}
+              <div className="text-[10px] text-muted">{stat.sub}</div>
             </div>
-          )}
-          <div className="text-[10px] text-muted">this month</div>
-        </div>
-
-        {/* Remaining */}
-        <div className="card p-4 flex flex-col gap-1">
-          <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted font-medium">
-            <Zap size={10} />
-            Remaining
-          </div>
-          {loading ? (
-            <div className="h-6 w-20 bg-surface-light animate-pulse rounded" />
-          ) : (
-            <div
-              className={`text-2xl font-bold ${
-                isUnlimited
-                  ? "text-gold"
-                  : remaining < effectiveLimit * 0.1
-                  ? "text-red-400"
-                  : "text-foreground"
-              }`}
-            >
-              {isUnlimited ? "∞" : fmt(remaining)}
-            </div>
-          )}
-          <div className="text-[10px] text-muted">
-            {isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`}
-          </div>
-        </div>
-
-        {/* Resets In */}
-        <div className="card p-4 flex flex-col gap-1">
-          <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted font-medium">
-            <Clock size={10} />
-            Resets In
-          </div>
-          {loading ? (
-            <div className="h-6 w-16 bg-surface-light animate-pulse rounded" />
-          ) : (
-            <div className="text-2xl font-bold text-foreground">
-              {tokenData.days_remaining}
-            </div>
-          )}
-          <div className="text-[10px] text-muted">days</div>
-        </div>
-
-        {/* Daily Average */}
-        <div className="card p-4 flex flex-col gap-1">
-          <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted font-medium">
-            <TrendingUp size={10} />
-            Daily Avg
-          </div>
-          {loading ? (
-            <div className="h-6 w-16 bg-surface-light animate-pulse rounded" />
-          ) : (
-            <div className="text-2xl font-bold text-foreground">
-              {fmtShort(tokenData.daily_average)}
-            </div>
-          )}
-          <div className="text-[10px] text-muted">tokens / day</div>
-        </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* ── Progress Bar ── */}
       {!isUnlimited && (
-        <div className="card p-5 space-y-3">
+        <div className="glass rounded-xl p-5 space-y-3">
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted">Monthly usage</span>
             <span className="font-medium text-foreground">
@@ -383,7 +335,7 @@ export default function UsagePage() {
       {/* ── Usage by Category + Daily Chart (side by side on larger screens) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Usage by Category */}
-        <div className="card p-5 space-y-4">
+        <div className="glass rounded-xl p-5 space-y-4">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
             <BarChart3 size={14} className="text-gold" />
             Usage by Category
@@ -438,7 +390,7 @@ export default function UsagePage() {
         </div>
 
         {/* Daily Usage Chart */}
-        <div className="card p-5 space-y-4">
+        <div className="glass rounded-xl p-5 space-y-4">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
             <Calendar size={14} className="text-gold" />
             Daily Usage (Last 30 Days)
@@ -494,7 +446,7 @@ export default function UsagePage() {
 
       {/* ── Buy More Tokens ── */}
       {isUnlimited ? (
-        <div className="card p-5 flex items-center gap-4">
+        <div className="glass rounded-xl p-5 flex items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center text-gold shrink-0">
             <Zap size={18} />
           </div>
@@ -506,7 +458,7 @@ export default function UsagePage() {
           </div>
         </div>
       ) : (
-        <div className="card p-5 space-y-4">
+        <div className="glass rounded-xl p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm font-medium text-foreground">
               <Package size={14} className="text-gold" />
@@ -591,7 +543,7 @@ export default function UsagePage() {
       )}
 
       {/* ── Recent Activity ── */}
-      <div className="card p-5 space-y-4">
+      <div className="glass rounded-xl p-5 space-y-4">
         <div className="flex items-center gap-2 text-sm font-medium text-foreground">
           <Activity size={14} className="text-gold" />
           Recent AI Activity
@@ -620,8 +572,8 @@ export default function UsagePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/40">
-                {tokenData.recent_activity.map((item) => (
-                  <tr key={item.id} className="hover:bg-surface-light/50 transition-colors">
+                {tokenData.recent_activity.map((item, idx) => (
+                  <motion.tr key={item.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="hover:bg-surface-light/50 transition-colors">
                     <td className="py-2.5 pl-1 text-muted whitespace-nowrap">
                       {formatRelative(item.created_at)}
                     </td>
@@ -636,7 +588,7 @@ export default function UsagePage() {
                     <td className="py-2.5 pr-1 text-right font-medium tabular-nums text-gold whitespace-nowrap">
                       {fmt(item.tokens_used)}
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>

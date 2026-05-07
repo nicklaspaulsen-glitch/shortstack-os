@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import {
   Check, Zap, TrendingUp, Crown, Building2, Infinity,
@@ -138,20 +139,24 @@ export default function PricingPage() {
 
       {/* Plans grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
-        {PLANS.map((plan) => {
+        {PLANS.map((plan, i) => {
           const monthlyPrice = annual ? Math.round(plan.price * 0.8) : plan.price;
           const isCurrentPlan = currentPlan === plan.key;
           const tierConfig = PLAN_TIERS[plan.key as keyof typeof PLAN_TIERS];
 
           return (
-            <div
+            <motion.div
               key={plan.key}
-              className={`relative rounded-2xl border p-5 flex flex-col transition-all hover:shadow-card-hover ${
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06, duration: 0.4 }}
+              whileHover={{ y: -4, scale: 1.01 }}
+              className={`relative glass rounded-2xl border p-5 flex flex-col transition-shadow ${
                 plan.popular
                   ? "border-gold/30 bg-gold/[0.03] shadow-card ring-1 ring-gold/10"
                   : isCurrentPlan
                   ? "border-success/30 bg-success/[0.03] ring-1 ring-success/10"
-                  : "border-border bg-surface shadow-soft"
+                  : "border-border shadow-soft"
               }`}
             >
               {plan.highlight && (
@@ -216,13 +221,13 @@ export default function PricingPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
 
       {/* Feature comparison highlights */}
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="glass rounded-2xl p-6">
         <h2 className="text-sm font-bold text-foreground mb-4">What scales with your plan</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="space-y-2">
@@ -308,18 +313,18 @@ export default function PricingPage() {
           { icon: <Code size={16} />, label: "API Access", desc: "Full REST API + webhooks", plans: "Pro+" },
           { icon: <Lock size={16} />, label: "SLA Guarantee", desc: "99.9% uptime commitment", plans: "Unlimited" },
           { icon: <Headphones size={16} />, label: "Dedicated Support", desc: "Named success manager", plans: "Business+" },
-        ].map((item) => (
-          <div key={item.label} className="rounded-xl border border-border bg-surface p-4">
+        ].map((item, i) => (
+          <motion.div key={item.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl p-4">
             <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center text-gold mb-2">{item.icon}</div>
             <p className="text-xs font-medium text-foreground">{item.label}</p>
             <p className="text-[10px] text-muted mt-0.5">{item.desc}</p>
             <p className="text-[9px] text-gold font-medium mt-1.5">{item.plans}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
 
       {/* Token Usage Explainer */}
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="glass rounded-2xl p-6">
         <h2 className="text-sm font-bold text-foreground mb-1">How AI tokens work</h2>
         <p className="text-xs text-muted mb-4">
           Tokens power all AI features — content generation, lead scoring, ad copy, scripts, social posts, and more.
@@ -332,7 +337,7 @@ export default function PricingPage() {
             { label: "Ad campaign", tokens: "~2,000", uses: "250 campaigns" },
             { label: "Lead scoring", tokens: "~100", uses: "5,000 leads" },
           ].map((item) => (
-            <div key={item.label} className="rounded-xl bg-surface-light p-3 border border-border/50">
+            <div key={item.label} className="glass rounded-xl p-3">
               <p className="text-xs font-medium text-foreground">{item.label}</p>
               <p className="text-[11px] text-muted mt-0.5">{item.tokens} tokens</p>
               <p className="text-[10px] text-gold mt-1">~{item.uses}/500K</p>
@@ -348,10 +353,14 @@ export default function PricingPage() {
           <h2 className="text-sm font-bold text-foreground">Add-ons</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {ADD_ONS.map((addon) => (
-            <div
+          {ADD_ONS.map((addon, idx) => (
+            <motion.div
               key={addon.name}
-              className="rounded-xl border border-border bg-surface p-4 hover:shadow-card transition-shadow flex items-start gap-3"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.04 }}
+              whileHover={{ y: -4, scale: 1.01 }}
+              className="glass rounded-xl p-4 transition-shadow flex items-start gap-3"
             >
               <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center text-muted shrink-0">
                 {addon.icon}
@@ -368,13 +377,13 @@ export default function PricingPage() {
                 <p className="text-[11px] text-muted mt-0.5">{addon.description}</p>
                 <p className="text-sm font-bold text-foreground mt-1.5">{addon.price}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
 
       {/* FAQ / CTA */}
-      <div className="rounded-2xl border border-gold/20 bg-gold/[0.03] p-6 text-center">
+      <div className="glass rounded-2xl border-gold/20 bg-gold/[0.03] p-6 text-center">
         <h2 className="text-sm font-bold text-foreground mb-1">Not sure which plan is right?</h2>
         <p className="text-xs text-muted mb-4">
           Start with Starter and upgrade anytime. All plans include a 14-day free trial.

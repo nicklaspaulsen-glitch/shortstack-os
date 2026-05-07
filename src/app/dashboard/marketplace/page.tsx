@@ -14,6 +14,7 @@ import {
   Image as ImageIcon, LayoutGrid, Filter,
   Clock, Tag, AlertCircle
 } from "lucide-react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import PageAI from "@/components/page-ai";
@@ -409,14 +410,18 @@ export default function MarketplacePage() {
       {/* ── Plugin grid ── */}
       {viewTab === "browse" ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filteredPlugins.map((plugin) => {
+          {filteredPlugins.map((plugin, i) => {
             const isInstalled = installedIds.has(plugin.id);
             const isInstalling = installing === plugin.id;
 
             return (
-              <div
+              <motion.div
                 key={plugin.id}
-                className="card group cursor-pointer transition-all hover:border-gold/30 hover:shadow-lg hover:shadow-gold/5"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.4 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="glass rounded-xl group cursor-pointer transition-shadow hover:border-gold/30 hover:shadow-lg hover:shadow-gold/5"
                 onClick={() => {
                   setSelectedPlugin(plugin);
                   setDetailTab("overview");
@@ -518,7 +523,7 @@ export default function MarketplacePage() {
                     )}
                   </button>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
 
@@ -546,12 +551,12 @@ export default function MarketplacePage() {
               </button>
             </div>
           ) : (
-            filteredPlugins.map((plugin) => {
+            filteredPlugins.map((plugin, idx) => {
               const isEnabled = enabledIds.has(plugin.id);
               const health = getHealthStatus(plugin.id);
 
               return (
-                <div key={plugin.id} className="card flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <motion.div key={plugin.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-4">
                   <div className="flex items-center gap-3">
                     {/* Health indicator */}
                     <div
@@ -645,7 +650,7 @@ export default function MarketplacePage() {
                       </button>
                     )}
                   </div>
-                </div>
+                </motion.div>
               );
             })
           )}
@@ -659,7 +664,7 @@ export default function MarketplacePage() {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {/* Build CTA */}
-        <div className="card border-dashed border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }} className="glass rounded-xl border-dashed border-gold/20 bg-gradient-to-br from-gold/5 to-transparent p-5">
           <div className="flex items-start gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/10">
               <Code2 size={24} className="text-gold" />
@@ -688,10 +693,10 @@ export default function MarketplacePage() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Manifest format */}
-        <div className="card">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16, duration: 0.4 }} className="glass rounded-xl p-5">
           <h3 className="text-sm font-semibold text-white mb-3">Plugin Manifest Format</h3>
           <pre className="overflow-x-auto rounded-lg bg-black/30 p-3 text-[11px] leading-relaxed text-muted">
 {`{
@@ -715,7 +720,7 @@ export default function MarketplacePage() {
             <Upload size={12} />
             Submit Your Plugin
           </button>
-        </div>
+        </motion.div>
       </div>
 
       {/* ── Plugin Detail Modal ── */}

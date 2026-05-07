@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   Briefcase,
@@ -150,18 +151,24 @@ export default function VerticalsIndexPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {verticals.map((v) => {
+            {verticals.map((v, i) => {
               const Icon = ICON_MAP[v.icon] ?? Briefcase;
               const appliedModules = appliedByVertical[v.vertical] ?? [];
               const isApplied = appliedModules.length > 0;
 
               return (
-                <Link
+                <motion.div
                   key={v.vertical}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06, duration: 0.4 }}
+                  whileHover={{ y: -4, scale: 1.01 }}
+                >
+                <Link
                   href={`/dashboard/verticals/${v.vertical}`}
-                  className={`group relative rounded-2xl border bg-gradient-to-br ${
+                  className={`group relative block glass rounded-2xl border bg-gradient-to-br ${
                     ACCENT_RING[v.accent] ?? ACCENT_RING.gold
-                  } p-6 transition-all hover:-translate-y-0.5`}
+                  } p-6 transition-shadow`}
                 >
                   {isApplied && (
                     <div className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 px-2.5 py-1 text-xs text-emerald-300">
@@ -206,6 +213,7 @@ export default function VerticalsIndexPage() {
                     </span>
                   </div>
                 </Link>
+                </motion.div>
               );
             })}
           </div>
@@ -217,7 +225,7 @@ export default function VerticalsIndexPage() {
 
 function CountTile({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-lg bg-black/30 border border-white/5 px-3 py-2">
+    <div className="glass rounded-lg px-3 py-2">
       <div className="text-lg font-semibold text-white">{value}</div>
       <div className="text-[10px] uppercase tracking-wide text-white/50">{label}</div>
     </div>

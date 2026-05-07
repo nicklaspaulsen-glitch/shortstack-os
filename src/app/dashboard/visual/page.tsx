@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import SectionHub from "@/components/dashboard/section-hub";
 import type { RollingPreviewItem } from "@/components/RollingPreview";
@@ -29,6 +30,7 @@ export default function VisualHubPage() {
   useAuth();
 
   return (
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
     <SectionHub
       section="visual"
       title="Visual"
@@ -100,5 +102,6 @@ export default function VisualHubPage() {
         },
       ]}
     />
+    </motion.div>
   );
 }
