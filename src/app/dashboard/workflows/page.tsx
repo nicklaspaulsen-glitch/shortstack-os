@@ -22,6 +22,7 @@ import { WORKFLOW_PRESETS, WORKFLOW_CATEGORIES, type WorkflowPreset } from "@/li
 import toast from "react-hot-toast";
 import { TelegramIcon, SlackIcon } from "@/components/ui/platform-icons";
 import AiWorkflowHero from "@/components/workflows/ai-workflow-hero";
+import { motion } from "framer-motion";
 
 interface WorkflowStep {
   id: string;
@@ -356,17 +357,23 @@ export default function WorkflowsPage() {
         gradient="sunset"
         actions={
           <>
-            <button onClick={() => setShowAiGen(true)} className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg transition-all flex items-center gap-1.5">
-              <Sparkles size={13} /> Generate with AI
-            </button>
-            <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
-              <Plus size={13} /> New
-            </button>
-            <button onClick={() => setTab("agent")} className={`flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg font-medium transition-all ${
-              tab === "agent" ? "bg-white/25 text-white" : "bg-white/10 text-white/80 hover:text-white border border-white/20"
-            }`}>
-              <Bot size={13} /> Agent Mode
-            </button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button onClick={() => setShowAiGen(true)} className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg transition-all flex items-center gap-1.5">
+                <Sparkles size={13} /> Generate with AI
+              </button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+                <Plus size={13} /> New
+              </button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button onClick={() => setTab("agent")} className={`flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg font-medium transition-all ${
+                tab === "agent" ? "bg-white/25 text-white" : "bg-white/10 text-white/80 hover:text-white border border-white/20"
+              }`}>
+                <Bot size={13} /> Agent Mode
+              </button>
+            </motion.div>
           </>
         }
       />

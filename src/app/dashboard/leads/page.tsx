@@ -15,6 +15,7 @@ import CollapsibleStats from "@/components/ui/collapsible-stats";
 import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
 import { ALLOWED_CSV, buildAccept, validateFile } from "@/lib/file-types";
+import { motion } from "framer-motion";
 
 type MainTab = "leads" | "scoring" | "routing" | "attribution" | "nurture" | "enrichment" | "funnel" | "tags";
 
@@ -804,12 +805,18 @@ export default function LeadEnginePage() {
         gradient="gold"
         actions={
           <>
-            <button onClick={() => setShowImportModal(true)} aria-label="Import leads from CSV" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
-            <button onClick={handleExport} disabled={exporting} aria-label="Export leads to CSV" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5 disabled:opacity-50">
-              {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
-              {exporting ? "Exporting..." : "Export"}
-            </button>
-            <button onClick={() => setShowAddModal(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button onClick={() => setShowImportModal(true)} aria-label="Import leads from CSV" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button onClick={handleExport} disabled={exporting} aria-label="Export leads to CSV" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5 disabled:opacity-50">
+                {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+                {exporting ? "Exporting..." : "Export"}
+              </button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button onClick={() => setShowAddModal(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
+            </motion.div>
           </>
         }
       />
@@ -841,12 +848,20 @@ export default function LeadEnginePage() {
             { label: "Converted", value: convertedLeads, icon: <Star size={12} />, color: "text-purple-400" },
             { label: "Avg Score", value: totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0, icon: <Target size={12} />, color: "text-blue-400" },
             { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-gold" },
-          ].map((stat, i) => (
-            <div key={i} className="card text-center p-3">
+          ].map((stat, index) => (
+            <motion.div
+              key={index}
+              className="glass text-center p-3 rounded-xl overflow-hidden"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: index * 0.06 }}
+              whileHover={{ y: -2 }}
+            >
+              <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="rounded-t-sm -mx-3 -mt-3 mb-3" />
               <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
               <p className="text-lg font-bold">{stat.value}</p>
               <p className="text-[9px] text-muted">{stat.label}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </CollapsibleStats>
@@ -868,7 +883,7 @@ export default function LeadEnginePage() {
           <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex flex-wrap gap-2 py-2">
             <div className="relative flex-1 min-w-[200px]">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-              <input type="text" placeholder="Search leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input w-full pl-9 text-xs" />
+              <input type="text" placeholder="Search leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input glass w-full pl-9 text-xs" />
             </div>
             <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="input text-xs">
               <option value="">All Statuses</option>
@@ -940,8 +955,13 @@ export default function LeadEnginePage() {
                 }
               />
             )}
-            {!loading && leads.map(lead => (
-              <div key={lead.id}>
+            {!loading && leads.map((lead, index) => (
+              <motion.div
+                key={lead.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.18, delay: index * 0.04 }}
+              >
                 <div
                   onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
                   onMouseEnter={() => {
@@ -1078,7 +1098,7 @@ export default function LeadEnginePage() {
                     </div>
                   </div>
                 )}
-              </div>
+              </motion.div>
             ))}
           </div>{/* end min-w-[600px] */}
           </div>{/* end overflow-x-auto */}
@@ -1283,20 +1303,35 @@ export default function LeadEnginePage() {
               { label: "Partial Data", value: 0, total: totalLeads, color: "text-yellow-400" },
               { label: "Missing Email", value: 0, total: totalLeads, color: "text-red-400" },
               { label: "Missing Phone", value: 0, total: totalLeads, color: "text-red-400" },
-            ].map((s, i) => (
-              <div key={i} className="card text-center p-3">
+            ].map((s, index) => (
+              <motion.div
+                key={index}
+                className="glass text-center p-3 rounded-xl overflow-hidden"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -2 }}
+              >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="rounded-t-sm -mx-3 -mt-3 mb-3" />
                 <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
                 <p className="text-[9px] text-muted">{s.label}</p>
                 <p className="text-[8px] text-muted">of {s.total} leads</p>
-              </div>
+              </motion.div>
             ))}
           </div>
           <div className="space-y-1.5">
             {leads.length === 0 && (
               <div className="text-center py-8 text-muted text-xs">No leads to enrich yet.</div>
             )}
-            {leads.map(lead => (
-              <div key={lead.id} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border text-[10px]">
+            {leads.map((lead, index) => (
+              <motion.div
+                key={lead.id}
+                className="glass-md flex items-center justify-between p-3 rounded-xl text-[10px]"
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.18, delay: index * 0.04 }}
+                whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+              >
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                     lead.email && lead.phone ? "bg-green-400/10" : "bg-yellow-400/10"
@@ -1319,7 +1354,7 @@ export default function LeadEnginePage() {
                     className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20"
                   >Enrich</button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
