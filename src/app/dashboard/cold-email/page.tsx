@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Send,
   MailPlus,
@@ -72,6 +73,8 @@ const STATUS_PILLS: Record<JobRow["status"], string> = {
   completed: "bg-green-500/15 text-green-300 border-green-500/30",
   failed: "bg-red-500/15 text-red-300 border-red-500/30",
 };
+
+const RAINBOW_BAR = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
 
 export default function ColdEmailPage() {
   const [jobs, setJobs] = useState<JobRow[]>([]);
@@ -194,28 +197,35 @@ export default function ColdEmailPage() {
         subtitle="Personalized opening lines at scale. Research, generate, and send 1000s a day."
         gradient="sunset"
         actions={
-          <button
-            onClick={() => setShowCreate((v) => !v)}
-            className="text-[11px] px-3 py-1.5 rounded-lg bg-white/15 text-white border border-white/25 hover:bg-white/25 transition-all flex items-center gap-1.5"
-          >
-            <Sparkles size={11} />
-            New Campaign
-          </button>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <button
+              onClick={() => setShowCreate((v) => !v)}
+              className="text-[11px] px-3 py-1.5 rounded-lg bg-white/15 text-white border border-white/25 hover:bg-white/25 transition-all flex items-center gap-1.5"
+            >
+              <Sparkles size={11} />
+              New Campaign
+            </button>
+          </motion.div>
         }
       />
 
       {error && (
-        <div className="card p-3 border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
+        <div className="glass rounded-xl p-3 border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
           <AlertTriangle size={13} />
           <span>{error}</span>
         </div>
       )}
 
       {showCreate && (
-        <div className="card p-4 space-y-3 border-gold/20 bg-gold/[0.03]">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22 }}
+          className="glass-indigo rounded-xl p-4 space-y-3"
+        >
           <div className="flex items-center gap-2">
-            <Sparkles size={13} className="text-gold" />
-            <h2 className="text-xs font-semibold text-gold">New Campaign</h2>
+            <Sparkles size={13} className="text-indigo-400" />
+            <h2 className="text-xs font-semibold text-indigo-300">New Campaign</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -227,7 +237,7 @@ export default function ColdEmailPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Q2 dental outreach"
-                className="input w-full text-xs py-1.5"
+                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-white/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40"
               />
             </div>
             <div>
@@ -238,7 +248,7 @@ export default function ColdEmailPage() {
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 placeholder="new"
-                className="input w-full text-xs py-1.5"
+                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-white/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40"
               />
               <p className="text-[9px] text-muted mt-0.5">
                 We pull all leads with this status that have an email.
@@ -254,7 +264,7 @@ export default function ColdEmailPage() {
               value={templateSeed}
               onChange={(e) => setTemplateSeed(e.target.value)}
               rows={4}
-              className="input w-full text-xs py-2 font-mono"
+              className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-white/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40 font-mono"
             />
             <p className="text-[9px] text-muted mt-0.5">
               Tokens: <code>{"{{first_name}}"}</code>, <code>{"{{business_name}}"}</code>,{" "}
@@ -282,7 +292,7 @@ export default function ColdEmailPage() {
                     onClick={() => setDepth(d)}
                     className={`flex-1 text-[10px] px-2 py-1.5 rounded border transition-all ${
                       depth === d
-                        ? "border-gold/40 bg-gold/15 text-gold"
+                        ? "border-indigo-500/40 bg-indigo-500/15 text-indigo-300"
                         : "border-border text-muted hover:text-foreground"
                     }`}
                   >
@@ -303,7 +313,7 @@ export default function ColdEmailPage() {
                 onChange={(e) => setThrottle(parseInt(e.target.value || "100") || 100)}
                 min={1}
                 max={5000}
-                className="input w-full text-xs py-1.5"
+                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-white/10 text-foreground focus:outline-none focus:border-indigo-500/40"
               />
               <p className="text-[9px] text-muted mt-0.5">
                 Recommended: 100/hr to protect domain reputation.
@@ -318,29 +328,31 @@ export default function ColdEmailPage() {
             >
               Cancel
             </button>
-            <button
-              onClick={handleCreate}
-              disabled={creating || !name.trim() || !templateSeed.trim()}
-              className="text-[10px] px-4 py-1.5 rounded-lg bg-gold text-black font-medium hover:bg-gold/80 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {creating ? "Building…" : "Create Campaign"}
-            </button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button
+                onClick={handleCreate}
+                disabled={creating || !name.trim() || !templateSeed.trim()}
+                className="text-[10px] px-4 py-1.5 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              >
+                {creating ? "Building…" : "Create Campaign"}
+              </button>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       )}
 
-      <div className="space-y-3">
+      <div className="glass rounded-xl overflow-hidden space-y-0">
         {loading ? (
-          <div className="card p-8 text-center text-[11px] text-muted">Loading…</div>
+          <div className="p-8 text-center text-[11px] text-muted">Loading…</div>
         ) : jobs.length === 0 ? (
-          <div className="card p-10 text-center">
+          <div className="p-10 text-center">
             <MailPlus size={22} className="mx-auto mb-2 text-muted opacity-40" />
             <p className="text-[11px] text-muted">
               No campaigns yet. Create one to start cold-email at scale.
             </p>
           </div>
         ) : (
-          jobs.map((j) => {
+          jobs.map((j, index) => {
             const progress =
               j.recipients_count > 0
                 ? Math.round(
@@ -351,7 +363,20 @@ export default function ColdEmailPage() {
                 : 0;
             const jobSamples = samples[j.id] ?? [];
             return (
-              <div key={j.id} className="card p-4 space-y-3">
+              <motion.div
+                key={j.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.18, delay: index * 0.04 }}
+                whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                className="relative p-4 space-y-3 border-b border-white/[0.05] last:border-0"
+              >
+                {/* Rainbow top bar (first item only decorative, per-card via absolute) */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-[2px]"
+                  style={{ background: RAINBOW_BAR, opacity: 0.5 }}
+                />
+
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -399,7 +424,7 @@ export default function ColdEmailPage() {
                     {(j.status === "researching" || j.status === "generating") && (
                       <button
                         onClick={() => handleSend(j.id)}
-                        className="text-[9px] px-2 py-1 rounded border border-gold/30 text-gold hover:bg-gold/10 transition-all flex items-center gap-1"
+                        className="text-[9px] px-2 py-1 rounded border border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10 transition-all flex items-center gap-1"
                       >
                         <Send size={9} />
                         Send
@@ -419,19 +444,22 @@ export default function ColdEmailPage() {
                   </div>
                   <div className="h-1.5 bg-black/40 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-gold to-orange-400 transition-all"
-                      style={{ width: `${Math.min(100, progress)}%` }}
+                      className="h-full transition-all"
+                      style={{
+                        width: `${Math.min(100, progress)}%`,
+                        background: RAINBOW_BAR,
+                      }}
                     />
                   </div>
                 </div>
 
                 {jobSamples.length > 0 && (
-                  <div className="space-y-2 pt-2 border-t border-border">
+                  <div className="space-y-2 pt-2 border-t border-white/[0.05]">
                     <p className="text-[9px] text-muted uppercase tracking-wider">
                       Preview samples
                     </p>
                     {jobSamples.map((s) => (
-                      <div key={s.personalization_id} className="bg-black/20 rounded-lg p-3 space-y-1.5">
+                      <div key={s.personalization_id} className="glass-md rounded-xl p-3 space-y-1.5">
                         {s.error ? (
                           <div className="text-[10px] text-red-400 flex items-center gap-1.5">
                             <AlertTriangle size={10} />
@@ -440,7 +468,7 @@ export default function ColdEmailPage() {
                         ) : (
                           <>
                             <div className="text-[10px] text-muted">
-                              <span className="text-gold">Subject:</span> {s.subject}
+                              <span className="text-indigo-400">Subject:</span> {s.subject}
                             </div>
                             <pre className="text-[10px] text-foreground whitespace-pre-wrap font-sans leading-relaxed">
                               {s.body}
@@ -470,7 +498,7 @@ export default function ColdEmailPage() {
                     </span>
                   )}
                 </div>
-              </div>
+              </motion.div>
             );
           })
         )}

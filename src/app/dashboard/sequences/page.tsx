@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Mail, Plus, Clock, Sparkles, Play, Pause, Trash2,
   ArrowDown, Phone, MessageSquare, Share2, GitBranch,
@@ -85,6 +86,8 @@ interface ActivityItem {
   description?: string;
   status?: string;
 }
+
+const RAINBOW_BAR = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
 
 const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep[]; category: string }[] = [
   { name: "Cold Outreach (5 touches)", description: "Multi-channel cold outreach with email, SMS and social", category: "Outreach",
@@ -594,30 +597,34 @@ export default function SequencesPage() {
         gradient="purple"
         actions={
           <>
-            <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
-              <Sparkles size={12} /> Generate with AI
-            </button>
-            <button className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5" onClick={() => {
-              const draft: Sequence = {
-                id: `tmp_${Date.now()}`,
-                name: "Untitled Sequence",
-                description: null,
-                steps: [],
-                active: false,
-                enrolled: 0, completed: 0, replied: 0,
-                persisted: false,
-              };
-              setSequences(prev => [draft, ...prev]);
-              setActiveSequence(draft);
-            }}>
-              <Plus size={12} /> New Sequence
-            </button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+                <Sparkles size={12} /> Generate with AI
+              </button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5" onClick={() => {
+                const draft: Sequence = {
+                  id: `tmp_${Date.now()}`,
+                  name: "Untitled Sequence",
+                  description: null,
+                  steps: [],
+                  active: false,
+                  enrolled: 0, completed: 0, replied: 0,
+                  persisted: false,
+                };
+                setSequences(prev => [draft, ...prev]);
+                setActiveSequence(draft);
+              }}>
+                <Plus size={12} /> New Sequence
+              </button>
+            </motion.div>
           </>
         }
       />
 
       {/* Recent activity panel — last 10 step executions from trinity_log */}
-      <div className="card p-4">
+      <div className="glass rounded-xl overflow-hidden p-4">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-xs font-semibold flex items-center gap-2">
             <Activity size={12} className="text-gold" /> Recent activity
@@ -645,7 +652,12 @@ export default function SequencesPage() {
 
       {/* AI Summary Card */}
       {aiSummary && (
-        <div className="card border-gold/20 bg-gold/5 p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22 }}
+          className="glass-indigo rounded-xl overflow-hidden p-4"
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Sparkles size={16} className="text-gold" />
@@ -661,7 +673,7 @@ export default function SequencesPage() {
               <button onClick={() => setAiSummary(null)} className="text-muted hover:text-foreground p-1"><XCircle size={12} /></button>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* AI Generator Modal */}
@@ -738,9 +750,16 @@ export default function SequencesPage() {
                   <p className="text-[10px] text-muted">Loading sequences...</p>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  {sequences.map(seq => (
-                    <div key={seq.id} className="card p-4 flex items-center justify-between">
+                <div className="glass rounded-xl overflow-hidden space-y-0">
+                  {sequences.map((seq, index) => (
+                    <motion.div
+                      key={seq.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: index * 0.04 }}
+                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      className="p-4 flex items-center justify-between border-b border-white/[0.05] last:border-0"
+                    >
                       <div className="flex items-center gap-3">
                         <div className={`w-2.5 h-2.5 rounded-full ${seq.active ? "bg-green-400 animate-pulse" : "bg-muted"}`} />
                         <div>
@@ -760,7 +779,7 @@ export default function SequencesPage() {
                           <button onClick={() => void handleDelete(seq)} className="btn-ghost text-[9px] py-1 px-2 text-red-400"><Trash2 size={10} /></button>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               )}
@@ -821,7 +840,13 @@ export default function SequencesPage() {
                   const colors = STEP_COLORS[step.type];
                   return (
                     <div key={step.id}>
-                      <div className={`p-4 rounded-xl border ${colors.border} ${colors.bg}`}>
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.18, delay: i * 0.04 }}
+                        whileHover={{ y: -2 }}
+                        className={`glass-md p-4 rounded-xl border ${colors.border}`}
+                      >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase flex items-center gap-1 ${colors.text}`}>
@@ -890,7 +915,7 @@ export default function SequencesPage() {
                             }} className="input w-full text-xs h-20 resize-none" placeholder="Message body..." />
                           </div>
                         )}
-                      </div>
+                      </motion.div>
                       {i < activeSequence.steps.length - 1 && (
                         <div className="flex justify-center py-1">
                           <ArrowDown size={14} className="text-muted/30" />
@@ -961,7 +986,15 @@ export default function SequencesPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {filteredTemplates.map((t, i) => (
-              <div key={i} className="card p-4 hover:border-gold/10 transition-all">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: i * 0.06 }}
+                whileHover={{ y: -2 }}
+                className="glass rounded-xl overflow-hidden relative p-4"
+              >
+                <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <p className="text-xs font-semibold">{t.name}</p>
@@ -977,10 +1010,12 @@ export default function SequencesPage() {
                   ))}
                 </div>
                 <div className="flex items-center justify-end">
-                  <button onClick={() => void createFromTemplate(t)}
-                    className="btn-primary text-[9px] px-2 py-1 flex items-center gap-1"><Plus size={9} /> Use Template</button>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <button onClick={() => void createFromTemplate(t)}
+                      className="btn-primary text-[9px] px-2 py-1 flex items-center gap-1"><Plus size={9} /> Use Template</button>
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -991,25 +1026,40 @@ export default function SequencesPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {[
-              { label: "Total Enrolled", value: sequences.reduce((s, seq) => s + seq.enrolled, 0), color: "text-gold" },
+              { label: "Total Enrolled", value: sequences.reduce((s, seq) => s + seq.enrolled, 0), color: "text-indigo-400" },
               { label: "Completed", value: sequences.reduce((s, seq) => s + seq.completed, 0), color: "text-green-400" },
               { label: "Replied", value: sequences.reduce((s, seq) => s + seq.replied, 0), color: "text-blue-400" },
-              { label: "Avg Reply Rate", value: sequences.length > 0 ? `${(sequences.reduce((s, seq) => s + (seq.enrolled > 0 ? seq.replied / seq.enrolled : 0), 0) / sequences.length * 100).toFixed(1)}%` : "0%", color: "text-purple-400" },
-              { label: "Active Sequences", value: sequences.filter(s => s.active).length, color: "text-gold" },
+              { label: "Avg Reply Rate", value: sequences.length > 0 ? `${(sequences.reduce((s, seq) => s + (seq.enrolled > 0 ? seq.replied / seq.enrolled : 0), 0) / sequences.length * 100).toFixed(1)}%` : "0%", color: "text-violet-400" },
+              { label: "Active Sequences", value: sequences.filter(s => s.active).length, color: "text-indigo-400" },
             ].map((stat, i) => (
-              <div key={i} className="card text-center p-3">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: i * 0.06 }}
+                whileHover={{ y: -2 }}
+                className="glass rounded-xl overflow-hidden relative text-center p-3"
+              >
+                <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
                 <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
                 <p className="text-[9px] text-muted">{stat.label}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
-          <div className="card">
+          <div className="glass rounded-xl overflow-hidden p-4">
             <h3 className="text-sm font-semibold mb-3">Sequence Performance</h3>
             <div className="space-y-3">
-              {sequences.map(seq => {
+              {sequences.map((seq, index) => {
                 const replyRate = seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100) : 0;
                 return (
-                  <div key={seq.id} className="p-3 rounded-lg bg-surface-light border border-border">
+                  <motion.div
+                    key={seq.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: index * 0.04 }}
+                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    className="p-3 rounded-lg bg-surface-light border border-border"
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-xs font-semibold flex items-center gap-2">
                         <span className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
@@ -1024,9 +1074,9 @@ export default function SequencesPage() {
                       <div><p className="font-bold text-gold">{replyRate.toFixed(1)}%</p><p className="text-[8px] text-muted">Reply Rate</p></div>
                     </div>
                     <div className="w-full bg-surface rounded-full h-1.5 mt-2">
-                      <div className="bg-gold rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%` }} />
+                      <div className="rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%`, background: RAINBOW_BAR }} />
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -1095,7 +1145,7 @@ export default function SequencesPage() {
               <button onClick={() => void loadRuns()} className="btn-ghost text-[10px]">Refresh</button>
             </div>
           </div>
-          <div className="card p-3">
+          <div className="glass rounded-xl overflow-hidden p-3">
             {runsLoading ? (
               <div className="text-center py-6">
                 <Loader2 size={16} className="animate-spin mx-auto text-gold mb-2" />
@@ -1108,8 +1158,15 @@ export default function SequencesPage() {
               </p>
             ) : (
               <ul className="space-y-1.5">
-                {runs.map(r => (
-                  <li key={r.id} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
+                {runs.map((r, index) => (
+                  <motion.li
+                    key={r.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: index * 0.04 }}
+                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]"
+                  >
                     <div className="flex items-center gap-2">
                       <span className={`px-1.5 py-0.5 rounded text-[9px] ${
                         r.status === "active" ? "bg-green-500/10 text-green-400"
@@ -1138,7 +1195,7 @@ export default function SequencesPage() {
                         <button onClick={() => void exitRunCall(r.id)} className="btn-ghost text-[9px] py-0.5 px-1.5 text-red-400">Exit</button>
                       )}
                     </div>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             )}
