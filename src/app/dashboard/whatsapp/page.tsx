@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
@@ -424,8 +425,14 @@ export default function WhatsAppPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              {numbers.map((n) => (
-                <div key={n.id} className="rounded-xl border border-white/8 bg-white/3 p-4 flex items-center gap-3">
+              {numbers.map((n, idx) => (
+                <motion.div
+                  key={n.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.04 }}
+                  className="glass rounded-xl p-4 flex items-center gap-3"
+                >
                   <div className="w-9 h-9 rounded-lg bg-[#25D366]/15 flex items-center justify-center">
                     <Phone className="w-4 h-4 text-[#25D366]" />
                   </div>
@@ -441,7 +448,7 @@ export default function WhatsAppPage() {
                       {n.status}
                     </span>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -462,10 +469,14 @@ export default function WhatsAppPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              {conversations.map((c) => (
-                <div
+              {conversations.map((c, idx) => (
+                <motion.div
                   key={c.id}
-                  className="rounded-xl border border-white/8 bg-white/3 hover:bg-white/5 p-4 flex items-center gap-3 transition-all"
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.04 }}
+                  whileHover={{ y: -4, scale: 1.01 }}
+                  className="glass rounded-xl p-4 flex items-center gap-3 transition-all"
                 >
                   <div className="w-9 h-9 rounded-full bg-[#25D366]/15 flex items-center justify-center text-xs font-semibold text-[#25D366]">
                     {(c.subject || c.external_thread_id || "?").charAt(0).toUpperCase()}
@@ -488,7 +499,7 @@ export default function WhatsAppPage() {
                       {c.last_message_at ? new Date(c.last_message_at).toLocaleDateString() : "—"}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -504,11 +515,20 @@ export default function WhatsAppPage() {
           { label: "Sent", value: campaigns.filter((c) => c.status === "sent").length },
           { label: "Scheduled", value: campaigns.filter((c) => c.status === "scheduled").length },
           { label: "Recipients Reached", value: campaigns.filter((c) => c.status === "sent").reduce((a, c) => a + c.recipient_count, 0) },
-        ].map((s) => (
-          <div key={s.label} className="rounded-xl border border-white/8 bg-white/3 p-4 text-center">
-            <p className="text-2xl font-bold text-white">{s.value}</p>
-            <p className="text-xs text-white/40 mt-1">{s.label}</p>
-          </div>
+        ].map((s, i) => (
+          <motion.div
+            key={s.label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06, duration: 0.4 }}
+            className="glass rounded-xl overflow-hidden"
+          >
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-4 text-center">
+              <p className="text-2xl font-bold text-white">{s.value}</p>
+              <p className="text-xs text-white/40 mt-1">{s.label}</p>
+            </div>
+          </motion.div>
         ))}
       </div>
 
@@ -529,10 +549,14 @@ export default function WhatsAppPage() {
           </div>
         ) : (
           <div className="flex flex-col gap-2">
-            {campaigns.map((c) => (
-              <div
+            {campaigns.map((c, idx) => (
+              <motion.div
                 key={c.id}
-                className="rounded-xl border border-white/8 bg-white/3 hover:bg-white/5 p-4 flex items-center gap-4 transition-all"
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.04 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="glass rounded-xl p-4 flex items-center gap-4 transition-all"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -557,7 +581,7 @@ export default function WhatsAppPage() {
                   </p>
                 </div>
                 <ChevronDown className="w-4 h-4 text-white/20 shrink-0 -rotate-90" />
-              </div>
+              </motion.div>
             ))}
           </div>
         )}

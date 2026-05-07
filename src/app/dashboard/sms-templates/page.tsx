@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   MessageSquare, Plus, Copy, Sparkles, Trash2, Edit3,
   Search, Shield, Link2, BarChart3, Clock, Send,
@@ -275,7 +276,7 @@ export default function SMSTemplatesPage() {
 
           {/* Add form */}
           {showAdd && (
-            <div className="card border-gold/10 space-y-2 p-4">
+            <div className="glass rounded-xl space-y-2 p-4">
               <h4 className="text-xs font-semibold">New SMS Template</h4>
               <div className="grid grid-cols-2 gap-2">
                 <input value={newTemplate.name} onChange={e => setNewTemplate({ ...newTemplate, name: e.target.value })} className="input text-xs" placeholder="Template name" />
@@ -346,8 +347,8 @@ export default function SMSTemplatesPage() {
             {filtered.length === 0 && (
               <div className="col-span-2 text-center py-12 text-muted text-xs">No templates yet. Click &quot;New&quot; to create your first SMS template.</div>
             )}
-            {filtered.map(template => (
-              <div key={template.id} className="p-4 rounded-xl bg-surface-light border border-border group transition-all hover:border-gold/10">
+            {filtered.map((template, idx) => (
+              <motion.div key={template.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-4 group transition-all hover:border-gold/10">
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <p className="text-xs font-semibold">{template.name}</p>
@@ -390,7 +391,7 @@ export default function SMSTemplatesPage() {
                     <Copy size={8} /> Copy
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -441,7 +442,7 @@ export default function SMSTemplatesPage() {
             </div>
           </div>
           {/* Template selector for preview */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h4 className="text-xs font-semibold mb-2">Select Template to Preview</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
               {templates.length === 0 && (
@@ -466,7 +467,7 @@ export default function SMSTemplatesPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Compliance Checker */}
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Shield size={14} className="text-gold" /> TCPA Compliance Checker
               </h3>
@@ -497,7 +498,7 @@ export default function SMSTemplatesPage() {
               </div>
             </div>
             {/* Opt-out Footer Manager */}
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Settings size={14} className="text-gold" /> Opt-out Footer Manager
               </h3>
@@ -536,16 +537,19 @@ export default function SMSTemplatesPage() {
               { label: "Total Replies", value: totalReplies.toLocaleString(), icon: <MessageSquare size={12} />, color: "text-purple-400" },
               { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-gold" },
             ].map((stat, i) => (
-              <div key={i} className="card text-center p-3">
-                <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
-                <p className="text-lg font-bold">{stat.value}</p>
-                <p className="text-[9px] text-muted">{stat.label}</p>
-              </div>
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div className="p-3">
+                  <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+                  <p className="text-lg font-bold">{stat.value}</p>
+                  <p className="text-[9px] text-muted">{stat.label}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Delivery Rate Monitor */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3">Delivery Rate by Template</h3>
             <div className="space-y-2">
               {templates.filter(t => t.sends > 0).length === 0 && (
@@ -579,7 +583,7 @@ export default function SMSTemplatesPage() {
       {/* ===== SHORT LINKS ===== */}
       {activeTab === "links" && (
         <div className="space-y-4">
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Link2 size={14} className="text-gold" /> Short Link Generator
             </h3>
@@ -604,7 +608,7 @@ export default function SMSTemplatesPage() {
       {activeTab === "schedule" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Calendar size={14} className="text-gold" /> Schedule SMS
               </h3>
@@ -625,7 +629,7 @@ export default function SMSTemplatesPage() {
                 </button>
               </div>
             </div>
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h3 className="text-sm font-semibold mb-3">Scheduled Messages</h3>
               <div className="space-y-2">
                 <div className="text-center py-6 text-[10px] text-muted">No scheduled messages yet. Use the form to schedule one.</div>

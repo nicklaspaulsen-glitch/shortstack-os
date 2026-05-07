@@ -15,6 +15,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Zap,
   Plus,
@@ -371,7 +372,7 @@ export default function TriggersPage() {
             <Loader size={14} className="animate-spin" /> Loading triggers…
           </div>
         ) : triggers.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border/50 bg-surface-light/20 p-10 text-center">
+          <div className="rounded-xl border border-dashed border-border/50 glass p-10 text-center">
             <Zap size={28} className="mx-auto mb-3 text-muted" />
             <h3 className="mb-1 text-base font-semibold">No triggers yet</h3>
             <p className="mx-auto mb-4 max-w-md text-sm text-muted">
@@ -387,22 +388,33 @@ export default function TriggersPage() {
           </div>
         ) : (
           <div className="space-y-2">
-            {triggers.map((t) => (
-              <TriggerRowCard
+            {triggers.map((t, idx) => (
+              <motion.div
                 key={t.id}
-                trigger={t}
-                workflowName={workflows.find((w) => w.id === t.workflow_id)?.name}
-                onToggle={() => toggleActive(t)}
-                onDelete={() => deleteTrigger(t)}
-                onFire={() => fireManual(t)}
-              />
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.04 }}
+              >
+                <TriggerRowCard
+                  trigger={t}
+                  workflowName={workflows.find((w) => w.id === t.workflow_id)?.name}
+                  onToggle={() => toggleActive(t)}
+                  onDelete={() => deleteTrigger(t)}
+                  onFire={() => fireManual(t)}
+                />
+              </motion.div>
             ))}
           </div>
         )}
 
         {/* History panel */}
         {showRuns && (
-          <div className="mt-6 rounded-xl border border-border/50 bg-surface-light/20 p-5">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
+            className="mt-6 glass rounded-xl p-5"
+          >
             <h3 className="mb-3 text-sm font-semibold">Recent trigger runs</h3>
             {runs.length === 0 ? (
               <p className="text-xs text-muted">
@@ -432,11 +444,16 @@ export default function TriggersPage() {
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
         )}
 
         {/* Help */}
-        <div className="mt-8 rounded-xl border border-border/40 bg-background/40 p-5 text-[12px] text-muted">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+          className="mt-8 glass rounded-xl p-5 text-[12px] text-muted"
+        >
           <p className="mb-2 font-semibold text-foreground">How triggers work</p>
           <ul className="ml-4 list-disc space-y-1">
             <li>Each trigger links ONE event type to ONE workflow.</li>
@@ -447,7 +464,7 @@ export default function TriggersPage() {
               then come back here to set its trigger.
             </li>
           </ul>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -475,7 +492,7 @@ function TriggerRowCard({
   const Icon = meta?.icon || Zap;
 
   return (
-    <div className="rounded-lg border border-border/50 bg-surface-light/20 transition hover:border-gold/40">
+    <div className="glass rounded-xl transition hover:border-gold/40">
       <div className="flex items-center gap-3 p-3">
         <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${meta?.tint || "bg-muted/20"}`}>
           <Icon size={16} />
@@ -621,7 +638,7 @@ function NewTriggerForm({
   }
 
   return (
-    <div className="rounded-xl border border-gold/30 bg-gold/5 p-5">
+    <div className="glass-md rounded-xl border border-gold/30 p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground" aria-label="Back to triggers list">

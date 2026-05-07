@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/auth-context";
+import { motion } from "framer-motion";
 import SectionHub from "@/components/dashboard/section-hub";
 import type { RollingPreviewItem } from "@/components/RollingPreview";
 import {
@@ -34,6 +35,7 @@ export default function SalesHubPage() {
   useAuth();
 
   return (
+    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
     <SectionHub
       section="sales"
       title="Sales"
@@ -85,5 +87,6 @@ export default function SalesHubPage() {
         { slug: "commission-tracker", label: "Commissions", description: "Calculate and pay out sales commissions.", href: "/dashboard/commission-tracker", icon: Award, category: "Schedule & Ads" },
       ]}
     />
+    </motion.div>
   );
 }

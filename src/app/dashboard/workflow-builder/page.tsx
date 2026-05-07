@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useCallback, useRef, useMemo, useEffect, DragEvent } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import {
   ReactFlow, ReactFlowProvider, Background, Controls, MiniMap, Panel,
@@ -803,7 +804,7 @@ function WorkflowBuilderInner() {
       />
     <div className="flex flex-col h-[calc(100vh-14rem)]">
       {/* ── Top Toolbar ── */}
-      <div className="shrink-0 h-11 border-b border-border bg-surface flex items-center px-3 gap-2">
+      <div className="shrink-0 h-11 border-b border-border glass flex items-center px-3 gap-2">
         <Zap size={16} className="text-gold" />
         {editingName ? (
           <input
@@ -866,7 +867,7 @@ function WorkflowBuilderInner() {
       {/* ── Main Area ── */}
       <div className="flex flex-1 min-h-0">
         {/* ── Left Sidebar: Node Palette ── */}
-        <div className="shrink-0 w-[250px] border-r border-border bg-surface overflow-y-auto">
+        <div className="shrink-0 w-[250px] border-r border-border glass overflow-y-auto">
           <div className="p-3">
             <div className="relative mb-3">
               <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
@@ -996,7 +997,7 @@ function WorkflowBuilderInner() {
 
         {/* ── Right Panel: Node Config ── */}
         {selectedNode && selectedDef && (
-          <div className="hidden lg:block shrink-0 w-[300px] border-l border-border bg-surface overflow-y-auto">
+          <div className="hidden lg:block shrink-0 w-[300px] border-l border-border glass overflow-y-auto">
             <div className="p-4">
               {/* Header */}
               <div className="flex items-center justify-between mb-4">
@@ -1101,7 +1102,7 @@ function WorkflowBuilderInner() {
       </div>
 
       {/* ── Bottom Stats Bar ── */}
-      <div className="shrink-0 h-8 border-t border-border bg-surface flex items-center px-4 gap-4 text-[10px] text-muted">
+      <div className="shrink-0 h-8 border-t border-border glass flex items-center px-4 gap-4 text-[10px] text-muted">
         <span className="flex items-center gap-1"><Zap size={10} className="text-gold" /> {stats.total} nodes</span>
         <span className="flex items-center gap-1"><Link2 size={10} /> {stats.connections} connections</span>
         <span className="flex items-center gap-1"><ArrowRight size={10} /> {stats.triggers} trigger{stats.triggers !== 1 ? "s" : ""}</span>
@@ -1114,7 +1115,7 @@ function WorkflowBuilderInner() {
       {showTemplates && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowTemplates(false)} />
-          <div className="relative w-full max-w-3xl mx-4 bg-surface border border-border rounded-2xl shadow-2xl overflow-hidden">
+          <div className="relative w-full max-w-3xl mx-4 glass-md border border-border rounded-2xl shadow-2xl overflow-hidden">
             {/* Modal header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
               <div>
@@ -1130,8 +1131,16 @@ function WorkflowBuilderInner() {
 
             {/* Template grid */}
             <div className="p-6 grid grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto">
-              {TEMPLATES.map(tpl => (
-                <div key={tpl.id} className="group rounded-xl border border-border bg-surface-light/50 hover:border-gold/30 transition-all p-4 cursor-pointer" onClick={() => loadTemplate(tpl)}>
+              {TEMPLATES.map((tpl, idx) => (
+                <motion.div
+                  key={tpl.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.04, duration: 0.35 }}
+                  whileHover={{ y: -4, scale: 1.01 }}
+                  className="group glass rounded-xl hover:border-gold/30 transition-all p-4 cursor-pointer"
+                  onClick={() => loadTemplate(tpl)}
+                >
                   <div className="flex items-start justify-between mb-2">
                     <div className="w-9 h-9 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center">
                       <Zap size={16} className="text-gold" />
@@ -1161,7 +1170,7 @@ function WorkflowBuilderInner() {
                   <button className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[11px] font-semibold bg-gold/10 text-gold border border-gold/20 group-hover:bg-gold/20 transition-colors">
                     <Play size={11} /> Use Template
                   </button>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

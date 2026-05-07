@@ -8,6 +8,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Star,
   Plus,
@@ -215,10 +216,23 @@ function ReviewManager() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="card"><p className="text-[10px] uppercase tracking-wider text-muted">Total</p><p className="mt-1 text-2xl font-bold">{stats.count}</p></div>
-        <div className="card"><p className="text-[10px] uppercase tracking-wider text-muted">Avg rating</p><div className="mt-1 flex items-center gap-1.5"><span className="text-2xl font-bold">{stats.avg || "—"}</span>{stats.avg > 0 && <Stars rating={Math.round(stats.avg)} />}</div></div>
-        <div className="card"><p className="text-[10px] uppercase tracking-wider text-muted">Unreplied</p><p className="mt-1 text-2xl font-bold text-amber-300">{stats.unreplied}</p></div>
-        <div className="card"><p className="text-[10px] uppercase tracking-wider text-muted">1–2 star</p><p className="mt-1 text-2xl font-bold text-rose-300">{stats.critical}</p></div>
+        {[
+          { label: "Total", value: stats.count, color: undefined },
+          { label: "Avg rating", value: stats.avg || "—", stars: stats.avg > 0 ? Math.round(stats.avg) : 0 },
+          { label: "Unreplied", value: stats.unreplied, color: "text-amber-300" },
+          { label: "1–2 star", value: stats.critical, color: "text-rose-300" },
+        ].map((stat, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3">
+              <p className="text-[10px] uppercase tracking-wider text-muted">{stat.label}</p>
+              <div className="mt-1 flex items-center gap-1.5">
+                <span className={`text-2xl font-bold ${stat.color || ""}`}>{stat.value}</span>
+                {stat.stars ? <Stars rating={stat.stars} /> : null}
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -253,7 +267,7 @@ function ReviewManager() {
       {loading ? (
         <div className="flex items-center gap-2 text-sm text-muted"><Loader size={14} className="animate-spin" /> Loading…</div>
       ) : filtered.length === 0 ? (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <EmptyState
             icon={<Star size={36} />}
             title={reviews.length === 0 ? "No reviews yet" : "No reviews match this filter"}
@@ -263,8 +277,10 @@ function ReviewManager() {
         </div>
       ) : (
         <div className="space-y-2">
-          {filtered.map((r) => (
-            <ReviewCard key={r.id} review={r} onDelete={() => remove(r.id)} onReply={(text) => reply(r.id, text)} onResolve={() => resolve(r.id)} />
+          {filtered.map((r, idx) => (
+            <motion.div key={r.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }}>
+              <ReviewCard review={r} onDelete={() => remove(r.id)} onReply={(text) => reply(r.id, text)} onResolve={() => resolve(r.id)} />
+            </motion.div>
           ))}
         </div>
       )}
@@ -395,7 +411,7 @@ function ReviewRequests() {
           )}
 
           {configs.length === 0 && !showForm ? (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <EmptyState
                 icon={<Send size={36} />}
                 title="No review request configs"
@@ -412,8 +428,8 @@ function ReviewRequests() {
             </div>
           ) : (
             <div className="space-y-2">
-              {configs.map((cfg) => (
-                <div key={cfg.id} className="rounded-lg border border-border/50 bg-surface-light/20 p-4">
+              {configs.map((cfg, idx) => (
+                <motion.div key={cfg.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl p-4">
                   <div className="flex items-start gap-3">
                     <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${cfg.enabled ? "bg-emerald-500/15 text-emerald-300" : "bg-surface-light/60 text-muted"}`}>
                       <Send size={14} />
@@ -452,14 +468,14 @@ function ReviewRequests() {
                       </button>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
 
           {/* Manual send */}
           {configs.length > 0 && (
-            <div className="rounded-xl border border-border/40 bg-surface-light/10 p-5">
+            <div className="glass rounded-xl p-5">
               <h3 className="mb-3 text-sm font-semibold">Send Now (Manual)</h3>
               <div className="flex flex-wrap items-end gap-3">
                 <div>
@@ -505,7 +521,7 @@ function ReviewRequests() {
         <>
           <p className="text-sm text-muted">All review requests sent (auto + manual), newest first.</p>
           {history.length === 0 ? (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <EmptyState
                 icon={<History size={36} />}
                 title="No requests sent yet"
@@ -513,7 +529,7 @@ function ReviewRequests() {
               />
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-xl border border-border/40">
+            <div className="glass rounded-xl overflow-hidden">
               <table className="w-full text-[12px]">
                 <thead>
                   <tr className="border-b border-border/40 text-left text-[10px] uppercase tracking-wider text-muted">
@@ -525,8 +541,8 @@ function ReviewRequests() {
                   </tr>
                 </thead>
                 <tbody>
-                  {history.map((row) => (
-                    <tr key={row.id} className="border-b border-border/20 hover:bg-surface-light/10">
+                  {history.map((row, idx) => (
+                    <motion.tr key={row.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="border-b border-border/20 hover:bg-surface-light/10">
                       <td className="px-4 py-3 text-muted">{new Date(row.sent_at).toLocaleString()}</td>
                       <td className="px-4 py-3 capitalize">{row.channel}</td>
                       <td className="px-4 py-3 capitalize">{(row.config as { platform?: string } | null)?.platform || "—"}</td>
@@ -536,7 +552,7 @@ function ReviewRequests() {
                         </span>
                       </td>
                       <td className="px-4 py-3 text-muted font-mono text-[10px]">{row.event_id ? row.event_id.slice(0, 8) + "…" : "manual"}</td>
-                    </tr>
+                    </motion.tr>
                   ))}
                 </tbody>
               </table>

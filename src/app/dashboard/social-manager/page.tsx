@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
@@ -459,7 +460,7 @@ export default function SocialManagerPage() {
 
       {/* Connect Accounts Section — shown when no accounts connected */}
       {currentClient && connectedAccounts.filter(a => a.is_active).length === 0 && (
-        <div className="card border-gold/10 relative overflow-hidden">
+        <div className="glass rounded-xl relative overflow-hidden">
           <div className="absolute inset-0 bg-mesh opacity-20" />
           <div className="relative text-center py-6">
             <div className="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -672,15 +673,20 @@ export default function SocialManagerPage() {
         <div className="space-y-4">
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            <StatCard label="Scheduled" value={scheduledPosts.length} icon={<Calendar size={14} />} />
-            <StatCard label="Published" value={recentPosts.length} icon={<CheckCircle size={14} />} changeType="positive" />
-            <StatCard label="Platforms" value={currentClient?.accounts.length || 0} icon={<Globe size={14} />} />
-            <StatCard label="Autopilot" value={isAutopilot ? "Active" : "Off"} icon={<Bot size={14} />}
-              changeType={isAutopilot ? "positive" : "neutral"} />
+            {[
+              { label: "Scheduled", value: scheduledPosts.length, icon: <Calendar size={14} /> },
+              { label: "Published", value: recentPosts.length, icon: <CheckCircle size={14} />, changeType: "positive" as const },
+              { label: "Platforms", value: currentClient?.accounts.length || 0, icon: <Globe size={14} /> },
+              { label: "Autopilot", value: isAutopilot ? "Active" : "Off", icon: <Bot size={14} />, changeType: (isAutopilot ? "positive" : "neutral") as "positive" | "neutral" },
+            ].map((stat, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }}>
+                <StatCard label={stat.label} value={stat.value} icon={stat.icon} changeType={stat.changeType} />
+              </motion.div>
+            ))}
           </div>
 
           {/* Generate week */}
-          <div className="card border-gold/10 relative overflow-hidden">
+          <div className="glass rounded-xl relative overflow-hidden">
             <div className="absolute inset-0 bg-mesh opacity-30" />
             <div className="relative">
               <div className="flex items-center justify-between mb-3">
@@ -704,7 +710,7 @@ export default function SocialManagerPage() {
 
           {/* AI Content Suggestions */}
           {suggestions.length > 0 && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="section-header mb-0 flex items-center gap-2">
                   <Lightbulb size={13} className="text-gold" /> AI Suggestions
@@ -712,7 +718,7 @@ export default function SocialManagerPage() {
                 <span className="text-[9px] text-muted">{suggestions.length} ideas</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {suggestions.slice(0, 6).map(s => {
+                {suggestions.slice(0, 6).map((s, idx) => {
                   const meta = s.metadata || {};
                   const typeIcon: Record<string, React.ReactNode> = {
                     short_video: <Video size={12} className="text-pink-400" />,
@@ -724,7 +730,7 @@ export default function SocialManagerPage() {
                     thread: <FileTextIcon size={12} className="text-cyan-400" />,
                   };
                   return (
-                    <div key={s.id} className="p-2.5 bg-surface-light rounded-lg border border-border hover:border-gold/10 transition-all">
+                    <motion.div key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-2.5 hover:border-gold/10 transition-all">
                       <div className="flex items-center gap-2 mb-1">
                         {typeIcon[String(meta.type)] || <Sparkles size={12} className="text-gold" />}
                         <span className="text-[10px] font-medium text-gold uppercase">{String(meta.type || "").replace("_", " ")}</span>
@@ -742,7 +748,7 @@ export default function SocialManagerPage() {
                           ))}
                         </div>
                       )}
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -751,7 +757,7 @@ export default function SocialManagerPage() {
 
           {/* Up next */}
           {scheduledPosts.length > 0 && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="section-header mb-0 flex items-center gap-2">
                   <Clock size={13} className="text-gold" /> Up Next
@@ -761,10 +767,10 @@ export default function SocialManagerPage() {
                 </button>
               </div>
               <div className="space-y-2">
-                {scheduledPosts.slice(0, 5).map(post => {
+                {scheduledPosts.slice(0, 5).map((post, idx) => {
                   const meta = (post.metadata as Record<string, unknown>) || {};
                   return (
-                    <div key={post.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-lg border border-border hover:border-gold/10 transition-all">
+                    <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-lg border border-border hover:border-gold/10 transition-all">
                       <div className="shrink-0">{PLATFORM_ICONS[post.platform] || <Globe size={14} />}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium truncate">{post.title}</p>
@@ -779,7 +785,7 @@ export default function SocialManagerPage() {
                         {posting === post.id ? <Loader size={10} className="animate-spin" /> : <Send size={10} />}
                         Post
                       </button>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -788,7 +794,7 @@ export default function SocialManagerPage() {
 
           {/* Recent published */}
           {recentPosts.length > 0 && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h2 className="section-header flex items-center gap-2">
                 <CheckCircle size={13} className="text-success" /> Recently Published
               </h2>
@@ -876,7 +882,7 @@ export default function SocialManagerPage() {
             </div>
 
             {/* Content pillars */}
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h3 className="section-header flex items-center gap-2 mb-3">
                 <Layers size={13} className="text-gold" /> Content Pillars
               </h3>
@@ -904,7 +910,7 @@ export default function SocialManagerPage() {
             </div>
 
             {/* Best posting times */}
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h3 className="section-header flex items-center gap-2 mb-3">
                 <Clock size={13} className="text-gold" /> Best Posting Times
               </h3>
@@ -939,7 +945,7 @@ export default function SocialManagerPage() {
       {/* Hashtag Research Tab */}
       {tab === "hashtags" && (
         <div className="space-y-4">
-          <div className="card border-gold/10 relative overflow-hidden">
+          <div className="glass rounded-xl relative overflow-hidden">
             <div className="absolute inset-0 bg-mesh opacity-30" />
             <div className="relative">
               <div className="flex items-center gap-2 mb-3">
@@ -978,7 +984,7 @@ export default function SocialManagerPage() {
           </div>
 
           {/* Caption templates */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h3 className="section-header flex items-center gap-2 mb-3">
               <FileTextIcon size={13} className="text-gold" /> Caption Templates
             </h3>
@@ -1011,16 +1017,16 @@ export default function SocialManagerPage() {
       {tab === "scheduled" && (
         <div className="space-y-2">
           {scheduledPosts.length === 0 ? (
-            <div className="card text-center py-8">
+            <div className="glass rounded-xl text-center py-8">
               <Calendar size={24} className="mx-auto mb-2 text-muted/30" />
               <p className="text-xs text-muted mb-2">No content scheduled</p>
               <button onClick={generateWeek} className="btn-primary text-xs">Generate This Week</button>
             </div>
           ) : (
-            scheduledPosts.map(post => {
+            scheduledPosts.map((post, idx) => {
               const meta = (post.metadata as Record<string, unknown>) || {};
               return (
-                <div key={post.id} className="card-hover p-3">
+                <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl p-3">
                   <div className="flex items-start gap-3">
                     <div className="shrink-0 mt-1">{PLATFORM_ICONS[post.platform] || <Globe size={14} />}</div>
                     <div className="flex-1 min-w-0">
@@ -1044,7 +1050,7 @@ export default function SocialManagerPage() {
                       Publish
                     </button>
                   </div>
-                </div>
+                </motion.div>
               );
             })
           )}
@@ -1055,19 +1061,19 @@ export default function SocialManagerPage() {
       {tab === "published" && (
         <div className="space-y-2">
           {recentPosts.length === 0 ? (
-            <div className="card text-center py-8">
+            <div className="glass rounded-xl text-center py-8">
               <p className="text-xs text-muted">Nothing published yet</p>
             </div>
           ) : (
-            recentPosts.map(post => (
-              <div key={post.id} className="card p-3 flex items-center gap-3">
+            recentPosts.map((post, idx) => (
+              <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl p-3 flex items-center gap-3">
                 {PLATFORM_ICONS[post.platform] || <Globe size={14} />}
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{post.title}</p>
                   <p className="text-[9px] text-muted">{post.scheduled_at ? formatRelativeTime(post.scheduled_at) : ""} · {post.platform}</p>
                 </div>
                 <StatusBadge status="published" />
-              </div>
+              </motion.div>
             ))
           )}
         </div>
@@ -1077,7 +1083,7 @@ export default function SocialManagerPage() {
       {tab === "config" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Content Generation Settings */}
-          <div className="card-static space-y-4">
+          <div className="glass rounded-xl p-5 space-y-4">
             <h2 className="text-sm font-semibold flex items-center gap-2"><Settings size={13} className="text-gold" /> Content Settings</h2>
 
             <div>
@@ -1123,7 +1129,7 @@ export default function SocialManagerPage() {
 
           {/* Autopilot Controls */}
           <div className="space-y-4">
-            <div className="card-static border-gold/20">
+            <div className="glass rounded-xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Bot size={16} className="text-gold" />
@@ -1222,7 +1228,7 @@ export default function SocialManagerPage() {
             </div>
 
             {/* How it works */}
-            <div className="card-static bg-gold/[0.02] border-gold/10">
+            <div className="glass rounded-xl p-5">
               <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Activity size={12} className="text-gold" /> How Social Autopilot Works</h3>
               <ol className="space-y-1 text-[10px] text-muted">
                 <li className="flex gap-2"><span className="text-gold font-bold">1.</span> Checks if content queue is running low (less than 3 days ahead)</li>
@@ -1264,7 +1270,7 @@ export default function SocialManagerPage() {
 
           {/* 1. AI Content Repurposer */}
           {toolsSubTab === "repurpose" && (
-            <div className="card border-gold/10 relative overflow-hidden">
+            <div className="glass rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-mesh opacity-30" />
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
@@ -1324,7 +1330,7 @@ export default function SocialManagerPage() {
 
           {/* 7. A/B Caption Tester */}
           {toolsSubTab === "ab-test" && (
-            <div className="card border-gold/10 relative overflow-hidden">
+            <div className="glass rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-mesh opacity-30" />
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
@@ -1386,7 +1392,7 @@ export default function SocialManagerPage() {
 
           {/* 8. Viral Score Predictor */}
           {toolsSubTab === "viral" && (
-            <div className="card border-gold/10 relative overflow-hidden">
+            <div className="glass rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-mesh opacity-30" />
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
@@ -1468,7 +1474,7 @@ export default function SocialManagerPage() {
 
           {/* 12. Bio Optimizer */}
           {toolsSubTab === "bio" && (
-            <div className="card border-gold/10 relative overflow-hidden">
+            <div className="glass rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-mesh opacity-30" />
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
@@ -1523,7 +1529,7 @@ export default function SocialManagerPage() {
 
           {/* 18. Post Preview */}
           {toolsSubTab === "preview" && (
-            <div className="card space-y-3">
+            <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-blue-400/10 rounded-lg flex items-center justify-center">
                   <Eye size={16} className="text-blue-400" />
@@ -1596,7 +1602,7 @@ export default function SocialManagerPage() {
 
           {/* 19. Bulk Post Scheduler */}
           {toolsSubTab === "bulk" && (
-            <div className="card space-y-3">
+            <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-green-400/10 rounded-lg flex items-center justify-center">
                   <Upload size={16} className="text-green-400" />
@@ -1632,7 +1638,7 @@ export default function SocialManagerPage() {
 
           {/* 11. Carousel Builder */}
           {toolsSubTab === "carousel" && (
-            <div className="card space-y-3">
+            <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-blue-400/10 rounded-lg flex items-center justify-center">
                   <Columns size={16} className="text-blue-400" />
@@ -1694,7 +1700,7 @@ export default function SocialManagerPage() {
 
           {/* 10. Story Planner */}
           {toolsSubTab === "story" && (
-            <div className="card space-y-3">
+            <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-pink-400/10 rounded-lg flex items-center justify-center">
                   <CircleDot size={16} className="text-pink-400" />
@@ -1756,7 +1762,7 @@ export default function SocialManagerPage() {
 
           {/* 13. Link in Bio Manager */}
           {toolsSubTab === "linkinbio" && (
-            <div className="card space-y-3">
+            <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-emerald-400/10 rounded-lg flex items-center justify-center">
                   <Link size={16} className="text-emerald-400" />
@@ -1813,7 +1819,7 @@ export default function SocialManagerPage() {
 
           {/* 26. Caption Templates Library (expanded) */}
           {toolsSubTab === "templates" && (
-            <div className="card space-y-3">
+            <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-yellow-400/10 rounded-lg flex items-center justify-center">
                   <BookOpen size={16} className="text-yellow-400" />
@@ -1870,7 +1876,7 @@ export default function SocialManagerPage() {
 
           {/* 21. Content Recycler */}
           {toolsSubTab === "recycler" && (
-            <div className="card space-y-3">
+            <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-green-400/10 rounded-lg flex items-center justify-center">
                   <Repeat size={16} className="text-green-400" />
@@ -1936,7 +1942,7 @@ export default function SocialManagerPage() {
           {/* 2. Engagement Rate Calculator */}
           {analyticsSubTab === "engagement" && (
             <div className="space-y-3">
-              <div className="card">
+              <div className="glass rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <TrendingUp size={16} className="text-gold" />
                   <h2 className="text-sm font-semibold">Engagement Rate Calculator</h2>
@@ -1970,7 +1976,7 @@ export default function SocialManagerPage() {
 
           {/* 3. Best Time to Post Heatmap */}
           {analyticsSubTab === "heatmap" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Grid3X3 size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Best Time to Post Heatmap</h2>
@@ -1985,7 +1991,7 @@ export default function SocialManagerPage() {
 
           {/* 5. Hashtag Performance Analytics */}
           {analyticsSubTab === "hashtags" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Hash size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Hashtag Performance Analytics</h2>
@@ -2000,7 +2006,7 @@ export default function SocialManagerPage() {
 
           {/* 20. Audience Growth Tracker */}
           {analyticsSubTab === "growth" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <LineChart size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Audience Growth Tracker</h2>
@@ -2015,7 +2021,7 @@ export default function SocialManagerPage() {
 
           {/* 22. Platform Analytics Comparison */}
           {analyticsSubTab === "comparison" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <BarChart3 size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Platform Analytics Comparison</h2>
@@ -2030,7 +2036,7 @@ export default function SocialManagerPage() {
 
           {/* 6. Content Pillar Planner */}
           {analyticsSubTab === "pillars" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <PieChart size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Content Pillar Planner</h2>
@@ -2116,7 +2122,7 @@ export default function SocialManagerPage() {
 
           {/* 9. Social Inbox */}
           {inboxSubTab === "messages" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Inbox size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Social Inbox</h2>
@@ -2132,7 +2138,7 @@ export default function SocialManagerPage() {
 
           {/* 16. Social Listening */}
           {inboxSubTab === "listening" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Search size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Social Listening</h2>
@@ -2171,7 +2177,7 @@ export default function SocialManagerPage() {
 
           {/* 14. UGC Tracker */}
           {inboxSubTab === "ugc" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <AtSign size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">UGC Tracker</h2>
@@ -2203,7 +2209,7 @@ export default function SocialManagerPage() {
 
           {/* 23. Auto-Reply Rules */}
           {inboxSubTab === "autoreplies" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Reply size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Auto-Reply Rules</h2>
@@ -2279,7 +2285,7 @@ export default function SocialManagerPage() {
 
           {/* 4. Competitor Social Tracker */}
           {collabsSubTab === "competitors" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Target size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Competitor Social Tracker</h2>
@@ -2333,7 +2339,7 @@ export default function SocialManagerPage() {
 
           {/* 15. Influencer Finder */}
           {collabsSubTab === "influencers" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Users size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Influencer Finder</h2>
@@ -2354,7 +2360,7 @@ export default function SocialManagerPage() {
 
           {/* 24. Collab Manager */}
           {collabsSubTab === "collabs" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Handshake size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Collab Manager</h2>
@@ -2399,7 +2405,7 @@ export default function SocialManagerPage() {
 
           {/* 25. Trending Audio Finder */}
           {collabsSubTab === "trending" && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Music2 size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Trending Audio Finder</h2>
@@ -2416,7 +2422,7 @@ export default function SocialManagerPage() {
 
       {/* 17. Content Calendar Export — add to calendar tab area */}
       {tab === "calendar" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <Download size={16} className="text-gold" />
             <h2 className="text-sm font-semibold">Export Calendar</h2>

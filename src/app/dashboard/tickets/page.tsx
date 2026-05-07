@@ -12,6 +12,7 @@
  */
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   LifeBuoy,
   Mail,
@@ -109,16 +110,21 @@ export default function ContactSupportPage() {
       <div className="mx-auto max-w-5xl space-y-6 px-6 pb-12 pt-5">
         {/* Three support channels */}
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          {SUPPORT_CHANNELS.map((channel) => {
+          {SUPPORT_CHANNELS.map((channel, i) => {
             const accent = ACCENT_STYLES[channel.accent];
             return (
-              <a
+              <motion.a
                 key={channel.title}
                 href={channel.href}
                 target={channel.external ? "_blank" : undefined}
                 rel={channel.external ? "noopener noreferrer" : undefined}
-                className={`flex flex-col rounded-2xl border bg-surface-light/20 p-5 transition ${accent.ring}`}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.4 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className={`flex flex-col glass rounded-xl overflow-hidden p-5 transition ${accent.ring}`}
               >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
                 <div
                   className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl ${accent.iconBg} ${accent.iconText}`}
                 >
@@ -138,13 +144,18 @@ export default function ContactSupportPage() {
                 >
                   {channel.cta} <ArrowRight size={14} />
                 </span>
-              </a>
+              </motion.a>
             );
           })}
         </div>
 
         {/* Self-serve helpers */}
-        <div className="rounded-2xl border border-border/40 bg-surface-light/15 p-5">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.24, duration: 0.4 }}
+          className="glass rounded-xl p-5"
+        >
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold/10 text-gold">
               <Sparkles size={18} />
@@ -197,17 +208,22 @@ export default function ContactSupportPage() {
               </ul>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Honest roadmap note — sets expectations */}
-        <div className="rounded-2xl border border-border/40 bg-background/40 p-5 text-[12px] text-muted">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+          className="glass rounded-xl p-5 text-[12px] text-muted"
+        >
           <p className="font-semibold text-foreground">On the roadmap</p>
           <p className="mt-1">
             A first-class in-product ticket inbox with email intake, SLA timers
             per plan, and team assignment is in active development. Until then,
             the channels above are the fastest way to reach us.
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

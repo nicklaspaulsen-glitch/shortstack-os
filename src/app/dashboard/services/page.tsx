@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { Package, Plus, Pencil, Trash2, Check, X, Loader2, Copy, ToggleLeft, ToggleRight } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
@@ -206,7 +207,7 @@ export default function ServicesPage() {
       />
 
       {showCreate && (
-        <div className="card p-5 border border-white/10">
+        <div className="glass rounded-xl p-5">
           <p className="font-semibold text-white text-sm mb-4">New Service</p>
           <ServiceForm value={createForm} onChange={setCreateForm}
             onSubmit={handleCreate} onCancel={() => setShowCreate(false)}
@@ -215,7 +216,7 @@ export default function ServicesPage() {
       )}
 
       {loading ? <TableSkeleton rows={5} /> : services.length === 0 ? (
-        <div className="card p-12 flex flex-col items-center gap-4 text-center">
+        <div className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center">
           <Package size={40} className="text-muted opacity-30" />
           <p className="text-white font-semibold">No services yet</p>
           <p className="text-muted text-sm max-w-xs">Build your productized service library to speed up proposals and invoices.</p>
@@ -225,7 +226,7 @@ export default function ServicesPage() {
           </button>
         </div>
       ) : (
-        <div className="card overflow-hidden">
+        <div className="glass rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/5 text-muted text-xs">
@@ -236,7 +237,7 @@ export default function ServicesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {services.map((s) =>
+              {services.map((s, idx) =>
                 editId === s.id ? (
                   <tr key={s.id} className="bg-white/[0.02]">
                     <td colSpan={4} className="px-4 py-4">
@@ -246,7 +247,7 @@ export default function ServicesPage() {
                     </td>
                   </tr>
                 ) : (
-                  <tr key={s.id} className={`hover:bg-white/[0.02] transition-colors group ${!s.is_active ? "opacity-50" : ""}`}>
+                  <motion.tr key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className={`hover:bg-white/[0.02] transition-colors group ${!s.is_active ? "opacity-50" : ""}`}>
                     <td className="px-4 py-3">
                       <p className="text-white font-medium">{s.name}</p>
                       {s.description && <p className="text-muted text-xs mt-0.5 line-clamp-1">{s.description}</p>}
@@ -276,7 +277,7 @@ export default function ServicesPage() {
                         </button>
                       </div>
                     </td>
-                  </tr>
+                  </motion.tr>
                 )
               )}
             </tbody>
