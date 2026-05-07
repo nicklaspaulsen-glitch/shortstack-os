@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import {
   Film, CheckCircle, MessageSquare,
@@ -114,26 +115,25 @@ export default function ProductionPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold">{items.length}</p>
-          <p className="text-[10px] text-muted">Total Items</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-blue-400">{items.filter(i => i.status === "in_progress").length}</p>
-          <p className="text-[10px] text-muted">In Progress</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-purple-400">{inReview}</p>
-          <p className="text-[10px] text-muted">In Review</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-red-400">{overdue}</p>
-          <p className="text-[10px] text-muted">Overdue</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-emerald-400">{totalActual.toFixed(1)}h</p>
-          <p className="text-[10px] text-muted">of {totalEstimated}h est.</p>
-        </div>
+        {[
+          { value: items.length, label: "Total Items", color: "" },
+          { value: items.filter(i => i.status === "in_progress").length, label: "In Progress", color: "text-blue-400" },
+          { value: inReview, label: "In Review", color: "text-purple-400" },
+          { value: overdue, label: "Overdue", color: "text-red-400" },
+          { value: `${totalActual.toFixed(1)}h`, label: `of ${totalEstimated}h est.`, color: "text-emerald-400" },
+        ].map((stat, index) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.06, duration: 0.4 }}
+            className="glass rounded-xl p-3 text-center relative overflow-hidden"
+          >
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
+            <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
+            <p className="text-[10px] text-muted">{stat.label}</p>
+          </motion.div>
+        ))}
       </div>
 
       {/* Filters */}
@@ -173,50 +173,68 @@ export default function ProductionPage() {
       )}
       {tab === "pipeline" && items.length > 0 && (
         <div className="grid grid-cols-5 gap-3 overflow-x-auto">
-          {(["backlog", "in_progress", "review", "approved", "delivered"] as KanbanStatus[]).map(status => (
-            <div key={status}
-              onDragOver={e => e.preventDefault()}
-              onDrop={() => handleDrop(status)}
-              className="min-w-[200px]">
-              <div className="flex items-center gap-2 mb-2">
-                <span className={`text-xs font-bold ${STATUS_CONFIG[status].color}`}>{STATUS_CONFIG[status].label}</span>
-                <span className="text-[10px] text-muted">({filtered.filter(i => i.status === status).length})</span>
+          {(["backlog", "in_progress", "review", "approved", "delivered"] as KanbanStatus[]).map((status, colIdx) => (
+            <motion.div
+              key={status}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: colIdx * 0.06, duration: 0.4 }}
+              className="min-w-[200px]"
+            >
+              {/* Drop zone uses plain div for HTML5 drag */}
+              <div
+                onDragOver={e => e.preventDefault()}
+                onDrop={() => handleDrop(status)}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`text-xs font-bold ${STATUS_CONFIG[status].color}`}>{STATUS_CONFIG[status].label}</span>
+                  <span className="text-[10px] text-muted">({filtered.filter(i => i.status === status).length})</span>
+                </div>
+                <div className="space-y-2">
+                  {filtered.filter(i => i.status === status).map((item, i) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.04 }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                    >
+                      {/* Inner div handles HTML5 drag — cannot go on motion.div */}
+                      <div draggable onDragStart={() => setDraggedItem(item.id)}
+                        className="glass rounded-xl p-3 cursor-move hover:border-gold/10 transition-all">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${PRIORITY_CONFIG[item.priority].bg} ${PRIORITY_CONFIG[item.priority].color}`}>
+                            {PRIORITY_CONFIG[item.priority].label}
+                          </span>
+                          <span className="text-[9px] text-muted">{item.type}</span>
+                        </div>
+                        <p className="text-xs font-semibold mb-0.5">{item.title}</p>
+                        <p className="text-[10px] text-muted mb-2">{item.client}</p>
+                        {/* Checklist progress */}
+                        <div className="mb-2">
+                          <div className="flex items-center justify-between text-[9px] text-muted mb-0.5">
+                            <span>{item.checklist.filter(c => c.done).length}/{item.checklist.length} tasks</span>
+                            <span>{item.actualHours}h / {item.estimatedHours}h</span>
+                          </div>
+                          <div className="h-1 rounded-full bg-surface-light overflow-hidden">
+                            <div className="h-full rounded-full bg-gold" style={{ width: `${(item.checklist.filter(c => c.done).length / item.checklist.length) * 100}%` }} />
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1">
+                            <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center text-[8px] font-bold text-gold">{item.assignee[0]}</div>
+                            <span className="text-[9px] text-muted">{item.assignee}</span>
+                          </div>
+                          <span className={`text-[9px] ${item.dueDate < new Date().toISOString().slice(0, 10) && item.status !== "delivered" ? "text-red-400" : "text-muted"}`}>
+                            {item.dueDate.slice(5)}
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-2">
-                {filtered.filter(i => i.status === status).map(item => (
-                  <div key={item.id} draggable onDragStart={() => setDraggedItem(item.id)}
-                    className="card p-3 cursor-move hover:border-gold/10 transition-all">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${PRIORITY_CONFIG[item.priority].bg} ${PRIORITY_CONFIG[item.priority].color}`}>
-                        {PRIORITY_CONFIG[item.priority].label}
-                      </span>
-                      <span className="text-[9px] text-muted">{item.type}</span>
-                    </div>
-                    <p className="text-xs font-semibold mb-0.5">{item.title}</p>
-                    <p className="text-[10px] text-muted mb-2">{item.client}</p>
-                    {/* Checklist progress */}
-                    <div className="mb-2">
-                      <div className="flex items-center justify-between text-[9px] text-muted mb-0.5">
-                        <span>{item.checklist.filter(c => c.done).length}/{item.checklist.length} tasks</span>
-                        <span>{item.actualHours}h / {item.estimatedHours}h</span>
-                      </div>
-                      <div className="h-1 rounded-full bg-surface-light overflow-hidden">
-                        <div className="h-full rounded-full bg-gold" style={{ width: `${(item.checklist.filter(c => c.done).length / item.checklist.length) * 100}%` }} />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1">
-                        <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center text-[8px] font-bold text-gold">{item.assignee[0]}</div>
-                        <span className="text-[9px] text-muted">{item.assignee}</span>
-                      </div>
-                      <span className={`text-[9px] ${item.dueDate < new Date().toISOString().slice(0, 10) && item.status !== "delivered" ? "text-red-400" : "text-muted"}`}>
-                        {item.dueDate.slice(5)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
@@ -224,7 +242,12 @@ export default function ProductionPage() {
       {/* Calendar Tab */}
       {tab === "calendar" && (
         <div className="space-y-4">
-          <div className="card">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="glass rounded-xl"
+          >
             <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-gold" /> Production Calendar</h2>
             <div className="space-y-2">
               {Array.from(new Set(items.map(i => i.dueDate))).sort().map(date => {
@@ -253,9 +276,14 @@ export default function ProductionPage() {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
           {/* Time Estimates vs Actuals */}
-          <div className="card">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.06 }}
+            className="glass rounded-xl"
+          >
             <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-blue-400" /> Time: Estimated vs Actual</h2>
             <div className="space-y-2">
               {items.filter(i => i.actualHours > 0).map(item => {
@@ -282,9 +310,14 @@ export default function ProductionPage() {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
           {/* Bottleneck Identifier */}
-          <div className="card">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.12 }}
+            className="glass rounded-xl"
+          >
             <h2 className="section-header flex items-center gap-2"><AlertTriangle size={13} className="text-yellow-400" /> Bottleneck Analysis</h2>
             <div className="space-y-2">
               {bottlenecks.map(([status, count]) => (
@@ -298,14 +331,19 @@ export default function ProductionPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Standup Tab */}
       {tab === "standup" && (
         <div className="space-y-4">
-          <div className="card">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="glass rounded-xl"
+          >
             <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-gold" /> Daily Standup Summary</h2>
             <p className="text-[10px] text-muted mb-3">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
             <div className="space-y-3">
@@ -340,14 +378,19 @@ export default function ProductionPage() {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Approvals Tab */}
       {tab === "approvals" && (
         <div className="space-y-4">
-          <div className="card">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="glass rounded-xl"
+          >
             <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-gold" /> Review & Approval Queue</h2>
             <div className="space-y-2">
               {items.filter(i => i.status === "review").map(item => (
@@ -399,9 +442,14 @@ export default function ProductionPage() {
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
           {/* Client Approval Portal */}
-          <div className="card">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.06 }}
+            className="glass rounded-xl"
+          >
             <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-blue-400" /> Client Approval Portal</h2>
             <p className="text-[10px] text-muted mb-3">Share approval links with clients for direct feedback</p>
             <div className="space-y-2">
@@ -425,14 +473,14 @@ export default function ProductionPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* New Request Modal */}
       {showSubmit && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowSubmit(false)}>
-          <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-3" onClick={e => e.stopPropagation()}>
+          <div className="glass rounded-2xl w-full max-w-md p-5 space-y-3" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-gold" /> New Production Request</h3>
               <button onClick={() => setShowSubmit(false)} className="text-muted hover:text-foreground"><X size={16} /></button>

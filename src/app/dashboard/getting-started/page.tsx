@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Rocket, CheckCircle, Circle, ArrowRight,
   Users, Zap, Bot, Globe, CreditCard, Settings,
@@ -143,7 +144,13 @@ export default function GettingStartedPage() {
       />
 
       {/* Progress */}
-      <div className="card border-gold/10">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="glass rounded-xl p-4 relative overflow-hidden"
+      >
+        <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-bold">{completed.size}/{STEPS.length} completed</span>
           <span className="text-xs text-gold font-mono">{progress}%</span>
@@ -154,7 +161,7 @@ export default function GettingStartedPage() {
         {progress === 100 && (
           <p className="text-xs text-success mt-2 flex items-center gap-1"><CheckCircle size={12} /> All done! Your agency is fully set up.</p>
         )}
-      </div>
+      </motion.div>
 
       {loading ? (
         <div className="flex items-center justify-center py-12">
@@ -169,11 +176,14 @@ export default function GettingStartedPage() {
             const isCurrent = !done && prevDone;
 
             return (
-              <div key={step.id}
-                className={`p-4 rounded-xl flex items-center gap-4 transition-all border ${
-                  done ? "bg-success/[0.02] border-success/10 opacity-70" :
-                  isCurrent ? "bg-gold/[0.03] border-gold/15" :
-                  "bg-surface-light border-border"
+              <motion.div key={step.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.04 }}
+                className={`p-4 glass rounded-xl flex items-center gap-4 transition-all ${
+                  done ? "opacity-70" :
+                  isCurrent ? "border border-gold/15" :
+                  ""
                 }`}>
                 <button
                   onClick={() => toggleStep(step.id)}
@@ -197,7 +207,7 @@ export default function GettingStartedPage() {
                 }`}>
                   {step.linkLabel} <ArrowRight size={9} />
                 </Link>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -205,11 +215,16 @@ export default function GettingStartedPage() {
 
       {/* Quick tip */}
       {!loading && completed.size < STEPS.length && (
-        <div className="card border-gold/10 bg-gold/[0.02]">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="glass rounded-xl p-4"
+        >
           <p className="text-[10px] text-muted">
             <span className="text-gold font-semibold">Tip:</span> Steps are auto-detected from your actual data. You can also manually check them off by clicking the circle.
           </p>
-        </div>
+        </motion.div>
       )}
     </div>
   );

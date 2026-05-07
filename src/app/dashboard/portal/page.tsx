@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
@@ -178,7 +179,12 @@ export default function ClientPortalPage() {
       <BrowserModeBanner />
 
       {/* Welcome header */}
-      <div className="card border-gold/10 relative overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="glass rounded-xl relative overflow-hidden"
+      >
         <div className="absolute inset-0 bg-mesh opacity-40" />
         <div className="relative flex items-center justify-between">
           <div>
@@ -192,12 +198,12 @@ export default function ClientPortalPage() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* AI Auto-Pilot Status */}
       {client && <AutopilotDashboard clientId={client.id} />}
 
-      {/* Stats */}
+      {/* Stats -- portal keeps it clean, light stagger */}
       <div className="grid grid-cols-3 md:grid-cols-6 gap-2.5">
         <StatCard label="Leads" value={leadCount} icon={<Target size={14} />} />
         <StatCard label="Outreach" value={outreachStats.sent} icon={<Zap size={14} />} change={outreachStats.replied > 0 ? `${outreachStats.replied} replied` : undefined} changeType="positive" />
@@ -269,25 +275,35 @@ export default function ClientPortalPage() {
 
       {/* AI Marketing Plan (shows after onboarding) */}
       {generatingPlan && (
-        <div className="card border-gold/10 text-center py-6">
+        <div className="glass rounded-xl text-center py-6">
           <Loader size={20} className="mx-auto mb-2 text-gold animate-spin" />
           <p className="text-xs text-muted">AI Chief is creating your custom marketing plan...</p>
         </div>
       )}
       {aiPlan && (
-        <div className="card border-gold/10">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="glass rounded-xl"
+        >
           <h2 className="section-header flex items-center gap-2">
             <Sparkles size={13} className="text-gold" /> Your Custom Marketing Plan
           </h2>
           <pre className="text-[10px] text-muted leading-relaxed whitespace-pre-wrap">{aiPlan}</pre>
-        </div>
+        </motion.div>
       )}
 
       {/* AI Recommendations */}
       <AIInsights clientId={client.id} />
 
       {/* Active Services */}
-      <div className="card">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.06 }}
+        className="glass rounded-xl"
+      >
         <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-gold" /> Active Services</h2>
         <div className="flex flex-wrap gap-2">
           {(client.services || []).map((service, i) => (
@@ -299,7 +315,7 @@ export default function ClientPortalPage() {
             <p className="text-xs text-muted">No active services yet</p>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Dedicated phone number (read-only for client) */}
       <ClientPortalPhoneCard clientId={client.id} />
@@ -311,7 +327,12 @@ export default function ClientPortalPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Tasks */}
-        <div className="card">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.08 }}
+          className="glass rounded-xl"
+        >
           <h2 className="section-header flex items-center gap-2">
             <CheckCircle size={13} className="text-success" /> Task Progress
           </h2>
@@ -345,10 +366,15 @@ export default function ClientPortalPage() {
               ))
             )}
           </div>
-        </div>
+        </motion.div>
 
         {/* Recent Activity */}
-        <div className="card">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.12 }}
+          className="glass rounded-xl"
+        >
           <h2 className="section-header flex items-center gap-2">
             <Sparkles size={13} className="text-gold" /> Recent Activity
           </h2>
@@ -368,12 +394,17 @@ export default function ClientPortalPage() {
               ))
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Upcoming Content */}
       {content.length > 0 && (
-        <div className="card">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.14 }}
+          className="glass rounded-xl"
+        >
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header mb-0 flex items-center gap-2">
               <Calendar size={13} className="text-gold" /> Upcoming Content
@@ -394,7 +425,7 @@ export default function ClientPortalPage() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Agent Activity for this client */}
@@ -402,7 +433,12 @@ export default function ClientPortalPage() {
 
       {/* Pending Invoices alert */}
       {pendingInvoices.length > 0 && (
-        <div className="card border-warning/15 bg-warning/[0.03]">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="glass rounded-xl border-warning/15"
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <CreditCard size={14} className="text-warning" />
@@ -415,7 +451,7 @@ export default function ClientPortalPage() {
               View Invoices
             </Link>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );
@@ -456,7 +492,7 @@ function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
   if (!status) return null;
 
   return (
-    <div className="card">
+    <div className="glass rounded-xl">
       <h2 className="section-header flex items-center gap-2">
         <Phone size={13} className="text-gold" /> Your Phone Number
       </h2>
@@ -555,7 +591,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
   }, [clientId]);
 
   return (
-    <div className="card">
+    <div className="glass rounded-xl">
       <div className="flex items-center justify-between mb-3">
         <h2 className="section-header flex items-center gap-2 mb-0">
           <FolderOpen size={13} className="text-gold" /> Your Uploaded Files
@@ -754,7 +790,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
       </div>
 
       {/* Step content */}
-      <div className="card">
+      <div className="glass rounded-xl">
         <p className="text-[10px] text-gold font-medium uppercase tracking-wider mb-0.5">Step {step + 1} of {steps.length}</p>
         <h2 className="text-sm font-semibold mb-0.5">{currentStep.title}</h2>
         <p className="text-[10px] text-muted mb-4">{currentStep.subtitle}</p>

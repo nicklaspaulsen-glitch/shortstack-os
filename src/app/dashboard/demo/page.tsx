@@ -3,6 +3,7 @@
 import { useAuth } from "@/lib/auth-context";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { motion } from "framer-motion";
 import {
   Play, Database, RefreshCw, Copy, Check, Link2,
   ClipboardList, Sparkles, AlertCircle, CheckCircle2
@@ -97,10 +98,15 @@ export default function DemoManagementPage() {
   if (profile?.role !== "admin") {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="card rounded-xl p-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="glass rounded-xl p-6 text-center"
+        >
           <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
           <p className="text-xs text-zinc-400">Admin access required</p>
-        </div>
+        </motion.div>
       </div>
     );
   }
@@ -119,7 +125,12 @@ export default function DemoManagementPage() {
       </div>
 
       {/* Demo Client Status */}
-      <div className="card card-hover rounded-xl p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="glass rounded-xl p-4"
+      >
         <div className="section-header flex items-center gap-2 mb-3">
           <ClipboardList className="w-3.5 h-3.5 text-purple-400" />
           <h2 className="text-xs font-semibold text-white">Demo Client Status</h2>
@@ -132,32 +143,28 @@ export default function DemoManagementPage() {
         ) : demoClient ? (
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2">
-              <div className="bg-zinc-800/50 rounded-xl p-2.5">
-                <p className="text-[9px] text-zinc-500 uppercase tracking-wider">Business</p>
-                <p className="text-[10px] text-white font-medium mt-0.5">{demoClient.business_name}</p>
-              </div>
-              <div className="bg-zinc-800/50 rounded-xl p-2.5">
-                <p className="text-[9px] text-zinc-500 uppercase tracking-wider">Industry</p>
-                <p className="text-[10px] text-white font-medium mt-0.5 capitalize">{demoClient.industry}</p>
-              </div>
-              <div className="bg-zinc-800/50 rounded-xl p-2.5">
-                <p className="text-[9px] text-zinc-500 uppercase tracking-wider">MRR</p>
-                <p className="text-[10px] text-emerald-400 font-medium mt-0.5">${demoClient.mrr.toLocaleString()}</p>
-              </div>
-              <div className="bg-zinc-800/50 rounded-xl p-2.5">
-                <p className="text-[9px] text-zinc-500 uppercase tracking-wider">Health</p>
-                <p className="text-[10px] text-white font-medium mt-0.5">{demoClient.health_score}/100</p>
-              </div>
-              <div className="bg-zinc-800/50 rounded-xl p-2.5">
-                <p className="text-[9px] text-zinc-500 uppercase tracking-wider">Package</p>
-                <p className="text-[10px] text-purple-400 font-medium mt-0.5">{demoClient.package_tier}</p>
-              </div>
-              <div className="bg-zinc-800/50 rounded-xl p-2.5">
-                <p className="text-[9px] text-zinc-500 uppercase tracking-wider">Contract</p>
-                <p className="text-[10px] text-white font-medium mt-0.5 capitalize">{demoClient.contract_status}</p>
-              </div>
+              {[
+                { label: "Business", value: demoClient.business_name, color: "text-white" },
+                { label: "Industry", value: demoClient.industry, color: "text-white", capitalize: true },
+                { label: "MRR", value: `$${demoClient.mrr.toLocaleString()}`, color: "text-emerald-400" },
+                { label: "Health", value: `${demoClient.health_score}/100`, color: "text-white" },
+                { label: "Package", value: demoClient.package_tier, color: "text-purple-400" },
+                { label: "Contract", value: demoClient.contract_status, color: "text-white", capitalize: true },
+              ].map((tile, index) => (
+                <motion.div
+                  key={tile.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.06, duration: 0.4 }}
+                  className="glass-md rounded-xl p-2.5 relative overflow-hidden"
+                >
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
+                  <p className="text-[9px] text-zinc-500 uppercase tracking-wider">{tile.label}</p>
+                  <p className={`text-[10px] ${tile.color} font-medium mt-0.5 ${tile.capitalize ? "capitalize" : ""}`}>{tile.value}</p>
+                </motion.div>
+              ))}
             </div>
-            <div className="bg-zinc-800/50 rounded-xl p-2.5">
+            <div className="glass-md rounded-xl p-2.5">
               <p className="text-[9px] text-zinc-500 uppercase tracking-wider mb-1">Services</p>
               <div className="flex flex-wrap gap-1">
                 {demoClient.services?.map((s) => (
@@ -180,14 +187,15 @@ export default function DemoManagementPage() {
             <p className="text-[9px] text-zinc-600 mt-0.5">Click &quot;Seed Demo Data&quot; to create one</p>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Actions */}
       <div className="grid grid-cols-2 gap-3">
-        <button
+        <motion.button
           onClick={seedDemo}
           disabled={seeding}
-          className="card card-hover rounded-xl p-4 text-left group"
+          whileHover={{ y: -4, scale: 1.01 }}
+          className="glass rounded-xl p-4 text-left group"
         >
           <div className="flex items-center gap-2 mb-2">
             <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
@@ -204,12 +212,13 @@ export default function DemoManagementPage() {
               <span className="text-[9px] text-purple-400">Seeding...</span>
             </div>
           )}
-        </button>
+        </motion.button>
 
-        <button
+        <motion.button
           onClick={resetDemo}
           disabled={seeding}
-          className="card card-hover rounded-xl p-4 text-left group"
+          whileHover={{ y: -4, scale: 1.01 }}
+          className="glass rounded-xl p-4 text-left group"
         >
           <div className="flex items-center gap-2 mb-2">
             <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
@@ -220,11 +229,16 @@ export default function DemoManagementPage() {
           <p className="text-[9px] text-zinc-500 leading-relaxed">
             Clear all existing demo data and re-seed with fresh entries.
           </p>
-        </button>
+        </motion.button>
       </div>
 
       {/* Share Demo Link */}
-      <div className="card card-hover rounded-xl p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="glass rounded-xl p-4"
+      >
         <div className="section-header flex items-center gap-2 mb-3">
           <Link2 className="w-3.5 h-3.5 text-purple-400" />
           <h2 className="text-xs font-semibold text-white">Share Demo Link</h2>
@@ -242,10 +256,15 @@ export default function DemoManagementPage() {
           </button>
         </div>
         <p className="text-[9px] text-zinc-600 mt-2">Share this link with prospects to preview the platform with sample data.</p>
-      </div>
+      </motion.div>
 
       {/* Instructions */}
-      <div className="card rounded-xl p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        className="glass rounded-xl p-4"
+      >
         <div className="section-header flex items-center gap-2 mb-3">
           <Sparkles className="w-3.5 h-3.5 text-purple-400" />
           <h2 className="text-xs font-semibold text-white">How to Use Demo Mode</h2>
@@ -258,13 +277,19 @@ export default function DemoManagementPage() {
             "Share the demo link with prospects so they can see a live preview.",
             "Use \"Reset Demo\" anytime to start fresh with clean sample data.",
           ].map((instruction, i) => (
-            <div key={i} className="flex items-start gap-2">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.04 }}
+              className="flex items-start gap-2"
+            >
               <span className="text-[9px] text-purple-400 font-bold mt-px">{i + 1}.</span>
               <p className="text-[10px] text-zinc-400 leading-relaxed">{instruction}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

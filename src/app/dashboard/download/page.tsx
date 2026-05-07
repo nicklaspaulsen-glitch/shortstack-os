@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Download,
   Monitor,
@@ -172,7 +173,12 @@ export default function DownloadDesktopPage() {
 
       {/* ── Unavailable banner (graceful fallback) ───────────────── */}
       {!loading && !isAvailable && (
-        <div className="flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="flex items-start gap-3 glass rounded-xl border border-amber-500/30 p-4"
+        >
           <AlertTriangle size={18} className="shrink-0 mt-0.5 text-amber-400" />
           <div className="flex-1 min-w-0">
             <div className="text-sm font-semibold text-amber-200">
@@ -199,27 +205,30 @@ export default function DownloadDesktopPage() {
               </a>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ── Download cards ────────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {PLATFORMS.map((p) => {
+        {PLATFORMS.map((p, index) => {
           const isRecommended = detectedOS === p.id;
           const entry = manifest?.files?.[p.id] ?? null;
           const size = formatBytes(entry?.size);
           const href = `/api/desktop/download/${p.id}`;
           return (
-            <a
+            <motion.a
               key={p.id}
               href={href}
               download
-              className={`group relative rounded-2xl border p-5 transition-all hover:scale-[1.01] ${
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.06, duration: 0.4 }}
+              whileHover={{ y: -4, scale: 1.01 }}
+              className={`group relative glass rounded-xl p-5 transition-all ${
                 isRecommended
                   ? "border-gold/50 shadow-[0_0_20px_rgba(201,168,76,0.12)]"
-                  : "border-border hover:border-border-light"
+                  : ""
               }`}
-              style={{ background: "var(--color-surface, #0f1115)" }}
             >
               {isRecommended && (
                 <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-gold text-[10px] font-bold text-black uppercase tracking-wider">
@@ -254,15 +263,17 @@ export default function DownloadDesktopPage() {
                   Download
                 </span>
               </div>
-            </a>
+            </motion.a>
           );
         })}
       </div>
 
       {/* ── What's included ──────────────────────────────────────── */}
-      <div
-        className="rounded-2xl border border-border p-6"
-        style={{ background: "var(--color-surface, #0f1115)" }}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.15 }}
+        className="glass rounded-xl p-6"
       >
         <div className="mb-5">
           <div className="text-[10px] font-bold uppercase tracking-wider text-gold mb-1">
@@ -273,10 +284,13 @@ export default function DownloadDesktopPage() {
           </h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {FEATURES.map((f) => (
-            <div
+          {FEATURES.map((f, i) => (
+            <motion.div
               key={f.title}
-              className="flex items-start gap-3 p-3 rounded-xl border border-border/60 bg-surface-light/40"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.04 }}
+              className="flex items-start gap-3 p-3 glass-md rounded-xl"
             >
               <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-gold/10 text-gold border border-gold/20">
                 <CheckCircle2 size={16} />
@@ -288,13 +302,18 @@ export default function DownloadDesktopPage() {
                 </div>
                 <div className="text-[11px] text-muted mt-0.5 leading-relaxed">{f.desc}</div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Version + changelog ──────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-border p-4 bg-surface-light/40">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass rounded-xl p-4"
+      >
         <div className="flex items-center gap-3 text-xs text-muted">
           <Keyboard size={14} className="text-gold" />
           <span>
@@ -317,7 +336,7 @@ export default function DownloadDesktopPage() {
         >
           View changelog <ExternalLink size={11} />
         </a>
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -18,6 +18,7 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { Check, RotateCcw, Eye, Upload } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -175,7 +176,12 @@ export default function LogoPickerPage() {
         </div>
 
         {previewConcept && (
-          <div className="mb-6 flex items-center gap-3 rounded-lg border border-gold/40 bg-gold/5 px-4 py-3 text-sm">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mb-6 flex items-center gap-3 glass rounded-xl border border-gold/40 px-4 py-3 text-sm"
+          >
             <Eye size={16} className="text-gold" />
             <span className="font-medium">Previewing #{previewConcept.id} — {previewConcept.name}</span>
             <span className="text-xs text-muted">(temporary — CSS var override only)</span>
@@ -185,22 +191,26 @@ export default function LogoPickerPage() {
             >
               Clear preview
             </button>
-          </div>
+          </motion.div>
         )}
 
         {/* 5-column grid per spec */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {CONCEPTS.map((c) => {
+          {CONCEPTS.map((c, index) => {
             const isSelected = selected === c.number;
             const isPreviewing = preview === c.number;
             const isApplying = applying === c.number;
             return (
-              <div
+              <motion.div
                 key={c.number}
-                className={`group relative overflow-hidden rounded-xl border transition ${
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.06, duration: 0.4 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className={`group relative overflow-hidden glass rounded-xl transition ${
                   isSelected
-                    ? "border-gold bg-gold/5 ring-2 ring-gold/40"
-                    : "border-border/50 bg-surface-light/30 hover:border-gold/40"
+                    ? "border border-gold ring-2 ring-gold/40"
+                    : ""
                 }`}
               >
                 <div className="absolute left-2 top-2 rounded bg-black/60 px-1.5 py-0.5 font-mono text-[10px] text-gold backdrop-blur">
@@ -270,19 +280,24 @@ export default function LogoPickerPage() {
                     )}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {!isAdmin && (
-          <div className="mt-8 rounded-lg border border-dashed border-border/50 bg-surface-light/20 p-4 text-xs text-muted">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="mt-8 glass rounded-xl border border-dashed border-border/50 p-4 text-xs text-muted"
+          >
             <p className="mb-1 font-semibold text-foreground">Admin access required to apply permanently.</p>
             <p>
               Use <span className="font-mono text-gold">Preview in app</span> to test any concept live — it sets a CSS
               variable override that affects any component using <code>var(--ss-logo-url)</code>.
             </p>
-          </div>
+          </motion.div>
         )}
       </div>
     </div>
