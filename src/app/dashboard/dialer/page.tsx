@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Phone, MessageCircle, Send } from "lucide-react";
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
 import DialerTab from "./_components/DialerTab";
 import SMSConsoleTab from "./_components/SMSConsoleTab";
@@ -32,34 +33,40 @@ export default function DialerPage() {
       />
 
       <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
-        <div className="border-b border-white/10">
-          <nav className="flex gap-1 overflow-x-auto" aria-label="Dialer tabs">
-            {TABS.map((tab) => {
-              const isActive = activeTab === tab;
-              return (
-                <button
-                  key={tab}
-                  type="button"
-                  onClick={() => setActiveTab(tab)}
-                  className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
-                    isActive
-                      ? "border-orange-400 text-orange-200"
-                      : "border-transparent text-white/60 hover:text-white"
-                  }`}
-                  aria-current={isActive ? "page" : undefined}
-                >
-                  {TAB_ICON[tab]}
-                  {tab}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
+        <div className="glass rounded-xl overflow-hidden">
+          <div className="border-b border-white/10">
+            <nav className="flex gap-1 overflow-x-auto px-2" aria-label="Dialer tabs">
+              {TABS.map((tab, index) => {
+                const isActive = activeTab === tab;
+                return (
+                  <motion.button
+                    key={tab}
+                    type="button"
+                    onClick={() => setActiveTab(tab)}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: index * 0.06 }}
+                    whileHover={{ y: -1 }}
+                    className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "border-indigo-400 text-indigo-200"
+                        : "border-transparent text-white/60 hover:text-white"
+                    }`}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {TAB_ICON[tab]}
+                    {tab}
+                  </motion.button>
+                );
+              })}
+            </nav>
+          </div>
 
-        <div className="mt-6">
-          {activeTab === "Power Dialer" && <DialerTab />}
-          {activeTab === "SMS Console" && <SMSConsoleTab />}
-          {activeTab === "DM Composer" && <DMComposerTab />}
+          <div className="p-6">
+            {activeTab === "Power Dialer" && <DialerTab />}
+            {activeTab === "SMS Console" && <SMSConsoleTab />}
+            {activeTab === "DM Composer" && <DMComposerTab />}
+          </div>
         </div>
       </div>
     </div>

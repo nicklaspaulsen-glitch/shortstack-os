@@ -54,6 +54,7 @@ import {
   RefreshCw,
   Save,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
@@ -631,7 +632,12 @@ export default function VoiceReceptionistPage() {
             all live; the banner just explains why the log is still empty on
             first run. */}
         {!usingRealCalls && (
-          <div className="flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22 }}
+            className="flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4"
+          >
             <AlertCircle size={18} className="mt-0.5 shrink-0 text-amber-400" />
             <div className="text-[12px] leading-relaxed">
               <p className="font-semibold text-amber-300">
@@ -657,7 +663,7 @@ export default function VoiceReceptionistPage() {
                 )}
               </p>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* ── 1. Overview + stat cards ──────────────────────────────── */}
@@ -669,34 +675,52 @@ export default function VoiceReceptionistPage() {
                 Activity across every number pointed at your receptionist agent.
               </p>
             </div>
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={loadAll}
               className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-[11px] font-medium text-muted hover:bg-surface-light hover:text-foreground"
             >
               <RefreshCw size={12} /> Refresh
-            </button>
+            </motion.button>
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <StatCard
-              label="Calls handled"
-              value={stats.handled}
-              icon={<PhoneCall size={14} />}
-            />
-            <StatCard
-              label="Booked to calendar"
-              value={stats.booked}
-              icon={<CalendarIcon size={14} />}
-            />
-            <StatCard
-              label="Avg call duration"
-              value={fmtDurationAvg(stats.avgDuration)}
-              icon={<Clock size={14} />}
-            />
+            {[
+              { label: "Calls handled", value: stats.handled, icon: <PhoneCall size={14} /> },
+              { label: "Booked to calendar", value: stats.booked, icon: <CalendarIcon size={14} /> },
+              { label: "Avg call duration", value: fmtDurationAvg(stats.avgDuration), icon: <Clock size={14} /> },
+            ].map((card, index) => (
+              <motion.div
+                key={card.label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -2 }}
+                className="relative glass rounded-xl overflow-hidden"
+              >
+                <div
+                  className="absolute top-0 left-0 right-0"
+                  style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }}
+                />
+                <div className="pt-2">
+                  <StatCard
+                    label={card.label}
+                    value={card.value}
+                    icon={card.icon}
+                  />
+                </div>
+              </motion.div>
+            ))}
           </div>
         </section>
 
         {/* ── 2. Agent setup card ───────────────────────────────────── */}
-        <section className="card !p-5">
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22, delay: 0.18 }}
+          className="glass rounded-xl !p-5"
+        >
           <div className="mb-4 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/15 text-purple-300">
@@ -854,7 +878,9 @@ export default function VoiceReceptionistPage() {
           </div>
 
           <div className="mt-5 flex flex-wrap items-center justify-end gap-2 border-t border-border/30 pt-4">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={saveConfig}
               disabled={savingConfig}
               className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-[12px] font-medium text-foreground hover:bg-surface-light disabled:opacity-50"
@@ -865,11 +891,13 @@ export default function VoiceReceptionistPage() {
                 <Save size={12} />
               )}
               Save settings
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={createAgent}
               disabled={creatingAgent}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-[12px] font-semibold text-black transition hover:bg-gold/90 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-4 py-2 text-[12px] font-semibold text-white transition hover:bg-indigo-500/90 disabled:opacity-50"
             >
               {creatingAgent ? (
                 <>
@@ -880,12 +908,17 @@ export default function VoiceReceptionistPage() {
                   <Sparkles size={13} /> {hasAgent ? "Create another agent" : "Create agent on ElevenLabs"}
                 </>
               )}
-            </button>
+            </motion.button>
           </div>
-        </section>
+        </motion.section>
 
         {/* ── 3. Call log table ─────────────────────────────────────── */}
-        <section className="card !p-5">
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22, delay: 0.24 }}
+          className="glass rounded-xl !p-5"
+        >
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-sky-500/15 text-sky-300">
@@ -929,13 +962,17 @@ export default function VoiceReceptionistPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {calls.map((c) => {
+                  {calls.map((c, index) => {
                     const om = outcomeMeta(c.outcome);
                     const OutIcon = om.icon;
                     return (
-                      <tr
+                      <motion.tr
                         key={c.id}
-                        className="border-b border-border/20 transition hover:bg-surface-light/20"
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.18, delay: index * 0.04 }}
+                        whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                        className="border-b border-border/20 transition"
                       >
                         <td className="px-2 py-3 font-mono text-[11.5px]">
                           {c.caller}
@@ -960,7 +997,7 @@ export default function VoiceReceptionistPage() {
                           {c.crmLink ? (
                             <Link
                               href={c.crmLink}
-                              className="inline-flex items-center gap-1 text-[11px] text-gold hover:underline"
+                              className="inline-flex items-center gap-1 text-[11px] text-indigo-300 hover:underline"
                             >
                               Open <ExternalLink size={10} />
                             </Link>
@@ -968,14 +1005,14 @@ export default function VoiceReceptionistPage() {
                             <span className="text-[10px] text-muted/70">—</span>
                           )}
                         </td>
-                      </tr>
+                      </motion.tr>
                     );
                   })}
                 </tbody>
               </table>
             </div>
           )}
-        </section>
+        </motion.section>
 
         {/* ── 4. Calendar integration + 5. Quota ───────────────────── */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
@@ -984,7 +1021,12 @@ export default function VoiceReceptionistPage() {
         </div>
 
         {/* Helper footer ──────────────────────────────────────────── */}
-        <div className="mt-2 rounded-xl border border-border/40 bg-background/40 p-5 text-[12px] text-muted">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22, delay: 0.36 }}
+          className="mt-2 glass rounded-xl p-5 text-[12px] text-muted"
+        >
           <p className="mb-2 font-semibold text-foreground">How it works</p>
           <ul className="ml-4 list-disc space-y-1">
             <li>
@@ -1003,21 +1045,21 @@ export default function VoiceReceptionistPage() {
               Provision phone numbers under{" "}
               <Link
                 href="/dashboard/phone-email"
-                className="text-gold underline"
+                className="text-indigo-300 underline"
               >
                 Phone / Email
               </Link>
               . Browse every agent under{" "}
               <Link
                 href="/dashboard/eleven-agents"
-                className="text-gold underline"
+                className="text-indigo-300 underline"
               >
                 ElevenAgents
               </Link>
               .
             </li>
           </ul>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -1083,7 +1125,12 @@ function CalendarIntegrationCard() {
   }, []);
 
   return (
-    <section className="card !p-5">
+    <motion.section
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.22, delay: 0.30 }}
+      className="glass rounded-xl !p-5"
+    >
       <div className="mb-3 flex items-center gap-2">
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-300">
           <CalendarIcon size={14} />
@@ -1114,12 +1161,14 @@ function CalendarIntegrationCard() {
               </p>
             </div>
           </div>
-          <Link
-            href="/dashboard/calendar"
-            className="inline-flex items-center gap-1 rounded-lg bg-surface-light/80 px-3 py-1.5 text-[11px] font-medium text-muted hover:bg-surface-light hover:text-foreground"
-          >
-            Manage <ArrowRight size={11} />
-          </Link>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Link
+              href="/dashboard/calendar"
+              className="inline-flex items-center gap-1 rounded-lg bg-surface-light/80 px-3 py-1.5 text-[11px] font-medium text-muted hover:bg-surface-light hover:text-foreground"
+            >
+              Manage <ArrowRight size={11} />
+            </Link>
+          </motion.div>
         </div>
       ) : (
         <div className="flex flex-col items-start gap-3 rounded-lg border border-dashed border-border/50 bg-surface-light/20 p-4">
@@ -1138,15 +1187,17 @@ function CalendarIntegrationCard() {
               </p>
             </div>
           </div>
-          <Link
-            href="/dashboard/calendar"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-3 py-2 text-[11.5px] font-semibold text-black hover:bg-gold/90"
-          >
-            <CalendarIcon size={12} /> Connect calendar
-          </Link>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Link
+              href="/dashboard/calendar"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-3 py-2 text-[11.5px] font-semibold text-white hover:bg-indigo-500/90"
+            >
+              <CalendarIcon size={12} /> Connect calendar
+            </Link>
+          </motion.div>
         </div>
       )}
-    </section>
+    </motion.section>
   );
 }
 
@@ -1164,7 +1215,12 @@ function QuotaCard({
   planTier?: string;
 }) {
   return (
-    <section className="card !p-5">
+    <motion.section
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.22, delay: 0.33 }}
+      className="glass rounded-xl !p-5"
+    >
       <div className="mb-3 flex items-center gap-2">
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/15 text-amber-300">
           <Phone size={14} />
@@ -1184,7 +1240,7 @@ function QuotaCard({
           <div className="flex items-center justify-between text-[12px]">
             <span className="text-muted">
               Plan:{" "}
-              <span className="font-semibold text-gold">
+              <span className="font-semibold text-indigo-300">
                 {planTier || "—"}
               </span>
             </span>
@@ -1199,12 +1255,12 @@ function QuotaCard({
             <div
               className={`h-full transition-all ${
                 quota.isUnlimited
-                  ? "bg-gold"
+                  ? "bg-indigo-500"
                   : quota.pct >= 100
                     ? "bg-rose-500"
                     : quota.pct >= 80
                       ? "bg-amber-400"
-                      : "bg-gold"
+                      : "bg-indigo-500"
               }`}
               style={{
                 width: quota.isUnlimited
@@ -1233,7 +1289,7 @@ function QuotaCard({
           )}
         </div>
       )}
-    </section>
+    </motion.section>
   );
 }
 

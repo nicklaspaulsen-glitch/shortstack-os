@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Voicemail, Plus, Play, Pause, Trash2, Upload, Loader2, Phone, X, ShieldAlert,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 
@@ -141,20 +142,27 @@ export default function VoicemailDropPage() {
         icon={<Voicemail className="w-6 h-6" />}
         gradient="purple"
         actions={
-          <button
-            onClick={() => setShowUpload(true)}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-gold hover:bg-gold/90 text-black transition-all"
-          >
-            <Plus className="w-4 h-4" />
-            Upload
-          </button>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <button
+              onClick={() => setShowUpload(true)}
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-indigo-500 hover:bg-indigo-500/90 text-white transition-all"
+            >
+              <Plus className="w-4 h-4" />
+              Upload
+            </button>
+          </motion.div>
         }
       />
 
       {/* Upload modal */}
       {showUpload && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111] shadow-2xl overflow-hidden">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22 }}
+            className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111] shadow-2xl overflow-hidden"
+          >
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
               <p className="font-semibold text-white">Upload voicemail</p>
               <button onClick={() => setShowUpload(false)} className="text-white/40 hover:text-white">
@@ -177,7 +185,7 @@ export default function VoicemailDropPage() {
                   type="file"
                   accept="audio/mpeg,audio/mp3,audio/wav,audio/wave"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="w-full text-white/70 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gold/10 file:text-gold hover:file:bg-gold/20"
+                  className="w-full text-white/70 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/10 file:text-indigo-300 hover:file:bg-indigo-500/20"
                 />
                 {file && (
                   <p className="text-xs text-white/40 mt-1.5">
@@ -193,23 +201,30 @@ export default function VoicemailDropPage() {
               >
                 Cancel
               </button>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={handleUpload}
                 disabled={uploading || !name.trim() || !file}
-                className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold bg-gold text-black disabled:opacity-50"
+                className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold bg-indigo-500 text-white disabled:opacity-50"
               >
                 {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                 {uploading ? "Uploading…" : "Upload"}
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Drop modal */}
       {showDrop && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111] shadow-2xl overflow-hidden">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22 }}
+            className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111] shadow-2xl overflow-hidden"
+          >
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
               <p className="font-semibold text-white">Drop &quot;{showDrop.name}&quot;</p>
               <button onClick={() => setShowDrop(null)} className="text-white/40 hover:text-white">
@@ -259,46 +274,59 @@ export default function VoicemailDropPage() {
               >
                 Cancel
               </button>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={handleDrop}
                 disabled={dropping || !dropTo.trim() || !tcpaConsent}
-                className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold bg-gold text-black disabled:opacity-50"
+                className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold bg-indigo-500 text-white disabled:opacity-50"
               >
                 {dropping ? <Loader2 className="w-4 h-4 animate-spin" /> : <Phone className="w-4 h-4" />}
                 {dropping ? "Dropping…" : "Drop voicemail"}
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* List */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-gold" />
+          <Loader2 className="w-8 h-8 animate-spin text-indigo-400" />
         </div>
       ) : templates.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-white/8 flex flex-col items-center justify-center py-14 gap-3 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22 }}
+          className="glass rounded-xl border-2 border-dashed border-white/8 flex flex-col items-center justify-center py-14 gap-3 text-center"
+        >
           <Voicemail className="w-10 h-10 text-white/20" />
           <p className="text-white/40 text-sm">No voicemail templates yet</p>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => setShowUpload(true)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-gold text-black"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white"
           >
             <Upload className="w-4 h-4" />
             Upload your first
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       ) : (
-        <div className="flex flex-col gap-2">
-          {templates.map((t) => (
-            <div
+        <div className="glass rounded-xl overflow-hidden flex flex-col">
+          {templates.map((t, index) => (
+            <motion.div
               key={t.id}
-              className="rounded-xl border border-white/8 bg-white/3 hover:bg-white/5 p-4 flex items-center gap-3 transition-all"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.18, delay: index * 0.04 }}
+              whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+              className="border-b border-white/8 last:border-b-0 p-4 flex items-center gap-3 transition-colors"
             >
               <button
                 onClick={() => togglePlay(t)}
-                className="w-10 h-10 rounded-full bg-gold/15 flex items-center justify-center text-gold hover:bg-gold/25 transition-all"
+                className="w-10 h-10 rounded-full bg-indigo-500/15 flex items-center justify-center text-indigo-300 hover:bg-indigo-500/25 transition-all"
                 aria-label={playingId === t.id ? "Pause" : "Play"}
               >
                 {playingId === t.id ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
@@ -309,13 +337,15 @@ export default function VoicemailDropPage() {
                   {t.duration_seconds ? `${t.duration_seconds}s` : "—"} · {new Date(t.created_at).toLocaleDateString()}
                 </p>
               </div>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setShowDrop(t)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gold/10 text-gold hover:bg-gold/20 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 transition-all"
               >
                 <Phone className="w-3.5 h-3.5" />
                 Drop
-              </button>
+              </motion.button>
               <button
                 onClick={() => handleDelete(t.id)}
                 className="text-white/40 hover:text-red-400 p-1.5"
@@ -323,7 +353,7 @@ export default function VoicemailDropPage() {
               >
                 <Trash2 className="w-4 h-4" />
               </button>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
