@@ -8,6 +8,7 @@ import Link from "next/link";
 import PageAI from "@/components/page-ai";
 import EmptyState from "@/components/empty-state";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import {
   Bell, Search, Zap, Send, Sparkles, Activity, AlertTriangle,
   CheckCircle2, Eye, ExternalLink, Loader, RefreshCw,
@@ -316,14 +317,16 @@ export default function NotificationsPage() {
               <RefreshCw size={14} />
             </button>
             {unreadCount > 0 && (
-              <button
-                onClick={markAllRead}
-                disabled={markingAll}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-white bg-white/15 border border-white/25 hover:bg-white/25 transition-colors disabled:opacity-50"
-              >
-                {markingAll ? <Loader size={12} className="animate-spin" /> : <Check size={12} />}
-                Mark All Read
-              </button>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <button
+                  onClick={markAllRead}
+                  disabled={markingAll}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-white bg-white/15 border border-white/25 hover:bg-white/25 transition-colors disabled:opacity-50"
+                >
+                  {markingAll ? <Loader size={12} className="animate-spin" /> : <Check size={12} />}
+                  Mark All Read
+                </button>
+              </motion.div>
             )}
           </>
         }
@@ -340,7 +343,7 @@ export default function NotificationsPage() {
             aria-label="Search notifications"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-surface border border-border/50 text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-gold/30 focus:border-gold/30 transition-all"
+            className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500/30 transition-all"
           />
         </div>
 
@@ -425,16 +428,20 @@ export default function NotificationsPage() {
 
               {/* Notification cards */}
               <div className="space-y-2">
-                {group.items.map((n) => {
+                {group.items.map((n, index) => {
                   const config = TYPE_CONFIG[n.type] || TYPE_CONFIG.info;
                   const actionLabel = getActionLabel(n.type);
                   return (
-                    <div
+                    <motion.div
                       key={n.id}
-                      className={`card group relative overflow-hidden transition-all duration-200 hover:shadow-md ${
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: index * 0.04 }}
+                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      className={`glass rounded-xl group relative overflow-hidden transition-all duration-200 hover:shadow-md ${
                         !n.read
-                          ? "bg-surface border-l-2 border-l-gold"
-                          : "bg-surface/60 opacity-75 hover:opacity-100"
+                          ? "border-l-2 border-l-indigo-500"
+                          : "opacity-75 hover:opacity-100"
                       }`}
                     >
                       <div className="p-4 flex items-start gap-3.5">
@@ -497,7 +504,7 @@ export default function NotificationsPage() {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -509,20 +516,28 @@ export default function NotificationsPage() {
       {/* ─── Stats bar ─── */}
       {!loading && notifications.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          {TABS.filter((t) => t.key !== "all").map((tab) => {
+          {TABS.filter((t) => t.key !== "all").map((tab, index) => {
             const count = tabCounts[tab.key];
             const unread = notifications.filter(
               (n) => typeToTab(n.type) === tab.key && !n.read
             ).length;
             return (
-              <button
+              <motion.button
                 key={tab.key}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -2 }}
                 onClick={() => setActiveTab(tab.key)}
-                className={`card p-3 text-center hover:shadow-md transition-all ${
-                  activeTab === tab.key ? "ring-1 ring-gold/30" : ""
+                className={`glass rounded-xl p-3 text-center relative overflow-hidden hover:shadow-md transition-all ${
+                  activeTab === tab.key ? "ring-1 ring-indigo-500/30" : ""
                 }`}
               >
-                <div className="flex items-center justify-center gap-1.5 mb-1">
+                <div
+                  className="absolute top-0 left-0 right-0"
+                  style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }}
+                />
+                <div className="flex items-center justify-center gap-1.5 mb-1 mt-1">
                   <span className="text-muted">{tab.icon}</span>
                   <span className="text-lg font-bold text-foreground">{count}</span>
                 </div>
@@ -532,7 +547,7 @@ export default function NotificationsPage() {
                     {unread} new
                   </span>
                 )}
-              </button>
+              </motion.button>
             );
           })}
         </div>

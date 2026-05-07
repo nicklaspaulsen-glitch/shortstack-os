@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Activity,
   AlertTriangle,
@@ -304,7 +305,11 @@ export default function SettingsIndexPage() {
       </div>
 
       {/* ── Channel & Infrastructure config ─────────────────────────────── */}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, delay: 0.12 }}
+      >
         <div className="flex items-center gap-3 mb-4">
           <h2
             className="font-editorial text-[11px] uppercase tracking-[0.18em]"
@@ -405,10 +410,14 @@ export default function SettingsIndexPage() {
             }
           />
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Developer tools ──────────────────────────────────────────────── */}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, delay: 0.18 }}
+      >
         <div className="flex items-center gap-3 mb-4">
           <h2
             className="font-editorial text-[11px] uppercase tracking-[0.18em]"
@@ -491,10 +500,14 @@ export default function SettingsIndexPage() {
             }
           />
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Business & Admin ─────────────────────────────────────────────── */}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, delay: 0.24 }}
+      >
         <div className="flex items-center gap-3 mb-4">
           <h2
             className="font-editorial text-[11px] uppercase tracking-[0.18em]"
@@ -613,7 +626,7 @@ export default function SettingsIndexPage() {
             }
           />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
