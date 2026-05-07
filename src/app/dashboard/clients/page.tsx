@@ -178,13 +178,10 @@ export default function ClientsPage() {
 
   // Memoize — these aggregates ran on every re-render otherwise (every
   // keystroke in filter inputs, every hover state change, etc.).
-  const { activeClients, totalMRR, avgHealth } = useMemo(() => {
+  const { activeClients, totalMRR } = useMemo(() => {
     const active = clients.filter((c) => c.is_active);
     const mrr = active.reduce((sum, c) => sum + (c.mrr || 0), 0);
-    const health = active.length > 0
-      ? Math.round(active.reduce((sum, c) => sum + c.health_score, 0) / active.length)
-      : 0;
-    return { activeClients: active, totalMRR: mrr, avgHealth: health };
+    return { activeClients: active, totalMRR: mrr };
   }, [clients]);
 
   // --- Client status pill (derived) ---
@@ -627,123 +624,66 @@ export default function ClientsPage() {
 
   return (
     <MotionPage className="space-y-4">
-      {/* ── Custom hero: OLED dark, no PageHero generic gradient ── */}
-      <div className="relative rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.05)] px-6 py-6 overflow-hidden">
-        {/* Subtle indigo radial glow — brand complement, not lime */}
-        <div
-          className="absolute top-0 right-1/4 w-72 h-28 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at center, rgba(99,102,241,0.07) 0%, transparent 70%)" }}
-        />
-        <div className="relative z-10 flex items-start justify-between gap-6 flex-wrap">
-          <div>
-            <p className="text-[9px] uppercase tracking-[0.24em] text-[#6366F1] font-semibold mb-3">
-              Account Management
-            </p>
-            <h1
-              className="font-display font-bold text-[#F5F4F1] tracking-[-0.04em] leading-none mb-2"
-              style={{ fontSize: "clamp(26px,3.5vw,40px)" }}
-            >
-              Clients
-            </h1>
-            <p className="text-sm text-[#9F9DAA]">
-              {callerRole === "admin" || callerRole === "founder"
-                ? scope === "all"
-                  ? `${clients.length} clients across the platform`
-                  : "Your agency clients"
-                : "Manage clients, contracts, and invoices"}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {(callerRole === "admin" || callerRole === "founder") && (
-              <div className="flex items-center bg-[#15141A] border border-[rgba(255,255,255,0.06)] rounded-xl p-0.5">
-                <button
-                  onClick={() => setScope("all")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    scope === "all" ? "bg-[#6366F1] text-white" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
-                  }`}
-                  title="See every client across every agency"
-                >
-                  All clients
-                </button>
-                <button
-                  onClick={() => setScope("mine")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    scope === "mine" ? "bg-[#6366F1] text-white" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
-                  }`}
-                  title="See only the clients you personally added"
-                >
-                  Mine
-                </button>
-              </div>
+      {/* ── Higgsfield compact header — 52px slim bar ── */}
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809]">
+        <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
+          <Users size={13} className="text-[#6366F1]" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Clients</h1>
+          <p className="text-[9px] text-[#6F6D7A]">
+            {callerRole === "admin" || callerRole === "founder"
+              ? scope === "all"
+                ? `${clients.length} clients across the platform`
+                : "Your agency clients"
+              : "Accounts · Contracts · Invoices"}
+          </p>
+        </div>
+        {/* Stat chips */}
+        {clients.length > 0 && (
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.18)] text-[10px] font-medium text-[#6366F1]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
+              {clients.length}
+            </span>
+            {totalMRR > 0 && (
+              <span className="px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[10px] font-medium text-[#9F9DAA]">
+                {formatCurrency(totalMRR)}
+              </span>
             )}
+          </div>
+        )}
+        {/* Scope switcher (admin/founder only) */}
+        {(callerRole === "admin" || callerRole === "founder") && (
+          <div className="flex items-center bg-[#15141A] border border-[rgba(255,255,255,0.06)] rounded-lg p-0.5 shrink-0">
             <button
-              onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.2)] text-[#6366F1] text-sm font-semibold hover:bg-[rgba(99,102,241,0.14)] transition-all"
+              onClick={() => setScope("all")}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                scope === "all" ? "bg-[#6366F1] text-white" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
+              }`}
+              title="See every client across every agency"
             >
-              <Plus size={15} /> Add Client
+              All
+            </button>
+            <button
+              onClick={() => setScope("mine")}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                scope === "mine" ? "bg-[#6366F1] text-white" : "text-[#9F9DAA] hover:text-[#F5F4F1]"
+              }`}
+              title="See only the clients you personally added"
+            >
+              Mine
             </button>
           </div>
-        </div>
+        )}
+        {/* Add Client CTA */}
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-[11px] font-semibold hover:bg-[#4F46E5] transition-all shrink-0"
+        >
+          <Plus size={12} /> Add Client
+        </button>
       </div>
-
-      {/* ── Scorecard strip — 4 cells, divide-x, MRR gets the one lime ── */}
-      <motion.div
-        className="rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.06)] grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[rgba(255,255,255,0.05)]"
-        initial="hidden"
-        animate="visible"
-        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
-      >
-        <motion.div
-          className="px-5 py-4 flex flex-col gap-1.5"
-          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
-        >
-          <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Total MRR</span>
-          <span
-            className="font-display text-2xl font-bold tracking-[-0.03em] text-[#6366F1]"
-            style={{ fontVariantNumeric: "tabular-nums" }}
-          >
-            {formatCurrency(totalMRR)}
-          </span>
-        </motion.div>
-        <motion.div
-          className="px-5 py-4 flex flex-col gap-1.5"
-          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
-        >
-          <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Active Clients</span>
-          <span
-            className="font-display text-2xl font-bold tracking-[-0.03em] text-[#F5F4F1]"
-            style={{ fontVariantNumeric: "tabular-nums" }}
-          >
-            {activeClients.length}
-          </span>
-        </motion.div>
-        <motion.div
-          className="px-5 py-4 flex flex-col gap-1.5"
-          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
-        >
-          <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Avg Health</span>
-          <span
-            className={`font-display text-2xl font-bold tracking-[-0.03em] ${
-              avgHealth >= 70 ? "text-[#7FE5B8]" : avgHealth >= 40 ? "text-[#FFC062]" : "text-[#F26063]"
-            }`}
-            style={{ fontVariantNumeric: "tabular-nums" }}
-          >
-            {avgHealth}%
-          </span>
-        </motion.div>
-        <motion.div
-          className="px-5 py-4 flex flex-col gap-1.5"
-          variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
-        >
-          <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Contracts Signed</span>
-          <span
-            className="font-display text-2xl font-bold tracking-[-0.03em] text-[#F5F4F1]"
-            style={{ fontVariantNumeric: "tabular-nums" }}
-          >
-            {contracts.filter((c) => c.status === "signed").length}
-          </span>
-        </motion.div>
-      </motion.div>
 
       {/* Tabs (sticky) */}
       <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(99,102,241,0.08)] rounded-xl p-1 w-fit shadow-lg shadow-black/20">

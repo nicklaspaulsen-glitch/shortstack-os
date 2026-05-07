@@ -375,72 +375,37 @@ export default function AnalyticsPage() {
   return (
     <MotionPage className="space-y-4">
 
-      {/* ── Custom hero: OLED dark, no PageHero generic gradient ── */}
-      <div className="relative rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.05)] overflow-hidden">
-        {/* Subtle indigo glow top-right */}
-        <div className="absolute top-0 right-1/3 w-80 h-24 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at center, rgba(99,102,241,0.08) 0%, transparent 70%)" }} />
-        {/* Lime micro-line bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#6366F1]/12 to-transparent" />
-
-        {/* Top row — eyebrow + title + action */}
-        <div className="relative z-10 px-6 pt-5 pb-4 flex items-start justify-between gap-6 flex-wrap">
-          <div>
-            <p className="text-[9px] uppercase tracking-[0.24em] text-[#6366F1] font-semibold mb-2">Performance Dashboard</p>
-            <h1 className="font-display font-bold text-[#F5F4F1] tracking-[-0.04em] leading-none mb-1.5"
-              style={{ fontSize: "clamp(26px,3.5vw,40px)" }}>Analytics</h1>
-            <p className="text-sm text-[#9F9DAA]">Leads, revenue, and content ROI — all in one place.</p>
-          </div>
-          <div className="flex items-center gap-2 flex-shrink-0 pt-1">
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-2 rounded-xl border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.06)] px-3 py-1.5 text-xs font-semibold text-[#6366F1] hover:bg-[rgba(99,102,241,0.12)] transition-colors duration-150"
-            >
-              <Download size={13} /> Export
-            </button>
-          </div>
+      {/* ── Slim compact header (Higgsfield pattern) ── */}
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809] rounded-xl">
+        <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
+          <BarChart3 size={13} className="text-[#6366F1]" />
         </div>
-
-        {/* Bottom row — 4-cell scorecard strip */}
-        <motion.div
-          className="relative z-10 border-t border-[rgba(255,255,255,0.05)] grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[rgba(255,255,255,0.05)]"
-          initial="hidden"
-          animate="visible"
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
+        <div className="flex-1 min-w-0">
+          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Analytics</h1>
+          <p className="text-[9px] text-[#6F6D7A]">Leads · Revenue · Content ROI</p>
+        </div>
+        {stats.totalMRR > 0 && (
+          <motion.span
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.15)] text-[#A78BFA]"
+          >
+            <span className="w-1 h-1 rounded-full bg-[#6366F1] animate-pulse" />
+            {formatCurrency(stats.totalMRR)} MRR
+          </motion.span>
+        )}
+        {!isLoading && (
+          <span className="hidden md:flex items-center gap-1 text-[9px] text-[#6F6D7A] px-2 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
+            {replyRate}% reply rate
+          </span>
+        )}
+        <button
+          onClick={handleExport}
+          className="flex items-center gap-1.5 rounded-lg border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.06)] px-2.5 py-1.5 text-[10px] font-semibold text-[#6366F1] hover:bg-[rgba(99,102,241,0.12)] transition-colors duration-150 shrink-0"
         >
-          <motion.div
-            className="px-5 py-3.5 flex flex-col gap-1"
-            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
-          >
-            <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Total MRR</span>
-            <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#6366F1]"
-              style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(stats.totalMRR)}</span>
-          </motion.div>
-          <motion.div
-            className="px-5 py-3.5 flex flex-col gap-1"
-            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
-          >
-            <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Leads This Month</span>
-            <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#F5F4F1]"
-              style={{ fontVariantNumeric: "tabular-nums" }}>{stats.leadsThisMonth.toLocaleString()}</span>
-          </motion.div>
-          <motion.div
-            className="px-5 py-3.5 flex flex-col gap-1"
-            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
-          >
-            <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Deals Won</span>
-            <span className="font-display text-xl font-bold tracking-[-0.03em] text-[#7FE5B8]"
-              style={{ fontVariantNumeric: "tabular-nums" }}>{stats.totalDeals.toLocaleString()}</span>
-          </motion.div>
-          <motion.div
-            className="px-5 py-3.5 flex flex-col gap-1"
-            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
-          >
-            <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">Reply Rate</span>
-            <span className={`font-display text-xl font-bold tracking-[-0.03em] ${replyRate >= 5 ? "text-[#7FE5B8]" : replyRate >= 2 ? "text-[#FFC062]" : "text-[#F5F4F1]"}`}
-              style={{ fontVariantNumeric: "tabular-nums" }}>{replyRate}%</span>
-          </motion.div>
-        </motion.div>
+          <Download size={11} /> Export
+        </button>
       </div>
 
       {/* ── Loading ──────────────────────────────────────────────────────── */}
