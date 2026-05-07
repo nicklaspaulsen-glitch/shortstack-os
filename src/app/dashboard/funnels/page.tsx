@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
@@ -135,14 +136,14 @@ export default function FunnelsPage() {
 
       {/* Tabs + Search */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1 bg-zinc-900/60 border border-white/8 rounded-lg p-1">
+        <div className="flex items-center gap-1 glass rounded-lg p-1">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setFilter(tab.id)}
               className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                 filter === tab.id
-                  ? "bg-white/10 text-white"
+                  ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
                   : "text-zinc-400 hover:text-zinc-200"
               }`}
             >
@@ -157,7 +158,7 @@ export default function FunnelsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search funnels…"
-            className="pl-9 pr-4 py-2 rounded-lg bg-zinc-900/60 border border-white/8 text-sm text-zinc-200 placeholder-zinc-500 outline-none focus:border-white/20 w-56"
+            className="glass rounded-lg pl-9 pr-4 py-2 text-sm text-zinc-200 placeholder-zinc-500 outline-none focus:border-indigo-500/40 w-56"
           />
         </div>
       </div>
@@ -188,12 +189,16 @@ export default function FunnelsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((funnel) => {
+          {filtered.map((funnel, index) => {
             const sc = STATUS_CONFIG[funnel.status];
             return (
-              <div
+              <motion.div
                 key={funnel.id}
-                className="group relative bg-zinc-900/60 border border-white/8 rounded-xl p-5 hover:border-white/15 transition-all cursor-pointer"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="group relative glass rounded-xl p-5 cursor-pointer"
                 onClick={() => router.push(`/dashboard/funnels/${funnel.id}`)}
               >
                 {/* Header */}
@@ -212,18 +217,18 @@ export default function FunnelsPage() {
 
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-2 mb-4">
-                  <div className="bg-white/4 rounded-lg p-2 text-center">
+                  <div className="glass-md rounded-lg p-2 text-center">
                     <div className="text-white font-bold text-lg leading-none">{funnel.step_count}</div>
                     <div className="text-zinc-500 text-[10px] mt-0.5">Steps</div>
                   </div>
-                  <div className="bg-white/4 rounded-lg p-2 text-center">
+                  <div className="glass-md rounded-lg p-2 text-center">
                     <div className="text-white font-bold text-lg leading-none flex items-center justify-center gap-0.5">
                       <Eye size={12} className="text-zinc-400" />
                       {funnel.total_views.toLocaleString()}
                     </div>
                     <div className="text-zinc-500 text-[10px] mt-0.5">Views</div>
                   </div>
-                  <div className="bg-white/4 rounded-lg p-2 text-center">
+                  <div className="glass-md rounded-lg p-2 text-center">
                     <div className={`font-bold text-lg leading-none ${funnel.conversion_rate >= 20 ? "text-emerald-400" : funnel.conversion_rate >= 10 ? "text-amber-400" : "text-zinc-400"}`}>
                       {funnel.conversion_rate}%
                     </div>
@@ -265,7 +270,7 @@ export default function FunnelsPage() {
                     <ChevronRight size={13} className="text-zinc-600 ml-1" />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -275,7 +280,7 @@ export default function FunnelsPage() {
       {funnels.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
           {[
-            { label: "Total Funnels", value: funnels.length, icon: <Filter size={16} />, color: "text-purple-400" },
+            { label: "Total Funnels", value: funnels.length, icon: <Filter size={16} />, color: "text-indigo-400" },
             { label: "Published", value: funnels.filter((f) => f.status === "published").length, icon: <CheckCircle2 size={16} />, color: "text-emerald-400" },
             { label: "Total Views", value: funnels.reduce((a, f) => a + f.total_views, 0).toLocaleString(), icon: <Eye size={16} />, color: "text-blue-400" },
             {
@@ -286,12 +291,20 @@ export default function FunnelsPage() {
               icon: <TrendingUp size={16} />,
               color: "text-amber-400",
             },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-zinc-900/40 border border-white/6 rounded-xl p-4">
-              <div className={`${stat.color} mb-2`}>{stat.icon}</div>
+          ].map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: index * 0.06 }}
+              whileHover={{ y: -2 }}
+              className="glass rounded-xl p-4 relative overflow-hidden"
+            >
+              <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
+              <div className={`${stat.color} mb-2 mt-1`}>{stat.icon}</div>
               <div className="text-white font-bold text-xl">{stat.value}</div>
               <div className="text-zinc-500 text-xs mt-0.5">{stat.label}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}

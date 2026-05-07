@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
 import {
   Globe, Sparkles, Layout, Eye, Pencil, Trash2, Copy, Rocket,
   ChevronUp, ChevronDown, EyeOff, RotateCcw, Plus, X, Check,
@@ -1031,7 +1032,7 @@ export default function LandingPagesPage() {
 
       {advancedMode && (<>
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 border border-border">
+      <div className="flex gap-1 glass rounded-xl p-1">
         {([
           { id: "create" as MainTab, label: "Create", icon: Sparkles },
           { id: "pages" as MainTab, label: "Generated Pages", icon: FileText },
@@ -1041,7 +1042,7 @@ export default function LandingPagesPage() {
           <button
             key={tab.id}
             onClick={() => setMainTab(tab.id)}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-md text-sm font-medium transition-colors ${mainTab === tab.id ? "bg-gold/10 text-gold" : "text-muted hover:text-white"}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-colors ${mainTab === tab.id ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30" : "text-muted hover:text-white"}`}
           >
             <tab.icon className="w-4 h-4" />
             {tab.label}
@@ -1195,12 +1196,16 @@ export default function LandingPagesPage() {
                 Choose a Template
               </h2>
               <div className="grid grid-cols-4 gap-4">
-                {TEMPLATES.map(tpl => {
+                {TEMPLATES.map((tpl, index) => {
                   const Icon = tpl.icon;
                   return (
-                    <div
+                    <motion.div
                       key={tpl.id}
-                      className={`card group cursor-pointer overflow-hidden transition-all hover:border-gold/30 ${selectedTemplate === tpl.id ? "border-gold ring-1 ring-gold/20" : ""}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: index * 0.06 }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      className={`glass rounded-xl group cursor-pointer overflow-hidden ${selectedTemplate === tpl.id ? "border-indigo-500/40 ring-1 ring-indigo-500/20" : ""}`}
                     >
                       {/* Preview thumbnail mockup */}
                       <div
@@ -1238,7 +1243,7 @@ export default function LandingPagesPage() {
                           Use Template
                         </button>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -1294,11 +1299,11 @@ export default function LandingPagesPage() {
             <h2 className="section-header text-lg font-bold text-white">Generated Pages</h2>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
-              <input value={pageSearch} onChange={e => setPageSearch(e.target.value)} placeholder="Search pages..." className="bg-surface-light border border-border rounded-lg pl-9 pr-4 py-2 text-sm text-white w-64 focus:border-gold focus:outline-none" />
+              <input value={pageSearch} onChange={e => setPageSearch(e.target.value)} placeholder="Search pages..." className="glass rounded-lg pl-9 pr-4 py-2 text-sm text-white w-64 focus:border-indigo-500/40 focus:outline-none" />
             </div>
           </div>
 
-          <div className="card overflow-hidden">
+          <div className="glass rounded-xl overflow-hidden">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border">
@@ -1445,15 +1450,23 @@ export default function LandingPagesPage() {
               { label: "Bounce Rate", value: `${EMPTY_ANALYTICS.bounceRate}%`, icon: TrendingUp, color: "text-orange-400" },
               { label: "Avg. Time", value: EMPTY_ANALYTICS.avgTime, icon: Timer, color: "text-cyan-400" },
               { label: "Conversion Rate", value: `${EMPTY_ANALYTICS.conversionRate}%`, icon: Target, color: "text-green-400" },
-              { label: "Form Submissions", value: EMPTY_ANALYTICS.formSubmissions.toLocaleString(), icon: Mail, color: "text-gold" },
-            ].map(stat => (
-              <div key={stat.label} className="card p-4">
-                <div className="flex items-center justify-between mb-2">
+              { label: "Form Submissions", value: EMPTY_ANALYTICS.formSubmissions.toLocaleString(), icon: Mail, color: "text-indigo-400" },
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -2 }}
+                className="glass rounded-xl p-4 relative overflow-hidden"
+              >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
+                <div className="flex items-center justify-between mb-2 mt-1">
                   <stat.icon className={`w-4 h-4 ${stat.color}`} />
                 </div>
                 <p className="text-lg font-bold text-white">{stat.value}</p>
                 <p className="text-xs text-muted mt-0.5">{stat.label}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
 

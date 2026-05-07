@@ -1215,10 +1215,12 @@ export default function WebsitesPage() {
       )}
 
       {/* Projects list */}
-      <div className="card">
-        <h2 className="section-header flex items-center gap-2">
-          <Layout size={13} className="text-gold" /> Your websites ({projects.length})
-        </h2>
+      <div className="glass rounded-xl overflow-hidden">
+        <div className="px-4 pt-4 pb-3">
+          <h2 className="section-header flex items-center gap-2">
+            <Layout size={13} className="text-gold" /> Your websites ({projects.length})
+          </h2>
+        </div>
         {loading ? (
           <div className="py-8 text-center text-muted text-xs">Loading...</div>
         ) : projects.length === 0 ? (
@@ -1233,14 +1235,22 @@ export default function WebsitesPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {projects.map((p) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-4">
+            {projects.map((p, index) => {
               const html = p.generated_files?.["index.html"] || "";
               const clientName = clients.find((c) => c.id === p.client_id)?.business_name;
               const status = effectiveStatus(p);
               const days = daysUntil(p.demo_expires_at);
               return (
-                <div key={p.id} className="card-hover p-0 overflow-hidden shadow-lg shadow-black/20 transition-transform duration-300 hover:-translate-y-0.5">
+                <motion.div
+                  key={p.id}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: index * 0.06 }}
+                  whileHover={{ y: -4, scale: 1.01 }}
+                  className="glass rounded-xl p-0 overflow-hidden shadow-lg shadow-black/20 relative"
+                >
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
                   {/* Thumbnail */}
                   <div className="relative h-36 bg-slate-900 border-b border-border overflow-hidden">
                     {html ? (
@@ -1352,7 +1362,7 @@ export default function WebsitesPage() {
                       </button>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -1361,27 +1371,27 @@ export default function WebsitesPage() {
 
       {/* How it works */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div className="card border-gold/10">
-          <h3 className="section-header flex items-center gap-2">
-            <Layout size={12} className="text-gold" /> 1. Pick a niche
-          </h3>
-          <p className="text-[10px] text-muted">Nine battle-tested templates, each one prewired for the conversion pattern that niche responds to.</p>
-        </div>
-        <div className="card border-gold/10">
-          <h3 className="section-header flex items-center gap-2">
-            <Rocket size={12} className="text-gold" /> 2. Share the demo
-          </h3>
-          <p className="text-[10px] text-muted">Auto-deployed to a live URL in under 3 minutes. Send it to your client &mdash; free for 14 days, no card.</p>
-        </div>
-        <div className="card border-gold/10">
-          <h3 className="section-header flex items-center gap-2">
-            <DollarSign size={12} className="text-gold" /> 3. Go live, get paid
-          </h3>
-          <p className="text-[10px] text-muted">Connect a domain and subscribe. Transparent monthly pricing based on what&apos;s actually in the site.</p>
-        </div>
+        {[
+          { icon: <Layout size={12} />, title: "1. Pick a niche", body: "Nine battle-tested templates, each one prewired for the conversion pattern that niche responds to." },
+          { icon: <Rocket size={12} />, title: "2. Share the demo", body: "Auto-deployed to a live URL in under 3 minutes. Send it to your client — free for 14 days, no card." },
+          { icon: <DollarSign size={12} />, title: "3. Go live, get paid", body: "Connect a domain and subscribe. Transparent monthly pricing based on what's actually in the site." },
+        ].map((item, index) => (
+          <motion.div
+            key={item.title}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: index * 0.06 }}
+            whileHover={{ y: -2 }}
+            className="glass rounded-xl p-4 relative overflow-hidden"
+          >
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
+            <h3 className="section-header flex items-center gap-2 text-gold">{item.icon} {item.title}</h3>
+            <p className="text-[10px] text-muted">{item.body}</p>
+          </motion.div>
+        ))}
       </div>
 
-      <div className="card border-gold/10">
+      <div className="glass rounded-xl p-4">
         <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
           <ShieldCheck size={11} className="text-gold" /> Every template ships with
         </h3>
