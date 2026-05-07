@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
@@ -9,6 +10,8 @@ import {
   Loader2, ExternalLink, Unlink, AlertCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
+
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
 
 // Notion icon (inline)
 const NotionIcon = () => (
@@ -120,7 +123,7 @@ export default function NotionSyncPage() {
         /* Connected state */
         <div className="flex flex-col gap-4">
           {/* Status card */}
-          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5 flex items-start gap-4">
+          <motion.div className="glass rounded-xl border border-emerald-500/20 p-5 flex items-start gap-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
               <CheckCircle2 className="w-5 h-5 text-emerald-400" />
             </div>
@@ -143,12 +146,12 @@ export default function NotionSyncPage() {
             <div className="text-white/20">
               <NotionIcon />
             </div>
-          </div>
+          </motion.div>
 
           {/* Actions */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Sync now */}
-            <div className="rounded-xl border border-white/8 bg-white/3 p-5 flex flex-col gap-3">
+            <motion.div className="glass rounded-xl p-5 flex flex-col gap-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <div className="flex items-center gap-2">
                 <RefreshCw className="w-4 h-4 text-[#6366F1]" />
                 <p className="text-sm font-semibold text-white">Sync Now</p>
@@ -168,10 +171,10 @@ export default function NotionSyncPage() {
                 )}
                 {syncing ? "Syncing…" : "Sync Now"}
               </button>
-            </div>
+            </motion.div>
 
             {/* Auto-sync toggle */}
-            <div className="rounded-xl border border-white/8 bg-white/3 p-5 flex flex-col gap-3">
+            <motion.div className="glass rounded-xl p-5 flex flex-col gap-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-[#6366F1]" />
                 <p className="text-sm font-semibold text-white">Auto-Sync</p>
@@ -191,11 +194,11 @@ export default function NotionSyncPage() {
                   {autoSync ? "Auto-sync on (every 15 min)" : "Auto-sync off"}
                 </span>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* What is synced */}
-          <div className="rounded-xl border border-white/8 bg-white/3 p-5">
+          <motion.div className="glass rounded-xl p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
             <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-3">
               Synced Resources
             </p>
@@ -212,7 +215,7 @@ export default function NotionSyncPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Disconnect */}
           <div className="flex justify-end">
@@ -233,9 +236,9 @@ export default function NotionSyncPage() {
       ) : (
         /* Not connected state */
         <div className="flex flex-col items-center gap-6 py-10">
-          <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/30">
+          <motion.div className="w-20 h-20 rounded-2xl glass border border-white/10 flex items-center justify-center text-white/30" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
             <NotionIcon />
-          </div>
+          </motion.div>
           <div className="text-center">
             <h2 className="text-xl font-bold text-white">Connect Your Notion Workspace</h2>
             <p className="text-white/50 mt-2 max-w-md text-sm">
@@ -248,12 +251,15 @@ export default function NotionSyncPage() {
               { icon: <RefreshCw className="w-5 h-5" />, label: "Two-way sync", desc: "Changes in either direction stay in sync" },
               { icon: <Link2 className="w-5 h-5" />, label: "Field mapping", desc: "Map ShortStack fields to Notion properties" },
               { icon: <Clock className="w-5 h-5" />, label: "Auto-sync", desc: "Background sync every 15 minutes" },
-            ].map((f) => (
-              <div key={f.label} className="rounded-xl border border-white/8 bg-white/3 p-4 flex flex-col gap-2">
-                <div className="text-[#6366F1]">{f.icon}</div>
-                <p className="text-sm font-semibold text-white">{f.label}</p>
-                <p className="text-xs text-white/50">{f.desc}</p>
-              </div>
+            ].map((f, fi) => (
+              <motion.div key={f.label} className="glass-md rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: fi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
+                <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                <div className="p-4 flex flex-col gap-2">
+                  <div className="text-[#6366F1]">{f.icon}</div>
+                  <p className="text-sm font-semibold text-white">{f.label}</p>
+                  <p className="text-xs text-white/50">{f.desc}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
 

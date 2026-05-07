@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   MapPin, Star, Send, RefreshCw, Reply, PenTool, Eye,
   BarChart3, Image, Clock, Calendar, Plus,
@@ -9,6 +10,8 @@ import {
   Globe as GlobeIcon,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -91,26 +94,21 @@ export default function GoogleBusinessPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-gold">{avgRating}</p>
-          <p className="text-[10px] text-muted flex items-center justify-center gap-0.5">{renderStars(Math.round(Number(avgRating)))} Avg</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold">{reviews.length}</p>
-          <p className="text-[10px] text-muted">Total Reviews</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-yellow-400">{needsReply}</p>
-          <p className="text-[10px] text-muted">Needs Reply</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-green-400">—</p>
-          <p className="text-[10px] text-muted">Profile Views</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-[#4285F4]">—</p>
-          <p className="text-[10px] text-muted">Actions Taken</p>
-        </div>
+        {[
+          { value: avgRating, label: <span className="flex items-center justify-center gap-0.5">{renderStars(Math.round(Number(avgRating)))} Avg</span>, color: "text-gold" },
+          { value: reviews.length, label: "Total Reviews", color: "" },
+          { value: needsReply, label: "Needs Reply", color: "text-yellow-400" },
+          { value: "—", label: "Profile Views", color: "text-green-400" },
+          { value: "—", label: "Actions Taken", color: "text-[#4285F4]" },
+        ].map((tile, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3 text-center">
+              <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
+              <p className="text-[10px] text-muted">{tile.label}</p>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
 
@@ -130,7 +128,7 @@ export default function GoogleBusinessPage() {
       {activeTab === "reviews" && (
         <div className="space-y-3">
           {/* Rating distribution */}
-          <div className="card p-4">
+          <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }}>
             <h3 className="text-xs font-semibold mb-3">Rating Distribution</h3>
             <div className="space-y-1.5">
               {[5, 4, 3, 2, 1].map(r => {
@@ -148,11 +146,11 @@ export default function GoogleBusinessPage() {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
 
           {/* Reviews */}
-          {reviews.map(review => (
-            <div key={review.id} className="card p-4">
+          {reviews.map((review, ri) => (
+            <motion.div key={review.id} className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: ri * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-[#4285F4]/10 flex items-center justify-center text-xs font-bold text-[#4285F4] shrink-0">
                   {review.name.charAt(0)}
@@ -187,7 +185,7 @@ export default function GoogleBusinessPage() {
                   )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
@@ -196,15 +194,15 @@ export default function GoogleBusinessPage() {
       {activeTab === "posts" && (
         <div className="space-y-4">
           {/* Post Scheduler */}
-          <div className="card p-4">
+          <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }}>
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-[#4285F4]" /> Post Scheduler</h3>
             <div className="space-y-2 mb-3">
               <p className="text-xs text-muted text-center py-2">No scheduled posts.</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Create Post */}
-          <div className="card p-4 space-y-3">
+          <motion.div className="glass rounded-xl p-4 space-y-3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} whileHover={{ y: -4, scale: 1.01 }}>
             <h2 className="text-xs font-semibold">Create GBP Post</h2>
             <textarea value={postContent} onChange={e => setPostContent(e.target.value)}
               className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24" placeholder="Share an update, promotion, or news..." />
@@ -212,12 +210,12 @@ export default function GoogleBusinessPage() {
               <button className="px-3 py-1.5 rounded-lg bg-[#4285F4] text-white text-xs font-semibold flex items-center gap-1.5"><Send size={12} /> Publish</button>
               <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted flex items-center gap-1.5"><Calendar size={12} /> Schedule</button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Recent Posts */}
           <div className="space-y-2">
-            {posts.map(p => (
-              <div key={p.id} className="card p-3">
+            {posts.map((p, pi) => (
+              <motion.div key={p.id} className="glass-md rounded-xl p-3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: pi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
                 <p className="text-xs">{p.content}</p>
                 <div className="flex items-center gap-3 mt-2 text-[9px] text-muted">
                   <span>{p.date}</span>
@@ -225,7 +223,7 @@ export default function GoogleBusinessPage() {
                   <span className="flex items-center gap-0.5"><ArrowUpRight size={8} /> {p.clicks} clicks</span>
                   <span className="bg-[#4285F4]/10 text-[#4285F4] px-1.5 py-0.5 rounded">{p.type}</span>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -242,19 +240,19 @@ export default function GoogleBusinessPage() {
 
       {/* ---- TAB: Q&A ---- */}
       {activeTab === "qa" && (
-        <div className="card p-4">
+        <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }}>
           <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><MessageSquare size={12} className="text-[#4285F4]" /> Q&A Manager</h3>
           <div className="flex flex-col items-center justify-center py-10 text-center">
             <MessageSquare size={24} className="text-muted mb-2" />
             <p className="text-xs text-muted">No questions yet.</p>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ---- TAB: Photos ---- */}
       {activeTab === "photos" && (
         <div className="space-y-4">
-          <div className="card p-4">
+          <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }}>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-xs font-semibold flex items-center gap-2"><Image size={12} className="text-[#4285F4]" /> Photo Gallery</h3>
               <button className="px-3 py-1.5 rounded-lg bg-[#4285F4] text-white text-[10px] font-semibold flex items-center gap-1"><Plus size={10} /> Upload</button>
@@ -267,7 +265,7 @@ export default function GoogleBusinessPage() {
               ))}
             </div>
             <p className="text-[10px] text-muted mt-2">No photos uploaded yet.</p>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -275,7 +273,7 @@ export default function GoogleBusinessPage() {
       {activeTab === "settings" && (
         <div className="space-y-4">
           {/* Categories */}
-          <div className="card p-4">
+          <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }}>
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Tag size={12} className="text-[#4285F4]" /> Category Optimizer</h3>
             <div className="flex flex-wrap gap-1.5">
               {CATEGORIES.map(c => (
@@ -284,10 +282,10 @@ export default function GoogleBusinessPage() {
                 }`}>{c}</span>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Service Area */}
-          <div className="card p-4">
+          <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} whileHover={{ y: -4, scale: 1.01 }}>
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Globe size={12} className="text-[#4285F4]" /> Service Area</h3>
             <div className="flex flex-wrap gap-1.5">
               {([] as string[]).map(a => (
@@ -295,18 +293,18 @@ export default function GoogleBusinessPage() {
               ))}
               <p className="text-xs text-muted py-2">No service areas configured</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Holiday Hours */}
-          <div className="card p-4">
+          <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} whileHover={{ y: -4, scale: 1.01 }}>
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-[#4285F4]" /> Holiday Hours</h3>
             <div className="space-y-2">
               <p className="text-xs text-muted text-center py-2">No holiday hours configured.</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Update Tracker */}
-          <div className="card p-4">
+          <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} whileHover={{ y: -4, scale: 1.01 }}>
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Clock size={12} className="text-[#4285F4]" /> Recent Listing Updates</h3>
             <div className="space-y-1.5 text-[10px]">
               {([] as { update: string; date: string }[]).map((u, i) => (
@@ -317,7 +315,7 @@ export default function GoogleBusinessPage() {
               ))}
               <p className="text-xs text-muted text-center py-4">No recent updates</p>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

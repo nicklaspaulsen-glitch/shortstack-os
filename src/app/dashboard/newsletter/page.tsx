@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useRef } from "react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import {
   Send, Sparkles, Eye, Monitor, Smartphone,
@@ -13,6 +14,8 @@ import {
   Newspaper, Wand2, FileText,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
@@ -1143,30 +1146,24 @@ export default function NewsletterPage() {
         <div className="space-y-4">
           {/* Summary cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="card text-center">
-              <p className="text-2xl font-bold text-gold">{PAST_NEWSLETTERS.length}</p>
-              <p className="text-[9px] text-muted uppercase tracking-wider mt-1">Newsletters Sent</p>
-            </div>
-            <div className="card text-center">
-              <p className="text-2xl font-bold text-green-400">
-                {(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.openRate), 0) / Math.max(PAST_NEWSLETTERS.length, 1)).toFixed(1)}%
-              </p>
-              <p className="text-[9px] text-muted uppercase tracking-wider mt-1">Avg Open Rate</p>
-            </div>
-            <div className="card text-center">
-              <p className="text-2xl font-bold text-blue-400">
-                {(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.clickRate), 0) / Math.max(PAST_NEWSLETTERS.length, 1)).toFixed(1)}%
-              </p>
-              <p className="text-[9px] text-muted uppercase tracking-wider mt-1">Avg Click Rate</p>
-            </div>
-            <div className="card text-center">
-              <p className="text-2xl font-bold">{PAST_NEWSLETTERS.reduce((s, n) => s + n.recipients, 0).toLocaleString()}</p>
-              <p className="text-[9px] text-muted uppercase tracking-wider mt-1">Total Recipients</p>
-            </div>
+            {[
+              { value: PAST_NEWSLETTERS.length, label: "Newsletters Sent", color: "text-gold" },
+              { value: `${(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.openRate), 0) / Math.max(PAST_NEWSLETTERS.length, 1)).toFixed(1)}%`, label: "Avg Open Rate", color: "text-green-400" },
+              { value: `${(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.clickRate), 0) / Math.max(PAST_NEWSLETTERS.length, 1)).toFixed(1)}%`, label: "Avg Click Rate", color: "text-blue-400" },
+              { value: PAST_NEWSLETTERS.reduce((s, n) => s + n.recipients, 0).toLocaleString(), label: "Total Recipients", color: "" },
+            ].map((tile, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden">
+                <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                <div className="text-center p-4">
+                  <p className={`text-2xl font-bold ${tile.color}`}>{tile.value}</p>
+                  <p className="text-[9px] text-muted uppercase tracking-wider mt-1">{tile.label}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* Past newsletters table */}
-          <div className="card">
+          <motion.div className="glass rounded-xl" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24, duration: 0.4 }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <BarChart3 size={14} className="text-gold" /> Past Newsletters
             </h3>
@@ -1204,12 +1201,12 @@ export default function NewsletterPage() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </motion.div>
 
           {/* Best performing highlight */}
           {PAST_NEWSLETTERS.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-            <div className="card">
+            <motion.div className="glass rounded-xl" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                 <Check size={12} className="text-green-400" /> Best Open Rate
               </h3>
@@ -1226,8 +1223,8 @@ export default function NewsletterPage() {
                   </div>
                 );
               })()}
-            </div>
-            <div className="card">
+            </motion.div>
+            <motion.div className="glass rounded-xl" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                 <Link2 size={12} className="text-blue-400" /> Best Click Rate
               </h3>
@@ -1244,7 +1241,7 @@ export default function NewsletterPage() {
                   </div>
                 );
               })()}
-            </div>
+            </motion.div>
           </div>
           )}
         </div>
