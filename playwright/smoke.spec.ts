@@ -38,4 +38,21 @@ test.describe("public smoke", () => {
       page.getByText(/(starter|pro|business|agency|founder)/i).first(),
     ).toBeVisible({ timeout: 10_000 });
   });
+
+  test("legal pages render (privacy, terms, cookies)", async ({ page }) => {
+    for (const path of ["/privacy", "/terms", "/cookies"]) {
+      const res = await page.goto(path);
+      expect(res?.status(), `${path} should return 200`).toBeLessThan(400);
+      // Each page should have its title heading
+      await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible({ timeout: 8_000 });
+    }
+  });
+
+  test("health endpoint returns ok", async ({ request }) => {
+    const res = await request.get("/api/health");
+    expect(res.status()).toBe(200);
+    const body = await res.json().catch(() => ({}));
+    // Accept any shape — just must not 500
+    expect(body).toBeDefined();
+  });
 });
