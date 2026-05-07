@@ -150,7 +150,7 @@ export default function GettingStartedPage() {
         transition={{ duration: 0.4 }}
         className="glass rounded-xl p-4 relative overflow-hidden"
       >
-        <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
+        <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 inset-x-0" />
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-bold">{completed.size}/{STEPS.length} completed</span>
           <span className="text-xs text-gold font-mono">{progress}%</span>

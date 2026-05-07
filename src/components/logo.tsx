@@ -40,13 +40,13 @@ import React from "react";
 
 /**
  * Legacy constant — was gold (#C9A84C) before the May 2026 brand refresh.
- * Now resolves to indigo (#6366F1) so call sites that use it for accent
+ * Now resolves to indigo (#FF2D2D) so call sites that use it for accent
  * colour (connect-modal, integration-card) automatically pick up the new
  * brand without a sweeping refactor. The mandala Logo component below is
  * also kept for back-compat but is no longer the primary mark — use
  * MandalaMark / Stack3D from @/components/brand/* for new surfaces.
  */
-export const SHORTSTACK_GOLD = "#6366F1" as const;
+export const SHORTSTACK_GOLD = "#FF2D2D" as const;
 
 export interface LogoProps {
   /** Pixel size (width & height). Default 32. */

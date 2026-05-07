@@ -148,7 +148,7 @@ export default function CompetitiveMonitorPage() {
 
   function addCompetitor() {
     if (!addUrl || !addName) { toast.error("URL and name are required"); return; }
-    const colors = ["#6366f1", "#ec4899", "#f59e0b", "#10b981", "#8b5cf6", "#0ea5e9", "#ef4444", "#d946ef"];
+    const colors = ["#FF2D2D", "#ec4899", "#f59e0b", "#10b981", "#8b5cf6", "#0ea5e9", "#ef4444", "#d946ef"];
     const newComp: Competitor = {
       id: `c${Date.now()}`, name: addName, url: addUrl, industry: addIndustry || "Unknown",
       notes: addNotes, status: "active", lastChecked: "Never", changeCount: 0,
@@ -844,16 +844,16 @@ export default function CompetitiveMonitorPage() {
             <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-gold" /> Estimated Market Share (Agency SaaS Segment)</h3>
             <div className="space-y-3">
               {[
-                { name: "AgencyFlow", share: 22, color: "#6366f1" },
+                { name: "AgencyFlow", share: 22, color: "#FF2D2D" },
                 { name: "MarketMind AI", share: 18, color: "#8b5cf6" },
                 { name: "SocialSpark", share: 15, color: "#f59e0b" },
-                { name: "Trinity (You)", share: 12, color: "#6366F1" },
+                { name: "Trinity (You)", share: 12, color: "#FF2D2D" },
                 { name: "ClientPulse", share: 10, color: "#ec4899" },
                 { name: "ContentEngine", share: 8, color: "#0ea5e9" },
                 { name: "Others", share: 15, color: "#64748b" },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className="w-32 text-xs text-right truncate" style={{ color: item.name.includes("You") ? "#6366F1" : undefined }}>
+                  <div className="w-32 text-xs text-right truncate" style={{ color: item.name.includes("You") ? "#FF2D2D" : undefined }}>
                     {item.name.includes("You") ? <strong>{item.name}</strong> : item.name}
                   </div>
                   <div className="flex-1 bg-surface-light rounded-full h-5 overflow-hidden">

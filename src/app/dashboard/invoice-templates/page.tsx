@@ -31,7 +31,7 @@ function calcSubtotal(items: LineItem[]) {
   return items.reduce((s, i) => s + i.qty * i.unit_price, 0);
 }
 
-const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
+const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
 
 /** Inline invoice preview modal */
 function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClose: () => void }) {

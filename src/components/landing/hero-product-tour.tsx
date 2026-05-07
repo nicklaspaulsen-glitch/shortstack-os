@@ -103,7 +103,7 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
                         ? "1px solid rgba(255,255,255,0.3)"
                         : "1px solid rgba(255,255,255,0.06)",
                     color:
-                      active === s.key ? "#A78BFA" : "rgba(255,255,255,0.5)",
+                      active === s.key ? "#FF6B6B" : "rgba(255,255,255,0.5)",
                   }}
                 >
                   {s.label}
@@ -147,7 +147,7 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
                   height: 6,
                   background:
                     active === s.key
-                      ? "#6366F1"
+                      ? "#FF2D2D"
                       : "rgba(255,255,255,0.25)",
                 }}
                 aria-label={s.label}
@@ -268,7 +268,7 @@ function LeadsMock() {
                     background:
                       r.score > 80
                         ? "linear-gradient(90deg, #10b981, #34d399)"
-                        : "linear-gradient(90deg, #6366F1, #A78BFA)",
+                        : "linear-gradient(90deg, #FF2D2D, #FF6B6B)",
                   }}
                 />
               </div>
@@ -282,7 +282,7 @@ function LeadsMock() {
                     r.status === "Hot"
                       ? "rgba(239,68,68,0.14)"
                       : "rgba(255,255,255,0.12)",
-                  color: r.status === "Hot" ? "#fca5a5" : "#A78BFA",
+                  color: r.status === "Hot" ? "#fca5a5" : "#FF6B6B",
                 }}
               >
                 {r.status}
@@ -326,7 +326,7 @@ function VoiceMock() {
         {[
           { caller: "+1 415 555 0102", duration: "2:14", outcome: "Booked", color: "#10b981" },
           { caller: "+1 408 555 0173", duration: "0:38", outcome: "Voicemail", color: "#94a3b8" },
-          { caller: "+1 510 555 0144", duration: "3:42", outcome: "Qualified", color: "#6366F1" },
+          { caller: "+1 510 555 0144", duration: "3:42", outcome: "Qualified", color: "#FF2D2D" },
           { caller: "+1 650 555 0119", duration: "0:12", outcome: "Spam", color: "#ef4444" },
         ].map((row, i) => (
           <div
@@ -364,7 +364,7 @@ function VoiceMock() {
           border: "1px solid rgba(255,255,255,0.12)",
         }}
       >
-        <Sparkles size={10} style={{ color: "#6366F1" }} />
+        <Sparkles size={10} style={{ color: "#FF2D2D" }} />
         AI hand-off triggered for high-intent caller — booked to John Friday 2pm.
       </div>
     </div>
@@ -379,7 +379,7 @@ function ContentMock() {
     { day: 2, type: "video", icon: <SiYoutube size={9} />, color: "#FF0000" },
     { day: 3, type: "reel", icon: <SiInstagram size={9} />, color: "#E4405F" },
     { day: 4, type: "post", icon: <SiTiktok size={9} />, color: "#FFFFFF" },
-    { day: 5, type: "ai", icon: <Sparkles size={9} />, color: "#6366F1" },
+    { day: 5, type: "ai", icon: <Sparkles size={9} />, color: "#FF2D2D" },
   ];
   return (
     <div>
@@ -479,7 +479,7 @@ function AdsMock() {
           border: "1px solid rgba(255,255,255,0.12)",
         }}
       >
-        <Sparkles size={10} style={{ color: "#6366F1" }} className="shrink-0 mt-0.5" />
+        <Sparkles size={10} style={{ color: "#FF2D2D" }} className="shrink-0 mt-0.5" />
         AI rebalanced budget: shifted $400/day from Meta Awareness → Google Search.
       </div>
     </div>

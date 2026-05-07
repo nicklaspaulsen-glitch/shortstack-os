@@ -327,7 +327,7 @@ function LayerRow({
       ctx.fillRect(4, 6, 24, 20);
       ctx.fillRect(4, 4, 12, 4);
     } else {
-      ctx.fillStyle = "#6366f1";
+      ctx.fillStyle = "#FF2D2D";
       ctx.fillRect(8, 8, 16, 16);
     }
   }, [layer]);

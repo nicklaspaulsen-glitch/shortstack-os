@@ -83,9 +83,9 @@ export default function TrinityOrbVisual({
         style={{
           background:
             state === "listening"
-              ? "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.65), rgba(167,139,250,0.30) 45%, transparent 72%)"
+              ? "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.65), rgba(255, 107, 107,0.30) 45%, transparent 72%)"
               : state === "thinking"
-              ? "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.55), rgba(79,70,229,0.25) 50%, transparent 75%)"
+              ? "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.55), rgba(204, 36, 36,0.25) 50%, transparent 75%)"
               : "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.42), rgba(255,255,255,0.07) 50%, transparent 70%)",
           animation: reduced ? undefined : `trinity-breath ${breathSpeed} ease-in-out infinite`,
         }}
@@ -96,7 +96,7 @@ export default function TrinityOrbVisual({
         className="absolute inset-[-4%] rounded-full opacity-70 pointer-events-none"
         style={{
           background:
-            "conic-gradient(from 0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.60) 22%, rgba(167,139,250,0.45) 50%, rgba(199,210,254,0.35) 78%, rgba(255,255,255,0) 100%)",
+            "conic-gradient(from 0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.60) 22%, rgba(255, 107, 107,0.45) 50%, rgba(199,210,254,0.35) 78%, rgba(255,255,255,0) 100%)",
           filter: "blur(5px)",
           animation: reduced ? undefined : `trinity-spin ${ringSpeed} linear infinite`,
         }}
@@ -140,28 +140,28 @@ export default function TrinityOrbVisual({
                 holographic gradient (soft-indigo → violet → deep-indigo) so the
                 head reads as iridescent crystal glass. */}
             <linearGradient id="trinity-facet-light" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#E0E7FF" />
-              <stop offset="40%" stopColor="#A78BFA" />
-              <stop offset="100%" stopColor="#6366F1" />
+              <stop offset="0%" stopColor="#FFE0E0" />
+              <stop offset="40%" stopColor="#FF6B6B" />
+              <stop offset="100%" stopColor="#FF2D2D" />
             </linearGradient>
             <linearGradient id="trinity-facet-mid" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#6366F1" />
-              <stop offset="55%" stopColor="#4F46E5" />
-              <stop offset="100%" stopColor="#3730A3" />
+              <stop offset="0%" stopColor="#FF2D2D" />
+              <stop offset="55%" stopColor="#CC2424" />
+              <stop offset="100%" stopColor="#991414" />
             </linearGradient>
             <linearGradient id="trinity-facet-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#3730A3" />
-              <stop offset="55%" stopColor="#312E81" />
+              <stop offset="0%" stopColor="#991414" />
+              <stop offset="55%" stopColor="#660E0E" />
               <stop offset="100%" stopColor="#1E1B4B" />
             </linearGradient>
             <radialGradient id="trinity-eye" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-              <stop offset="40%" stopColor="#C7D2FE" stopOpacity={eyeIntensity} />
-              <stop offset="100%" stopColor="#6366F1" stopOpacity="0" />
+              <stop offset="40%" stopColor="#FFB3B3" stopOpacity={eyeIntensity} />
+              <stop offset="100%" stopColor="#FF2D2D" stopOpacity="0" />
             </radialGradient>
             <linearGradient id="trinity-scan" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="rgba(199,210,254,0)" />
-              <stop offset="50%" stopColor="rgba(167,139,250,0.85)" />
+              <stop offset="50%" stopColor="rgba(255, 107, 107,0.85)" />
               <stop offset="100%" stopColor="rgba(199,210,254,0)" />
             </linearGradient>
           </defs>
@@ -226,7 +226,7 @@ export default function TrinityOrbVisual({
                 cx="42"
                 cy="46"
                 r="1.6"
-                fill="#C7D2FE"
+                fill="#FFB3B3"
                 style={{
                   animation: reduced
                     ? undefined
@@ -240,7 +240,7 @@ export default function TrinityOrbVisual({
                 cx="58"
                 cy="46"
                 r="1.6"
-                fill="#C7D2FE"
+                fill="#FFB3B3"
                 style={{
                   animation: reduced
                     ? undefined

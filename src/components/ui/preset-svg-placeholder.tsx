@@ -17,7 +17,7 @@ const CATEGORY_GRADIENTS: Record<string, [string, string]> = {
   effects: ["#DC2626", "#F97316"],
   ads: ["#CA8A04", "#FACC15"],
   social: ["#DB2777", "#F43F5E"],
-  agency: ["#1E40AF", "#6366F1"],
+  agency: ["#1E40AF", "#FF2D2D"],
   // Thumbnail presets
   youtube: ["#EF4444", "#F97316"],
   podcast: ["#7C3AED", "#A855F7"],

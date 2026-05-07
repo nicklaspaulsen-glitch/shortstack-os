@@ -93,9 +93,9 @@ interface BusinessInfo {
 const COLOR_SCHEMES = [
   { id: "modern-dark", name: "Modern Dark", bg: "#0f172a", primary: "#3b82f6", accent: "#60a5fa", text: "#f1f5f9" },
   { id: "clean-light", name: "Clean Light", bg: "#ffffff", primary: "#2563eb", accent: "#3b82f6", text: "#1e293b" },
-  { id: "bold-gradient", name: "Bold Gradient", bg: "linear-gradient(135deg,#6366f1,#ec4899)", primary: "#8b5cf6", accent: "#f472b6", text: "#ffffff" },
+  { id: "bold-gradient", name: "Bold Gradient", bg: "linear-gradient(135deg,#FF2D2D,#ec4899)", primary: "#8b5cf6", accent: "#f472b6", text: "#ffffff" },
   { id: "minimal", name: "Minimal", bg: "#fafafa", primary: "#18181b", accent: "#71717a", text: "#18181b" },
-  { id: "luxury-gold", name: "Luxury Gold", bg: "#0a0a0a", primary: "#6366F1", accent: "#d4af37", text: "#f5f5f5" },
+  { id: "luxury-gold", name: "Luxury Gold", bg: "#0a0a0a", primary: "#FF2D2D", accent: "#d4af37", text: "#f5f5f5" },
 ];
 
 const TEMPLATES = [
@@ -105,7 +105,7 @@ const TEMPLATES = [
   { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: Home, color: "#10b981", gradient: "from-emerald-500 to-teal-500" },
   { id: "fitness", name: "Fitness Studio", desc: "Classes + trainers + pricing + schedule", icon: Dumbbell, color: "#ef4444", gradient: "from-red-500 to-rose-500" },
   { id: "ecommerce", name: "E-commerce", desc: "Product hero + features + reviews + CTA", icon: ShoppingBag, color: "#f97316", gradient: "from-orange-500 to-yellow-500" },
-  { id: "consultant", name: "Consultant", desc: "About + services + testimonials + booking", icon: Briefcase, color: "#6366f1", gradient: "from-indigo-500 to-purple-500" },
+  { id: "consultant", name: "Consultant", desc: "About + services + testimonials + booking", icon: Briefcase, color: "#FF2D2D", gradient: "from-indigo-500 to-purple-500" },
   { id: "event", name: "Event", desc: "Countdown + speakers + schedule + tickets", icon: CalendarDays, color: "#ec4899", gradient: "from-pink-500 to-rose-500" },
 ];
 
@@ -1460,7 +1460,7 @@ export default function LandingPagesPage() {
                 whileHover={{ y: -2 }}
                 className="glass rounded-xl p-4 relative overflow-hidden"
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 inset-x-0" />
                 <div className="flex items-center justify-between mb-2 mt-1">
                   <stat.icon className={`w-4 h-4 ${stat.color}`} />
                 </div>
@@ -1487,7 +1487,7 @@ export default function LandingPagesPage() {
                   return (
                     <div key={i} className="flex-1 flex flex-col items-center gap-1">
                       <span className="text-[10px] text-muted">{v.toLocaleString()}</span>
-                      <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #6366F1 0%, #6366F140 100%)` }}>
+                      <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #FF2D2D 0%, #FF2D2D40 100%)` }}>
                         <div className="absolute inset-0 bg-gold/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md" />
                       </div>
                       <span className="text-[10px] text-muted">{days[i]}</span>
@@ -1501,7 +1501,7 @@ export default function LandingPagesPage() {
                 <svg viewBox="0 0 700 100" className="absolute -top-40 left-0 w-full h-40 pointer-events-none" preserveAspectRatio="none">
                   <polyline
                     fill="none"
-                    stroke="#6366F1"
+                    stroke="#FF2D2D"
                     strokeWidth="2"
                     strokeLinejoin="round"
                     points={EMPTY_ANALYTICS.dailyViews.map((v, i) => {
@@ -1515,7 +1515,7 @@ export default function LandingPagesPage() {
                     const max = Math.max(...EMPTY_ANALYTICS.dailyViews, 1);
                     const x = (i / (EMPTY_ANALYTICS.dailyViews.length - 1 || 1)) * 680 + 10;
                     const y = 95 - (v / max) * 90;
-                    return <circle key={i} cx={x} cy={y} r="3" fill="#6366F1" />;
+                    return <circle key={i} cx={x} cy={y} r="3" fill="#FF2D2D" />;
                   })}
                 </svg>
               </div>
@@ -1536,7 +1536,7 @@ export default function LandingPagesPage() {
                       <span className="text-xs text-gold font-semibold">{src.pct}%</span>
                     </div>
                     <div className="w-full h-2 bg-surface-light rounded-full overflow-hidden">
-                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${src.pct}%`, background: "linear-gradient(90deg, #6366F1, #6366F180)" }} />
+                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${src.pct}%`, background: "linear-gradient(90deg, #FF2D2D, #FF2D2D80)" }} />
                     </div>
                   </div>
                 ))}

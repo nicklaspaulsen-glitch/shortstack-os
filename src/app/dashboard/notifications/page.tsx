@@ -535,7 +535,7 @@ export default function NotificationsPage() {
               >
                 <div
                   className="absolute top-0 left-0 right-0"
-                  style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }}
+                  style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }}
                 />
                 <div className="flex items-center justify-center gap-1.5 mb-1 mt-1">
                   <span className="text-muted">{tab.icon}</span>

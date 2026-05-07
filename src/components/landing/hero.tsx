@@ -56,7 +56,7 @@ export default function Hero() {
           style={{
             background: "rgba(255,255,255,0.07)",
             border: "1px solid rgba(255,255,255,0.18)",
-            color: "#A78BFA",
+            color: "#FF6B6B",
           }}
         >
           <Sparkles size={12} />
@@ -69,7 +69,7 @@ export default function Hero() {
           }`}
           style={{
             background:
-              "linear-gradient(135deg, #ffffff 0%, #6366F1 40%, #A78BFA 60%, #ffffff 100%)",
+              "linear-gradient(135deg, #ffffff 0%, #FF2D2D 40%, #FF6B6B 60%, #ffffff 100%)",
             backgroundSize: "200% auto",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
@@ -108,7 +108,7 @@ export default function Hero() {
             href="/pricing"
             className="group flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all hover:shadow-lg"
             style={{
-              background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+              background: "linear-gradient(135deg, #FF2D2D, #CC2424)",
               color: "#ffffff",
               boxShadow: "0 0 30px rgba(255,255,255,0.2)",
             }}
@@ -139,15 +139,15 @@ export default function Hero() {
           style={{ opacity: 0 }}
         >
           <div className="flex items-center gap-1.5">
-            <Shield size={12} style={{ color: "#6366F1" }} />
+            <Shield size={12} style={{ color: "#FF2D2D" }} />
             No credit card required
           </div>
           <div className="flex items-center gap-1.5">
-            <Shield size={12} style={{ color: "#6366F1" }} />
+            <Shield size={12} style={{ color: "#FF2D2D" }} />
             Cancel anytime
           </div>
           <div className="flex items-center gap-1.5">
-            <Shield size={12} style={{ color: "#6366F1" }} />
+            <Shield size={12} style={{ color: "#FF2D2D" }} />
             You own your data
           </div>
         </div>

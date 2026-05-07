@@ -378,7 +378,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Mirror chrome text, iridescent bubbles, 2001 nostalgia.",
     promptModifier:
       "Y2K chrome aesthetic thumbnail, liquid mirror metal textures, iridescent holographic bubbles, early-2000s nostalgia, glossy 3D typography, blue and silver palette, Matrix meets Bratz",
-    gradient: ["#A5B4FC", "#E5E7EB"],
+    gradient: ["#FF8080", "#E5E7EB"],
   },
   {
     id: "exp_risograph",
@@ -396,7 +396,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Purple-pink gradients, marble busts, palm silhouettes.",
     promptModifier:
       "vaporwave aesthetic thumbnail, pink and purple gradient sky, Greek marble bust, palm tree silhouettes, retro-future nostalgia, grid floor receding to horizon, dreamy surreal mood",
-    gradient: ["#A78BFA", "#EC4899"],
+    gradient: ["#FF6B6B", "#EC4899"],
   },
   {
     id: "exp_glitch_distort",
@@ -414,7 +414,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Octane-style render, soft studio HDRI, pastel materials.",
     promptModifier:
       "3D render thumbnail, Octane-style physically accurate render, soft studio HDRI lighting, pastel material finish, subtle ambient occlusion, Blender sculpture aesthetic, Pinterest-core",
-    gradient: ["#FED7AA", "#C7D2FE"],
+    gradient: ["#FED7AA", "#FFB3B3"],
   },
 
   // ───────── MORE VIRAL CREATOR ARCHETYPES ─────────
@@ -508,7 +508,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Clean isometric illustration, infographic tiles, flat shading.",
     promptModifier:
       "isometric illustration thumbnail, clean flat-shaded 3D diagram, infographic tile composition, muted professional palette, explanatory tech-product aesthetic, Dribbble-style",
-    gradient: ["#60A5FA", "#A78BFA"],
+    gradient: ["#60A5FA", "#FF6B6B"],
   },
 
   // ───────── NAMED YOUTUBER CHANNEL PRESETS ─────────
@@ -619,7 +619,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Deep indigo backdrop, phone floating with glow halo, Arun-style polish.",
     promptModifier:
       "Mrwhosetheboss-inspired premium tech thumbnail, flagship smartphone floating mid-air with a soft circular radial glow halo behind it, deep indigo and midnight-blue backdrop with subtle star-field particles, polished cinematic product composition, British-reviewer cool aesthetic, sleek futuristic typography space, ultra-crisp focus and smooth gradients",
-    gradient: ["#312E81", "#38BDF8"],
+    gradient: ["#660E0E", "#38BDF8"],
   },
   {
     id: "creator_dave2d",
@@ -854,7 +854,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Emma with Chamberlain coffee, faded film, fisheye bedroom, gen-Z mess.",
     promptModifier:
       "Emma Chamberlain-style vlog thumbnail, casual messy-bun subject holding a Chamberlain Coffee cup, faded film-grain color grade with washed-out yellows and dusty pinks, slight fisheye distortion, lived-in bedroom or LA cafe backdrop, unposed candid mid-laugh moment, gen-Z chaotic-authentic aesthetic, low-saturation vintage feel",
-    gradient: ["#F5D0A9", "#A78BFA"],
+    gradient: ["#F5D0A9", "#FF6B6B"],
   },
   {
     id: "creator_david_dobrik",

@@ -34,7 +34,7 @@ const FEATURES: Feature[] = [
     title: "Lead Scraper",
     description:
       "Pull targeted leads from Google Maps, LinkedIn, niche directories, and custom sources. AI-enrich with emails, phones, socials, and fit scores.",
-    color: "#6366F1",
+    color: "#FF2D2D",
     metrics: [
       { label: "Sources", value: "12+" },
       { label: "Enriched", value: "98%" },

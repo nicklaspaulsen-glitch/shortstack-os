@@ -4,7 +4,7 @@ export default function CookiesPage() {
   return (
     <div className="min-h-screen bg-[#070708] py-16 px-4">
       <div className="max-w-2xl mx-auto">
-        <Link href="/dashboard" className="text-xs text-[#6366F1] hover:text-[#A78BFA] mb-8 inline-block">
+        <Link href="/dashboard" className="text-xs text-[#FF2D2D] hover:text-[#FF6B6B] mb-8 inline-block">
           ← Back to Dashboard
         </Link>
         <h1 className="text-2xl font-bold text-foreground mb-2">Cookie Policy</h1>
@@ -35,27 +35,27 @@ export default function CookiesPage() {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   <tr>
-                    <td className="py-2 pr-4 font-mono text-[#A78BFA]">sb-*-auth-token</td>
+                    <td className="py-2 pr-4 font-mono text-[#FF6B6B]">sb-*-auth-token</td>
                     <td className="py-2 pr-4">Supabase authentication session — keeps you logged in</td>
                     <td className="py-2">1 hour (refreshed automatically)</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-4 font-mono text-[#A78BFA]">cookie-consent</td>
+                    <td className="py-2 pr-4 font-mono text-[#FF6B6B]">cookie-consent</td>
                     <td className="py-2 pr-4">Records that you acknowledged this cookie notice</td>
                     <td className="py-2">Persistent (localStorage)</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-4 font-mono text-[#A78BFA]">tour_completed</td>
+                    <td className="py-2 pr-4 font-mono text-[#FF6B6B]">tour_completed</td>
                     <td className="py-2 pr-4">Remembers whether you completed the onboarding tour</td>
                     <td className="py-2">Persistent (localStorage)</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-4 font-mono text-[#A78BFA]">advanced-mode-*</td>
+                    <td className="py-2 pr-4 font-mono text-[#FF6B6B]">advanced-mode-*</td>
                     <td className="py-2 pr-4">Saves your preference for advanced vs. guided wizard mode per page</td>
                     <td className="py-2">Persistent (localStorage)</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-4 font-mono text-[#A78BFA]">sidebar-*</td>
+                    <td className="py-2 pr-4 font-mono text-[#FF6B6B]">sidebar-*</td>
                     <td className="py-2 pr-4">Saves sidebar collapse / expand state</td>
                     <td className="py-2">Persistent (localStorage)</td>
                   </tr>
@@ -112,11 +112,11 @@ export default function CookiesPage() {
             <h2 className="text-sm font-semibold text-foreground mb-2">6. Contact</h2>
             <p>
               Questions about our cookie use? Email{" "}
-              <a href="mailto:privacy@shortstack.work" className="text-[#6366F1] hover:text-[#A78BFA]">
+              <a href="mailto:privacy@shortstack.work" className="text-[#FF2D2D] hover:text-[#FF6B6B]">
                 privacy@shortstack.work
               </a>
               {" "}or visit our{" "}
-              <Link href="/privacy" className="text-[#6366F1] hover:text-[#A78BFA]">
+              <Link href="/privacy" className="text-[#FF2D2D] hover:text-[#FF6B6B]">
                 Privacy Policy
               </Link>
               .
@@ -125,8 +125,8 @@ export default function CookiesPage() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 flex gap-6 text-xs text-muted">
-          <Link href="/privacy" className="hover:text-[#6366F1]">Privacy Policy</Link>
-          <Link href="/terms" className="hover:text-[#6366F1]">Terms of Service</Link>
+          <Link href="/privacy" className="hover:text-[#FF2D2D]">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-[#FF2D2D]">Terms of Service</Link>
         </div>
       </div>
     </div>

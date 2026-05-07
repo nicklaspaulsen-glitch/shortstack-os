@@ -10,47 +10,47 @@
 
 export const tokens = {
   bg: {
-    base: "#070708",
+    base: "#050507",
     surface1: "#101012",
     surface2: "#17171A",
     surface3: "#26262B",
   },
   border: {
-    subtle: "rgba(99, 102, 241, 0.07)",
-    strong: "rgba(99, 102, 241, 0.16)",
+    subtle: "rgba(255, 255, 255, 0.07)",
+    strong: "rgba(255, 255, 255, 0.16)",
   },
   text: {
-    primary: "#F5F5F7",
+    primary: "#F0F0F4",
     secondary: "#A8A8B2",
-    muted: "#6F6F7A",
+    muted: "#4A4A5A",
   },
   brand: {
-    /** The brand accent — INDIGO/VIOLET (May 2). Richer, more editorial.
+    /** The brand accent — PRISM RED (May 7). Sharp, distinctive, anti-AI-slop.
      *  Three variants:
-     *    accent     — indigo-500 (#6366F1) — primary on dark surfaces
-     *    accentSoft — violet-400 (#A78BFA) — hover / highlight on dark
-     *    accentDim  — indigo-600 (#4F46E5) — primary on LIGHT surfaces (AA on white)
-     *  Light theme picks accentDim via globals.css so contrast holds. */
-    accent: "#6366F1",
-    accentSoft: "#A78BFA",
-    accentDim: "#4F46E5",
-    accentGlow: "rgba(99, 102, 241, 0.4)",
+     *    accent     — #FF2D2D — primary on dark surfaces (hero red)
+     *    accentSoft — #FF6B6B — hover / highlight on dark
+     *    accentDim  — #CC2424 — primary on LIGHT surfaces (AA on white)
+     *  Prism split: red leads, then rainbow cycle for variety. */
+    accent: "#FF2D2D",
+    accentSoft: "#FF6B6B",
+    accentDim: "#CC2424",
+    accentGlow: "rgba(255, 45, 45, 0.4)",
 
-    /** Legacy alias — `tokens.brand.lime` now resolves to the indigo accent.
+    /** Legacy alias — `tokens.brand.lime` now resolves to the prism red.
      *  Do not introduce new uses; existing call sites are intentionally left
      *  pointing at this so the visual system migrates without a sweeping
      *  refactor of the 100+ pages still referencing it. */
-    lime: "#6366F1",
-    limeSoft: "#A78BFA",
-    limeDim: "#4F46E5",
-    limeGlow: "rgba(99, 102, 241, 0.4)",
+    lime: "#FF2D2D",
+    limeSoft: "#FF6B6B",
+    limeDim: "#CC2424",
+    limeGlow: "rgba(255, 45, 45, 0.4)",
 
     /** Editorial complement — neutral charcoal (replaces the old plum). */
     plum: "#1F1F23",
     plumHover: "#2C2C32",
 
-    /** `indigo` alias — resolves to the primary accent. */
-    indigo: "#6366F1",
+    /** `indigo` alias — resolves to the prism red accent. */
+    indigo: "#FF2D2D",
   },
   status: {
     success: "#7FE5B8",
@@ -111,22 +111,22 @@ export const themeTokens = {
 
 /** RGB triplet helpers — Tailwind opacity modifiers need `r g b` strings. */
 export const tokenRgb = {
-  bgBase: "7 7 8",
+  bgBase: "5 5 7",
   bgSurface1: "16 16 18",
   bgSurface2: "23 23 26",
   bgSurface3: "38 38 43",
-  textPrimary: "245 245 247",
+  textPrimary: "240 240 244",
   textSecondary: "168 168 178",
-  textMuted: "111 111 122",
-  brandAccent: "99 102 241",
-  brandAccentSoft: "167 139 250",
-  brandAccentDim: "79 70 229",
-  brandLime: "99 102 241",       // legacy alias (= accent)
-  brandLimeSoft: "167 139 250",  // legacy alias (= accentSoft)
-  brandLimeDim: "79 70 229",     // legacy alias (= accentDim)
+  textMuted: "74 74 90",
+  brandAccent: "255 45 45",
+  brandAccentSoft: "255 107 107",
+  brandAccentDim: "204 36 36",
+  brandLime: "255 45 45",       // legacy alias (= accent)
+  brandLimeSoft: "255 107 107",  // legacy alias (= accentSoft)
+  brandLimeDim: "204 36 36",     // legacy alias (= accentDim)
   brandPlum: "31 31 35",
   brandPlumHover: "44 44 50",
-  brandIndigo: "99 102 241",
+  brandIndigo: "255 45 45",
   statusSuccess: "127 229 184",
   statusWarning: "255 192 98",
   statusError: "242 96 99",

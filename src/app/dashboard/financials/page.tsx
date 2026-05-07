@@ -541,7 +541,7 @@ export default function FinancialsPage() {
               { icon: <AlertTriangle size={12} className={churnRate > 5 ? "text-red-400" : "text-yellow-400"} />, label: "Churn Rate", value: `${churnRate.toFixed(1)}%`, color: churnRate > 5 ? "text-red-400" : "text-yellow-400", sub: `${churnedThisMonth} churned / ${totalClients} total` },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className="flex items-center gap-1.5 mb-1">
                     {tile.icon}
@@ -563,7 +563,7 @@ export default function FinancialsPage() {
               { icon: <Shield size={12} className="text-orange-400" />, label: "Est. Annual Tax", value: formatCurrency(estimatedTax), color: "text-orange-400", sub: `${estimatedTaxRate}% effective rate` },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className="flex items-center gap-1.5 mb-1">
                     {tile.icon}
@@ -700,7 +700,7 @@ export default function FinancialsPage() {
               { icon: <Percent size={12} className={marginPct >= 0 ? "text-green-400" : "text-red-400"} />, label: "Profit Margin", value: `${marginPct.toFixed(1)}%`, color: marginPct >= 0 ? "text-green-400" : "text-red-400" },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className="flex items-center gap-1.5 mb-1">
                     {tile.icon}
@@ -866,7 +866,7 @@ export default function FinancialsPage() {
               { label: "Top Cost", value: mostExpensive?.tool_name || "—", color: "text-gold", sub: mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data", small: true },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-4">
                   <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
                   <p className={`${tile.small ? "text-sm font-semibold truncate" : "text-lg font-bold"} ${tile.color}`}>{tile.value}</p>
@@ -1004,7 +1004,7 @@ export default function FinancialsPage() {
               { icon: <CheckCircle size={12} className="text-green-400" />, label: "Paid", value: formatCurrency(invoiceTotals.paid), color: "text-green-400", sub: `${invoices.filter(i => i.status === "paid").length} invoices` },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className="flex items-center gap-1.5 mb-1">
                     {tile.icon}

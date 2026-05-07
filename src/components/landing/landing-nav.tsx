@@ -92,7 +92,7 @@ export default function LandingNav() {
             href="/pricing"
             className="text-sm font-semibold px-5 py-2 rounded-lg transition-all hover:opacity-90 hidden sm:inline-block"
             style={{
-              background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+              background: "linear-gradient(135deg, #FF2D2D, #CC2424)",
               color: "#fff",
             }}
           >
@@ -141,7 +141,7 @@ export default function LandingNav() {
                 href="/pricing"
                 className="text-sm font-semibold px-5 py-2 rounded-lg transition-all hover:opacity-90 text-center"
                 style={{
-                  background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+                  background: "linear-gradient(135deg, #FF2D2D, #CC2424)",
                   color: "#fff",
                 }}
                 onClick={() => setMenuOpen(false)}

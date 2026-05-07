@@ -55,7 +55,7 @@ const STATUS_CONFIG: Record<
   },
 };
 
-const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
+const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
 
 function fmtUSD(cents: number) {
   return new Intl.NumberFormat("en-US", {

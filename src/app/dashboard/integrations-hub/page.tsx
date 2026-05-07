@@ -284,9 +284,9 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
             style={{ background: "rgba(255,255,255,0.08)" }}
           >
             {isZernio ? (
-              <ExternalLink size={18} className="text-[#6366F1]" />
+              <ExternalLink size={18} className="text-[#FF2D2D]" />
             ) : (
-              <Key size={18} className="text-[#6366F1]" />
+              <Key size={18} className="text-[#FF2D2D]" />
             )}
           </div>
           <div>
@@ -332,7 +332,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               {(integration.requiredEnv ?? []).map((envVar) => (
                 <code
                   key={envVar}
-                  className="block w-full bg-[#0A0A0B] border border-[rgba(255,255,255,0.1)] rounded-lg px-3 py-2 text-[#6366F1] text-[11px] font-mono"
+                  className="block w-full bg-[#0A0A0B] border border-[rgba(255,255,255,0.1)] rounded-lg px-3 py-2 text-[#FF2D2D] text-[11px] font-mono"
                 >
                   {envVar}
                 </code>
@@ -349,7 +349,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold px-3 py-2 rounded-lg text-white transition-all"
               style={{
-                background: "#6366F1",
+                background: "#FF2D2D",
                 boxShadow:
                   "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(255,255,255,0.45)",
               }}

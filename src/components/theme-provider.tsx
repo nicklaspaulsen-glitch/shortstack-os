@@ -47,8 +47,8 @@ const THEMES: Record<ThemeId, ThemeDef> = {
     surface: "#FAFAFB",
     surfaceLight: "#F2F2F4",
     border: "#E4E4E7",
-    accent: "#4F46E5",             // slightly darker indigo for AA contrast on white
-    accentSoft: "#6366F1",
+    accent: "#CC2424",             // slightly darker indigo for AA contrast on white
+    accentSoft: "#FF2D2D",
     accentDim: "#A5A4F0",
     text: "#0A0A0B",               // pure black for body
     muted: "#52525B",

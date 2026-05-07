@@ -149,7 +149,7 @@ export default function CreationWizard({
   return (
     <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 fade-in" onClick={onClose}>
       <div
-        className="bg-surface border border-border  shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden"
+        className="bg-surface border border-border shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -174,7 +174,7 @@ export default function CreationWizard({
             </div>
             <div className="h-1 rounded-full bg-surface-light overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-[#6366F1] to-[#A78BFA]"
+                className="h-full bg-gradient-to-r from-[#FF2D2D] to-[#FF6B6B]"
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
               />

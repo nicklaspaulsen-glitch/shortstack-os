@@ -190,7 +190,7 @@ export default function FeedbackButton() {
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 24, opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full max-w-md  overflow-hidden"
+              className="relative w-full max-w-md overflow-hidden"
               style={{
                 background: "linear-gradient(180deg, #131620 0%, #0b0d12 100%)",
                 border: "1px solid rgba(200,168,85,0.15)",

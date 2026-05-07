@@ -19,7 +19,7 @@ import { EmptyState } from "@/components/ui/empty-state-illustration";
 import PageHero from "@/components/ui/page-hero";
 import Link from "next/link";
 
-const CHART_COLORS = ["#6366F1", "#A78BFA", "#7FE5B8", "#F26063", "#FFC062", "#4F46E5"];
+const CHART_COLORS = ["#FF2D2D", "#FF6B6B", "#7FE5B8", "#F26063", "#FFC062", "#CC2424"];
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 interface ChurnClient { name: string; risk: "high" | "medium" | "low"; score: number; reason: string; mrr: number }
@@ -305,9 +305,9 @@ export default function AnalyticsPage() {
   }, [contentHeatmap]);
 
   const funnelData = useMemo(() => [
-    { name: "Leads", value: stats.totalLeads || 0, fill: "#6366F1" },
+    { name: "Leads", value: stats.totalLeads || 0, fill: "#FF2D2D" },
     { name: "Contacted", value: stats.dmsSent || 0, fill: "#5B5BE6" },
-    { name: "Calls Booked", value: stats.callsBooked || 0, fill: "#A78BFA" },
+    { name: "Calls Booked", value: stats.callsBooked || 0, fill: "#FF6B6B" },
     { name: "Proposals", value: 0, fill: "#7C3AED" },
     { name: "Closed Won", value: stats.totalDeals || 0, fill: "#7FE5B8" },
   ], [stats]);
@@ -362,11 +362,11 @@ export default function AnalyticsPage() {
 
   const activityIcon = (type: string) => {
     switch (type) {
-      case "lead": return <Zap size={10} style={{ color: "#6366F1" }} />;
+      case "lead": return <Zap size={10} style={{ color: "#FF2D2D" }} />;
       case "payment": return <DollarSign size={10} style={{ color: "#7FE5B8" }} />;
-      case "post": return <Film size={10} style={{ color: "#A78BFA" }} />;
+      case "post": return <Film size={10} style={{ color: "#FF6B6B" }} />;
       case "deal": return <Trophy size={10} style={{ color: "#7FE5B8" }} />;
-      case "call": return <Phone size={10} style={{ color: "#A78BFA" }} />;
+      case "call": return <Phone size={10} style={{ color: "#FF6B6B" }} />;
       default: return <Activity size={10} style={{ color: "#6F6D7A" }} />;
     }
   };
@@ -399,9 +399,9 @@ export default function AnalyticsPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.15)] text-[#A78BFA]"
+                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.15)] text-[#FF6B6B]"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
                 {formatCurrency(stats.totalMRR)} MRR
               </motion.span>
             )}
@@ -412,7 +412,7 @@ export default function AnalyticsPage() {
             )}
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.06)] px-3 py-1.5 text-xs font-semibold text-[#6366F1] hover:bg-[rgba(255,255,255,0.12)] transition-colors duration-150"
+              className="flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.06)] px-3 py-1.5 text-xs font-semibold text-[#FF2D2D] hover:bg-[rgba(255,255,255,0.12)] transition-colors duration-150"
             >
               <Download size={13} /> Export
             </button>
@@ -483,7 +483,7 @@ export default function AnalyticsPage() {
                   onClick={() => setDateRange(r)}
                   className={`px-3 py-1 text-[10px] rounded-md transition-colors duration-150 ${
                     dateRange === r
-                      ? "bg-[#6366F1] text-white font-semibold"
+                      ? "bg-[#FF2D2D] text-white font-semibold"
                       : "text-[#6F6D7A] hover:text-[#F5F4F1]"
                   }`}
                 >
@@ -522,14 +522,14 @@ export default function AnalyticsPage() {
               {/* Prism rainbow top bar */}
               <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#10B981] via-[#3B82F6] via-[#06B6D4] via-[#8B5CF6] to-[#F59E0B]" />
               {/* Ambient glow */}
-              <div className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 rounded-full bg-[#6366F1] opacity-[0.06] blur-3xl" />
+              <div className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 rounded-full bg-[#FF2D2D] opacity-[0.06] blur-3xl" />
               <div className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#10B981] opacity-[0.04] blur-2xl" />
 
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A] mb-3">
                 Monthly Recurring Revenue
               </p>
               <p
-                className="font-display font-bold leading-none text-[#6366F1]"
+                className="font-display font-bold leading-none text-[#FF2D2D]"
                 style={{ fontSize: "clamp(40px,6vw,68px)", letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums" }}
               >
                 {formatCurrency(stats.totalMRR)}
@@ -609,8 +609,8 @@ export default function AnalyticsPage() {
                     <AreaChart data={leadsByDay} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
                       <defs>
                         <linearGradient id="limeAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#6366F1" stopOpacity={0.15} />
-                          <stop offset="85%" stopColor="#6366F1" stopOpacity={0} />
+                          <stop offset="0%" stopColor="#FF2D2D" stopOpacity={0.15} />
+                          <stop offset="85%" stopColor="#FF2D2D" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.04)" vertical={false} />
@@ -619,7 +619,7 @@ export default function AnalyticsPage() {
                       <Tooltip {...TT} cursor={{ stroke: "rgba(255,255,255,0.15)", strokeDasharray: "2 4" }} />
                       <Area
                         type="monotone" dataKey="count" name="Leads"
-                        stroke="#6366F1" strokeWidth={1.5}
+                        stroke="#FF2D2D" strokeWidth={1.5}
                         fill="url(#limeAreaGrad)"
                       />
                     </AreaChart>
@@ -743,7 +743,7 @@ export default function AnalyticsPage() {
                       <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
                       <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={28} />
                       <Tooltip {...TT} />
-                      <Line type="monotone" dataKey="sent" stroke="#6366F1" strokeWidth={1.5} dot={false} name="Sent" />
+                      <Line type="monotone" dataKey="sent" stroke="#FF2D2D" strokeWidth={1.5} dot={false} name="Sent" />
                       <Line type="monotone" dataKey="replies" stroke="#7FE5B8" strokeWidth={1.5} dot={false} name="Replies" />
                     </LineChart>
                   </ResponsiveContainer>
@@ -751,7 +751,7 @@ export default function AnalyticsPage() {
               )}
               <div className="flex items-center gap-5 mt-3">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-4 h-px bg-[#6366F1]" />
+                  <div className="w-4 h-px bg-[#FF2D2D]" />
                   <span className="text-[9px] text-[#6F6D7A]">Sent</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -789,7 +789,7 @@ export default function AnalyticsPage() {
                         </span>
                         <div className="flex-1 h-1 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
                           <motion.div
-                            className="h-full rounded-full bg-[#A78BFA]"
+                            className="h-full rounded-full bg-[#FF6B6B]"
                             initial={{ width: 0 }}
                             animate={{ width: `${pct}%` }}
                             transition={{ duration: 0.6, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
@@ -815,7 +815,7 @@ export default function AnalyticsPage() {
               <div className="space-y-3.5">
                 {goals.map(goal => {
                   const pct = goal.target > 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
-                  const barColor = pct >= 100 ? "#7FE5B8" : pct >= 70 ? "#6366F1" : pct >= 40 ? "#A78BFA" : "#4F4D58";
+                  const barColor = pct >= 100 ? "#7FE5B8" : pct >= 70 ? "#FF2D2D" : pct >= 40 ? "#FF6B6B" : "#4F4D58";
                   return (
                     <div key={goal.label}>
                       <div className="flex items-center justify-between mb-1.5">
@@ -863,7 +863,7 @@ export default function AnalyticsPage() {
                         {/* Your score */}
                         <motion.div
                           className="absolute h-full rounded-full"
-                          style={{ background: isAbove ? "#6366F1" : "#F26063" }}
+                          style={{ background: isAbove ? "#FF2D2D" : "#F26063" }}
                           initial={{ width: 0 }}
                           animate={{ width: `${yourPct}%` }}
                           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -871,7 +871,7 @@ export default function AnalyticsPage() {
                       </div>
                       <span
                         className="text-[9px] font-mono w-7 text-right shrink-0"
-                        style={{ color: isAbove ? "#6366F1" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+                        style={{ color: isAbove ? "#FF2D2D" : "#F26063", fontVariantNumeric: "tabular-nums" }}
                       >
                         {b.yours}%
                       </span>
@@ -885,7 +885,7 @@ export default function AnalyticsPage() {
                   <span className="text-[9px] text-[#4F4D58]">Industry avg</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-1.5 rounded-full bg-[#6366F1]" />
+                  <div className="w-3 h-1.5 rounded-full bg-[#FF2D2D]" />
                   <span className="text-[9px] text-[#4F4D58]">Yours</span>
                 </div>
               </div>
@@ -983,7 +983,7 @@ export default function AnalyticsPage() {
             icon={<TrendingUp size={13} />}
             badge={
               revenueForecast.length > 0 ? (
-                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.12)] text-[#6366F1]">
+                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.12)] text-[#FF2D2D]">
                   {formatCurrency(revenueForecast[0]?.projected || 0)} next mo.
                 </span>
               ) : undefined
@@ -1009,8 +1009,8 @@ export default function AnalyticsPage() {
                       >
                         <defs>
                           <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#6366F1" stopOpacity={0.15} />
-                            <stop offset="85%" stopColor="#6366F1" stopOpacity={0} />
+                            <stop offset="0%" stopColor="#FF2D2D" stopOpacity={0.15} />
+                            <stop offset="85%" stopColor="#FF2D2D" stopOpacity={0} />
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.04)" vertical={false} />
@@ -1018,8 +1018,8 @@ export default function AnalyticsPage() {
                         <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={32} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
                         <Tooltip {...TT} formatter={(v) => formatCurrency(Number(v) || 0)} />
                         <Area type="monotone" dataKey="optimistic" stroke="#7FE5B8" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Optimistic" />
-                        <Area type="monotone" dataKey="projected" stroke="#6366F1" fill="url(#forecastGrad)" strokeWidth={1.5} name="Projected" />
-                        <Area type="monotone" dataKey="conservative" stroke="#6366F1" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Conservative" />
+                        <Area type="monotone" dataKey="projected" stroke="#FF2D2D" fill="url(#forecastGrad)" strokeWidth={1.5} name="Projected" />
+                        <Area type="monotone" dataKey="conservative" stroke="#FF2D2D" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Conservative" />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
@@ -1076,7 +1076,7 @@ export default function AnalyticsPage() {
                     <tr>
                       <td colSpan={5} className="py-8 text-center" style={{ background: "none" }}>
                         <p className="text-[11px] text-[#6F6D7A]">No ad platform data yet</p>
-                        <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-[#6366F1] hover:opacity-80 transition-opacity">
+                        <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-[#FF2D2D] hover:opacity-80 transition-opacity">
                           Connect platforms <ArrowUp size={9} className="rotate-45" />
                         </Link>
                       </td>
@@ -1090,7 +1090,7 @@ export default function AnalyticsPage() {
                       <td className="py-3 text-right">
                         <span
                           className="text-[10px] font-bold"
-                          style={{ color: p.roi > 200 ? "#7FE5B8" : p.roi > 100 ? "#6366F1" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+                          style={{ color: p.roi > 200 ? "#7FE5B8" : p.roi > 100 ? "#FF2D2D" : "#F26063", fontVariantNumeric: "tabular-nums" }}
                         >
                           {p.roi}%
                         </span>
@@ -1207,7 +1207,7 @@ export default function AnalyticsPage() {
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <Trophy size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-[#9F9DAA]">No team activity yet</p>
-                  <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#6366F1] hover:opacity-80 transition-opacity">
+                  <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#FF2D2D] hover:opacity-80 transition-opacity">
                     Invite team <ArrowUp size={9} className="rotate-45" />
                   </Link>
                 </div>
@@ -1219,11 +1219,11 @@ export default function AnalyticsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <p className="text-xs font-medium text-[#F5F4F1]">{member.name}</p>
-                      {i === 0 && <Star size={9} className="text-[#6366F1]" />}
+                      {i === 0 && <Star size={9} className="text-[#FF2D2D]" />}
                     </div>
                     <p className="text-[9px] text-[#6F6D7A]">{member.leads} leads · {member.deals} deals · {member.calls} calls</p>
                   </div>
-                  <p className="text-xs font-bold text-[#6366F1] shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <p className="text-xs font-bold text-[#FF2D2D] shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
                     {formatCurrency(member.revenue)}
                   </p>
                 </div>
@@ -1262,7 +1262,7 @@ export default function AnalyticsPage() {
                               <div
                                 className="h-7 rounded-md flex items-center justify-center text-[9px] font-bold transition-all hover:scale-105"
                                 style={{
-                                  background: `rgba(99, 102, 241, ${intensity * 0.6 + 0.04})`,
+                                  background: `rgba(255, 45, 45, ${intensity * 0.6 + 0.04})`,
                                   color: intensity > 0.5 ? "#fff" : "#6F6D7A",
                                 }}
                               >
@@ -1329,7 +1329,7 @@ export default function AnalyticsPage() {
                   <DollarSign size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-[#9F9DAA]">No CLV data yet</p>
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
-                  <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#6366F1] hover:opacity-80 transition-opacity">
+                  <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#FF2D2D] hover:opacity-80 transition-opacity">
                     Add clients <ArrowUp size={9} className="rotate-45" />
                   </Link>
                 </div>
@@ -1344,7 +1344,7 @@ export default function AnalyticsPage() {
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <p className="text-[9px] text-[#6F6D7A] uppercase">Avg CLV</p>
-                          <p className="text-sm font-bold text-[#6366F1]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(tier.avgCLV)}</p>
+                          <p className="text-sm font-bold text-[#FF2D2D]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(tier.avgCLV)}</p>
                         </div>
                         <div>
                           <p className="text-[9px] text-[#6F6D7A] uppercase">Avg Lifetime</p>

@@ -244,7 +244,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "luxury-gold",
       hero_style: "big-headline-image",
       cta_goal: "contact",
-      brand_primary: "#6366F1",
+      brand_primary: "#FF2D2D",
       brand_accent: "#1E293B",
       sections: ["gallery", "about", "testimonials", "contact"],
     },
@@ -380,7 +380,7 @@ export default function WebsitesPage() {
     const industry = String(data.industry || data.business_type || "");
     const map: Record<string, { primary: string; accent: string }> = {
       restaurant: { primary: "#B45309", accent: "#78350F" },
-      real_estate: { primary: "#6366F1", accent: "#1E293B" },
+      real_estate: { primary: "#FF2D2D", accent: "#1E293B" },
       coach: { primary: "#7C3AED", accent: "#1E1B4B" },
       saas: { primary: "#2563EB", accent: "#0F172A" },
       ecommerce: { primary: "#EC4899", accent: "#111827" },
@@ -389,7 +389,7 @@ export default function WebsitesPage() {
       blog: { primary: "#059669", accent: "#064E3B" },
       agency: { primary: "#DC2626", accent: "#1F2937" },
     };
-    const palette = map[industry.toLowerCase()] || { primary: "#6366F1", accent: "#0F172A" };
+    const palette = map[industry.toLowerCase()] || { primary: "#FF2D2D", accent: "#0F172A" };
     return { brand_primary: palette.primary, brand_accent: palette.accent };
   }
 
@@ -608,7 +608,7 @@ export default function WebsitesPage() {
 
   function startBlank(): void {
     setWizardPreset({
-      brand_primary: "#6366F1",
+      brand_primary: "#FF2D2D",
       brand_accent: "#0F172A",
       sections: ["about", "features", "testimonials", "faq"],
       visuals: "stock-photos",
@@ -946,8 +946,8 @@ export default function WebsitesPage() {
                 key={niche}
                 type="button"
                 onClick={() => setNicheFilter(filterKey)}
-                className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1]/60"
-                style={{ color: isActive ? "#6366F1" : "rgba(255,255,255,0.45)" }}
+                className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF2D2D]/60"
+                style={{ color: isActive ? "#FF2D2D" : "rgba(255,255,255,0.45)" }}
               >
                 {isActive && (
                   <motion.span
@@ -1250,7 +1250,7 @@ export default function WebsitesPage() {
                   whileHover={{ y: -4, scale: 1.01 }}
                   className="glass rounded-xl p-0 overflow-hidden shadow-lg shadow-black/20 relative"
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 inset-x-0" />
                   {/* Thumbnail */}
                   <div className="relative h-36 bg-slate-900 border-b border-border overflow-hidden">
                     {html ? (
@@ -1384,7 +1384,7 @@ export default function WebsitesPage() {
             whileHover={{ y: -2 }}
             className="glass rounded-xl p-4 relative overflow-hidden"
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 inset-x-0" />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 inset-x-0" />
             <h3 className="section-header flex items-center gap-2 text-gold">{item.icon} {item.title}</h3>
             <p className="text-[10px] text-muted">{item.body}</p>
           </motion.div>

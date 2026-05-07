@@ -436,7 +436,7 @@ export default function ConversationsPage() {
           ) : conversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
               <div className="w-12 h-12  bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.12)] flex items-center justify-center">
-                <Inbox size={20} className="text-[#6366F1]/60" />
+                <Inbox size={20} className="text-[#FF2D2D]/60" />
               </div>
               <div>
                 <p className="text-sm font-medium text-white/50 mb-1">No conversations yet</p>

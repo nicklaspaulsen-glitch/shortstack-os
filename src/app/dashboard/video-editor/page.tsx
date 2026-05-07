@@ -273,7 +273,7 @@ const CAPTION_STYLES: { id: string; name: string; previewBg: string; previewCss:
   { id: "karaoke",        name: "Karaoke",               previewBg: "#0d0020", previewCss: { color: "#c084fc", fontWeight: 700, fontSize: 12, letterSpacing: 1 } },
   { id: "typewriter",     name: "Typewriter",            previewBg: "#1a1a1a", previewCss: { color: "#d1fae5", fontFamily: "monospace", fontSize: 11, letterSpacing: 2 } },
   { id: "bounce",         name: "Bounce",                previewBg: "#111827", previewCss: { color: "#fbbf24", fontWeight: 900, fontSize: 14, textShadow: "0 4px 0 rgba(0,0,0,0.4)" } },
-  { id: "gradient_text",  name: "Gradient Text",         previewBg: "#0a0a0a", previewCss: { background: "linear-gradient(90deg,#6366F1,#ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontWeight: 800, fontSize: 13 } },
+  { id: "gradient_text",  name: "Gradient Text",         previewBg: "#0a0a0a", previewCss: { background: "linear-gradient(90deg,#FF2D2D,#ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontWeight: 800, fontSize: 13 } },
   { id: "neon_glow",      name: "Neon Glow",             previewBg: "#050505", previewCss: { color: "#67e8f9", fontWeight: 700, fontSize: 12, textShadow: "0 0 8px #67e8f9, 0 0 20px #22d3ee" } },
   { id: "handwritten",    name: "Handwritten",           previewBg: "#1c1917", previewCss: { color: "#fef3c7", fontFamily: "cursive", fontSize: 13, fontStyle: "italic" } },
   { id: "subtitle_bar",   name: "Netflix Style",         previewBg: "#000", previewCss: { color: "#fff", background: "rgba(0,0,0,0.85)", padding: "1px 8px", fontSize: 11, fontWeight: 500 } },
@@ -417,7 +417,7 @@ const ADVANCED_CAPTION_PRESETS = [
   { id: "youtube_standard", name: "YouTube Standard", desc: "White on dark box", bg: "rgba(0,0,0,0.75)", color: "#fff", stroke: "transparent", weight: 500, size: 28, position: "bottom" },
   { id: "podcast_minimal", name: "Podcast Minimal", desc: "Clean sans, no backdrop", bg: "transparent", color: "#fff", stroke: "transparent", weight: 400, size: 24, position: "bottom" },
   { id: "mrbeast", name: "MrBeast Style", desc: "Huge yellow, word highlight", bg: "transparent", color: "#FFEB3B", stroke: "#000", weight: 900, size: 96, position: "center" },
-  { id: "karaoke", name: "Karaoke", desc: "Word-by-word color fill", bg: "transparent", color: "#fff", stroke: "#6366F1", weight: 700, size: 48, position: "bottom" },
+  { id: "karaoke", name: "Karaoke", desc: "Word-by-word color fill", bg: "transparent", color: "#fff", stroke: "#FF2D2D", weight: 700, size: 48, position: "bottom" },
   { id: "typewriter", name: "Typewriter", desc: "Letter-by-letter reveal", bg: "rgba(0,0,0,0.6)", color: "#00ff00", stroke: "transparent", weight: 400, size: 28, position: "bottom" },
   { id: "popup", name: "Pop-up", desc: "Fade + scale words", bg: "transparent", color: "#fff", stroke: "#000", weight: 800, size: 56, position: "center" },
   { id: "cinematic", name: "Cinematic", desc: "Italic lower-third", bg: "transparent", color: "#f5f5f5", stroke: "transparent", weight: 300, size: 22, position: "bottom" },
@@ -1578,7 +1578,7 @@ export default function VideoEditorPage() {
   const [aiScriptScenes, setAiScriptScenes] = useState<Array<{ text: string; suggestedStyle: string; duration: number }>>([]);
   const [selectedBrandKit, setSelectedBrandKit] = useState("");
   const [brandKits] = useState([
-    { id: "bk1", name: "Default Brand", colors: ["#6366F1", "#1a1a1a", "#ffffff"], font: "Inter", logo: "logo.png" },
+    { id: "bk1", name: "Default Brand", colors: ["#FF2D2D", "#1a1a1a", "#ffffff"], font: "Inter", logo: "logo.png" },
   ]);
   const [selectedMotionGraphics, setSelectedMotionGraphics] = useState<string[]>([]);
   const [motionGraphicsCategory, setMotionGraphicsCategory] = useState("lower-thirds");
@@ -3325,7 +3325,7 @@ export default function VideoEditorPage() {
       {/* Higgsfield-style slim header */}
       <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(255,255,255,0.08)] bg-[#080809] -mx-4 sm:-mx-6 mb-4">
         <div className="w-7 h-7 rounded-xl bg-[rgba(255,255,255,0.12)] flex items-center justify-center shrink-0">
-          <Film size={13} className="text-[#6366F1]" />
+          <Film size={13} className="text-[#FF2D2D]" />
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Video Editor</h1>
@@ -6528,7 +6528,7 @@ export default function VideoEditorPage() {
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Brand Colors</label>
                   <input value={config.brand_colors} onChange={e => setConfig({ ...config, brand_colors: e.target.value })}
-                    className="input w-full text-xs" placeholder="#6366F1, #1a1a1a" />
+                    className="input w-full text-xs" placeholder="#FF2D2D, #1a1a1a" />
                 </div>
               </div>
               {nextVideoTierLabel && (
@@ -6632,7 +6632,7 @@ export default function VideoEditorPage() {
                           <span style={c.previewCss}>Abc</span>
                         </div>
                         <span className={`flex-1 px-2.5 py-1.5 ${
-                          config.caption_style === c.id ? "text-[#6366F1]" : "text-muted"
+                          config.caption_style === c.id ? "text-[#FF2D2D]" : "text-muted"
                         }`}>
                           {c.name}
                         </span>
@@ -7715,7 +7715,7 @@ export default function VideoEditorPage() {
             {generating && (
               <div className="mt-1 w-full h-1 bg-surface-light rounded-full overflow-hidden">
                 <motion.div
-                  className="h-1 bg-gradient-to-r from-[#6366F1] to-[#A78BFA]"
+                  className="h-1 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B6B]"
                   animate={{ width: `${renderProgress}%` }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 />

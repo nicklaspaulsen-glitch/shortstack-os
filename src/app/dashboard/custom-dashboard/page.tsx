@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 
 // ── Widget definitions ─────────────────────────────────────────────────────────
 const WIDGET_TYPES = [
-  { id: "leads_today", label: "Leads Today", icon: <Users className="w-5 h-5" />, color: "#6366F1", bg: "from-[#6366F1]/15 to-[#6366F1]/5" },
+  { id: "leads_today", label: "Leads Today", icon: <Users className="w-5 h-5" />, color: "#FF2D2D", bg: "from-[#FF2D2D]/15 to-[#FF2D2D]/5" },
   { id: "revenue_month", label: "Revenue This Month", icon: <DollarSign className="w-5 h-5" />, color: "#10B981", bg: "from-emerald-500/15 to-emerald-500/5" },
   { id: "active_clients", label: "Active Clients", icon: <Activity className="w-5 h-5" />, color: "#3B82F6", bg: "from-blue-500/15 to-blue-500/5" },
   { id: "pipeline_value", label: "Pipeline Value", icon: <TrendingUp className="w-5 h-5" />, color: "#8B5CF6", bg: "from-violet-500/15 to-violet-500/5" },
@@ -66,10 +66,10 @@ function WidgetCard({
       onDragOver={onDragOver}
       onDrop={onDrop}
       className={`glass rounded-xl overflow-hidden cursor-grab active:cursor-grabbing transition-all select-none ${
-        isDragOver ? "border-[#6366F1]/60 scale-[1.02]" : ""
+        isDragOver ? "border-[#FF2D2D]/60 scale-[1.02]" : ""
       }`}
     >
-      <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+      <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
       <div className="p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -190,7 +190,7 @@ export default function CustomDashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#6366F1]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#FF2D2D]" />
       </div>
     );
   }
@@ -214,7 +214,7 @@ export default function CustomDashboardPage() {
             <button
               onClick={() => saveLayout(widgets)}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#6366F1] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#FF2D2D] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Layout

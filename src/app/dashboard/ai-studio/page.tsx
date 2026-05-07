@@ -55,10 +55,10 @@ interface JobResult {
 // ── Tool configs ─────────────────────────────────────────────────
 const TOOLS = [
   { id: "transcribe", name: "Transcribe", desc: "Audio/video to text with timestamps", icon: Mic, color: "#60a5fa", tag: "Whisper V3" },
-  { id: "image-gen", name: "Image Gen", desc: "Generate images from text prompts", icon: Palette, color: "#818cf8", tag: "FLUX/DALL-E" },
+  { id: "image-gen", name: "Image Gen", desc: "Generate images from text prompts", icon: Palette, color: "#FF5252", tag: "FLUX/DALL-E" },
   { id: "upscale", name: "Upscale", desc: "4x AI image upscaling", icon: ArrowUpRight, color: "#34d399", tag: "Real-ESRGAN" },
   { id: "remove-bg", name: "Remove BG", desc: "One-click background removal", icon: Scissors, color: "#f472b6", tag: "REMBG/SAM" },
-  { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video", icon: Film, color: "#a78bfa", tag: "SVD" },
+  { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video", icon: Film, color: "#FF6B6B", tag: "SVD" },
   { id: "music-gen", name: "Music Gen", desc: "AI background music for videos", icon: Music, color: "#fbbf24", tag: "MusicGen" },
   { id: "voice-clone", name: "Voice Clone", desc: "Clone voice from 6 sec audio", icon: Volume2, color: "#fb923c", tag: "XTTS v2" },
   { id: "train-lora", name: "Brand LoRA", desc: "Train custom image style models", icon: Brain, color: "#e879f9", tag: "LoRA", badge: "Business+" },
@@ -169,9 +169,9 @@ export default function AIStudioPage() {
               <motion.span
                 initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.15)] text-[#A78BFA]"
+                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.15)] text-[#FF6B6B]"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
                 {history.filter(j => j.status === "completed").length} done
               </motion.span>
             )}
@@ -186,7 +186,7 @@ export default function AIStudioPage() {
                   setActiveTool("image-gen");
                   setCreationWizardOpen(true);
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-bold shadow-lg shadow-[rgba(255,255,255,0.15)] hover:brightness-105 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D2D] text-white text-xs font-bold shadow-lg shadow-[rgba(255,255,255,0.15)] hover:brightness-105 transition-all"
               >
                 <Sparkles size={13} />
                 New with AI
@@ -224,11 +224,11 @@ export default function AIStudioPage() {
                         transition={{ duration: 0.2 }}
                         onClick={() => { setGuidedIntent(t.id); setActiveTool(t.id); }}
                         className={`relative text-left p-4 rounded-xl border transition-all ${
-                          selected ? "border-[rgba(255,255,255,0.4)] bg-[rgba(255,255,255,0.06)] shadow-lg shadow-[rgba(255,255,255,0.1)]" : "border-border hover:border-[#6366F1]/30 bg-surface-light"
+                          selected ? "border-[rgba(255,255,255,0.4)] bg-[rgba(255,255,255,0.06)] shadow-lg shadow-[rgba(255,255,255,0.1)]" : "border-border hover:border-[#FF2D2D]/30 bg-surface-light"
                         }`}
                       >
                         {"badge" in t && t.badge && (
-                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(255,255,255,0.1)] text-[#6366F1]">
+                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(255,255,255,0.1)] text-[#FF2D2D]">
                             {t.badge}
                           </span>
                         )}
@@ -270,7 +270,7 @@ export default function AIStudioPage() {
                 />
               ) : (
                 <div className="card bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.15)] text-center py-8">
-                  <Upload size={28} className="mx-auto mb-2 text-[#6366F1]" />
+                  <Upload size={28} className="mx-auto mb-2 text-[#FF2D2D]" />
                   <p className="text-sm font-semibold">
                     {TOOLS.find(t => t.id === guidedIntent)?.name} uses files — hit Finish to open the tool.
                   </p>
@@ -304,7 +304,7 @@ export default function AIStudioPage() {
                   </div>
                   {guidedPrompt && (
                     <p className="text-[11px] text-muted pt-2 border-t border-border/50 line-clamp-3">
-                      <span className="text-[#A78BFA] font-semibold">Prompt:</span> {guidedPrompt}
+                      <span className="text-[#FF6B6B] font-semibold">Prompt:</span> {guidedPrompt}
                     </p>
                   )}
                 </div>
@@ -346,7 +346,7 @@ export default function AIStudioPage() {
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Sparkles size={13} className="text-[#A78BFA]" />
+                <Sparkles size={13} className="text-[#FF6B6B]" />
                 <span className="text-sm font-semibold text-[#F5F4F1]">Latest generation</span>
                 <span className="text-[10px] text-[#9F9DAA]">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
               </div>
@@ -357,7 +357,7 @@ export default function AIStudioPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {wizardImages.map((img, i) => (
                 <a key={i} href={img.url} target="_blank" rel="noopener noreferrer"
-                  className="block bg-black rounded-xl overflow-hidden hover:ring-1 hover:ring-[#6366F1]/40 transition-all">
+                  className="block bg-black rounded-xl overflow-hidden hover:ring-1 hover:ring-[#FF2D2D]/40 transition-all">
                   <SafeThumb
                     src={img.url}
                     alt={`Wizard output ${i + 1}`}
@@ -380,7 +380,7 @@ export default function AIStudioPage() {
                 onClick={() => setToolCategory(cat)}
                 className={`text-[9px] font-semibold px-2.5 py-1.5 rounded-lg transition-all capitalize ${
                   toolCategory === cat
-                    ? "bg-[#6366F1] text-white"
+                    ? "bg-[#FF2D2D] text-white"
                     : "text-[#6F6D7A] bg-[rgba(255,255,255,0.04)] hover:text-[#9F9DAA] border border-[rgba(255,255,255,0.05)]"
                 }`}
               >
@@ -432,16 +432,16 @@ export default function AIStudioPage() {
                       className="relative z-10 w-6 h-6 rounded-md flex items-center justify-center shrink-0"
                       style={{ background: `${tool.color}${active ? "28" : "18"}` }}
                     >
-                      <Icon size={12} style={{ color: active ? "#6366F1" : tool.color }} />
+                      <Icon size={12} style={{ color: active ? "#FF2D2D" : tool.color }} />
                     </div>
                     <div className="relative z-10 min-w-0 flex-1">
-                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#6366F1]" : "text-[#F5F4F1]"}`}>
+                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#FF2D2D]" : "text-[#F5F4F1]"}`}>
                         {tool.name}
                       </p>
                       <p className="text-[8px] font-mono text-[#6F6D7A] truncate">{tool.tag}</p>
                     </div>
                     {"badge" in tool && tool.badge && (
-                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(255,255,255,0.1)] text-[#6366F1] shrink-0">
+                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(255,255,255,0.1)] text-[#FF2D2D] shrink-0">
                         Biz+
                       </span>
                     )}
@@ -473,7 +473,7 @@ export default function AIStudioPage() {
                       <p className="text-[9px] font-mono text-[#6F6D7A]">{t.tag}</p>
                     </div>
                     {"badge" in t && t.badge && (
-                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.08)] text-[#6366F1] border border-[rgba(255,255,255,0.2)]">
+                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.08)] text-[#FF2D2D] border border-[rgba(255,255,255,0.2)]">
                         {t.badge}
                       </span>
                     )}
@@ -481,7 +481,7 @@ export default function AIStudioPage() {
                 );
               })()}
               {/* Lime tick — one chromatic moment per zone */}
-              <div className="w-1 h-4 rounded-full bg-[#6366F1]/35 shrink-0" />
+              <div className="w-1 h-4 rounded-full bg-[#FF2D2D]/35 shrink-0" />
             </div>
 
             {/* Tool content — AnimatePresence fades panel on tool switch */}
@@ -810,9 +810,9 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Palette size={16} className="text-[#6366F1]" />
+        <Palette size={16} className="text-[#FF2D2D]" />
         <h2 className="text-sm font-bold text-foreground">Image Generator</h2>
-        <span className="text-[9px] bg-[#6366F1]/10 text-[#6366F1] px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
+        <span className="text-[9px] bg-[#FF2D2D]/10 text-[#FF2D2D] px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
       </motion.div>
 
       {setupRequired && (
@@ -845,7 +845,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 <button key={s.value} onClick={() => setStyle(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     style === s.value
-                      ? "bg-[#6366F1] text-white font-semibold"
+                      ? "bg-[#FF2D2D] text-white font-semibold"
                       : "bg-surface-light text-muted"
                   }`}>{s.label}</button>
               ))}
@@ -859,7 +859,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 <button key={s.value} onClick={() => setSize(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     size === s.value
-                      ? "bg-[#6366F1] text-white font-semibold"
+                      ? "bg-[#FF2D2D] text-white font-semibold"
                       : "bg-surface-light text-muted"
                   }`}>{s.label}</button>
               ))}
@@ -868,7 +868,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
           <motion.button onClick={handleGenerate} disabled={processing || !prompt.trim()}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2.5 bg-[#6366F1] text-white text-xs font-semibold rounded-lg hover:bg-[#5E5BFF] disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full px-4 py-2.5 bg-[#FF2D2D] text-white text-xs font-semibold rounded-lg hover:bg-[#5E5BFF] disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
             Generate Image
           </motion.button>
@@ -891,7 +891,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                   />
                   <div className="flex items-center justify-center gap-3 mt-1">
                     <a href={img} target="_blank" rel="noopener noreferrer" download={`generated-${i + 1}.png`}
-                      className="inline-flex items-center gap-1 text-[10px] text-[#6366F1] hover:underline">
+                      className="inline-flex items-center gap-1 text-[10px] text-[#FF2D2D] hover:underline">
                       <Download size={10} /> Download
                     </a>
                     <button
@@ -912,7 +912,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                           setHandoffingIdx(null);
                         }
                       }}
-                      className="inline-flex items-center gap-1 text-[10px] text-[#6366F1] hover:underline disabled:opacity-40"
+                      className="inline-flex items-center gap-1 text-[10px] text-[#FF2D2D] hover:underline disabled:opacity-40"
                     >
                       {handoffingIdx === i
                         ? <Loader2 size={10} className="animate-spin" />
@@ -1226,9 +1226,9 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Film size={16} className="text-[#A78BFA]" />
+        <Film size={16} className="text-[#FF6B6B]" />
         <h2 className="text-sm font-bold text-foreground">Image to Video</h2>
-        <span className="text-[9px] bg-[rgba(255,255,255,0.08)] text-[#A78BFA] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
+        <span className="text-[9px] bg-[rgba(255,255,255,0.08)] text-[#FF6B6B] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1251,20 +1251,20 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
             <div className="flex items-center gap-3">
               <span className="text-[10px] text-muted w-16">Motion:</span>
               <input type="range" min={1} max={255} value={motionBucket} onChange={e => setMotionBucket(Number(e.target.value))}
-                className="flex-1 h-1 accent-[#6366F1]" />
+                className="flex-1 h-1 accent-[#FF2D2D]" />
               <span className="text-[10px] text-muted w-8">{motionBucket}</span>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-[10px] text-muted w-16">FPS:</span>
               {[6, 12, 24].map(f => (
                 <button key={f} onClick={() => setFps(f)}
-                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-[#6366F1] text-white" : "bg-surface-light text-muted"}`}>{f}</button>
+                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-[#FF2D2D] text-white" : "bg-surface-light text-muted"}`}>{f}</button>
               ))}
             </div>
           </div>
           <motion.button onClick={handleGenerate} disabled={processing || !file}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full mt-3 px-4 py-2.5 bg-[#6366F1] text-white text-xs font-semibold rounded-lg hover:bg-[#4F46E5] disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full mt-3 px-4 py-2.5 bg-[#FF2D2D] text-white text-xs font-semibold rounded-lg hover:bg-[#CC2424] disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
             Animate Image
           </motion.button>
@@ -1624,9 +1624,9 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Brain size={16} className="text-[#A78BFA]" />
+        <Brain size={16} className="text-[#FF6B6B]" />
         <h2 className="text-sm font-bold text-foreground">Brand LoRA Training</h2>
-        <span className="text-[9px] bg-[rgba(255,255,255,0.08)] text-[#A78BFA] px-2 py-0.5 rounded-full">Business+ Only</span>
+        <span className="text-[9px] bg-[rgba(255,255,255,0.08)] text-[#FF6B6B] px-2 py-0.5 rounded-full">Business+ Only</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1669,13 +1669,13 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-muted">Steps:</span>
             <input type="range" min={500} max={5000} step={100} value={steps} onChange={e => setSteps(Number(e.target.value))}
-              className="flex-1 h-1 accent-[#6366F1]" />
+              className="flex-1 h-1 accent-[#FF2D2D]" />
             <span className="text-xs text-foreground font-mono">{steps}</span>
           </div>
 
           <motion.button onClick={handleTrain} disabled={processing || images.length < 5}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2.5 bg-[#6366F1] text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full px-4 py-2.5 bg-[#FF2D2D] text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} />}
             Start Training (~{Math.ceil(steps / 100)} min)
           </motion.button>
@@ -1696,14 +1696,14 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
             ].map(({ step, text }) => (
               <div key={step} className="flex items-start gap-2">
                 <div className="w-5 h-5 rounded-full bg-[rgba(255,255,255,0.08)] flex items-center justify-center shrink-0">
-                  <span className="text-[9px] font-bold text-[#A78BFA]">{step}</span>
+                  <span className="text-[9px] font-bold text-[#FF6B6B]">{step}</span>
                 </div>
                 <p className="text-[10px] text-muted leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
           {trainingStatus && (
-            <div className="mt-4 p-3 rounded-lg bg-[rgba(255,255,255,0.08)] text-xs text-[#A78BFA]">
+            <div className="mt-4 p-3 rounded-lg bg-[rgba(255,255,255,0.08)] text-xs text-[#FF6B6B]">
               {trainingStatus}
             </div>
           )}

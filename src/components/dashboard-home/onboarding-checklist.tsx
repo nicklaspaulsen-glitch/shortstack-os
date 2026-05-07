@@ -181,7 +181,7 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
               aria-label={`${pct}% of setup complete`}
             >
               <div
-                className="h-full rounded-full bg-[#6366F1] transition-all duration-500"
+                className="h-full rounded-full bg-[#FF2D2D] transition-all duration-500"
                 style={{ width: `${pct}%` }}
               />
             </div>
@@ -230,10 +230,10 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
                 <button
                   onClick={() => toggleManual(item.id)}
                   aria-label={done ? `Mark "${item.label}" as incomplete` : `Mark "${item.label}" as complete`}
-                  className="mt-0.5 flex-shrink-0 text-[#6F6F7A] hover:text-[#6366F1] transition-colors"
+                  className="mt-0.5 flex-shrink-0 text-[#6F6F7A] hover:text-[#FF2D2D] transition-colors"
                 >
                   {done ? (
-                    <CheckCircle2 className="h-4 w-4 text-[#6366F1]" />
+                    <CheckCircle2 className="h-4 w-4 text-[#FF2D2D]" />
                   ) : (
                     <Circle className="h-4 w-4" />
                   )}

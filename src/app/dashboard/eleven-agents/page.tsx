@@ -275,7 +275,7 @@ export default function ElevenAgentsPage() {
           { label: "Cost Today", value: `$${totalCost.toFixed(2)}`, color: "text-cyan-400" },
         ].map((s, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
             <div className="p-3">
               <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
               <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>

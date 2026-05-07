@@ -293,7 +293,7 @@ export default function ApiDocsPage() {
           { label: "API Version", value: "v2.4", color: "text-cyan-400" },
         ].map((s, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-3 text-center">
               <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
               <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
@@ -841,7 +841,7 @@ const valid = signature === expected;`}</pre>
               { label: "Full Access", value: apiKeys.filter(k => k.permissions === "full" && k.is_active).length, color: "text-orange-400", icon: <AlertTriangle size={13} className="text-orange-400" /> },
             ].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className="flex items-center gap-2 mb-1">
                     {s.icon}

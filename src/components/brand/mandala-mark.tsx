@@ -94,7 +94,7 @@ export default function MandalaMark({
             width: "100%",
             height: "100%",
             filter: animate
-              ? "drop-shadow(0 4px 12px rgba(79,70,229,0.25))"
+              ? "drop-shadow(0 4px 12px rgba(204, 36, 36,0.25))"
               : "drop-shadow(0 2px 6px rgba(0,0,0,0.10))",
           }}
         >

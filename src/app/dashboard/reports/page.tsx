@@ -162,7 +162,7 @@ export default function ReportsPage() {
     const metricsHTML = m ? `
       <table style="width:100%;border-collapse:collapse;margin:24px 0;">
         <thead>
-          <tr style="background:#FBF9F4;border-bottom:2px solid #6366F1;">
+          <tr style="background:#FBF9F4;border-bottom:2px solid #FF2D2D;">
             <th style="text-align:left;padding:10px 14px;font-size:12px;color:#6B7280;font-weight:600;">Metric</th>
             <th style="text-align:right;padding:10px 14px;font-size:12px;color:#6B7280;font-weight:600;">Value</th>
           </tr>
@@ -243,12 +243,12 @@ export default function ReportsPage() {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #6366F1;
+      background: #FF2D2D;
     }
     .brand-name {
       font-size: 13px;
       font-weight: 600;
-      color: #6366F1;
+      color: #FF2D2D;
       letter-spacing: 0.5px;
     }
     .title {
@@ -266,7 +266,7 @@ export default function ReportsPage() {
     .section-title {
       font-size: 11px;
       font-weight: 600;
-      color: #6366F1;
+      color: #FF2D2D;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin: 0 0 16px;
@@ -284,7 +284,7 @@ export default function ReportsPage() {
       display: inline-block;
       margin: 0 auto 32px;
       padding: 10px 24px;
-      background: #6366F1;
+      background: #FF2D2D;
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -410,7 +410,7 @@ export default function ReportsPage() {
             transition={{ duration: 0.22, delay: index * 0.06 }}
             whileHover={{ y: -2 }}
           >
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
             <div className="flex items-center justify-between mb-2">
               <stat.icon size={14} className={stat.color} />
             </div>

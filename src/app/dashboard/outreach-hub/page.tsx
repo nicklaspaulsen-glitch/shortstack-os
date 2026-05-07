@@ -1722,7 +1722,7 @@ export default function OutreachHubPage() {
                 className="rounded-xl overflow-hidden relative"
                 style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
                 <div className="p-4">
                   <p className="text-[10px] text-muted mb-1">{stat.label}</p>
                   <p className="text-xl font-bold">{stat.value}</p>
@@ -1743,7 +1743,7 @@ export default function OutreachHubPage() {
             className="rounded-xl overflow-hidden"
             style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
             <div className="p-4 space-y-4">
             <h3 className="text-xs font-semibold flex items-center gap-2">
               <BarChart3 size={12} className="text-indigo-400" /> Channel Performance

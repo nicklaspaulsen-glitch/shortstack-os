@@ -8,9 +8,9 @@ function Defs({ id }: { id: string }) {
     <defs>
       {/* Indigo gradient (primary brand accent — replaces old gold) */}
       <linearGradient id={`${id}-gold`} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#818CF8" />
-        <stop offset="50%" stopColor="#6366F1" />
-        <stop offset="100%" stopColor="#4338CA" />
+        <stop offset="0%" stopColor="#FF5252" />
+        <stop offset="50%" stopColor="#FF2D2D" />
+        <stop offset="100%" stopColor="#CC1A1A" />
       </linearGradient>
       {/* Blue gradient */}
       <linearGradient id={`${id}-blue`} x1="0" y1="0" x2="1" y2="1">
@@ -39,8 +39,8 @@ function Defs({ id }: { id: string }) {
       </linearGradient>
       {/* Radial glow — indigo */}
       <radialGradient id={`${id}-glow`} cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0%" stopColor="#6366F1" stopOpacity="0.22" />
-        <stop offset="100%" stopColor="#6366F1" stopOpacity="0" />
+        <stop offset="0%" stopColor="#FF2D2D" stopOpacity="0.22" />
+        <stop offset="100%" stopColor="#FF2D2D" stopOpacity="0" />
       </radialGradient>
       {/* Soft shadow blur filter */}
       <filter id={`${id}-soft-shadow`} x="-50%" y="-50%" width="200%" height="200%">
@@ -167,7 +167,7 @@ export function EmptyMessagesIllustration({ size = 200 }: { size?: number }) {
       {/* Paper plane */}
       <g filter={`url(#${id}-soft-shadow)`}>
         <path d="M70 165 L170 110 L145 100 L120 150 L100 130 Z" fill={`url(#${id}-gold)`} />
-        <path d="M100 130 L120 150 L125 135 Z" fill="#4338CA" />
+        <path d="M100 130 L120 150 L125 135 Z" fill="#CC1A1A" />
         <path d="M70 165 L100 130 L120 150 Z" fill={`url(#${id}-gold)`} opacity="0.7" />
       </g>
     </svg>
@@ -195,7 +195,7 @@ export function EmptyCampaignsIllustration({ size = 200 }: { size?: number }) {
         <circle cx="125" cy="65" r="4" fill="white" opacity="0.3" />
         {/* Fins */}
         <path d="M115 100 L105 120 L115 115 Z" fill={`url(#${id}-gold)`} />
-        <path d="M135 100 L145 120 L135 115 Z" fill="#4338CA" />
+        <path d="M135 100 L145 120 L135 115 Z" fill="#CC1A1A" />
         {/* Flame */}
         <path d="M120 112 L125 130 L130 112 Q125 120 120 112 Z" fill={`url(#${id}-sunset)`} opacity="0.9" />
       </g>
@@ -248,7 +248,7 @@ export function EmptyCalendarIllustration({ size = 200 }: { size?: number }) {
         <rect x="134" y="45" width="6" height="20" rx="3" fill="#1a1a2e" />
         {/* Dates */}
         {[0,1,2,3,4].map(r => [0,1,2,3,4,5].map(c => (
-          <circle key={`${r}-${c}`} cx={54 + c*18} cy={96 + r*14} r="3.5" fill="#6366F1" opacity={r*5+c === 8 ? 1 : 0.18} />
+          <circle key={`${r}-${c}`} cx={54 + c*18} cy={96 + r*14} r="3.5" fill="#FF2D2D" opacity={r*5+c === 8 ? 1 : 0.18} />
         )))}
       </g>
       {/* Sparkle */}

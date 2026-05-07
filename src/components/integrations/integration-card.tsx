@@ -192,7 +192,7 @@ export default function IntegrationCard({
             onClick={() => onConnect(integration)}
             className="flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-md text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             style={{
-              background: "#6366F1",
+              background: "#FF2D2D",
               boxShadow:
                 "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(255,255,255,0.45)",
             }}

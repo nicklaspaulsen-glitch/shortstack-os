@@ -318,7 +318,7 @@ export default function LlmCostsDashboard() {
                     }}
                     formatter={(value) => formatUsd(Number(value))}
                   />
-                  <Bar dataKey="cost_usd" fill="#6366F1" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="cost_usd" fill="#FF2D2D" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

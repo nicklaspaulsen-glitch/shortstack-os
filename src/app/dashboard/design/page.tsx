@@ -168,21 +168,21 @@ const INDUSTRY_STYLES: Record<string, string> = {
 };
 
 const COLOR_PALETTES = [
-  { name: "Professional", colors: ["#1a1a2e", "#16213e", "#0f3460", "#e94560", "#6366F1"] },
+  { name: "Professional", colors: ["#1a1a2e", "#16213e", "#0f3460", "#e94560", "#FF2D2D"] },
   { name: "Fresh & Clean", colors: ["#ffffff", "#f0f0f0", "#2d3436", "#00cec9", "#6c5ce7"] },
   { name: "Bold & Vibrant", colors: ["#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3", "#54a0ff"] },
-  { name: "Luxury Gold", colors: ["#0d0d0d", "#1a1a1a", "#6366F1", "#e8d5a3", "#ffffff"] },
+  { name: "Luxury Gold", colors: ["#0d0d0d", "#1a1a1a", "#FF2D2D", "#e8d5a3", "#ffffff"] },
   { name: "Nature", colors: ["#2d5016", "#3a7d0a", "#87c159", "#f5f5dc", "#8b4513"] },
   { name: "Ocean", colors: ["#003545", "#006d77", "#83c5be", "#edf6f9", "#ffddd2"] },
   { name: "Sunset", colors: ["#2b1055", "#d63230", "#f5a623", "#f7dc6f", "#fed8b1"] },
-  { name: "Minimal Dark", colors: ["#0a0a0a", "#1a1a1a", "#333333", "#ffffff", "#6366F1"] },
+  { name: "Minimal Dark", colors: ["#0a0a0a", "#1a1a1a", "#333333", "#ffffff", "#FF2D2D"] },
   { name: "Neon Pop", colors: ["#0D0D0D", "#FF00FF", "#00FF87", "#FFE600", "#00D4FF"] },
-  { name: "Pastel Dream", colors: ["#FDA4AF", "#A5B4FC", "#86EFAC", "#FDE68A", "#FBCFE8"] },
+  { name: "Pastel Dream", colors: ["#FDA4AF", "#FF8080", "#86EFAC", "#FDE68A", "#FBCFE8"] },
   { name: "Earth Tones", colors: ["#78350F", "#92400E", "#B45309", "#D4A574", "#FDF8E1"] },
   { name: "Coral Reef", colors: ["#FF6B6B", "#EE5A6F", "#F8B595", "#F5E6CC", "#355C7D"] },
   { name: "Cyberpunk", colors: ["#0A0A1A", "#1A0533", "#FF2D95", "#00F0FF", "#FFE600"] },
   { name: "Forest Moss", colors: ["#1B3A2D", "#2D5016", "#5B8C3E", "#A8C686", "#F0F5E8"] },
-  { name: "Royal Purple", colors: ["#1A0533", "#2D1B69", "#6D28D9", "#A78BFA", "#EDE9FE"] },
+  { name: "Royal Purple", colors: ["#1A0533", "#2D1B69", "#6D28D9", "#FF6B6B", "#EDE9FE"] },
   { name: "Warm Autumn", colors: ["#451A03", "#9A3412", "#EA580C", "#F97316", "#FED7AA"] },
   { name: "Ice Blue", colors: ["#0C1929", "#1E3A5F", "#2563EB", "#60A5FA", "#DBEAFE"] },
   { name: "Rose Gold", colors: ["#1A1A1A", "#4A2040", "#B76E79", "#E8C4B8", "#FFF5F5"] },
@@ -361,11 +361,11 @@ export default function DesignStudioPage() {
   // ---------- New Feature State ----------
   const [toolsTab, setToolsTab] = useState<string>("brand-kit");
   const [brandKits, setBrandKits] = useState<BrandKit[]>([
-    { id: "1", name: "Default Brand", colors: ["#6366F1", "#1a1a2e", "#16213e", "#ffffff", "#f0f0f0"], fonts: { heading: "Montserrat Bold", body: "Open Sans Regular" }, logoUrl: "" },
+    { id: "1", name: "Default Brand", colors: ["#FF2D2D", "#1a1a2e", "#16213e", "#ffffff", "#f0f0f0"], fonts: { heading: "Montserrat Bold", body: "Open Sans Regular" }, logoUrl: "" },
   ]);
   const [activeBrandKit, setActiveBrandKit] = useState<string>("1");
   const [newBrandKitName, setNewBrandKitName] = useState("");
-  const [newBrandColor, setNewBrandColor] = useState("#6366F1");
+  const [newBrandColor, setNewBrandColor] = useState("#FF2D2D");
 
   // Smart Resize
   const [resizeSource, setResizeSource] = useState<string>("");
@@ -412,7 +412,7 @@ export default function DesignStudioPage() {
 
   // Pattern Generator
   const [patternType, setPatternType] = useState("geometric");
-  const [patternColor1, setPatternColor1] = useState("#6366F1");
+  const [patternColor1, setPatternColor1] = useState("#FF2D2D");
   const [patternColor2, setPatternColor2] = useState("#1a1a2e");
   const [patternScale, setPatternScale] = useState(50);
 
@@ -472,13 +472,13 @@ export default function DesignStudioPage() {
 
   // Mood Board
   const [moodBoardItems, setMoodBoardItems] = useState<Array<{ id: string; type: "color" | "image" | "note"; value: string }>>([
-    { id: "m1", type: "color", value: "#6366F1" },
+    { id: "m1", type: "color", value: "#FF2D2D" },
     { id: "m2", type: "color", value: "#1a1a2e" },
     { id: "m3", type: "note", value: "Minimalist luxury feel" },
     { id: "m4", type: "note", value: "Gold accents on dark background" },
   ]);
   const [newMoodNote, setNewMoodNote] = useState("");
-  const [newMoodColor, setNewMoodColor] = useState("#6366F1");
+  const [newMoodColor, setNewMoodColor] = useState("#FF2D2D");
 
   // AI Style Transfer
   const [styleTransferSource, setStyleTransferSource] = useState("");
@@ -522,7 +522,7 @@ export default function DesignStudioPage() {
   function handleExtractColors() {
     setExtractingColors(true);
     setTimeout(() => {
-      setExtractedColors(["#2d3436", "#636e72", "#b2bec3", "#dfe6e9", "#6366F1", "#e17055"]);
+      setExtractedColors(["#2d3436", "#636e72", "#b2bec3", "#dfe6e9", "#FF2D2D", "#e17055"]);
       setExtractingColors(false);
       toast.success("Extracted 6 colors from image");
     }, 1500);
@@ -989,10 +989,10 @@ export default function DesignStudioPage() {
                 transition={{ delay: i * 0.06, duration: 0.4 }}
                 whileHover={{ y: -4, scale: 1.01 }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
                 <div className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 bg-[rgba(255,255,255,0.1)] rounded-xl flex items-center justify-center text-[#6366F1]">
+                  <div className="w-9 h-9 bg-[rgba(255,255,255,0.1)] rounded-xl flex items-center justify-center text-[#FF2D2D]">
                     {section.icon}
                   </div>
                   <div className="flex-1">
@@ -1106,13 +1106,13 @@ export default function DesignStudioPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03, duration: 0.35 }}
                 whileHover={{ y: -3, scale: 1.02 }}
-                className={`rounded-xl overflow-hidden text-left ${selectedTemplate?.label === t.label ? "border-[#6366F1]/40" : ""}`}
+                className={`rounded-xl overflow-hidden text-left ${selectedTemplate?.label === t.label ? "border-[#FF2D2D]/40" : ""}`}
                 style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: selectedTemplate?.label === t.label ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.1)" }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
                 <div className="p-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[#6366F1]">{t.icon}</span>
+                  <span className="text-[#FF2D2D]">{t.icon}</span>
                   <span className="text-[8px] text-muted bg-white/5 px-1.5 py-0.5 rounded capitalize">{t.category}</span>
                 </div>
                 <p className="text-[11px] font-semibold">{t.label}</p>
@@ -1138,10 +1138,10 @@ export default function DesignStudioPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04, duration: 0.35 }}
                 whileHover={{ y: -3, scale: 1.02 }}
-                className={`rounded-xl overflow-hidden text-left ${selectedPalette?.name === palette.name ? "border-[#6366F1]/40" : ""}`}
+                className={`rounded-xl overflow-hidden text-left ${selectedPalette?.name === palette.name ? "border-[#FF2D2D]/40" : ""}`}
                 style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: selectedPalette?.name === palette.name ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.1)" }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
                 <div className="p-4">
                 <p className="text-xs font-semibold mb-2">{palette.name}</p>
                 <div className="flex gap-1 mb-2">

@@ -142,7 +142,7 @@ export default function SectionHub({
 
       {/* Rolling preview marquee (optional — each hub can pass its own set) */}
       {preview && preview.items.length > 0 && (
-        <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-5">
+        <div className="relative overflow-hidden border border-border bg-surface-light/30 py-5">
           <div className="absolute inset-0 pointer-events-none">
             <RollingPreview
               items={preview.items}

@@ -141,12 +141,12 @@ export default function DesignStudioPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06, duration: 0.4 }}
                   whileHover={{ y: -4, scale: 1.02 }}
-                  className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#6366F1]/40 transition-colors group"
+                  className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#FF2D2D]/40 transition-colors group"
                   style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", width: "calc(100% + 32px)", marginLeft: -16, marginRight: -16, marginBottom: 8, flexShrink: 0 }} />
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", width: "calc(100% + 32px)", marginLeft: -16, marginRight: -16, marginBottom: 8, flexShrink: 0 }} />
                   <div
-                    className="border border-white/20 bg-white/5 rounded group-hover:border-[#6366F1]/50 transition-colors"
+                    className="border border-white/20 bg-white/5 rounded group-hover:border-[#FF2D2D]/50 transition-colors"
                     style={{
                       width: 48,
                       height: Math.round(48 * (preset.height / preset.width)),
@@ -177,7 +177,7 @@ export default function DesignStudioPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0a0a14]">
-        <Loader2 size={32} className="animate-spin text-[#6366F1]" />
+        <Loader2 size={32} className="animate-spin text-[#FF2D2D]" />
       </div>
     );
   }
@@ -231,10 +231,10 @@ function RecentDesigns() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.05, duration: 0.35 }}
           whileHover={{ y: -4, scale: 1.01 }}
-          className="rounded-xl overflow-hidden hover:border-[#6366F1]/30 transition-colors group"
+          className="rounded-xl overflow-hidden hover:border-[#FF2D2D]/30 transition-colors group"
           style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+          <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
           <div className="relative aspect-video bg-[#1a1a2e] flex items-center justify-center">
             {d.thumbnail_url ? (
               <Image

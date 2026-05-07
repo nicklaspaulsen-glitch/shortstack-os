@@ -46,7 +46,7 @@ export default function IntakeFormClient({ formId }: { formId: string }) {
       });
   }, [formId]);
 
-  const accent = form?.brand_color ?? "#6366F1";
+  const accent = form?.brand_color ?? "#FF2D2D";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

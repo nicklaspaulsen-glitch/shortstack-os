@@ -111,11 +111,11 @@ function StepCard({ step, idx }: { step: Step; idx: number }) {
             border: "1px solid rgba(255,255,255,0.18)",
           }}
         >
-          <step.icon size={20} style={{ color: "#A78BFA" }} />
+          <step.icon size={20} style={{ color: "#FF6B6B" }} />
         </div>
         <span
           className="text-3xl font-extrabold opacity-30 group-hover:opacity-60 transition-opacity"
-          style={{ color: "#A78BFA" }}
+          style={{ color: "#FF6B6B" }}
         >
           {step.num}
         </span>
@@ -197,7 +197,7 @@ function StepVisual({ idx }: { idx: number }) {
         }}
       >
         {[
-          { Icon: Sparkles, label: "AI drafted 12 cold emails", color: "#A78BFA", delay: 0 },
+          { Icon: Sparkles, label: "AI drafted 12 cold emails", color: "#FF6B6B", delay: 0 },
           { Icon: Phone, label: "AI booked 3 meetings", color: "#10b981", delay: 0.5 },
           { Icon: Zap, label: "Lead enriched + scored", color: "#3b82f6", delay: 1 },
         ].map((item, i) => (
@@ -257,7 +257,7 @@ function StepVisual({ idx }: { idx: number }) {
               height: `${h}%`,
               background:
                 i === 6
-                  ? "linear-gradient(180deg, #6366F1, #4F46E5)"
+                  ? "linear-gradient(180deg, #FF2D2D, #CC2424)"
                   : "rgba(255,255,255,0.25)",
               animation: "bar-grow 1.4s ease-out forwards",
               animationDelay: `${i * 0.08}s`,

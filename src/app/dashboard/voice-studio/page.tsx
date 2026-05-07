@@ -166,7 +166,7 @@ export default function VoiceStudioPage() {
       {/* Higgsfield-style slim header */}
       <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(255,255,255,0.08)] bg-[#080809]">
         <div className="w-7 h-7 rounded-xl bg-[rgba(255,255,255,0.12)] flex items-center justify-center shrink-0">
-          <Mic size={13} className="text-[#6366F1]" />
+          <Mic size={13} className="text-[#FF2D2D]" />
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Voice Studio</h1>
@@ -176,9 +176,9 @@ export default function VoiceStudioPage() {
           <motion.span
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.15)] text-[#A78BFA]"
+            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.15)] text-[#FF6B6B]"
           >
-            <span className="w-1 h-1 rounded-full bg-[#6366F1] animate-pulse" />
+            <span className="w-1 h-1 rounded-full bg-[#FF2D2D] animate-pulse" />
             {stats.mineCount} voice{stats.mineCount !== 1 ? "s" : ""}
           </motion.span>
         )}
@@ -378,7 +378,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
     <PrismPanel rainbow padding="p-6" className="rounded-xl">
       <div className="flex items-start gap-4">
         <div className="rounded-lg border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] p-2.5">
-          <Upload size={20} className="text-[#6366F1]" />
+          <Upload size={20} className="text-[#FF2D2D]" />
         </div>
         <div className="flex-1 space-y-4">
           <div>
@@ -402,7 +402,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-indigo-500/30 px-4 py-6 text-sm text-[#6366F1]/80 hover:border-indigo-500/50 transition-colors"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-indigo-500/30 px-4 py-6 text-sm text-[#FF2D2D]/80 hover:border-indigo-500/50 transition-colors"
             style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
           >
             <Upload size={16} />
@@ -449,7 +449,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                   onClick={() => setConsentKind(opt.key)}
                   className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
                     consentKind === opt.key
-                      ? "border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.08)] text-[#6366F1]"
+                      ? "border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.08)] text-[#FF2D2D]"
                       : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
                   }`}
                 >
@@ -470,13 +470,13 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
 
           <div className="flex items-center justify-between gap-4">
             {submitMsg && (
-              <div className="text-sm text-[#6366F1]/80">{submitMsg}</div>
+              <div className="text-sm text-[#FF2D2D]/80">{submitMsg}</div>
             )}
             <button
               type="button"
               onClick={onSubmit}
               disabled={submitting}
-              className="ml-auto flex items-center gap-2 rounded-lg bg-[#6366F1] px-4 py-2 text-sm font-medium text-white hover:bg-[#6366F1]/90 transition-colors disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
+              className="ml-auto flex items-center gap-2 rounded-lg bg-[#FF2D2D] px-4 py-2 text-sm font-medium text-white hover:bg-[#FF2D2D]/90 transition-colors disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
             >
               {submitting ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -566,14 +566,14 @@ function CloneRow({
   return (
     <div className="rounded-xl p-5 cursor-pointer tilt-3d" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
       <div className="flex flex-wrap items-start gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] text-[#6366F1]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] text-[#FF2D2D]">
           <Mic size={20} />
         </div>
         <div className="flex-1 min-w-[180px]">
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={`/dashboard/voice-studio/${clone.id}`}
-              className="text-sm font-semibold text-white hover:text-[#6366F1] transition-colors"
+              className="text-sm font-semibold text-white hover:text-[#FF2D2D] transition-colors"
             >
               {clone.label}
             </Link>
@@ -764,7 +764,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
           <button
             type="button"
             onClick={onRefresh}
-            className="mt-4 flex items-center gap-2 rounded-lg bg-[#6366F1] px-4 py-2 text-sm font-medium text-white hover:bg-[#5E5BFF] transition-colors cursor-pointer"
+            className="mt-4 flex items-center gap-2 rounded-lg bg-[#FF2D2D] px-4 py-2 text-sm font-medium text-white hover:bg-[#5E5BFF] transition-colors cursor-pointer"
           >
             <RefreshCw size={14} />
             Seed preset library
@@ -786,7 +786,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search presets…"
-            className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50"
+            className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#FF2D2D]/50"
             style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           />
         </div>
@@ -801,7 +801,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               className={[
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
                 genderFilter === g
-                  ? "border border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.08)] text-[#6366F1]"
+                  ? "border border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.08)] text-[#FF2D2D]"
                   : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
               ].join(" ")}
             >
@@ -819,8 +819,8 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                   key={c}
                   type="button"
                   onClick={() => setCategoryFilter(c)}
-                  className="relative rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1]/60"
-                  style={{ color: isActive ? "#6366F1" : "rgba(255,255,255,0.55)" }}
+                  className="relative rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF2D2D]/60"
+                  style={{ color: isActive ? "#FF2D2D" : "rgba(255,255,255,0.55)" }}
                 >
                   {isActive && (
                     <motion.span
@@ -840,7 +840,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             <select
               value={langFilter}
               onChange={(e) => setLangFilter(e.target.value)}
-              className="ml-auto rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50 cursor-pointer"
+              className="ml-auto rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70 focus:outline-none focus:ring-1 focus:ring-[#FF2D2D]/50 cursor-pointer"
             >
               {languages.map((l) => (
                 <option key={l} value={l} className="bg-[#17171A]">
@@ -965,18 +965,18 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
       }}
     >
       {/* Rainbow top bar */}
-      <div style={{ height: 2, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899)" }} className="rounded-t-xl" />
+      <div style={{ height: 2, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899)" }} className="rounded-t-xl" />
       <div className="p-5 flex flex-col flex-1">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] text-[#6366F1]">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] text-[#FF2D2D]">
             <Mic size={16} />
           </div>
           <div className="flex items-center gap-1.5">
             <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
               {lang}
             </span>
-            <span className="rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#6366F1]/70">
+            <span className="rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#FF2D2D]/70">
               {category}
             </span>
           </div>
@@ -997,7 +997,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               rows={3}
               maxLength={300}
               placeholder="Type what you want the voice to say…"
-              className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50 resize-none"
+              className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#FF2D2D]/50 resize-none"
             />
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-white/30">{testText.length}/300</span>
@@ -1005,7 +1005,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 <button
                   type="button"
                   onClick={() => { setEditMode(false); onTest(); }}
-                  className="text-[10px] text-[rgba(255,255,255,0.7)] hover:text-[#6366F1] cursor-pointer"
+                  className="text-[10px] text-[rgba(255,255,255,0.7)] hover:text-[#FF2D2D] cursor-pointer"
                 >
                   Preview
                 </button>
@@ -1025,7 +1025,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             <button
               type="button"
               onClick={() => setEditMode(true)}
-              className="flex-shrink-0 text-[10px] text-[rgba(255,255,255,0.55)] hover:text-[#6366F1] cursor-pointer"
+              className="flex-shrink-0 text-[10px] text-[rgba(255,255,255,0.55)] hover:text-[#FF2D2D] cursor-pointer"
               aria-label="Edit test phrase"
             >
               Edit
@@ -1043,7 +1043,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               "flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer",
               // Pulse border when hover detected but audio not yet loading
               isHovering && !testing && !testUrl
-                ? "border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.05)] text-[#6366F1]/80 animate-pulse"
+                ? "border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.05)] text-[#FF2D2D]/80 animate-pulse"
                 : "border-white/15 bg-white/5 text-white hover:bg-white/10",
               "disabled:cursor-not-allowed disabled:opacity-40",
             ].join(" ")}
@@ -1065,7 +1065,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             className={[
               "flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed",
               saved
-                ? "border-[rgba(255,255,255,0.25)] bg-[rgba(255,255,255,0.07)] text-[#6366F1]/70"
+                ? "border-[rgba(255,255,255,0.25)] bg-[rgba(255,255,255,0.07)] text-[#FF2D2D]/70"
                 : "border-white/15 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white",
             ].join(" ")}
           >
@@ -1081,7 +1081,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             <audio src={testUrl ?? prevUrlRef.current ?? ""} controls className="w-full" style={{ height: 32 }} />
             {testing && (
               <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
-                <Loader2 size={16} className="animate-spin text-[#6366F1]" />
+                <Loader2 size={16} className="animate-spin text-[#FF2D2D]" />
               </div>
             )}
           </div>

@@ -79,7 +79,7 @@ export default function ReplaceStack() {
             className="text-center mt-10 py-7 relative overflow-hidden"
             style={{
               background:
-                "linear-gradient(135deg, rgba(255,255,255,0.07), rgba(167,139,250,0.04))",
+                "linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255, 107, 107,0.04))",
               border: "1px solid rgba(255,255,255,0.18)",
             }}
           >
@@ -98,7 +98,7 @@ export default function ReplaceStack() {
               className="text-4xl md:text-5xl font-extrabold mb-2 relative"
               style={{
                 background:
-                  "linear-gradient(135deg, #6366F1, #A78BFA 60%, #E0E7FF)",
+                  "linear-gradient(135deg, #FF2D2D, #FF6B6B 60%, #FFE0E0)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}

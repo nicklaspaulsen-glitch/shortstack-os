@@ -20,7 +20,7 @@ interface AgentAvatarProps {
 
 const STATUS_COLORS: Record<AgentStatus, { glow: string; accent: string }> = {
   idle:     { glow: "rgba(59, 130, 246, 0.4)",  accent: "#60A5FA" },
-  working:  { glow: "rgba(99, 102, 241, 0.5)",   accent: "#6366F1" },
+  working:  { glow: "rgba(255, 45, 45, 0.5)",   accent: "#FF2D2D" },
   thinking: { glow: "rgba(168, 85, 247, 0.5)",  accent: "#A855F7" },
   error:    { glow: "rgba(239, 68, 68, 0.5)",   accent: "#EF4444" },
   success:  { glow: "rgba(16, 185, 129, 0.5)",  accent: "#10B981" },
@@ -345,7 +345,7 @@ function renderFace(face: AgentFace, accent: string, status: AgentStatus) {
       return (
         <>
           {/* Hat */}
-          <path d="M 30 36 L 50 8 L 70 36 Z" fill="#6366F1" />
+          <path d="M 30 36 L 50 8 L 70 36 Z" fill="#FF2D2D" />
           <path d="M 30 36 L 50 8 L 70 36 Z" fill="url(#hatGrad)" opacity="0.4" />
           <defs>
             <linearGradient id="hatGrad"><stop offset="0" stopColor="#fff" /><stop offset="1" stopColor="#000" /></linearGradient>
@@ -355,7 +355,7 @@ function renderFace(face: AgentFace, accent: string, status: AgentStatus) {
           <circle cx="55" cy="18" r="1" fill={accent} />
           <circle cx="50" cy="28" r="1.2" fill={accent} />
           {/* Hat brim */}
-          <ellipse cx="50" cy="36" rx="22" ry="4" fill="#4F46E5" />
+          <ellipse cx="50" cy="36" rx="22" ry="4" fill="#CC2424" />
           {/* Face */}
           <ellipse cx="50" cy="56" rx="24" ry="26" fill="#FED7AA" />
           {/* Beard */}

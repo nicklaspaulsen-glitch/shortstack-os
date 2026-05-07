@@ -7,8 +7,8 @@ import {
   Package, Globe,
 } from "lucide-react";
 
-const GOLD = "#6366F1";
-const GOLD_LIGHT = "#A78BFA";
+const GOLD = "#FF2D2D";
+const GOLD_LIGHT = "#FF6B6B";
 
 // Lucide icon compatible — accept any component that takes size + className
 type LucideLike = React.ComponentType<React.SVGProps<SVGSVGElement> & { size?: number | string }>;

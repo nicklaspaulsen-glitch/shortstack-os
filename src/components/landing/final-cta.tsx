@@ -24,7 +24,7 @@ export default function FinalCTA() {
             style={{
               background: "rgba(255,255,255,0.07)",
               border: "1px solid rgba(255,255,255,0.12)",
-              color: "#A78BFA",
+              color: "#FF6B6B",
             }}
           >
             <Shield size={10} />
@@ -38,7 +38,7 @@ export default function FinalCTA() {
             Run your agency on{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #6366F1, #A78BFA)",
+                background: "linear-gradient(135deg, #FF2D2D, #FF6B6B)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -58,7 +58,7 @@ export default function FinalCTA() {
               href="/pricing"
               className="group flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all hover:shadow-lg"
               style={{
-                background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+                background: "linear-gradient(135deg, #FF2D2D, #CC2424)",
                 color: "#fff",
                 boxShadow: "0 0 40px rgba(255,255,255,0.12)",
               }}

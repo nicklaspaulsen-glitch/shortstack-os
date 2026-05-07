@@ -348,7 +348,7 @@ export default function VoiceCloneDetailPage() {
                   value={testText}
                   onChange={(e) => setTestText(e.target.value)}
                   rows={3}
-                  className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#6366F1]/60 focus:outline-none"
+                  className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#FF2D2D]/60 focus:outline-none"
                   placeholder="Test text..."
                 />
                 <div className="mt-3 flex items-center gap-2">
@@ -356,7 +356,7 @@ export default function VoiceCloneDetailPage() {
                     type="button"
                     onClick={onTest}
                     disabled={testing || testText.trim().length === 0}
-                    className="flex items-center gap-1.5 rounded-lg bg-[#6366F1] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#A78BFA] disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
+                    className="flex items-center gap-1.5 rounded-lg bg-[#FF2D2D] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#FF6B6B] disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
                   >
                     {testing ? (
                       <Loader2 size={12} className="animate-spin" />
@@ -415,10 +415,10 @@ export default function VoiceCloneDetailPage() {
                               <button
                                 type="button"
                                 onClick={() => setPlayingSampleId(isPlaying ? null : s.id)}
-                                className="flex-shrink-0 w-6 h-6 rounded-full bg-[#6366F1]/20 hover:bg-[#6366F1]/40 flex items-center justify-center transition-colors"
+                                className="flex-shrink-0 w-6 h-6 rounded-full bg-[#FF2D2D]/20 hover:bg-[#FF2D2D]/40 flex items-center justify-center transition-colors"
                                 aria-label={isPlaying ? "Pause" : "Play"}
                               >
-                                {isPlaying ? <Pause size={10} className="text-[#A78BFA]" /> : <Play size={10} className="text-[#6366F1]" />}
+                                {isPlaying ? <Pause size={10} className="text-[#FF6B6B]" /> : <Play size={10} className="text-[#FF2D2D]" />}
                               </button>
                             ) : (
                               <div className="flex-shrink-0 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
@@ -486,10 +486,10 @@ export default function VoiceCloneDetailPage() {
                             <button
                               type="button"
                               onClick={() => setPlayingRenderId(isPlaying ? null : r.id)}
-                              className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-[#6366F1]/20 hover:bg-[#6366F1]/40 flex items-center justify-center transition-colors"
+                              className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-[#FF2D2D]/20 hover:bg-[#FF2D2D]/40 flex items-center justify-center transition-colors"
                               aria-label={isPlaying ? "Pause" : "Play"}
                             >
-                              {isPlaying ? <Pause size={10} className="text-[#A78BFA]" /> : <Play size={10} className="text-[#6366F1]" />}
+                              {isPlaying ? <Pause size={10} className="text-[#FF6B6B]" /> : <Play size={10} className="text-[#FF2D2D]" />}
                             </button>
                           ) : (
                             <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">

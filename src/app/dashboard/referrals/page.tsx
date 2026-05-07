@@ -371,7 +371,7 @@ export default function ReferralsPage() {
           { icon: <Clock size={14} />, accent: "#a855f7", label: "Pending payout", value: meLoading ? "—" : fmtCents(me?.stats.pending_payout_cents ?? 0), sublabel: "Paid on the 1st" },
         ].map((tile, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
             <StatCard {...tile} />
           </motion.div>
         ))}

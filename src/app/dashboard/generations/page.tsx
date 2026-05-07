@@ -145,7 +145,7 @@ export default function GenerationsPage() {
           { label: "Latest",       value: latest,           icon: <Clock size={14} />,       color: "text-purple-400" },
         ].map((s, i) => (
           <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
             <div className="py-2.5 px-3 flex items-center gap-3">
               <div className={s.color}>{s.icon}</div>
               <div>

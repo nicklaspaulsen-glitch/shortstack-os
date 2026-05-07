@@ -33,7 +33,7 @@ type SortDir = "asc" | "desc";
 type ViewMode = "table" | "card";
 
 const TAG_PRESETS: ClientTag[] = [
-  { label: "VIP", color: "#6366F1" },
+  { label: "VIP", color: "#FF2D2D" },
   { label: "At Risk", color: "#f43f5e" },
   { label: "New", color: "#38bdf8" },
   { label: "Enterprise", color: "#8b5cf6" },
@@ -649,8 +649,8 @@ export default function ClientsPage() {
             {/* Stat chips */}
             {clients.length > 0 && (
               <div className="hidden sm:flex items-center gap-1.5">
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.18)] text-[10px] font-medium text-[#6366F1]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
+                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.18)] text-[10px] font-medium text-[#FF2D2D]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
                   {clients.length}
                 </span>
                 {totalMRR > 0 && (
@@ -666,7 +666,7 @@ export default function ClientsPage() {
                 <button
                   onClick={() => setScope("all")}
                   className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                    scope === "all" ? "bg-[#6366F1] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
+                    scope === "all" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
                   }`}
                   title="See every client across every agency"
                 >
@@ -675,7 +675,7 @@ export default function ClientsPage() {
                 <button
                   onClick={() => setScope("mine")}
                   className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                    scope === "mine" ? "bg-[#6366F1] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
+                    scope === "mine" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
                   }`}
                   title="See only the clients you personally added"
                 >
@@ -686,7 +686,7 @@ export default function ClientsPage() {
             {/* Add Client CTA */}
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-semibold hover:bg-[#4F46E5] transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D2D] text-white text-xs font-semibold hover:bg-[#CC2424] transition-all"
             >
               <Plus size={13} /> Add Client
             </button>
@@ -746,7 +746,7 @@ export default function ClientsPage() {
             aria-selected={tab === t}
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
-              tab === t ? "bg-[#6366F1] text-white font-medium" : "text-muted hover:text-foreground"
+              tab === t ? "bg-[#FF2D2D] text-white font-medium" : "text-muted hover:text-foreground"
             }`}
           >
             {t === "billing" && <CreditCard size={14} />}
@@ -774,10 +774,10 @@ export default function ClientsPage() {
 
             {/* Feature 9: Advanced Filters Toggle */}
             <button onClick={() => setShowFilters(!showFilters)}
-              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(255,255,255,0.1)] text-[#6366F1] border-[rgba(255,255,255,0.25)]" : ""}`}>
+              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(255,255,255,0.1)] text-[#FF2D2D] border-[rgba(255,255,255,0.25)]" : ""}`}>
               <Filter size={14} /> Filters
               {(filterIndustry || filterStatus !== "all" || filterTag || filterMrrMin || filterMrrMax) && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D]" />
               )}
             </button>
 
@@ -793,7 +793,7 @@ export default function ClientsPage() {
               ]).map(s => (
                 <button key={s.field} onClick={() => handleSort(s.field)}
                   className={`px-2 py-1 text-[10px] rounded-md transition-all flex items-center gap-0.5 ${
-                    sortField === s.field ? "bg-[#6366F1] text-white font-medium" : "text-muted hover:text-foreground"
+                    sortField === s.field ? "bg-[#FF2D2D] text-white font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {s.label}
                   {sortField === s.field && (
@@ -806,11 +806,11 @@ export default function ClientsPage() {
             {/* Feature 15: View Mode Toggle */}
             <div className="flex items-center gap-0.5 bg-surface rounded-lg p-0.5">
               <button onClick={() => setViewMode("table")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#6366F1] text-white" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#FF2D2D] text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutList size={14} />
               </button>
               <button onClick={() => setViewMode("card")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#6366F1] text-white" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#FF2D2D] text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutGrid size={14} />
               </button>
             </div>
@@ -1023,7 +1023,7 @@ export default function ClientsPage() {
                 <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(255,255,255,0.08)] overflow-hidden">
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">MRR</p>
-                    <p className="text-xs font-bold text-[#6366F1]">{formatCurrency(c.mrr)}</p>
+                    <p className="text-xs font-bold text-[#FF2D2D]">{formatCurrency(c.mrr)}</p>
                   </div>
                   <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-[rgba(255,255,255,0.08)]">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Paid</p>
@@ -1044,7 +1044,7 @@ export default function ClientsPage() {
                     <span className="text-[9px] font-mono font-medium">{onboarding}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-[#7FE5B8]" : onboarding >= 60 ? "bg-[#6366F1]" : "bg-[#FFC062]"}`}
+                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-[#7FE5B8]" : onboarding >= 60 ? "bg-[#FF2D2D]" : "bg-[#FFC062]"}`}
                       style={{ width: `${onboarding}%` }} />
                   </div>
                 </div>
@@ -1138,7 +1138,7 @@ export default function ClientsPage() {
         </div>
       )}
       {tab === "clients" && viewMode === "table" && filteredClients.length > 0 && (
-        <div className="space-y-0 [&_tbody_tr:hover]:border-l-2 [&_tbody_tr:hover]:border-l-[#6366F1]/40">
+        <div className="space-y-0 [&_tbody_tr:hover]:border-l-2 [&_tbody_tr:hover]:border-l-[#FF2D2D]/40">
           <DataTable
             columns={[
               { key: "select", label: (
@@ -1288,10 +1288,10 @@ export default function ClientsPage() {
                   {[
                     { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#10B981" },
                     { label: "Health", value: `${client.health_score ?? "—"}%`, color: client.health_score >= 70 ? "#7FE5B8" : client.health_score >= 40 ? "#FFC062" : "#F26063" },
-                    { label: "Package", value: client.package_tier ?? "—", color: "#A78BFA" },
+                    { label: "Package", value: client.package_tier ?? "—", color: "#FF6B6B" },
                     { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
                   ].map((tile, ti) => {
-                    const bars = ["from-[#10B981]","from-[#7FE5B8]","from-[#A78BFA]","from-[#6F6D7A]"];
+                    const bars = ["from-[#10B981]","from-[#7FE5B8]","from-[#FF6B6B]","from-[#6F6D7A]"];
                     return (
                       <div key={tile.label} className="relative rounded-xl border border-[rgba(255,255,255,0.1)] p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
                         <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${bars[ti]} to-transparent opacity-60`} />
@@ -1311,7 +1311,7 @@ export default function ClientsPage() {
                       {[
                         { action: "Invoice sent", time: "2 hours ago", icon: <FileText size={10} className="text-info" /> },
                         { action: "Content published", time: "1 day ago", icon: <CheckCircle size={10} className="text-success" /> },
-                        { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-[#6366F1]" /> },
+                        { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-[#FF2D2D]" /> },
                         { action: "Contract signed", time: "1 week ago", icon: <FileText size={10} className="text-gold" /> },
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-2 text-[10px]">

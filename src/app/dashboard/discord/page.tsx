@@ -690,7 +690,7 @@ export default function DiscordPage() {
                 transition={{ delay: i * 0.06, duration: 0.4 }}
                 className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
                 <div className="p-3 text-center">
                   <stat.icon size={16} className={`mx-auto mb-1 ${stat.color}`} />
                   <p className="text-lg font-bold font-mono">{stat.value}</p>

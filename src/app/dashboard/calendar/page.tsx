@@ -635,7 +635,7 @@ export default function CalendarPage() {
                       className="rounded-xl overflow-hidden relative"
                       style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
                     >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 left-0 right-0" />
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 left-0 right-0" />
                       <div className="flex justify-between text-xs p-2 pt-3">
                         <span className="text-muted">{stat.label}</span>
                         <span className={`font-bold ${stat.color}`}>{stat.value}</span>

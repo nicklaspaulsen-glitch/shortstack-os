@@ -423,9 +423,9 @@ export function unsubscribeFooterHtml(email: string): string {
     <div style="margin-top:32px;padding-top:16px;border-top:1px solid #222;text-align:center;">
       <p style="color:#555;font-size:11px;line-height:1.6;margin:0;">
         You received this email because your contact was added to an outreach campaign.<br/>
-        <a href="${link}" style="color:#6366F1;text-decoration:underline;">Unsubscribe</a>
+        <a href="${link}" style="color:#FF2D2D;text-decoration:underline;">Unsubscribe</a>
         &nbsp;·&nbsp;
-        <a href="https://app.shortstack.work/privacy" style="color:#6366F1;text-decoration:underline;">Privacy Policy</a>
+        <a href="https://app.shortstack.work/privacy" style="color:#FF2D2D;text-decoration:underline;">Privacy Policy</a>
       </p>
     </div>
   `;

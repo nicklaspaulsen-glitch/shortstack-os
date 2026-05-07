@@ -194,7 +194,7 @@ function BentoFallback() {
       </p>
       <Link
         href="/dashboard/monitor"
-        className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#6366F1] text-white"
+        className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#FF2D2D] text-white"
       >
         Check system status
       </Link>
@@ -219,7 +219,7 @@ function ClientDashboard() {
         {/* Acid Lime underline accent */}
         <div
           className="h-[2px] mt-1 rounded-full"
-          style={{ background: "linear-gradient(90deg, var(--brand-accent, #4F46E5) 0%, transparent 70%)" }}
+          style={{ background: "linear-gradient(90deg, var(--brand-accent, #CC2424) 0%, transparent 70%)" }}
           aria-hidden
         />
         <p className="text-sm text-muted mt-1.5">Your client portal</p>

@@ -82,7 +82,7 @@ const LOCATION_OPTIONS = [
 ];
 
 const COLOR_OPTIONS = [
-  "#6366F1", "#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ef4444", "#ec4899", "#06b6d4",
+  "#FF2D2D", "#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ef4444", "#ec4899", "#06b6d4",
 ];
 
 /* ------------------------------------------------------------------ */
@@ -136,7 +136,7 @@ export default function SchedulingPage() {
     duration: 30,
     description: "",
     location_type: "zoom",
-    color: "#6366F1",
+    color: "#FF2D2D",
     buffer_time: 0,
     max_bookings_per_day: "",
   });
@@ -189,7 +189,7 @@ export default function SchedulingPage() {
       });
       if (res.ok) {
         setShowCreateModal(false);
-        setNewMeeting({ name: "", duration: 30, description: "", location_type: "zoom", color: "#6366F1", buffer_time: 0, max_bookings_per_day: "" });
+        setNewMeeting({ name: "", duration: 30, description: "", location_type: "zoom", color: "#FF2D2D", buffer_time: 0, max_bookings_per_day: "" });
         fetchMeetingTypes();
       }
     } finally {
@@ -298,7 +298,7 @@ export default function SchedulingPage() {
             transition={{ delay: i * 0.06, duration: 0.4 }}
             className="glass rounded-xl overflow-hidden text-center"
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-3">
               <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
               <p className="text-[10px] text-muted">{stat.label}</p>
@@ -341,10 +341,10 @@ export default function SchedulingPage() {
                   whileHover={{ y: -4, scale: 1.01 }}
                   className={`glass rounded-xl overflow-hidden ${!mt.active ? "opacity-50" : ""}`}
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
                   <div className="p-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-3 h-full rounded-full shrink-0 mt-1" style={{ background: mt.color || "#6366F1", minHeight: 40 }} />
+                    <div className="w-3 h-full rounded-full shrink-0 mt-1" style={{ background: mt.color || "#FF2D2D", minHeight: 40 }} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
                         <p className="text-xs font-bold">{mt.name}</p>
@@ -508,7 +508,7 @@ export default function SchedulingPage() {
             </div>
             {showEmailPreview && (
               <div className="mt-3 rounded-xl bg-[#1a1c23] p-5 text-foreground text-xs">
-                <p className="font-bold text-base mb-2" style={{ color: "#6366F1" }}>ShortStack Creative</p>
+                <p className="font-bold text-base mb-2" style={{ color: "#FF2D2D" }}>ShortStack Creative</p>
                 <p className="mb-3">Hi <strong>[Client Name]</strong>,</p>
                 <p className="mb-2">Your <strong>[Meeting Type]</strong> has been confirmed!</p>
                 <div className="bg-white/5 rounded-lg p-3 mb-3">
@@ -776,7 +776,7 @@ export default function SchedulingPage() {
                 transition={{ delay: i * 0.06, duration: 0.4 }}
                 className="glass rounded-xl overflow-hidden text-center"
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
                 <div className="p-3">
                   <p className="text-[10px] text-muted">{stat.label}</p>
                   <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -814,7 +814,7 @@ export default function SchedulingPage() {
                             <div className="w-full h-7 rounded flex items-center justify-center text-[8px] font-bold transition-all"
                               style={{
                                 background: intensity > 0.7 ? "rgba(201,168,76,0.35)" : intensity > 0.4 ? "rgba(201,168,76,0.2)" : intensity > 0.1 ? "rgba(201,168,76,0.08)" : "rgba(255,255,255,0.02)",
-                                color: intensity > 0.4 ? "#6366F1" : "rgba(255,255,255,0.2)"
+                                color: intensity > 0.4 ? "#FF2D2D" : "rgba(255,255,255,0.2)"
                               }}>
                               {val}
                             </div>
@@ -851,10 +851,10 @@ export default function SchedulingPage() {
                   const pct = totalBookings > 0 ? (count / totalBookings) * 100 : 0;
                   return (
                     <div key={mt.id} className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full shrink-0" style={{ background: mt.color || "#6366F1" }} />
+                      <div className="w-3 h-3 rounded-full shrink-0" style={{ background: mt.color || "#FF2D2D" }} />
                       <span className="text-xs w-32 truncate">{mt.name}</span>
                       <div className="flex-1 h-2 rounded-full bg-surface-light overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: mt.color || "#6366F1" }} />
+                        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: mt.color || "#FF2D2D" }} />
                       </div>
                       <span className="text-xs font-bold w-8 text-right">{count}</span>
                     </div>

@@ -578,7 +578,7 @@ export default function InboxPage() {
               whileHover={{ y: -2 }}
               className="glass rounded-xl overflow-hidden relative !py-2.5 !px-3 flex items-center gap-3"
             >
-              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
               <div className={`${s.color}`}>{s.icon}</div>
               <div>
                 <p className="text-lg font-bold leading-none">{s.value}</p>

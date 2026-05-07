@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
-const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
+const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
 
 // Notion icon (inline)
 const NotionIcon = () => (
@@ -105,7 +105,7 @@ export default function NotionSyncPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#6366F1]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#FF2D2D]" />
       </div>
     );
   }
@@ -153,7 +153,7 @@ export default function NotionSyncPage() {
             {/* Sync now */}
             <motion.div className="glass rounded-xl p-5 flex flex-col gap-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <div className="flex items-center gap-2">
-                <RefreshCw className="w-4 h-4 text-[#6366F1]" />
+                <RefreshCw className="w-4 h-4 text-[#FF2D2D]" />
                 <p className="text-sm font-semibold text-white">Sync Now</p>
               </div>
               <p className="text-xs text-white/50">
@@ -162,7 +162,7 @@ export default function NotionSyncPage() {
               <button
                 onClick={handleSyncNow}
                 disabled={syncing}
-                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#6366F1] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#FF2D2D] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
               >
                 {syncing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -176,7 +176,7 @@ export default function NotionSyncPage() {
             {/* Auto-sync toggle */}
             <motion.div className="glass rounded-xl p-5 flex flex-col gap-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#6366F1]" />
+                <Clock className="w-4 h-4 text-[#FF2D2D]" />
                 <p className="text-sm font-semibold text-white">Auto-Sync</p>
               </div>
               <p className="text-xs text-white/50">
@@ -185,7 +185,7 @@ export default function NotionSyncPage() {
               <div className="flex items-center gap-3 mt-1">
                 <button onClick={handleToggleAutoSync} className="shrink-0">
                   {autoSync ? (
-                    <ToggleRight className="w-9 h-9 text-[#6366F1]" />
+                    <ToggleRight className="w-9 h-9 text-[#FF2D2D]" />
                   ) : (
                     <ToggleLeft className="w-9 h-9 text-white/30" />
                   )}
@@ -255,7 +255,7 @@ export default function NotionSyncPage() {
               <motion.div key={f.label} className="glass-md rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: fi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
                 <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
                 <div className="p-4 flex flex-col gap-2">
-                  <div className="text-[#6366F1]">{f.icon}</div>
+                  <div className="text-[#FF2D2D]">{f.icon}</div>
                   <p className="text-sm font-semibold text-white">{f.label}</p>
                   <p className="text-xs text-white/50">{f.desc}</p>
                 </div>

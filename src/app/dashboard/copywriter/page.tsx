@@ -87,7 +87,7 @@ const CONTENT_TYPES: {
   color: string;
 }[] = [
   { id: "blog", label: "Blog Post", description: "SEO-optimized articles", icon: FileText, color: "#60a5fa" },
-  { id: "landing", label: "Landing Page", description: "High-converting page copy", icon: Globe, color: "#818cf8" },
+  { id: "landing", label: "Landing Page", description: "High-converting page copy", icon: Globe, color: "#FF5252" },
   { id: "email", label: "Email Campaign", description: "Drip sequences & blasts", icon: Mail, color: "#34d399" },
   { id: "social", label: "Social Media", description: "Captions & post copy", icon: MessageSquare, color: "#f472b6" },
   { id: "product", label: "Product Description", description: "E-commerce copy", icon: ShoppingBag, color: "#fbbf24" },
@@ -113,7 +113,7 @@ const TEMPLATES: Template[] = [
     id: "t2", name: "Lead Gen Landing Page", description: "Free trial / demo signup page",
     type: "landing", topic: "Get more [outcome] with [Product] - Start your free trial",
     tone: "bold", audience: "Small business owners looking to scale", keywords: "free trial, ROI, growth, results",
-    wordCount: 600, icon: Target, color: "#818cf8",
+    wordCount: 600, icon: Target, color: "#FF5252",
   },
   {
     id: "t3", name: "Welcome Email Sequence", description: "Onboarding drip campaign (3 emails)",
@@ -143,7 +143,7 @@ const TEMPLATES: Template[] = [
     id: "t7", name: "Thought Leadership Article", description: "Industry trends deep-dive",
     type: "blog", topic: "The future of [Industry]: 5 trends reshaping [Topic] in 2026",
     tone: "professional", audience: "Industry professionals and decision-makers", keywords: "trends, innovation, future, strategy",
-    wordCount: 1200, icon: BookOpen, color: "#a78bfa",
+    wordCount: 1200, icon: BookOpen, color: "#FF6B6B",
   },
   {
     id: "t8", name: "Re-engagement Email", description: "Win-back campaign for churned users",

@@ -545,7 +545,7 @@ export default function ProjectsPage() {
               >
                 <span
                   className="w-2 h-2 rounded-full"
-                  style={{ background: b.color || "#6366F1" }}
+                  style={{ background: b.color || "#FF2D2D" }}
                 />
                 {b.name}
               </button>

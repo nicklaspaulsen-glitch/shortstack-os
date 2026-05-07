@@ -75,7 +75,7 @@ const STATUS_PILLS: Record<JobRow["status"], string> = {
   failed: "bg-red-500/15 text-red-300 border-red-500/30",
 };
 
-const RAINBOW_BAR = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
+const RAINBOW_BAR = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
 
 export default function ColdEmailPage() {
   const [jobs, setJobs] = useState<JobRow[]>([]);

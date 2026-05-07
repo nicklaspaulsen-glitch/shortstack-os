@@ -252,7 +252,7 @@ export default function BillingPage() {
           borderColor: `${planConfig.color}30`,
         }}
       >
-        <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", position: "absolute", top: 0, left: 0, right: 0 }} />
+        <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", position: "absolute", top: 0, left: 0, right: 0 }} />
         <div className="flex items-center gap-4 min-w-0">
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
@@ -350,7 +350,7 @@ export default function BillingPage() {
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
                 <div className="p-4">
                 <div className="flex items-center justify-between mb-2.5">
                   <div className="flex items-center gap-2">
@@ -443,7 +443,7 @@ export default function BillingPage() {
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
                 {pack.popular && (
                   <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-gold text-white text-[9px] font-bold uppercase tracking-wider">
                     Best value

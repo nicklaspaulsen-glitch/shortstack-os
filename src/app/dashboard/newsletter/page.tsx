@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 
-const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
+const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
@@ -82,7 +82,7 @@ function defaultBlock(type: ContentBlock["type"]): ContentBlock {
     hero:    { imageUrl: "", headline: "Your Headline Here", subheadline: "Add a short supporting line." },
     text:    { body: "Write your content here. Click 'Write with AI' for instant copy." },
     image:   { url: "", alt: "Image description", caption: "" },
-    button:  { label: "Learn More", url: "#", color: "#6366F1" },
+    button:  { label: "Learn More", url: "#", color: "#FF2D2D" },
     divider: {},
     footer:  { company: "ShortStack", address: "123 Agency St, Miami FL", unsubscribe: "#", twitter: "#", linkedin: "#", instagram: "#" },
   };
@@ -107,7 +107,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         header, hero,
         { ...defaultBlock("text"), content: { body: "Hi there,\n\nHere's what we've been up to this month and what's coming next for your brand." } },
         { ...defaultBlock("text"), content: { body: "Share your latest service launch or internal update here." } },
-        { ...defaultBlock("button"), content: { label: "See What's New", url: "#", color: "#6366F1" } },
+        { ...defaultBlock("button"), content: { label: "See What's New", url: "#", color: "#FF2D2D" } },
         footer,
       ];
     case "product_launch":
@@ -129,7 +129,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         { ...defaultBlock("text"), content: { body: "Top Story: Add your featured story here." } },
         defaultBlock("divider"),
         { ...defaultBlock("text"), content: { body: "Quick Wins This Week:\n- List your top wins and takeaways for the week" } },
-        { ...defaultBlock("button"), content: { label: "View Full Report", url: "#", color: "#6366F1" } },
+        { ...defaultBlock("button"), content: { label: "View Full Report", url: "#", color: "#FF2D2D" } },
         footer,
       ];
     case "event_invite":
@@ -151,7 +151,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         defaultBlock("divider"),
         { ...defaultBlock("text"), content: { body: "The Results:\n- List the measurable outcomes you achieved\n- Add specific metrics here\n- Highlight the key wins" } },
         defaultBlock("image"),
-        { ...defaultBlock("button"), content: { label: "Read Full Case Study", url: "#", color: "#6366F1" } },
+        { ...defaultBlock("button"), content: { label: "Read Full Case Study", url: "#", color: "#FF2D2D" } },
         footer,
       ];
     case "holiday_special":
@@ -384,7 +384,7 @@ export default function NewsletterPage() {
         case "image":
           return `<tr><td style="padding:12px 32px;text-align:center">${b.content.url ? `<img src="${b.content.url}" alt="${b.content.alt || ""}" style="max-width:100%;border-radius:8px"/>` : `<div style="height:160px;background:#f0eeea;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:13px">Image placeholder</div>`}${b.content.caption ? `<p style="font-size:11px;color:#9ca3af;margin-top:6px">${b.content.caption}</p>` : ""}</td></tr>`;
         case "button":
-          return `<tr><td style="padding:16px 32px;text-align:center"><a href="${b.content.url || "#"}" style="display:inline-block;padding:12px 28px;background:${b.content.color || "#6366F1"};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:14px">${b.content.label || "Click Here"}</a></td></tr>`;
+          return `<tr><td style="padding:16px 32px;text-align:center"><a href="${b.content.url || "#"}" style="display:inline-block;padding:12px 28px;background:${b.content.color || "#FF2D2D"};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:14px">${b.content.label || "Click Here"}</a></td></tr>`;
         case "divider":
           return `<tr><td style="padding:8px 32px"><hr style="border:none;border-top:1px solid #e8e5e0;margin:0"/></td></tr>`;
         case "footer":
@@ -466,7 +466,7 @@ export default function NewsletterPage() {
         });
       const ctaBlock = {
         ...defaultBlock("button"),
-        content: { label: result.cta_text || "Read more", url: result.cta_url || "#", color: "#6366F1" },
+        content: { label: result.cta_text || "Read more", url: result.cta_url || "#", color: "#FF2D2D" },
       };
       const footer = defaultBlock("footer");
       setBlocks([header, hero, ...sectionBlocks, ctaBlock, footer]);
@@ -827,7 +827,7 @@ export default function NewsletterPage() {
                       <div>
                         <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Color</label>
                         <div className="flex gap-1.5">
-                          {["#6366F1", "#3B82F6", "#10b981", "#EF4444", "#8B5CF6", "#1a1a2e"].map(c => (
+                          {["#FF2D2D", "#3B82F6", "#10b981", "#EF4444", "#8B5CF6", "#1a1a2e"].map(c => (
                             <button key={c} onClick={() => updateBlockContent(block.id, "color", c)}
                               className={`w-6 h-6 rounded-md border-2 transition-all ${block.content.color === c ? "border-white scale-110" : "border-transparent"}`}
                               style={{ background: c }}
@@ -1110,7 +1110,7 @@ export default function NewsletterPage() {
                           <a
                             href={block.content.url || "#"}
                             className="inline-block py-3 px-7 rounded-lg text-white font-semibold text-sm no-underline"
-                            style={{ background: block.content.color || "#6366F1" }}
+                            style={{ background: block.content.color || "#FF2D2D" }}
                           >
                             {block.content.label || "Click Here"}
                           </a>

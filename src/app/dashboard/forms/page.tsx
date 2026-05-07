@@ -232,7 +232,7 @@ export default function FormsPage() {
         redirectUrl: "",
         webhookUrl: "",
         thankYouMessage: data.success_message || "Thanks! We'll be in touch soon.",
-        accentColor: "#6366F1",
+        accentColor: "#FF2D2D",
         spamProtection: true,
         views: 0, starts: 0, completions: 0,
       };
@@ -294,7 +294,7 @@ export default function FormsPage() {
       redirectUrl: "",
       webhookUrl: "",
       thankYouMessage: "Thank you for your submission! We'll be in touch soon.",
-      accentColor: "#6366F1",
+      accentColor: "#FF2D2D",
       spamProtection: true,
       views: 0,
       starts: 0,
@@ -438,7 +438,7 @@ export default function FormsPage() {
             transition={{ delay: i * 0.06, duration: 0.4 }}
             className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
             <div className="p-3 text-center">
               <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
               <p className="text-[10px] text-muted">{tile.label}</p>
@@ -596,7 +596,7 @@ export default function FormsPage() {
                 <div>
                   <label className="block text-[10px] text-muted mb-1">Accent Color</label>
                   <div className="flex gap-2">
-                    {["#6366F1", "#3b82f6", "#10b981", "#ef4444", "#8b5cf6", "#ec4899", "#f59e0b"].map(c => (
+                    {["#FF2D2D", "#3b82f6", "#10b981", "#ef4444", "#8b5cf6", "#ec4899", "#f59e0b"].map(c => (
                       <button key={c} onClick={() => {
                         const u = { ...activeForm, accentColor: c }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
                       }} className={`w-6 h-6 rounded-full transition-all ${activeForm.accentColor === c ? "ring-2 ring-white/30 scale-110" : ""}`}

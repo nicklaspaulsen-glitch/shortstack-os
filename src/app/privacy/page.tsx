@@ -4,7 +4,7 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-[#070708] py-16 px-4">
       <div className="max-w-2xl mx-auto">
-        <Link href="/dashboard" className="text-xs text-[#6366F1] hover:text-[#A78BFA] mb-8 inline-block">Back to Dashboard</Link>
+        <Link href="/dashboard" className="text-xs text-[#FF2D2D] hover:text-[#FF6B6B] mb-8 inline-block">Back to Dashboard</Link>
         <h1 className="text-2xl font-bold text-foreground mb-2">Privacy Policy</h1>
         <p className="text-xs text-muted mb-8">Last updated: April 6, 2026</p>
 

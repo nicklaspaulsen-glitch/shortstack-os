@@ -48,7 +48,7 @@ export function BentoTile({
 
   return (
     <motion.section
-      className={`${span} relative overflow-hidden  flex flex-col`}
+      className={`${span} relative overflow-hidden flex flex-col`}
       style={{
         background: themeTokens.bg.surface1,
         border: `1px solid ${borderColor}`,

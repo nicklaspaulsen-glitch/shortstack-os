@@ -88,7 +88,7 @@ interface ActivityItem {
   status?: string;
 }
 
-const RAINBOW_BAR = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
+const RAINBOW_BAR = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
 
 const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep[]; category: string }[] = [
   { name: "Cold Outreach (5 touches)", description: "Multi-channel cold outreach with email, SMS and social", category: "Outreach",

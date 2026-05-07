@@ -150,7 +150,7 @@ export default function AutomationsPage() {
             transition={{ duration: 0.22, delay: index * 0.06 }}
             whileHover={{ y: -2 }}
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
             <p className={`text-2xl font-bold ${s.color} mt-2`}>{s.value}</p>
             <p className="text-xs text-white/40 mt-0.5">{s.label}</p>
             <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: 'rgba(255,255,255,0.3)' }} />

@@ -515,7 +515,7 @@ export default function AIVideoPage() {
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
         >
           {[
-            { label: "Videos generated", value: results.length.toString(), color: "#6366F1" },
+            { label: "Videos generated", value: results.length.toString(), color: "#FF2D2D" },
             { label: "Plan tier", value: planTier, color: "#F5F4F1" },
             { label: "Max duration", value: Number.isFinite(maxSeconds) ? formatVideoDuration(maxSeconds) : "Unlimited", color: "#7FE5B8" },
           ].map(({ label, value, color }, index) => (
@@ -709,7 +709,7 @@ export default function AIVideoPage() {
                   </div>
                   <div className="h-1 rounded-full bg-white/8 overflow-hidden">
                     <motion.div
-                      className="h-full rounded-full bg-gradient-to-r from-[#6366F1] to-[#A78BFA]"
+                      className="h-full rounded-full bg-gradient-to-r from-[#FF2D2D] to-[#FF6B6B]"
                       animate={{ width: `${progress}%` }}
                       transition={{ duration: 0.8, ease: "easeOut" }}
                     />

@@ -167,7 +167,7 @@ export default class ErrorBoundary extends React.Component<
 
     return (
       <div className="flex items-center justify-center min-h-[400px] p-6">
-        <div className="bg-surface  border border-border shadow-card p-8 max-w-md w-full text-center">
+        <div className="bg-surface border border-border shadow-card p-8 max-w-md w-full text-center">
           <div className="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center mx-auto mb-4">
             <AlertIcon className="w-6 h-6 text-danger" />
           </div>
