@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import {
   CreditCard, Plus, Send, Clock, CheckCircle, AlertTriangle,
   FileText, RefreshCw,
@@ -39,6 +40,11 @@ const formatCurrency = (amount: number, currency: string = "USD") => {
   return `$${amount.toLocaleString()}`;
 };
 
+const RAINBOW_BAR = {
+  height: 3,
+  background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)",
+};
+
 export default function InvoicesPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("all");
   const [filter, setFilter] = useState<"all" | "sent" | "paid" | "overdue" | "draft">("all");
@@ -50,8 +56,6 @@ export default function InvoicesPage() {
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
-  // Load real invoices from the agency-side `invoices` table. We map the DB
-  // shape into the local Invoice UI type so the rest of the page stays as-is.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -124,6 +128,14 @@ export default function InvoicesPage() {
     { key: "revenue", label: "Revenue", icon: <BarChart3 size={14} /> },
   ];
 
+  const STATS = [
+    { label: "Outstanding", value: formatCurrency(totalSent), icon: <Clock size={12} />, color: "text-yellow-400" },
+    { label: "Collected", value: formatCurrency(totalPaid), icon: <CheckCircle size={12} />, color: "text-green-400" },
+    { label: "Overdue", value: formatCurrency(totalOverdue), icon: <AlertTriangle size={12} />, color: "text-red-400" },
+    { label: "Draft", value: formatCurrency(totalDraft), icon: <FileText size={12} />, color: "text-muted" },
+    { label: "Monthly Recurring", value: formatCurrency(recurringTotal), icon: <RefreshCw size={12} />, color: "text-gold" },
+  ];
+
   return (
     <div className="fade-in space-y-5">
       {/* Hero Header */}
@@ -134,39 +146,47 @@ export default function InvoicesPage() {
         gradient="gold"
         actions={
           <div className="flex gap-2">
-            <Link
-              href="/dashboard/invoices/new"
-              className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold text-black font-medium hover:bg-gold/90 transition-all"
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                href="/dashboard/invoices/new"
+                className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold text-black font-medium hover:bg-gold/90 transition-all"
+              >
+                <Sparkles size={12} /> AI Smart Invoice
+              </Link>
+            </motion.div>
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setActiveTab("builder")}
+              className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all"
             >
-              <Sparkles size={12} /> AI Smart Invoice
-            </Link>
-            <button onClick={() => setActiveTab("builder")}
-              className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all">
               <Plus size={12} /> New Invoice
-            </button>
+            </motion.button>
           </div>
         }
       />
 
-      {/* Loading note while initial fetch resolves. */}
+      {/* Loading note */}
       {loading && (
         <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices…</p>
       )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        {[
-          { label: "Outstanding", value: formatCurrency(totalSent), icon: <Clock size={12} />, color: "text-yellow-400" },
-          { label: "Collected", value: formatCurrency(totalPaid), icon: <CheckCircle size={12} />, color: "text-green-400" },
-          { label: "Overdue", value: formatCurrency(totalOverdue), icon: <AlertTriangle size={12} />, color: "text-red-400" },
-          { label: "Draft", value: formatCurrency(totalDraft), icon: <FileText size={12} />, color: "text-muted" },
-          { label: "Monthly Recurring", value: formatCurrency(recurringTotal), icon: <RefreshCw size={12} />, color: "text-gold" },
-        ].map((stat, i) => (
-          <div key={i} className="card text-center p-3">
+        {STATS.map((stat, index) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: index * 0.06 }}
+            whileHover={{ y: -2 }}
+            className="glass rounded-xl text-center p-3 relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
             <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
             <p className="text-lg font-bold">{stat.value}</p>
             <p className="text-[9px] text-muted">{stat.label}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
 
@@ -186,7 +206,13 @@ export default function InvoicesPage() {
           <div className="flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 min-w-[200px]">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-              <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="Search invoices..." aria-label="Search invoices" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border-0 focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50"
+                placeholder="Search invoices..."
+                aria-label="Search invoices"
+              />
             </div>
             <div className="flex gap-1.5">
               {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (
@@ -198,90 +224,99 @@ export default function InvoicesPage() {
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="glass rounded-xl overflow-hidden">
             {filtered.length === 0 ? (
-              <EmptyState
-                type="no-invoices"
-                title="No Invoices Yet"
-                description="Create your first invoice to start tracking payments, set up recurring billing, and get paid faster."
-                action={
-                  <button onClick={() => setActiveTab("builder")} className="btn-primary text-xs">
-                    Create Invoice
-                  </button>
-                }
-              />
+              <div className="p-4">
+                <EmptyState
+                  type="no-invoices"
+                  title="No Invoices Yet"
+                  description="Create your first invoice to start tracking payments, set up recurring billing, and get paid faster."
+                  action={
+                    <button onClick={() => setActiveTab("builder")} className="btn-primary text-xs">
+                      Create Invoice
+                    </button>
+                  }
+                />
+              </div>
             ) : (
-              filtered.map(inv => {
-                const isOverdue = (inv.status === "sent" && inv.dueDate < today) || inv.status === "overdue";
-                return (
-                  <div key={inv.id}>
-                    <div onClick={() => setExpandedInvoice(expandedInvoice === inv.id ? null : inv.id)}
-                      className={`flex items-center justify-between p-4 rounded-xl bg-surface-light border transition-all cursor-pointer ${
-                        isOverdue ? "border-red-400/15" : "border-border hover:border-gold/10"
-                      }`}>
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          inv.status === "paid" ? "bg-green-400/10" : isOverdue ? "bg-red-400/10" : inv.status === "draft" ? "bg-surface" : "bg-yellow-400/10"
-                        }`}>
-                          {inv.status === "paid" ? <CheckCircle size={16} className="text-green-400" /> :
-                           isOverdue ? <AlertTriangle size={16} className="text-red-400" /> :
-                           inv.status === "draft" ? <FileText size={16} className="text-muted" /> :
-                           <Clock size={16} className="text-yellow-400" />}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <p className="text-sm font-semibold">{inv.client}</p>
-                            <span className="text-[8px] font-mono text-muted">{inv.id}</span>
-                            {inv.recurring && <RefreshCw size={8} className="text-gold" />}
-                            {inv.currency !== "USD" && <Globe size={8} className="text-blue-400" />}
+              <div className="divide-y divide-white/5">
+                {filtered.map((inv, index) => {
+                  const isOverdue = (inv.status === "sent" && inv.dueDate < today) || inv.status === "overdue";
+                  return (
+                    <div key={inv.id}>
+                      <motion.div
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.18, delay: index * 0.04 }}
+                        onClick={() => setExpandedInvoice(expandedInvoice === inv.id ? null : inv.id)}
+                        className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-indigo-500/5 ${
+                          isOverdue ? "bg-red-400/5" : ""
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                            inv.status === "paid" ? "bg-green-400/10" : isOverdue ? "bg-red-400/10" : inv.status === "draft" ? "bg-surface" : "bg-yellow-400/10"
+                          }`}>
+                            {inv.status === "paid" ? <CheckCircle size={16} className="text-green-400" /> :
+                             isOverdue ? <AlertTriangle size={16} className="text-red-400" /> :
+                             inv.status === "draft" ? <FileText size={16} className="text-muted" /> :
+                             <Clock size={16} className="text-yellow-400" />}
                           </div>
-                          <p className="text-[10px] text-muted">{inv.description}</p>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <p className="text-sm font-semibold">{inv.client}</p>
+                              <span className="text-[8px] font-mono text-muted">{inv.id}</span>
+                              {inv.recurring && <RefreshCw size={8} className="text-gold" />}
+                              {inv.currency !== "USD" && <Globe size={8} className="text-blue-400" />}
+                            </div>
+                            <p className="text-[10px] text-muted">{inv.description}</p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className="text-lg font-bold">{formatCurrency(inv.amount, inv.currency)}</p>
-                          <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="text-lg font-bold">{formatCurrency(inv.amount, inv.currency)}</p>
+                            <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
+                          </div>
+                          <span className={`text-[9px] px-2 py-0.5 rounded-full ${
+                            inv.status === "paid" ? "bg-green-400/10 text-green-400" :
+                            isOverdue ? "bg-red-400/10 text-red-400" :
+                            inv.status === "draft" ? "bg-white/10 text-muted border border-white/10" :
+                            inv.status === "sent" ? "bg-blue-400/10 text-blue-400" :
+                            "bg-yellow-400/10 text-yellow-400"
+                          }`}>{isOverdue ? "overdue" : inv.status}</span>
+                          <ChevronRight size={14} className="text-muted" />
                         </div>
-                        <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                          inv.status === "paid" ? "bg-green-400/10 text-green-400" :
-                          isOverdue ? "bg-red-400/10 text-red-400" :
-                          inv.status === "draft" ? "bg-white/10 text-muted border border-white/10" :
-                          inv.status === "sent" ? "bg-blue-400/10 text-blue-400" :
-                          "bg-yellow-400/10 text-yellow-400"
-                        }`}>{isOverdue ? "overdue" : inv.status}</span>
-                        <ChevronRight size={14} className="text-muted" />
-                      </div>
+                      </motion.div>
+                      {expandedInvoice === inv.id && (
+                        <div className="ml-4 mb-3 p-3 rounded-lg bg-surface border border-border space-y-2 mx-4">
+                          <div className="grid grid-cols-4 gap-3 text-[10px]">
+                            <div><span className="text-muted">Sent:</span> <span>{inv.sentDate || "Not sent"}</span></div>
+                            <div><span className="text-muted">Due:</span> <span>{inv.dueDate}</span></div>
+                            <div><span className="text-muted">Tax:</span> <span>{inv.tax > 0 ? formatCurrency(inv.tax) : "None"}</span></div>
+                            <div><span className="text-muted">Currency:</span> <span>{inv.currency}</span></div>
+                          </div>
+                          <div className="flex gap-2 pt-2 items-center">
+                            <Link href="/dashboard/billing" className="btn-ghost text-[9px] flex items-center gap-1">
+                              <ArrowRight size={9} /> Manage in Stripe portal
+                            </Link>
+                            {inv.paymentLink && (
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(inv.paymentLink)
+                                    .then(() => toast.success("Payment link copied"))
+                                    .catch(() => toast.error("Copy failed"));
+                                }}
+                                className="btn-ghost text-[9px] flex items-center gap-1">
+                                <Copy size={9} /> Copy Pay Link
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    {expandedInvoice === inv.id && (
-                      <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border space-y-2">
-                        <div className="grid grid-cols-4 gap-3 text-[10px]">
-                          <div><span className="text-muted">Sent:</span> <span>{inv.sentDate || "Not sent"}</span></div>
-                          <div><span className="text-muted">Due:</span> <span>{inv.dueDate}</span></div>
-                          <div><span className="text-muted">Tax:</span> <span>{inv.tax > 0 ? formatCurrency(inv.tax) : "None"}</span></div>
-                          <div><span className="text-muted">Currency:</span> <span>{inv.currency}</span></div>
-                        </div>
-                        <div className="flex gap-2 pt-2 items-center">
-                          <Link href="/dashboard/billing" className="btn-ghost text-[9px] flex items-center gap-1">
-                            <ArrowRight size={9} /> Manage in Stripe portal
-                          </Link>
-                          {inv.paymentLink && (
-                            <button
-                              onClick={() => {
-                                navigator.clipboard.writeText(inv.paymentLink)
-                                  .then(() => toast.success("Payment link copied"))
-                                  .catch(() => toast.error("Copy failed"));
-                              }}
-                              className="btn-ghost text-[9px] flex items-center gap-1">
-                              <Copy size={9} /> Copy Pay Link
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })
+                  );
+                })}
+              </div>
             )}
           </div>
         </div>
@@ -292,7 +327,7 @@ export default function InvoicesPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2 space-y-3">
-              <div className="card space-y-3">
+              <div className="glass rounded-xl p-4 space-y-3">
                 <h3 className="text-sm font-semibold">Invoice Builder</h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -371,12 +406,12 @@ export default function InvoicesPage() {
 
             {/* Sidebar */}
             <div className="space-y-3">
-              <div className="card p-4">
+              <div className="glass rounded-xl p-4">
                 <h4 className="text-xs font-semibold mb-3">Invoice Summary</h4>
                 <div className="space-y-2 text-[10px]">
                   <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
                   <div className="flex justify-between"><span className="text-muted">Tax ({taxRate}%)</span><span>{formatCurrency(Math.round(2497 * taxRate / 100), selectedCurrency)}</span></div>
-                  <div className="border-t border-border pt-2 flex justify-between font-bold">
+                  <div className="border-t border-white/10 pt-2 flex justify-between font-bold">
                     <span>Total</span><span className="text-gold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
                   </div>
                 </div>
@@ -391,7 +426,7 @@ export default function InvoicesPage() {
               </div>
 
               {/* Quick Invoice from Proposal */}
-              <div className="card border-gold/10 p-4">
+              <div className="glass-indigo rounded-xl p-4">
                 <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                   <Zap size={12} className="text-gold" /> Quick Invoice
                 </h4>
@@ -407,7 +442,7 @@ export default function InvoicesPage() {
               </div>
 
               {/* Payment Link */}
-              <div className="card p-4">
+              <div className="glass rounded-xl p-4">
                 <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                   <CreditCard size={12} className="text-gold" /> Payment Links
                 </h4>
@@ -434,12 +469,18 @@ export default function InvoicesPage() {
           </div>
           <div className="space-y-2">
             {invoicesData.filter(i => i.recurring).length === 0 ? (
-              <div className="card text-center py-8">
+              <div className="glass rounded-xl text-center py-8">
                 <RefreshCw size={20} className="mx-auto mb-2 text-muted/30" />
                 <p className="text-xs text-muted">No recurring invoices yet</p>
               </div>
-            ) : invoicesData.filter(i => i.recurring).map(inv => (
-              <div key={inv.id} className="card p-4 flex items-center justify-between">
+            ) : invoicesData.filter(i => i.recurring).map((inv, index) => (
+              <motion.div
+                key={inv.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.18, delay: index * 0.05 }}
+                className="glass rounded-xl p-4 flex items-center justify-between"
+              >
                 <div className="flex items-center gap-3">
                   <RefreshCw size={14} className="text-gold" />
                   <div>
@@ -461,10 +502,10 @@ export default function InvoicesPage() {
                     onClick={() => toast("Pause recurring from the Stripe customer portal — use Billing → Manage subscription.", { icon: "💡", duration: 6000 })}
                     className="text-[9px] text-muted hover:text-red-400">Pause</button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-          <div className="card text-center p-4">
+          <div className="glass rounded-xl text-center p-4">
             <p className="text-sm font-bold text-gold">{formatCurrency(recurringTotal)}/mo</p>
             <p className="text-[10px] text-muted">Total monthly recurring revenue from invoices</p>
           </div>
@@ -485,7 +526,13 @@ export default function InvoicesPage() {
               { delay: "14 days overdue", message: "Final notice before account review", enabled: false },
               { delay: "30 days overdue", message: "Account suspension warning", enabled: false },
             ].map((reminder, i) => (
-              <div key={i} className={`card p-4 flex items-center justify-between ${!reminder.enabled ? "opacity-50" : ""}`}>
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.18, delay: i * 0.05 }}
+                className={`glass rounded-xl p-4 flex items-center justify-between ${!reminder.enabled ? "opacity-50" : ""}`}
+              >
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-yellow-400/10" : i < 4 ? "bg-orange-400/10" : "bg-red-400/10"}`}>
                     <Clock size={14} className={i < 2 ? "text-yellow-400" : i < 4 ? "text-orange-400" : "text-red-400"} />
@@ -498,11 +545,11 @@ export default function InvoicesPage() {
                 <div className={`w-8 h-4 rounded-full ${reminder.enabled ? "bg-gold" : "bg-surface-light"}`}>
                   <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${reminder.enabled ? "ml-4" : "ml-0.5"}`} />
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
           {/* Currently overdue */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-red-400">
               <AlertTriangle size={12} /> Currently Overdue
             </h4>
@@ -533,14 +580,21 @@ export default function InvoicesPage() {
         <div className="space-y-4">
           <h3 className="text-sm font-semibold">Invoice Templates</h3>
           {INVOICE_TEMPLATES.length === 0 && (
-            <div className="card text-center py-8">
+            <div className="glass rounded-xl text-center py-8">
               <FileText size={20} className="mx-auto mb-2 text-muted/30" />
               <p className="text-xs text-muted">No invoice templates yet</p>
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {INVOICE_TEMPLATES.map(t => (
-              <div key={t.id} className="card p-4 hover:border-gold/10 transition-all cursor-pointer">
+            {INVOICE_TEMPLATES.map((t, index) => (
+              <motion.div
+                key={t.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -3 }}
+                className="glass rounded-xl p-4 cursor-pointer"
+              >
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center">
                     <FileText size={16} className="text-gold" />
@@ -558,7 +612,7 @@ export default function InvoicesPage() {
                 <button
                   onClick={() => toast("Invoice templates aren't yet persisted. Create invoices via Stripe at /dashboard/billing for now.", { icon: "💡", duration: 6000 })}
                   className="btn-secondary text-[9px] mt-3 w-full">Use Template</button>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -578,28 +632,44 @@ export default function InvoicesPage() {
               { range: "15-30 days", amount: 0, count: 0, color: "text-red-400" },
               { range: "30+ days", amount: 0, count: 0, color: "text-red-400" },
             ].map((bucket, i) => (
-              <div key={i} className="card text-center p-3">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: i * 0.06 }}
+                whileHover={{ y: -2 }}
+                className="glass rounded-xl text-center p-3 relative overflow-hidden"
+              >
+                <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                 <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
                 <p className={`text-lg font-bold ${bucket.color}`}>{formatCurrency(bucket.amount)}</p>
                 <p className="text-[8px] text-muted">{bucket.count} invoice{bucket.count !== 1 ? "s" : ""}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
-          <div className="card">
-            <h4 className="text-xs font-semibold mb-3">Invoice History</h4>
-            <div className="space-y-1">
-              <div className="grid grid-cols-6 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
+          <div className="glass rounded-xl overflow-hidden">
+            <div className="p-3 border-b border-white/10">
+              <h4 className="text-xs font-semibold">Invoice History</h4>
+            </div>
+            <div className="divide-y divide-white/5">
+              <div className="grid grid-cols-6 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-3">
                 <span>Invoice</span><span>Client</span><span>Amount</span><span>Due Date</span><span>Status</span><span>Age</span>
               </div>
               {invoicesData.length === 0 ? (
                 <div className="text-center py-6">
                   <p className="text-[10px] text-muted">No invoice history yet</p>
                 </div>
-              ) : invoicesData.map(inv => {
+              ) : invoicesData.map((inv, index) => {
                 const dueDate = new Date(inv.dueDate);
                 const ageDays = Math.max(0, Math.floor((Date.now() - dueDate.getTime()) / 86400000));
                 return (
-                  <div key={inv.id} className="grid grid-cols-6 text-[10px] py-2 px-2 rounded bg-surface-light items-center">
+                  <motion.div
+                    key={inv.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: index * 0.03 }}
+                    className="grid grid-cols-6 text-[10px] py-2 px-3 hover:bg-indigo-500/5 transition-colors items-center"
+                  >
                     <span className="font-mono text-muted">{inv.id}</span>
                     <span className="font-medium">{inv.client}</span>
                     <span className="font-bold">{formatCurrency(inv.amount, inv.currency)}</span>
@@ -610,7 +680,7 @@ export default function InvoicesPage() {
                       "bg-yellow-400/10 text-yellow-400"
                     }`}>{inv.status}</span>
                     <span className={ageDays > 7 ? "text-red-400" : "text-muted"}>{ageDays}d</span>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -625,24 +695,28 @@ export default function InvoicesPage() {
             <BarChart3 size={14} className="text-gold" /> Revenue Summary
           </h3>
           <div className="grid grid-cols-3 gap-4">
-            <div className="card text-center p-5">
-              <p className="text-[10px] text-muted uppercase mb-1">Paid Invoices</p>
-              <p className="text-2xl font-bold text-gold">{formatCurrency(totalPaid)}</p>
-              <p className="text-[9px] text-muted mt-1">All-time collected</p>
-            </div>
-            <div className="card text-center p-5">
-              <p className="text-[10px] text-muted uppercase mb-1">Outstanding</p>
-              <p className="text-2xl font-bold text-purple-400">{formatCurrency(totalSent)}</p>
-              <p className="text-[9px] text-muted mt-1">Sent, not paid</p>
-            </div>
-            <div className="card text-center p-5">
-              <p className="text-[10px] text-muted uppercase mb-1">Overdue</p>
-              <p className="text-2xl font-bold text-red-400">{formatCurrency(totalOverdue)}</p>
-              <p className="text-[9px] text-muted mt-1">Needs chasing</p>
-            </div>
+            {[
+              { label: "Paid Invoices", value: formatCurrency(totalPaid), sub: "All-time collected", color: "text-gold" },
+              { label: "Outstanding", value: formatCurrency(totalSent), sub: "Sent, not paid", color: "text-purple-400" },
+              { label: "Overdue", value: formatCurrency(totalOverdue), sub: "Needs chasing", color: "text-red-400" },
+            ].map((card, index) => (
+              <motion.div
+                key={card.label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -2 }}
+                className="glass rounded-xl text-center p-5 relative overflow-hidden"
+              >
+                <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
+                <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
+                <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
+                <p className="text-[9px] text-muted mt-1">{card.sub}</p>
+              </motion.div>
+            ))}
           </div>
           {/* Monthly bar chart */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h4 className="text-xs font-semibold mb-3">Monthly Revenue</h4>
             <div className="flex items-end gap-3 h-40">
               {invoicesData.length === 0 ? (
@@ -664,7 +738,7 @@ export default function InvoicesPage() {
             </div>
           </div>
           {/* Collection rate */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h4 className="text-xs font-semibold mb-3">Collection Metrics</h4>
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-surface-light rounded-lg p-3 text-center">

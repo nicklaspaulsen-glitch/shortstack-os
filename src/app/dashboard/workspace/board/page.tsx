@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Kanban, Plus, Filter } from "lucide-react";
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
 import { createBrowserClient } from "@supabase/ssr";
 import {
@@ -179,9 +180,6 @@ export default function WorkspaceBoardPage() {
           table: "workspace_tasks",
         },
         (payload) => {
-          // Filter client-side: realtime channel returns rows we have RLS
-          // visibility for, but the filter is broader than we want. Trust
-          // RLS on the wire and apply the local agency filter as defense.
           if (payload.eventType === "DELETE") {
             const old = payload.old as { id?: string };
             if (old.id) {
@@ -208,8 +206,7 @@ export default function WorkspaceBoardPage() {
     };
   }, [user?.id]);
 
-  // Comment counts (lightweight roll-up). Refetch when tasks change so
-  // newly-created tasks show 0 instead of ghosting.
+  // Comment counts (lightweight roll-up).
   useEffect(() => {
     if (tasks.length === 0) {
       setCommentCountByTask({});
@@ -294,7 +291,6 @@ export default function WorkspaceBoardPage() {
           }),
         });
         if (!res.ok) {
-          // Roll back on failure.
           setTasks((prev) => prev.map((t) => (t.id === taskId ? current : t)));
           console.error("[workspace-board] move failed", await res.text());
         }
@@ -429,15 +425,19 @@ export default function WorkspaceBoardPage() {
         eyebrow="Workspace"
         actions={
           <div className="flex items-center gap-2">
-            <button
+            <motion.button
               type="button"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => setFiltersOpen((v) => !v)}
               className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 border border-white/15 text-sm text-white transition-colors"
             >
               <Filter size={14} /> Filters
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               type="button"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => {
                 setModalDefaultStatus("backlog");
                 setModalOpen(true);
@@ -445,7 +445,7 @@ export default function WorkspaceBoardPage() {
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gold text-black hover:bg-gold/90 text-sm font-medium transition-colors"
             >
               <Plus size={14} /> New task
-            </button>
+            </motion.button>
           </div>
         }
       />
@@ -525,19 +525,22 @@ export default function WorkspaceBoardPage() {
           {TASK_STATUSES.map((s) => (
             <div
               key={s}
-              className="h-64 rounded-xl bg-surface-light/30 border border-border animate-pulse"
+              className="h-64 rounded-xl glass animate-pulse"
             />
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {TASK_STATUSES.map((status) => {
+          {TASK_STATUSES.map((status, colIndex) => {
             const meta = COLUMN_META[status];
             const columnTasks = tasksByStatus[status];
             const isHover = hoverCol === status;
             return (
-              <div
+              <motion.div
                 key={status}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: colIndex * 0.06 }}
                 onDragOver={(e) => {
                   e.preventDefault();
                   setHoverCol(status);
@@ -552,7 +555,8 @@ export default function WorkspaceBoardPage() {
                 }}
                 className="flex flex-col"
               >
-                <div className="flex items-center justify-between px-1 mb-2">
+                {/* Column header */}
+                <div className="glass rounded-xl px-3 py-2.5 mb-2 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div
                       className="w-2.5 h-2.5 rounded-full"
@@ -577,18 +581,19 @@ export default function WorkspaceBoardPage() {
                       setModalDefaultStatus(status);
                       setModalOpen(true);
                     }}
-                    className="p-1 rounded text-muted hover:text-fg hover:bg-surface-light transition-colors"
+                    className="p-1 rounded text-muted hover:text-fg hover:bg-white/5 transition-colors"
                     aria-label={`Add task to ${meta.label}`}
                   >
                     <Plus size={14} />
                   </button>
                 </div>
 
+                {/* Drop zone */}
                 <div
-                  className={`flex-1 min-h-[200px] rounded-xl bg-surface-light/30 border border-dashed transition-colors p-2 space-y-2 ${
+                  className={`flex-1 min-h-[200px] rounded-xl border border-dashed transition-colors p-2 space-y-2 ${
                     isHover
-                      ? "border-gold/40 bg-gold/5"
-                      : "border-border/50"
+                      ? "border-indigo-400/40 bg-indigo-500/5"
+                      : "glass border-white/10"
                   }`}
                 >
                   {columnTasks.length === 0 ? (
@@ -596,35 +601,39 @@ export default function WorkspaceBoardPage() {
                       Drop tasks here
                     </div>
                   ) : (
-                    columnTasks.map((task) => (
-                      <BoardCard
+                    columnTasks.map((task, cardIndex) => (
+                      <motion.div
                         key={task.id}
-                        task={task}
-                        clients={clientsById}
-                        members={membersById}
-                        commentCount={commentCountByTask[task.id]}
-                        isDragging={draggedId === task.id}
-                        onDragStart={() => {
-                          setDraggedId(task.id);
-                          justDraggedRef.current = true;
-                        }}
-                        onDragEnd={() => {
-                          setDraggedId(null);
-                          // Defer click suppression so the trailing click
-                          // after drop never opens the drawer accidentally.
-                          setTimeout(() => {
-                            justDraggedRef.current = false;
-                          }, 50);
-                        }}
-                        onClick={() => {
-                          if (justDraggedRef.current) return;
-                          void openTask(task.id);
-                        }}
-                      />
+                        initial={{ opacity: 0, x: -6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.16, delay: cardIndex * 0.04 }}
+                      >
+                        <BoardCard
+                          task={task}
+                          clients={clientsById}
+                          members={membersById}
+                          commentCount={commentCountByTask[task.id]}
+                          isDragging={draggedId === task.id}
+                          onDragStart={() => {
+                            setDraggedId(task.id);
+                            justDraggedRef.current = true;
+                          }}
+                          onDragEnd={() => {
+                            setDraggedId(null);
+                            setTimeout(() => {
+                              justDraggedRef.current = false;
+                            }, 50);
+                          }}
+                          onClick={() => {
+                            if (justDraggedRef.current) return;
+                            void openTask(task.id);
+                          }}
+                        />
+                      </motion.div>
                     ))
                   )}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

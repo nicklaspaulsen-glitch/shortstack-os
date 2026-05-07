@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import {
   Users, CheckCircle,
   Clock,
@@ -52,6 +53,10 @@ interface PermissionRow {
   viewer: boolean;
 }
 
+const RAINBOW_BAR = {
+  height: 3,
+  background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)",
+};
 
 const ROLE_DEFINITIONS: RoleDefinition[] = [
   { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#6366F1", memberCount: 0 },
@@ -243,6 +248,13 @@ export default function TeamPage() {
     return acc;
   }, {});
 
+  const STATS = [
+    { icon: <Users size={12} className="text-gold" />, label: "Team Size", value: members.length, sub: `${onlineCount} online now`, subColor: "text-emerald-400" },
+    { icon: <Shield size={12} className="text-purple-400" />, label: "Roles", value: ROLE_DEFINITIONS.length, valueColor: "text-purple-400", sub: "defined roles" },
+    { icon: <CheckCircle size={12} className="text-emerald-400" />, label: "Tasks Done", value: `${completedTasks}/${totalTasks}`, valueColor: "text-emerald-400", sub: "this week" },
+    { icon: <Clock size={12} className="text-blue-400" />, label: "Avg Hours/Week", value: `${avgHours}h`, valueColor: "text-blue-400", sub: "across team" },
+  ];
+
   return (
     <div className="fade-in space-y-5">
       <PageHero
@@ -251,34 +263,34 @@ export default function TeamPage() {
         subtitle={`${members.length} members · ${onlineCount} online`}
         gradient="gold"
         actions={
-          <button onClick={() => setShowInvite(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setShowInvite(true)}
+            className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5"
+          >
             <UserPlus size={12} /> Invite Member
-          </button>
+          </motion.button>
         }
       />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-        <div className="card p-3">
-          <div className="flex items-center gap-1.5 mb-1"><Users size={12} className="text-gold" /><p className="text-[10px] text-muted uppercase tracking-wider">Team Size</p></div>
-          <p className="text-lg font-bold">{members.length}</p>
-          <p className="text-[10px] text-emerald-400">{onlineCount} online now</p>
-        </div>
-        <div className="card p-3">
-          <div className="flex items-center gap-1.5 mb-1"><Shield size={12} className="text-purple-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Roles</p></div>
-          <p className="text-lg font-bold text-purple-400">{ROLE_DEFINITIONS.length}</p>
-          <p className="text-[10px] text-muted">defined roles</p>
-        </div>
-        <div className="card p-3">
-          <div className="flex items-center gap-1.5 mb-1"><CheckCircle size={12} className="text-emerald-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Tasks Done</p></div>
-          <p className="text-lg font-bold text-emerald-400">{completedTasks}/{totalTasks}</p>
-          <p className="text-[10px] text-muted">this week</p>
-        </div>
-        <div className="card p-3">
-          <div className="flex items-center gap-1.5 mb-1"><Clock size={12} className="text-blue-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Avg Hours/Week</p></div>
-          <p className="text-lg font-bold text-blue-400">{avgHours}h</p>
-          <p className="text-[10px] text-muted">across team</p>
-        </div>
+        {STATS.map((stat, index) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: index * 0.06 }}
+            whileHover={{ y: -2 }}
+            className="glass rounded-xl p-3 relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
+            <div className="flex items-center gap-1.5 mb-1">{stat.icon}<p className="text-[10px] text-muted uppercase tracking-wider">{stat.label}</p></div>
+            <p className={`text-lg font-bold ${stat.valueColor ?? ""}`}>{stat.value}</p>
+            <p className={`text-[10px] ${stat.subColor ?? "text-muted"}`}>{stat.sub}</p>
+          </motion.div>
+        ))}
       </div>
 
       {/* Tabs */}
@@ -300,7 +312,8 @@ export default function TeamPage() {
             <div className="relative flex-1 min-w-[200px]">
               <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
               <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                className="input w-full text-xs pl-8" placeholder="Search members..." aria-label="Search team members" />
+                className="glass rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-transparent border-0 focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50"
+                placeholder="Search members..." aria-label="Search team members" />
             </div>
             <div className="flex gap-1 bg-surface rounded-lg p-0.5">
               <button onClick={() => setRoleFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === "all" ? "bg-gold/20 text-gold" : "text-muted"}`}>All</button>
@@ -311,10 +324,10 @@ export default function TeamPage() {
           </div>
 
           {/* Members Table */}
-          <div className="card overflow-x-auto">
+          <div className="glass rounded-xl overflow-hidden">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-border">
+                <tr className="border-b border-white/10">
                   <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Member</th>
                   <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Role</th>
                   <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden md:table-cell">Status</th>
@@ -327,9 +340,15 @@ export default function TeamPage() {
                 {filteredMembers.length === 0 && (
                   <tr><td colSpan={6} className="text-center py-12 text-muted">No members match your search.</td></tr>
                 )}
-                {filteredMembers.map(member => (
-                  <tr key={member.id} className="border-b border-border/50 hover:bg-surface-light/50 transition-colors cursor-pointer"
-                    onClick={() => setSelectedMember(selectedMember === member.id ? null : member.id)}>
+                {filteredMembers.map((member, index) => (
+                  <motion.tr
+                    key={member.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: index * 0.04 }}
+                    className="border-b border-white/5 hover:bg-indigo-500/5 transition-colors cursor-pointer"
+                    onClick={() => setSelectedMember(selectedMember === member.id ? null : member.id)}
+                  >
                     <td className="py-2.5 px-3">
                       <div className="flex items-center gap-2.5">
                         <div className="relative">
@@ -368,7 +387,7 @@ export default function TeamPage() {
                         ><Mail size={11} /></button>
                       </div>
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>
@@ -379,7 +398,12 @@ export default function TeamPage() {
             const m = members.find(mem => mem.id === selectedMember);
             if (!m) return null;
             return (
-              <div className="card p-4 space-y-4">
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+                className="glass rounded-xl p-4 space-y-4"
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="relative">
@@ -395,18 +419,17 @@ export default function TeamPage() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  <div className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
-                    <p className="text-lg font-bold">{m.clients}</p><p className="text-[8px] text-muted">Clients</p>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
-                    <p className="text-lg font-bold text-blue-400">{m.hoursThisWeek}h</p><p className="text-[8px] text-muted">This Week</p>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
-                    <p className="text-lg font-bold text-emerald-400">{m.tasksCompleted}</p><p className="text-[8px] text-muted">Tasks Done</p>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
-                    <p className="text-lg font-bold text-gold">{m.tasksAssigned > 0 ? Math.round((m.tasksCompleted / m.tasksAssigned) * 100) : 0}%</p><p className="text-[8px] text-muted">Completion</p>
-                  </div>
+                  {[
+                    { value: m.clients, label: "Clients" },
+                    { value: `${m.hoursThisWeek}h`, label: "This Week", color: "text-blue-400" },
+                    { value: m.tasksCompleted, label: "Tasks Done", color: "text-emerald-400" },
+                    { value: `${m.tasksAssigned > 0 ? Math.round((m.tasksCompleted / m.tasksAssigned) * 100) : 0}%`, label: "Completion", color: "text-gold" },
+                  ].map((tile) => (
+                    <div key={tile.label} className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
+                      <p className={`text-lg font-bold ${tile.color ?? ""}`}>{tile.value}</p>
+                      <p className="text-[8px] text-muted">{tile.label}</p>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Recent Actions */}
@@ -422,7 +445,7 @@ export default function TeamPage() {
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })()}
         </div>
@@ -430,17 +453,29 @@ export default function TeamPage() {
 
       {/* ═══ PERMISSIONS TAB ═══ */}
       {tab === "permissions" && (
-        <div className="card overflow-x-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="glass rounded-xl overflow-x-auto p-4"
+        >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-gold" /> Role Permissions Matrix</h2>
-            <button onClick={() => setShowCustomRole(true)} className="btn-secondary text-[10px] flex items-center gap-1.5"><Settings size={10} /> Custom Role Builder</button>
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setShowCustomRole(true)}
+              className="btn-secondary text-[10px] flex items-center gap-1.5"
+            >
+              <Settings size={10} /> Custom Role Builder
+            </motion.button>
           </div>
           {Object.entries(permCategories).map(([category, perms]) => (
             <div key={category} className="mb-4">
               <p className="text-[9px] text-muted uppercase tracking-wider font-bold mb-2 px-2">{category}</p>
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-border">
+                  <tr className="border-b border-white/10">
                     <th className="text-left py-2 pr-4 text-muted font-semibold text-[10px] w-48 pl-2">Feature</th>
                     {ROLE_DEFINITIONS.map(role => (
                       <th key={role.id} className="text-center py-2 px-2 text-[10px] font-semibold" style={{ color: role.color }}>{role.label}</th>
@@ -449,7 +484,7 @@ export default function TeamPage() {
                 </thead>
                 <tbody>
                   {perms.map((perm, idx) => (
-                    <tr key={idx} className="border-b border-border/30">
+                    <tr key={idx} className="border-b border-white/5 hover:bg-indigo-500/5 transition-colors">
                       <td className="py-2 pr-4 font-medium pl-2">{perm.feature}</td>
                       {(["owner", "admin", "manager", "creator", "viewer"] as RoleId[]).map(roleId => (
                         <td key={roleId} className="text-center py-2">
@@ -466,15 +501,23 @@ export default function TeamPage() {
               </table>
             </div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ ROLES TAB ═══ */}
       {tab === "roles" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {ROLE_DEFINITIONS.map(role => (
-              <div key={role.id} className="card p-4 hover:border-gold/10 transition-all">
+            {ROLE_DEFINITIONS.map((role, index) => (
+              <motion.div
+                key={role.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -3 }}
+                className="glass rounded-xl p-4 relative overflow-hidden"
+              >
+                <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${role.color}15` }}>
                     <Shield size={16} style={{ color: role.color }} />
@@ -496,26 +539,34 @@ export default function TeamPage() {
                   </div>
                   <span className="text-[9px] text-muted">{PERMISSIONS.filter(p => p[role.id]).length}/{PERMISSIONS.length} permissions</span>
                 </div>
-              </div>
+              </motion.div>
             ))}
 
             {/* Add Custom Role Card */}
-            <button onClick={() => setShowCustomRole(true)}
-              className="card p-4 border-dashed hover:border-gold/20 transition-all flex flex-col items-center justify-center gap-2 min-h-[160px]">
+            <motion.button
+              whileHover={{ y: -3 }}
+              onClick={() => setShowCustomRole(true)}
+              className="glass rounded-xl p-4 border-dashed hover:border-gold/20 transition-all flex flex-col items-center justify-center gap-2 min-h-[160px]"
+            >
               <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center">
                 <Settings size={16} className="text-gold" />
               </div>
               <p className="text-xs font-bold text-muted">Create Custom Role</p>
               <p className="text-[9px] text-muted text-center">Define a role with specific permissions for your team</p>
-            </button>
+            </motion.button>
           </div>
         </div>
       )}
 
       {/* ═══ ACCESS LOG TAB ═══ */}
       {tab === "activity" && (
-        <div className="card">
-          <h2 className="section-header flex items-center gap-2"><Activity size={13} className="text-gold" /> Per-Member Access Log</h2>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="glass rounded-xl p-4"
+        >
+          <h2 className="section-header flex items-center gap-2 mb-3"><Activity size={13} className="text-gold" /> Per-Member Access Log</h2>
           <div className="space-y-2">
             {members.flatMap(m =>
               m.recentActions.map(a => ({
@@ -525,7 +576,13 @@ export default function TeamPage() {
                 role: m.role,
               }))
             ).map((act, idx) => (
-              <div key={idx} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-surface-light border-b border-border/30 transition-colors">
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.18, delay: idx * 0.04 }}
+                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-indigo-500/5 border-b border-white/5 transition-colors"
+              >
                 <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-[9px] font-bold text-gold shrink-0">{act.avatar}</div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[11px]">
@@ -535,64 +592,78 @@ export default function TeamPage() {
                   <p className="text-[10px] text-muted mt-0.5">{act.action} on <span className="text-foreground">{act.resource}</span></p>
                 </div>
                 <span className="text-[9px] text-muted shrink-0">{act.time}</span>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ CAPACITY TAB ═══ */}
       {tab === "capacity" && (
-        <div className="space-y-4">
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Team Capacity Tracker</h2>
-            <p className="text-[10px] text-muted mb-4">See who has bandwidth and who is overloaded.</p>
-            <div className="space-y-3">
-              {members.map(m => {
-                const taskLoad = m.tasksAssigned > 0 ? (m.tasksAssigned / 30) * 100 : 0;
-                const hourLoad = (m.hoursThisWeek / 45) * 100;
-                const combinedLoad = Math.min(Math.round((taskLoad + hourLoad) / 2), 100);
-                const loadLevel = combinedLoad > 80 ? "Overloaded" : combinedLoad > 50 ? "Balanced" : "Available";
-                const loadColor = combinedLoad > 80 ? "text-red-400" : combinedLoad > 50 ? "text-gold" : "text-emerald-400";
-                const barColor = combinedLoad > 80 ? "#ef4444" : combinedLoad > 50 ? "#6366F1" : "#10b981";
-                return (
-                  <div key={m.id} className="p-3 rounded-lg bg-surface-light border border-border">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="relative">
-                        <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center text-[10px] font-bold text-gold">{m.avatar}</div>
-                        <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[var(--color-surface-light)] ${STATUS_COLORS[m.status]}`} />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <p className="text-xs font-semibold">{m.name}</p>
-                          <div className="flex items-center gap-2">
-                            {combinedLoad > 80 && <AlertTriangle size={10} className="text-red-400" />}
-                            <span className={`text-[9px] font-medium ${loadColor}`}>{loadLevel}</span>
-                          </div>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="glass rounded-xl p-4"
+        >
+          <h2 className="section-header flex items-center gap-2 mb-1"><BarChart3 size={13} className="text-gold" /> Team Capacity Tracker</h2>
+          <p className="text-[10px] text-muted mb-4">See who has bandwidth and who is overloaded.</p>
+          <div className="space-y-3">
+            {members.map((m, idx) => {
+              const taskLoad = m.tasksAssigned > 0 ? (m.tasksAssigned / 30) * 100 : 0;
+              const hourLoad = (m.hoursThisWeek / 45) * 100;
+              const combinedLoad = Math.min(Math.round((taskLoad + hourLoad) / 2), 100);
+              const loadLevel = combinedLoad > 80 ? "Overloaded" : combinedLoad > 50 ? "Balanced" : "Available";
+              const loadColor = combinedLoad > 80 ? "text-red-400" : combinedLoad > 50 ? "text-gold" : "text-emerald-400";
+              const barColor = combinedLoad > 80 ? "#ef4444" : combinedLoad > 50 ? "#6366F1" : "#10b981";
+              return (
+                <motion.div
+                  key={m.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.18, delay: idx * 0.05 }}
+                  className="p-3 rounded-lg bg-surface-light border border-border"
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="relative">
+                      <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center text-[10px] font-bold text-gold">{m.avatar}</div>
+                      <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[var(--color-surface-light)] ${STATUS_COLORS[m.status]}`} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-semibold">{m.name}</p>
+                        <div className="flex items-center gap-2">
+                          {combinedLoad > 80 && <AlertTriangle size={10} className="text-red-400" />}
+                          <span className={`text-[9px] font-medium ${loadColor}`}>{loadLevel}</span>
                         </div>
-                        <p className="text-[10px] text-muted">{m.role} &middot; {m.tasksAssigned} tasks &middot; {m.hoursThisWeek}h/week &middot; {m.clients} clients</p>
                       </div>
-                    </div>
-                    <div className="h-2.5 rounded-full bg-surface overflow-hidden">
-                      <div className="h-full rounded-full transition-all" style={{ width: `${combinedLoad}%`, background: barColor }} />
-                    </div>
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-[9px] text-muted">{combinedLoad}% capacity used</span>
-                      <span className="text-[9px] text-muted">{m.tasksCompleted}/{m.tasksAssigned} tasks done</span>
+                      <p className="text-[10px] text-muted">{m.role} &middot; {m.tasksAssigned} tasks &middot; {m.hoursThisWeek}h/week &middot; {m.clients} clients</p>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                  <div className="h-2.5 rounded-full bg-surface overflow-hidden">
+                    <div className="h-full rounded-full transition-all" style={{ width: `${combinedLoad}%`, background: barColor }} />
+                  </div>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className="text-[9px] text-muted">{combinedLoad}% capacity used</span>
+                    <span className="text-[9px] text-muted">{m.tasksCompleted}/{m.tasksAssigned} tasks done</span>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ REAL TEAM MEMBERS SECTION ═══ */}
       {tab === "members" && membersLoading && <TableSkeleton rows={4} />}
 
       {tab === "members" && !membersLoading && realMembers.length > 0 && (
-        <div className="card mt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22 }}
+          className="glass rounded-xl p-4 mt-4"
+        >
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header flex items-center gap-2 mb-0">
               <Users size={13} className="text-gold" /> Active Team Members
@@ -602,8 +673,15 @@ export default function TeamPage() {
             </h2>
           </div>
           <div className="space-y-2">
-            {realMembers.map(m => (
-              <div key={m.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light/30 border border-border hover:border-gold/20 transition-all">
+            {realMembers.map((m, index) => (
+              <motion.div
+                key={m.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.18, delay: index * 0.05 }}
+                whileHover={{ y: -3 }}
+                className="glass-md rounded-xl flex items-center gap-3 p-3 hover:border-gold/20 transition-all"
+              >
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold/30 to-amber-500/20 flex items-center justify-center text-gold text-xs font-bold shrink-0">
                   {m.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() || m.email[0].toUpperCase()}
                 </div>
@@ -632,17 +710,29 @@ export default function TeamPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
-                  <button onClick={() => setEditingMember(m)} className="p-1.5 rounded hover:bg-white/5 text-muted hover:text-foreground" title="Edit">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setEditingMember(m)}
+                    className="p-1.5 rounded hover:bg-white/5 text-muted hover:text-foreground"
+                    title="Edit"
+                  >
                     <Pencil size={11} />
-                  </button>
-                  <button onClick={() => removeMember(m.id, m.email)} className="p-1.5 rounded hover:bg-red-500/10 text-muted hover:text-red-400" title="Remove">
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => removeMember(m.id, m.email)}
+                    className="p-1.5 rounded hover:bg-red-500/10 text-muted hover:text-red-400"
+                    title="Remove"
+                  >
                     <Trash2 size={11} />
-                  </button>
+                  </motion.button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ INVITE MODAL ═══ */}
@@ -795,8 +885,6 @@ export default function TeamPage() {
                     toast.error("Toggle at least one permission for this role");
                     return;
                   }
-                  // Custom roles aren't persisted to the backend yet — surface
-                  // that clearly instead of fake-success closing the modal.
                   toast("Custom roles aren't saved yet. Use per-member permissions in Active Team Members for now.", { icon: "💡", duration: 6000 });
                   setShowCustomRole(false);
                   setCustomRoleName("");
