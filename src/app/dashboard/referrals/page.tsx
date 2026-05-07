@@ -60,6 +60,7 @@ function LinkedinIcon({ size = 14 }: { size?: number }) {
     </svg>
   );
 }
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
 import { COMMISSION_RATES } from "@/lib/referral-commission";
 import { PLAN_TIERS, getPlanConfig, type PlanTier } from "@/lib/plan-config";
@@ -232,8 +233,11 @@ export default function ReferralsPage() {
       />
 
       {/* ─── Hero: code + share link + social buttons ──────────────── */}
-      <section
-        className="rounded-2xl border p-5 sm:p-6"
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="glass rounded-xl p-5 sm:p-6"
         style={{
           background:
             "linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(26, 16, 51, 0.0) 70%)",
@@ -357,37 +361,26 @@ export default function ReferralsPage() {
         <p className="text-[10px] text-muted mt-3">
           Commission paid monthly for 12 months on every active subscription. Payout sent on the 1st of each month via Stripe Connect.
         </p>
-      </section>
+      </motion.section>
 
       {/* ─── Stat cards ─────────────────────────────────────────────── */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <StatCard
-          icon={<TrendingUp size={14} />}
-          accent="#10b981"
-          label="This month"
-          value={meLoading ? "—" : fmtCents(me?.stats.this_month_cents ?? 0)}
-          sublabel="Current cycle"
-        />
-        <StatCard
-          icon={<Wallet size={14} />}
-          accent="#c8a855"
-          label="All time earned"
-          value={meLoading ? "—" : fmtCents(me?.stats.total_earned_cents ?? 0)}
-          sublabel={`${me?.stats.total_referrals ?? 0} total referral${me?.stats.total_referrals === 1 ? "" : "s"}`}
-        />
-        <StatCard
-          icon={<Clock size={14} />}
-          accent="#a855f7"
-          label="Pending payout"
-          value={meLoading ? "—" : fmtCents(me?.stats.pending_payout_cents ?? 0)}
-          sublabel="Paid on the 1st"
-        />
+        {[
+          { icon: <TrendingUp size={14} />, accent: "#10b981", label: "This month", value: meLoading ? "—" : fmtCents(me?.stats.this_month_cents ?? 0), sublabel: "Current cycle" },
+          { icon: <Wallet size={14} />, accent: "#c8a855", label: "All time earned", value: meLoading ? "—" : fmtCents(me?.stats.total_earned_cents ?? 0), sublabel: `${me?.stats.total_referrals ?? 0} total referral${me?.stats.total_referrals === 1 ? "" : "s"}` },
+          { icon: <Clock size={14} />, accent: "#a855f7", label: "Pending payout", value: meLoading ? "—" : fmtCents(me?.stats.pending_payout_cents ?? 0), sublabel: "Paid on the 1st" },
+        ].map((tile, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <StatCard {...tile} />
+          </motion.div>
+        ))}
       </section>
 
       {/* ─── Bottom: referred users + leaderboard ──────────────────── */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Referrals table */}
-        <div className="lg:col-span-2 rounded-2xl border border-border bg-surface overflow-hidden">
+        <div className="lg:col-span-2 glass rounded-xl overflow-hidden">
           <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Users size={14} className="text-purple-300" />
@@ -426,11 +419,11 @@ export default function ReferralsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {referrals.map((r) => {
+                  {referrals.map((r, i) => {
                     const cfg = getPlanConfig(r.plan_tier);
                     const active = r.subscription_status === "active" || r.subscription_status === "trialing";
                     return (
-                      <tr key={r.id} className="border-b border-border last:border-0 hover:bg-surface-light/20 transition-colors">
+                      <motion.tr key={r.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="border-b border-border last:border-0 hover:bg-surface-light/20 transition-colors">
                         <td className="px-4 py-3">
                           <div className="text-xs font-semibold text-foreground truncate max-w-[180px]">
                             {r.full_name || "—"}
@@ -461,7 +454,7 @@ export default function ReferralsPage() {
                           </span>
                         </td>
                         <td className="px-4 py-3 text-xs text-muted">{fmtDate(r.signed_up_at)}</td>
-                      </tr>
+                      </motion.tr>
                     );
                   })}
                 </tbody>
@@ -471,7 +464,7 @@ export default function ReferralsPage() {
         </div>
 
         {/* Leaderboard */}
-        <div className="rounded-2xl border border-border bg-surface overflow-hidden">
+        <div className="glass rounded-xl overflow-hidden">
           <div className="px-5 py-3.5 border-b border-border flex items-center gap-2">
             <Trophy size={14} className="text-amber-400" />
             <h2 className="text-sm font-bold text-foreground">Leaderboard</h2>
@@ -522,7 +515,7 @@ export default function ReferralsPage() {
       </section>
 
       {/* Footer help */}
-      <div className="rounded-2xl border border-border bg-surface p-5 flex items-start gap-4 flex-wrap">
+      <div className="glass rounded-xl p-5 flex items-start gap-4 flex-wrap">
         <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0">
           <Sparkles size={16} className="text-purple-300" />
         </div>
@@ -563,7 +556,7 @@ function StatCard({
   sublabel: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-4">
+    <div className="p-4">
       <div className="flex items-center gap-2 mb-2.5">
         <div
           className="w-7 h-7 rounded-lg flex items-center justify-center"

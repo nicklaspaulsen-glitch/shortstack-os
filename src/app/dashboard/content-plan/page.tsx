@@ -8,6 +8,7 @@ import {
   MessageSquare, Heart, Share2, Zap, ChevronLeft, ChevronRight,
   Loader2, Filter, ThumbsUp, ThumbsDown, Users, Target, Wand2,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
@@ -669,11 +670,11 @@ export default function ContentPlanPage() {
 
           {/* Loading / Empty / Content */}
           {loading ? (
-            <div className="card flex items-center justify-center py-20">
+            <div className="glass rounded-xl flex items-center justify-center py-20">
               <DotsPulse label="Loading posts..." />
             </div>
           ) : filteredPosts.length === 0 ? (
-            <div className="card p-8">
+            <div className="glass rounded-xl p-8">
               <EmptyState
                 type="no-calendar"
                 title="No content yet"
@@ -716,7 +717,7 @@ export default function ContentPlanPage() {
 
         {/* ── RIGHT: AI Insights sidebar ─────────────────── */}
         <aside className="space-y-4 xl:sticky xl:top-4 xl:self-start">
-          <div className="card">
+          <div className="glass rounded-xl">
             <div className="flex items-center justify-between mb-2.5">
               <h3 className="text-xs font-semibold flex items-center gap-1.5">
                 <Sparkles size={12} className="text-gold" /> AI Insights
@@ -838,7 +839,7 @@ function InsightSection({
   const childArray = Array.isArray(children) ? children : [children];
   const hasItems = childArray.filter(Boolean).length > 0;
   return (
-    <div className="card">
+    <div className="glass rounded-xl">
       <h4 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2 text-foreground">
         {icon} {title}
       </h4>
@@ -865,10 +866,14 @@ function PostGrid({
 }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-      {posts.map(p => (
-        <div
+      {posts.map((p, i) => (
+        <motion.div
           key={p.id}
-          className={`card cursor-pointer group transition-all ${
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.06, duration: 0.4 }}
+          whileHover={{ y: -4, scale: 1.01 }}
+          className={`glass rounded-xl overflow-hidden cursor-pointer group transition-shadow ${
             selectedIds.has(p.id) ? "border-gold bg-gold/5" : ""
           }`}
           onClick={() => onOpen(p)}
@@ -924,7 +929,7 @@ function PostGrid({
             <span className="flex items-center gap-1"><Share2 size={10} /> {formatNum(p.shares)}</span>
             {p.views > 0 && <span className="flex items-center gap-1"><Eye size={10} /> {formatNum(p.views)}</span>}
           </div>
-        </div>
+        </motion.div>
       ))}
     </div>
   );
@@ -949,7 +954,7 @@ function PostList({
   }, [insights]);
 
   return (
-    <div className="card p-0 overflow-hidden">
+    <div className="glass rounded-xl p-0 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-[11px]">
           <thead className="bg-surface-light border-b border-border">
@@ -974,8 +979,11 @@ function PostList({
           </thead>
           <tbody>
             {posts.map((p, idx) => (
-              <tr
+              <motion.tr
                 key={p.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.04 }}
                 onClick={() => onOpen(p)}
                 className={`border-b border-border/50 cursor-pointer hover:bg-surface-light ${
                   selectedIds.has(p.id) ? "bg-gold/5" : idx % 2 ? "bg-surface/40" : ""
@@ -1016,7 +1024,7 @@ function PostList({
                     <span className="text-[10px] text-muted/50">—</span>
                   )}
                 </td>
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>
@@ -1060,7 +1068,7 @@ function PostCalendar({
   const today = new Date();
 
   return (
-    <div className="card">
+    <div className="glass rounded-xl">
       {/* Calendar header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -1353,7 +1361,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
 
 function Stat({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
-    <div className="p-2 rounded-lg border border-border bg-surface-light/40 text-center">
+    <div className="glass-md rounded-lg text-center">
       <div className="text-[10px] text-muted flex items-center justify-center gap-1 mb-0.5">{icon} {label}</div>
       <div className="text-sm font-semibold text-foreground">{value}</div>
     </div>

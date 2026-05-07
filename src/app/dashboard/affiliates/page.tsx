@@ -34,6 +34,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
 
@@ -209,34 +210,17 @@ export default function AffiliatesPage() {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard
-          label="Programs"
-          value={programs.length}
-          icon={<Award size={14} />}
-        />
-        <StatCard
-          label="Affiliates"
-          value={totalAffiliates}
-          change={
-            totalAffiliates > 0
-              ? `${approvedAffiliates} approved`
-              : "Invite your first one"
-          }
-          changeType={approvedAffiliates > 0 ? "positive" : "neutral"}
-          icon={<Users size={14} />}
-        />
-        <StatCard
-          label="Pending payouts"
-          value={fmtCents(totalPendingCents)}
-          icon={<Activity size={14} />}
-          premium
-        />
-        <StatCard
-          label="Paid out"
-          value={fmtCents(totalPaidCents)}
-          icon={<DollarSign size={14} />}
-          premium
-        />
+        {[
+          <StatCard key="programs" label="Programs" value={programs.length} icon={<Award size={14} />} />,
+          <StatCard key="affiliates" label="Affiliates" value={totalAffiliates} change={totalAffiliates > 0 ? `${approvedAffiliates} approved` : "Invite your first one"} changeType={approvedAffiliates > 0 ? "positive" : "neutral"} icon={<Users size={14} />} />,
+          <StatCard key="pending" label="Pending payouts" value={fmtCents(totalPendingCents)} icon={<Activity size={14} />} premium />,
+          <StatCard key="paid" label="Paid out" value={fmtCents(totalPaidCents)} icon={<DollarSign size={14} />} premium />,
+        ].map((card, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            {card}
+          </motion.div>
+        ))}
       </div>
 
       <div className="flex flex-wrap gap-1 border-b border-border">
@@ -377,7 +361,13 @@ function ProgramCard({
   }, [program.id, program.status, onChanged]);
 
   return (
-    <div className="rounded-2xl border border-border bg-card/60 p-5 space-y-3 hover:border-gold/40 transition-colors">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.05 }}
+      whileHover={{ y: -4, scale: 1.01 }}
+      className="glass rounded-xl p-5 space-y-3 hover:border-gold/40 transition-colors"
+    >
       <div className="flex items-start justify-between gap-2">
         <div className="space-y-1 min-w-0">
           <h3 className="font-semibold truncate">{program.name}</h3>
@@ -435,7 +425,7 @@ function ProgramCard({
           )}
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -654,7 +644,7 @@ function AffiliatesTab({
           <p className="text-sm text-muted">No affiliates yet</p>
         </div>
       ) : (
-        <div className="rounded-2xl border border-border overflow-hidden">
+        <div className="glass rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-muted/10 text-xs uppercase text-muted">
               <tr>
@@ -1042,7 +1032,7 @@ function KanbanColumn({
 
   return (
     <div
-      className={`rounded-2xl border-t-2 ${colorMap[color]} bg-card/40 p-4 space-y-3`}
+      className={`glass rounded-xl border-t-2 ${colorMap[color]} p-4 space-y-3`}
     >
       <div className="flex items-center justify-between">
         <h3 className={`font-semibold uppercase text-xs tracking-wide ${titleMap[color]}`}>
@@ -1161,7 +1151,7 @@ function PayoutsTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card/40 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 glass rounded-xl p-4">
         <div>
           <div className="text-sm font-semibold">
             {readyCount} affiliate{readyCount === 1 ? "" : "s"} ready to pay
@@ -1195,7 +1185,7 @@ function PayoutsTab({
           <p className="text-sm text-muted">No pending payouts.</p>
         </div>
       ) : (
-        <div className="rounded-2xl border border-border overflow-hidden">
+        <div className="glass rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-muted/10 text-xs uppercase text-muted">
               <tr>
@@ -1243,7 +1233,7 @@ function PayoutsTab({
       )}
 
       {results && (
-        <div className="rounded-2xl border border-border bg-card/40 p-4 space-y-2">
+        <div className="glass rounded-xl p-4 space-y-2">
           <h4 className="text-sm font-semibold">Last run</h4>
           <ul className="text-xs space-y-1">
             {results.map((r) => (

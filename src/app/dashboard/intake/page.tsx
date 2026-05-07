@@ -8,6 +8,7 @@ import {
   MessageSquare, List, Hash, Star, ChevronDown,
   X, Zap
 } from "lucide-react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
@@ -318,13 +319,18 @@ export default function IntakePage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {forms.map((form) => {
+                {forms.map((form, i) => {
                   const embedUrl = `${appUrl}/intake/${form.id}`;
                   return (
-                    <div
+                    <motion.div
                       key={form.id}
-                      className="bg-[#101012] border border-[rgba(99,102,241,0.08)] rounded-xl p-4 flex flex-col gap-3"
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.06, duration: 0.4 }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      className="glass rounded-xl overflow-hidden p-4 flex flex-col gap-3"
                     >
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0", marginTop: -16, marginLeft: -16, marginRight: -16, marginBottom: 4, width: "calc(100% + 32px)" }} />
                       <div className="flex items-start gap-3">
                         <div
                           className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center"
@@ -351,7 +357,7 @@ export default function IntakePage() {
                       </div>
 
                       {/* Embed URL */}
-                      <div className="bg-white/[0.03] border border-white/[0.05] rounded-lg px-2.5 py-2 flex items-center gap-2">
+                      <div className="glass-md rounded-lg px-2.5 py-2 flex items-center gap-2">
                         <span className="text-[10px] text-white/30 truncate flex-1 font-mono">{embedUrl}</span>
                         <button
                           onClick={() => {
@@ -412,7 +418,7 @@ export default function IntakePage() {
                           <Trash2 size={11} />
                         </button>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -435,13 +441,16 @@ export default function IntakePage() {
               </div>
             ) : (
               <div className="space-y-2">
-                {submissions.map((sub) => {
+                {submissions.map((sub, i) => {
                   const meta = STATUS_META[sub.status];
                   return (
-                    <button
+                    <motion.button
                       key={sub.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.04 }}
                       onClick={() => setSubDetail(sub)}
-                      className="w-full text-left bg-[#101012] border border-[rgba(99,102,241,0.08)] hover:border-[rgba(99,102,241,0.18)] rounded-xl p-3.5 flex items-center gap-3 transition-all"
+                      className="w-full text-left glass rounded-xl p-3.5 flex items-center gap-3 transition-all hover:border-[rgba(99,102,241,0.18)]"
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -467,7 +476,7 @@ export default function IntakePage() {
                           {meta.label}
                         </span>
                       </div>
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
@@ -488,7 +497,7 @@ export default function IntakePage() {
               <input
                 value={bName}
                 onChange={(e) => setBName(e.target.value)}
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white/90 outline-none focus:border-[#6366F1]/50"
+                className="w-full glass rounded-lg px-3 py-2 text-sm text-white/90 outline-none focus:border-[#6366F1]/50"
               />
             </div>
 
@@ -498,7 +507,7 @@ export default function IntakePage() {
                 value={bWelcome}
                 onChange={(e) => setBWelcome(e.target.value)}
                 rows={2}
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-sm text-white/90 outline-none focus:border-[#6366F1]/50 resize-none"
+                className="w-full glass rounded-lg px-3 py-2 text-sm text-white/90 outline-none focus:border-[#6366F1]/50 resize-none"
               />
             </div>
 

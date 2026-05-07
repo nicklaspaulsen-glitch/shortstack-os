@@ -9,6 +9,7 @@ import {
 import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 
 interface TagRow {
@@ -247,7 +248,7 @@ export default function TagsPage() {
 
       {/* Bulk-action bar — appears when at least one tag is selected */}
       {selected.size > 0 && (
-        <div className="card p-3 flex items-center justify-between gap-3 border border-gold/30 bg-gold/5">
+        <div className="glass rounded-xl p-3 flex items-center justify-between gap-3 border border-gold/30 bg-gold/5">
           <p className="text-xs text-white/70">
             <span className="font-semibold text-white">{selected.size}</span> tag{selected.size === 1 ? "" : "s"} selected
           </p>
@@ -264,7 +265,7 @@ export default function TagsPage() {
       )}
 
       {showMerge && selected.size > 0 && (
-        <div className="card p-4 space-y-3 border border-gold/30">
+        <div className="glass rounded-xl p-4 space-y-3 border border-gold/30">
           <p className="text-sm font-semibold text-white">Merge {selected.size} tag{selected.size === 1 ? "" : "s"} into:</p>
           <input
             className="input w-full text-sm"
@@ -291,7 +292,7 @@ export default function TagsPage() {
       )}
 
       {showCreate && (
-        <div className="card p-5 space-y-4 border border-white/10">
+        <div className="glass rounded-xl p-5 space-y-4">
           <p className="font-semibold text-white text-sm">New Tag</p>
           <div className="flex flex-wrap gap-3">
             <input className="input flex-1 min-w-[160px] text-sm" placeholder="Tag name"
@@ -318,7 +319,7 @@ export default function TagsPage() {
       )}
 
       {loading ? <TableSkeleton rows={6} /> : tags.length === 0 ? (
-        <div className="card p-12 flex flex-col items-center gap-4 text-center">
+        <div className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center">
           <Tag size={40} className="text-muted opacity-30" />
           <p className="text-white font-semibold">No tags yet</p>
           <p className="text-muted text-sm max-w-xs">Create tags to segment and organise every record in one place.</p>
@@ -328,7 +329,7 @@ export default function TagsPage() {
           </button>
         </div>
       ) : (
-        <div className="card overflow-hidden">
+        <div className="glass rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/5 text-muted text-xs">
@@ -382,7 +383,7 @@ export default function TagsPage() {
                     </td>
                   </tr>
                 ) : (
-                  <tr key={tag.id} className="hover:bg-white/[0.02] transition-colors group">
+                  <motion.tr key={tag.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: tags.indexOf(tag) * 0.04 }} className="hover:bg-white/[0.02] transition-colors group">
                     <td className="px-3 py-3">
                       <input
                         type="checkbox"
@@ -419,7 +420,7 @@ export default function TagsPage() {
                         </button>
                       </div>
                     </td>
-                  </tr>
+                  </motion.tr>
                 )
               )}
             </tbody>
