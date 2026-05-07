@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
@@ -125,7 +126,7 @@ export default function ClientReportsPage() {
           icon={<ClipboardList size={22} />}
           gradient="purple"
         />
-        <div className="rounded-xl border border-white/10 bg-white/5 p-12 text-center">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
           <FileText size={40} className="mx-auto mb-4 text-white/20" />
           <p className="text-white/60 mb-2">No reports generated yet.</p>
           <p className="text-white/40 text-sm mb-6">
@@ -137,7 +138,7 @@ export default function ClientReportsPage() {
           >
             Go to Report Generator
           </Link>
-        </div>
+        </motion.div>
       </div>
     );
   }
@@ -162,11 +163,11 @@ export default function ClientReportsPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-24 rounded-xl bg-white/5 animate-pulse" />
+            <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }} className="h-24 glass rounded-xl animate-pulse" />
           ))}
         </div>
       ) : rows.length === 0 ? (
-        <div className="rounded-xl border border-white/10 bg-white/5 p-12 text-center">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
           <ClipboardList size={40} className="mx-auto mb-4 text-white/20" />
           <p className="text-white/60 mb-2">No reports yet.</p>
           <Link
@@ -175,15 +176,19 @@ export default function ClientReportsPage() {
           >
             Generate your first report
           </Link>
-        </div>
+        </motion.div>
       ) : (
         <div className="space-y-4">
-          {rows.map(row => {
+          {rows.map((row, i) => {
             const isExpanded = expandedClient === row.client_id;
             return (
-              <div
+              <motion.div
                 key={row.client_id || "__none__"}
-                className="rounded-xl border border-white/10 bg-white/5 overflow-hidden"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="glass rounded-xl overflow-hidden"
               >
                 {/* Client header */}
                 <button
@@ -263,7 +268,7 @@ export default function ClientReportsPage() {
                     ))}
                   </div>
                 )}
-              </div>
+              </motion.div>
             );
           })}
         </div>

@@ -3545,7 +3545,7 @@ export default function VideoEditorPage() {
               description: "We'll assemble the edit. Fine-tune captions, music, SFX, and scenes in Advanced mode.",
               icon: <Wand2 size={18} />,
               component: (
-                <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+                <div className="glass rounded-xl bg-gold/[0.04] border-gold/20 space-y-2">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <p className="text-[9px] uppercase tracking-wider text-muted">Type</p>
@@ -3586,7 +3586,7 @@ export default function VideoEditorPage() {
 
       {/* Result in guided mode */}
       {!advancedMode && result && (
-        <div className="card space-y-3">
+        <div className="glass rounded-xl space-y-3">
           <h2 className="section-header flex items-center gap-2">
             <Film size={14} className="text-gold" /> {config.title || "Your video"}
           </h2>
@@ -3828,7 +3828,7 @@ export default function VideoEditorPage() {
 
             {/* Scene Builder Sidebar */}
             <div className="space-y-4">
-              <div className="card border-gold/10">
+              <div className="glass rounded-xl border-gold/10">
                 <h3 className="section-header flex items-center gap-2"><Timer size={12} className="text-gold" /> Scene Timeline</h3>
                 <div className="space-y-1">
                   {sceneBuilderScenes.map((scene, idx) => {
@@ -3926,7 +3926,7 @@ export default function VideoEditorPage() {
 
             {/* Script Sidebar */}
             <div className="space-y-4">
-              <div className="card border-gold/10">
+              <div className="glass rounded-xl border-gold/10">
                 <h3 className="section-header flex items-center gap-2"><BarChart3 size={12} className="text-gold" /> Script Analysis</h3>
                 <div className="space-y-2 text-[9px]">
                   <div className="flex justify-between"><span className="text-muted">Word Count</span><span className="font-mono">{aiScriptInput.split(/\s+/).filter(Boolean).length}</span></div>
@@ -4098,7 +4098,7 @@ export default function VideoEditorPage() {
 
             {/* Audio Sidebar */}
             <div className="space-y-4">
-              <div className="card border-gold/10">
+              <div className="glass rounded-xl border-gold/10">
                 <h3 className="section-header flex items-center gap-2"><Sliders size={12} className="text-gold" /> Mix Summary</h3>
                 <div className="space-y-2 text-[9px]">
                   <div className="flex justify-between items-center">
@@ -5758,7 +5758,7 @@ export default function VideoEditorPage() {
 
             {/* Sidebar — active-config summary */}
             <div className="space-y-3">
-              <div className="card border-gold/10">
+              <div className="glass rounded-xl border-gold/10">
                 <h3 className="section-header flex items-center gap-2"><ListChecks size={12} className="text-gold" /> Active Config Summary</h3>
                 <div className="space-y-1.5 text-[9px]">
                   <SummaryRow label="Captions" on={editorSettings.captions.enabled} value={editorSettings.captions.enabled ? ADVANCED_CAPTION_PRESETS.find(x => x.id === editorSettings.captions.preset)?.name : "off"} />
@@ -5799,7 +5799,7 @@ export default function VideoEditorPage() {
                 </div>
               </div>
 
-              <div className="card border-gold/10">
+              <div className="glass rounded-xl border-gold/10">
                 <h3 className="section-header flex items-center gap-2"><AlertCircle size={12} className="text-gold" /> Tips</h3>
                 <ul className="text-[9px] text-muted space-y-1 list-disc pl-3.5">
                   <li>Every panel is optional — toggle only what you need.</li>
@@ -5843,7 +5843,7 @@ export default function VideoEditorPage() {
              *  fake endpoints. These three call existing, shipped backends. */}
             {editorLeftTab === "ai" && (
               <div className="space-y-3">
-                <div className="card space-y-2">
+                <div className="glass rounded-xl space-y-2">
                   <h2 className="section-header flex items-center gap-2 mb-0">
                     <Wand2 size={13} className="text-gold" /> One-click Auto-Edit
                   </h2>
@@ -5867,7 +5867,7 @@ export default function VideoEditorPage() {
                   )}
                 </div>
 
-                <div className="card space-y-2">
+                <div className="glass rounded-xl space-y-2">
                   <h2 className="section-header flex items-center gap-2 mb-0">
                     <Eye size={13} className="text-gold" /> Classify Footage
                   </h2>
@@ -5927,7 +5927,7 @@ export default function VideoEditorPage() {
                   )}
                 </div>
 
-                <div className="card space-y-2">
+                <div className="glass rounded-xl space-y-2">
                   <h2 className="section-header flex items-center gap-2 mb-0">
                     <TrendingUp size={13} className="text-gold" /> Analyze Viral Video
                   </h2>
@@ -6381,7 +6381,7 @@ export default function VideoEditorPage() {
             </div>
 
             {/* Details */}
-            <div className="card space-y-3">
+            <div className="glass rounded-xl space-y-3">
               <h2 className="section-header">Video Details</h2>
               <div>
                 <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Title *</label>
@@ -6663,7 +6663,7 @@ export default function VideoEditorPage() {
 
             {/* ── AI-Generated Shot List / Script / Captions ── */}
             {aiProject && (aiProject.shotlist || aiProject.scenes || aiProject.captions) && (
-              <div className="card space-y-3">
+              <div className="glass rounded-xl space-y-3">
                 <h2 className="section-header flex items-center gap-2">
                   <Bot size={13} className="text-gold" /> AI Project
                   <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">Claude</span>
@@ -7318,7 +7318,7 @@ export default function VideoEditorPage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {result.storyboard.map((scene, i) => (
-                  <div key={i} className="card card-hover">
+                  <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl card-hover">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] font-bold text-gold">Scene {scene.scene_number}</span>
                       <span className="text-[9px] text-muted font-mono">{scene.duration}</span>
@@ -7345,12 +7345,12 @@ export default function VideoEditorPage() {
                         {scene.camera_movement && <span className="text-[8px] text-muted flex items-center gap-1"><Camera size={8} /> {scene.camera_movement}</span>}
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </>
           ) : result?.plan ? (
-            <div className="card">
+            <div className="glass rounded-xl">
               <h2 className="section-header flex items-center gap-2"><Sparkles size={13} className="text-gold" /> Video Plan</h2>
               <pre className="text-[10px] text-muted bg-surface-light rounded-lg p-3 whitespace-pre-wrap max-h-[500px] overflow-y-auto">{result.plan}</pre>
               <div className="flex gap-2 mt-3">
@@ -7957,7 +7957,7 @@ function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void
       )}
 
       {/* Batch ideas */}
-      <div className="card border-gold/10">
+      <div className="glass rounded-xl border-gold/10">
         <h3 className="section-header flex items-center gap-2"><Zap size={12} className="text-gold" /> Weekly Content Plan</h3>
         <p className="text-[10px] text-muted mb-3">Auto-generate a week of video content — one preset per day</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">

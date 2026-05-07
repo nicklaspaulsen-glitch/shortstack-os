@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency } from "@/lib/utils";
@@ -532,95 +533,50 @@ export default function FinancialsPage() {
         <>
           {/* Key Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <DollarSign size={12} className="text-gold" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">MRR</p>
-              </div>
-              <p className="text-lg font-bold text-gold">{formatCurrency(totalMRR)}</p>
-              <p className="text-[10px] text-muted mt-0.5">{activeClients.length} active clients</p>
-            </div>
-
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Globe size={12} className="text-blue-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">ARR</p>
-              </div>
-              <p className="text-lg font-bold text-blue-400">{formatCurrency(annualRecurringRevenue)}</p>
-              <p className="text-[10px] text-muted mt-0.5">annualized</p>
-            </div>
-
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <TrendingUp size={12} className={netProfit >= 0 ? "text-green-400" : "text-red-400"} />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Net Profit</p>
-              </div>
-              <p className={`text-lg font-bold ${netProfit >= 0 ? "text-green-400" : "text-red-400"}`}>
-                {formatCurrency(netProfit)}
-              </p>
-              <p className="text-[10px] text-muted mt-0.5 flex items-center gap-0.5">
-                {marginPct >= 0 ? (
-                  <ArrowUpRight size={10} className="text-green-400" />
-                ) : (
-                  <ArrowDownRight size={10} className="text-red-400" />
-                )}
-                {marginPct.toFixed(1)}% margin
-              </p>
-            </div>
-
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <AlertTriangle size={12} className={churnRate > 5 ? "text-red-400" : "text-yellow-400"} />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Churn Rate</p>
-              </div>
-              <p className={`text-lg font-bold ${churnRate > 5 ? "text-red-400" : "text-yellow-400"}`}>
-                {churnRate.toFixed(1)}%
-              </p>
-              <p className="text-[10px] text-muted mt-0.5">{churnedThisMonth} churned / {totalClients} total</p>
-            </div>
+            {[
+              { icon: <DollarSign size={12} className="text-gold" />, label: "MRR", value: formatCurrency(totalMRR), color: "text-gold", sub: `${activeClients.length} active clients` },
+              { icon: <Globe size={12} className="text-blue-400" />, label: "ARR", value: formatCurrency(annualRecurringRevenue), color: "text-blue-400", sub: "annualized" },
+              { icon: <TrendingUp size={12} className={netProfit >= 0 ? "text-green-400" : "text-red-400"} />, label: "Net Profit", value: formatCurrency(netProfit), color: netProfit >= 0 ? "text-green-400" : "text-red-400", sub: <span className="flex items-center gap-0.5">{marginPct >= 0 ? <ArrowUpRight size={10} className="text-green-400" /> : <ArrowDownRight size={10} className="text-red-400" />}{marginPct.toFixed(1)}% margin</span> },
+              { icon: <AlertTriangle size={12} className={churnRate > 5 ? "text-red-400" : "text-yellow-400"} />, label: "Churn Rate", value: `${churnRate.toFixed(1)}%`, color: churnRate > 5 ? "text-red-400" : "text-yellow-400", sub: `${churnedThisMonth} churned / ${totalClients} total` },
+            ].map((tile, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div className="p-3">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    {tile.icon}
+                    <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+                  </div>
+                  <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
+                  <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* Extended Metrics Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Minus size={12} className="text-red-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Monthly Expenses</p>
-              </div>
-              <p className="text-lg font-bold text-red-400">{formatCurrency(totalMonthlyExpenses)}</p>
-              <p className="text-[10px] text-muted mt-0.5">{expenses.length} subscriptions</p>
-            </div>
-
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Users size={12} className="text-purple-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Avg / Client</p>
-              </div>
-              <p className="text-lg font-bold text-purple-400">{formatCurrency(avgRevenue)}</p>
-              <p className="text-[10px] text-muted mt-0.5">{activeClients.length} clients</p>
-            </div>
-
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Zap size={12} className="text-gold" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Client LTV</p>
-              </div>
-              <p className="text-lg font-bold text-gold">{formatCurrency(clv)}</p>
-              <p className="text-[10px] text-muted mt-0.5">avg {avgClientLifeMonths} months</p>
-            </div>
-
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Shield size={12} className="text-orange-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Est. Annual Tax</p>
-              </div>
-              <p className="text-lg font-bold text-orange-400">{formatCurrency(estimatedTax)}</p>
-              <p className="text-[10px] text-muted mt-0.5">{estimatedTaxRate}% effective rate</p>
-            </div>
+            {[
+              { icon: <Minus size={12} className="text-red-400" />, label: "Monthly Expenses", value: formatCurrency(totalMonthlyExpenses), color: "text-red-400", sub: `${expenses.length} subscriptions` },
+              { icon: <Users size={12} className="text-purple-400" />, label: "Avg / Client", value: formatCurrency(avgRevenue), color: "text-purple-400", sub: `${activeClients.length} clients` },
+              { icon: <Zap size={12} className="text-gold" />, label: "Client LTV", value: formatCurrency(clv), color: "text-gold", sub: `avg ${avgClientLifeMonths} months` },
+              { icon: <Shield size={12} className="text-orange-400" />, label: "Est. Annual Tax", value: formatCurrency(estimatedTax), color: "text-orange-400", sub: `${estimatedTaxRate}% effective rate` },
+            ].map((tile, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div className="p-3">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    {tile.icon}
+                    <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+                  </div>
+                  <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
+                  <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* Revenue vs Expenses Bar */}
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="glass rounded-xl p-4">
             <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
               <BarChart3 size={13} className="text-gold" /> Revenue vs Expenses vs Profit
             </p>
@@ -653,11 +609,11 @@ export default function FinancialsPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* MRR Trend */}
           {mrrTrend.length > 1 && (
-            <div className="card p-4">
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="glass rounded-xl p-4">
               <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                 <TrendingUp size={13} className="text-gold" /> MRR Growth Trend
               </p>
@@ -676,11 +632,11 @@ export default function FinancialsPage() {
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* Revenue by Plan Tier */}
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="glass rounded-xl p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
               <Layers size={13} className="text-gold" /> Revenue by Plan Tier
             </p>
@@ -699,10 +655,10 @@ export default function FinancialsPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Payment Method Distribution */}
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }} className="glass rounded-xl p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
               <CreditCard size={13} className="text-gold" /> Payment Method Distribution
             </p>
@@ -724,7 +680,7 @@ export default function FinancialsPage() {
               ))}
             </div>
             )}
-          </div>
+          </motion.div>
         </>
       )}
 
@@ -736,38 +692,27 @@ export default function FinancialsPage() {
         <>
           {/* Expense Summary Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Minus size={12} className="text-red-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Monthly Total</p>
-              </div>
-              <p className="text-lg font-bold text-red-400">{formatCurrency(totalMonthlyExpenses)}</p>
-            </div>
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Calendar size={12} className="text-orange-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Annual Total</p>
-              </div>
-              <p className="text-lg font-bold text-orange-400">{formatCurrency(totalMonthlyExpenses * 12)}</p>
-            </div>
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Layers size={12} className="text-blue-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Categories</p>
-              </div>
-              <p className="text-lg font-bold text-blue-400">{categoryTotals.length}</p>
-            </div>
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Percent size={12} className={marginPct >= 0 ? "text-green-400" : "text-red-400"} />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Profit Margin</p>
-              </div>
-              <p className={`text-lg font-bold ${marginPct >= 0 ? "text-green-400" : "text-red-400"}`}>{marginPct.toFixed(1)}%</p>
-            </div>
+            {[
+              { icon: <Minus size={12} className="text-red-400" />, label: "Monthly Total", value: formatCurrency(totalMonthlyExpenses), color: "text-red-400" },
+              { icon: <Calendar size={12} className="text-orange-400" />, label: "Annual Total", value: formatCurrency(totalMonthlyExpenses * 12), color: "text-orange-400" },
+              { icon: <Layers size={12} className="text-blue-400" />, label: "Categories", value: String(categoryTotals.length), color: "text-blue-400" },
+              { icon: <Percent size={12} className={marginPct >= 0 ? "text-green-400" : "text-red-400"} />, label: "Profit Margin", value: `${marginPct.toFixed(1)}%`, color: marginPct >= 0 ? "text-green-400" : "text-red-400" },
+            ].map((tile, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div className="p-3">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    {tile.icon}
+                    <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+                  </div>
+                  <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* Budget vs Actual */}
-          <div className="card p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass rounded-xl p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
               <Target size={13} className="text-gold" /> Budget vs Actual
             </p>
@@ -798,11 +743,11 @@ export default function FinancialsPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Category Breakdown */}
           {categoryTotals.length > 0 && (
-            <div className="card p-4">
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="glass rounded-xl p-4">
               <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                 <Receipt size={13} className="text-gold" /> Expense Categories
               </p>
@@ -817,7 +762,7 @@ export default function FinancialsPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* Preset Drawer */}
@@ -912,31 +857,22 @@ export default function FinancialsPage() {
         <>
           {/* Summary cards */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-            <div className="card p-4">
-              <p className="text-[10px] text-muted uppercase tracking-wider">Monthly Spend</p>
-              <p className="text-lg font-bold text-red-400">{formatCurrency(totalMonthlySubs)}</p>
-              <p className="text-[9px] text-muted">{activeSubs} active tools</p>
-            </div>
-            <div className="card p-4">
-              <p className="text-[10px] text-muted uppercase tracking-wider">Annual Spend</p>
-              <p className="text-lg font-bold text-foreground">{formatCurrency(totalAnnualSubs)}</p>
-              <p className="text-[9px] text-muted">Projected</p>
-            </div>
-            <div className="card p-4">
-              <p className="text-[10px] text-muted uppercase tracking-wider">Active</p>
-              <p className="text-lg font-bold text-emerald-400">{activeSubs}</p>
-              <p className="text-[9px] text-muted">of {subscriptions.length} total</p>
-            </div>
-            <div className="card p-4">
-              <p className="text-[10px] text-muted uppercase tracking-wider">Renewals ≤7d</p>
-              <p className="text-lg font-bold text-amber-400">{upcomingRenewals}</p>
-              <p className="text-[9px] text-muted">Upcoming charges</p>
-            </div>
-            <div className="card p-4">
-              <p className="text-[10px] text-muted uppercase tracking-wider">Top Cost</p>
-              <p className="text-sm font-semibold text-gold truncate">{mostExpensive?.tool_name || "—"}</p>
-              <p className="text-[9px] text-muted">{mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data"}</p>
-            </div>
+            {[
+              { label: "Monthly Spend", value: formatCurrency(totalMonthlySubs), color: "text-red-400", sub: `${activeSubs} active tools` },
+              { label: "Annual Spend", value: formatCurrency(totalAnnualSubs), color: "text-foreground", sub: "Projected" },
+              { label: "Active", value: String(activeSubs), color: "text-emerald-400", sub: `of ${subscriptions.length} total` },
+              { label: "Renewals ≤7d", value: String(upcomingRenewals), color: "text-amber-400", sub: "Upcoming charges" },
+              { label: "Top Cost", value: mostExpensive?.tool_name || "—", color: "text-gold", sub: mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data", small: true },
+            ].map((tile, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div className="p-4">
+                  <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+                  <p className={`${tile.small ? "text-sm font-semibold truncate" : "text-lg font-bold"} ${tile.color}`}>{tile.value}</p>
+                  <p className="text-[9px] text-muted">{tile.sub}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* Header + Add button */}
@@ -1060,38 +996,24 @@ export default function FinancialsPage() {
         <>
           {/* Invoice Summary */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <AlertTriangle size={12} className="text-red-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Overdue</p>
-              </div>
-              <p className="text-lg font-bold text-red-400">{formatCurrency(invoiceTotals.overdue)}</p>
-              <p className="text-[10px] text-muted mt-0.5">{invoices.filter(i => i.status === "overdue").length} invoices</p>
-            </div>
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Clock size={12} className="text-yellow-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Due Soon</p>
-              </div>
-              <p className="text-lg font-bold text-yellow-400">{formatCurrency(invoiceTotals.dueSoon)}</p>
-              <p className="text-[10px] text-muted mt-0.5">{invoices.filter(i => i.status === "due_soon").length} invoices</p>
-            </div>
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <FileText size={12} className="text-blue-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Pending</p>
-              </div>
-              <p className="text-lg font-bold text-blue-400">{formatCurrency(invoiceTotals.pending)}</p>
-              <p className="text-[10px] text-muted mt-0.5">{invoices.filter(i => i.status === "pending").length} invoices</p>
-            </div>
-            <div className="card p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <CheckCircle size={12} className="text-green-400" />
-                <p className="text-[10px] text-muted uppercase tracking-wider">Paid</p>
-              </div>
-              <p className="text-lg font-bold text-green-400">{formatCurrency(invoiceTotals.paid)}</p>
-              <p className="text-[10px] text-muted mt-0.5">{invoices.filter(i => i.status === "paid").length} invoices</p>
-            </div>
+            {[
+              { icon: <AlertTriangle size={12} className="text-red-400" />, label: "Overdue", value: formatCurrency(invoiceTotals.overdue), color: "text-red-400", sub: `${invoices.filter(i => i.status === "overdue").length} invoices` },
+              { icon: <Clock size={12} className="text-yellow-400" />, label: "Due Soon", value: formatCurrency(invoiceTotals.dueSoon), color: "text-yellow-400", sub: `${invoices.filter(i => i.status === "due_soon").length} invoices` },
+              { icon: <FileText size={12} className="text-blue-400" />, label: "Pending", value: formatCurrency(invoiceTotals.pending), color: "text-blue-400", sub: `${invoices.filter(i => i.status === "pending").length} invoices` },
+              { icon: <CheckCircle size={12} className="text-green-400" />, label: "Paid", value: formatCurrency(invoiceTotals.paid), color: "text-green-400", sub: `${invoices.filter(i => i.status === "paid").length} invoices` },
+            ].map((tile, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div className="p-3">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    {tile.icon}
+                    <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+                  </div>
+                  <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
+                  <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* Invoice Aging Chart */}
