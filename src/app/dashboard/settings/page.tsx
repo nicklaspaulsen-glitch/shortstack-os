@@ -5,10 +5,14 @@ import {
   Activity,
   AlertTriangle,
   Bell,
+  Building2,
   ClipboardList,
   Code,
   CreditCard,
+  Download,
+  Gift,
   Globe2,
+  LayoutTemplate,
   Mail,
   Mic,
   Palette,
@@ -482,6 +486,128 @@ export default function SettingsIndexPage() {
                 </span>
                 <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
                   Full history
+                </span>
+              </>
+            }
+          />
+        </div>
+      </div>
+
+      {/* ── Business & Admin ─────────────────────────────────────────────── */}
+      <div>
+        <div className="flex items-center gap-3 mb-4">
+          <h2
+            className="font-editorial text-[11px] uppercase tracking-[0.18em]"
+            style={{ color: tokens.text.muted }}
+          >
+            Business &amp; Admin
+          </h2>
+          <div className="flex-1 h-px" style={{ background: tokens.border.subtle }} />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <SettingsCard
+            index={20}
+            href="/dashboard/subaccounts"
+            title="Subaccounts"
+            description="Create and manage sub-agency accounts under your workspace."
+            Icon={Building2}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Multi-tenant
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Sub-agencies
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={21}
+            href="/dashboard/pricing"
+            title="Pricing Plans"
+            description="Configure the pricing tiers you offer your clients."
+            Icon={CreditCard}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Monetization
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Client tiers
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={22}
+            href="/dashboard/affiliates"
+            title="Affiliates"
+            description="Manage your affiliate program and referral commissions."
+            Icon={Gift}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Referrals
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Commission tracking
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={23}
+            href="/dashboard/verticals"
+            title="Vertical Templates"
+            description="Industry-specific page and workflow templates for your niche."
+            Icon={LayoutTemplate}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Templates
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  By industry
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={24}
+            href="/dashboard/monitor"
+            title="Monitor"
+            description="System health, uptime checks, and background job status."
+            Icon={Activity}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Observability
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Uptime &amp; jobs
+                </span>
+              </>
+            }
+          />
+
+          <SettingsCard
+            index={25}
+            href="/dashboard/download"
+            title="Desktop App"
+            description="Download the ShortStack desktop client for Mac or Windows."
+            Icon={Download}
+            preview={
+              <>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                  Native
+                </span>
+                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                  Mac · Windows
                 </span>
               </>
             }

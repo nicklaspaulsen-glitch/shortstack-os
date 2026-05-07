@@ -161,12 +161,12 @@ const navItems: NavItem[] = [
   { label: "Proposals", href: "/dashboard/proposals", icon: <NavIcon3D name="FileCheck" size={16} />, roles: ["admin", "team_member"], sub: "Pipeline", tier: 2 },
   { label: "Forecast", href: "/dashboard/forecast", icon: <NavIcon3D name="TrendingUp" size={16} />, roles: ["admin"], sub: "Pipeline", tier: 3 },
   { label: "Commissions", href: "/dashboard/commission-tracker", icon: <NavIcon3D name="Award" size={16} />, roles: ["admin"], sub: "Pipeline", tier: 3 },
-  { label: "Affiliates", href: "/dashboard/affiliates", icon: <NavIcon3D name="Award" size={16} />, roles: ["admin"], sub: "Pipeline", tier: 3 },
+  { label: "Affiliates", href: "/dashboard/affiliates", icon: <NavIcon3D name="Award" size={16} />, roles: ["admin"], sub: "Pipeline", tier: 3, settingsOnly: true },
   { label: "Ads Manager", href: "/dashboard/ads-manager", icon: <NavIcon3D name="Target" size={16} />, roles: ["admin"], sub: "Pipeline", tier: 3 },
   { label: "Scheduling", href: "/dashboard/scheduling", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], sub: "Scheduling", tier: 3 },
   { label: "Meetings", href: "/dashboard/meetings", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], sub: "Scheduling", tier: 3 },
   { label: "Courses", href: "/dashboard/courses", icon: <NavIcon3D name="BookOpen" size={16} />, roles: ["admin"], sub: "Membership", tier: 3 },
-  { label: "Vertical Templates", href: "/dashboard/verticals", icon: <NavIcon3D name="Briefcase" size={16} />, roles: ["admin"], sub: "Membership", tier: 3 },
+  { label: "Vertical Templates", href: "/dashboard/verticals", icon: <NavIcon3D name="Briefcase" size={16} />, roles: ["admin"], sub: "Membership", tier: 3, settingsOnly: true },
 
   // ── Create (content production) ──
   { label: "AI Copywriter", href: "/dashboard/copywriter", icon: <NavIcon3D name="Pen" size={16} />, roles: ["admin", "team_member"], section: "Create", sub: "Writing", tier: 2 },
@@ -230,8 +230,8 @@ const navItems: NavItem[] = [
   { label: "Financials", href: "/dashboard/financials", icon: <NavIcon3D name="BarChart3" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
   { label: "Invoices", href: "/dashboard/invoices", icon: <NavIcon3D name="Receipt" size={16} />, roles: ["admin"], sub: "Business", tier: 2 },
   { label: "Invoice Templates", href: "/dashboard/invoice-templates", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
-  { label: "Subaccounts", href: "/dashboard/subaccounts", icon: <NavIcon3D name="Building2" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
-  { label: "Pricing", href: "/dashboard/pricing", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin"], sub: "Business", tier: 3 },
+  { label: "Subaccounts", href: "/dashboard/subaccounts", icon: <NavIcon3D name="Building2" size={16} />, roles: ["admin"], sub: "Business", tier: 3, settingsOnly: true },
+  { label: "Pricing", href: "/dashboard/pricing", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin"], sub: "Business", tier: 3, settingsOnly: true },
   // Moved to Settings hub — not in sidebar footer, only reachable from /dashboard/settings:
   { label: "White Label", href: "/dashboard/white-label", icon: <NavIcon3D name="Palette" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
   { label: "Billing", href: "/dashboard/billing", icon: <NavIcon3D name="CreditCard" size={16} />, roles: ["admin", "founder", "agency", "team_member"], tier: 4, settingsOnly: true },
@@ -245,10 +245,10 @@ const navItems: NavItem[] = [
   { label: "Tickets", href: "/dashboard/tickets", icon: <NavIcon3D name="LifeBuoy" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
   { label: "Referrals", href: "/dashboard/referrals", icon: <NavIcon3D name="Gift" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
   { label: "ROI Calculator", href: "/dashboard/roi-calculator", icon: <NavIcon3D name="Calculator" size={16} />, roles: ["admin"], sub: "Support", tier: 3 },
-  { label: "Monitor", href: "/dashboard/monitor", icon: <NavIcon3D name="Activity" size={16} />, roles: ["admin"], sub: "Tools", tier: 3 },
+  { label: "Monitor", href: "/dashboard/monitor", icon: <NavIcon3D name="Activity" size={16} />, roles: ["admin"], sub: "Tools", tier: 3, settingsOnly: true },
   { label: "Reports Gen", href: "/dashboard/report-generator", icon: <NavIcon3D name="FileBarChart2" size={16} />, roles: ["admin"], sub: "Tools", tier: 3 },
   { label: "Marketplace", href: "/dashboard/marketplace", icon: <NavIcon3D name="Store" size={16} />, roles: ["admin"], sub: "Tools", tier: 3 },
-  { label: "Download Desktop", href: "/dashboard/download", icon: <NavIcon3D name="Download" size={16} />, roles: ["admin", "team_member"], sub: "Tools", tier: 3 },
+  { label: "Download Desktop", href: "/dashboard/download", icon: <NavIcon3D name="Download" size={16} />, roles: ["admin", "team_member"], sub: "Tools", tier: 3, settingsOnly: true },
 
   // ── Connect (integrations) — no sub-groups ──
   { label: "Google Biz", href: "/dashboard/google-business", icon: <NavIcon3D name="Globe" size={16} />, roles: ["admin"], section: "Connect", tier: 3 },
