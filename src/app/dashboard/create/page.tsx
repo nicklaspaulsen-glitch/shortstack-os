@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import SectionHub from "@/components/dashboard/section-hub";
 import type { RollingPreviewItem } from "@/components/RollingPreview";
@@ -30,6 +31,11 @@ export default function CreateHubPage() {
   useAuth();
 
   return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
     <SectionHub
       section="create"
       title="Create"
@@ -130,5 +136,6 @@ export default function CreateHubPage() {
         },
       ]}
     />
+    </motion.div>
   );
 }
