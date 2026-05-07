@@ -12,6 +12,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import {
@@ -238,13 +239,17 @@ export default function BillingPage() {
       />
 
       {/* ─── Current plan hero ─────────────────────────────────────── */}
-      <div
-        className="rounded-2xl border p-5 flex items-center justify-between gap-4 flex-wrap"
+      <motion.div
+        className="glass-indigo rounded-2xl p-5 flex items-center justify-between gap-4 flex-wrap relative overflow-hidden"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22 }}
         style={{
           background: `linear-gradient(135deg, ${planConfig.color}0A 0%, transparent 60%)`,
           borderColor: `${planConfig.color}30`,
         }}
       >
+        <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", position: "absolute", top: 0, left: 0, right: 0 }} />
         <div className="flex items-center gap-4 min-w-0">
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
@@ -283,23 +288,27 @@ export default function BillingPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleManageSubscription}
-            disabled={portalLoading}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-gold/10 hover:text-gold transition-colors disabled:opacity-60"
-          >
-            {portalLoading ? <Loader2 size={12} className="animate-spin" /> : <ExternalLink size={12} />}
-            Manage subscription
-          </button>
-          <Link
-            href="/dashboard/upgrade"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gold text-white text-xs font-semibold hover:bg-gold/90 transition-colors"
-          >
-            <ArrowUpRight size={12} />
-            Upgrade
-          </Link>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <button
+              onClick={handleManageSubscription}
+              disabled={portalLoading}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-gold/10 hover:text-gold transition-colors disabled:opacity-60"
+            >
+              {portalLoading ? <Loader2 size={12} className="animate-spin" /> : <ExternalLink size={12} />}
+              Manage subscription
+            </button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Link
+              href="/dashboard/upgrade"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gold text-white text-xs font-semibold hover:bg-gold/90 transition-colors"
+            >
+              <ArrowUpRight size={12} />
+              Upgrade
+            </Link>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ─── Usage this month ──────────────────────────────────────── */}
       <section>
@@ -312,7 +321,7 @@ export default function BillingPage() {
           )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {RESOURCE_META.map((meta) => {
+          {RESOURCE_META.map((meta, index) => {
             const used = usage?.usage[meta.key] ?? 0;
             const limitRaw = usage?.limits[meta.key];
             const unlimited = limitRaw === "unlimited";
@@ -327,12 +336,18 @@ export default function BillingPage() {
               : "from-emerald-500 to-teal-400";
 
             return (
-              <div
+              <motion.div
                 key={meta.key}
-                className={`rounded-2xl border p-4 bg-surface transition-all ${
-                  maxed ? "border-red-500/30 shadow-[0_0_16px_rgba(239,68,68,0.12)]" : "border-border"
+                className={`glass rounded-2xl overflow-hidden relative transition-all ${
+                  maxed ? "shadow-[0_0_16px_rgba(239,68,68,0.12)]" : ""
                 }`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -2 }}
               >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div className="p-4">
                 <div className="flex items-center justify-between mb-2.5">
                   <div className="flex items-center gap-2">
                     <div
@@ -379,7 +394,9 @@ export default function BillingPage() {
                     </p>
                   </>
                 )}
-              </div>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: "rgba(99,102,241,0.3)" }} />
+              </motion.div>
             );
           })}
         </div>
@@ -405,15 +422,20 @@ export default function BillingPage() {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {TOKEN_PACKS.map((pack) => {
+          {TOKEN_PACKS.map((pack, index) => {
             const isLoading = topUpLoading === pack.id;
             return (
-              <div
+              <motion.div
                 key={pack.id}
-                className={`relative rounded-2xl border p-4 bg-surface transition-all ${
-                  pack.popular ? "border-gold/30 ring-1 ring-gold/15" : "border-border"
+                className={`relative overflow-hidden rounded-2xl p-4 transition-all ${
+                  pack.popular ? "glass-indigo" : "glass"
                 }`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -2 }}
               >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
                 {pack.popular && (
                   <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-gold text-white text-[9px] font-bold uppercase tracking-wider">
                     Best value
@@ -443,7 +465,7 @@ export default function BillingPage() {
                   )}
                   Buy {pack.label.replace(" Tokens", "")} tokens
                 </button>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -462,7 +484,7 @@ export default function BillingPage() {
           </button>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface overflow-hidden">
+        <div className="glass rounded-2xl overflow-hidden">
           {invoicesLoading ? (
             <div className="p-8 text-center">
               <Loader2 size={16} className="animate-spin text-gold mx-auto" />
@@ -488,7 +510,7 @@ export default function BillingPage() {
                 </tr>
               </thead>
               <tbody>
-                {invoices.map((inv) => {
+                {invoices.map((inv, index) => {
                   const statusColor =
                     inv.status === "paid"
                       ? "text-emerald-400 bg-emerald-500/10"
@@ -498,7 +520,14 @@ export default function BillingPage() {
                       ? "text-muted bg-surface-light"
                       : "text-foreground bg-surface-light";
                   return (
-                    <tr key={inv.id} className="border-b border-border last:border-0 hover:bg-surface-light/50 transition-colors">
+                    <motion.tr
+                      key={inv.id}
+                      className="border-b border-border last:border-0"
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: index * 0.04 }}
+                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    >
                       <td className="px-4 py-3 text-xs text-foreground">{formatDate(inv.created)}</td>
                       <td className="px-4 py-3 text-xs text-muted font-mono">{inv.number || inv.id.slice(-8)}</td>
                       <td className="px-4 py-3">
@@ -535,7 +564,7 @@ export default function BillingPage() {
                           )}
                         </div>
                       </td>
-                    </tr>
+                    </motion.tr>
                   );
                 })}
               </tbody>

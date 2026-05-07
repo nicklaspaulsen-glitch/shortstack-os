@@ -2,6 +2,7 @@
 // CRM settings tab now persists to Supabase (automations, tags, notes, follow-ups, segments).
 
 import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
@@ -918,13 +919,24 @@ export default function CRMPage() {
                 { label: "With Phone", value: stats.withPhone, icon: Phone, color: "text-emerald-400" },
                 { label: "Stale Leads", value: stats.stale, icon: AlertTriangle, color: stats.stale > 0 ? "text-red-400" : "text-muted" },
               ].map((s, i) => (
-                <div key={i} className="rounded-lg bg-surface-light/50 px-3 py-2">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <s.icon size={10} className={s.color} />
-                    <span className="text-[8px] text-muted uppercase tracking-wider">{s.label}</span>
+                <motion.div
+                  key={i}
+                  className="glass rounded-xl overflow-hidden relative"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: i * 0.06 }}
+                  whileHover={{ y: -2 }}
+                >
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                  <div className="px-3 py-2">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <s.icon size={10} className={s.color} />
+                      <span className="text-[8px] text-muted uppercase tracking-wider">{s.label}</span>
+                    </div>
+                    <p className={`text-sm font-bold ${s.color}`}>{s.value}<span className="text-[8px] text-muted font-normal">{s.suffix || ""}</span></p>
                   </div>
-                  <p className={`text-sm font-bold ${s.color}`}>{s.value}<span className="text-[8px] text-muted font-normal">{s.suffix || ""}</span></p>
-                </div>
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: "rgba(99,102,241,0.3)" }} />
+                </motion.div>
               ))}
             </div>
             {/* Pipeline funnel */}
@@ -1032,7 +1044,9 @@ export default function CRMPage() {
             <Coins size={11} className="text-gold" />
             <span className="text-[9px] font-medium text-gold">{emailCredits}</span>
           </button>
-          <button onClick={() => fetchLeads()} className="btn-ghost text-[9px] flex items-center gap-1"><RefreshCw size={11} /> Refresh</button>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <button onClick={() => fetchLeads()} className="btn-ghost text-[9px] flex items-center gap-1"><RefreshCw size={11} /> Refresh</button>
+          </motion.div>
         </div>
       </div>
 
@@ -1212,7 +1226,7 @@ export default function CRMPage() {
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
           <input value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search name, industry, city, email, phone..."
-            className="input w-full text-[10px] pl-8 py-1.5"
+            className="input glass w-full text-[10px] pl-8 py-1.5"
             aria-label="Search leads" />
           {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2" aria-label="Clear search"><X size={11} className="text-muted hover:text-foreground" /></button>}
         </div>
@@ -1287,7 +1301,7 @@ export default function CRMPage() {
 
           {/* ══ TABLE VIEW ══ */}
           {viewMode === "table" && (
-            <div className="card p-0 overflow-hidden">
+            <div className="glass rounded-2xl p-0 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className={`w-full ${dText}`}>
                   <thead>
@@ -1315,7 +1329,7 @@ export default function CRMPage() {
                     {paginated.length === 0 && (
                       <tr><td colSpan={columns.filter(c => c.visible).length} className="text-center py-12 text-muted text-xs">No leads found</td></tr>
                     )}
-                    {paginated.map(lead => {
+                    {paginated.map((lead, index) => {
                       const score = getLeadScore(lead);
                       const scoreInfo = getScoreInfo(score);
                       const stale = isLeadStale(lead);
@@ -1326,7 +1340,12 @@ export default function CRMPage() {
 
                       return (
                         <React.Fragment key={lead.id}>
-                          <tr className={`border-b border-border/50 hover:bg-surface-light/30 transition-colors cursor-pointer ${isExpanded ? "bg-surface-light/20" : ""} ${selected ? "bg-gold/5" : ""}`}
+                          <motion.tr
+                            className={`border-b border-border/50 cursor-pointer ${isExpanded ? "bg-surface-light/20" : ""} ${selected ? "bg-gold/5" : ""}`}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.18, delay: index * 0.04 }}
+                            whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
                             onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                             {columns.filter(c => c.visible).map(col => {
                               if (col.key === "select") return (
@@ -1451,9 +1470,14 @@ export default function CRMPage() {
                               );
                               return null;
                             })}
-                          </tr>
+                          </motion.tr>
                           {isExpanded && (
-                            <tr className="bg-surface-light/10">
+                            <motion.tr
+                              className="bg-surface-light/10"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.15 }}
+                            >
                               <td colSpan={columns.filter(c => c.visible).length} className="px-4 py-3">
                                 <div className="flex items-center gap-2 mb-2">
                                   <Send size={10} className="text-gold" />
@@ -1480,7 +1504,7 @@ export default function CRMPage() {
                                   </div>
                                 )}
                               </td>
-                            </tr>
+                            </motion.tr>
                           )}
                         </React.Fragment>
                       );
@@ -1495,13 +1519,19 @@ export default function CRMPage() {
           {viewMode === "card" && (
             <div className={`grid gap-2 ${density === "dense" ? "grid-cols-1 md:grid-cols-3 xl:grid-cols-4" : density === "compact" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"}`}>
               {paginated.length === 0 && <div className="col-span-full text-center py-12 text-muted text-xs">No leads found</div>}
-              {paginated.map(lead => {
+              {paginated.map((lead, index) => {
                 const score = getLeadScore(lead);
                 const scoreInfo = getScoreInfo(score);
                 const stale = isLeadStale(lead);
                 const tags = leadTags[lead.id] || [];
                 return (
-                  <div key={lead.id} className={`card ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} hover:border-gold/20 transition-all cursor-pointer ${selectedIds.has(lead.id) ? "border-gold/30 bg-gold/5" : ""}`}
+                  <motion.div
+                    key={lead.id}
+                    className={`glass rounded-xl ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-gold/30 bg-gold/5" : ""}`}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: index * 0.04 }}
+                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
                     onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-1.5 min-w-0">
@@ -1557,7 +1587,7 @@ export default function CRMPage() {
                         <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone} className="p-1 rounded bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30" aria-label="Call lead"><Phone size={9} /></button>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -1585,13 +1615,18 @@ export default function CRMPage() {
                           <p className="text-[9px] text-muted">No leads</p>
                         </div>
                       )}
-                      {stageLeads.map(lead => {
+                      {stageLeads.map((lead, index) => {
                         const score = getLeadScore(lead);
                         const scoreInfo = getScoreInfo(score);
                         const tags = leadTags[lead.id] || [];
                         return (
-                          <div key={lead.id}
-                            className="rounded-lg p-2.5 space-y-1.5 cursor-pointer bg-surface-light border border-border hover:border-gold/20 transition-all"
+                          <motion.div
+                            key={lead.id}
+                            className="glass-md rounded-lg p-2.5 space-y-1.5 cursor-pointer"
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.18, delay: index * 0.04 }}
+                            whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
                             onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                             <div className="flex items-start justify-between">
                               <div className="min-w-0">
@@ -1620,7 +1655,7 @@ export default function CRMPage() {
                               <span>{lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "No outreach"}</span>
                               <span>{lead.outreach_log.length} msgs</span>
                             </div>
-                          </div>
+                          </motion.div>
                         );
                       })}
                     </div>
@@ -1649,7 +1684,7 @@ export default function CRMPage() {
 
         {/* ══ DETAIL SIDEBAR ══ */}
         {detailLead && (
-          <div ref={detailPanelRef} className="w-[350px] shrink-0 card p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block">
+          <div ref={detailPanelRef} className="w-[350px] shrink-0 glass rounded-2xl p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block">
             <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
               <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
               <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground" aria-label="Close detail panel"><X size={14} /></button>
