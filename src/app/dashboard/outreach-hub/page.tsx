@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   PhoneCall, Mail, MessageSquare, Send, Settings,
   Sparkles, Loader2, Copy, Check, Save,
@@ -878,14 +879,23 @@ export default function OutreachHubPage() {
       </div>
 
       {/* ── Tabs (sticky) ── */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 bg-surface rounded-xl p-1 overflow-x-auto">
-        {TABS.map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)}
+      <div className="sticky top-0 z-10 glass rounded-xl p-1 overflow-x-auto flex gap-1">
+        {TABS.map((t, index) => (
+          <motion.button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, delay: index * 0.05 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
             className={`px-4 py-2 text-xs rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
-              tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+              tab === t.key
+                ? "bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 font-medium"
+                : "text-muted hover:text-foreground border border-transparent"
             }`}>
             {t.icon} {t.label}
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -909,9 +919,14 @@ export default function OutreachHubPage() {
 
           {/* ── Campaign Builder ── */}
           {showCampaignBuilder && (
-            <div className="card space-y-5">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22 }}
+              className="glass rounded-xl p-5 space-y-5"
+            >
               <h3 className="text-sm font-semibold flex items-center gap-2">
-                <Zap size={14} className="text-gold" /> New Campaign
+                <Zap size={14} className="text-indigo-400" /> New Campaign
               </h3>
 
               {/* Presets */}
@@ -1032,12 +1047,12 @@ export default function OutreachHubPage() {
               </div>
 
               {/* Create button */}
-              <div className="flex justify-end">
+              <motion.div className="flex justify-end" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <button onClick={createCampaign} className="btn-primary text-xs flex items-center gap-1.5">
                   <Plus size={12} /> Create Campaign
                 </button>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           )}
 
           {/* ── Campaign List ── */}
@@ -1057,8 +1072,14 @@ export default function OutreachHubPage() {
             </div>
           )}
 
-          {campaigns.map(campaign => (
-            <div key={campaign.id} className="card space-y-3">
+          {campaigns.map((campaign, index) => (
+            <motion.div
+              key={campaign.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: index * 0.05 }}
+              className="glass rounded-xl overflow-hidden space-y-3 p-4"
+            >
               {/* Campaign header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -1133,7 +1154,7 @@ export default function OutreachHubPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
@@ -1155,10 +1176,16 @@ export default function OutreachHubPage() {
 
           {/* Pre-built sequences */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {sequences.map(seq => (
-              <button key={seq.id} onClick={() => setActiveSequence(seq.id)}
+            {sequences.map((seq, index) => (
+              <motion.button
+                key={seq.id}
+                onClick={() => setActiveSequence(seq.id)}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: index * 0.05 }}
+                whileHover={{ scale: 1.01, y: -2 }}
                 className={`text-left p-4 rounded-xl border transition-all ${
-                  activeSequence === seq.id ? "bg-gold/10 border-gold/20" : "border-border/50 hover:border-border bg-surface-light/30"
+                  activeSequence === seq.id ? "glass-indigo border-indigo-500/20" : "glass border-white/10 hover:border-white/20"
                 }`}>
                 <div className="flex items-center justify-between mb-1">
                   <h3 className={`text-xs font-semibold ${activeSequence === seq.id ? "text-gold" : ""}`}>{seq.name}</h3>
@@ -1174,29 +1201,35 @@ export default function OutreachHubPage() {
                     ))}
                   </div>
                 </div>
-              </button>
+              </motion.button>
             ))}
           </div>
 
           {/* Active Sequence Timeline */}
           {activeSequence && (
-            <div className="card space-y-4">
+            <div className="glass rounded-xl p-4 space-y-4">
               <h3 className="text-xs font-semibold flex items-center gap-2">
-                <Activity size={12} className="text-gold" /> Sequence Timeline: {sequences.find(s => s.id === activeSequence)?.name}
+                <Activity size={12} className="text-indigo-400" /> Sequence Timeline: {sequences.find(s => s.id === activeSequence)?.name}
               </h3>
               <div className="relative pl-6">
                 {/* Vertical line */}
                 <div className="absolute left-[11px] top-2 bottom-2 w-px bg-border/50" />
                 {sequences.find(s => s.id === activeSequence)?.steps.map((step, idx) => (
-                  <div key={step.id} className="relative flex items-start gap-4 mb-4 last:mb-0">
+                  <motion.div
+                    key={step.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.18, delay: idx * 0.06 }}
+                    className="relative flex items-start gap-4 mb-4 last:mb-0"
+                  >
                     {/* Dot */}
                     <div className={`absolute left-[-17px] top-1 w-5 h-5 rounded-full border-2 flex items-center justify-center bg-surface ${
-                      idx === 0 ? "border-gold" : "border-border/50"
+                      idx === 0 ? "border-indigo-500" : "border-border/50"
                     }`}>
-                      <span className={`text-[8px] font-bold ${idx === 0 ? "text-gold" : "text-muted"}`}>{step.day}</span>
+                      <span className={`text-[8px] font-bold ${idx === 0 ? "text-indigo-400" : "text-muted"}`}>{step.day}</span>
                     </div>
                     {/* Content */}
-                    <div className="flex-1 bg-surface-light/50 rounded-lg p-3 border border-border/20">
+                    <div className="flex-1 glass-md rounded-lg p-3 border border-white/8">
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`${channelColor(step.channel)}`}>{channelIcon(step.channel, 12)}</span>
                         <span className="text-[10px] font-semibold capitalize">{step.channel}</span>
@@ -1205,7 +1238,7 @@ export default function OutreachHubPage() {
                       </div>
                       <p className="text-[10px] text-muted">{step.action}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -1291,20 +1324,29 @@ export default function OutreachHubPage() {
         <div className="space-y-4">
           {/* Template sub-tabs */}
           <div className="flex items-center gap-4">
-            <div className="flex gap-1 bg-surface rounded-xl p-1">
+            <div className="flex gap-1 glass rounded-xl p-1">
               {([
                 { key: "calls" as TemplateSubTab, label: "Calls", icon: <PhoneCall size={12} />, count: callTemplates.length },
                 { key: "sms" as TemplateSubTab, label: "SMS", icon: <Smartphone size={12} />, count: smsTemplates.length },
                 { key: "email" as TemplateSubTab, label: "Email", icon: <Mail size={12} />, count: emailTemplates.length },
                 { key: "dms" as TemplateSubTab, label: "DMs", icon: <MessageSquare size={12} />, count: dmTemplates.length },
-              ]).map(t => (
-                <button key={t.key} onClick={() => setTemplateSubTab(t.key)}
+              ]).map((t, index) => (
+                <motion.button
+                  key={t.key}
+                  onClick={() => setTemplateSubTab(t.key)}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.18, delay: index * 0.05 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
                   className={`px-3 py-2 text-[11px] rounded-lg flex items-center gap-1.5 transition-all ${
-                    templateSubTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+                    templateSubTab === t.key
+                      ? "bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 font-medium"
+                      : "text-muted hover:text-foreground border border-transparent"
                   }`}>
                   {t.icon} {t.label}
-                  <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${templateSubTab === t.key ? "bg-black/20" : "bg-white/5"}`}>{t.count}</span>
-                </button>
+                  <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${templateSubTab === t.key ? "bg-indigo-500/20" : "bg-white/5"}`}>{t.count}</span>
+                </motion.button>
               ))}
             </div>
             <div className="ml-auto flex gap-1">
@@ -1340,7 +1382,7 @@ export default function OutreachHubPage() {
                 <h2 className="text-sm font-semibold flex items-center gap-2">
                   <Settings size={14} className="text-muted" /> Call Settings
                 </h2>
-                <div className="card space-y-4">
+                <div className="glass rounded-xl p-4 space-y-4">
                   <div>
                     <label className="text-[10px] text-muted block mb-1">Agent Name</label>
                     <input value={callSettings.agentName} onChange={e => setCallSettings(p => ({ ...p, agentName: e.target.value }))}
@@ -1380,7 +1422,7 @@ export default function OutreachHubPage() {
                   </div>
                 </div>
                 {/* Preview */}
-                <div className="card space-y-3">
+                <div className="glass-indigo rounded-xl p-4 space-y-3">
                   <h3 className="text-xs font-semibold flex items-center gap-2"><Eye size={12} /> Live Preview</h3>
                   <div className="space-y-2">
                     <input placeholder="Business name..." value={previewVars.business_name || ""}
@@ -1423,7 +1465,7 @@ export default function OutreachHubPage() {
                 <h2 className="text-sm font-semibold flex items-center gap-2">
                   <Settings size={14} className="text-muted" /> SMS Settings
                 </h2>
-                <div className="card space-y-4">
+                <div className="glass rounded-xl p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs">AI Personalization</span>
                     <button onClick={() => setSmsSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
@@ -1507,7 +1549,7 @@ export default function OutreachHubPage() {
                 <h2 className="text-sm font-semibold flex items-center gap-2">
                   <Settings size={14} className="text-muted" /> Email Settings
                 </h2>
-                <div className="card space-y-4">
+                <div className="glass rounded-xl p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs">AI Personalization</span>
                     <button onClick={() => setEmailSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
@@ -1592,7 +1634,7 @@ export default function OutreachHubPage() {
                 <h2 className="text-sm font-semibold flex items-center gap-2">
                   <Settings size={14} className="text-muted" /> DM Settings
                 </h2>
-                <div className="card space-y-4">
+                <div className="glass rounded-xl p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs">AI Personalization</span>
                     <button onClick={() => setDmSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
@@ -1667,22 +1709,39 @@ export default function OutreachHubPage() {
               { label: "Replied", value: 0, change: "0%" },
               { label: "Booked", value: 0, change: "0%" },
               { label: "Converted", value: 0, change: "0%" },
-            ].map(stat => (
-              <div key={stat.label} className="card p-4">
-                <p className="text-[10px] text-muted mb-1">{stat.label}</p>
-                <p className="text-xl font-bold">{stat.value}</p>
-                <div className="flex items-center gap-1 mt-1">
-                  <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-surface-light text-muted">{stat.change}</span>
-                  <span className="text-[9px] text-muted">vs last period</span>
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -2 }}
+                className="glass rounded-xl overflow-hidden relative"
+              >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div className="p-4">
+                  <p className="text-[10px] text-muted mb-1">{stat.label}</p>
+                  <p className="text-xl font-bold">{stat.value}</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-white/5 text-muted">{stat.change}</span>
+                    <span className="text-[9px] text-muted">vs last period</span>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Channel Performance */}
-          <div className="card space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.3 }}
+            className="glass rounded-xl overflow-hidden"
+          >
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <div className="p-4 space-y-4">
             <h3 className="text-xs font-semibold flex items-center gap-2">
-              <BarChart3 size={12} className="text-gold" /> Channel Performance
+              <BarChart3 size={12} className="text-indigo-400" /> Channel Performance
             </h3>
             <div className="space-y-3">
               {[
@@ -1708,11 +1767,12 @@ export default function OutreachHubPage() {
                 </div>
               ))}
             </div>
-          </div>
+            </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Response Rate Heatmap */}
-            <div className="card space-y-3">
+            <div className="glass rounded-xl p-4 space-y-3">
               <h3 className="text-xs font-semibold flex items-center gap-2">
                 <Clock size={12} className="text-muted" /> Response Rate by Day
               </h3>
@@ -1736,9 +1796,9 @@ export default function OutreachHubPage() {
             </div>
 
             {/* Conversion Funnel */}
-            <div className="card space-y-3">
+            <div className="glass rounded-xl p-4 space-y-3">
               <h3 className="text-xs font-semibold flex items-center gap-2">
-                <Target size={12} className="text-gold" /> Conversion Funnel
+                <Target size={12} className="text-indigo-400" /> Conversion Funnel
               </h3>
               <div className="space-y-2">
                 {[
@@ -1761,13 +1821,18 @@ export default function OutreachHubPage() {
           </div>
 
           {/* Best Performing */}
-          <div className="card p-6 text-center">
-            <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center mx-auto mb-3">
-              <Star size={20} className="text-gold" />
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.5 }}
+            className="glass rounded-xl p-6 text-center"
+          >
+            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-3">
+              <Star size={20} className="text-indigo-400" />
             </div>
             <h3 className="text-sm font-semibold mb-1">Best Performing</h3>
             <p className="text-[11px] text-muted">No data yet — launch your first campaign to see which channels and sequences perform best.</p>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -1777,9 +1842,9 @@ export default function OutreachHubPage() {
       {tab === "settings" && (
         <div className="max-w-2xl space-y-4">
           {/* Global AI Settings */}
-          <div className="card space-y-5">
+          <div className="glass rounded-xl p-5 space-y-5">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Sparkles size={14} className="text-gold" /> Global AI Settings
+              <Sparkles size={14} className="text-indigo-400" /> Global AI Settings
             </h2>
             <p className="text-[10px] text-muted">These settings apply across all outreach channels. They control how the AI generates and personalizes messages.</p>
 
@@ -1841,9 +1906,9 @@ export default function OutreachHubPage() {
           </div>
 
           {/* Daily Limits */}
-          <div className="card space-y-4">
+          <div className="glass rounded-xl p-4 space-y-4">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <AlertCircle size={14} className="text-gold" /> Daily Limits
+              <AlertCircle size={14} className="text-indigo-400" /> Daily Limits
             </h2>
             <p className="text-[10px] text-muted">Maximum number of outreach actions per day across all campaigns.</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -1875,9 +1940,9 @@ export default function OutreachHubPage() {
           </div>
 
           {/* Compliance */}
-          <div className="card space-y-4">
+          <div className="glass rounded-xl p-4 space-y-4">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Shield size={14} className="text-gold" /> Compliance
+              <Shield size={14} className="text-indigo-400" /> Compliance
             </h2>
             <p className="text-[10px] text-muted">Ensure your outreach complies with regulations.</p>
             <div className="space-y-3">
@@ -1902,9 +1967,9 @@ export default function OutreachHubPage() {
           </div>
 
           {/* Default Target Mode + Timezone + Working Hours */}
-          <div className="card space-y-4">
+          <div className="glass rounded-xl p-4 space-y-4">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Settings size={14} className="text-gold" /> General
+              <Settings size={14} className="text-indigo-400" /> General
             </h2>
 
             <div>
@@ -1944,9 +2009,9 @@ export default function OutreachHubPage() {
           </div>
 
           {/* Variable reference */}
-          <div className="card space-y-3">
+          <div className="glass rounded-xl p-4 space-y-3">
             <h3 className="text-xs font-semibold flex items-center gap-2">
-              <Hash size={12} className="text-muted" /> Available Variables
+              <Hash size={12} className="text-indigo-400" /> Available Variables
             </h3>
             <p className="text-[9px] text-muted">Use these in any template. They&apos;re replaced with real lead data at send time.</p>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">

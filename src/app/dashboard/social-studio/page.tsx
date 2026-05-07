@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Megaphone, Calendar, Sparkles, Lightbulb, BarChart3, Users } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { useAuth } from "@/lib/auth-context";
@@ -41,25 +42,30 @@ export default function SocialStudioPage() {
         eyebrow="MVP"
       />
 
-      <div className="rounded-xl border border-border/40 bg-surface p-1 flex flex-wrap gap-1">
-        {TABS.map((t) => {
+      <div className="glass rounded-xl p-1 flex flex-wrap gap-1">
+        {TABS.map((t, index) => {
           const active = tab === t.key;
           return (
-            <button
+            <motion.button
               key={t.key}
               type="button"
               onClick={() => setTab(t.key)}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.18, delay: index * 0.05 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
               className={`flex-1 min-w-[140px] px-3 py-2 rounded-md text-xs font-medium inline-flex items-center justify-center gap-2 transition-all ${
                 active
-                  ? "bg-gold/15 border border-gold/40 text-gold shadow-inner"
-                  : "border border-transparent text-muted hover:text-foreground hover:bg-elevated"
+                  ? "bg-indigo-500/15 border border-indigo-500/40 text-indigo-400 shadow-inner"
+                  : "border border-transparent text-muted hover:text-foreground hover:bg-white/5"
               }`}
               aria-pressed={active}
               title={t.description}
             >
               {t.icon}
               <span>{t.label}</span>
-            </button>
+            </motion.button>
           );
         })}
       </div>
