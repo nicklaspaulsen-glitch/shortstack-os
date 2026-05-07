@@ -115,6 +115,21 @@ const config: Config = {
           800: "#3730A3",
           900: "#312E81",
         },
+        // Apr 28+: yellow-* was not originally shim'd — adding now so
+        // `text-yellow-400`, `bg-yellow-500/20`, etc. render as indigo
+        // rather than Tailwind's default literal yellow.
+        yellow: {
+          50: "#EEF2FF",
+          100: "#E0E7FF",
+          200: "#C7D2FE",
+          300: "#A5B4FC",
+          400: "#818CF8",
+          500: "#6366F1",
+          600: "#4F46E5",
+          700: "#4338CA",
+          800: "#3730A3",
+          900: "#312E81",
+        },
         // Purple now maps to a charcoal neutral so old `bg-purple-500/20` etc.
         // don't fight the pure-monochrome base. Same shape as plum.
         purple: {

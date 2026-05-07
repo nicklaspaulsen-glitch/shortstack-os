@@ -10,6 +10,7 @@ import {
   Clock, Play, Webhook, Mail, MessageCircle,
   Phone, Tag, GitBranch, RefreshCw, Loader
 } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 interface WorkflowNode {
   id: string;
@@ -117,7 +118,7 @@ export default function AutomationsPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard/automations/library"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-sm font-medium transition-colors border border-amber-500/30"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-sm font-medium transition-colors border border-indigo-500/30"
             >
               Browse template library
             </Link>
@@ -136,7 +137,7 @@ export default function AutomationsPage() {
         {[
           { label: "Total", value: workflows.length, color: "text-white" },
           { label: "Active", value: activeCount, color: "text-emerald-400" },
-          { label: "Paused", value: workflows.length - activeCount, color: "text-yellow-400" },
+          { label: "Paused", value: workflows.length - activeCount, color: "text-indigo-400" },
         ].map(s => (
           <div
             key={s.label}
@@ -155,7 +156,7 @@ export default function AutomationsPage() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search automations…"
-          className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-3 py-2 text-white text-sm focus:outline-none focus:border-yellow-400/50"
+          className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500/50"
         />
       </div>
 
@@ -166,20 +167,25 @@ export default function AutomationsPage() {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl border border-white/10 bg-white/5 p-12 text-center">
-          <Zap size={40} className="mx-auto mb-4 text-white/20" />
-          <p className="text-white/60 mb-2">
-            {search ? "No automations match your search." : "No automations yet."}
-          </p>
-          {!search && (
-            <Link
-              href="/dashboard/workflow-builder"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 text-sm font-medium transition-colors"
-            >
-              <Plus size={14} /> Create your first automation
-            </Link>
-          )}
-        </div>
+        <EmptyState
+          type="no-campaigns"
+          title={search ? "No automations found" : "No automations yet"}
+          description={
+            search
+              ? "Try a different search term."
+              : "Build workflows that run automatically — trigger actions on new leads, replies, form fills, and more."
+          }
+          action={
+            !search ? (
+              <Link
+                href="/dashboard/workflow-builder"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-sm font-medium transition-colors border border-indigo-500/30"
+              >
+                <Plus size={14} /> Create your first automation
+              </Link>
+            ) : undefined
+          }
+        />
       ) : (
         <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
           <div className="divide-y divide-white/5">
