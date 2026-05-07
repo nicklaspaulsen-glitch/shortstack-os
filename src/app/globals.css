@@ -1569,49 +1569,62 @@ body {
 }
 
 /* ═══════════ PRISM AMBIENT BACKGROUND ═══════════ */
-/* Applied to body via globals — red/violet/blue radial glows */
-/* Prism ambient: dramatic diagonal color rays — red dominant, white-tinted edges */
+/* Dramatic white light rays with red accent — high-contrast on OLED black */
 .prism-ambient::before {
   content: '';
   position: fixed;
   inset: 0;
   background:
-    /* Primary red ray — top-left, sweeps diagonally */
-    radial-gradient(ellipse 1200px 800px at 10% 15%, rgba(255,45,45,0.18), transparent 65%),
-    /* Secondary red ray — bottom-right mirror */
-    radial-gradient(ellipse 1000px 700px at 85% 80%, rgba(255,45,45,0.14), transparent 65%),
-    /* White diffusion — center-top, creates the "split" feel */
-    radial-gradient(ellipse 800px 400px at 50% 0%, rgba(255,255,255,0.04), transparent 60%),
-    /* Violet accent — subtle, mid-right */
-    radial-gradient(ellipse 600px 600px at 75% 45%, rgba(139,92,246,0.08), transparent 60%),
-    /* Red glow — center halo */
-    radial-gradient(ellipse 500px 500px at 45% 50%, rgba(255,45,45,0.06), transparent 55%),
-    /* White edge — bottom-left corner diffusion */
-    radial-gradient(ellipse 700px 500px at 5% 95%, rgba(255,255,255,0.025), transparent 55%);
+    /* ── WHITE LIGHT BEAMS (dominant) ── */
+    /* Main overhead beam — top-center, wide spread */
+    radial-gradient(ellipse 1400px 600px at 50% -5%, rgba(255,255,255,0.14), transparent 70%),
+    /* Left diagonal ray — bright white sweep */
+    radial-gradient(ellipse 900px 1200px at 5% 20%, rgba(255,255,255,0.10), transparent 65%),
+    /* Right diagonal ray — mirror */
+    radial-gradient(ellipse 900px 1200px at 95% 25%, rgba(255,255,255,0.08), transparent 65%),
+    /* Center bloom — soft white halo */
+    radial-gradient(ellipse 700px 700px at 50% 45%, rgba(255,255,255,0.06), transparent 55%),
+    /* Bottom-left diffusion */
+    radial-gradient(ellipse 800px 500px at 10% 90%, rgba(255,255,255,0.05), transparent 60%),
+    /* Bottom-right diffusion */
+    radial-gradient(ellipse 800px 500px at 90% 85%, rgba(255,255,255,0.04), transparent 60%),
+    /* ── RED ACCENT RAYS ── */
+    /* Primary red — top-left, sweeps diagonally */
+    radial-gradient(ellipse 1200px 800px at 10% 15%, rgba(255,45,45,0.12), transparent 65%),
+    /* Secondary red — bottom-right mirror */
+    radial-gradient(ellipse 1000px 700px at 85% 80%, rgba(255,45,45,0.08), transparent 65%),
+    /* Red center halo */
+    radial-gradient(ellipse 500px 500px at 45% 50%, rgba(255,45,45,0.05), transparent 55%);
   pointer-events: none;
   z-index: 0;
 }
-/* Animated prism ray sweep — slow diagonal movement */
+/* Animated prism ray sweep — white-dominant rotating light */
 .prism-ambient::after {
   content: '';
   position: fixed;
   inset: 0;
   background:
-    conic-gradient(from 200deg at 30% 30%,
+    /* Rotating white spotlight beam */
+    conic-gradient(from 200deg at 35% 35%,
       transparent 0deg,
-      rgba(255,45,45,0.06) 40deg,
-      transparent 80deg,
-      rgba(255,255,255,0.02) 160deg,
-      transparent 200deg,
-      rgba(255,45,45,0.04) 300deg,
-      transparent 360deg);
+      rgba(255,255,255,0.07) 30deg,
+      transparent 60deg,
+      rgba(255,45,45,0.04) 120deg,
+      transparent 150deg,
+      rgba(255,255,255,0.09) 200deg,
+      transparent 240deg,
+      rgba(255,255,255,0.05) 300deg,
+      rgba(255,45,45,0.03) 330deg,
+      transparent 360deg),
+    /* Secondary counter-rotation white wash */
+    radial-gradient(ellipse 1600px 400px at 50% 10%, rgba(255,255,255,0.06), transparent 70%);
   pointer-events: none;
   z-index: 0;
-  animation: prismRayRotate 45s linear infinite;
+  animation: prismRayRotate 50s linear infinite;
 }
 @keyframes prismRayRotate {
-  0%   { transform: rotate(0deg) scale(1.5); }
-  100% { transform: rotate(360deg) scale(1.5); }
+  0%   { transform: rotate(0deg) scale(1.6); }
+  100% { transform: rotate(360deg) scale(1.6); }
 }
 .ambient-red::before {
   content: '';

@@ -173,21 +173,21 @@ const config: Config = {
           800: "#991414",
           900: "#660E0E",
         },
-        // Blue alias — redirected to prism red accent so old `text-blue-*` /
-        // `bg-blue-*` / `border-blue-*` class names render red instead of
-        // Tailwind's default #3B82F6.
+        // Blue alias — redirected to neutral grey/silver so old `bg-blue-600
+        // text-white` buttons become grey chrome that stands out on the OLED
+        // dark base. White text passes AA on 600+. No color hue — pure neutral.
         blue: {
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
-          950: "#4D0A0A",
+          50: "#FAFAFA",
+          100: "#F0F0F3",
+          200: "#E4E4E8",
+          300: "#CACAD0",
+          400: "#9898A0",
+          500: "#6E6E78",
+          600: "#4A4A54",
+          700: "#383840",
+          800: "#28282E",
+          900: "#1C1C21",
+          950: "#141417",
         },
         // Green alias — redirected to prism red. Semantic "success" states
         // use the lighter end of the red scale (soft pink reads as positive
