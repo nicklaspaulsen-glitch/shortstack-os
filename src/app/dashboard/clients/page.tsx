@@ -616,6 +616,14 @@ export default function ClientsPage() {
   const paidInvoices = invoices.filter(i => i.status === "paid");
   const overdueInvoices = invoices.filter(i => i.status === "overdue");
 
+  // ─── Prism color map for stat tiles ─────────────────────────────────────
+  const CLIENT_PRISM = [
+    { accent: "#10B981", bar: "from-[#10B981] to-transparent" },  // Total
+    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },  // Active
+    { accent: "#06B6D4", bar: "from-[#06B6D4] to-transparent" },  // MRR
+    { accent: "#F59E0B", bar: "from-[#F59E0B] to-transparent" },  // At Risk
+  ] as const;
+
   if (loading) return (
     <div className="space-y-4">
       <div className="animate-pulse h-28 rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.04)]" />
@@ -685,6 +693,48 @@ export default function ClientsPage() {
           </div>
         }
       />
+
+      {/* Prism stat strip — 4 glass tiles with per-tile color accent */}
+      {clients.length > 0 && (
+        <motion.div
+          className="relative rounded-2xl border border-[rgba(99,102,241,0.1)] overflow-hidden"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* Prism rainbow top bar */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#10B981] via-[#3B82F6] via-[#06B6D4] to-[#F59E0B]" />
+          <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(99,102,241,0.08)]">
+            {[
+              { label: "Total Clients", value: String(clients.length), sub: `${clients.filter(c => !c.is_active).length} inactive` },
+              { label: "Active", value: String(activeClients.length), sub: `${Math.round((activeClients.length / (clients.length || 1)) * 100)}% retention` },
+              { label: "MRR", value: formatCurrency(totalMRR), sub: "monthly recurring" },
+              { label: "At Risk", value: String(clients.filter(c => c.health_score < 40).length), sub: "health score <40" },
+            ].map((cell, i) => {
+              const tile = CLIENT_PRISM[i];
+              return (
+                <motion.div
+                  key={cell.label}
+                  className="relative px-6 py-4 flex flex-col gap-1 overflow-hidden"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.34, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">{cell.label}</span>
+                  <span
+                    className="font-display text-2xl font-bold tracking-[-0.03em] font-mono"
+                    style={{ color: tile.accent, fontVariantNumeric: "tabular-nums" }}
+                  >
+                    {cell.value}
+                  </span>
+                  <span className="text-[10px] text-[#6F6D7A]">{cell.sub}</span>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
 
       {/* Tabs (sticky) */}
       <div className="overflow-x-auto max-w-full">
@@ -910,12 +960,14 @@ export default function ClientsPage() {
               status === "churned" ? "card-accent-danger"  :
               "card-accent-gold"; // trial
             return (
-              <motion.div key={c.id} className={`card card-accent ${accentClass} p-4 ${c.mrr > 0 ? "hover:border-[#6366F1]/25" : "hover:border-white/8"} transition-all cursor-pointer group relative`}
+              <motion.div key={c.id}
+                className={`card card-accent ${accentClass} p-4 transition-all cursor-pointer group relative`}
+                style={{ background: "rgba(255,255,255,0.03)", backdropFilter: "blur(12px)" }}
                 variants={{
                   hidden: { opacity: 0, y: 16 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
                 }}
-                whileHover={{ y: -4 }}
+                whileHover={{ y: -4, borderColor: "rgba(99,102,241,0.22)", boxShadow: "0 12px 40px rgba(0,0,0,0.45), 0 0 40px rgba(99,102,241,0.06)", transition: { duration: 0.22 } }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
                 onMouseEnter={() => setHoveredClient(c.id)}
                 onMouseLeave={() => setHoveredClient(null)}>
@@ -1231,24 +1283,23 @@ export default function ClientsPage() {
             const revenue = getClientRevenue(expandedRow);
             const note = clientNotes[expandedRow];
             return (
-              <div className="bg-[#15141A] border border-white/[0.08] border-t-0 rounded-b-xl px-4 pb-4">
-                <div className="grid grid-cols-2 gap-4 pt-3 sm:grid-cols-4">
-                  <div className="rounded-xl border border-white/[0.08] bg-[#1F1E26] p-3">
-                    <div className="text-[10px] uppercase tracking-wider text-white/50">MRR</div>
-                    <div className="mt-1 text-lg font-bold text-[#F5F4F1]">{formatCurrency(revenue.mrr ?? 0)}</div>
-                  </div>
-                  <div className="rounded-xl border border-white/[0.08] bg-[#1F1E26] p-3">
-                    <div className="text-[10px] uppercase tracking-wider text-white/50">Health</div>
-                    <div className={`mt-1 text-lg font-bold ${client.health_score >= 70 ? "text-[#7FE5B8]" : client.health_score >= 40 ? "text-[#FFC062]" : "text-[#F26063]"}`}>{client.health_score ?? "—"}%</div>
-                  </div>
-                  <div className="rounded-xl border border-white/[0.08] bg-[#1F1E26] p-3">
-                    <div className="text-[10px] uppercase tracking-wider text-white/50">Package</div>
-                    <div className="mt-1 text-sm font-semibold text-[#F5F4F1]">{client.package_tier ?? "—"}</div>
-                  </div>
-                  <div className="rounded-xl border border-white/[0.08] bg-[#1F1E26] p-3">
-                    <div className="text-[10px] uppercase tracking-wider text-white/50">Since</div>
-                    <div className="mt-1 text-sm text-[#9F9DAA]">{formatDate(client.created_at ?? "")}</div>
-                  </div>
+              <div className="border border-t-0 border-[rgba(99,102,241,0.12)] rounded-b-xl px-4 pb-4" style={{ background: "rgba(255,255,255,0.022)", backdropFilter: "blur(12px)" }}>
+                <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
+                  {[
+                    { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#10B981" },
+                    { label: "Health", value: `${client.health_score ?? "—"}%`, color: client.health_score >= 70 ? "#7FE5B8" : client.health_score >= 40 ? "#FFC062" : "#F26063" },
+                    { label: "Package", value: client.package_tier ?? "—", color: "#A78BFA" },
+                    { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
+                  ].map((tile, ti) => {
+                    const bars = ["from-[#10B981]","from-[#7FE5B8]","from-[#A78BFA]","from-[#6F6D7A]"];
+                    return (
+                      <div key={tile.label} className="relative rounded-xl border border-[rgba(99,102,241,0.1)] p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
+                        <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${bars[ti]} to-transparent opacity-60`} />
+                        <div className="text-[10px] uppercase tracking-wider text-[#6F6D7A]">{tile.label}</div>
+                        <div className="mt-1 text-lg font-bold font-mono" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</div>
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Legacy activity + revenue + notes below the tiles */}
@@ -1356,24 +1407,28 @@ export default function ClientsPage() {
       {/* Billing Tab */}
       {tab === "billing" && (
         <div className="space-y-4">
-          {/* Billing Stats */}
+          {/* Billing Stats — prism glass tiles */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="card p-3">
-              <p className="text-[10px] text-muted uppercase tracking-wider">Stripe Customers</p>
-              <p className="text-xl font-bold mt-1">{clientsWithStripe.length}<span className="text-xs text-muted font-normal">/{clients.length}</span></p>
-            </div>
-            <div className="card p-3">
-              <p className="text-[10px] text-muted uppercase tracking-wider">Active Subs</p>
-              <p className="text-xl font-bold text-success mt-1">{clientsWithSubs.length}</p>
-            </div>
-            <div className="card p-3">
-              <p className="text-[10px] text-muted uppercase tracking-wider">Paid Invoices</p>
-              <p className="text-xl font-bold text-success mt-1">{paidInvoices.length}</p>
-            </div>
-            <div className="card p-3">
-              <p className="text-[10px] text-muted uppercase tracking-wider">Overdue</p>
-              <p className={`text-xl font-bold mt-1 ${overdueInvoices.length > 0 ? "text-danger" : "text-muted"}`}>{overdueInvoices.length}</p>
-            </div>
+            {[
+              { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#10B981", bar: "from-[#10B981] to-transparent" },
+              { label: "Active Subs", value: String(clientsWithSubs.length), color: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },
+              { label: "Paid Invoices", value: String(paidInvoices.length), color: "#06B6D4", bar: "from-[#06B6D4] to-transparent" },
+              { label: "Overdue", value: String(overdueInvoices.length), color: overdueInvoices.length > 0 ? "#F26063" : "#6F6D7A", bar: overdueInvoices.length > 0 ? "from-[#F26063] to-transparent" : "from-[#6F6D7A] to-transparent" },
+            ].map((tile, i) => (
+              <motion.div
+                key={tile.label}
+                className="relative rounded-xl border border-[rgba(99,102,241,0.08)] px-4 py-3 overflow-hidden"
+                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(12px)" }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.36, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -2, transition: { duration: 0.2 } }}
+              >
+                <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${tile.bar} opacity-70`} />
+                <p className="text-[10px] text-[#6F6D7A] uppercase tracking-wider">{tile.label}</p>
+                <p className="text-xl font-bold font-mono mt-1" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</p>
+              </motion.div>
+            ))}
           </div>
 
           {/* Client Billing Cards */}

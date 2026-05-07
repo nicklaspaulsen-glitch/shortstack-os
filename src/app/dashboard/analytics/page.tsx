@@ -50,10 +50,13 @@ function Accordion({
   expanded: boolean; onToggle: () => void; children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[#0E0D14] overflow-hidden">
+    <div
+      className="rounded-2xl border border-[rgba(99,102,241,0.1)] overflow-hidden"
+      style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}
+    >
       <button
         onClick={onToggle}
-        className="flex items-center justify-between w-full px-6 py-4 hover:bg-[rgba(255,255,255,0.02)] transition-colors duration-150"
+        className="flex items-center justify-between w-full px-6 py-4 hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
       >
         <div className="flex items-center gap-2.5">
           <span className="text-[#6F6D7A]">{icon}</span>
@@ -372,6 +375,14 @@ export default function AnalyticsPage() {
     stats.totalClients > 0 || stats.totalDeals > 0 || stats.replies > 0 ||
     stats.callsBooked > 0 || stats.contentPublished > 0;
 
+  // ─── Prism color map for stat tiles ─────────────────────────────────────
+  const PRISM_TILES = [
+    { accent: "#10B981", bar: "from-[#10B981] to-transparent" },   // MRR → emerald
+    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },   // Leads → blue
+    { accent: "#06B6D4", bar: "from-[#06B6D4] to-transparent" },   // DMs → cyan
+    { accent: "#8B5CF6", bar: "from-[#8B5CF6] to-transparent" },   // Deals → violet
+  ] as const;
+
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <MotionPage className="space-y-4">
@@ -498,20 +509,21 @@ export default function AnalyticsPage() {
           </div>
 
           {/* ── Zone 1: Hero KPI ─────────────────────────────────────────── */}
-          {/* Lime accent lives HERE and ONLY here. Every other zone uses     */}
-          {/* neutral or indigo. One chromatic moment per page section.       */}
           <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4">
 
-            {/* Left — MRR hero. The lime zone. */}
+            {/* Left — MRR hero with prism top bar */}
             <motion.div
-              className="relative rounded-2xl border border-[rgba(99,102,241,0.16)] bg-[rgba(99,102,241,0.025)] px-8 py-8 overflow-hidden"
-              initial={{ opacity: 0, y: 14 }}
+              className="relative rounded-2xl border border-[rgba(99,102,241,0.16)] bg-[rgba(255,255,255,0.028)] px-8 py-8 overflow-hidden"
+              style={{ backdropFilter: "blur(16px)" }}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Ambient glow — intentional not decorative */}
-              <div className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 rounded-full bg-[#6366F1] opacity-[0.05] blur-3xl" />
-              <div className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#6366F1] opacity-[0.03] blur-2xl" />
+              {/* Prism rainbow top bar */}
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#10B981] via-[#3B82F6] via-[#06B6D4] via-[#8B5CF6] to-[#F59E0B]" />
+              {/* Ambient glow */}
+              <div className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 rounded-full bg-[#6366F1] opacity-[0.06] blur-3xl" />
+              <div className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#10B981] opacity-[0.04] blur-2xl" />
 
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A] mb-3">
                 Monthly Recurring Revenue
@@ -536,41 +548,48 @@ export default function AnalyticsPage() {
               </div>
             </motion.div>
 
-            {/* Right — 4 secondary stats. Muted, hairline borders, no lime. */}
+            {/* Right — 4 prism stat tiles with per-tile color accent bar */}
             <div className="grid grid-cols-2 lg:grid-cols-1 gap-3">
               {[
                 { label: "Total Leads", value: stats.totalLeads.toLocaleString(), sub: leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "—", subOk: leadGrowth >= 0 },
                 { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate >= 5 },
                 { label: "Calls Booked", value: stats.callsBooked.toLocaleString(), sub: "this period", subOk: true },
                 { label: "Deals Won", value: stats.totalDeals.toLocaleString(), sub: formatCurrency(stats.dealValue) + " closed", subOk: true },
-              ].map((cell, i) => (
-                <motion.div
-                  key={cell.label}
-                  className="rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] px-4 py-3"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: 0.07 * (i + 1), ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-[#6F6D7A]">{cell.label}</p>
-                  <p
-                    className="font-display text-xl font-bold text-[#F5F4F1] tracking-[-0.02em] mt-1"
-                    style={{ fontVariantNumeric: "tabular-nums" }}
+              ].map((cell, i) => {
+                const tile = PRISM_TILES[i];
+                return (
+                  <motion.div
+                    key={cell.label}
+                    className="relative rounded-xl bg-[rgba(255,255,255,0.028)] border border-[rgba(255,255,255,0.07)] px-4 py-3 overflow-hidden"
+                    style={{ backdropFilter: "blur(12px)" }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.07 * (i + 1), ease: [0.22, 1, 0.36, 1] }}
+                    whileHover={{ y: -2, borderColor: "rgba(255,255,255,0.14)", transition: { duration: 0.2 } }}
                   >
-                    {cell.value}
-                  </p>
-                  <p className="text-[10px] mt-0.5" style={{ color: cell.subOk ? "#6F6D7A" : "#F26063" }}>
-                    {cell.sub}
-                  </p>
-                </motion.div>
-              ))}
+                    {/* Bottom accent bar (prism color per tile) */}
+                    <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${tile.bar} opacity-70`} />
+                    <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-[#6F6D7A]">{cell.label}</p>
+                    <p
+                      className="font-display text-xl font-bold tracking-[-0.02em] mt-1"
+                      style={{ color: tile.accent, fontVariantNumeric: "tabular-nums" }}
+                    >
+                      {cell.value}
+                    </p>
+                    <p className="text-[10px] mt-0.5" style={{ color: cell.subOk ? "#6F6D7A" : "#F26063" }}>
+                      {cell.sub}
+                    </p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
 
           {/* ── Zone 2: Lead velocity + Lead sources ─────────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-4">
 
-            {/* Lead velocity area chart — chart IS the content, not inside a card */}
-            <div className="rounded-2xl bg-[#0E0D14] px-6 pt-5 pb-4">
+            {/* Lead velocity area chart */}
+            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Acquisition</p>
@@ -609,8 +628,8 @@ export default function AnalyticsPage() {
               )}
             </div>
 
-            {/* Lead sources — Linear-style horizontal bars, not a pie chart */}
-            <div className="rounded-2xl bg-[#0E0D14] px-6 pt-5 pb-5">
+            {/* Lead sources */}
+            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Channels</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Lead Sources</h2>
               {leadsBySource.length === 0 ? (
@@ -653,8 +672,8 @@ export default function AnalyticsPage() {
           {/* ── Zone 3: Funnel + Outreach ─────────────────────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-4">
 
-            {/* Conversion funnel — animated progress bars, not bar chart */}
-            <div className="rounded-2xl bg-[#0E0D14] px-6 pt-5 pb-5">
+            {/* Conversion funnel */}
+            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Sales Pipeline</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Conversion Funnel</h2>
               <div className="space-y-3">
@@ -708,8 +727,8 @@ export default function AnalyticsPage() {
               </div>
             </div>
 
-            {/* Outreach performance — line chart */}
-            <div className="rounded-2xl bg-[#0E0D14] px-6 pt-5 pb-4">
+            {/* Outreach performance */}
+            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Engagement</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-4">Outreach Performance</h2>
               {outreachByDay.length === 0 ? (
@@ -746,8 +765,8 @@ export default function AnalyticsPage() {
           {/* ── Zone 4: Industries + Goals + Benchmarks (3-col dense) ──────── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-            {/* Top industries — ranked list */}
-            <div className="rounded-2xl bg-[#0E0D14] px-6 pt-5 pb-5">
+            {/* Top industries */}
+            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Verticals</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Top Industries</h2>
               {leadsByIndustry.length === 0 ? (
@@ -789,8 +808,8 @@ export default function AnalyticsPage() {
               )}
             </div>
 
-            {/* Monthly goals — progress bars */}
-            <div className="rounded-2xl bg-[#0E0D14] px-6 pt-5 pb-5">
+            {/* Monthly goals */}
+            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Progress</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
               <div className="space-y-3.5">
@@ -823,8 +842,8 @@ export default function AnalyticsPage() {
               </div>
             </div>
 
-            {/* Benchmarks — overlapping bars (your vs industry) */}
-            <div className="rounded-2xl bg-[#0E0D14] px-6 pt-5 pb-5">
+            {/* Benchmarks */}
+            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">vs Industry</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Benchmarks</h2>
               <div className="space-y-3">
@@ -873,58 +892,45 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          {/* ── Zone 5: Scorecard strip ───────────────────────────────────── */}
-          {/* Lime on Revenue Closed only. All other cells: neutral.          */}
-          <div className="relative rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[#0E0D14] overflow-hidden">
-            <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(255,255,255,0.06)]">
-              <div className="px-6 py-5 flex flex-col gap-1.5">
-                <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">Revenue Closed</span>
-                <span
-                  className="font-display text-2xl font-bold tracking-[-0.03em] text-[#6366F1]"
-                  style={{ fontVariantNumeric: "tabular-nums" }}
+          {/* ── Zone 5: Scorecard strip (prism glass, staggered entrance) ── */}
+          <motion.div
+            className="relative rounded-2xl border border-[rgba(99,102,241,0.1)] overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {/* Prism top bar */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#10B981] via-[#3B82F6] via-[#06B6D4] via-[#8B5CF6] to-[#F59E0B]" />
+            <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(99,102,241,0.08)]">
+              {[
+                { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#10B981" },
+                { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#3B82F6" : "#F26063" },
+                { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#06B6D4" },
+                { label: "Active Clients", value: String(stats.activeClients), sub: `${formatCurrency(stats.totalMRR)} MRR`, color: "#8B5CF6" },
+              ].map((cell, i) => (
+                <motion.div
+                  key={cell.label}
+                  className="px-6 py-5 flex flex-col gap-1.5"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.36, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {formatCurrency(stats.dealValue)}
-                </span>
-                <span className="text-[10px] text-[#6F6D7A]">
-                  {stats.totalDeals} deal{stats.totalDeals !== 1 ? "s" : ""} won
-                </span>
-              </div>
-              <div className="px-6 py-5 flex flex-col gap-1.5">
-                <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">Lead Growth</span>
-                <span
-                  className="font-display text-2xl font-bold tracking-[-0.03em]"
-                  style={{ color: leadGrowth >= 0 ? "#7FE5B8" : "#F26063", fontVariantNumeric: "tabular-nums" }}
-                >
-                  {leadGrowth >= 0 ? "+" : ""}{leadGrowth}%
-                </span>
-                <span className="text-[10px] text-[#6F6D7A]">vs last month</span>
-              </div>
-              <div className="px-6 py-5 flex flex-col gap-1.5">
-                <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">Reply Rate</span>
-                <span
-                  className="font-display text-2xl font-bold tracking-[-0.03em] text-[#F5F4F1]"
-                  style={{ fontVariantNumeric: "tabular-nums" }}
-                >
-                  {replyRate}%
-                </span>
-                <span className="text-[10px] text-[#6F6D7A]">{stats.dmsSent.toLocaleString()} DMs sent</span>
-              </div>
-              <div className="px-6 py-5 flex flex-col gap-1.5">
-                <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">Active Clients</span>
-                <span
-                  className="font-display text-2xl font-bold tracking-[-0.03em] text-[#F5F4F1]"
-                  style={{ fontVariantNumeric: "tabular-nums" }}
-                >
-                  {stats.activeClients}
-                </span>
-                <span className="text-[10px] text-[#6F6D7A]">{formatCurrency(stats.totalMRR)} MRR</span>
-              </div>
+                  <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">{cell.label}</span>
+                  <span
+                    className="font-display text-2xl font-bold tracking-[-0.03em] font-mono"
+                    style={{ color: cell.color, fontVariantNumeric: "tabular-nums" }}
+                  >
+                    {cell.value}
+                  </span>
+                  <span className="text-[10px] text-[#6F6D7A]">{cell.sub}</span>
+                </motion.div>
+              ))}
             </div>
-            <div className="h-px bg-gradient-to-r from-[#6366F1]/20 via-[#6366F1]/6 to-transparent" />
-          </div>
+          </motion.div>
 
           {/* ── Zone 6: Real-time activity feed ──────────────────────────── */}
-          <div className="rounded-2xl bg-[#0E0D14] px-6 pt-5 pb-5">
+          <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Live Stream</p>
@@ -1068,7 +1074,7 @@ export default function AnalyticsPage() {
                 <tbody>
                   {platformROI.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-8 text-center">
+                      <td colSpan={5} className="py-8 text-center" style={{ background: "none" }}>
                         <p className="text-[11px] text-[#6F6D7A]">No ad platform data yet</p>
                         <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-[#6366F1] hover:opacity-80 transition-opacity">
                           Connect platforms <ArrowUp size={9} className="rotate-45" />
@@ -1076,7 +1082,8 @@ export default function AnalyticsPage() {
                       </td>
                     </tr>
                   ) : platformROI.map(p => (
-                    <tr key={p.platform} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors">
+                    <tr key={p.platform} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.03)] transition-colors group">
+
                       <td className="py-3 font-medium text-[#F5F4F1]">{p.platform}</td>
                       <td className="py-3 text-right text-[#9F9DAA]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.spend)}</td>
                       <td className="py-3 text-right text-[#7FE5B8] font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.revenue)}</td>
@@ -1160,7 +1167,7 @@ export default function AnalyticsPage() {
                   ].map(row => {
                     const growth = row.last > 0 ? Math.round(((row.current - row.last) / row.last) * 100) : 0;
                     return (
-                      <tr key={row.label} className="border-b border-[rgba(255,255,255,0.04)]">
+                      <tr key={row.label} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.03)] transition-colors">
                         <td className="py-3 font-medium text-[#F5F4F1]">{row.label}</td>
                         <td className="py-3 text-right text-[#4F4D58]" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.three) : row.three}
