@@ -909,6 +909,8 @@ export default function LeadEnginePage() {
           {/* Split-pane: table (flex-1) + detail panel (sticky right, lg+ only) */}
           <div className="flex items-start gap-4">
           <div className="min-w-0 flex-1 space-y-1.5">
+            <div className="overflow-x-auto -mx-1 px-1">
+            <div className="min-w-[600px]">
             <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-2 px-3">
               <span className="col-span-3">Business</span>
               <span className="col-span-2">Contact</span>
@@ -1078,6 +1080,8 @@ export default function LeadEnginePage() {
                 )}
               </div>
             ))}
+          </div>{/* end min-w-[600px] */}
+          </div>{/* end overflow-x-auto */}
           </div>{/* end min-w-0 flex-1 table */}
 
           {/* Side detail panel — desktop only */}
@@ -1273,7 +1277,7 @@ export default function LeadEnginePage() {
               className="btn-primary text-xs flex items-center gap-1.5"
             ><RefreshCw size={12} /> Enrich All Missing</button>
           </div>
-          <div className="grid grid-cols-4 gap-3 mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
             {[
               { label: "Fully Enriched", value: 0, total: totalLeads, color: "text-green-400" },
               { label: "Partial Data", value: 0, total: totalLeads, color: "text-yellow-400" },
