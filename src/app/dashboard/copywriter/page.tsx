@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -1153,7 +1153,7 @@ export default function CopywriterPage() {
 
       {/* Rolling preview of example copywriter outputs */}
       {advancedMode && (
-        <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
+        <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
           <div className="absolute inset-0 pointer-events-none">
             <RollingPreview
               items={COPYWRITER_PREVIEW_FALLBACK}
@@ -1292,7 +1292,7 @@ export default function CopywriterPage() {
                     initial={{ opacity: 0, x: -16 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.04, duration: 0.28 }}
-                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                     onClick={() => loadFromHistory(item)}
                     className="w-full text-left p-3 border-b border-white/5 last:border-0 transition-all group flex items-start gap-3"
                   >
@@ -1701,7 +1701,7 @@ export default function CopywriterPage() {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-gold/[0.06] flex items-center justify-center mb-4">
+                  <div className="w-16 h-16  bg-gold/[0.06] flex items-center justify-center mb-4">
                     <PenTool size={28} className="text-gold/40" />
                   </div>
                   <h3 className="text-sm font-semibold text-foreground mb-1">Ready to Write</h3>

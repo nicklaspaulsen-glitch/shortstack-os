@@ -69,7 +69,7 @@ export default function TodaysPriority() {
   return (
     <Link
       href={priority.href}
-      className={`block rounded-2xl border ${accent.ring} bg-gradient-to-br ${accent.bg} p-4 transition-all hover:-translate-y-0.5 hover:shadow-md group`}
+      className={`block  border ${accent.ring} bg-gradient-to-br ${accent.bg} p-4 transition-all hover:-translate-y-0.5 hover:shadow-md group`}
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-[10px] text-muted font-semibold uppercase tracking-wider flex items-center gap-1.5">

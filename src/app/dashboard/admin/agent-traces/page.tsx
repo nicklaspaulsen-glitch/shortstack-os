@@ -233,7 +233,7 @@ export default function AgentTracesDashboard() {
       </div>
 
       {/* Filter chips */}
-      <section className="rounded-2xl border border-border bg-surface p-5 space-y-3">
+      <section className=" border border-border bg-surface p-5 space-y-3">
         <div className="space-y-2">
           <p className="text-[11px] uppercase tracking-wide text-muted">Surface</p>
           <div className="flex flex-wrap gap-2">
@@ -273,7 +273,7 @@ export default function AgentTracesDashboard() {
       </section>
 
       {/* Trace table */}
-      <section className="rounded-2xl border border-border bg-surface overflow-hidden">
+      <section className=" border border-border bg-surface overflow-hidden">
         <header className="flex items-center justify-between px-5 py-4 border-b border-border">
           <div>
             <h2 className="text-sm font-semibold">Recent traces</h2>

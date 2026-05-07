@@ -181,7 +181,7 @@ function SelectCard({
   return (
     <button
       onClick={onClick}
-      className={`relative text-left rounded-2xl p-4 border transition-all duration-200 ${
+      className={`relative text-left  p-4 border transition-all duration-200 ${
         selected
           ? "border-gold bg-gold/[0.05] shadow-[0_0_0_1px_rgba(201,168,76,0.3)]"
           : "border-border bg-surface-light hover:border-gold/40"

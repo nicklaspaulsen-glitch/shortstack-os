@@ -159,7 +159,7 @@ export default function ClientChatWidget() {
 
   return (
     <Draggable defaultX={typeof window !== "undefined" ? window.innerWidth - 400 : 600} defaultY={typeof window !== "undefined" ? window.innerHeight - 540 : 200} storageKey="chat_panel">
-    <div className="w-[380px] h-[520px] bg-surface border border-border rounded-2xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in">
+    <div className="w-[380px] h-[520px] bg-surface border border-border  shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in">
       {/* Header */}
       <div className="bg-surface-light px-4 py-3 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
@@ -185,7 +185,7 @@ export default function ClientChatWidget() {
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 ${
+            <div className={`max-w-[80%]  px-3.5 py-2.5 ${
               msg.role === "user"
                 ? "bg-gold text-black rounded-br-sm"
                 : "bg-surface-light text-foreground rounded-bl-sm"
@@ -196,7 +196,7 @@ export default function ClientChatWidget() {
         ))}
         {sending && (
           <div className="flex justify-start">
-            <div className="bg-surface-light rounded-2xl rounded-bl-sm px-4 py-3">
+            <div className="bg-surface-light  rounded-bl-sm px-4 py-3">
               <div className="flex gap-1">
                 <div className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                 <div className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />

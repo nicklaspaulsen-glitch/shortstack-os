@@ -115,7 +115,7 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
   if (!meta) return null;
 
   return (
-    <div className="rounded-2xl border border-gold/20 bg-gradient-to-br from-gold/[0.04] via-transparent to-transparent p-4">
+    <div className=" border border-gold/20 bg-gradient-to-br from-gold/[0.04] via-transparent to-transparent p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center">

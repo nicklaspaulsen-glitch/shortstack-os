@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, Suspense, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -243,7 +243,7 @@ function LoginForm() {
         className="pointer-events-none absolute inset-0 opacity-90"
         style={{
           backgroundImage:
-            "radial-gradient(900px 600px at 0% 0%, rgba(99,102,241,0.04), transparent 60%), radial-gradient(900px 600px at 100% 100%, rgba(63,13,45,0.20), transparent 60%)",
+            "radial-gradient(900px 600px at 0% 0%, rgba(255,255,255,0.04), transparent 60%), radial-gradient(900px 600px at 100% 100%, rgba(63,13,45,0.20), transparent 60%)",
         }}
       />
 
@@ -283,7 +283,7 @@ function LoginForm() {
             )}
 
             {/* Glass card */}
-            <div className="relative rounded-2xl border border-border-subtle bg-bg-surface-2/80 backdrop-blur-md p-7 shadow-stack-2">
+            <div className="relative  border border-border-subtle bg-bg-surface-2/80 backdrop-blur-md p-7 shadow-stack-2">
               {/* Top edge highlight to make the card feel layered */}
               <div
                 aria-hidden
@@ -302,7 +302,7 @@ function LoginForm() {
 
                   {resetSent ? (
                     <div className="text-center py-2">
-                      <div className="w-12 h-12 bg-status-success/10 rounded-2xl flex items-center justify-center mx-auto mb-3 ring-1 ring-status-success/30">
+                      <div className="w-12 h-12 bg-status-success/10  flex items-center justify-center mx-auto mb-3 ring-1 ring-status-success/30">
                         <Mail size={20} className="text-status-success" />
                       </div>
                       <h2 className="font-display text-[18px] text-text-primary mb-1">Check your email</h2>
@@ -328,7 +328,7 @@ function LoginForm() {
                         type="submit"
                         disabled={loading}
                         ref={submitBtnRef}
-                        className="w-full text-[14px] font-medium py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(99,102,241,0.3),0_0_24px_-6px_rgba(99,102,241,0.45)]"
+                        className="w-full text-[14px] font-medium py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(255,255,255,0.3),0_0_24px_-6px_rgba(255,255,255,0.45)]"
                       >
                         {loading ? <Loader size={14} className="animate-spin" /> : <Mail size={14} />}
                         {loading ? "Sending..." : "Send reset link"}
@@ -460,7 +460,7 @@ function LoginForm() {
                     type="submit"
                     disabled={loading}
                     ref={submitBtnRef}
-                    className="w-full text-[14px] font-semibold py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(99,102,241,0.3),0_0_24px_-6px_rgba(99,102,241,0.45)] hover:shadow-[0_0_0_1px_rgba(99,102,241,0.45),0_0_32px_-4px_rgba(99,102,241,0.6)]"
+                    className="w-full text-[14px] font-semibold py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(255,255,255,0.3),0_0_24px_-6px_rgba(255,255,255,0.45)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_0_32px_-4px_rgba(255,255,255,0.6)]"
                     style={{ willChange: "transform" }}
                   >
                     {loading ? <Loader size={14} className="animate-spin" /> : <ArrowRight size={14} />}

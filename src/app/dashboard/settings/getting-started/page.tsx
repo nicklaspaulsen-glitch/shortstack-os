@@ -197,7 +197,7 @@ export default function GettingStartedSettingsPage() {
         ) : (
           <div className="space-y-8">
             {/* Hero */}
-            <section className="rounded-2xl bg-surface-1 border border-border-subtle p-6">
+            <section className=" bg-surface-1 border border-border-subtle p-6">
               <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wide mb-4">
                 Hero
               </h2>
@@ -339,7 +339,7 @@ export default function GettingStartedSettingsPage() {
             </section>
 
             {/* Settings + actions */}
-            <section className="rounded-2xl bg-surface-1 border border-border-subtle p-5 flex items-center justify-between flex-wrap gap-3">
+            <section className=" bg-surface-1 border border-border-subtle p-5 flex items-center justify-between flex-wrap gap-3">
               <button
                 onClick={() => setDoc({ ...doc, is_public: !doc.is_public })}
                 className="inline-flex items-center gap-2 text-sm text-text-primary"

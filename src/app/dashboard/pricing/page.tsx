@@ -151,7 +151,7 @@ export default function PricingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06, duration: 0.4 }}
               whileHover={{ y: -4, scale: 1.01 }}
-              className={`relative glass rounded-2xl border p-5 flex flex-col transition-shadow ${
+              className={`relative glass  border p-5 flex flex-col transition-shadow ${
                 plan.popular
                   ? "border-gold/30 bg-gold/[0.03] shadow-card ring-1 ring-gold/10"
                   : isCurrentPlan
@@ -227,7 +227,7 @@ export default function PricingPage() {
       </div>
 
       {/* Feature comparison highlights */}
-      <div className="glass rounded-2xl p-6">
+      <div className="glass  p-6">
         <h2 className="text-sm font-bold text-foreground mb-4">What scales with your plan</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="space-y-2">
@@ -324,7 +324,7 @@ export default function PricingPage() {
       </div>
 
       {/* Token Usage Explainer */}
-      <div className="glass rounded-2xl p-6">
+      <div className="glass  p-6">
         <h2 className="text-sm font-bold text-foreground mb-1">How AI tokens work</h2>
         <p className="text-xs text-muted mb-4">
           Tokens power all AI features — content generation, lead scoring, ad copy, scripts, social posts, and more.
@@ -383,7 +383,7 @@ export default function PricingPage() {
       </div>
 
       {/* FAQ / CTA */}
-      <div className="glass rounded-2xl border-gold/20 bg-gold/[0.03] p-6 text-center">
+      <div className="glass  border-gold/20 bg-gold/[0.03] p-6 text-center">
         <h2 className="text-sm font-bold text-foreground mb-1">Not sure which plan is right?</h2>
         <p className="text-xs text-muted mb-4">
           Start with Starter and upgrade anytime. All plans include a 14-day free trial.

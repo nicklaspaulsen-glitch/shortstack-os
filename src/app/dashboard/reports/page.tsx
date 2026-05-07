@@ -679,7 +679,7 @@ export default function ReportsPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                   >
                     <button
                       onClick={() => setExpandedReport(expandedReport === report.id ? null : report.id)}
@@ -734,7 +734,7 @@ export default function ReportsPage() {
       {/* Email report modal */}
       {emailFormOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center fade-in">
-          <div className="bg-surface border border-border/50 rounded-2xl p-6 w-full max-w-sm shadow-elevated">
+          <div className="bg-surface border border-border/50  p-6 w-full max-w-sm shadow-elevated">
             <div className="flex items-center gap-2 mb-4">
               <Mail size={16} className="text-gold" />
               <h3 className="text-sm font-semibold text-foreground">Email Report</h3>

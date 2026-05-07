@@ -48,7 +48,7 @@ const GRID_COLS: Record<2 | 3 | 4, string> = {
 const SIZE_CARD: Record<"sm" | "md" | "lg", string> = {
   sm: "p-2.5 rounded-lg",
   md: "p-3.5 rounded-xl",
-  lg: "p-4 rounded-2xl",
+  lg: "p-4 ",
 };
 
 const SIZE_ICON: Record<"sm" | "md" | "lg", string> = {

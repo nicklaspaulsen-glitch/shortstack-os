@@ -160,7 +160,7 @@ export default function TokenUsageWidget() {
       {/* Expanded breakdown on hover */}
       {expanded && (
         <div
-          className="absolute bottom-full right-0 mb-2 w-64 rounded-2xl border border-border bg-surface shadow-2xl shadow-black/50 p-3 fade-in"
+          className="absolute bottom-full right-0 mb-2 w-64  border border-border bg-surface shadow-2xl shadow-black/50 p-3 fade-in"
           onMouseEnter={() => setExpanded(true)}
           onMouseLeave={() => setExpanded(false)}
         >

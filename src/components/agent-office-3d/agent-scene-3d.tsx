@@ -881,7 +881,7 @@ export default function AgentScene3D({
 }: AgentScene3DProps) {
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-white/8 bg-[#070708] ${className ?? ""}`}
+      className={`relative overflow-hidden  border border-white/8 bg-[#070708] ${className ?? ""}`}
       style={{ aspectRatio: "16 / 9" }}
     >
       <Canvas

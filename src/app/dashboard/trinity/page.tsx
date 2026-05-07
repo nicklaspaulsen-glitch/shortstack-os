@@ -198,7 +198,7 @@ export default function TrinityPage() {
           <div className="flex-1 overflow-y-auto p-5 space-y-3">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[70%] rounded-2xl px-4 py-3 ${
+                <div className={`max-w-[70%]  px-4 py-3 ${
                   msg.role === "user" ? "bg-gold text-black rounded-br-sm" : "bg-surface-light text-foreground rounded-bl-sm"
                 }`}>
                   <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
@@ -210,7 +210,7 @@ export default function TrinityPage() {
             ))}
             {sending && (
               <div className="flex justify-start">
-                <div className="bg-surface-light rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1">
+                <div className="bg-surface-light  rounded-bl-sm px-4 py-3 flex gap-1">
                   <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                   <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
                   <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />

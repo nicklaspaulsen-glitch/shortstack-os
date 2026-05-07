@@ -15,7 +15,7 @@ interface WebhookHealthProps {
 export default function WebhookHealth({ providers }: WebhookHealthProps) {
   if (!providers) {
     return (
-      <div className="rounded-2xl border border-border bg-surface p-4">
+      <div className=" border border-border bg-surface p-4">
         <h2 className="text-xs font-bold mb-3 text-foreground">Webhook dedup health</h2>
         <p className="text-[11px] text-muted">Unavailable</p>
       </div>
@@ -25,7 +25,7 @@ export default function WebhookHealth({ providers }: WebhookHealthProps) {
   const stuckCount = providers.filter((p) => p.stuck).length;
 
   return (
-    <div className="rounded-2xl border border-border bg-surface p-4">
+    <div className=" border border-border bg-surface p-4">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xs font-bold text-foreground">Webhook dedup health</h2>
         <span

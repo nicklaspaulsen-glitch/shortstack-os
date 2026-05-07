@@ -85,7 +85,7 @@ function ExpandableRow({ row }: { row: TrinityErrorRow }) {
 export default function ErrorLog({ rows }: ErrorLogProps) {
   if (!rows) {
     return (
-      <div className="rounded-2xl border border-border bg-surface p-4">
+      <div className=" border border-border bg-surface p-4">
         <h2 className="text-xs font-bold mb-3 text-foreground">Recent error log</h2>
         <p className="text-[11px] text-muted">Unavailable</p>
       </div>
@@ -93,7 +93,7 @@ export default function ErrorLog({ rows }: ErrorLogProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-surface p-4">
+    <div className=" border border-border bg-surface p-4">
       <div className="flex items-center gap-2 mb-3">
         <AlertTriangle size={14} className="text-danger" />
         <h2 className="text-xs font-bold text-foreground">

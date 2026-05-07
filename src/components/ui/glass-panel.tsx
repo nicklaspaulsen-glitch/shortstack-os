@@ -40,7 +40,7 @@ export function GlassPanel({
 }: GlassPanelProps) {
   return (
     <motion.div
-      className={`relative rounded-2xl ${VARIANTS[variant]} ${SHADOWS[shadow]} ${tilt ? "tilt-3d" : ""} ${ambient ? "ambient-radial" : ""} ${className}`.trim()}
+      className={`relative ${VARIANTS[variant]} ${SHADOWS[shadow]} ${tilt ? "tilt-3d" : ""} ${ambient ? "ambient-radial" : ""} ${className}`.trim()}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1], delay: index * 0.06 }}

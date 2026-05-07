@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -743,7 +743,7 @@ export default function InboxPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                     onClick={() => openItem(item)}
                     className={`group flex items-start gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
                       selectedItem?.id === item.id
@@ -943,7 +943,7 @@ export default function InboxPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                     className="flex items-start gap-3 px-4 py-3 rounded-lg glass-md border border-white/5 transition-colors"
                   >
                     {/* Icon */}
@@ -993,7 +993,7 @@ export default function InboxPage() {
 
           {/* Modal */}
           <div
-            className="relative w-[90%] max-w-4xl h-[85vh] bg-[#141414] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className="relative w-[90%] max-w-4xl h-[85vh] bg-[#141414] border border-white/10  shadow-2xl flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {/* Modal Header */}

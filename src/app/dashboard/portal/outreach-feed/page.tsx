@@ -54,7 +54,7 @@ export default function ClientOutreachFeedPage() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-[#0b0d12] p-10 text-center text-white/40 text-sm">
+      <div className=" border border-white/10 bg-[#0b0d12] p-10 text-center text-white/40 text-sm">
         Loading…
       </div>
     );
@@ -62,7 +62,7 @@ export default function ClientOutreachFeedPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#041926] via-[#0b3547] to-[#1f7a87] px-6 py-5 sm:py-6">
+      <div className=" border border-white/10 bg-gradient-to-br from-[#041926] via-[#0b3547] to-[#1f7a87] px-6 py-5 sm:py-6">
         <div className="flex items-start gap-3">
           <div
             className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"

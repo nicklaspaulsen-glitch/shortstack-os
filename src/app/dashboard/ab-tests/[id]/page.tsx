@@ -128,8 +128,8 @@ export default function AbTestDetailPage() {
   if (loading || !test) {
     return (
       <div className="p-6 max-w-6xl mx-auto space-y-6">
-        <div className="h-32 rounded-2xl bg-white/4 animate-pulse" />
-        <div className="h-64 rounded-2xl bg-white/4 animate-pulse" />
+        <div className="h-32  bg-white/4 animate-pulse" />
+        <div className="h-64  bg-white/4 animate-pulse" />
       </div>
     );
   }

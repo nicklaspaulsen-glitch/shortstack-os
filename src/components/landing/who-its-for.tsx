@@ -75,7 +75,7 @@ export default function WhoItsFor() {
           {AUDIENCES.map((a, i) => (
             <Reveal key={a.title} delay={0.06 * i}>
               <div
-                className="rounded-2xl p-5 h-full transition-all duration-300 hover:-translate-y-1"
+                className="p-5 h-full transition-all duration-300 hover:-translate-y-1"
                 style={{
                   background: "rgba(255,255,255,0.02)",
                   border: "1px solid rgba(255,255,255,0.05)",
@@ -83,7 +83,7 @@ export default function WhoItsFor() {
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: "rgba(99,102,241,0.08)" }}
+                  style={{ background: "rgba(255,255,255,0.07)" }}
                 >
                   <a.icon size={18} style={{ color: "#A78BFA" }} />
                 </div>

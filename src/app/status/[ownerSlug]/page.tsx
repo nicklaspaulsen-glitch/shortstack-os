@@ -217,7 +217,7 @@ export default async function PublicStatusPage({
         {/* Top banner */}
         {!highestActive ? (
           <div
-            className="rounded-2xl border p-6 flex items-center gap-4"
+            className=" border p-6 flex items-center gap-4"
             style={{
               borderColor: "rgba(16, 185, 129, 0.4)",
               background: "rgba(16, 185, 129, 0.08)",
@@ -240,7 +240,7 @@ export default async function PublicStatusPage({
           </div>
         ) : (
           <div
-            className="rounded-2xl border p-6 space-y-2"
+            className=" border p-6 space-y-2"
             style={{
               borderColor: "rgba(234, 179, 8, 0.4)",
               background: "rgba(234, 179, 8, 0.08)",

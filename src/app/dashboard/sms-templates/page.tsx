@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -349,7 +349,7 @@ export default function SMSTemplatesPage() {
               <div className="col-span-2 text-center py-12 text-muted text-xs">No templates yet. Click &quot;New&quot; to create your first SMS template.</div>
             )}
             {filtered.map((template, idx) => (
-              <motion.div key={template.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="rounded-xl p-4 group transition-all hover:border-indigo-500/10" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+              <motion.div key={template.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="rounded-xl p-4 group transition-all hover:border-indigo-500/10" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <p className="text-xs font-semibold">{template.name}</p>
@@ -415,7 +415,7 @@ export default function SMSTemplatesPage() {
                 </div>
                 <div className="p-3 min-h-[300px] space-y-2">
                   {previewTemplate ? (
-                    <div className="bg-green-600 rounded-2xl rounded-tl-sm p-3 max-w-[85%]">
+                    <div className="bg-green-600  rounded-tl-sm p-3 max-w-[85%]">
                       <p className="text-[10px] text-white leading-relaxed">
                         {previewTemplate.body
                           .replace(/\{name\}/g, "John")
@@ -538,7 +538,7 @@ export default function SMSTemplatesPage() {
               { label: "Total Replies", value: totalReplies.toLocaleString(), icon: <MessageSquare size={12} />, color: "text-purple-400" },
               { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-gold" },
             ].map((stat, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>

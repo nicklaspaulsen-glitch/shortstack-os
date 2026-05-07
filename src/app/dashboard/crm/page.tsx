@@ -1291,7 +1291,7 @@ export default function CRMPage() {
 
           {/* ══ TABLE VIEW ══ */}
           {viewMode === "table" && (
-            <div className="rounded-2xl p-0 overflow-hidden border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}>
+            <div className=" p-0 overflow-hidden border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}>
               <div className="overflow-x-auto">
                 <table className={`w-full ${dText}`}>
                   <thead>
@@ -1335,7 +1335,7 @@ export default function CRMPage() {
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                            whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                             onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                             {columns.filter(c => c.visible).map(col => {
                               if (col.key === "select") return (
@@ -1517,12 +1517,12 @@ export default function CRMPage() {
                 return (
                   <motion.div
                     key={lead.id}
-                    className={`rounded-xl border border-[rgba(99,102,241,0.1)] ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-gold/30 bg-gold/5" : ""}`}
-                    style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
+                    className={`rounded-xl border border-[rgba(255,255,255,0.1)] ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-gold/30 bg-gold/5" : ""}`}
+                    style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                     onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-1.5 min-w-0">
@@ -1613,11 +1613,11 @@ export default function CRMPage() {
                         return (
                           <motion.div
                             key={lead.id}
-                            className="rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)" }}
+                            className="rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)" }}
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                            whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                             onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                             <div className="flex items-start justify-between">
                               <div className="min-w-0">
@@ -1675,7 +1675,7 @@ export default function CRMPage() {
 
         {/* ══ DETAIL SIDEBAR ══ */}
         {detailLead && (
-          <div ref={detailPanelRef} className="w-[350px] shrink-0 rounded-2xl p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}>
+          <div ref={detailPanelRef} className="w-[350px] shrink-0  p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}>
             <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
               <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
               <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground" aria-label="Close detail panel"><X size={14} /></button>
@@ -1816,7 +1816,7 @@ export default function CRMPage() {
       {/* ══ AUTOMATION MODAL ══ */}
       {showAutomation && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowAutomation(false)}>
-          <div className="bg-surface border border-border rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface border border-border  shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <div>
                 <h3 className="text-sm font-bold flex items-center gap-2"><Bot size={16} className="text-gold" /> Automation Rules</h3>
@@ -1944,7 +1944,7 @@ export default function CRMPage() {
       {/* ══ BUY CREDITS MODAL ══ */}
       {showBuyCredits && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowBuyCredits(false)}>
-          <div className="bg-surface border border-border rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface border border-border  shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-sm font-bold flex items-center gap-2"><Coins size={16} className="text-gold" /> Buy Email Credits</h3>
@@ -1976,7 +1976,7 @@ export default function CRMPage() {
       {/* ══ SAVE SEGMENT MODAL ══ */}
       {showSegmentSave && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowSegmentSave(false)}>
-          <div className="bg-surface border border-border rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface border border-border  shadow-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
             <h3 className="text-sm font-bold mb-3 flex items-center gap-2"><Bookmark size={14} className="text-gold" /> Save Segment</h3>
             <input value={newSegmentName} onChange={e => setNewSegmentName(e.target.value)} placeholder="Segment name..."
               className="input w-full text-xs px-3 py-2 mb-3" onKeyDown={e => { if (e.key === "Enter") saveSegment(); }} />

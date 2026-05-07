@@ -246,7 +246,7 @@ export default function FunnelCanvasPage() {
   if (loading) {
     return (
       <div className="p-6 max-w-7xl mx-auto space-y-6">
-        <div className="h-32 rounded-2xl bg-white/4 animate-pulse" />
+        <div className="h-32  bg-white/4 animate-pulse" />
         <div className="flex gap-4">
           {[...Array(3)].map((_, i) => <div key={i} className="h-36 w-48 rounded-xl bg-white/4 animate-pulse" />)}
         </div>

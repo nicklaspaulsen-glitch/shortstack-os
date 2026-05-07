@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * PresetPickerPanel — right-side slide-out sidebar that exposes every preset
@@ -469,7 +469,7 @@ export function PresetPickerPanel({
                 type="button"
                 onClick={() => fireDrop(r.kind, r.id, r.payload)}
                 title={`Re-apply ${r.label} (${r.kind})`}
-                className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-border hover:border-[rgba(99,102,241,0.4)] hover:bg-[rgba(99,102,241,0.08)] text-muted hover:text-foreground transition-all cursor-pointer"
+                className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-border hover:border-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.07)] text-muted hover:text-foreground transition-all cursor-pointer"
               >
                 {/* Clock icon — inline SVG to avoid adding another lucide import */}
                 <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -625,7 +625,7 @@ function TabBtn({
           className={`absolute inset-0 rounded ${
             highlight
               ? "bg-[rgba(212,160,23,0.12)] border border-[rgba(212,160,23,0.25)]"
-              : "bg-[rgba(99,102,241,0.12)] border border-[rgba(99,102,241,0.22)]"
+              : "bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.22)]"
           }`}
           transition={{ type: "spring", stiffness: 380, damping: 30 }}
         />

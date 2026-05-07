@@ -297,7 +297,7 @@ function ProgramsTab({
       </div>
 
       {programs.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-card/40 p-12 text-center">
+        <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
           <Award size={32} className="mx-auto text-gold/60 mb-3" />
           <h3 className="text-lg font-semibold mb-1">No programs yet</h3>
           <p className="text-sm text-muted mb-4">
@@ -485,7 +485,7 @@ function CreateProgramModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-card border border-border p-6 space-y-4">
+      <div className="w-full max-w-lg  bg-card border border-border p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">New affiliate program</h2>
           <button onClick={onClose} className="text-muted hover:text-foreground">
@@ -615,7 +615,7 @@ function AffiliatesTab({
 
   if (programs.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-card/40 p-12 text-center">
+      <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
         <p className="text-sm text-muted">
           Create a program first, then invite affiliates into it.
         </p>
@@ -639,7 +639,7 @@ function AffiliatesTab({
       </div>
 
       {affiliates.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-card/40 p-12 text-center">
+        <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
           <Users size={32} className="mx-auto text-gold/60 mb-3" />
           <p className="text-sm text-muted">No affiliates yet</p>
         </div>
@@ -854,7 +854,7 @@ function InviteAffiliateModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl bg-card border border-border p-6 space-y-4">
+      <div className="w-full max-w-md  bg-card border border-border p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Invite affiliate</h2>
           <button onClick={onClose} className="text-muted hover:text-foreground">
@@ -1181,7 +1181,7 @@ function PayoutsTab({
       </div>
 
       {eligible.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-card/40 p-12 text-center">
+        <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
           <p className="text-sm text-muted">No pending payouts.</p>
         </div>
       ) : (

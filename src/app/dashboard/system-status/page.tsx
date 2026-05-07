@@ -223,7 +223,7 @@ export default function SystemStatusPage() {
 
       {/* Launch-readiness verdict banner */}
       <div
-        className={`rounded-2xl border p-4 flex items-start gap-3 ${
+        className={` border p-4 flex items-start gap-3 ${
           summary.ready_to_launch
             ? "border-success/30 bg-success/5"
             : summary.blockers > 0
@@ -262,7 +262,7 @@ export default function SystemStatusPage() {
       {/* Groups */}
       <div className="space-y-4">
         {groups.map((group, gi) => (
-          <motion.div key={group.category} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: gi * 0.06, duration: 0.4 }} className="glass rounded-2xl p-5">
+          <motion.div key={group.category} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: gi * 0.06, duration: 0.4 }} className="glass  p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Zap size={14} className="text-gold" />
@@ -333,7 +333,7 @@ export default function SystemStatusPage() {
       </div>
 
       {/* Quick-action footer */}
-      <div className="glass rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div className="glass  p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="text-[11px] text-muted">
           Missing env vars? Add them in Vercel → Project Settings → Environment Variables, then redeploy.
         </div>

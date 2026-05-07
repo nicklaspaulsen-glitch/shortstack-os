@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -164,8 +164,8 @@ export default function VoiceStudioPage() {
   return (
     <div className="min-h-screen pb-12">
       {/* Higgsfield-style slim header */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809]">
-        <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(255,255,255,0.08)] bg-[#080809]">
+        <div className="w-7 h-7 rounded-xl bg-[rgba(255,255,255,0.12)] flex items-center justify-center shrink-0">
           <Mic size={13} className="text-[#6366F1]" />
         </div>
         <div className="flex-1 min-w-0">
@@ -176,7 +176,7 @@ export default function VoiceStudioPage() {
           <motion.span
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.15)] text-[#A78BFA]"
+            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.15)] text-[#A78BFA]"
           >
             <span className="w-1 h-1 rounded-full bg-[#6366F1] animate-pulse" />
             {stats.mineCount} voice{stats.mineCount !== 1 ? "s" : ""}
@@ -190,7 +190,7 @@ export default function VoiceStudioPage() {
         <button
           type="button"
           onClick={refresh}
-          className="flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-2.5 py-1.5 text-[11px] font-medium text-[#9F9DAA] hover:text-[#F5F4F1] hover:bg-[rgba(99,102,241,0.08)] transition-colors duration-150"
+          className="flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-2.5 py-1.5 text-[11px] font-medium text-[#9F9DAA] hover:text-[#F5F4F1] hover:bg-[rgba(255,255,255,0.08)] transition-colors duration-150"
         >
           <RefreshCw size={11} /> Refresh
         </button>
@@ -377,7 +377,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
   return (
     <PrismPanel rainbow padding="p-6" className="rounded-xl">
       <div className="flex items-start gap-4">
-        <div className="rounded-lg border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] p-2.5">
+        <div className="rounded-lg border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] p-2.5">
           <Upload size={20} className="text-[#6366F1]" />
         </div>
         <div className="flex-1 space-y-4">
@@ -403,7 +403,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-indigo-500/30 px-4 py-6 text-sm text-[#6366F1]/80 hover:border-indigo-500/50 transition-colors"
-            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
+            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
           >
             <Upload size={16} />
             {files.length === 0
@@ -417,14 +417,14 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="Label (e.g. 'My voice — natural')"
-              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(99,102,241,0.4)] focus:outline-none"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(255,255,255,0.4)] focus:outline-none"
             />
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description (optional)"
-              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(99,102,241,0.4)] focus:outline-none"
+              className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(255,255,255,0.4)] focus:outline-none"
             />
           </div>
 
@@ -449,7 +449,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                   onClick={() => setConsentKind(opt.key)}
                   className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
                     consentKind === opt.key
-                      ? "border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.08)] text-[#6366F1]"
+                      ? "border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.08)] text-[#6366F1]"
                       : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
                   }`}
                 >
@@ -463,7 +463,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                 value={signedBy}
                 onChange={(e) => setSignedBy(e.target.value)}
                 placeholder="Signed by (legal name)"
-                className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(99,102,241,0.4)] focus:outline-none"
+                className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[rgba(255,255,255,0.4)] focus:outline-none"
               />
             )}
           </div>
@@ -564,9 +564,9 @@ function CloneRow({
   }, [clone.id, clone.label, onChange]);
 
   return (
-    <div className="rounded-xl p-5 cursor-pointer tilt-3d" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+    <div className="rounded-xl p-5 cursor-pointer tilt-3d" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
       <div className="flex flex-wrap items-start gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] text-[#6366F1]">
           <Mic size={20} />
         </div>
         <div className="flex-1 min-w-[180px]">
@@ -777,7 +777,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   return (
     <div className="space-y-4">
       {/* Filter bar */}
-      <div className="space-y-2.5 rounded-xl p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+      <div className="space-y-2.5 rounded-xl p-3" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
         {/* Search row */}
         <div className="relative">
           <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
@@ -787,7 +787,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search presets…"
             className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50"
-            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           />
         </div>
         {/* Gender row */}
@@ -801,7 +801,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               className={[
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
                 genderFilter === g
-                  ? "border border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.08)] text-[#6366F1]"
+                  ? "border border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.08)] text-[#6366F1]"
                   : "border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10",
               ].join(" ")}
             >
@@ -825,7 +825,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                   {isActive && (
                     <motion.span
                       layoutId="voice-category-pill"
-                      className="absolute inset-0 rounded-full border border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.08)]"
+                      className="absolute inset-0 rounded-full border border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.08)]"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -953,7 +953,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   return (
     <div
       className="group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-colors duration-150"
-      style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+      style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
       onMouseEnter={() => {
         setIsHovering(true);
         if (testUrl || testing) return;
@@ -969,14 +969,14 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
       <div className="p-5 flex flex-col flex-1">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] text-[#6366F1]">
             <Mic size={16} />
           </div>
           <div className="flex items-center gap-1.5">
             <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
               {lang}
             </span>
-            <span className="rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#6366F1]/70">
+            <span className="rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#6366F1]/70">
               {category}
             </span>
           </div>
@@ -1005,7 +1005,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 <button
                   type="button"
                   onClick={() => { setEditMode(false); onTest(); }}
-                  className="text-[10px] text-[rgba(99,102,241,0.7)] hover:text-[#6366F1] cursor-pointer"
+                  className="text-[10px] text-[rgba(255,255,255,0.7)] hover:text-[#6366F1] cursor-pointer"
                 >
                   Preview
                 </button>
@@ -1025,7 +1025,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             <button
               type="button"
               onClick={() => setEditMode(true)}
-              className="flex-shrink-0 text-[10px] text-[rgba(99,102,241,0.55)] hover:text-[#6366F1] cursor-pointer"
+              className="flex-shrink-0 text-[10px] text-[rgba(255,255,255,0.55)] hover:text-[#6366F1] cursor-pointer"
               aria-label="Edit test phrase"
             >
               Edit
@@ -1043,7 +1043,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               "flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer",
               // Pulse border when hover detected but audio not yet loading
               isHovering && !testing && !testUrl
-                ? "border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.05)] text-[#6366F1]/80 animate-pulse"
+                ? "border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.05)] text-[#6366F1]/80 animate-pulse"
                 : "border-white/15 bg-white/5 text-white hover:bg-white/10",
               "disabled:cursor-not-allowed disabled:opacity-40",
             ].join(" ")}
@@ -1065,7 +1065,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             className={[
               "flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed",
               saved
-                ? "border-[rgba(99,102,241,0.25)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]/70"
+                ? "border-[rgba(255,255,255,0.25)] bg-[rgba(255,255,255,0.07)] text-[#6366F1]/70"
                 : "border-white/15 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white",
             ].join(" ")}
           >

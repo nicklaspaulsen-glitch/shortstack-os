@@ -285,7 +285,7 @@ export default function CompetitiveMonitorPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: i * 0.07 }}
             whileHover={{ y: -2 }}
-            className="rounded-xl p-4 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+            className="rounded-xl p-4 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           >
             <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${stat.bar}`} />
             <div className="flex items-center gap-2 text-muted text-xs mb-1">{stat.icon} {stat.label}</div>
@@ -307,7 +307,7 @@ export default function CompetitiveMonitorPage() {
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="rounded-xl p-5" style={{ background: "rgba(99,102,241,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.15)" }}
+          className="rounded-xl p-5" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.15)" }}
         >
           <h3 className="section-header text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-gold" /> Add New Competitor</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -346,7 +346,7 @@ export default function CompetitiveMonitorPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: ci * 0.06 }}
               whileHover={{ y: -3 }}
-              className="rounded-xl p-4 hover:border-indigo-500/20 transition group" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+              className="rounded-xl p-4 hover:border-indigo-500/20 transition group" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
@@ -459,7 +459,7 @@ export default function CompetitiveMonitorPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: chi * 0.05 }}
-                  className="rounded-xl p-4 hover:border-indigo-500/20 transition" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                  className="rounded-xl p-4 hover:border-indigo-500/20 transition" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
                 >
                   <div className="flex items-start gap-3">
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${meta.color}`}>
@@ -639,7 +639,7 @@ export default function CompetitiveMonitorPage() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.28 }}
-              className="rounded-xl p-5" style={{ background: "rgba(99,102,241,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.15)" }}
+              className="rounded-xl p-5" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.15)" }}
             >
               <h4 className="text-sm font-medium mb-4">New Alert Rule</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -699,7 +699,7 @@ export default function CompetitiveMonitorPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: ri * 0.05 }}
-                  style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                  style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
                   className={`rounded-xl p-4 flex items-center gap-4 hover:border-indigo-500/20 transition ${!rule.enabled ? "opacity-50" : ""}`}
                 >
                   <button onClick={() => setAlertRules(prev => prev.map(r => r.id === rule.id ? { ...r, enabled: !r.enabled } : r))}
@@ -797,7 +797,7 @@ export default function CompetitiveMonitorPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: i * 0.07 }}
                   whileHover={{ y: -3 }}
-                  className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(239,68,68,0.1)" }}
+                  className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(239,68,68,0.1)" }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <AlertTriangle className="w-4 h-4 text-red-400" />
@@ -826,7 +826,7 @@ export default function CompetitiveMonitorPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: i * 0.07 }}
                   whileHover={{ y: -3 }}
-                  className="rounded-xl p-4" style={{ background: "rgba(99,102,241,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.15)" }}
+                  className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.15)" }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Target className="w-4 h-4 text-gold" />

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -1040,8 +1040,8 @@ export default function Sidebar() {
                           title={`Open ${group.section} hub →`}
                           className={`group/hub inline-flex items-center gap-0.5 text-[9px] font-semibold px-2 py-[3px] rounded-full border transition-all duration-220 ease-out-expo-foundation ${
                             hubActive
-                              ? "bg-[rgba(99,102,241,0.18)] border-[rgba(99,102,241,0.35)] text-brand-accent"
-                              : "bg-[rgba(99,102,241,0.07)] border-border-subtle text-text-muted hover:bg-[rgba(99,102,241,0.14)] hover:border-[rgba(99,102,241,0.25)] hover:text-text-primary"
+                              ? "bg-[rgba(255,255,255,0.18)] border-[rgba(255,255,255,0.35)] text-brand-accent"
+                              : "bg-[rgba(255,255,255,0.07)] border-border-subtle text-text-muted hover:bg-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] hover:text-text-primary"
                           }`}
                         >
                           {group.section}
@@ -1069,7 +1069,7 @@ export default function Sidebar() {
                       onClick={() => toggleSection(group.section!)}
                       className="w-full flex items-center justify-between gap-1.5 px-2.5 pt-2.5 pb-1 group/sec cursor-pointer"
                     >
-                      <span className="inline-flex items-center text-[9px] font-semibold px-2 py-[3px] rounded-full border border-border-subtle bg-[rgba(99,102,241,0.07)] text-text-muted group-hover/sec:bg-[rgba(99,102,241,0.12)] group-hover/sec:text-text-primary group-hover/sec:border-[rgba(99,102,241,0.2)] transition-all duration-220">
+                      <span className="inline-flex items-center text-[9px] font-semibold px-2 py-[3px] rounded-full border border-border-subtle bg-[rgba(255,255,255,0.07)] text-text-muted group-hover/sec:bg-[rgba(255,255,255,0.1)] group-hover/sec:text-text-primary group-hover/sec:border-[rgba(255,255,255,0.15)] transition-all duration-220">
                         {group.section}
                       </span>
                       <ChevronDown

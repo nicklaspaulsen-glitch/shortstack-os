@@ -384,7 +384,7 @@ export default function PixelOffice() {
 
   return (
     <div className="space-y-2">
-      <div className="rounded-2xl overflow-hidden border border-border/30 bg-[#080c14]">
+      <div className=" overflow-hidden border border-border/30 bg-[#080c14]">
         <canvas
           ref={canvasRef}
           width={620}

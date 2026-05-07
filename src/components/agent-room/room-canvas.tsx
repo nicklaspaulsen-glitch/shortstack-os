@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AGENTS, ZONES, type AgentDef } from "./roster";
@@ -180,7 +180,7 @@ export default function RoomCanvas() {
       {/* Room — perspective wrapper holds the tilt; inner room is the floor.
           In flat mode wrappers are passthrough (rotation is 0/0). */}
       <div
-        className="relative w-full rounded-2xl border border-white/10 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-black"
+        className="relative w-full  border border-white/10 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-black"
         style={{
           aspectRatio: "16 / 9",
           minHeight: 520,
@@ -334,7 +334,7 @@ export default function RoomCanvas() {
                 left: "55%",
                 top: "45%",
                 background:
-                  "radial-gradient(circle, rgba(99,102,241,0.16) 0%, transparent 70%)",
+                  "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
                 filter: "blur(40px)",
                 animation: "office-light-pulse 11s ease-in-out infinite 2s",
               }}

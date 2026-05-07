@@ -94,7 +94,7 @@ export default function UsageNudgeBanner({ planTier }: { planTier?: string | nul
   const resourceLabel = worstResource.key.replace(/_/g, " ");
 
   return (
-    <div className="relative flex items-center gap-3 px-4 py-3 rounded-2xl border border-amber-500/25 bg-gradient-to-r from-amber-500/[0.06] via-orange-500/[0.04] to-transparent">
+    <div className="relative flex items-center gap-3 px-4 py-3  border border-amber-500/25 bg-gradient-to-r from-amber-500/[0.06] via-orange-500/[0.04] to-transparent">
       <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center shrink-0">
         <AlertTriangle size={16} className="text-amber-500" />
       </div>

@@ -99,7 +99,7 @@ export default function DemoPage() {
         </div>
 
         {/* CTA */}
-        <div className="text-center mb-8 p-8 rounded-2xl" style={{ background: "rgba(200,168,85,0.04)", border: "1px solid rgba(200,168,85,0.1)" }}>
+        <div className="text-center mb-8 p-8 " style={{ background: "rgba(200,168,85,0.04)", border: "1px solid rgba(200,168,85,0.1)" }}>
           <h2 className="text-xl font-bold text-white mb-2">Ready to automate your agency?</h2>
           <p className="text-sm text-gray-400 mb-6">Book a free strategy call and see how ShortStack can transform your business.</p>
           <Link href="/book" className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold text-sm text-black"

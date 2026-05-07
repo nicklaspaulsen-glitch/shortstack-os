@@ -703,7 +703,7 @@ export default function KumoScene({
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden border border-border-subtle"
+      className="relative  overflow-hidden border border-border-subtle"
       style={{ background: "linear-gradient(180deg, #0F2C2A 0%, #042F2E 100%)" }}
     >
       <svg

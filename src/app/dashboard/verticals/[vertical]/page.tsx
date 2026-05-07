@@ -268,7 +268,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
           gradient="gold"
         />
         <div className="max-w-5xl mx-auto px-6 py-10">
-          <div className="rounded-2xl bg-white/5 h-96 animate-pulse" />
+          <div className=" bg-white/5 h-96 animate-pulse" />
         </div>
       </div>
     );
@@ -409,7 +409,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
 
         {/* Apply CTA — sticky bar */}
         <div className="sticky bottom-4 z-10">
-          <div className="bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xl">
+          <div className="bg-black/80 backdrop-blur-xl border border-white/10  p-4 flex items-center justify-between gap-4 shadow-2xl">
             <div className="text-sm text-white/70">
               <Sparkles size={14} className="inline -mt-0.5 mr-1.5 text-amber-400" />
               {selected.size} module{selected.size === 1 ? "" : "s"} selected

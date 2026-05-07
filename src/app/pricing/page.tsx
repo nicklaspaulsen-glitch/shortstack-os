@@ -155,7 +155,7 @@ export default function PricingPage() {
           {PLANS.map(plan => {
             const displayPrice = annual ? Math.round(plan.price * 0.8) : plan.price;
             return (
-              <div key={plan.key} className="rounded-2xl p-5 relative flex flex-col"
+              <div key={plan.key} className=" p-5 relative flex flex-col"
                 style={{
                   background: plan.popular ? "rgba(200,168,85,0.04)" : "rgba(255,255,255,0.02)",
                   border: `1px solid ${plan.popular ? "rgba(200,168,85,0.2)" : "rgba(255,255,255,0.05)"}`,

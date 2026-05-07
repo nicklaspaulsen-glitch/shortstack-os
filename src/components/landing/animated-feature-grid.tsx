@@ -62,7 +62,7 @@ const FEATURES: Feature[] = [
             transition={{ duration: 1.4, repeat: h ? Infinity : 0, delay: i * 0.1 }}
           >
             <div className="w-4 h-4 rounded-full" style={{ background: GOLD }} />
-            <div className="flex-1 h-1.5 rounded-full" style={{ background: "rgba(99,102,241,0.2)" }} />
+            <div className="flex-1 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
           </motion.div>
         ))}
       </div>
@@ -153,10 +153,10 @@ const FEATURES: Feature[] = [
           <motion.div
             key={i}
             className="flex-1 h-8 rounded flex items-center justify-center"
-            style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)" }}
+            style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)" }}
             animate={{ background: h
-              ? ["rgba(99,102,241,0.1)", "rgba(99,102,241,0.3)", "rgba(99,102,241,0.1)"]
-              : "rgba(99,102,241,0.1)"
+              ? ["rgba(255,255,255,0.07)", "rgba(255,255,255,0.25)", "rgba(255,255,255,0.07)"]
+              : "rgba(255,255,255,0.07)"
             }}
             transition={{ duration: 1.2, repeat: h ? Infinity : 0, delay: i * 0.25 }}
           >
@@ -174,8 +174,8 @@ const FEATURES: Feature[] = [
       <motion.div
         className="h-16 rounded border"
         style={{
-          background: "linear-gradient(135deg, rgba(99,102,241,0.05), rgba(99,102,241,0.02))",
-          borderColor: "rgba(99,102,241,0.2)",
+          background: "linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))",
+          borderColor: "rgba(255,255,255,0.15)",
         }}
         animate={{ rotate: h ? [0, 1, -1, 0] : 0 }}
         transition={{ duration: 2, repeat: h ? Infinity : 0 }}
@@ -230,7 +230,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
     >
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-lg flex items-center justify-center"
-          style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)" }}>
+          style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)" }}>
           <Icon size={18} className="text-gold" />
         </div>
         <h3 className="text-white font-semibold">{feature.title}</h3>

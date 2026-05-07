@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integrations Hub — Nango-powered tenant OAuth dashboard + API-key integrations.
  *
  * NOTE: This page is intentionally separate from `/dashboard/integrations`,
@@ -277,11 +277,11 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
         className="absolute inset-0 bg-black/70 backdrop-blur-md"
         onClick={onClose}
       />
-      <div className="relative z-10 w-full max-w-md mx-4 bg-[#15141A] border border-[rgba(99,102,241,0.12)] rounded-2xl p-6 shadow-2xl">
+      <div className="relative z-10 w-full max-w-md mx-4 bg-[#15141A] border border-[rgba(255,255,255,0.12)]  p-6 shadow-2xl">
         <div className="flex items-center gap-3 mb-4">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{ background: "rgba(99,102,241,0.08)" }}
+            style={{ background: "rgba(255,255,255,0.08)" }}
           >
             {isZernio ? (
               <ExternalLink size={18} className="text-[#6366F1]" />
@@ -332,7 +332,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               {(integration.requiredEnv ?? []).map((envVar) => (
                 <code
                   key={envVar}
-                  className="block w-full bg-[#0A0A0B] border border-[rgba(99,102,241,0.1)] rounded-lg px-3 py-2 text-[#6366F1] text-[11px] font-mono"
+                  className="block w-full bg-[#0A0A0B] border border-[rgba(255,255,255,0.1)] rounded-lg px-3 py-2 text-[#6366F1] text-[11px] font-mono"
                 >
                   {envVar}
                 </code>
@@ -351,7 +351,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               style={{
                 background: "#6366F1",
                 boxShadow:
-                  "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(99,102,241,0.45)",
+                  "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(255,255,255,0.45)",
               }}
             >
               <ExternalLink size={11} />
@@ -361,7 +361,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 text-[11px] font-medium px-3 py-2 rounded-lg border border-[rgba(99,102,241,0.12)] text-[#9F9DAA] hover:text-[#F5F4F1] transition-colors"
+            className="flex-1 text-[11px] font-medium px-3 py-2 rounded-lg border border-[rgba(255,255,255,0.12)] text-[#9F9DAA] hover:text-[#F5F4F1] transition-colors"
           >
             Close
           </button>

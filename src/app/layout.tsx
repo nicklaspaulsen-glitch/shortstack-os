@@ -113,7 +113,7 @@ export default function RootLayout({
           <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" />
         </noscript>
       </head>
-      <body className="antialiased bg-background min-h-screen">
+      <body className="antialiased bg-background min-h-screen prism-ambient">
         {/* Apr 28: hidden SVG <defs> with the volumetric "3D nav icon"
             filter. Positioned absolute and 0×0 so it occupies no layout
             space; referenced by `filter: url(#nav-icon-3d)` from

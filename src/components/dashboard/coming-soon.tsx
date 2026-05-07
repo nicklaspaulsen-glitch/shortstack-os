@@ -122,7 +122,7 @@ export function ComingSoon({
 
       {/* Hero */}
       <div
-        className="relative overflow-hidden rounded-2xl border border-white/5"
+        className="relative overflow-hidden  border border-white/5"
         style={{
           background: heroGradient,
           boxShadow:
@@ -181,7 +181,7 @@ export function ComingSoon({
 
         <div className="relative z-10 px-6 py-10 sm:px-10 sm:py-14 text-center">
           <div
-            className="inline-flex w-16 h-16 rounded-2xl items-center justify-center mb-5"
+            className="inline-flex w-16 h-16  items-center justify-center mb-5"
             style={{
               background: "rgba(255,255,255,0.07)",
               border: "1px solid rgba(255,255,255,0.15)",
@@ -278,7 +278,7 @@ export function ComingSoon({
 
           {joined ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center py-4">
-              <div className="w-12 h-12 rounded-2xl bg-success/10 border border-success/20 flex items-center justify-center text-success mb-3">
+              <div className="w-12 h-12  bg-success/10 border border-success/20 flex items-center justify-center text-success mb-3">
                 <CheckCircle2 size={22} />
               </div>
               <p className="text-[13px] font-semibold text-foreground">

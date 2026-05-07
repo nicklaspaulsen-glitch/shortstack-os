@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Voice Receptionist — 24/7 AI phone agent that answers, qualifies, and books.
@@ -971,7 +971,7 @@ export default function VoiceReceptionistPage() {
                         initial={{ opacity: 0, x: -8 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.18, delay: index * 0.04 }}
-                        whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                        whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                         className="border-b border-border/20 transition"
                       >
                         <td className="px-2 py-3 font-mono text-[11.5px]">

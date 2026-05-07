@@ -997,7 +997,7 @@ export default function SchedulingPage() {
       {/* ---- Link Generator Modal ---- */}
       {showLinkGen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowLinkGen(false)}>
-          <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface  border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Link2 size={14} className="text-gold" /> Booking Link Generator</h3>
               <button onClick={() => setShowLinkGen(false)} className="text-muted hover:text-foreground" aria-label="Close link generator"><X size={16} /></button>
@@ -1035,7 +1035,7 @@ export default function SchedulingPage() {
       {/* ---- Create Meeting Type Modal ---- */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreateModal(false)}>
-          <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface  border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-gold" /> New Meeting Type</h3>
               <button onClick={() => setShowCreateModal(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>

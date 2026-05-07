@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -348,7 +348,7 @@ export default function WebhooksPage() {
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
-                  whileHover={{ backgroundColor: "rgba(99,102,241,0.04)" }}
+                  whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
                   className={`p-4 rounded-xl border transition-colors ${wh.active ? "glass border-white/10" : "bg-surface border-border/50 opacity-60"}`}>
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-3">

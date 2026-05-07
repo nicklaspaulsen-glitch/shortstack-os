@@ -263,7 +263,7 @@ export default function OutreachFeedClient({
   );
 
   return (
-    <div className="flex h-[calc(100vh-14rem)] min-h-[480px] rounded-2xl border border-white/10 bg-[#0b0d12] overflow-hidden">
+    <div className="flex h-[calc(100vh-14rem)] min-h-[480px]  border border-white/10 bg-[#0b0d12] overflow-hidden">
       {/* LEFT: contact list */}
       <aside className="w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-white/5 flex flex-col">
         <div className="p-4 border-b border-white/5 space-y-3">
@@ -549,7 +549,7 @@ function BubbleItem({ event }: BubbleItemProps) {
     return (
       <div className={`flex flex-col ${align} max-w-[90%] sm:max-w-[75%]`}>
         <div
-          className={`rounded-2xl border px-3 py-2 ${tone} ${isOutbound ? "rounded-br-md" : "rounded-bl-md"}`}
+          className={` border px-3 py-2 ${tone} ${isOutbound ? "rounded-br-md" : "rounded-bl-md"}`}
         >
           <div className="flex items-center gap-2 text-xs">
             <ChannelIcon channel="voice_call" size={13} />
@@ -582,7 +582,7 @@ function BubbleItem({ event }: BubbleItemProps) {
 
   return (
     <div className={`flex flex-col ${align} ${widthClass}`}>
-      <div className={`rounded-2xl border px-3 py-2 ${tone} ${isOutbound ? "rounded-br-md" : "rounded-bl-md"}`}>
+      <div className={` border px-3 py-2 ${tone} ${isOutbound ? "rounded-br-md" : "rounded-bl-md"}`}>
         <div className="flex items-center gap-2 text-[10px] text-white/50 mb-1">
           <ChannelIcon channel={event.channel} size={11} />
           <span className="uppercase tracking-wider">{event.channel}</span>

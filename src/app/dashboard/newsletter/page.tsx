@@ -630,7 +630,7 @@ export default function NewsletterPage() {
 
       {/* Rolling preview of example newsletter templates */}
       {advancedMode && (
-      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6">
+      <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6">
         <div className="absolute inset-0 pointer-events-none">
           <RollingPreview
             items={NEWSLETTER_PREVIEW_FALLBACK}
@@ -1004,7 +1004,7 @@ export default function NewsletterPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {TEMPLATES.map(tpl => (
               <button key={tpl.id} onClick={() => loadTemplate(tpl.id)}
-                className="text-left p-5 rounded-2xl bg-surface border border-border hover:border-gold/20 hover:shadow-lg transition-all group">
+                className="text-left p-5  bg-surface border border-border hover:border-gold/20 hover:shadow-lg transition-all group">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-xl bg-gold/10 text-gold flex items-center justify-center group-hover:bg-gold/20 transition-colors">
                     {tpl.icon}
@@ -1041,7 +1041,7 @@ export default function NewsletterPage() {
 
           {/* Email client chrome */}
           <div className="flex justify-center">
-            <div className={`bg-[#1a1c23] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ${previewMode === "desktop" ? "w-full max-w-2xl" : "w-[375px]"}`}>
+            <div className={`bg-[#1a1c23]  shadow-2xl overflow-hidden transition-all duration-300 ${previewMode === "desktop" ? "w-full max-w-2xl" : "w-[375px]"}`}>
               {/* Window chrome */}
               <div className="bg-surface p-3 border-b border-border">
                 <div className="flex items-center gap-2">

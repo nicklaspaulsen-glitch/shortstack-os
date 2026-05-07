@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import {
@@ -259,7 +259,7 @@ export default function IntakePage() {
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 activeTab === tab
-                  ? "bg-[rgba(99,102,241,0.15)] text-[#6366F1]"
+                  ? "bg-[rgba(255,255,255,0.15)] text-[#6366F1]"
                   : "text-white/40 hover:text-white/70"
               }`}
             >
@@ -300,7 +300,7 @@ export default function IntakePage() {
               </div>
             ) : forms.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-                <div className="w-14 h-14 rounded-2xl bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.12)] flex items-center justify-center">
+                <div className="w-14 h-14  bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.12)] flex items-center justify-center">
                   <Zap size={22} className="text-[#6366F1]/60" />
                 </div>
                 <div>
@@ -431,7 +431,7 @@ export default function IntakePage() {
           <div>
             {submissions.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
-                <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center">
+                <div className="w-12 h-12  bg-white/[0.03] border border-white/[0.06] flex items-center justify-center">
                   <Users size={18} className="text-white/20" />
                 </div>
                 <p className="text-sm text-white/40">No submissions yet</p>
@@ -450,7 +450,7 @@ export default function IntakePage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.04 }}
                       onClick={() => setSubDetail(sub)}
-                      className="w-full text-left glass rounded-xl p-3.5 flex items-center gap-3 transition-all hover:border-[rgba(99,102,241,0.18)]"
+                      className="w-full text-left glass rounded-xl p-3.5 flex items-center gap-3 transition-all hover:border-[rgba(255,255,255,0.18)]"
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -620,7 +620,7 @@ export default function IntakePage() {
             </div>
 
             {subDetail.ai_summary && (
-              <div className="bg-[rgba(99,102,241,0.06)] border border-[rgba(99,102,241,0.12)] rounded-xl p-3">
+              <div className="bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.12)] rounded-xl p-3">
                 <p className="text-[10px] font-medium text-[#6366F1] mb-1.5 flex items-center gap-1">
                   <Sparkles size={10} /> AI Summary
                 </p>

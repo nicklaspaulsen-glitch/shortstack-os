@@ -774,7 +774,7 @@ export default function DMControllerPage() {
                 </div>
                 <div className="p-3 space-y-2">
                   <div className="text-[9px] text-muted flex items-center gap-1"><Clock size={8} /> just now</div>
-                  <div className="max-w-[85%] px-3 py-2 rounded-2xl rounded-bl-sm bg-white/[0.06] border border-white/10 text-[11px] leading-relaxed">
+                  <div className="max-w-[85%] px-3 py-2  rounded-bl-sm bg-white/[0.06] border border-white/10 text-[11px] leading-relaxed">
                     {previewText || <span className="text-muted italic">Your message will appear here…</span>}
                   </div>
                 </div>
@@ -815,7 +815,7 @@ export default function DMControllerPage() {
             <div className="card p-4 border-gold/10 relative overflow-hidden">
               <div className="text-center py-3">
                 <div className={cn(
-                  "w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3",
+                  "w-14 h-14  flex items-center justify-center mx-auto mb-3",
                   running ? "bg-green-400/10 animate-pulse" : "bg-gold/10"
                 )}>
                   {running
@@ -1122,11 +1122,11 @@ export default function DMControllerPage() {
 
                 {/* Conversation thread */}
                 <div className="space-y-2">
-                  <div className="max-w-[85%] px-3 py-2 rounded-2xl rounded-bl-sm bg-white/[0.04] border border-white/10 text-[11px]">
+                  <div className="max-w-[85%] px-3 py-2  rounded-bl-sm bg-white/[0.04] border border-white/10 text-[11px]">
                     <p className="text-[9px] text-muted mb-1">You</p>
                     {openReply.original}
                   </div>
-                  <div className="max-w-[85%] ml-auto px-3 py-2 rounded-2xl rounded-br-sm bg-gold/10 border border-gold/30 text-[11px]">
+                  <div className="max-w-[85%] ml-auto px-3 py-2  rounded-br-sm bg-gold/10 border border-gold/30 text-[11px]">
                     <p className="text-[9px] text-gold mb-1">{openReply.from}</p>
                     {openReply.full}
                   </div>

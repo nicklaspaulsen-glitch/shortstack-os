@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -437,7 +437,7 @@ export default function NotificationsPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                       className={`glass rounded-xl group relative overflow-hidden transition-all duration-200 hover:shadow-md ${
                         !n.read
                           ? "border-l-2 border-l-indigo-500"

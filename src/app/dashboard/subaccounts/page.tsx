@@ -253,7 +253,7 @@ export default function SubaccountsPage() {
 
       {showInvite && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0e0e10] p-6 shadow-2xl">
+          <div className="relative w-full max-w-md  border border-white/10 bg-[#0e0e10] p-6 shadow-2xl">
             <button onClick={() => setShowInvite(false)} className="absolute top-4 right-4 p-1.5 rounded hover:bg-white/10 text-white/60">
               <X className="w-4 h-4" />
             </button>

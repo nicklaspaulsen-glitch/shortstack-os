@@ -50,7 +50,7 @@ const TrinityHistory = dynamic(() => import("@/components/trinity/TrinityHistory
   loading: () => (
     <div className="px-4 sm:px-6 pb-3 space-y-3">
       {[1, 2].map((i) => (
-        <div key={i} className="h-10 rounded-2xl bg-surface-light animate-pulse" />
+        <div key={i} className="h-10  bg-surface-light animate-pulse" />
       ))}
     </div>
   ),
@@ -280,7 +280,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
           }}
           className="relative flex items-end gap-2 max-w-2xl mx-auto"
         >
-          <div className="flex-1 relative rounded-2xl border border-gold/20 bg-surface focus-within:border-gold/50 focus-within:shadow-[0_0_0_3px_rgba(200,168,85,0.12)] transition-all">
+          <div className="flex-1 relative  border border-gold/20 bg-surface focus-within:border-gold/50 focus-within:shadow-[0_0_0_3px_rgba(200,168,85,0.12)] transition-all">
             <textarea
               ref={inputRef}
               value={input}
@@ -307,7 +307,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            className="h-[46px] px-4 rounded-2xl bg-gold text-black font-semibold text-xs flex items-center gap-1.5 hover:bg-gold-dark disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            className="h-[46px] px-4  bg-gold text-black font-semibold text-xs flex items-center gap-1.5 hover:bg-gold-dark disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             {sending ? <Loader size={14} className="animate-spin" /> : <Send size={14} />}
             <span className="hidden sm:inline">Send</span>

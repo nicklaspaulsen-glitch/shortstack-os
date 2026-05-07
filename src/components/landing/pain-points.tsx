@@ -129,7 +129,7 @@ export default function PainPoints() {
 function PainCard({ pain }: { pain: Pain }) {
   return (
     <div
-      className="group relative rounded-2xl p-6 h-full transition-all duration-500 hover:-translate-y-1 overflow-hidden flex flex-col"
+      className="group relative p-6 h-full transition-all duration-500 hover:-translate-y-1 overflow-hidden flex flex-col"
       style={{
         background:
           "linear-gradient(160deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.005) 100%)",

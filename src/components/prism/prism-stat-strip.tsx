@@ -65,7 +65,7 @@ export default function PrismStatStrip({
 
   return (
     <motion.div
-      className={`relative rounded-2xl border overflow-hidden ${className}`}
+      className={`relative border overflow-hidden ${className}`}
       style={{
         ...PRISM_GLASS,
         borderColor: PRISM_BORDERS.default,
@@ -80,7 +80,7 @@ export default function PrismStatStrip({
         style={{ background: rainbow }}
       />
 
-      <div className={`grid ${gridClass} md:divide-x divide-[rgba(99,102,241,0.08)]`}>
+      <div className={`grid ${gridClass} md:divide-x divide-[rgba(255,255,255,0.07)]`}>
         {tiles.map((tile, i) => {
           const accent = tile.accent ?? accents[i % accents.length];
           return (
@@ -95,17 +95,17 @@ export default function PrismStatStrip({
                 ease: [...PRISM_EASE],
               }}
             >
-              <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">
+              <span className="text-[11px] font-medium uppercase tracking-[1.2px] text-[#4A4A5A]">
                 {tile.label}
               </span>
               <span
-                className="font-display text-2xl font-bold tracking-[-0.03em]"
-                style={{ color: accent, fontVariantNumeric: "tabular-nums" }}
+                className="text-[32px] font-semibold tracking-[-0.5px]"
+                style={{ color: "#F0F0F4", fontFamily: "'JetBrains Mono', monospace", fontVariantNumeric: "tabular-nums" }}
               >
                 {tile.value}
               </span>
               {tile.sub && (
-                <span className="text-[10px] text-[#6F6D7A]">{tile.sub}</span>
+                <span className="text-xs text-[#7A7A8E]" style={{ fontFamily: "'JetBrains Mono', monospace" }}>{tile.sub}</span>
               )}
               {/* Bottom accent bar */}
               <div

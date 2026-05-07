@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -938,7 +938,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl p-5 space-y-2"
-              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               {/* Email Provider Selector */}
               <div>
@@ -1016,14 +1016,14 @@ export default function EmailComposerPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">To</label>
-                  <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Recipient email or select from list..." />
+                  <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Recipient email or select from list..." />
                 </div>
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">From name</label>
                   <input
                     value={email.fromName}
                     onChange={e => setEmail({ ...email, fromName: e.target.value })}
-                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     placeholder="e.g. Nicklas at ShortStack"
                   />
                 </div>
@@ -1035,13 +1035,13 @@ export default function EmailComposerPage() {
                     type="email"
                     value={email.fromEmail}
                     onChange={e => setEmail({ ...email, fromEmail: e.target.value })}
-                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     placeholder="growth@yourdomain.com (uses verified domain if blank)"
                   />
                 </div>
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Reply-To</label>
-                  <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="replies@yourdomain.com" />
+                  <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="replies@yourdomain.com" />
                 </div>
               </div>
             </motion.div>
@@ -1049,7 +1049,7 @@ export default function EmailComposerPage() {
             {/* Subject + AI Subject Line Generator */}
             <div className="relative">
               <input value={email.subject} onChange={e => setEmail({ ...email, subject: e.target.value })}
-                className="w-full text-sm font-medium pr-24 rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Subject line..." />
+                className="w-full text-sm font-medium pr-24 rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Subject line..." />
               <button onClick={handleSubjectIdeas} disabled={loadingVariants}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition-all flex items-center gap-1">
                 {loadingVariants ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
@@ -1076,7 +1076,7 @@ export default function EmailComposerPage() {
             )}
 
             {/* Rich Text Toolbar */}
-            <div className="flex items-center gap-1 p-1.5 rounded-lg" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+            <div className="flex items-center gap-1 p-1.5 rounded-lg" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
               {[
                 { icon: <Bold size={12} />, label: "Bold" },
                 { icon: <Italic size={12} />, label: "Italic" },
@@ -1119,7 +1119,7 @@ export default function EmailComposerPage() {
                 <div className="grid grid-cols-3 gap-1.5">
                   {VARIABLES.map(v => (
                     <button key={v.tag} onClick={() => setEmail(prev => ({ ...prev, body: prev.body + " " + v.tag }))}
-                      className="text-left p-2 rounded hover:border-indigo-500/20 transition-all" style={{ background: "rgba(255,255,255,0.028)", border: "1px solid rgba(99,102,241,0.1)" }}>
+                      className="text-left p-2 rounded hover:border-indigo-500/20 transition-all" style={{ background: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.1)" }}>
                       <p className="text-[9px] font-mono text-indigo-400">{v.tag}</p>
                       <p className="text-[8px] text-muted">{v.label} ({v.example})</p>
                     </button>
@@ -1131,11 +1131,11 @@ export default function EmailComposerPage() {
             {/* Body Editor / HTML Source */}
             {showHtml ? (
               <textarea value={`<html><body><p>${email.body.replace(/\n/g, "</p><p>")}</p></body></html>`}
-                className="w-full text-xs font-mono leading-relaxed rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
+                className="w-full text-xs font-mono leading-relaxed rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
                 readOnly />
             ) : (
               <textarea value={email.body} onChange={e => setEmail({ ...email, body: e.target.value })}
-                className="w-full text-sm leading-relaxed rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
+                className="w-full text-sm leading-relaxed rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
                 placeholder="Write your email here..." />
             )}
 
@@ -1193,7 +1193,7 @@ export default function EmailComposerPage() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => handleSend({ testMode: true })}
                   disabled={sendingTest || sending}
-                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg hover:border-white/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)]"
+                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg hover:border-white/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)]"
                 >
                   {sendingTest ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sendingTest ? "Sending..." : "Test Send"}
@@ -1220,7 +1220,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-4"
-              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <div className="h-px bg-gradient-to-r from-indigo-500 via-violet-400 to-indigo-500 mb-3 rounded-full" />
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Composer Stats</h3>
@@ -1252,10 +1252,10 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.1 }}
               className="rounded-xl p-4"
-              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Quick Templates</h3>
-              <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", border: "1px solid rgba(99,102,241,0.08)" }}>
+              <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.08)" }}>
                 {TEMPLATE_GALLERY.length === 0 && (
                   <p className="text-[9px] text-muted text-center py-3">No templates yet.</p>
                 )}
@@ -1265,7 +1265,7 @@ export default function EmailComposerPage() {
                     initial={{ opacity: 0, x: -16 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.12 + i * 0.04, duration: 0.28 }}
-                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                     onClick={() => setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview }))}
                     className="w-full text-left p-2 text-[10px] transition-all border-b border-white/5 last:border-0"
                   >
@@ -1302,7 +1302,7 @@ export default function EmailComposerPage() {
                 transition={{ delay: i * 0.04, duration: 0.3 }}
                 whileHover={{ y: -4, scale: 1.01 }}
                 onClick={() => { setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview })); setActiveTab("compose"); }}
-                className="text-left p-3 rounded-xl hover:border-indigo-500/30 transition-all group bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)]"
+                className="text-left p-3 rounded-xl hover:border-indigo-500/30 transition-all group bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)]"
               >
                 <p className="text-[10px] font-semibold">{t.name}</p>
                 <p className="text-[9px] text-indigo-400 mt-0.5">{t.category}</p>
@@ -1373,7 +1373,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl text-center p-6"
-              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <div className={`w-24 h-24 rounded-full border-4 flex items-center justify-center mx-auto mb-3 ${
                 spamScore >= 80 ? "border-green-400" : spamScore >= 50 ? "border-yellow-400" : "border-red-400"
@@ -1393,7 +1393,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-5 col-span-1 lg:col-span-2"
-              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <h3 className="text-sm font-semibold mb-3">Deliverability Checklist</h3>
               <div className="space-y-2">
@@ -1423,7 +1423,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Calendar size={14} className="text-indigo-400" /> Schedule Send
@@ -1431,11 +1431,11 @@ export default function EmailComposerPage() {
               <div className="space-y-3">
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Date & Time</label>
-                  <input type="datetime-local" value={scheduledTime} onChange={e => setScheduledTime(e.target.value)} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" />
+                  <input type="datetime-local" value={scheduledTime} onChange={e => setScheduledTime(e.target.value)} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" />
                 </div>
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Timezone</label>
-                  <select className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                  <select className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all">
                     <option>America/New_York (ET)</option>
                     <option>America/Chicago (CT)</option>
                     <option>America/Los_Angeles (PT)</option>
@@ -1466,7 +1466,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <h3 className="text-sm font-semibold mb-3">Optimal Send Times</h3>
               <p className="text-[10px] text-muted mb-3">Based on your audience engagement data</p>
@@ -1561,15 +1561,15 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl p-5 space-y-3"
-              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <h4 className="text-xs font-semibold">Edit Signature</h4>
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Full Name" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Title" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Phone" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Email" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Website" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.028)] border border-[rgba(99,102,241,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Calendar link" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Full Name" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Title" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Phone" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Email" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Website" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Calendar link" defaultValue="" />
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
@@ -1581,7 +1581,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <h4 className="text-xs font-semibold mb-3">Preview</h4>
               <div className="p-4 rounded-lg bg-[#1a1c23]">

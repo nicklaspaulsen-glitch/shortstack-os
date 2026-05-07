@@ -591,7 +591,7 @@ export default function ImageWizard({
     return (
       <FullModal onClose={onClose}>
         <div className="flex flex-col items-center justify-center py-16 px-6">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gold/20 to-amber-500/10 flex items-center justify-center mb-4">
+          <div className="w-20 h-20  bg-gradient-to-br from-gold/20 to-amber-500/10 flex items-center justify-center mb-4">
             <Loader2 size={32} className="text-gold animate-spin" />
           </div>
           <h2 className="text-base font-semibold text-foreground mb-1.5">Generating with FLUX on RunPod</h2>
@@ -644,7 +644,7 @@ function FullModal({ children, onClose }: { children: React.ReactNode; onClose: 
       onClick={onClose}
     >
       <div
-        className="bg-surface border border-border rounded-2xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden"
+        className="bg-surface border border-border  shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {children}

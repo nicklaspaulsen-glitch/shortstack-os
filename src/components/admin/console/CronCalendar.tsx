@@ -14,7 +14,7 @@ interface CronCalendarProps {
 export default function CronCalendar({ entries }: CronCalendarProps) {
   if (!entries) {
     return (
-      <div className="rounded-2xl border border-border bg-surface p-4">
+      <div className=" border border-border bg-surface p-4">
         <h2 className="text-xs font-bold mb-3 text-foreground">Cron job calendar</h2>
         <p className="text-[11px] text-muted">Unavailable</p>
       </div>
@@ -22,7 +22,7 @@ export default function CronCalendar({ entries }: CronCalendarProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-surface p-4">
+    <div className=" border border-border bg-surface p-4">
       <div className="flex items-center gap-2 mb-3">
         <Clock size={13} className="text-muted" />
         <h2 className="text-xs font-bold text-foreground">Cron job calendar</h2>

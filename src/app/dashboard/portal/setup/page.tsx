@@ -120,7 +120,7 @@ export default function ClientSetupPage() {
 
     // Step 3: Meet Trinity
     <div key="trinity" className="text-center space-y-6">
-      <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mx-auto">
+      <div className="w-16 h-16 bg-gold/10  flex items-center justify-center mx-auto">
         <MessageSquare size={32} className="text-gold" />
       </div>
       <div>

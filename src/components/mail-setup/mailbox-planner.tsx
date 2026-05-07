@@ -136,7 +136,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
 
   return (
     <section
-      className="relative rounded-2xl p-5 md:p-6 overflow-hidden"
+      className="relative  p-5 md:p-6 overflow-hidden"
       style={{
         background:
           "linear-gradient(135deg, rgba(34,197,94,0.06), rgba(34,197,94,0.02))",

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * LoadingMark — drop-in animated brand mark for loading states.
@@ -83,7 +83,7 @@ export default function LoadingMark({
           className="absolute inset-0 -z-10 rounded-full blur-2xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(99,102,241,0.4), transparent 70%)",
+              "radial-gradient(closest-side, rgba(255,255,255,0.4), transparent 70%)",
             animation: "limePulse 2.4s ease-in-out infinite",
           }}
         />

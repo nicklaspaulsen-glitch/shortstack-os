@@ -398,7 +398,7 @@ export default function ReferralsPage() {
             </div>
           ) : referrals.length === 0 ? (
             <div className="p-8 text-center">
-              <div className="w-12 h-12 mx-auto rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-3">
+              <div className="w-12 h-12 mx-auto  bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-3">
                 <Sparkles size={18} className="text-purple-300" />
               </div>
               <p className="text-sm font-medium text-foreground mb-1">No referrals yet</p>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -161,7 +161,7 @@ export default function VoicemailDropPage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22 }}
-            className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111] shadow-2xl overflow-hidden"
+            className="w-full max-w-md  border border-white/10 bg-[#111] shadow-2xl overflow-hidden"
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
               <p className="font-semibold text-white">Upload voicemail</p>
@@ -223,7 +223,7 @@ export default function VoicemailDropPage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22 }}
-            className="w-full max-w-md rounded-2xl border border-white/10 bg-[#111] shadow-2xl overflow-hidden"
+            className="w-full max-w-md  border border-white/10 bg-[#111] shadow-2xl overflow-hidden"
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
               <p className="font-semibold text-white">Drop &quot;{showDrop.name}&quot;</p>
@@ -321,7 +321,7 @@ export default function VoicemailDropPage() {
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.18, delay: index * 0.04 }}
-              whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+              whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
               className="border-b border-white/8 last:border-b-0 p-4 flex items-center gap-3 transition-colors"
             >
               <button

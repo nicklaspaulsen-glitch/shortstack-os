@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * TopNavbar — sticky breadcrumb bar + Trinity Cmd+K button.
@@ -117,7 +117,7 @@ export default function TopNavbar() {
     <>
       <div
         className="h-14 sticky top-0 z-30 border-b bg-background/80 backdrop-blur-sm flex items-center px-4 lg:px-6 gap-2"
-        style={{ borderColor: "rgba(99,102,241,0.10)" }}
+        style={{ borderColor: "rgba(255,255,255,0.07)" }}
       >
         {/* Breadcrumbs */}
         <nav
@@ -171,8 +171,8 @@ export default function TopNavbar() {
           }}
           className="shrink-0 flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border transition-all hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
           style={{
-            background: "rgba(99,102,241,0.10)",
-            borderColor: "rgba(99,102,241,0.22)",
+            background: "rgba(255,255,255,0.07)",
+            borderColor: "rgba(255,255,255,0.15)",
             color: "#6366F1",
           }}
           title="Open Trinity quick prompt"
@@ -181,7 +181,7 @@ export default function TopNavbar() {
           <span className="hidden sm:inline">Ask Trinity</span>
           <span
             className="text-[10px] font-mono opacity-70 border rounded px-1"
-            style={{ borderColor: "rgba(99,102,241,0.25)" }}
+            style={{ borderColor: "rgba(255,255,255,0.12)" }}
           >
             {shortcutHint}
           </span>

@@ -3323,8 +3323,8 @@ export default function VideoEditorPage() {
         }
       `}</style>
       {/* Higgsfield-style slim header */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809] -mx-4 sm:-mx-6 mb-4">
-        <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(255,255,255,0.08)] bg-[#080809] -mx-4 sm:-mx-6 mb-4">
+        <div className="w-7 h-7 rounded-xl bg-[rgba(255,255,255,0.12)] flex items-center justify-center shrink-0">
           <Film size={13} className="text-[#6366F1]" />
         </div>
         <div className="flex-1 min-w-0">
@@ -6340,7 +6340,7 @@ export default function VideoEditorPage() {
                 {!stylesExpanded && (
                   <button
                     onClick={() => setStylesExpanded(true)}
-                    className="p-2 rounded-xl border border-dashed border-[rgba(99,102,241,0.2)] text-left transition-all hover:border-[rgba(99,102,241,0.4)] hover:bg-[rgba(99,102,241,0.03)] col-span-2"
+                    className="p-2 rounded-xl border border-dashed border-[rgba(255,255,255,0.2)] text-left transition-all hover:border-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.03)] col-span-2"
                   >
                     <p className="text-[10px] font-semibold text-muted">+{STYLES.length - 6} more styles</p>
                     <p className="text-[8px] text-muted/60">Browse all</p>
@@ -6349,7 +6349,7 @@ export default function VideoEditorPage() {
                 {stylesExpanded && (
                   <button
                     onClick={() => setStylesExpanded(false)}
-                    className="p-2 rounded-xl border border-dashed border-[rgba(99,102,241,0.12)] text-left transition-all hover:border-[rgba(99,102,241,0.25)] col-span-2 md:col-span-4"
+                    className="p-2 rounded-xl border border-dashed border-[rgba(255,255,255,0.12)] text-left transition-all hover:border-[rgba(255,255,255,0.25)] col-span-2 md:col-span-4"
                   >
                     <p className="text-[10px] text-muted">Show fewer</p>
                   </button>
@@ -6621,8 +6621,8 @@ export default function VideoEditorPage() {
                       <button key={c.id} onClick={() => setConfig({ ...config, caption_style: c.id })}
                         className={`w-full text-left text-[10px] rounded-lg border transition-all flex items-center overflow-hidden ${
                           config.caption_style === c.id
-                            ? "border-[rgba(99,102,241,0.30)] bg-[rgba(99,102,241,0.05)]"
-                            : "border-border hover:border-[rgba(99,102,241,0.15)]"
+                            ? "border-[rgba(255,255,255,0.30)] bg-[rgba(255,255,255,0.05)]"
+                            : "border-border hover:border-[rgba(255,255,255,0.15)]"
                         }`}>
                         {/* Mini CSS-only style preview */}
                         <div
@@ -7691,7 +7691,7 @@ export default function VideoEditorPage() {
        *  Only rendered on the Create tab so other tabs stay clean. */}
       {tab === "create" && (
         <div
-          className="sticky bottom-2 z-30 mt-2 rounded-2xl border border-gold/25 bg-surface/95 backdrop-blur px-3 py-2 flex items-center gap-2 shadow-lg"
+          className="sticky bottom-2 z-30 mt-2  border border-gold/25 bg-surface/95 backdrop-blur px-3 py-2 flex items-center gap-2 shadow-lg"
           role="toolbar"
           aria-label="Video editor actions"
         >

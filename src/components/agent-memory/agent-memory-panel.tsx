@@ -104,7 +104,7 @@ export default function AgentMemoryPanel({
   }, [readOnly, subjectKind, subjectId]);
 
   return (
-    <section className="rounded-2xl border border-border bg-surface overflow-hidden">
+    <section className=" border border-border bg-surface overflow-hidden">
       <header className="flex items-center justify-between px-5 py-4 border-b border-border">
         <div className="flex items-center gap-2">
           <Brain size={16} className="text-muted" />

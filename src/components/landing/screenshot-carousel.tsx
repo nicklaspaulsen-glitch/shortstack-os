@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
@@ -71,8 +71,8 @@ const SLIDES: Slide[] = [
             transition={{ delay: i * 0.04 }}
             className="rounded-lg h-20 flex items-center justify-center"
             style={{
-              background: "rgba(99,102,241,0.06)",
-              border: "1px solid rgba(99,102,241,0.12)",
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.12)",
             }}
           >
             <Sparkles size={18} style={{ color: GOLD }} />
@@ -244,7 +244,7 @@ const SLIDES: Slide[] = [
         <div className="grid grid-cols-3 gap-3">
           {["+312%", "42 days", "$1.8M"].map((k) => (
             <div key={k} className="rounded-lg p-3"
-              style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.12)" }}>
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
               <div className="text-lg font-bold" style={{ color: GOLD }}>{k}</div>
             </div>
           ))}
@@ -306,8 +306,8 @@ export default function ScreenshotCarousel() {
                 onClick={() => setIndex(i)}
                 className="text-xs px-3 py-1.5 rounded-full transition-all"
                 style={{
-                  background: i === index ? "rgba(99,102,241,0.15)" : "rgba(255,255,255,0.03)",
-                  border: `1px solid ${i === index ? "rgba(99,102,241,0.4)" : "rgba(255,255,255,0.06)"}`,
+                  background: i === index ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.03)",
+                  border: `1px solid ${i === index ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.06)"}`,
                   color: i === index ? GOLD : "rgba(255,255,255,0.6)",
                 }}
               >
@@ -327,7 +327,7 @@ export default function ScreenshotCarousel() {
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-lg flex items-center justify-center"
-                    style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)" }}>
+                    style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)" }}>
                     <Icon size={18} className="text-gold" />
                   </div>
                   <div>

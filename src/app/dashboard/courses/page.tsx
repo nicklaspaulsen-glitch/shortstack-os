@@ -176,7 +176,7 @@ export default function CoursesPage() {
       {/* Create modal */}
       {showCreate && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="glass rounded-2xl p-6 w-full max-w-md">
+          <div className="glass  p-6 w-full max-w-md">
             <h2 className="text-lg font-semibold text-white mb-4">New Course</h2>
             <div className="space-y-4">
               <div>

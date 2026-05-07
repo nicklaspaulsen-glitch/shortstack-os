@@ -141,7 +141,7 @@ export default function VerticalsIndexPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="rounded-2xl bg-white/5 h-72 animate-pulse" />
+              <div key={i} className=" bg-white/5 h-72 animate-pulse" />
             ))}
           </div>
         ) : verticals.length === 0 ? (
@@ -166,7 +166,7 @@ export default function VerticalsIndexPage() {
                 >
                 <Link
                   href={`/dashboard/verticals/${v.vertical}`}
-                  className={`group relative block glass rounded-2xl border bg-gradient-to-br ${
+                  className={`group relative block glass  border bg-gradient-to-br ${
                     ACCENT_RING[v.accent] ?? ACCENT_RING.gold
                   } p-6 transition-shadow`}
                 >

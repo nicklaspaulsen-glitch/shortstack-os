@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -29,7 +29,7 @@ export default function Hero() {
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at center, rgba(99,102,241,0.10) 0%, transparent 70%)",
+            "radial-gradient(ellipse at center, rgba(255,255,255,0.07) 0%, transparent 70%)",
           animation: "glow-pulse 4s ease-in-out infinite",
         }}
       />
@@ -54,8 +54,8 @@ export default function Hero() {
             visible ? "animate-fade-up" : "opacity-0"
           }`}
           style={{
-            background: "rgba(99,102,241,0.08)",
-            border: "1px solid rgba(99,102,241,0.18)",
+            background: "rgba(255,255,255,0.07)",
+            border: "1px solid rgba(255,255,255,0.18)",
             color: "#A78BFA",
           }}
         >
@@ -110,7 +110,7 @@ export default function Hero() {
             style={{
               background: "linear-gradient(135deg, #6366F1, #4F46E5)",
               color: "#ffffff",
-              boxShadow: "0 0 30px rgba(99,102,241,0.25)",
+              boxShadow: "0 0 30px rgba(255,255,255,0.2)",
             }}
           >
             Start your 7-day free trial

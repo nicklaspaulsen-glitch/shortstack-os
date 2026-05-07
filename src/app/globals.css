@@ -221,7 +221,7 @@ a[role="button"]:hover,
 
   /* Premium card shadow tokens — used by .hover-lift and inline card styles */
   --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px -4px rgba(0,0,0,0.12), 0 14px 32px -12px rgba(0,0,0,0.14);
-  --card-shadow-hover: 0 4px 24px rgba(99,102,241,0.12), 0 2px 8px rgba(0,0,0,0.12), 0 18px 40px -12px rgba(0,0,0,0.18);
+  --card-shadow-hover: 0 4px 24px rgba(255,45,45,0.08), 0 2px 8px rgba(0,0,0,0.12), 0 18px 40px -12px rgba(0,0,0,0.18);
 }
 
 * {
@@ -329,7 +329,7 @@ a[role="button"]:hover,
 
   /* Dark theme card shadows — deeper for OLED surfaces */
   --card-shadow: 0 1px 3px rgba(0,0,0,0.20), 0 4px 12px -4px rgba(0,0,0,0.30), 0 14px 32px -12px rgba(0,0,0,0.40);
-  --card-shadow-hover: 0 4px 24px rgba(99,102,241,0.18), 0 2px 8px rgba(0,0,0,0.28), 0 18px 40px -12px rgba(0,0,0,0.50);
+  --card-shadow-hover: 0 4px 24px rgba(255,45,45,0.10), 0 2px 8px rgba(0,0,0,0.28), 0 18px 40px -12px rgba(0,0,0,0.50);
 }
 
 /* ═══════════ LIGHT THEME OVERRIDES (kept for parity / explicit selector) ═══════════
@@ -470,7 +470,7 @@ body {
    * accent ring. Gives every card the "sitting on the page" feel
    * instead of the "painted on" flat look. */
   .card {
-    @apply rounded-2xl p-5;
+    @apply  p-5;
     position: relative;
     isolation: isolate;
     background: var(--color-surface, #FFFFFF);
@@ -513,7 +513,7 @@ body {
   }
 
   .card-gradient {
-    @apply rounded-2xl p-5;
+    @apply  p-5;
     background: linear-gradient(145deg, var(--color-surface, #FFFFFF) 0%, var(--color-background, #FAFAF7) 100%);
     border: 1px solid var(--color-border, #E8E5E0);
     box-shadow:
@@ -522,7 +522,7 @@ body {
   }
 
   .card-static {
-    @apply rounded-2xl p-5;
+    @apply  p-5;
     background: var(--color-surface, #FFFFFF);
     border: 1px solid var(--color-border, #E8E5E0);
     box-shadow:
@@ -701,7 +701,7 @@ body {
 
   /* ═══════════ STAT CARDS ═══════════ */
   .stat-card {
-    @apply rounded-2xl p-5 flex flex-col gap-1.5;
+    @apply  p-5 flex flex-col gap-1.5;
     position: relative;
     isolation: isolate;
     background: linear-gradient(160deg, var(--color-surface, #FFFFFF) 0%, color-mix(in srgb, var(--color-surface, #FFFFFF) 92%, var(--color-background, #FAFAF7)) 100%);
@@ -929,7 +929,7 @@ body {
   }
   .breathe { animation: breathe 3s ease-in-out infinite; }
   .pulse-ring { animation: pulseRing 2s ease-out infinite; }
-  .shimmer-bg { background: linear-gradient(90deg, transparent 33%, rgba(99,102,241,0.06) 50%, transparent 66%); background-size: 200% 100%; animation: shimmer 2.5s ease-in-out infinite; }
+  .shimmer-bg { background: linear-gradient(90deg, transparent 33%, rgba(255,45,45,0.06) 50%, transparent 66%); background-size: 200% 100%; animation: shimmer 2.5s ease-in-out infinite; }
 
   .stagger-1 { animation-delay: 0.06s; animation-fill-mode: backwards; }
   .stagger-2 { animation-delay: 0.12s; animation-fill-mode: backwards; }
@@ -1513,7 +1513,7 @@ body {
 }
 .hover-lift:hover {
   transform: translateY(-1px);
-  box-shadow: var(--card-shadow-hover, 0 4px 24px rgba(99,102,241,0.12), 0 2px 8px rgba(0,0,0,0.12));
+  box-shadow: var(--card-shadow-hover, 0 4px 24px rgba(255,45,45,0.08), 0 2px 8px rgba(0,0,0,0.12));
 }
 
 .hover-glow {
@@ -1523,69 +1523,70 @@ body {
   box-shadow: 0 0 12px -2px rgba(var(--brand-accent-rgb, 99 102 241) / 0.35);
 }
 
-/* ═══════════ GLASS PANEL SYSTEM (prism split) ═══════════ */
-/* May 7: upgraded to prism design — indigo-tinted borders,
-   visible on OLED black, matches analytics/clients reference */
+/* ═══════════ PRISM SPLIT GLASS SYSTEM ═══════════ */
+/* May 7 v2: real prism split — white-tinted glass, sharp corners,
+   red (#FF2D2D) hero accent, ref: 93-prism-dashboard.html */
 .glass {
-  background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid rgba(99,102,241,0.10);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.04) inset,
-    0 2px 8px rgba(0,0,0,0.25),
-    0 0 0 0.5px rgba(99,102,241,0.06);
+  background: rgba(255,255,255,0.035);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.07);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04);
 }
 .glass-md {
   background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(99,102,241,0.14);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.05) inset,
-    0 4px 12px rgba(0,0,0,0.30),
-    0 0 0 0.5px rgba(99,102,241,0.10);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04);
 }
 .glass-strong {
   background: rgba(255,255,255,0.07);
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
-  border: 1px solid rgba(99,102,241,0.18);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.06) inset,
-    0 6px 20px rgba(0,0,0,0.35),
-    0 0 0 0.5px rgba(99,102,241,0.14);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
 }
-/* Indigo-tinted glass for brand surfaces */
+/* Back-compat alias — resolves to .glass now */
 .glass-indigo {
-  background: rgba(99,102,241,0.06);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(99,102,241,0.15);
-  box-shadow: 0 0 0 1px rgba(99,102,241,0.08) inset, 0 8px 32px rgba(99,102,241,0.08);
+  background: rgba(255,255,255,0.035);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.07);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04);
 }
 
 /* ═══════════ 3D PERSPECTIVE TILT ═══════════ */
-/* Apply to any card for subtle depth on hover */
 .tilt-3d {
-  transition: transform 0.3s cubic-bezier(0.32,0.72,0,1), box-shadow 0.3s cubic-bezier(0.32,0.72,0,1);
+  transition: transform 0.35s cubic-bezier(0.32,0.72,0,1), box-shadow 0.35s cubic-bezier(0.32,0.72,0,1), border-color 0.35s;
   transform-style: preserve-3d;
   will-change: transform;
 }
 .tilt-3d:hover {
-  transform: perspective(800px) rotateX(-2deg) translateY(-1px);
-  box-shadow: 0 4px 24px rgba(99,102,241,0.15), 0 2px 8px rgba(0,0,0,0.3), 0 20px 48px -12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+  transform: perspective(800px) rotateX(-3deg) translateY(-4px);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(255,45,45,0.06);
 }
 
-/* ═══════════ AMBIENT RADIAL OVERLAYS ═══════════ */
-/* Drop inside relative containers for atmospheric depth */
-.ambient-indigo::before {
+/* ═══════════ PRISM AMBIENT BACKGROUND ═══════════ */
+/* Applied to body via globals — red/violet/blue radial glows */
+.prism-ambient::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 30%, rgba(255,45,45,0.04), transparent),
+    radial-gradient(ellipse 500px 500px at 75% 65%, rgba(139,92,246,0.03), transparent),
+    radial-gradient(ellipse 400px 300px at 50% 10%, rgba(59,130,246,0.02), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+.ambient-red::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(99,102,241,0.06) 0%, transparent 70%);
+  background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(255,45,45,0.06) 0%, transparent 70%);
   pointer-events: none;
-  border-radius: inherit;
 }
 .ambient-radial::before {
   content: '';
@@ -1593,18 +1594,17 @@ body {
   inset: 0;
   background: radial-gradient(ellipse 80% 60% at 30% 40%, rgba(255,255,255,0.04) 0%, transparent 60%);
   pointer-events: none;
-  border-radius: inherit;
 }
 
 /* ═══════════ PREMIUM DROP SHADOWS ═══════════ */
 .shadow-glass {
-  box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 2px 4px rgba(0,0,0,0.2), 0 8px 24px -4px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04);
 }
 .shadow-glass-indigo {
-  box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 2px 4px rgba(0,0,0,0.2), 0 8px 24px -4px rgba(99,102,241,0.12), 0 20px 48px -12px rgba(0,0,0,0.4), 0 0 0 1px rgba(99,102,241,0.10);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04);
 }
 .shadow-lift {
-  box-shadow: 0 4px 24px rgba(99,102,241,0.18), 0 2px 8px rgba(0,0,0,0.28), 0 18px 40px -12px rgba(0,0,0,0.50);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(255,45,45,0.06);
 }
 
 /* Subtle icon breathing on idle nav items — one at a time */

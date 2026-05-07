@@ -80,7 +80,7 @@ export default function AgentSidePanel({
 
   return (
     <aside
-      className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0f]/95 backdrop-blur-xl"
+      className="flex h-full w-full flex-col overflow-hidden  border border-white/10 bg-[#0a0a0f]/95 backdrop-blur-xl"
       style={{ boxShadow: "0 18px 60px -10px rgba(0,0,0,0.7)" }}
     >
       {/* Header strip — colour banner + portrait + close */}

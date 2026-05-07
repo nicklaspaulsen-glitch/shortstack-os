@@ -311,7 +311,7 @@ function GenerateModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-auto p-5 space-y-4">
+      <div className="bg-zinc-900 border border-white/10  w-full max-w-2xl max-h-[90vh] overflow-auto p-5 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">Generate copy in {clientName}&apos;s voice</h3>
           <button

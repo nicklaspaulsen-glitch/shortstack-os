@@ -911,7 +911,7 @@ export default function TelegramBotPage() {
       {/* ═══════════ CREATE/EDIT MODAL ═══════════ */}
       {showModal && editing && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-surface border border-border rounded-2xl max-w-2xl w-full my-8 max-h-[90vh] overflow-y-auto">
+          <div className="bg-surface border border-border  max-w-2xl w-full my-8 max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-surface border-b border-border px-6 py-4 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-foreground">
                 {editing.id ? "Edit Routine" : "New Routine"}

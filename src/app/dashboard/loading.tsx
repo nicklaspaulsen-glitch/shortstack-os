@@ -2,9 +2,9 @@ export default function DashboardLoading() {
   return (
     <div className="fade-in space-y-5 p-1">
       {/* Hero banner skeleton — matches PageHero component */}
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-gold/[0.08] via-gold/[0.03] to-transparent p-6">
+      <div className="relative overflow-hidden  border border-border bg-gradient-to-br from-gold/[0.08] via-gold/[0.03] to-transparent p-6">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-gold/10 animate-pulse" />
+          <div className="w-14 h-14  bg-gold/10 animate-pulse" />
           <div className="flex-1 space-y-2">
             <div className="h-6 w-64 bg-white/5 rounded-lg animate-pulse" />
             <div className="h-3 w-48 bg-white/5 rounded animate-pulse" />

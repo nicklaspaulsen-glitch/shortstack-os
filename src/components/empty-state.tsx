@@ -20,7 +20,7 @@ export default function EmptyState({
   onAction,
 }: EmptyStateProps) {
   return (
-    <div className="pop-fade relative flex flex-col items-center justify-center text-center py-16 px-6 rounded-2xl border border-dashed border-border bg-gradient-to-b from-gold/[0.02] to-transparent overflow-hidden">
+    <div className="pop-fade relative flex flex-col items-center justify-center text-center py-16 px-6  border border-dashed border-border bg-gradient-to-b from-gold/[0.02] to-transparent overflow-hidden">
       {/* Background pattern */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
@@ -35,7 +35,7 @@ export default function EmptyState({
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-gold/[0.04] blur-3xl pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center">
-        <div className="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center mb-4 text-gold">
+        <div className="w-14 h-14  bg-gold/10 flex items-center justify-center mb-4 text-gold">
           {icon}
         </div>
         <h3 className="text-sm font-semibold text-foreground mb-1">{title}</h3>

@@ -10,7 +10,7 @@ interface DbRowCountsProps {
 export default function DbRowCounts({ counts }: DbRowCountsProps) {
   if (!counts) {
     return (
-      <div className="rounded-2xl border border-border bg-surface p-4">
+      <div className=" border border-border bg-surface p-4">
         <h2 className="text-xs font-bold mb-3 text-foreground">DB row counts</h2>
         <p className="text-[11px] text-muted">Unavailable</p>
       </div>
@@ -18,7 +18,7 @@ export default function DbRowCounts({ counts }: DbRowCountsProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-surface p-4">
+    <div className=" border border-border bg-surface p-4">
       <h2 className="text-xs font-bold mb-3 text-foreground">DB row counts</h2>
       <table className="w-full text-[11px]">
         <thead>

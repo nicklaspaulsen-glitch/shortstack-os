@@ -179,7 +179,7 @@ export default function AbTestsPage() {
         </div>
       ) : tests.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+          <div className="w-16 h-16  bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
             <FlaskConical size={28} className="text-purple-400" />
           </div>
           <div className="text-center">
@@ -384,7 +384,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
         initial={{ opacity: 0, y: 12, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.3 }}
-        className="glass rounded-2xl p-6 w-full max-w-md"
+        className="glass  p-6 w-full max-w-md"
       >
         <h2 className="text-lg font-semibold text-white mb-4">New A/B Test</h2>
         <div className="space-y-4">

@@ -285,7 +285,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
   }
 
   return (
-    <div style={panelStyle} className="w-[380px] max-h-[500px] flex flex-col bg-surface border border-border/50 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden fade-in">
+    <div style={panelStyle} className="w-[380px] max-h-[500px] flex flex-col bg-surface border border-border/50  shadow-2xl shadow-black/40 overflow-hidden fade-in">
       {/* Header — draggable */}
       <div
         className="flex items-center justify-between px-4 py-3 border-b border-border/30 bg-surface-light/30 cursor-grab active:cursor-grabbing"

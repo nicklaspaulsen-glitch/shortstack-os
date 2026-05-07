@@ -462,7 +462,7 @@ export default function ClientUploadsPage() {
         <div className="space-y-4">
           {zernioProfiles.length === 0 ? (
             <div className="card-static text-center py-12">
-              <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gold/10  flex items-center justify-center mx-auto mb-4">
                 <Share2 size={28} className="text-gold" />
               </div>
               <h3 className="text-sm font-semibold mb-1">Social accounts not connected</h3>

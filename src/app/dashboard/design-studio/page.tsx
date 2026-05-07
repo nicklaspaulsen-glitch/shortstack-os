@@ -142,7 +142,7 @@ export default function DesignStudioPage() {
                   transition={{ delay: i * 0.06, duration: 0.4 }}
                   whileHover={{ y: -4, scale: 1.02 }}
                   className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#6366F1]/40 transition-colors group"
-                  style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                  style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
                 >
                   <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", width: "calc(100% + 32px)", marginLeft: -16, marginRight: -16, marginBottom: 8, flexShrink: 0 }} />
                   <div
@@ -232,7 +232,7 @@ function RecentDesigns() {
           transition={{ delay: i * 0.05, duration: 0.35 }}
           whileHover={{ y: -4, scale: 1.01 }}
           className="rounded-xl overflow-hidden hover:border-[#6366F1]/30 transition-colors group"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
         >
           <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
           <div className="relative aspect-video bg-[#1a1a2e] flex items-center justify-center">

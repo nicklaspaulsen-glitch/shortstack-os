@@ -51,7 +51,7 @@ function Accordion({
 }) {
   return (
     <div
-      className="rounded-2xl border border-[rgba(99,102,241,0.1)] overflow-hidden"
+      className=" border border-[rgba(255,255,255,0.1)] overflow-hidden"
       style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}
     >
       <button
@@ -399,7 +399,7 @@ export default function AnalyticsPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.15)] text-[#A78BFA]"
+                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.15)] text-[#A78BFA]"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
                 {formatCurrency(stats.totalMRR)} MRR
@@ -412,7 +412,7 @@ export default function AnalyticsPage() {
             )}
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 rounded-lg border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.06)] px-3 py-1.5 text-xs font-semibold text-[#6366F1] hover:bg-[rgba(99,102,241,0.12)] transition-colors duration-150"
+              className="flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.06)] px-3 py-1.5 text-xs font-semibold text-[#6366F1] hover:bg-[rgba(255,255,255,0.12)] transition-colors duration-150"
             >
               <Download size={13} /> Export
             </button>
@@ -513,7 +513,7 @@ export default function AnalyticsPage() {
 
             {/* Left — MRR hero with prism top bar */}
             <motion.div
-              className="relative rounded-2xl border border-[rgba(99,102,241,0.16)] bg-[rgba(255,255,255,0.028)] px-8 py-8 overflow-hidden"
+              className="relative  border border-[rgba(255,255,255,0.16)] bg-[rgba(255,255,255,0.035)] px-8 py-8 overflow-hidden"
               style={{ backdropFilter: "blur(16px)" }}
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
@@ -560,7 +560,7 @@ export default function AnalyticsPage() {
                 return (
                   <motion.div
                     key={cell.label}
-                    className="relative rounded-xl bg-[rgba(255,255,255,0.028)] border border-[rgba(255,255,255,0.07)] px-4 py-3 overflow-hidden"
+                    className="relative rounded-xl bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.07)] px-4 py-3 overflow-hidden"
                     style={{ backdropFilter: "blur(12px)" }}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -589,7 +589,7 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-4">
 
             {/* Lead velocity area chart */}
-            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Acquisition</p>
@@ -616,7 +616,7 @@ export default function AnalyticsPage() {
                       <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.04)" vertical={false} />
                       <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
                       <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={28} />
-                      <Tooltip {...TT} cursor={{ stroke: "rgba(99,102,241,0.15)", strokeDasharray: "2 4" }} />
+                      <Tooltip {...TT} cursor={{ stroke: "rgba(255,255,255,0.15)", strokeDasharray: "2 4" }} />
                       <Area
                         type="monotone" dataKey="count" name="Leads"
                         stroke="#6366F1" strokeWidth={1.5}
@@ -629,7 +629,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Lead sources */}
-            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Channels</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Lead Sources</h2>
               {leadsBySource.length === 0 ? (
@@ -673,7 +673,7 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-4">
 
             {/* Conversion funnel */}
-            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Sales Pipeline</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Conversion Funnel</h2>
               <div className="space-y-3">
@@ -728,7 +728,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Outreach performance */}
-            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Engagement</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-4">Outreach Performance</h2>
               {outreachByDay.length === 0 ? (
@@ -766,7 +766,7 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
             {/* Top industries */}
-            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Verticals</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Top Industries</h2>
               {leadsByIndustry.length === 0 ? (
@@ -809,7 +809,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Monthly goals */}
-            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Progress</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
               <div className="space-y-3.5">
@@ -843,7 +843,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Benchmarks */}
-            <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">vs Industry</p>
               <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Benchmarks</h2>
               <div className="space-y-3">
@@ -894,15 +894,15 @@ export default function AnalyticsPage() {
 
           {/* ── Zone 5: Scorecard strip (prism glass, staggered entrance) ── */}
           <motion.div
-            className="relative rounded-2xl border border-[rgba(99,102,241,0.1)] overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
+            className="relative  border border-[rgba(255,255,255,0.1)] overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Prism top bar */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#10B981] via-[#3B82F6] via-[#06B6D4] via-[#8B5CF6] to-[#F59E0B]" />
-            <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(99,102,241,0.08)]">
+            <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(255,255,255,0.08)]">
               {[
                 { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#10B981" },
                 { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#3B82F6" : "#F26063" },
@@ -930,7 +930,7 @@ export default function AnalyticsPage() {
           </motion.div>
 
           {/* ── Zone 6: Real-time activity feed ──────────────────────────── */}
-          <div className="rounded-2xl border border-[rgba(99,102,241,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+          <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Live Stream</p>
@@ -983,7 +983,7 @@ export default function AnalyticsPage() {
             icon={<TrendingUp size={13} />}
             badge={
               revenueForecast.length > 0 ? (
-                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(99,102,241,0.12)] text-[#6366F1]">
+                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.12)] text-[#6366F1]">
                   {formatCurrency(revenueForecast[0]?.projected || 0)} next mo.
                 </span>
               ) : undefined

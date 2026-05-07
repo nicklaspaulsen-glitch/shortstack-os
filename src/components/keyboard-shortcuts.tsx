@@ -96,7 +96,7 @@ export default function KeyboardShortcuts() {
     <div className="fixed inset-0 z-[9999]">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowHelp(false)} />
       <div className="relative max-w-md mx-auto mt-[15vh]">
-        <div className="rounded-2xl overflow-hidden fade-in bg-surface border border-border">
+        <div className=" overflow-hidden fade-in bg-surface border border-border">
           <div className="px-5 py-3 border-b border-border">
             <h2 className="text-sm font-bold text-foreground">Keyboard Shortcuts</h2>
             <p className="text-[10px] text-muted">Press <kbd className="px-1.5 py-0.5 rounded text-[9px] bg-surface-light">?</kbd> to toggle</p>

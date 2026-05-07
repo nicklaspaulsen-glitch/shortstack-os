@@ -113,7 +113,7 @@ export default function ClientContextPill() {
           onClick={() => setOpen(false)}
         >
           <div
-            className="bg-surface border border-border rounded-2xl shadow-2xl w-full max-w-md max-h-[70vh] flex flex-col overflow-hidden"
+            className="bg-surface border border-border  shadow-2xl w-full max-w-md max-h-[70vh] flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {/* Header */}

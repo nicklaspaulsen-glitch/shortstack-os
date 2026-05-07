@@ -480,7 +480,7 @@ export default function ProductionPage() {
       {/* New Request Modal */}
       {showSubmit && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowSubmit(false)}>
-          <div className="glass rounded-2xl w-full max-w-md p-5 space-y-3" onClick={e => e.stopPropagation()}>
+          <div className="glass  w-full max-w-md p-5 space-y-3" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-gold" /> New Production Request</h3>
               <button onClick={() => setShowSubmit(false)} className="text-muted hover:text-foreground"><X size={16} /></button>

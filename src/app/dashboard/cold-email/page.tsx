@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -223,7 +223,7 @@ export default function ColdEmailPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
           className="rounded-xl p-4 space-y-3"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.16)" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.16)" }}
         >
           <div className="flex items-center gap-2">
             <Sparkles size={13} className="text-indigo-400" />
@@ -370,7 +370,7 @@ export default function ColdEmailPage() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: index * 0.04 }}
-                whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                 className="relative p-4 space-y-3 border-b border-white/[0.05] last:border-0"
               >
                 {/* Rainbow top bar (first item only decorative, per-card via absolute) */}
@@ -461,7 +461,7 @@ export default function ColdEmailPage() {
                       Preview samples
                     </p>
                     {jobSamples.map((s) => (
-                      <div key={s.personalization_id} className="rounded-xl p-3 space-y-1.5" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+                      <div key={s.personalization_id} className="rounded-xl p-3 space-y-1.5" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                         {s.error ? (
                           <div className="text-[10px] text-red-400 flex items-center gap-1.5">
                             <AlertTriangle size={10} />

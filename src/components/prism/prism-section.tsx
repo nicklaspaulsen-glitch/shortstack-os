@@ -37,7 +37,7 @@ export default function PrismSection({
 }: PrismSectionProps) {
   return (
     <div
-      className="rounded-2xl border overflow-hidden"
+      className="border overflow-hidden"
       style={{
         ...PRISM_GLASS,
         borderColor: PRISM_BORDERS.default,
@@ -48,8 +48,8 @@ export default function PrismSection({
         className="flex items-center justify-between w-full px-6 py-4 hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
       >
         <div className="flex items-center gap-2.5">
-          <span className="text-[#6F6D7A]">{icon}</span>
-          <span className="font-display text-sm font-semibold text-[#F5F4F1] tracking-[-0.01em]">
+          <span className="text-[#4A4A5A]">{icon}</span>
+          <span className="font-display text-sm font-semibold text-[#F0F0F4] tracking-[-0.01em]">
             {label}
           </span>
           {badge}

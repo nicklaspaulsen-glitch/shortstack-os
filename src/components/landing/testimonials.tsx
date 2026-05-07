@@ -22,16 +22,16 @@ export default function Testimonials() {
             className="rounded-3xl p-10 md:p-14 text-center"
             style={{
               background:
-                "linear-gradient(135deg, rgba(99,102,241,0.05), rgba(99,102,241,0.02))",
-              border: "1px solid rgba(99,102,241,0.15)",
+                "linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))",
+              border: "1px solid rgba(255,255,255,0.12)",
             }}
           >
             <div
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest mb-5"
               style={{
-                background: "rgba(99,102,241,0.1)",
+                background: "rgba(255,255,255,0.07)",
                 color: "#A78BFA",
-                border: "1px solid rgba(99,102,241,0.2)",
+                border: "1px solid rgba(255,255,255,0.15)",
               }}
             >
               <Sparkles size={11} />

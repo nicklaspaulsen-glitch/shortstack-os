@@ -873,7 +873,7 @@ export default function OnboardPage() {
             {step === 0 && (
               <div className="space-y-6">
                 <div className="text-center space-y-3 py-4">
-                  <div className="w-16 h-16 mx-auto bg-gold/10 rounded-2xl flex items-center justify-center">
+                  <div className="w-16 h-16 mx-auto bg-gold/10  flex items-center justify-center">
                     <Sparkles size={28} className="text-gold" />
                   </div>
                   <h2 className="text-xl font-bold">Welcome to Client Onboarding</h2>

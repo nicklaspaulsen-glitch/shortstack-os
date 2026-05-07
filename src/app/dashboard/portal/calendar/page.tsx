@@ -356,7 +356,7 @@ export default function ContentCalendarPage() {
       <Modal isOpen={showBookCall} onClose={() => { setShowBookCall(false); setConfirmedBooking(null); setBookingNotes(""); }} title="Book a call with your agency" size="md">
         {confirmedBooking ? (
           <div className="space-y-3 text-center py-4">
-            <div className="w-12 h-12 bg-success/10 rounded-2xl flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 bg-success/10  flex items-center justify-center mx-auto">
               <CheckCircle size={24} className="text-success" />
             </div>
             <h3 className="text-sm font-semibold">You are booked</h3>

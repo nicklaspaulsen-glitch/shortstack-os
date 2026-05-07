@@ -166,7 +166,7 @@ export default function ClientRoomCanvas({ clientId, clientName }: Props) {
 
       {/* Room */}
       <div
-        className="relative w-full rounded-2xl border border-white/10 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-black"
+        className="relative w-full  border border-white/10 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-black"
         style={{ aspectRatio: "16 / 9", minHeight: 520 }}
       >
         {/* Floor grid */}

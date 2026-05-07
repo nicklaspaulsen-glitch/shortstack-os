@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -212,7 +212,7 @@ export default function AIVideoPage() {
                   key={cat.label}
                   type="button"
                   onClick={() => setPrompt(cat.prompt)}
-                  className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-[rgba(99,102,241,0.08)] hover:border-[rgba(99,102,241,0.3)] px-3 py-1.5 rounded-full border border-border/50 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.3)] px-3 py-1.5 rounded-full border border-border/50 transition-all cursor-pointer"
                 >
                   <span className="text-[10px] leading-none">{cat.icon}</span>
                   {cat.label}
@@ -509,7 +509,7 @@ export default function AIVideoPage() {
       {/* Scorecard strip — 3-cell stagger, same pattern as analytics/clients */}
       <PrismPanel rainbow padding="p-0" className="rounded-xl">
         <motion.div
-          className="grid grid-cols-3 divide-x divide-[rgba(99,102,241,0.08)] overflow-hidden"
+          className="grid grid-cols-3 divide-x divide-[rgba(255,255,255,0.08)] overflow-hidden"
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
@@ -589,7 +589,7 @@ export default function AIVideoPage() {
                     key={cat.label}
                     type="button"
                     onClick={() => setPrompt(cat.prompt)}
-                    className="inline-flex items-center gap-1.5 text-[11px] text-white/45 hover:text-white/90 px-3 py-1.5 rounded-full border border-white/10 hover:border-[rgba(99,102,241,0.4)] hover:bg-[rgba(99,102,241,0.1)] transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-[11px] text-white/45 hover:text-white/90 px-3 py-1.5 rounded-full border border-white/10 hover:border-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.1)] transition-all cursor-pointer"
                   >
                     <span className="text-[10px] leading-none">{cat.icon}</span>
                     {cat.label}
@@ -732,7 +732,7 @@ export default function AIVideoPage() {
               </span>
             </button>
             {advancedOpen && (
-              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl border border-white/5 bg-white/[0.015]">
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 p-4  border border-white/5 bg-white/[0.015]">
                 <div>
                   <label className="block text-[9px] text-white/35 uppercase tracking-[0.16em] mb-1.5">
                     Frames
@@ -796,7 +796,7 @@ export default function AIVideoPage() {
                   <motion.div
                     key={result.id}
                     className={`hf-thumb rounded-xl ${aspectClass} group`}
-                    style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                    style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
                     variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] } } }}
                     whileHover={{ y: -4, scale: 1.02 }}
                   >

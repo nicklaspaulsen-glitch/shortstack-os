@@ -831,7 +831,7 @@ export default function CarouselGeneratorPage() {
       {advancedMode && (
       <>
       {/* Rolling preview of example carousels — 1:1 Instagram-native aspect */}
-      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6 mb-5">
+      <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6 mb-5">
         <div className="absolute inset-0 pointer-events-none">
           <RollingPreview
             items={CAROUSEL_PREVIEW_FALLBACK}
@@ -1101,7 +1101,7 @@ export default function CarouselGeneratorPage() {
             <button
               onClick={handleGenerate}
               disabled={generating || !topic.trim()}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed text-white"
+              className="w-full flex items-center justify-center gap-2 py-3  text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed text-white"
               style={{
                 background: generating
                   ? "var(--color-muted)"
@@ -1185,7 +1185,7 @@ export default function CarouselGeneratorPage() {
             {slides.length === 0 && !generating && (
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
+                  className="w-16 h-16  flex items-center justify-center mb-4"
                   style={{ background: "color-mix(in srgb, var(--color-accent) 10%, transparent)" }}
                 >
                   <Layers size={28} style={{ color: "var(--color-accent)" }} />
@@ -1203,7 +1203,7 @@ export default function CarouselGeneratorPage() {
                 {Array.from({ length: Math.min(slideCount, 4) }).map((_, i) => (
                   <div
                     key={i}
-                    className="flex-shrink-0 w-[280px] h-[280px] rounded-2xl overflow-hidden"
+                    className="flex-shrink-0 w-[280px] h-[280px]  overflow-hidden"
                     style={{
                       background: "var(--color-surface-light)",
                       border: "1px solid var(--color-border)",
@@ -1386,7 +1386,7 @@ export default function CarouselGeneratorPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.22, delay: idx * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                       style={{
                         background: editingSlide === idx
                           ? "color-mix(in srgb, var(--color-accent) 5%, var(--color-surface-light))"

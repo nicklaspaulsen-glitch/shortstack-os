@@ -30,7 +30,7 @@ export default function StylePreviewPage() {
                 </div>
                 <span className="text-white/30 text-xs">{expanded === s.id ? "Click to shrink" : "Click to expand"}</span>
               </div>
-              <div className={`rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 ${expanded === s.id ? "scale-100" : "hover:scale-[1.01]"}`}
+              <div className={` overflow-hidden border border-white/10 transition-all duration-500 ${expanded === s.id ? "scale-100" : "hover:scale-[1.01]"}`}
                 style={{ height: expanded === s.id ? "auto" : "420px" }}>
                 {s.id === "executive" && <ExecutiveStyle expanded={expanded === s.id} />}
                 {s.id === "neobrutal" && <NeoBrutalStyle expanded={expanded === s.id} />}
@@ -335,7 +335,7 @@ function NordicStyle({ expanded }: { expanded: boolean }) {
           { label: "Sent", value: "142", sub: "outreach" },
           { label: "Won", value: "8", sub: "deals" },
         ].map((s, i) => (
-          <div key={i} className="p-4 rounded-2xl" style={{ background: "#F5F5F0", border: "1px solid #ECECEA" }}>
+          <div key={i} className="p-4 " style={{ background: "#F5F5F0", border: "1px solid #ECECEA" }}>
             <p style={{ fontSize: 10, color: "#A3A3A3", marginBottom: 8 }}>{s.label}</p>
             <p style={{ fontSize: 24, fontWeight: 600, color: "#1A1A1A", fontFamily: "monospace", lineHeight: 1 }}>{s.value}</p>
             <p style={{ fontSize: 9, color: "#C4C4C0", marginTop: 4 }}>{s.sub}</p>
@@ -346,7 +346,7 @@ function NordicStyle({ expanded }: { expanded: boolean }) {
       {expanded && (
         <>
           {/* Pipeline — thin elegant bars */}
-          <div className="mx-7 mb-6 p-5 rounded-2xl" style={{ background: "#F5F5F0", border: "1px solid #ECECEA" }}>
+          <div className="mx-7 mb-6 p-5 " style={{ background: "#F5F5F0", border: "1px solid #ECECEA" }}>
             <p style={{ fontSize: 11, fontWeight: 500, color: "#1A1A1A", marginBottom: 14 }}>Pipeline</p>
             {[
               { label: "New", pct: 100, color: "#1A1A1A" },
@@ -364,7 +364,7 @@ function NordicStyle({ expanded }: { expanded: boolean }) {
           </div>
 
           {/* Activity — minimal list */}
-          <div className="mx-7 p-5 rounded-2xl" style={{ background: "#F5F5F0", border: "1px solid #ECECEA" }}>
+          <div className="mx-7 p-5 " style={{ background: "#F5F5F0", border: "1px solid #ECECEA" }}>
             <p style={{ fontSize: 11, fontWeight: 500, color: "#1A1A1A", marginBottom: 12 }}>Today</p>
             {[
               { text: "73 leads scraped across 12 cities", time: "2m" },

@@ -313,7 +313,7 @@ export default function AdminStatusPage() {
 
       {/* Composer panel */}
       {draft && (
-        <section className="rounded-2xl border border-gold/30 bg-surface p-5 space-y-4">
+        <section className=" border border-gold/30 bg-surface p-5 space-y-4">
           <header className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">
               {draft.id ? "Edit incident" : "New incident"}
@@ -421,7 +421,7 @@ export default function AdminStatusPage() {
           </span>
         </header>
         {openCount === 0 ? (
-          <div className="rounded-2xl border border-success/30 bg-success/5 p-5 text-center">
+          <div className=" border border-success/30 bg-success/5 p-5 text-center">
             <CheckCircle2 size={20} className="text-success mx-auto mb-2" />
             <p className="text-sm font-semibold">All systems operational</p>
             <p className="text-[11px] text-muted">
@@ -483,7 +483,7 @@ interface IncidentCardProps {
 function IncidentCard({ incident, onEdit, onResolve, onDelete }: IncidentCardProps) {
   const style = SEVERITY_STYLES[incident.severity];
   return (
-    <li className="rounded-2xl border border-border bg-surface p-4 hover:border-border-bright transition-colors">
+    <li className=" border border-border bg-surface p-4 hover:border-border-bright transition-colors">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-1">

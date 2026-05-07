@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * LoginHero — editorial left column for the redesigned login screen.
@@ -60,7 +60,7 @@ export default function LoginHero() {
         aria-hidden
         className="pointer-events-none absolute -top-40 -left-40 w-[640px] h-[640px] rounded-full opacity-[0.08] blur-3xl"
         style={{
-          background: "radial-gradient(closest-side, rgba(99,102,241,0.6), transparent 70%)",
+          background: "radial-gradient(closest-side, rgba(255,255,255,0.6), transparent 70%)",
         }}
       />
       {/* Faint plum glow lower-right for editorial complement */}

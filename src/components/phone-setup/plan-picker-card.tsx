@@ -65,7 +65,7 @@ export default function PlanPickerCard() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl p-5 bg-card border border-border">
+      <div className=" p-5 bg-card border border-border">
         <div className="flex items-center gap-2 text-sm text-muted">
           <Loader size={14} className="animate-spin" /> Checking your plan…
         </div>
@@ -84,7 +84,7 @@ export default function PlanPickerCard() {
 
   return (
     <section
-      className="relative rounded-2xl p-5 md:p-6 overflow-hidden"
+      className="relative  p-5 md:p-6 overflow-hidden"
       style={{
         background:
           "linear-gradient(135deg, rgba(168,85,247,0.06), rgba(168,85,247,0.02))",

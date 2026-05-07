@@ -279,7 +279,7 @@ export default function PageHero({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border ${className}`}
+      className={`relative overflow-hidden  border ${className}`}
       style={{
         background: treatment.bg,
         borderColor: tokens.border.subtle,

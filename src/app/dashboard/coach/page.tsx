@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * AI Sales Coach — overview page.
@@ -267,7 +267,7 @@ export default function CoachPage() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+          className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
         >
           {data.analyses.length === 0 ? (
             <div className="px-6 py-12 text-center text-white/60">
@@ -344,7 +344,7 @@ export default function CoachPage() {
                 key={bucket.repId}
                 variants={cardVariants}
                 whileHover={{ y: -1 }}
-                className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -411,12 +411,12 @@ export default function CoachPage() {
           </motion.div>
 
           {!leaderboard || leaderboard.leaderboard.length === 0 ? (
-            <motion.div variants={cardVariants} className="rounded-xl px-6 py-8 text-center text-white/60" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+            <motion.div variants={cardVariants} className="rounded-xl px-6 py-8 text-center text-white/60" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
               Leaderboard requires at least 3 analyses per rep. Once your team accumulates more
               calls, rankings will appear here.
             </motion.div>
           ) : (
-            <motion.div variants={cardVariants} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+            <motion.div variants={cardVariants} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
               <table className="w-full text-sm">
                 <thead className="bg-white/[0.03] text-xs uppercase tracking-wider text-white/50">
                   <tr>

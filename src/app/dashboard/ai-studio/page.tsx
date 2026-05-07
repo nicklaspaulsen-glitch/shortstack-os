@@ -169,7 +169,7 @@ export default function AIStudioPage() {
               <motion.span
                 initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.15)] text-[#A78BFA]"
+                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.15)] text-[#A78BFA]"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
                 {history.filter(j => j.status === "completed").length} done
@@ -186,7 +186,7 @@ export default function AIStudioPage() {
                   setActiveTool("image-gen");
                   setCreationWizardOpen(true);
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-bold shadow-lg shadow-[rgba(99,102,241,0.15)] hover:brightness-105 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-bold shadow-lg shadow-[rgba(255,255,255,0.15)] hover:brightness-105 transition-all"
               >
                 <Sparkles size={13} />
                 New with AI
@@ -224,11 +224,11 @@ export default function AIStudioPage() {
                         transition={{ duration: 0.2 }}
                         onClick={() => { setGuidedIntent(t.id); setActiveTool(t.id); }}
                         className={`relative text-left p-4 rounded-xl border transition-all ${
-                          selected ? "border-[rgba(99,102,241,0.4)] bg-[rgba(99,102,241,0.06)] shadow-lg shadow-[rgba(99,102,241,0.1)]" : "border-border hover:border-[#6366F1]/30 bg-surface-light"
+                          selected ? "border-[rgba(255,255,255,0.4)] bg-[rgba(255,255,255,0.06)] shadow-lg shadow-[rgba(255,255,255,0.1)]" : "border-border hover:border-[#6366F1]/30 bg-surface-light"
                         }`}
                       >
                         {"badge" in t && t.badge && (
-                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(99,102,241,0.1)] text-[#6366F1]">
+                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(255,255,255,0.1)] text-[#6366F1]">
                             {t.badge}
                           </span>
                         )}
@@ -265,11 +265,11 @@ export default function AIStudioPage() {
                       : "e.g., A minimalist logo mockup on a black marble surface, studio lighting"
                   }
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(99,102,241,0.45)] focus:ring-2 focus:ring-[rgba(99,102,241,0.12)] transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(255,255,255,0.45)] focus:ring-2 focus:ring-[rgba(255,255,255,0.12)] transition-all resize-none"
                   autoFocus
                 />
               ) : (
-                <div className="card bg-[rgba(99,102,241,0.03)] border-[rgba(99,102,241,0.15)] text-center py-8">
+                <div className="card bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.15)] text-center py-8">
                   <Upload size={28} className="mx-auto mb-2 text-[#6366F1]" />
                   <p className="text-sm font-semibold">
                     {TOOLS.find(t => t.id === guidedIntent)?.name} uses files — hit Finish to open the tool.
@@ -283,7 +283,7 @@ export default function AIStudioPage() {
               description: "We'll take you to the tool with everything pre-filled.",
               icon: <Wand2 size={18} />,
               component: (
-                <div className="card bg-[rgba(99,102,241,0.03)] border-[rgba(99,102,241,0.15)] space-y-2">
+                <div className="card bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.15)] space-y-2">
                   <div className="flex items-center gap-2">
                     {(() => {
                       const t = TOOLS.find(x => x.id === guidedIntent);
@@ -340,8 +340,8 @@ export default function AIStudioPage() {
         {/* Wizard image results — inline strip above the workspace */}
         {wizardImages.length > 0 && (
           <motion.div
-            className="mb-5 rounded-2xl p-4"
-            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+            className="mb-5  p-4"
+            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
           >
             <div className="flex items-center justify-between mb-3">
@@ -397,7 +397,7 @@ export default function AIStudioPage() {
         <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-3 items-start">
 
           {/* Left: vertical tool list */}
-          <div className="rounded-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          <div className=" overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <div className="px-3 pt-3 pb-1">
               <p className="text-[8px] uppercase tracking-[0.2em] text-[#6F6D7A] font-semibold px-1 mb-2">Tools</p>
             </div>
@@ -417,14 +417,14 @@ export default function AIStudioPage() {
                     }}
                     className={`relative w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl border ${
                       active
-                        ? "border-[rgba(99,102,241,0.18)]"
+                        ? "border-[rgba(255,255,255,0.18)]"
                         : "hover:bg-[rgba(255,255,255,0.03)] border-transparent"
                     }`}
                   >
                     {active && (
                       <motion.div
                         layoutId="tool-active-bg"
-                        className="absolute inset-0 rounded-xl bg-[rgba(99,102,241,0.07)]"
+                        className="absolute inset-0 rounded-xl bg-[rgba(255,255,255,0.07)]"
                         transition={{ type: "spring", stiffness: 380, damping: 32 }}
                       />
                     )}
@@ -441,7 +441,7 @@ export default function AIStudioPage() {
                       <p className="text-[8px] font-mono text-[#6F6D7A] truncate">{tool.tag}</p>
                     </div>
                     {"badge" in tool && tool.badge && (
-                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(99,102,241,0.1)] text-[#6366F1] shrink-0">
+                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(255,255,255,0.1)] text-[#6366F1] shrink-0">
                         Biz+
                       </span>
                     )}
@@ -454,8 +454,8 @@ export default function AIStudioPage() {
           {/* Right: active tool workspace */}
           <div
             ref={toolPanelRef}
-            className="rounded-2xl overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+            className=" overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           >
             {/* Tool header */}
             <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[rgba(255,255,255,0.05)]">
@@ -473,7 +473,7 @@ export default function AIStudioPage() {
                       <p className="text-[9px] font-mono text-[#6F6D7A]">{t.tag}</p>
                     </div>
                     {"badge" in t && t.badge && (
-                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(99,102,241,0.08)] text-[#6366F1] border border-[rgba(99,102,241,0.2)]">
+                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.08)] text-[#6366F1] border border-[rgba(255,255,255,0.2)]">
                         {t.badge}
                       </span>
                     )}
@@ -654,7 +654,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         {/* Output */}
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22, delay: 0.08 }}
@@ -876,7 +876,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {images.length > 0 ? (
@@ -1047,7 +1047,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1164,7 +1164,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
         </div>
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: !result ? "rgba(255,255,255,0.028)" : bgColor ? bgColor : "repeating-conic-gradient(#e0e0e0 0% 25%, #f8f8f8 0% 50%) 50% / 16px 16px", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+          style={{ background: !result ? "rgba(255,255,255,0.035)" : bgColor ? bgColor : "repeating-conic-gradient(#e0e0e0 0% 25%, #f8f8f8 0% 50%) 50% / 16px 16px", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1228,13 +1228,13 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
       >
         <Film size={16} className="text-[#A78BFA]" />
         <h2 className="text-sm font-bold text-foreground">Image to Video</h2>
-        <span className="text-[9px] bg-[rgba(99,102,241,0.08)] text-[#A78BFA] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
+        <span className="text-[9px] bg-[rgba(255,255,255,0.08)] text-[#A78BFA] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(99,102,241,0.3)] transition-all">
+            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(255,255,255,0.3)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { setFile(f); setPreview(URL.createObjectURL(f)); setResult(null); } }} />
             {preview ? (
               /* eslint-disable-next-line @next/next/no-img-element */
@@ -1271,7 +1271,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
         </div>
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1377,7 +1377,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex flex-col items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1549,7 +1549,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
           </div>
           <motion.div
             className="rounded-xl p-4 flex items-center justify-center"
-            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
           >
             {result ? (
@@ -1626,13 +1626,13 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
       >
         <Brain size={16} className="text-[#A78BFA]" />
         <h2 className="text-sm font-bold text-foreground">Brand LoRA Training</h2>
-        <span className="text-[9px] bg-[rgba(99,102,241,0.08)] text-[#A78BFA] px-2 py-0.5 rounded-full">Business+ Only</span>
+        <span className="text-[9px] bg-[rgba(255,255,255,0.08)] text-[#A78BFA] px-2 py-0.5 rounded-full">Business+ Only</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(99,102,241,0.3)] transition-all">
+            className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(255,255,255,0.3)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
             <Layers size={24} className="mx-auto mb-2 text-muted" />
             <p className="text-xs text-foreground font-medium">
@@ -1683,7 +1683,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           <h3 className="text-xs font-semibold text-foreground mb-3">How it works</h3>
@@ -1695,7 +1695,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
               { step: 4, text: "Use the trained LoRA in Design Studio & Thumbnail Generator" },
             ].map(({ step, text }) => (
               <div key={step} className="flex items-start gap-2">
-                <div className="w-5 h-5 rounded-full bg-[rgba(99,102,241,0.08)] flex items-center justify-center shrink-0">
+                <div className="w-5 h-5 rounded-full bg-[rgba(255,255,255,0.08)] flex items-center justify-center shrink-0">
                   <span className="text-[9px] font-bold text-[#A78BFA]">{step}</span>
                 </div>
                 <p className="text-[10px] text-muted leading-relaxed">{text}</p>
@@ -1703,7 +1703,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
             ))}
           </div>
           {trainingStatus && (
-            <div className="mt-4 p-3 rounded-lg bg-[rgba(99,102,241,0.08)] text-xs text-[#A78BFA]">
+            <div className="mt-4 p-3 rounded-lg bg-[rgba(255,255,255,0.08)] text-xs text-[#A78BFA]">
               {trainingStatus}
             </div>
           )}
@@ -1817,7 +1817,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           <h3 className="text-xs font-semibold text-foreground mb-3">Queue ({results.length})</h3>

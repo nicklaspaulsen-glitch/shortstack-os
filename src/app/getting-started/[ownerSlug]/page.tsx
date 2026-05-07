@@ -155,7 +155,7 @@ export default async function GettingStartedPage({ params }: PageProps) {
 
           {doc.hero_video_url && (
             <div
-              className="mt-10 rounded-2xl overflow-hidden border border-slate-200 shadow-sm aspect-video"
+              className="mt-10  overflow-hidden border border-slate-200 shadow-sm aspect-video"
               style={{ borderColor: `${brandColor}20` }}
             >
               <VideoEmbed url={doc.hero_video_url} />
@@ -231,7 +231,7 @@ function SectionCard({
   const Icon = ICON_MAP[section.icon] || Sparkles;
 
   return (
-    <article className="group rounded-2xl border border-slate-200 bg-white p-6 hover:shadow-md transition-shadow">
+    <article className="group  border border-slate-200 bg-white p-6 hover:shadow-md transition-shadow">
       <div
         className="inline-flex w-10 h-10 items-center justify-center rounded-xl mb-4"
         style={{ background: `${brandColor}15`, color: brandColor }}

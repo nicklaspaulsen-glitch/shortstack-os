@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -658,7 +658,7 @@ export default function SequencesPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
           className="rounded-xl overflow-hidden p-4"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.16)" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.16)" }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -759,7 +759,7 @@ export default function SequencesPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                       className="p-4 flex items-center justify-between border-b border-white/[0.05] last:border-0"
                     >
                       <div className="flex items-center gap-3">
@@ -848,7 +848,7 @@ export default function SequencesPage() {
                         transition={{ duration: 0.18, delay: i * 0.04 }}
                         whileHover={{ y: -2 }}
                         className={`p-4 rounded-xl border ${colors.border}`}
-                        style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
+                        style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
@@ -995,7 +995,7 @@ export default function SequencesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: i * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
               >
                 <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
                 <div className="flex items-start justify-between mb-2">
@@ -1041,7 +1041,7 @@ export default function SequencesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: i * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
               >
                 <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
                 <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -1060,7 +1060,7 @@ export default function SequencesPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                     className="p-3 rounded-lg bg-surface-light border border-border"
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -1167,7 +1167,7 @@ export default function SequencesPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                     className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]"
                   >
                     <div className="flex items-center gap-2">

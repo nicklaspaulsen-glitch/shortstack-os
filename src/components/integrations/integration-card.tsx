@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration card for the Integrations Hub grid.
  *
  * Renders a single Nango-backed integration with:
@@ -121,7 +121,7 @@ export default function IntegrationCard({
     <div
       className={[
         "group relative rounded-xl border bg-surface p-4 hover-lift",
-        "hover:border-[rgba(99,102,241,0.25)]",
+        "hover:border-[rgba(255,255,255,0.25)]",
         isComingSoon ? "opacity-70" : "",
         "border-border",
       ].join(" ")}
@@ -194,7 +194,7 @@ export default function IntegrationCard({
             style={{
               background: "#6366F1",
               boxShadow:
-                "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(99,102,241,0.45)",
+                "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(255,255,255,0.45)",
             }}
           >
             {busy ? (

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * OnboardingChecklist — Persistent new-user activation widget.
@@ -156,7 +156,7 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
 
   return (
     <div
-      className="rounded-xl border border-[rgba(99,102,241,0.16)] bg-[#101012] overflow-hidden"
+      className="rounded-xl border border-[rgba(255,255,255,0.12)] bg-[#101012] overflow-hidden"
       role="region"
       aria-label="Getting started checklist"
     >
@@ -213,7 +213,7 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
 
       {/* Items */}
       {!collapsed && (
-        <div className="border-t border-[rgba(99,102,241,0.07)]">
+        <div className="border-t border-[rgba(255,255,255,0.07)]">
           {ITEMS.map((item, idx) => {
             const done =
               completedFromApi.includes(item.id) || (stored.manualChecked || []).includes(item.id);
@@ -223,7 +223,7 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
               <div
                 key={item.id}
                 className={`flex items-start gap-3 px-4 py-2.5 group ${
-                  !isLast ? "border-b border-[rgba(99,102,241,0.05)]" : ""
+                  !isLast ? "border-b border-[rgba(255,255,255,0.05)]" : ""
                 } ${done ? "opacity-50" : "hover:bg-[#17171A]"} transition-colors`}
               >
                 {/* Checkbox — toggle manually or confirmed via API */}

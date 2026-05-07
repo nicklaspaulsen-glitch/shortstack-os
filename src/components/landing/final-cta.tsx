@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { ArrowRight, Calendar, Shield } from "lucide-react";
@@ -13,7 +13,7 @@ export default function FinalCTA() {
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 70%)",
+              "radial-gradient(ellipse, rgba(255,255,255,0.07) 0%, transparent 70%)",
             filter: "blur(40px)",
           }}
         />
@@ -22,8 +22,8 @@ export default function FinalCTA() {
           <div
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-medium mb-6"
             style={{
-              background: "rgba(99,102,241,0.08)",
-              border: "1px solid rgba(99,102,241,0.15)",
+              background: "rgba(255,255,255,0.07)",
+              border: "1px solid rgba(255,255,255,0.12)",
               color: "#A78BFA",
             }}
           >
@@ -60,7 +60,7 @@ export default function FinalCTA() {
               style={{
                 background: "linear-gradient(135deg, #6366F1, #4F46E5)",
                 color: "#fff",
-                boxShadow: "0 0 40px rgba(99,102,241,0.15)",
+                boxShadow: "0 0 40px rgba(255,255,255,0.12)",
               }}
             >
               Start your 7-day free trial
@@ -74,7 +74,7 @@ export default function FinalCTA() {
               className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm text-white transition-all hover:border-white/20"
               style={{
                 background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.07)",
               }}
             >
               <Calendar size={15} className="text-gray-400" />

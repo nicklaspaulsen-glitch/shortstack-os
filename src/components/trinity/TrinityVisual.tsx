@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * TrinityOrbVisual — the faceted low-poly 3D head SVG that sits at the
@@ -83,10 +83,10 @@ export default function TrinityOrbVisual({
         style={{
           background:
             state === "listening"
-              ? "radial-gradient(circle at 50% 50%, rgba(99,102,241,0.65), rgba(167,139,250,0.30) 45%, transparent 72%)"
+              ? "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.65), rgba(167,139,250,0.30) 45%, transparent 72%)"
               : state === "thinking"
-              ? "radial-gradient(circle at 50% 50%, rgba(99,102,241,0.55), rgba(79,70,229,0.25) 50%, transparent 75%)"
-              : "radial-gradient(circle at 50% 50%, rgba(99,102,241,0.42), rgba(99,102,241,0.10) 50%, transparent 70%)",
+              ? "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.55), rgba(79,70,229,0.25) 50%, transparent 75%)"
+              : "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.42), rgba(255,255,255,0.07) 50%, transparent 70%)",
           animation: reduced ? undefined : `trinity-breath ${breathSpeed} ease-in-out infinite`,
         }}
         aria-hidden
@@ -96,7 +96,7 @@ export default function TrinityOrbVisual({
         className="absolute inset-[-4%] rounded-full opacity-70 pointer-events-none"
         style={{
           background:
-            "conic-gradient(from 0deg, rgba(99,102,241,0) 0%, rgba(99,102,241,0.60) 22%, rgba(167,139,250,0.45) 50%, rgba(199,210,254,0.35) 78%, rgba(99,102,241,0) 100%)",
+            "conic-gradient(from 0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.60) 22%, rgba(167,139,250,0.45) 50%, rgba(199,210,254,0.35) 78%, rgba(255,255,255,0) 100%)",
           filter: "blur(5px)",
           animation: reduced ? undefined : `trinity-spin ${ringSpeed} linear infinite`,
         }}
@@ -109,7 +109,7 @@ export default function TrinityOrbVisual({
           aria-hidden
           className="absolute inset-0 rounded-full pointer-events-none"
           style={{
-            border: "1px solid rgba(99,102,241,0.60)",
+            border: "1px solid rgba(255,255,255,0.60)",
             animation: reduced
               ? undefined
               : `trinity-voicering 1.6s ease-out ${i * 0.5}s infinite`,

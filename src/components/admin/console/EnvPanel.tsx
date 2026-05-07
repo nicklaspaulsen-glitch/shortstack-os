@@ -14,7 +14,7 @@ interface EnvPanelProps {
 export default function EnvPanel({ items }: EnvPanelProps) {
   if (!items) {
     return (
-      <div className="rounded-2xl border border-border bg-surface p-4">
+      <div className=" border border-border bg-surface p-4">
         <h2 className="text-xs font-bold mb-3 text-foreground">Env-var presence</h2>
         <p className="text-[11px] text-muted">Unavailable</p>
       </div>
@@ -24,7 +24,7 @@ export default function EnvPanel({ items }: EnvPanelProps) {
   const missing = items.filter((i) => !i.present);
 
   return (
-    <div className="rounded-2xl border border-border bg-surface p-4">
+    <div className=" border border-border bg-surface p-4">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xs font-bold text-foreground">Env-var presence</h2>
         <span

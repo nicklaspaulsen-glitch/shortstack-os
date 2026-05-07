@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
@@ -82,16 +82,16 @@ export default function PricingPreview() {
           {PLANS.map((plan, i) => (
             <Reveal key={plan.name} delay={0.1 * i}>
               <div
-                className="rounded-2xl p-7 h-full flex flex-col transition-all duration-300 hover:-translate-y-1"
+                className="p-7 h-full flex flex-col transition-all duration-300 hover:-translate-y-1"
                 style={{
                   background: plan.featured
-                    ? "rgba(99,102,241,0.05)"
+                    ? "rgba(255,255,255,0.05)"
                     : "rgba(255,255,255,0.02)",
                   border: plan.featured
-                    ? "1px solid rgba(99,102,241,0.3)"
+                    ? "1px solid rgba(255,255,255,0.25)"
                     : "1px solid rgba(255,255,255,0.05)",
                   boxShadow: plan.featured
-                    ? "0 0 30px rgba(99,102,241,0.08)"
+                    ? "0 0 30px rgba(255,255,255,0.07)"
                     : "none",
                 }}
               >

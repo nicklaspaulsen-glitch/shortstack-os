@@ -174,7 +174,7 @@ export default function AffiliateDetailPage() {
 
   if (!affiliate) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-card/40 p-12 text-center">
+      <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
         <p className="text-sm text-muted">Affiliate not found.</p>
         <Link href="/dashboard/affiliates" className="text-gold underline">
           Back to affiliates
@@ -260,7 +260,7 @@ export default function AffiliateDetailPage() {
         />
       </div>
 
-      <div className="rounded-2xl border border-border bg-card/40 p-5 space-y-3">
+      <div className=" border border-border bg-card/40 p-5 space-y-3">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">
           Referral link
         </h3>
@@ -285,7 +285,7 @@ export default function AffiliateDetailPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-border bg-card/40 p-5 space-y-3">
+        <div className=" border border-border bg-card/40 p-5 space-y-3">
           <h3 className="font-semibold">Recent referrals</h3>
           {referrals.length === 0 ? (
             <p className="text-xs text-muted">No referrals yet.</p>
@@ -317,7 +317,7 @@ export default function AffiliateDetailPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-border bg-card/40 p-5 space-y-3">
+        <div className=" border border-border bg-card/40 p-5 space-y-3">
           <h3 className="font-semibold">Commissions</h3>
           {commissions.length === 0 ? (
             <p className="text-xs text-muted">No commissions yet.</p>

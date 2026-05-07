@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   SiMailchimp,
@@ -76,11 +76,11 @@ export default function ReplaceStack() {
 
         <Reveal delay={0.5}>
           <div
-            className="text-center mt-10 py-7 rounded-2xl relative overflow-hidden"
+            className="text-center mt-10 py-7 relative overflow-hidden"
             style={{
               background:
-                "linear-gradient(135deg, rgba(99,102,241,0.08), rgba(167,139,250,0.04))",
-              border: "1px solid rgba(99,102,241,0.18)",
+                "linear-gradient(135deg, rgba(255,255,255,0.07), rgba(167,139,250,0.04))",
+              border: "1px solid rgba(255,255,255,0.18)",
             }}
           >
             {/* Soft glow */}
@@ -88,7 +88,7 @@ export default function ReplaceStack() {
               className="absolute inset-0 -z-0 opacity-40 blur-3xl pointer-events-none"
               style={{
                 background:
-                  "radial-gradient(circle at 30% 50%, rgba(99,102,241,0.18) 0%, transparent 60%)",
+                  "radial-gradient(circle at 30% 50%, rgba(255,255,255,0.18) 0%, transparent 60%)",
               }}
             />
             <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1.5 relative">

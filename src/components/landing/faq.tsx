@@ -13,9 +13,9 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
       onClick={() => setOpen(!open)}
       className="w-full text-left rounded-xl p-5 transition-all"
       style={{
-        background: open ? "rgba(99,102,241,0.04)" : "rgba(255,255,255,0.02)",
+        background: open ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
         border: `1px solid ${
-          open ? "rgba(99,102,241,0.15)" : "rgba(255,255,255,0.05)"
+          open ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.05)"
         }`,
       }}
     >

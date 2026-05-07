@@ -85,7 +85,7 @@ export default function PortalAgencyRoomPage() {
           subtitle="Live view of every agent working on your project."
           gradient="gold"
         />
-        <div className="rounded-2xl border border-white/10 bg-surface p-8 text-center">
+        <div className=" border border-white/10 bg-surface p-8 text-center">
           <Sparkles className="mx-auto mb-3 text-gold/60" size={32} />
           <h2 className="text-base font-semibold mb-1">Your room isn&apos;t set up yet</h2>
           <p className="text-[12px] text-muted max-w-md mx-auto">

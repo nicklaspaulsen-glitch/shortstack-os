@@ -227,7 +227,7 @@ export default function LlmCostsDashboard() {
       </div>
 
       {/* Daily spend sparkline */}
-      <section className="rounded-2xl border border-border bg-surface p-5">
+      <section className=" border border-border bg-surface p-5">
         <header className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-sm font-semibold">Daily spend (this month)</h2>
@@ -284,7 +284,7 @@ export default function LlmCostsDashboard() {
 
       {/* Top tasks + Top models — side by side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <section className="rounded-2xl border border-border bg-surface p-5">
+        <section className=" border border-border bg-surface p-5">
           <header className="mb-4">
             <h2 className="text-sm font-semibold">Top tasks by cost</h2>
             <p className="text-[11px] text-muted">This month</p>
@@ -325,7 +325,7 @@ export default function LlmCostsDashboard() {
           )}
         </section>
 
-        <section className="rounded-2xl border border-border bg-surface p-5">
+        <section className=" border border-border bg-surface p-5">
           <header className="mb-4">
             <h2 className="text-sm font-semibold">Top models by cost</h2>
             <p className="text-[11px] text-muted">This month</p>
@@ -364,7 +364,7 @@ export default function LlmCostsDashboard() {
       </div>
 
       {/* Optimisation hints */}
-      <section className="rounded-2xl border border-border bg-surface p-5">
+      <section className=" border border-border bg-surface p-5">
         <header className="mb-4 flex items-center justify-between">
           <div>
             <h2 className="text-sm font-semibold">Optimisation hints</h2>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * TrinityPrompt — Cmd+K quick-prompt modal for the top navbar.
@@ -98,17 +98,17 @@ export default function TrinityPrompt() {
         style={{ maxWidth: "min(96vw, 560px)" }}
       >
         <div
-          className="rounded-2xl border bg-background shadow-2xl overflow-hidden"
+          className=" border bg-background shadow-2xl overflow-hidden"
           style={{
-            borderColor: "rgba(99,102,241,0.25)",
+            borderColor: "rgba(255,255,255,0.15)",
             boxShadow:
-              "0 0 0 1px rgba(99,102,241,0.12), 0 24px 60px rgba(0,0,0,0.45)",
+              "0 0 0 1px rgba(255,255,255,0.1), 0 24px 60px rgba(0,0,0,0.45)",
           }}
         >
           {/* Header */}
           <div
             className="flex items-center gap-2 px-4 py-3 border-b"
-            style={{ borderColor: "rgba(99,102,241,0.12)" }}
+            style={{ borderColor: "rgba(255,255,255,0.1)" }}
           >
             <Sparkles
               size={14}
@@ -120,7 +120,7 @@ export default function TrinityPrompt() {
             </span>
             <span
               className="ml-auto text-[10px] text-muted/60 font-mono border rounded px-1.5 py-0.5"
-              style={{ borderColor: "rgba(99,102,241,0.15)" }}
+              style={{ borderColor: "rgba(255,255,255,0.12)" }}
             >
               esc
             </span>
@@ -158,8 +158,8 @@ export default function TrinityPrompt() {
             <div
               className="mx-4 mb-3 rounded-xl px-4 py-3 text-sm"
               style={{
-                background: "rgba(99,102,241,0.07)",
-                border: "1px solid rgba(99,102,241,0.15)",
+                background: "rgba(255,255,255,0.07)",
+                border: "1px solid rgba(255,255,255,0.12)",
               }}
             >
               {sending ? (
@@ -178,7 +178,7 @@ export default function TrinityPrompt() {
           {/* Footer */}
           <div
             className="flex items-center justify-between px-4 py-2.5 border-t"
-            style={{ borderColor: "rgba(99,102,241,0.08)" }}
+            style={{ borderColor: "rgba(255,255,255,0.07)" }}
           >
             <span className="text-[10px] text-muted/60">
               Enter to send · Shift+Enter for new line

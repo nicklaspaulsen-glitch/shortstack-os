@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -311,7 +311,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.2)" }}
+          className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.2)" }}
         >
           <div className="flex items-center gap-2 mb-3">
             <Users size={16} className="text-gold" />
@@ -361,7 +361,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                 transition={{ delay: i * 0.06 }}
                 whileHover={{ y: -2, scale: 1.01 }}
                 onClick={() => setSelectedProfile(p.id)}
-                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
                 className={`rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "!border-indigo-500/40 bg-indigo-500/8" : "hover:border-white/10"}`}
               >
                 <div className="flex items-center justify-between">

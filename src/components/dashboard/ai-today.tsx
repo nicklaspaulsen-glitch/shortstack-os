@@ -80,7 +80,7 @@ export default function AiToday() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl p-5 bg-card border border-border">
+      <div className=" p-5 bg-card border border-border">
         <div className="flex items-center gap-2 mb-4">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center animate-pulse"
@@ -108,7 +108,7 @@ export default function AiToday() {
   if (!actions || actions.length === 0) return null;
 
   return (
-    <section className="relative rounded-2xl p-5 bg-card border border-border overflow-hidden">
+    <section className="relative  p-5 bg-card border border-border overflow-hidden">
       {/* Ambient gold glow keyed to the AI vibe */}
       <div
         className="absolute -top-12 -right-12 w-48 h-48 rounded-full pointer-events-none blur-3xl opacity-50"

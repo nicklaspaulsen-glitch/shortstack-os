@@ -236,7 +236,7 @@ export default function NotionSyncPage() {
       ) : (
         /* Not connected state */
         <div className="flex flex-col items-center gap-6 py-10">
-          <motion.div className="w-20 h-20 rounded-2xl glass border border-white/10 flex items-center justify-center text-white/30" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+          <motion.div className="w-20 h-20  glass border border-white/10 flex items-center justify-center text-white/30" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
             <NotionIcon />
           </motion.div>
           <div className="text-center">

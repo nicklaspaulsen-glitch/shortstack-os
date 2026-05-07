@@ -969,7 +969,7 @@ function WorkflowBuilderInner() {
             {nodes.length === 0 && (
               <Panel position="top-center">
                 <div className="mt-32 text-center">
-                  <div className="w-14 h-14 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-4">
+                  <div className="w-14 h-14  bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-4">
                     <Zap size={24} className="text-gold" />
                   </div>
                   <h3 className="text-sm font-semibold text-foreground mb-1">Build your workflow</h3>
@@ -1115,7 +1115,7 @@ function WorkflowBuilderInner() {
       {showTemplates && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowTemplates(false)} />
-          <div className="relative w-full max-w-3xl mx-4 glass-md border border-border rounded-2xl shadow-2xl overflow-hidden">
+          <div className="relative w-full max-w-3xl mx-4 glass-md border border-border  shadow-2xl overflow-hidden">
             {/* Modal header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
               <div>

@@ -241,7 +241,7 @@ export default function WhatsAppPage() {
       {/* Compose modal */}
       {showCompose && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#111] shadow-2xl overflow-hidden">
+          <div className="w-full max-w-2xl  border border-white/10 bg-[#111] shadow-2xl overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
               <div className="flex items-center gap-2">

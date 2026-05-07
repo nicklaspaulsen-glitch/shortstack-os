@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -587,7 +587,7 @@ export default function CalendarPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                       className="flex items-center gap-3 p-3 rounded-lg border border-border transition-colors">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${CATEGORY_CONFIG[evt.category].bg}`}>
                         <span className={CATEGORY_CONFIG[evt.category].color}>{TYPE_ICONS[evt.type]}</span>
@@ -633,7 +633,7 @@ export default function CalendarPage() {
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
                       className="rounded-xl overflow-hidden relative"
-                      style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                      style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
                     >
                       <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 left-0 right-0" />
                       <div className="flex justify-between text-xs p-2 pt-3">
@@ -681,7 +681,7 @@ export default function CalendarPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                       className="flex items-center gap-3 p-3 rounded-lg border border-border"
                     >
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${daysLeft <= 1 ? "bg-red-400/10" : daysLeft <= 3 ? "bg-yellow-400/10" : "bg-blue-400/10"}`}>
@@ -716,7 +716,7 @@ export default function CalendarPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                     className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border"
                   >
                     <Repeat size={12} className="text-purple-400 shrink-0" />
@@ -738,7 +738,7 @@ export default function CalendarPage() {
       {/* Create Event Modal */}
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreate(false)}>
-          <div className="bg-surface rounded-2xl border border-border w-full max-w-lg p-5 space-y-3" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-3" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-gold" /> New Event</h3>
               <button onClick={() => setShowCreate(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>

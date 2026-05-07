@@ -1649,7 +1649,7 @@ export default function ScraperPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => setShowOutreachModal(false)}>
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
           <div
-            className="relative w-[95%] max-w-2xl max-h-[85vh] bg-[#141414] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className="relative w-[95%] max-w-2xl max-h-[85vh] bg-[#141414] border border-white/10  shadow-2xl flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {/* Modal Header */}

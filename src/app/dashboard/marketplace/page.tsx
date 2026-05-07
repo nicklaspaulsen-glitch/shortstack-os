@@ -730,7 +730,7 @@ export default function MarketplacePage() {
           onClick={() => setSelectedPlugin(null)}
         >
           <div
-            className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-[#0f1117] shadow-2xl"
+            className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto  border border-border bg-[#0f1117] shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal header */}

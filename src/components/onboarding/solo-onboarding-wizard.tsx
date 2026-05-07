@@ -298,7 +298,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
       </div>
 
       {/* ─── Step body ────────────────────────────────────────── */}
-      <div className="rounded-2xl border border-border bg-surface p-6 min-h-[480px]">
+      <div className=" border border-border bg-surface p-6 min-h-[480px]">
         {stepKey === "user_type" && (
           <StepUserType
             selected={state.user_type}
@@ -441,7 +441,7 @@ function StepUserType({
   return (
     <div>
       <div className="text-center mb-6">
-        <div className="inline-flex w-14 h-14 rounded-2xl bg-gold/10 border border-gold/20 items-center justify-center mb-3">
+        <div className="inline-flex w-14 h-14  bg-gold/10 border border-gold/20 items-center justify-center mb-3">
           <Sparkles size={24} className="text-gold" />
         </div>
         <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
@@ -455,7 +455,7 @@ function StepUserType({
             <button
               key={t.id}
               onClick={() => onPick(t.id)}
-              className={`relative text-left p-4 rounded-2xl border transition-all hover-lift ${
+              className={`relative text-left p-4  border transition-all hover-lift ${
                 isSelected
                   ? "border-gold bg-gold/10 shadow-[0_0_0_2px_rgba(201,168,76,0.2)]"
                   : "border-border bg-surface-light hover:border-gold/30"

@@ -321,7 +321,7 @@ export default function EmailTemplatesPage() {
           </div>
         ) : (
           <>
-            <div className="rounded-2xl bg-surface-1 border border-border-subtle p-5 mb-6">
+            <div className=" bg-surface-1 border border-border-subtle p-5 mb-6">
               <p className="text-sm text-text-secondary leading-relaxed">
                 <Info size={14} className="inline mr-1.5 -mt-0.5" />
                 {KIND_DESCRIPTIONS[activeKind]}

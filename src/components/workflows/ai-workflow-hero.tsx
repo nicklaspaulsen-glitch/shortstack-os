@@ -105,7 +105,7 @@ export default function AiWorkflowHero({
 
   return (
     <section
-      className="relative rounded-2xl p-5 md:p-6 overflow-hidden"
+      className="relative  p-5 md:p-6 overflow-hidden"
       style={{
         background:
           "linear-gradient(135deg, rgba(200,168,85,0.06), rgba(200,168,85,0.02))",

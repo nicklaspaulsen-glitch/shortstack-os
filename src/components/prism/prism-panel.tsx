@@ -9,31 +9,27 @@ import {
   PRISM_GLASS_STRONG,
   PRISM_BORDERS,
   PRISM_RAINBOW_GRADIENT,
+  PRISM_SHADOWS,
 } from "./constants";
 
 /**
- * PrismPanel — glass container with the prism design language.
+ * PrismPanel — the prism split glass container.
  *
- * Replaces the nearly-invisible `.glass` CSS class with the real
- * prism surface: inline glass background, indigo-tinted borders,
- * optional rainbow top bar, optional ambient glow circles.
+ * Sharp corners (zero border-radius), white-tinted glass,
+ * red accent rainbow bar, 3D perspective tilt on hover.
  *
- * Usage:
- *   <PrismPanel rainbow glow>
- *     <h2>Revenue Overview</h2>
- *     <Chart ... />
- *   </PrismPanel>
+ * Reference: _design-previews/93-prism-dashboard.html
  */
 
 interface PrismPanelProps {
   children: ReactNode;
-  /** Show the signature rainbow gradient top bar (2px) */
+  /** Show the prismatic gradient top bar (2px) */
   rainbow?: boolean;
-  /** Show ambient glow circles (indigo top-right, emerald bottom-left) */
+  /** Show ambient glow circles */
   glow?: boolean;
   /** Use stronger glass surface for hero-level panels */
   strong?: boolean;
-  /** Border intensity: "subtle" | "default" | "strong" */
+  /** Border intensity */
   border?: "subtle" | "default" | "strong";
   /** Custom className for outer wrapper */
   className?: string;
@@ -41,6 +37,8 @@ interface PrismPanelProps {
   delay?: number;
   /** Custom padding override */
   padding?: string;
+  /** Enable 3D tilt on hover */
+  tilt?: boolean;
 }
 
 export default function PrismPanel({
@@ -52,15 +50,17 @@ export default function PrismPanel({
   className = "",
   delay = 0,
   padding = "px-6 py-5",
+  tilt = false,
 }: PrismPanelProps) {
   const glass = strong ? PRISM_GLASS_STRONG : PRISM_GLASS;
 
   return (
     <motion.div
-      className={`relative rounded-2xl border overflow-hidden ${padding} ${className}`}
+      className={`relative border overflow-hidden ${padding} ${className}`}
       style={{
         ...glass,
         borderColor: PRISM_BORDERS[border],
+        boxShadow: PRISM_SHADOWS.card,
       }}
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
@@ -69,8 +69,16 @@ export default function PrismPanel({
         delay,
         ease: [...PRISM_EASE],
       }}
+      whileHover={
+        tilt
+          ? {
+              y: -4,
+              transition: { duration: 0.35, ease: [...PRISM_EASE] },
+            }
+          : undefined
+      }
     >
-      {/* Rainbow top bar */}
+      {/* Prismatic top bar */}
       {rainbow && (
         <div
           className="absolute top-0 left-0 right-0 h-[2px]"
@@ -78,11 +86,17 @@ export default function PrismPanel({
         />
       )}
 
-      {/* Ambient glow */}
+      {/* Ambient glow — red top-right, violet bottom-left */}
       {glow && (
         <>
-          <div className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 rounded-full bg-[#6366F1] opacity-[0.06] blur-3xl" />
-          <div className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#10B981] opacity-[0.04] blur-2xl" />
+          <div
+            className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 blur-3xl"
+            style={{ background: "#FF2D2D", opacity: 0.04, borderRadius: "50%" }}
+          />
+          <div
+            className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 blur-2xl"
+            style={{ background: "#8B5CF6", opacity: 0.03, borderRadius: "50%" }}
+          />
         </>
       )}
 

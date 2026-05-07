@@ -68,9 +68,9 @@ const SIZE_GRID: Record<StatCardSize, string> = {
 };
 
 const SIZE_VALUE_CLASS: Record<StatCardSize, string> = {
-  "bento-1x1": "font-display text-[clamp(1.75rem,1.4rem+0.8vw,2.25rem)] leading-[1.0]",
-  "bento-2x1": "font-display text-[clamp(2rem,1.6rem+1vw,2.75rem)] leading-[1.0]",
-  "bento-2x2": "font-display text-[clamp(2.5rem,1.8rem+2vw,3.5rem)] leading-[0.96]",
+  "bento-1x1": "text-[clamp(1.75rem,1.4rem+0.8vw,2.25rem)] font-semibold leading-[1.0]",
+  "bento-2x1": "text-[clamp(2rem,1.6rem+1vw,2.75rem)] font-semibold leading-[1.0]",
+  "bento-2x2": "text-[clamp(2.5rem,1.8rem+2vw,3.5rem)] font-semibold leading-[0.96]",
 };
 
 const SIZE_PADDING: Record<StatCardSize, string> = {
@@ -129,8 +129,8 @@ export default function StatCard({
   sparkline,
   index = 0,
 }: StatCardProps) {
-  // May 7: prism split — cycle through prism accents by index, fallback to indigo
-  const PRISM_CYCLE = ["#10B981", "#3B82F6", "#06B6D4", "#8B5CF6", "#F59E0B"];
+  // May 7 v2: real prism split — red leads, then cycles through spectrum
+  const PRISM_CYCLE = ["#FF2D2D", "#8B5CF6", "#3B82F6", "#06B6D4", "#10B981", "#F59E0B"];
   const accent = accentColor ?? PRISM_CYCLE[index % PRISM_CYCLE.length];
   const changeColor = {
     positive: tokens.status.success,
@@ -177,30 +177,30 @@ export default function StatCard({
     <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
-      className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden rounded-xl flex flex-col gap-1.5 tilt-3d`}
-      // May 7: Prism split design — glass surface with bottom accent bar,
-      // indigo-tinted border. Replaces old left-stripe pattern.
+      className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden flex flex-col gap-1.5 tilt-3d`}
+      // May 7 v2: Prism split — sharp corners, white-tinted glass,
+      // red-glow shadows. Matches 93-prism-dashboard.html reference.
       style={{
-        background: "rgba(255,255,255,0.028)",
+        background: "rgba(255,255,255,0.035)",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
-        border: `1px solid rgba(99,102,241,0.1)`,
+        border: `1px solid rgba(255,255,255,0.07)`,
         boxShadow: [
           "0 1px 0 rgba(255,255,255,0.04) inset",
-          "0 2px 8px rgba(0,0,0,0.20)",
+          "0 2px 8px rgba(0,0,0,0.25)",
           `0 0 24px -8px ${accent}18`,
         ].join(", "),
       }}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 10 }}
-      transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1], delay: index * 0.06 }}
+      transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
       data-premium={premium ? "true" : undefined}
       whileHover={{
         y: -2,
-        borderColor: "rgba(99,102,241,0.18)",
+        borderColor: "rgba(255,255,255,0.18)",
         boxShadow: [
           "0 1px 0 rgba(255,255,255,0.06) inset",
-          "0 4px 12px rgba(0,0,0,0.24)",
+          "0 4px 12px rgba(0,0,0,0.30)",
           `0 0 32px -8px ${accent}30`,
         ].join(", "),
         transition: { duration: 0.2 },
@@ -227,16 +227,16 @@ export default function StatCard({
       <div className="relative">
         <div className="flex items-center justify-between mb-2">
           <span
-            className="text-[9px] font-medium uppercase tracking-[0.18em]"
-            style={{ color: "#6F6D7A" }}
+            className="text-[11px] font-medium uppercase tracking-[1.2px]"
+            style={{ color: "#4A4A5A" }}
           >
             {label}
           </span>
           {icon && (
             <span
-              className="transition-all duration-220 ease-out"
+              className="transition-all duration-200 ease-out"
               style={{
-                color: `${accent}66`,
+                color: `${accent}88`,
               }}
             >
               {icon}
@@ -244,8 +244,8 @@ export default function StatCard({
           )}
         </div>
         <span
-          className={`${SIZE_VALUE_CLASS[size]} tracking-[-0.025em] tabular-nums`}
-          style={{ color: accent, fontVariantNumeric: "tabular-nums" }}
+          className={`${SIZE_VALUE_CLASS[size]} tracking-[-0.5px] tabular-nums`}
+          style={{ color: "#F0F0F4", fontFamily: "'JetBrains Mono', monospace", fontVariantNumeric: "tabular-nums" }}
         >
           {typeof value === "string" && value.startsWith("$")
             ? `$${animatedNum.toLocaleString()}`

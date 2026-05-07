@@ -153,7 +153,7 @@ export default function OnboardingVerticalPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="rounded-2xl bg-white/5 h-80 animate-pulse" />
+              <div key={i} className=" bg-white/5 h-80 animate-pulse" />
             ))}
           </div>
         ) : (
@@ -168,11 +168,11 @@ export default function OnboardingVerticalPage() {
                   type="button"
                   disabled={isDisabled}
                   onClick={() => void pick(v.vertical)}
-                  className={`group relative text-left rounded-2xl border bg-gradient-to-br ${
+                  className={`group relative text-left  border bg-gradient-to-br ${
                     ACCENT_BG[v.accent] ?? ACCENT_BG.gold
                   } p-7 transition-all hover:-translate-y-1 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0`}
                 >
-                  <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-black/30 backdrop-blur-sm text-white mb-5">
+                  <div className="inline-flex h-14 w-14 items-center justify-center  bg-black/30 backdrop-blur-sm text-white mb-5">
                     <Icon size={24} />
                   </div>
                   <h2 className="text-2xl font-semibold text-white mb-2">

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   FileBarChart,
@@ -58,7 +58,7 @@ export default function HowItWorks() {
       className="py-20 md:py-28 px-6 relative overflow-hidden"
       style={{
         background:
-          "linear-gradient(180deg, rgba(99,102,241,0.02) 0%, transparent 100%)",
+          "linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%)",
       }}
     >
       {/* Ambient glow blob */}
@@ -66,7 +66,7 @@ export default function HowItWorks() {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-30 pointer-events-none blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
         }}
       />
 
@@ -95,7 +95,7 @@ export default function HowItWorks() {
 function StepCard({ step, idx }: { step: Step; idx: number }) {
   return (
     <div
-      className="relative h-full flex flex-col rounded-2xl p-6 md:p-7 transition-all duration-500 hover:-translate-y-1 group"
+      className="relative h-full flex flex-col p-6 md:p-7 transition-all duration-500 hover:-translate-y-1 group"
       style={{
         background:
           "linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.01) 100%)",
@@ -107,8 +107,8 @@ function StepCard({ step, idx }: { step: Step; idx: number }) {
         <div
           className="w-12 h-12 rounded-xl flex items-center justify-center"
           style={{
-            background: "rgba(99,102,241,0.08)",
-            border: "1px solid rgba(99,102,241,0.18)",
+            background: "rgba(255,255,255,0.07)",
+            border: "1px solid rgba(255,255,255,0.18)",
           }}
         >
           <step.icon size={20} style={{ color: "#A78BFA" }} />
@@ -258,7 +258,7 @@ function StepVisual({ idx }: { idx: number }) {
               background:
                 i === 6
                   ? "linear-gradient(180deg, #6366F1, #4F46E5)"
-                  : "rgba(99,102,241,0.25)",
+                  : "rgba(255,255,255,0.25)",
               animation: "bar-grow 1.4s ease-out forwards",
               animationDelay: `${i * 0.08}s`,
               transformOrigin: "bottom",

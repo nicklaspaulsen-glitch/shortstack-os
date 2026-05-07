@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Unified Conversations Inbox
@@ -435,7 +435,7 @@ export default function ConversationsPage() {
             </div>
           ) : conversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.12)] flex items-center justify-center">
+              <div className="w-12 h-12  bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.12)] flex items-center justify-center">
                 <Inbox size={20} className="text-[#6366F1]/60" />
               </div>
               <div>
@@ -624,7 +624,7 @@ function ConversationRow({
       initial={{ opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.18, delay: index * 0.04 }}
-      whileHover={{ backgroundColor: active ? undefined : "rgba(99,102,241,0.06)" }}
+      whileHover={{ backgroundColor: active ? undefined : "rgba(255,255,255,0.06)" }}
       onClick={onClick}
       className={`w-full text-left px-4 py-3 border-b border-white/5 transition-colors ${
         active ? "bg-indigo-500/10 border-l-2 border-l-indigo-500/60" : ""
@@ -680,7 +680,7 @@ function MessageBubble({ m }: { m: Message }) {
       className={`flex ${inbound ? "justify-start" : "justify-end"}`}
     >
       <div
-        className={`max-w-[70%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+        className={`max-w-[70%]  px-4 py-2.5 text-sm leading-relaxed ${
           inbound
             ? "glass text-white/90"
             : "bg-indigo-500/90 text-white"

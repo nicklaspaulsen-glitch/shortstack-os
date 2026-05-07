@@ -85,7 +85,7 @@ export default function IntakeFormClient({ formId }: { formId: string }) {
   if (notFound || !form) {
     return (
       <div className="min-h-screen bg-[#0a0a0c] flex flex-col items-center justify-center gap-3 px-6 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-2">
+        <div className="w-16 h-16  bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-2">
           <span className="text-3xl select-none">🔒</span>
         </div>
         <h1 className="text-xl font-semibold text-white/70">Form not found</h1>
@@ -119,7 +119,7 @@ export default function IntakeFormClient({ formId }: { formId: string }) {
         {/* Header */}
         <div className="mb-8 text-center">
           <div
-            className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4"
+            className="inline-flex items-center justify-center w-12 h-12  mb-4"
             style={{ background: `${accent}18`, border: `1px solid ${accent}30` }}
           >
             <ChevronRight size={20} style={{ color: accent }} />

@@ -89,7 +89,7 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
       : 100;
 
   const body = (
-    <div className={inline ? "rounded-2xl border border-red-500/20 bg-red-500/[0.04] p-5" : "p-6"}>
+    <div className={inline ? " border border-red-500/20 bg-red-500/[0.04] p-5" : "p-6"}>
       <div className="flex items-start gap-3 mb-4">
         <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center shrink-0">
           <AlertTriangle size={18} className="text-red-400" />
@@ -157,7 +157,7 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
-      <div className="relative w-full max-w-md mx-4 bg-surface border border-border/50 rounded-2xl shadow-2xl shadow-black/50 fade-in">
+      <div className="relative w-full max-w-md mx-4 bg-surface border border-border/50  shadow-2xl shadow-black/50 fade-in">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border/30">
           <div className="flex items-center gap-2">
             <CreditCard size={14} className="text-gold" />

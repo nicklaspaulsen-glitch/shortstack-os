@@ -172,7 +172,7 @@ export default function FunnelsPage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+          <div className="w-16 h-16  bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
             <Layers size={28} className="text-purple-400" />
           </div>
           <div className="text-center">

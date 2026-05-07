@@ -33,7 +33,7 @@ export default function TrinityHistory({ messages, sending }: Props) {
       {messages.map((m, i) => (
         <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
           <div
-            className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed whitespace-pre-wrap ${
+            className={`max-w-[85%]  px-3.5 py-2.5 text-xs leading-relaxed whitespace-pre-wrap ${
               m.role === "user"
                 ? "bg-gold/15 text-foreground border border-gold/25 rounded-br-sm"
                 : "bg-surface-light text-foreground border border-border rounded-bl-sm"
@@ -60,7 +60,7 @@ export default function TrinityHistory({ messages, sending }: Props) {
       ))}
       {sending && (
         <div className="flex justify-start">
-          <div className="bg-surface-light border border-border rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1">
+          <div className="bg-surface-light border border-border  rounded-bl-sm px-4 py-3 flex gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: "0ms" }} />
             <span className="w-1.5 h-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: "150ms" }} />
             <span className="w-1.5 h-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: "300ms" }} />

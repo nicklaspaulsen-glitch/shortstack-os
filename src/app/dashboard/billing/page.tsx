@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Agency-owner billing hub. Shows:
@@ -241,7 +241,7 @@ export default function BillingPage() {
 
       {/* ─── Current plan hero ─────────────────────────────────────── */}
       <motion.div
-        className="rounded-2xl border p-5 flex items-center justify-between gap-4 flex-wrap relative overflow-hidden"
+        className=" border p-5 flex items-center justify-between gap-4 flex-wrap relative overflow-hidden"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.22 }}
@@ -341,10 +341,10 @@ export default function BillingPage() {
             return (
               <motion.div
                 key={meta.key}
-                className={`rounded-2xl border overflow-hidden relative transition-all ${
+                className={` border overflow-hidden relative transition-all ${
                   maxed ? "shadow-[0_0_16px_rgba(239,68,68,0.12)]" : ""
                 }`}
-                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
+                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.1)" }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
@@ -399,7 +399,7 @@ export default function BillingPage() {
                   </>
                 )}
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: "rgba(99,102,241,0.3)" }} />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: "rgba(255,255,255,0.3)" }} />
               </motion.div>
             );
           })}
@@ -431,12 +431,12 @@ export default function BillingPage() {
             return (
               <motion.div
                 key={pack.id}
-                className="relative overflow-hidden rounded-2xl border p-4 transition-all"
+                className="relative overflow-hidden  border p-4 transition-all"
                 style={{
-                  background: pack.popular ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.028)",
+                  background: pack.popular ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.035)",
                   backdropFilter: pack.popular ? "blur(20px)" : "blur(16px)",
                   WebkitBackdropFilter: pack.popular ? "blur(20px)" : "blur(16px)",
-                  borderColor: pack.popular ? "rgba(99,102,241,0.16)" : "rgba(99,102,241,0.1)",
+                  borderColor: pack.popular ? "rgba(255,255,255,0.16)" : "rgba(255,255,255,0.1)",
                 }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -534,7 +534,7 @@ export default function BillingPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                     >
                       <td className="px-4 py-3 text-xs text-foreground">{formatDate(inv.created)}</td>
                       <td className="px-4 py-3 text-xs text-muted font-mono">{inv.number || inv.id.slice(-8)}</td>

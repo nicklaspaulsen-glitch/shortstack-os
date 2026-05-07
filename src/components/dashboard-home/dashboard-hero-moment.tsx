@@ -30,7 +30,7 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
 
   return (
     <motion.section
-      className="lg:col-span-8 lg:row-span-2 relative overflow-hidden rounded-2xl flex border border-border-subtle"
+      className="lg:col-span-8 lg:row-span-2 relative overflow-hidden  flex border border-border-subtle"
       // Apr 28 v4 fix: was hardcoding themeTokens.bg.surface1 (dark hex) which
       // broke the card in light theme. Now uses CSS var-backed gradient
       // so the card flips correctly when [data-theme="light"] is active.

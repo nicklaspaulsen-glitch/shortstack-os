@@ -952,7 +952,7 @@ export default function WebsitesPage() {
                 {isActive && (
                   <motion.span
                     layoutId="niche-filter-pill"
-                    className="absolute inset-0 rounded-full border border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.08)]"
+                    className="absolute inset-0 rounded-full border border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.08)]"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -967,7 +967,7 @@ export default function WebsitesPage() {
             <button
               key={t.id}
               onClick={() => pickTemplate(t)}
-              className="group relative text-left rounded-2xl overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-1 hover:border-gold/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
+              className="group relative text-left  overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-1 hover:border-gold/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
             >
               {/* Preview image */}
               <div className="relative aspect-[3/2] overflow-hidden">

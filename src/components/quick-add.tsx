@@ -100,7 +100,7 @@ export default function QuickAdd() {
     <div className="fixed inset-0 z-[9998]">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(null)} />
       <div className="relative max-w-sm mx-auto mt-[20vh]">
-        <div className="rounded-2xl overflow-hidden fade-in bg-surface border border-border">
+        <div className=" overflow-hidden fade-in bg-surface border border-border">
           {/* Type selector */}
           <div className="flex border-b border-border">
             {([

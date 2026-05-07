@@ -251,14 +251,14 @@ export default function Tab2AIUpload() {
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
-        className={`relative rounded-2xl border-2 border-dashed transition-all p-8 text-center ${
+        className={`relative  border-2 border-dashed transition-all p-8 text-center ${
           dragOver
             ? "border-gold/60 bg-gold/5"
             : "border-border/40 bg-surface hover:border-border/60"
         }`}
       >
         <div className="flex flex-col items-center gap-3">
-          <div className="w-14 h-14 rounded-2xl bg-gold/10 border border-gold/30 flex items-center justify-center">
+          <div className="w-14 h-14  bg-gold/10 border border-gold/30 flex items-center justify-center">
             <UploadCloud size={26} className="text-gold" />
           </div>
           <div>

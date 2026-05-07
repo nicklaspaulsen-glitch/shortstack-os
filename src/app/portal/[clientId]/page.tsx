@@ -483,7 +483,7 @@ export default function ClientPortalDashboard({
           </button>
 
           {notificationsOpen && (
-            <div className="absolute right-0 top-12 w-80 rounded-2xl bg-surface border border-border shadow-elevated z-50 scale-in overflow-hidden">
+            <div className="absolute right-0 top-12 w-80  bg-surface border border-border shadow-elevated z-50 scale-in overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                 <p className="text-sm font-semibold text-foreground">Notifications</p>
                 <button
@@ -993,7 +993,7 @@ export default function ClientPortalDashboard({
       <button
         onClick={() => setChatOpen(!chatOpen)}
         aria-label={chatOpen ? "Close assistant" : "Open assistant"}
-        className={`fixed bottom-6 right-6 z-40 p-3.5 rounded-2xl shadow-elevated transition-all duration-300 ${
+        className={`fixed bottom-6 right-6 z-40 p-3.5  shadow-elevated transition-all duration-300 ${
           chatOpen
             ? "bg-surface border border-border text-muted hover:text-foreground scale-90"
             : "bg-gold text-white hover:bg-gold/90 scale-100"
@@ -1016,7 +1016,7 @@ export default function ClientPortalDashboard({
       </button>
 
       {chatOpen && (
-        <div className="fixed bottom-20 right-6 z-40 w-[380px] max-h-[520px] rounded-2xl bg-surface border border-border shadow-elevated flex flex-col scale-in overflow-hidden">
+        <div className="fixed bottom-20 right-6 z-40 w-[380px] max-h-[520px]  bg-surface border border-border shadow-elevated flex flex-col scale-in overflow-hidden">
           <div
             className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0"
             style={{
@@ -1067,7 +1067,7 @@ export default function ClientPortalDashboard({
                     className={`flex ${isMe ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
+                      className={`max-w-[85%]  px-3.5 py-2.5 text-xs leading-relaxed ${
                         isMe
                           ? "bg-gold text-white rounded-br-md"
                           : "bg-surface-light text-foreground rounded-bl-md border border-border/50"
@@ -1081,7 +1081,7 @@ export default function ClientPortalDashboard({
             )}
             {chatSending && (
               <div className="flex justify-end">
-                <div className="bg-gold/50 text-white rounded-2xl rounded-br-md px-4 py-3 text-xs">
+                <div className="bg-gold/50 text-white  rounded-br-md px-4 py-3 text-xs">
                   Sending…
                 </div>
               </div>

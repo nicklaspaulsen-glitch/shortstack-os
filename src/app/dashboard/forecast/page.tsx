@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, type Variants } from "framer-motion";
@@ -203,8 +203,8 @@ export default function ForecastPage() {
                 key={i}
                 variants={fadeUp}
                 whileHover={{ y: -2 }}
-                className="rounded-2xl border p-5 overflow-hidden relative"
-                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
+                className=" border p-5 overflow-hidden relative"
+                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.1)" }}
               >
                 <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
                 <p className="text-xs text-muted uppercase tracking-wider mb-1">{stat.label}</p>

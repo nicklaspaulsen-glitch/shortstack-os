@@ -545,7 +545,7 @@ function TelegramEditExample({
       {/* Fake Telegram bubble */}
       <div>
         <p className="text-xs text-muted mb-2">Live preview</p>
-        <div className="rounded-2xl rounded-tl-sm bg-[#17212b] border border-[#2b5278]/40 px-4 py-3 max-w-sm">
+        <div className=" rounded-tl-sm bg-[#17212b] border border-[#2b5278]/40 px-4 py-3 max-w-sm">
           {/* Telegram sender line */}
           <div className="flex items-center gap-2 mb-2">
             <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-[10px] font-bold shrink-0">

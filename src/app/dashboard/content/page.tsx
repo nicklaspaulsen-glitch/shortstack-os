@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { useManagedClient } from "@/lib/use-managed-client";
@@ -846,7 +846,7 @@ export default function ContentPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: i * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                     className={`flex items-center gap-3 text-[11px] p-2 border rounded ${p.needs_creation ? "border-amber-500/30 bg-amber-500/5" : "border-border bg-surface/50"}`}
                   >
                     <span className="text-gold font-medium w-12 shrink-0">{p.day}</span>

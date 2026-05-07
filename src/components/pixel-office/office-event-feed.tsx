@@ -16,7 +16,7 @@ interface FeedProps {
 
 export default function OfficeEventFeed({ events, onSelectAgent }: FeedProps) {
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/8 bg-[#0a0a0f]/85 backdrop-blur-md">
+    <div className="flex h-full flex-col overflow-hidden  border border-white/8 bg-[#0a0a0f]/85 backdrop-blur-md">
       <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
         <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/55">
           Live Feed
@@ -103,7 +103,7 @@ interface OnlineNowProps {
 /** Tiny presence indicator — top of the right rail. */
 export function OnlineNow({ rows }: OnlineNowProps) {
   return (
-    <div className="flex items-center gap-2 rounded-2xl border border-white/8 bg-[#0a0a0f]/85 px-4 py-3 backdrop-blur-md">
+    <div className="flex items-center gap-2  border border-white/8 bg-[#0a0a0f]/85 px-4 py-3 backdrop-blur-md">
       <span className="relative flex h-2 w-2">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime-400 opacity-70" />
         <span className="relative inline-flex h-2 w-2 rounded-full bg-lime-400" />

@@ -192,7 +192,7 @@ export default function AffiliatePortalPage() {
   return (
     <div className="max-w-5xl mx-auto py-10 px-6 space-y-8">
       <div className="flex items-center gap-3">
-        <div className="p-3 rounded-2xl bg-gold/10 border border-gold/30">
+        <div className="p-3  bg-gold/10 border border-gold/30">
           <Award size={24} className="text-gold" />
         </div>
         <div>
@@ -202,22 +202,22 @@ export default function AffiliatePortalPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-border bg-card/40 p-5">
+        <div className=" border border-border bg-card/40 p-5">
           <div className="text-xs uppercase text-muted">Total earned</div>
           <div className="text-2xl font-bold text-gold mt-1">{fmtCents(totalEarned)}</div>
         </div>
-        <div className="rounded-2xl border border-border bg-card/40 p-5">
+        <div className=" border border-border bg-card/40 p-5">
           <div className="text-xs uppercase text-muted">Pending</div>
           <div className="text-2xl font-bold mt-1">{fmtCents(totalPending)}</div>
         </div>
-        <div className="rounded-2xl border border-border bg-card/40 p-5">
+        <div className=" border border-border bg-card/40 p-5">
           <div className="text-xs uppercase text-muted">Paid out</div>
           <div className="text-2xl font-bold text-success mt-1">{fmtCents(totalPaid)}</div>
         </div>
       </div>
 
       {!stripeConnected && (
-        <div className="rounded-2xl border border-warning/40 bg-warning/5 p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className=" border border-warning/40 bg-warning/5 p-5 flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex-1">
             <h3 className="font-semibold">Connect Stripe to receive payouts</h3>
             <p className="text-sm text-muted">
@@ -244,7 +244,7 @@ export default function AffiliatePortalPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-border bg-card/40 p-5 space-y-3">
+        <div className=" border border-border bg-card/40 p-5 space-y-3">
           <h3 className="font-semibold">Recent referrals</h3>
           {recentReferrals.length === 0 ? (
             <p className="text-xs text-muted">No referrals yet — share your link!</p>
@@ -275,7 +275,7 @@ export default function AffiliatePortalPage() {
             </div>
           )}
         </div>
-        <div className="rounded-2xl border border-border bg-card/40 p-5 space-y-3">
+        <div className=" border border-border bg-card/40 p-5 space-y-3">
           <h3 className="font-semibold">Recent payouts</h3>
           {recentCommissions.length === 0 ? (
             <p className="text-xs text-muted">No commissions yet.</p>
@@ -338,7 +338,7 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
   }, [refLink, program?.name]);
 
   return (
-    <div className="rounded-2xl border border-border bg-card/40 p-5 space-y-3">
+    <div className=" border border-border bg-card/40 p-5 space-y-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div>
           <h3 className="font-semibold">{program?.name ?? "Program"}</h3>

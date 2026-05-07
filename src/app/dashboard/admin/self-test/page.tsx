@@ -219,7 +219,7 @@ export default function SelfTestDashboard() {
 
       {/* Verdict banner */}
       {!latest_run ? (
-        <div className="rounded-2xl border border-gold/30 bg-gold/5 p-4 flex items-start gap-3">
+        <div className=" border border-gold/30 bg-gold/5 p-4 flex items-start gap-3">
           <AlertTriangle size={20} className="text-gold shrink-0 mt-0.5" />
           <div>
             <div className="text-sm font-bold text-foreground">No runs yet</div>
@@ -230,7 +230,7 @@ export default function SelfTestDashboard() {
         </div>
       ) : (
         <div
-          className={`rounded-2xl border p-4 flex items-start gap-3 ${
+          className={` border p-4 flex items-start gap-3 ${
             allGreen
               ? "border-success/30 bg-success/5"
               : "border-danger/30 bg-danger/5"
@@ -256,7 +256,7 @@ export default function SelfTestDashboard() {
 
       {/* Trend */}
       {trend.length > 0 && (
-        <div className="rounded-2xl border border-border bg-surface p-4">
+        <div className=" border border-border bg-surface p-4">
           <h2 className="text-xs font-bold mb-3 text-foreground">Last 14 runs</h2>
           <div className="flex items-end gap-1 h-12">
             {trend.map((t) => {
@@ -283,7 +283,7 @@ export default function SelfTestDashboard() {
 
       {/* Results table */}
       {latest_run && (
-        <div className="rounded-2xl border border-border bg-surface">
+        <div className=" border border-border bg-surface">
           <div className="p-4 flex items-center justify-between border-b border-border">
             <h2 className="text-sm font-bold text-foreground">Route results</h2>
             <div className="flex items-center gap-1 text-[10px]">

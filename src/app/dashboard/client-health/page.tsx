@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -198,7 +198,7 @@ export default function ClientHealthPage() {
       {activeTab === "overview" && (
         <>
           {/* Engagement Trend Chart */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <TrendingUp size={14} className="text-gold" /> Engagement Trend (Last 6 Months)
             </h3>
@@ -374,7 +374,7 @@ export default function ClientHealthPage() {
       {/* ---- TAB: Algorithm Breakdown ---- */}
       {activeTab === "algorithm" && (
         <div className="space-y-4">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 className="text-sm font-semibold mb-1 flex items-center gap-2">
               <Zap size={14} className="text-gold" /> Health Score Algorithm
             </h3>
@@ -396,7 +396,7 @@ export default function ClientHealthPage() {
           </motion.div>
 
           {/* Score Breakdown Per Client */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <BarChart3 size={14} className="text-gold" /> Client Score Breakdown
             </h3>
@@ -441,7 +441,7 @@ export default function ClientHealthPage() {
       {/* ---- TAB: Alerts ---- */}
       {activeTab === "alerts" && (
         <div className="space-y-4">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Bell size={14} className="text-gold" /> Automated Health Alerts
             </h3>
@@ -478,7 +478,7 @@ export default function ClientHealthPage() {
           </motion.div>
 
           {/* Activity Frequency Monitor */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Clock size={14} className="text-gold" /> Last Contact Tracker
             </h3>
@@ -526,7 +526,7 @@ export default function ClientHealthPage() {
           </div>
 
           {/* NPS Distribution */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3">NPS Distribution</h3>
             <div className="flex items-end gap-1 h-20">
               {Array.from({ length: 11 }, (_, i) => {
@@ -544,7 +544,7 @@ export default function ClientHealthPage() {
           </motion.div>
 
           {/* Satisfaction Survey */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Calendar size={14} className="text-gold" /> Client Satisfaction Survey
             </h3>
@@ -588,7 +588,7 @@ export default function ClientHealthPage() {
       {/* ---- TAB: History ---- */}
       {activeTab === "history" && (
         <div className="space-y-4">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <BarChart3 size={14} className="text-gold" /> Health Score History
             </h3>
@@ -607,7 +607,7 @@ export default function ClientHealthPage() {
           </motion.div>
 
           {/* Per-client health history */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3">Client Health Trends</h3>
             <div className="space-y-3">
               {clients.map(c => (

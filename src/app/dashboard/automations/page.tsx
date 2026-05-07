@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -153,7 +153,7 @@ export default function AutomationsPage() {
             <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
             <p className={`text-2xl font-bold ${s.color} mt-2`}>{s.value}</p>
             <p className="text-xs text-white/40 mt-0.5">{s.label}</p>
-            <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: 'rgba(99,102,241,0.3)' }} />
+            <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: 'rgba(255,255,255,0.3)' }} />
           </motion.div>
         ))}
       </div>
@@ -208,7 +208,7 @@ export default function AutomationsPage() {
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.18, delay: index * 0.04 }}
-                  whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                  whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                 >
                   {/* Status indicator */}
                   <div

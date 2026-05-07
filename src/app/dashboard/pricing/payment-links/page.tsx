@@ -136,7 +136,7 @@ export default function PaymentLinksPage() {
         }
       />
 
-      <div className="rounded-2xl border border-border bg-surface p-4">
+      <div className=" border border-border bg-surface p-4">
         <p className="text-[11px] text-muted leading-relaxed">
           <span className="text-foreground font-medium">{configuredCount}</span> of{" "}
           <span className="text-foreground font-medium">{links.length}</span> payment links configured.{" "}
@@ -157,7 +157,7 @@ export default function PaymentLinksPage() {
         {tierOrder
           .filter((t) => byTier[t])
           .map((tier) => (
-            <div key={tier} className="rounded-2xl border border-border bg-surface p-5">
+            <div key={tier} className=" border border-border bg-surface p-5">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-bold text-foreground">{TIER_LABELS[tier]}</h2>
                 <span className="text-[10px] text-muted">
@@ -230,7 +230,7 @@ export default function PaymentLinksPage() {
       </div>
 
       {fetchState === "error" && (
-        <div className="rounded-2xl border border-danger/20 bg-danger/[0.05] p-4 text-center">
+        <div className=" border border-danger/20 bg-danger/[0.05] p-4 text-center">
           <p className="text-xs text-danger">Failed to load payment links. Try refreshing.</p>
         </div>
       )}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useRef, DragEvent, ChangeEvent, FormEvent } from "react";
 import {
@@ -493,7 +493,7 @@ function LeadDetailPanel({
   const qualScore = qualChecks.filter((q) => q.ok).length;
 
   return (
-    <div className="relative flex flex-col gap-3 rounded-xl border border-[rgba(99,102,241,0.12)] bg-[#15141A] p-4 shadow-2xl">
+    <div className="relative flex flex-col gap-3 rounded-xl border border-[rgba(255,255,255,0.12)] bg-[#15141A] p-4 shadow-2xl">
       {/* Close */}
       <button
         type="button"
@@ -525,7 +525,7 @@ function LeadDetailPanel({
           <button
             onClick={() => onScore(lead)}
             disabled={scoring}
-            className="flex items-center gap-1 rounded-lg bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.2)] px-2.5 py-1 text-[10px] font-medium text-[#6366F1] hover:bg-[rgba(99,102,241,0.15)] disabled:opacity-50 transition-colors cursor-pointer"
+            className="flex items-center gap-1 rounded-lg bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.2)] px-2.5 py-1 text-[10px] font-medium text-[#6366F1] hover:bg-[rgba(255,255,255,0.15)] disabled:opacity-50 transition-colors cursor-pointer"
           >
             {scoring ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
             Score with AI
@@ -604,7 +604,7 @@ function LeadDetailPanel({
           onClick={(e) => { if (!lead.phone) e.preventDefault(); }}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-medium transition-colors ${
             lead.phone
-              ? "border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.06)] text-[#6366F1] hover:bg-[rgba(99,102,241,0.12)]"
+              ? "border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.06)] text-[#6366F1] hover:bg-[rgba(255,255,255,0.12)]"
               : "border-white/10 bg-white/[0.03] text-white/25 cursor-not-allowed"
           }`}
           title={lead.phone || "No phone"}
@@ -860,7 +860,7 @@ export default function LeadEnginePage() {
       </CollapsibleStats>
 
       {/* Tabs (sticky) */}
-      <div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
+      <div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -966,8 +966,8 @@ export default function LeadEnginePage() {
                   }}
                   className={`grid grid-cols-12 items-center py-1.5 px-3 rounded-lg border transition-all cursor-pointer text-[10px] ${
                     selectedLead?.id === lead.id
-                      ? "bg-[rgba(99,102,241,0.04)] border-[rgba(99,102,241,0.15)]"
-                      : "bg-surface-light border-border hover:border-[rgba(99,102,241,0.1)]"
+                      ? "bg-[rgba(255,255,255,0.04)] border-[rgba(255,255,255,0.15)]"
+                      : "bg-surface-light border-border hover:border-[rgba(255,255,255,0.1)]"
                   }`}>
                   <div className="col-span-3">
                     <p className="text-xs font-semibold">{lead.business_name}</p>
@@ -1311,11 +1311,11 @@ export default function LeadEnginePage() {
             {leads.map((lead, index) => (
               <motion.div
                 key={lead.id}
-                className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)" }}
+                className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)" }}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: index * 0.04 }}
-                whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${

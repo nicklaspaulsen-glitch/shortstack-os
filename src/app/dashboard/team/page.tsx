@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -287,7 +287,7 @@ export default function TeamPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
+      <div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
@@ -305,7 +305,7 @@ export default function TeamPage() {
             <div className="relative flex-1 min-w-[200px]">
               <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
               <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-transparent border border-[rgba(99,102,241,0.1)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
+                className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-transparent border border-[rgba(255,255,255,0.1)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
                 placeholder="Search members..." aria-label="Search team members" />
             </div>
             <div className="flex gap-1 bg-surface rounded-lg p-0.5">
@@ -395,7 +395,7 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="rounded-xl p-4 space-y-4 border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
+                className="rounded-xl p-4 space-y-4 border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -450,7 +450,7 @@ export default function TeamPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="rounded-xl overflow-x-auto p-4 border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
+          className="rounded-xl overflow-x-auto p-4 border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-gold" /> Role Permissions Matrix</h2>
@@ -508,7 +508,7 @@ export default function TeamPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -3 }}
-                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)", borderRadius: "0.75rem", padding: "1rem", position: "relative", overflow: "hidden" }}
+                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "0.75rem", padding: "1rem", position: "relative", overflow: "hidden" }}
               >
                 <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                 <div className="flex items-center gap-3 mb-3">
@@ -540,7 +540,7 @@ export default function TeamPage() {
               whileHover={{ y: -3 }}
               onClick={() => setShowCustomRole(true)}
               className="hover:border-gold/20 transition-all flex flex-col items-center justify-center gap-2 min-h-[160px]"
-              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px dashed rgba(99,102,241,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
+              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
             >
               <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center">
                 <Settings size={16} className="text-gold" />
@@ -558,7 +558,7 @@ export default function TeamPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
         >
           <h2 className="section-header flex items-center gap-2 mb-3"><Activity size={13} className="text-gold" /> Per-Member Access Log</h2>
           <div className="space-y-2">
@@ -598,7 +598,7 @@ export default function TeamPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
         >
           <h2 className="section-header flex items-center gap-2 mb-1"><BarChart3 size={13} className="text-gold" /> Team Capacity Tracker</h2>
           <p className="text-[10px] text-muted mb-4">See who has bandwidth and who is overloaded.</p>
@@ -657,7 +657,7 @@ export default function TeamPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
           className="mt-4"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header flex items-center gap-2 mb-0">
@@ -676,7 +676,7 @@ export default function TeamPage() {
                 transition={{ duration: 0.18, delay: index * 0.05 }}
                 whileHover={{ y: -3 }}
                 className="flex items-center gap-3 hover:border-gold/20 transition-all"
-                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.08)", borderRadius: "0.75rem", padding: "0.75rem" }}
+                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "0.75rem", padding: "0.75rem" }}
               >
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold/30 to-amber-500/20 flex items-center justify-center text-gold text-xs font-bold shrink-0">
                   {m.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() || m.email[0].toUpperCase()}
@@ -734,7 +734,7 @@ export default function TeamPage() {
       {/* ═══ INVITE MODAL ═══ */}
       {showInvite && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowInvite(false)}>
-          <div className="bg-surface rounded-2xl border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><UserPlus size={14} className="text-gold" /> Create Team Member</h3>
               <button onClick={() => setShowInvite(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
@@ -836,7 +836,7 @@ export default function TeamPage() {
       {/* ═══ CUSTOM ROLE BUILDER MODAL ═══ */}
       {showCustomRole && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCustomRole(false)}>
-          <div className="bg-surface rounded-2xl border border-border w-full max-w-lg p-5 space-y-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Settings size={14} className="text-gold" /> Custom Role Builder</h3>
               <button onClick={() => setShowCustomRole(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
@@ -946,7 +946,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-surface rounded-2xl border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+      <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold flex items-center gap-2"><Pencil size={14} className="text-gold" /> Edit Team Member</h3>
           <button onClick={onClose} className="text-muted hover:text-foreground" aria-label="Close edit dialog"><X size={16} /></button>

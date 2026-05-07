@@ -436,7 +436,7 @@ export default function FormsPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06, duration: 0.4 }}
-            className="rounded-2xl border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
+            className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
           >
             <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
             <div className="p-3 text-center">
@@ -463,7 +463,7 @@ export default function FormsPage() {
       {tab === "builder" && !activeForm && (
         <div className="space-y-4">
           {forms.length > 0 && (
-            <div className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+            <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               <h2 className="section-header">Your Forms</h2>
               <div className="space-y-2">
                 {forms.map((form, i) => (
@@ -504,7 +504,7 @@ export default function FormsPage() {
       {tab === "builder" && activeForm && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="space-y-4">
-            <div className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+            <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="section-header mb-0">Edit Form</h2>
               </div>
@@ -578,7 +578,7 @@ export default function FormsPage() {
             </div>
 
             {/* Form Settings */}
-            <div className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+            <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               <h2 className="section-header flex items-center gap-2"><Settings size={12} className="text-indigo-400" /> Form Settings</h2>
               <div className="space-y-3">
                 <div>
@@ -625,7 +625,7 @@ export default function FormsPage() {
             </div>
 
             {/* Embed Code */}
-            <div className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+            <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               <h2 className="section-header flex items-center gap-2"><Code size={12} className="text-indigo-400" /> Embed Code</h2>
               <pre className="text-[9px] text-muted bg-black/20 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap">{generateEmbedCode()}</pre>
               <button onClick={() => navigator.clipboard.writeText(generateEmbedCode())} className="btn-primary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
@@ -635,7 +635,7 @@ export default function FormsPage() {
           </div>
 
           {/* Live Preview */}
-          <div className="rounded-2xl border p-4 sticky top-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+          <div className=" border p-4 sticky top-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <h2 className="section-header flex items-center gap-2"><Eye size={12} className="text-indigo-400" /> Live Preview</h2>
             <div className="rounded-xl p-6" style={{ background: "#ffffff" }}>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 16 }}>{activeForm.name}</h2>
@@ -721,7 +721,7 @@ export default function FormsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05, duration: 0.35 }}
               whileHover={{ y: -4, scale: 1.01 }}
-              className="text-left rounded-2xl border p-4 transition-all" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
+              className="text-left  border p-4 transition-all" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
             >
               <p className="text-sm font-bold mb-1">{tpl.name}</p>
               <p className="text-[10px] text-muted mb-2">{tpl.desc} - {tpl.fields.length} fields</p>
@@ -760,7 +760,7 @@ export default function FormsPage() {
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.04 }}
-                  className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
+                  className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
@@ -786,7 +786,7 @@ export default function FormsPage() {
       {/* Analytics Tab */}
       {tab === "analytics" && (
         <div className="space-y-4">
-          <div className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+          <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-indigo-400" /> Form Funnel</h2>
             <div className="flex items-end gap-4 h-40 justify-center">
               {[
@@ -806,13 +806,13 @@ export default function FormsPage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+            <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-blue-400" /> Traffic Sources</h2>
               <div className="space-y-2">
                 <div className="text-center py-4"><p className="text-[10px] text-muted">No traffic data yet</p></div>
               </div>
             </div>
-            <div className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+            <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-indigo-400" /> Drop-off Points</h2>
               <div className="space-y-2">
                 <div className="text-center py-4"><p className="text-[10px] text-muted">No drop-off data yet</p></div>
@@ -825,7 +825,7 @@ export default function FormsPage() {
       {/* Settings Tab */}
       {tab === "settings" && (
         <div className="space-y-4">
-          <div className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+          <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-indigo-400" /> Form Styling</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -863,7 +863,7 @@ export default function FormsPage() {
               </div>
             </div>
           </div>
-          <div className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+          <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <h2 className="section-header flex items-center gap-2"><Link2 size={13} className="text-blue-400" /> Integrations</h2>
             <div className="space-y-2">
               {[

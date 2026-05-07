@@ -170,7 +170,7 @@ export default function CommandPalette() {
     <div className="fixed inset-0 z-[9999]">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
       <div className="relative max-w-lg mx-auto mt-[15vh]">
-        <div className="bg-surface border border-border/50 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden fade-in">
+        <div className="bg-surface border border-border/50  shadow-2xl shadow-black/50 overflow-hidden fade-in">
           {/* Search input */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-border/30">
             <Search size={16} className="text-muted shrink-0" />

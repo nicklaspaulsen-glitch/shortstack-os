@@ -150,7 +150,7 @@ export default function ConnectModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="relative w-full max-w-md mx-4 rounded-2xl border border-white/5 bg-surface text-foreground shadow-2xl shadow-black/50 overflow-hidden"
+        className="relative w-full max-w-md mx-4  border border-white/5 bg-surface text-foreground shadow-2xl shadow-black/50 overflow-hidden"
       >
         {/* Top gold/blue gradient bar — echoes <PageHero> aesthetic without
          *  the full hero block. The same horizontal motion-feel comes from
@@ -185,7 +185,7 @@ export default function ConnectModal({
           {/* Centered integration logo / avatar */}
           <div className="flex justify-center">
             <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center bg-surface-light border border-border/40 overflow-hidden"
+              className="w-16 h-16  flex items-center justify-center bg-surface-light border border-border/40 overflow-hidden"
               style={{
                 boxShadow:
                   "0 1px 0 rgba(255,255,255,0.05) inset, 0 4px 16px -4px rgba(0,0,0,0.45)",

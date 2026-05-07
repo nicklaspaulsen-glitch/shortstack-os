@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -371,7 +371,7 @@ export default function ActivityLogPage() {
               const types: Record<string, number> = {};
               logs.filter(l => l.user === user).forEach(l => { types[l.type] = (types[l.type] || 0) + 1; });
               return (
-                <motion.div key={user} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+                <motion.div key={user} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold">{user[0]}</div>
                     <div className="flex-1">
@@ -409,7 +409,7 @@ export default function ActivityLogPage() {
           ) : (
           <div className="space-y-2">
             {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).map((log, idx) => (
-              <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+              <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-xs font-semibold">{log.details}</p>
                   <span className="text-[9px] text-muted">{new Date(log.timestamp).toLocaleString()}</span>
@@ -460,7 +460,7 @@ export default function ActivityLogPage() {
             ) : (
               <div className="space-y-2">
                 {logs.filter(l => l.type === "login").map((log, idx) => (
-                  <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl flex items-center gap-3 p-2.5" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
+                  <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl flex items-center gap-3 p-2.5" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                     <Key size={12} className={log.action === "failed_login" ? "text-red-400" : "text-emerald-400"} />
                     <div className="flex-1">
                       <p className="text-xs font-medium">{log.user} - {log.details}</p>

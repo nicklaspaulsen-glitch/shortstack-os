@@ -162,7 +162,7 @@ export default function AiRecommender() {
     <>
       <button
         onClick={handleOpen}
-        className={`group relative w-full md:w-auto rounded-2xl overflow-hidden transition-all hover-lift ${
+        className={`group relative w-full md:w-auto  overflow-hidden transition-all hover-lift ${
           hasCached
             ? "bg-gradient-to-r from-gold via-amber-400 to-gold shadow-lg shadow-gold/40"
             : "bg-gradient-to-r from-gold to-amber-500 shadow-lg shadow-gold/30"
@@ -199,7 +199,7 @@ export default function AiRecommender() {
           onClick={() => setOpen(false)}
         >
           <div
-            className="bg-surface border border-border rounded-2xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden"
+            className="bg-surface border border-border  shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {/* Header */}
@@ -210,7 +210,7 @@ export default function AiRecommender() {
               </div>
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-gold to-amber-500 flex items-center justify-center shadow-lg shadow-gold/30">
+                  <div className="w-12 h-12  bg-gradient-to-br from-gold to-amber-500 flex items-center justify-center shadow-lg shadow-gold/30">
                     <Sparkles size={22} className="text-black" />
                   </div>
                   <div>
@@ -256,7 +256,7 @@ export default function AiRecommender() {
                 </div>
               ) : recommendations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gold/15 flex items-center justify-center">
+                  <div className="w-16 h-16  bg-gold/15 flex items-center justify-center">
                     <Sparkles size={28} className="text-gold" />
                   </div>
                   <div className="text-center">

@@ -204,7 +204,7 @@ export default function ClientsPage() {
     active:  { bar: "bg-success", pill: "bg-success/10 text-success border-success/30", dot: "bg-success shadow-[0_0_8px_rgba(127,229,184,0.5)]", label: "Active" },
     paused:  { bar: "bg-warning", pill: "bg-warning/10 text-warning border-warning/30", dot: "bg-warning",                                            label: "Paused" },
     churned: { bar: "bg-danger",  pill: "bg-danger/10 text-danger border-danger/30",    dot: "bg-danger",                                             label: "Churned" },
-    trial:   { bar: "bg-info",    pill: "bg-info/10 text-info border-info/30",          dot: "bg-info shadow-[0_0_8px_rgba(99,102,241,0.5)]",         label: "Trial" },
+    trial:   { bar: "bg-info",    pill: "bg-info/10 text-info border-info/30",          dot: "bg-info shadow-[0_0_8px_rgba(255,255,255,0.5)]",         label: "Trial" },
   };
 
   // --- Feature 1: Client Health Score helper ---
@@ -626,7 +626,7 @@ export default function ClientsPage() {
 
   if (loading) return (
     <div className="space-y-4">
-      <div className="animate-pulse h-28 rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.04)]" />
+      <div className="animate-pulse h-28  bg-[#0E0D14] border border-[rgba(255,255,255,0.04)]" />
       <TableSkeleton rows={8} />
     </div>
   );
@@ -649,7 +649,7 @@ export default function ClientsPage() {
             {/* Stat chips */}
             {clients.length > 0 && (
               <div className="hidden sm:flex items-center gap-1.5">
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.18)] text-[10px] font-medium text-[#6366F1]">
+                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.18)] text-[10px] font-medium text-[#6366F1]">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1] animate-pulse" />
                   {clients.length}
                 </span>
@@ -697,15 +697,15 @@ export default function ClientsPage() {
       {/* Prism stat strip — 4 glass tiles with per-tile color accent */}
       {clients.length > 0 && (
         <motion.div
-          className="relative rounded-2xl border border-[rgba(99,102,241,0.1)] overflow-hidden"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
+          className="relative  border border-[rgba(255,255,255,0.1)] overflow-hidden"
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* Prism rainbow top bar */}
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#10B981] via-[#3B82F6] via-[#06B6D4] to-[#F59E0B]" />
-          <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(99,102,241,0.08)]">
+          <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(255,255,255,0.08)]">
             {[
               { label: "Total Clients", value: String(clients.length), sub: `${clients.filter(c => !c.is_active).length} inactive` },
               { label: "Active", value: String(activeClients.length), sub: `${Math.round((activeClients.length / (clients.length || 1)) * 100)}% retention` },
@@ -738,7 +738,7 @@ export default function ClientsPage() {
 
       {/* Tabs (sticky) */}
       <div className="overflow-x-auto max-w-full">
-      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(99,102,241,0.08)] rounded-xl p-1 w-fit min-w-max shadow-lg shadow-black/20">
+      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(255,255,255,0.08)] rounded-xl p-1 w-fit min-w-max shadow-lg shadow-black/20">
         {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}
@@ -774,7 +774,7 @@ export default function ClientsPage() {
 
             {/* Feature 9: Advanced Filters Toggle */}
             <button onClick={() => setShowFilters(!showFilters)}
-              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(99,102,241,0.1)] text-[#6366F1] border-[rgba(99,102,241,0.25)]" : ""}`}>
+              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(255,255,255,0.1)] text-[#6366F1] border-[rgba(255,255,255,0.25)]" : ""}`}>
               <Filter size={14} /> Filters
               {(filterIndustry || filterStatus !== "all" || filterTag || filterMrrMin || filterMrrMax) && (
                 <span className="w-1.5 h-1.5 rounded-full bg-[#6366F1]" />
@@ -967,7 +967,7 @@ export default function ClientsPage() {
                   hidden: { opacity: 0, y: 16 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
                 }}
-                whileHover={{ y: -4, borderColor: "rgba(99,102,241,0.22)", boxShadow: "0 12px 40px rgba(0,0,0,0.45), 0 0 40px rgba(99,102,241,0.06)", transition: { duration: 0.22 } }}
+                whileHover={{ y: -4, borderColor: "rgba(255,255,255,0.22)", boxShadow: "0 12px 40px rgba(0,0,0,0.45), 0 0 40px rgba(255,255,255,0.06)", transition: { duration: 0.22 } }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
                 onMouseEnter={() => setHoveredClient(c.id)}
                 onMouseLeave={() => setHoveredClient(null)}>
@@ -1020,12 +1020,12 @@ export default function ClientsPage() {
                 )}
 
                 {/* Stats grid — bordered editorial layout */}
-                <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(99,102,241,0.08)] overflow-hidden">
+                <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(255,255,255,0.08)] overflow-hidden">
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">MRR</p>
                     <p className="text-xs font-bold text-[#6366F1]">{formatCurrency(c.mrr)}</p>
                   </div>
-                  <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-[rgba(99,102,241,0.08)]">
+                  <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-[rgba(255,255,255,0.08)]">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Paid</p>
                     <p className="text-xs font-bold text-[#F5F4F1]">{formatCurrency(revenue.totalPaid)}</p>
                   </div>
@@ -1283,7 +1283,7 @@ export default function ClientsPage() {
             const revenue = getClientRevenue(expandedRow);
             const note = clientNotes[expandedRow];
             return (
-              <div className="border border-t-0 border-[rgba(99,102,241,0.12)] rounded-b-xl px-4 pb-4" style={{ background: "rgba(255,255,255,0.022)", backdropFilter: "blur(12px)" }}>
+              <div className="border border-t-0 border-[rgba(255,255,255,0.12)] rounded-b-xl px-4 pb-4" style={{ background: "rgba(255,255,255,0.022)", backdropFilter: "blur(12px)" }}>
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
                     { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#10B981" },
@@ -1293,7 +1293,7 @@ export default function ClientsPage() {
                   ].map((tile, ti) => {
                     const bars = ["from-[#10B981]","from-[#7FE5B8]","from-[#A78BFA]","from-[#6F6D7A]"];
                     return (
-                      <div key={tile.label} className="relative rounded-xl border border-[rgba(99,102,241,0.1)] p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
+                      <div key={tile.label} className="relative rounded-xl border border-[rgba(255,255,255,0.1)] p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
                         <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${bars[ti]} to-transparent opacity-60`} />
                         <div className="text-[10px] uppercase tracking-wider text-[#6F6D7A]">{tile.label}</div>
                         <div className="mt-1 text-lg font-bold font-mono" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</div>
@@ -1417,8 +1417,8 @@ export default function ClientsPage() {
             ].map((tile, i) => (
               <motion.div
                 key={tile.label}
-                className="relative rounded-xl border border-[rgba(99,102,241,0.08)] px-4 py-3 overflow-hidden"
-                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(12px)" }}
+                className="relative rounded-xl border border-[rgba(255,255,255,0.08)] px-4 py-3 overflow-hidden"
+                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(12px)" }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.36, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}

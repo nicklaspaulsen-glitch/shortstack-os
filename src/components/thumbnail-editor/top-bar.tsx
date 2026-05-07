@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // Top bar: undo/redo, preset picker, AI fill/remove/upscale, export,
 // grid/rulers toggles, and zoom controls. The page.tsx owns the state
@@ -62,9 +62,9 @@ export default function TopBar(props: TopBarProps) {
   const [exportQuality, setExportQuality] = useState(0.92);
 
   return (
-    <div className="bg-[#080809] border-b border-[rgba(99,102,241,0.08)] flex items-center px-3 py-2.5 gap-2 text-sm text-neutral-200">
+    <div className="bg-[#080809] border-b border-[rgba(255,255,255,0.07)] flex items-center px-3 py-2.5 gap-2 text-sm text-neutral-200">
       {/* Higgsfield-style slim header: icon badge + title + subtitle */}
-      <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
+      <div className="w-7 h-7 rounded-xl bg-[rgba(255,255,255,0.1)] flex items-center justify-center shrink-0">
         <ImageIcon size={13} className="text-[#6366F1]" />
       </div>
       <div className="flex flex-col min-w-0 mr-2">
@@ -85,7 +85,7 @@ export default function TopBar(props: TopBarProps) {
         onClick={props.onRedo}
       />
 
-      <span className="w-px h-6 bg-[rgba(99,102,241,0.12)] mx-1" />
+      <span className="w-px h-6 bg-[rgba(255,255,255,0.1)] mx-1" />
 
       {/* Add layer quick actions */}
       <IconBtn
@@ -99,7 +99,7 @@ export default function TopBar(props: TopBarProps) {
         title="Add rectangle"
         onClick={() => props.onAddShape("rect")}
       />
-      <label className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded hover:bg-[rgba(99,102,241,0.08)] cursor-pointer">
+      <label className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded hover:bg-[rgba(255,255,255,0.07)] cursor-pointer">
         <Upload className="w-4 h-4" />
         <span>Upload</span>
         <input
@@ -122,7 +122,7 @@ export default function TopBar(props: TopBarProps) {
         />
       )}
 
-      <span className="w-px h-6 bg-[rgba(99,102,241,0.12)] mx-1" />
+      <span className="w-px h-6 bg-[rgba(255,255,255,0.1)] mx-1" />
 
       {/* AI actions */}
       <button
@@ -135,21 +135,21 @@ export default function TopBar(props: TopBarProps) {
       <button
         type="button"
         onClick={props.onAIRemove}
-        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(99,102,241,0.10)] border border-[rgba(255,255,255,0.05)] transition-colors"
+        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.05)] transition-colors"
       >
         <Eraser className="w-4 h-4" /> AI Erase
       </button>
       <button
         type="button"
         onClick={props.onAIUpscale}
-        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(99,102,241,0.10)] border border-[rgba(255,255,255,0.05)] transition-colors"
+        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.05)] transition-colors"
       >
         <Sparkles className="w-4 h-4" /> Upscale
       </button>
       <button
         type="button"
         onClick={props.onTextToLayer}
-        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(99,102,241,0.10)] border border-[rgba(255,255,255,0.05)] transition-colors"
+        className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.05)] transition-colors"
       >
         <Wand2 className="w-4 h-4" /> Text → Layer
       </button>
@@ -157,7 +157,7 @@ export default function TopBar(props: TopBarProps) {
         <button
           type="button"
           onClick={props.onStockPhotos}
-          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(99,102,241,0.10)] border border-[rgba(255,255,255,0.05)] transition-colors"
+          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.05)] transition-colors"
           title="Insert stock photo (Pexels / Unsplash)"
         >
           <ImagePlus className="w-4 h-4" /> Stock
@@ -180,7 +180,7 @@ export default function TopBar(props: TopBarProps) {
         active={props.showGrid}
       />
 
-      <span className="w-px h-6 bg-[rgba(99,102,241,0.12)] mx-1" />
+      <span className="w-px h-6 bg-[rgba(255,255,255,0.1)] mx-1" />
 
       <IconBtn
         icon={<ZoomOut className="w-4 h-4" />}
@@ -201,27 +201,27 @@ export default function TopBar(props: TopBarProps) {
         onClick={props.onFit}
       />
 
-      <span className="w-px h-6 bg-[rgba(99,102,241,0.12)] mx-1" />
+      <span className="w-px h-6 bg-[rgba(255,255,255,0.1)] mx-1" />
 
       {/* Presets */}
       <div className="relative">
         <button
           type="button"
           onClick={() => setPresetsOpen(!presetsOpen)}
-          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(99,102,241,0.10)] border border-[rgba(255,255,255,0.05)] transition-colors"
+          className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.05)] transition-colors"
         >
           Presets <ChevronDown className="w-3 h-3" />
         </button>
         {presetsOpen && (
           <div
-            className="absolute right-0 top-full mt-1 bg-[#101012] border border-[rgba(99,102,241,0.15)] rounded shadow-lg z-50 min-w-[220px]"
+            className="absolute right-0 top-full mt-1 bg-[#101012] border border-[rgba(255,255,255,0.12)] rounded shadow-lg z-50 min-w-[220px]"
             onMouseLeave={() => setPresetsOpen(false)}
           >
             {DEFAULT_PRESETS.map((p) => (
               <button
                 key={p.id}
                 type="button"
-                className="block w-full text-left px-3 py-2 text-xs hover:bg-[rgba(99,102,241,0.08)]"
+                className="block w-full text-left px-3 py-2 text-xs hover:bg-[rgba(255,255,255,0.07)]"
                 onClick={() => {
                   props.onPickPreset(p);
                   setPresetsOpen(false);
@@ -248,14 +248,14 @@ export default function TopBar(props: TopBarProps) {
         </button>
         {exportOpen && (
           <div
-            className="absolute right-0 top-full mt-1 bg-[#101012] border border-[rgba(99,102,241,0.15)] rounded shadow-lg z-50 p-3 min-w-[240px]"
+            className="absolute right-0 top-full mt-1 bg-[#101012] border border-[rgba(255,255,255,0.12)] rounded shadow-lg z-50 p-3 min-w-[240px]"
             onMouseLeave={() => setExportOpen(false)}
           >
             <label className="text-xs text-[#A8A8B2] block mb-1">
               Format
             </label>
             <select
-              className="w-full bg-[#17171A] border border-[rgba(99,102,241,0.12)] rounded px-2 py-1 text-xs mb-2"
+              className="w-full bg-[#17171A] border border-[rgba(255,255,255,0.1)] rounded px-2 py-1 text-xs mb-2"
               value={exportFormat}
               onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
             >
@@ -317,8 +317,8 @@ function IconBtn({ icon, title, onClick, disabled, active, label }: IconBtnProps
         disabled
           ? "text-neutral-600 cursor-not-allowed"
           : active
-            ? "bg-[rgba(99,102,241,0.20)] text-[#6366F1] border border-[rgba(99,102,241,0.30)]"
-            : "text-neutral-300 hover:bg-[rgba(99,102,241,0.08)]"
+            ? "bg-[rgba(255,255,255,0.15)] text-[#6366F1] border border-[rgba(255,255,255,0.30)]"
+            : "text-neutral-300 hover:bg-[rgba(255,255,255,0.07)]"
       }`}
     >
       {icon}

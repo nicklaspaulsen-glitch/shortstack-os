@@ -269,7 +269,7 @@ export default function CreationWalkthrough({
       />
 
       {/* Main container */}
-      <div className="relative w-full max-w-5xl max-h-[90vh] bg-surface border border-border rounded-2xl shadow-2xl shadow-black/50 overflow-hidden flex flex-col fade-in">
+      <div className="relative w-full max-w-5xl max-h-[90vh] bg-surface border border-border  shadow-2xl shadow-black/50 overflow-hidden flex flex-col fade-in">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-border bg-surface-light/40">
           <div className="flex items-center gap-3">

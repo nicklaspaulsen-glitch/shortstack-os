@@ -193,7 +193,7 @@ export default function FeaturesOverview() {
         className="absolute inset-0 -z-0 pointer-events-none opacity-30"
         style={{
           background:
-            "radial-gradient(ellipse 80% 50% at 50% 30%, rgba(99,102,241,0.04) 0%, transparent 70%)",
+            "radial-gradient(ellipse 80% 50% at 50% 30%, rgba(255,255,255,0.04) 0%, transparent 70%)",
         }}
       />
       <div className="max-w-6xl mx-auto relative">
@@ -221,7 +221,7 @@ export default function FeaturesOverview() {
 function FeatureCard({ feature }: { feature: Feature }) {
   return (
     <div
-      className="group relative rounded-2xl p-6 h-full transition-all duration-500 hover:-translate-y-1 overflow-hidden"
+      className="group relative p-6 h-full transition-all duration-500 hover:-translate-y-1 overflow-hidden"
       style={{
         background:
           "linear-gradient(160deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.005) 100%)",

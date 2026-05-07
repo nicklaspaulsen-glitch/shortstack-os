@@ -281,7 +281,7 @@ export function Wizard({
 
   return (
     <div
-      className={`w-full bg-surface border border-border rounded-2xl overflow-hidden shadow-card ${className}`}
+      className={`w-full bg-surface border border-border  overflow-hidden shadow-card ${className}`}
       data-wizard-root
     >
       {/* Progress bar */}

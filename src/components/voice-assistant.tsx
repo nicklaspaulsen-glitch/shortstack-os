@@ -292,7 +292,7 @@ export default function VoiceAssistant() {
 
   return (
     <Draggable defaultX={288} defaultY={typeof window !== "undefined" ? window.innerHeight - 580 : 200} storageKey="voice_panel">
-    <div className="w-[420px] bg-surface border border-border rounded-2xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in" style={{ height: "560px" }}>
+    <div className="w-[420px] bg-surface border border-border  shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in" style={{ height: "560px" }}>
       {/* Header */}
       <div className="bg-gradient-to-r from-gold-dark/20 to-gold/10 px-4 py-3 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
@@ -359,7 +359,7 @@ export default function VoiceAssistant() {
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 ${
+            <div className={`max-w-[85%]  px-3.5 py-2.5 ${
               msg.role === "user"
                 ? "bg-gold text-black rounded-br-sm"
                 : "bg-surface-light text-foreground rounded-bl-sm"
@@ -373,7 +373,7 @@ export default function VoiceAssistant() {
         ))}
         {processing && (
           <div className="flex justify-start">
-            <div className="bg-surface-light rounded-2xl rounded-bl-sm px-4 py-3">
+            <div className="bg-surface-light  rounded-bl-sm px-4 py-3">
               <div className="flex gap-1">
                 <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                 <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />

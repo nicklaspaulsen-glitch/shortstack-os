@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -184,8 +184,8 @@ export default function ClientPortalPage() {
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="rounded-2xl border relative overflow-hidden"
-        style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
+        className=" border relative overflow-hidden"
+        style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.1)" }}
       >
         <div className="absolute inset-0 bg-mesh opacity-40" />
         <div className="relative flex items-center justify-between">
@@ -287,8 +287,8 @@ export default function ClientPortalPage() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="rounded-2xl border"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
+          className=" border"
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.1)" }}
         >
           <h2 className="section-header flex items-center gap-2">
             <Sparkles size={13} className="text-gold" /> Your Custom Marketing Plan
@@ -305,8 +305,8 @@ export default function ClientPortalPage() {
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.06 }}
-        className="rounded-2xl border"
-        style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
+        className=" border"
+        style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.1)" }}
       >
         <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-gold" /> Active Services</h2>
         <div className="flex flex-wrap gap-2">
@@ -335,8 +335,8 @@ export default function ClientPortalPage() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
-          className="rounded-2xl border"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
+          className=" border"
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.1)" }}
         >
           <h2 className="section-header flex items-center gap-2">
             <CheckCircle size={13} className="text-success" /> Task Progress
@@ -378,8 +378,8 @@ export default function ClientPortalPage() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.12 }}
-          className="rounded-2xl border"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
+          className=" border"
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.1)" }}
         >
           <h2 className="section-header flex items-center gap-2">
             <Sparkles size={13} className="text-gold" /> Recent Activity
@@ -409,8 +409,8 @@ export default function ClientPortalPage() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.14 }}
-          className="rounded-2xl border"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
+          className=" border"
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.1)" }}
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header mb-0 flex items-center gap-2">
@@ -444,8 +444,8 @@ export default function ClientPortalPage() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="rounded-2xl border border-warning/15"
-          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}
+          className=" border border-warning/15"
+          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -782,7 +782,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
     <div className="fade-in max-w-xl mx-auto py-6 space-y-5">
       {/* Header */}
       <div className="text-center">
-        <div className="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-gold/20">
+        <div className="w-14 h-14 bg-gold/10  flex items-center justify-center mx-auto mb-3 border border-gold/20">
           <Sparkles size={24} className="text-gold" />
         </div>
         <h1 className="text-lg font-bold tracking-tight">Welcome to Trinity</h1>

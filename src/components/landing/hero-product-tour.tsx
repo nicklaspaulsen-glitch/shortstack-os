@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * HeroProductTour — rotating mock-up of 4 product surfaces, replaces the
@@ -69,7 +69,7 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
       onMouseLeave={() => setPaused(false)}
     >
       <div
-        className="relative rounded-2xl overflow-hidden"
+        className="relative overflow-hidden"
         style={{
           background: "rgba(255,255,255,0.02)",
           border: "1px solid rgba(255,255,255,0.06)",
@@ -77,10 +77,10 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
         }}
       >
         <div
-          className="rounded-2xl px-6 md:px-8 py-8 md:py-10 min-h-[420px] relative overflow-hidden"
+          className="px-6 md:px-8 py-8 md:py-10 min-h-[420px] relative overflow-hidden"
           style={{
             background:
-              "linear-gradient(180deg, rgba(99,102,241,0.03) 0%, rgba(11,13,18,1) 100%)",
+              "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(11,13,18,1) 100%)",
           }}
         >
           {/* Window chrome + tab pills */}
@@ -97,10 +97,10 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
                   className="text-[10px] font-semibold px-2.5 py-1 rounded-md transition-all"
                   style={{
                     background:
-                      active === s.key ? "rgba(99,102,241,0.18)" : "rgba(255,255,255,0.03)",
+                      active === s.key ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.03)",
                     border:
                       active === s.key
-                        ? "1px solid rgba(99,102,241,0.35)"
+                        ? "1px solid rgba(255,255,255,0.3)"
                         : "1px solid rgba(255,255,255,0.06)",
                     color:
                       active === s.key ? "#A78BFA" : "rgba(255,255,255,0.5)",
@@ -160,7 +160,7 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "linear-gradient(90deg, transparent, rgba(99,102,241,0.03), transparent)",
+                "linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent)",
               animation: "shimmer 3s ease-in-out infinite",
             }}
           />
@@ -172,7 +172,7 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
         className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(99,102,241,0.1) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(255,255,255,0.07) 0%, transparent 70%)",
           filter: "blur(20px)",
         }}
       />
@@ -215,9 +215,9 @@ function DashboardMock() {
             className="flex-1 rounded-t transition-all"
             style={{
               height: `${h}%`,
-              background: `linear-gradient(180deg, rgba(99,102,241,${
+              background: `linear-gradient(180deg, rgba(255,255,255,${
                 0.3 + (h / 100) * 0.5
-              }) 0%, rgba(99,102,241,0.05) 100%)`,
+              }) 0%, rgba(255,255,255,0.05) 100%)`,
             }}
           />
         ))}
@@ -281,7 +281,7 @@ function LeadsMock() {
                   background:
                     r.status === "Hot"
                       ? "rgba(239,68,68,0.14)"
-                      : "rgba(99,102,241,0.14)",
+                      : "rgba(255,255,255,0.12)",
                   color: r.status === "Hot" ? "#fca5a5" : "#A78BFA",
                 }}
               >
@@ -360,8 +360,8 @@ function VoiceMock() {
       <div
         className="mt-4 rounded-md p-2.5 flex items-center gap-2 text-[10px] text-gray-300"
         style={{
-          background: "rgba(99,102,241,0.05)",
-          border: "1px solid rgba(99,102,241,0.15)",
+          background: "rgba(255,255,255,0.05)",
+          border: "1px solid rgba(255,255,255,0.12)",
         }}
       >
         <Sparkles size={10} style={{ color: "#6366F1" }} />
@@ -475,8 +475,8 @@ function AdsMock() {
       <div
         className="rounded-md p-2.5 flex items-start gap-2 text-[10px] text-gray-300"
         style={{
-          background: "rgba(99,102,241,0.05)",
-          border: "1px solid rgba(99,102,241,0.15)",
+          background: "rgba(255,255,255,0.05)",
+          border: "1px solid rgba(255,255,255,0.12)",
         }}
       >
         <Sparkles size={10} style={{ color: "#6366F1" }} className="shrink-0 mt-0.5" />
