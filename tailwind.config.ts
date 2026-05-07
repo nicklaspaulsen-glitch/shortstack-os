@@ -103,37 +103,15 @@ const config: Config = {
           800: "#991414",
           900: "#660E0E",
         },
-        amber: {
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
-        },
+        // amber, purple, indigo, green, emerald, teal, cyan, sky — REMOVED
+        // custom overrides. Tailwind built-in prismatic colors now render
+        // natively, giving the design real spectral vibrancy (red + amber +
+        // green + cyan + violet). Only gold/lime (brand→red), blue (→grey),
+        // and plum (→charcoal) retain custom scales.
+        //
         // NOTE: yellow-* is intentionally NOT shimmed. It remains Tailwind's
         // literal yellow and is used semantically for "paused" / "warning"
-        // status indicators across dashboard pages. amber-* (brand accent
-        // usage) IS shimmed above. Fix yellow usages page-by-page where they
-        // are cosmetic, not semantic.
-        // Purple now maps to a charcoal neutral so old `bg-purple-500/20` etc.
-        // don't fight the pure-monochrome base. Same shape as plum.
-        purple: {
-          50: "#F4F4F5",
-          100: "#E4E4E7",
-          200: "#D4D4D8",
-          300: "#A1A1AA",
-          400: "#52525B",
-          500: "#3F3F46",
-          600: "#2C2C32",
-          700: "#1F1F23",
-          800: "#18181B",
-          900: "#101012",
-        },
+        // status indicators across dashboard pages.
         plum: {
           50: "#F4F4F5",
           100: "#E4E4E7",
@@ -146,19 +124,8 @@ const config: Config = {
           800: "#18181B",
           900: "#101012",
         },
-        // Indigo scale — redirected to prism red accent.
-        indigo: {
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
-        },
+        // indigo: removed custom override — Tailwind default indigo (violet)
+        // renders natively for prismatic accent.
         // Lime alias — kept registered so `text-lime-*` / `bg-lime-*` in
         // old code still resolves, redirected to prism red accent.
         lime: {
@@ -189,78 +156,8 @@ const config: Config = {
           900: "#1C1C21",
           950: "#141417",
         },
-        // Green alias — redirected to prism red. Semantic "success" states
-        // use the lighter end of the red scale (soft pink reads as positive
-        // on dark backgrounds when combined with a checkmark icon).
-        green: {
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
-          950: "#4D0A0A",
-        },
-        // Emerald alias → prism red
-        emerald: {
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
-          950: "#4D0A0A",
-        },
-        // Teal alias → prism red
-        teal: {
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
-          950: "#4D0A0A",
-        },
-        // Cyan alias → prism red
-        cyan: {
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
-          950: "#4D0A0A",
-        },
-        // Sky alias → prism red
-        sky: {
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
-          950: "#4D0A0A",
-        },
+        // green, emerald, teal, cyan, sky: removed custom overrides.
+        // Tailwind defaults render natively for prismatic vibrancy.
       },
       fontFamily: {
         // Body — kept as default font-sans so existing pages don't change.
