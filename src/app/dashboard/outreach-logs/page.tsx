@@ -19,6 +19,7 @@ import {
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { motion } from "framer-motion";
 
 /* ── Types ── */
 interface OutreachEntry {
@@ -565,11 +566,14 @@ export default function OutreachLogsPage() {
           { label: "SMS", value: stats.byPlatform?.sms || 0, color: "text-emerald-400", icon: <Phone size={12} /> },
           { label: "Calls", value: stats.byPlatform?.call || 0, color: "text-blue-400", icon: <PhoneCall size={12} /> },
         ].map((s, i) => (
-          <div key={i} className="card text-center p-2">
-            <div className={`w-5 h-5 rounded-md mx-auto mb-1 flex items-center justify-center bg-white/5 ${s.color}`}>{s.icon}</div>
-            <p className="text-sm font-bold">{s.value}</p>
-            <p className="text-[8px] text-muted">{s.label}</p>
-          </div>
+          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden text-center">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <div className="p-2">
+              <div className={`w-5 h-5 rounded-md mx-auto mb-1 flex items-center justify-center bg-white/5 ${s.color}`}>{s.icon}</div>
+              <p className="text-sm font-bold">{s.value}</p>
+              <p className="text-[8px] text-muted">{s.label}</p>
+            </div>
+          </motion.div>
         ))}
       </div>
 
@@ -892,8 +896,10 @@ export default function OutreachLogsPage() {
 
           {/* ── DETAIL SIDE PANEL ── */}
           {detailEntry && (
-            <div className="w-full lg:w-[380px] flex-shrink-0 lg:sticky lg:top-4 lg:self-start">
-              <div className="card space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto">
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full lg:w-[380px] flex-shrink-0 lg:sticky lg:top-4 lg:self-start">
+              <div className="glass rounded-xl overflow-hidden">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+              <div className="p-5 space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto">
                 {/* Header */}
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
@@ -1215,7 +1221,8 @@ export default function OutreachLogsPage() {
                   </div>
                 )}
               </div>
-            </div>
+              </div>
+            </motion.div>
           )}
         </div>
       )}
@@ -1224,7 +1231,9 @@ export default function OutreachLogsPage() {
       {tab === "analytics" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="card">
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden" whileHover={{ y: -4, scale: 1.01 }}>
+              <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+              <div className="p-5">
               <h3 className="text-sm font-semibold mb-3">Volume by Platform</h3>
               <div className="space-y-3">
                 {Object.entries(stats.byPlatform).sort(([,a],[,b]) => b - a).map(([platform, count]) => {
@@ -1245,8 +1254,11 @@ export default function OutreachLogsPage() {
                   <p className="text-[10px] text-muted text-center py-4">No data yet</p>
                 )}
               </div>
-            </div>
-            <div className="card">
+              </div>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} className="glass rounded-xl overflow-hidden" whileHover={{ y: -4, scale: 1.01 }}>
+              <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+              <div className="p-5">
               <h3 className="text-sm font-semibold mb-3">Status Breakdown</h3>
               <div className="space-y-3">
                 {[
@@ -1265,29 +1277,25 @@ export default function OutreachLogsPage() {
                   </div>
                 ))}
               </div>
-            </div>
+              </div>
+            </motion.div>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="card text-center p-4">
-              <ThumbsUp size={20} className="mx-auto mb-2 text-green-400" />
-              <p className="text-xl font-bold text-green-400">{stats.replied}</p>
-              <p className="text-[10px] text-muted">Total Replies</p>
-            </div>
-            <div className="card text-center p-4">
-              <BarChart3 size={20} className="mx-auto mb-2 text-gold" />
-              <p className="text-xl font-bold text-gold">{replyRate}%</p>
-              <p className="text-[10px] text-muted">Reply Rate</p>
-            </div>
-            <div className="card text-center p-4">
-              <ThumbsDown size={20} className="mx-auto mb-2 text-red-400" />
-              <p className="text-xl font-bold text-red-400">{stats.failed}</p>
-              <p className="text-[10px] text-muted">Failed/Bounced</p>
-            </div>
-            <div className="card text-center p-4">
-              <Calendar size={20} className="mx-auto mb-2 text-blue-400" />
-              <p className="text-xl font-bold text-blue-400">{stats.total}</p>
-              <p className="text-[10px] text-muted">All Time Total</p>
-            </div>
+            {[
+              { icon: <ThumbsUp size={20} className="mx-auto mb-2 text-green-400" />, value: stats.replied, label: "Total Replies", color: "text-green-400" },
+              { icon: <BarChart3 size={20} className="mx-auto mb-2 text-gold" />, value: `${replyRate}%`, label: "Reply Rate", color: "text-gold" },
+              { icon: <ThumbsDown size={20} className="mx-auto mb-2 text-red-400" />, value: stats.failed, label: "Failed/Bounced", color: "text-red-400" },
+              { icon: <Calendar size={20} className="mx-auto mb-2 text-blue-400" />, value: stats.total, label: "All Time Total", color: "text-blue-400" },
+            ].map((tile, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 + i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden text-center" whileHover={{ y: -4, scale: 1.01 }}>
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div className="p-4">
+                  {tile.icon}
+                  <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
+                  <p className="text-[10px] text-muted">{tile.label}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       )}

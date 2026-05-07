@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { Wizard, type WizardStepDef } from "@/components/ui/wizard";
+import { motion } from "framer-motion";
 
 /* ── Types ──────────────────────────────────────────────────── */
 
@@ -338,7 +339,9 @@ export default function ReportGeneratorPage() {
   );
 
   const previewBlock = (
-    <div className="bg-surface-light border border-border/30 rounded-2xl p-5 text-xs">
+    <div className="glass rounded-2xl overflow-hidden text-xs">
+      <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+    <div className="p-5">
       <div className="flex items-center gap-2 mb-2">
         <FileText size={12} className="text-gold" />
         <p className="text-[10px] uppercase tracking-wider font-semibold text-gold">Report preview</p>
@@ -381,6 +384,7 @@ export default function ReportGeneratorPage() {
           </span>
         </label>
       </div>
+    </div>
     </div>
   );
 
@@ -449,7 +453,9 @@ export default function ReportGeneratorPage() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} className="lg:col-span-2 glass rounded-xl overflow-hidden">
+          <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+          <div className="p-1">
           <Wizard
             steps={steps}
             onFinish={generate}
@@ -476,16 +482,19 @@ export default function ReportGeneratorPage() {
             activeIdx={step}
             onStepChange={setStep}
           />
-        </div>
+          </div>
+        </motion.div>
 
         <div className="lg:col-span-1 space-y-4">
           {/* Live preview always visible on desktop */}
-          <div className="hidden lg:block">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} className="hidden lg:block">
             {previewBlock}
-          </div>
+          </motion.div>
 
           {/* Past reports */}
-          <div className="bg-surface border border-border/50 rounded-2xl p-5">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.4 }} className="glass rounded-2xl overflow-hidden" whileHover={{ y: -4, scale: 1.01 }}>
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+          <div className="p-5">
             <div className="flex items-center gap-2 mb-3">
               <History size={14} className="text-muted" />
               <h2 className="text-sm font-semibold text-foreground">Past reports</h2>
@@ -535,6 +544,7 @@ export default function ReportGeneratorPage() {
               </ul>
             )}
           </div>
+          </motion.div>
         </div>
       </div>
     </div>

@@ -16,6 +16,7 @@
 import PageHero from "@/components/ui/page-hero";
 import { MessagesSquare } from "lucide-react";
 import OutreachFeedClient from "@/components/outreach/outreach-feed-client";
+import { motion } from "framer-motion";
 
 export default function OutreachFeedPage() {
   return (
@@ -27,7 +28,17 @@ export default function OutreachFeedPage() {
         icon={<MessagesSquare size={22} />}
         gradient="purple"
       />
-      <OutreachFeedClient mode="agency" />
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.4 }}
+        className="glass rounded-xl overflow-hidden"
+      >
+        <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+        <div className="p-1">
+          <OutreachFeedClient mode="agency" />
+        </div>
+      </motion.div>
     </div>
   );
 }

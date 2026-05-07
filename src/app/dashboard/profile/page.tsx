@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import { motion } from "framer-motion";
 
 export default function ProfilePage() {
   const { profile, refreshProfile } = useAuth();
@@ -152,7 +153,15 @@ export default function ProfilePage() {
       />
 
       {/* Avatar + Identity Card */}
-      <div className="card">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0 * 0.06, duration: 0.4 }}
+        className="glass rounded-xl overflow-hidden"
+        whileHover={{ y: -4, scale: 1.01 }}
+      >
+        <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+        <div className="p-5">
         <div className="flex items-center gap-5">
           <div className="relative group">
             {avatarUrl ? (
@@ -186,10 +195,19 @@ export default function ProfilePage() {
             <p className="text-xs text-muted mt-0.5 capitalize">{profile?.role === "admin" ? "Founder" : (profile?.role?.replace("_", " ") || "Admin")} &middot; {form.email}</p>
           </div>
         </div>
-      </div>
+        </div>
+      </motion.div>
 
       {/* Username + Nickname */}
-      <div className="card space-y-3">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1 * 0.06, duration: 0.4 }}
+        className="glass rounded-xl overflow-hidden"
+        whileHover={{ y: -4, scale: 1.01 }}
+      >
+        <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+      <div className="p-5 space-y-3">
         <h2 className="section-header flex items-center gap-2">
           <AtSign size={14} className="text-gold" /> Identity
         </h2>
@@ -236,9 +254,18 @@ export default function ProfilePage() {
           </div>
         )}
       </div>
+      </motion.div>
 
       {/* Personal Info */}
-      <div className="card space-y-3">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2 * 0.06, duration: 0.4 }}
+        className="glass rounded-xl overflow-hidden"
+        whileHover={{ y: -4, scale: 1.01 }}
+      >
+        <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+      <div className="p-5 space-y-3">
         <h2 className="section-header">Personal Information</h2>
         <div className="grid grid-cols-2 gap-3">
           <div>
@@ -272,9 +299,18 @@ export default function ProfilePage() {
           {saving ? "Saving..." : "Save Changes"}
         </button>
       </div>
+      </motion.div>
 
       {/* Change Password */}
-      <div className="card space-y-3">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 3 * 0.06, duration: 0.4 }}
+        className="glass rounded-xl overflow-hidden"
+        whileHover={{ y: -4, scale: 1.01 }}
+      >
+        <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+      <div className="p-5 space-y-3">
         <h2 className="section-header flex items-center gap-2"><Key size={14} className="text-gold" /> Change Password</h2>
         <div className="space-y-2">
           <input type="password" value={password.new} onChange={e => setPassword({ ...password, new: e.target.value })}
@@ -287,6 +323,7 @@ export default function ProfilePage() {
           <Key size={12} /> Change Password
         </button>
       </div>
+      </motion.div>
     </div>
   );
 }
