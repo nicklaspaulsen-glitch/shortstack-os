@@ -196,7 +196,8 @@ export default function VoiceStudioPage() {
       </div>
 
       <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
-        <div className="border-b border-white/10">
+        {/* ── Tab bar — glass pill container ── */}
+        <div className="glass rounded-xl p-1">
           <nav className="flex gap-1 overflow-x-auto" aria-label="Voice Studio tabs">
             {TAB_ORDER.map((t) => {
               const isActive = tab === t;
@@ -205,10 +206,10 @@ export default function VoiceStudioPage() {
                   key={t}
                   type="button"
                   onClick={() => setTab(t)}
-                  className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
                     isActive
-                      ? "border-[#6366F1] text-[#6366F1]"
-                      : "border-transparent text-white/60 hover:text-white"
+                      ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
+                      : "text-white/40 hover:text-white/60"
                   }`}
                   aria-current={isActive ? "page" : undefined}
                 >
@@ -267,8 +268,16 @@ function MyVoicesTab({
         </div>
       ) : (
         <div className="space-y-3">
-          {clones.map((c) => (
-            <CloneRow key={c.id} clone={c} onChange={onChange} />
+          {clones.map((c, index) => (
+            <motion.div
+              key={c.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: index * 0.05 }}
+              whileHover={{ scale: 1.01 }}
+            >
+              <CloneRow clone={c} onChange={onChange} />
+            </motion.div>
           ))}
         </div>
       )}
@@ -365,7 +374,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
   }, [files, label, description, consentKind, signedBy, onCreated]);
 
   return (
-    <div className="rounded-xl border border-[rgba(99,102,241,0.12)] bg-gradient-to-br from-[rgba(99,102,241,0.04)] to-transparent p-6">
+    <div className="glass rounded-xl p-6">
       <div className="flex items-start gap-4">
         <div className="rounded-lg border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] p-2.5">
           <Upload size={20} className="text-[#6366F1]" />
@@ -388,10 +397,11 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
             onChange={(e) => handleFiles(e.target.files)}
             className="hidden"
           />
+          {/* ── Upload drop zone ── */}
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[rgba(99,102,241,0.25)] bg-[rgba(99,102,241,0.03)] px-4 py-6 text-sm text-[#6366F1]/80 hover:border-[rgba(99,102,241,0.45)] hover:bg-[rgba(99,102,241,0.06)] transition-colors"
+            className="glass flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-indigo-500/30 px-4 py-6 text-sm text-[#6366F1]/80 hover:border-indigo-500/50 transition-colors"
           >
             <Upload size={16} />
             {files.length === 0
@@ -552,7 +562,7 @@ function CloneRow({
   }, [clone.id, clone.label, onChange]);
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+    <div className="glass rounded-xl p-5 cursor-pointer tilt-3d">
       <div className="flex flex-wrap items-start gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]">
           <Mic size={20} />
@@ -765,7 +775,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   return (
     <div className="space-y-4">
       {/* Filter bar */}
-      <div className="space-y-2.5 rounded-xl border border-white/8 bg-white/[0.03] p-3">
+      <div className="glass-md space-y-2.5 rounded-xl p-3">
         {/* Search row */}
         <div className="relative">
           <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
@@ -774,7 +784,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search presets…"
-            className="w-full rounded-lg border border-white/10 bg-black/30 py-1.5 pl-8 pr-3 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50"
+            className="glass rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50"
           />
         </div>
         {/* Gender row */}
@@ -846,16 +856,22 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p) => (
-            <PresetCard
+          {filtered.map((p, index) => (
+            <motion.div
               key={p.id}
-              preset={p}
-              cachedUrl={previewCache[p.id] ?? null}
-              cachedText={textCache[p.id] ?? TEST_PROMPT_DEFAULT}
-              onUrlCached={(url) => setPreviewCache((prev) => ({ ...prev, [p.id]: url }))}
-              onTextChanged={(text) => setTextCache((prev) => ({ ...prev, [p.id]: text }))}
-              onSaved={onRefresh}
-            />
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: index * 0.05 }}
+            >
+              <PresetCard
+                preset={p}
+                cachedUrl={previewCache[p.id] ?? null}
+                cachedText={textCache[p.id] ?? TEST_PROMPT_DEFAULT}
+                onUrlCached={(url) => setPreviewCache((prev) => ({ ...prev, [p.id]: url }))}
+                onTextChanged={(text) => setTextCache((prev) => ({ ...prev, [p.id]: text }))}
+                onSaved={onRefresh}
+              />
+            </motion.div>
           ))}
         </div>
       )}
@@ -933,7 +949,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
 
   return (
     <div
-      className="group flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-5 transition-colors duration-150 hover:border-[rgba(99,102,241,0.2)]"
+      className="glass-indigo group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-colors duration-150"
       onMouseEnter={() => {
         setIsHovering(true);
         if (testUrl || testing) return;
@@ -944,126 +960,130 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
       }}
     >
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]">
-          <Mic size={16} />
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
-            {lang}
-          </span>
-          <span className="rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#6366F1]/70">
-            {category}
-          </span>
-        </div>
-      </div>
-
-      {/* Info */}
-      <h3 className="mt-3 text-sm font-semibold text-white">{preset.label}</h3>
-      {preset.description && (
-        <p className="mt-1 text-xs text-white/55 leading-relaxed">{preset.description}</p>
-      )}
-
-      {/* Edit test text */}
-      {editMode ? (
-        <div className="mt-3 space-y-1.5">
-          <textarea
-            value={testText}
-            onChange={(e) => { setTestText(e.target.value); onTextChanged(e.target.value); }}
-            rows={3}
-            maxLength={300}
-            placeholder="Type what you want the voice to say…"
-            className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50 resize-none"
-          />
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] text-white/30">{testText.length}/300</span>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => { setEditMode(false); onTest(); }}
-                className="text-[10px] text-[rgba(99,102,241,0.7)] hover:text-[#6366F1] cursor-pointer"
-              >
-                Preview
-              </button>
-              <button
-                type="button"
-                onClick={() => setEditMode(false)}
-                className="text-[10px] text-white/40 hover:text-white/70 cursor-pointer"
-              >
-                Done
-              </button>
-            </div>
+      {/* Rainbow top bar */}
+      <div style={{ height: 2, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899)" }} className="rounded-t-xl" />
+      <div className="p-5 flex flex-col flex-1">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]">
+            <Mic size={16} />
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
+              {lang}
+            </span>
+            <span className="rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#6366F1]/70">
+              {category}
+            </span>
           </div>
         </div>
-      ) : (
-        <div className="mt-3 flex items-center gap-1.5">
-          <p className="flex-1 truncate text-[11px] text-white/35 italic">{testText}</p>
+
+        {/* Info */}
+        <h3 className="mt-3 text-sm font-semibold text-white">{preset.label}</h3>
+        {preset.description && (
+          <p className="mt-1 text-xs text-white/55 leading-relaxed">{preset.description}</p>
+        )}
+
+        {/* Edit test text */}
+        {editMode ? (
+          <div className="mt-3 space-y-1.5">
+            <textarea
+              value={testText}
+              onChange={(e) => { setTestText(e.target.value); onTextChanged(e.target.value); }}
+              rows={3}
+              maxLength={300}
+              placeholder="Type what you want the voice to say…"
+              className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50 resize-none"
+            />
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] text-white/30">{testText.length}/300</span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => { setEditMode(false); onTest(); }}
+                  className="text-[10px] text-[rgba(99,102,241,0.7)] hover:text-[#6366F1] cursor-pointer"
+                >
+                  Preview
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditMode(false)}
+                  className="text-[10px] text-white/40 hover:text-white/70 cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-3 flex items-center gap-1.5">
+            <p className="flex-1 truncate text-[11px] text-white/35 italic">{testText}</p>
+            <button
+              type="button"
+              onClick={() => setEditMode(true)}
+              className="flex-shrink-0 text-[10px] text-[rgba(99,102,241,0.55)] hover:text-[#6366F1] cursor-pointer"
+              aria-label="Edit test phrase"
+            >
+              Edit
+            </button>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="mt-3 flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setEditMode(true)}
-            className="flex-shrink-0 text-[10px] text-[rgba(99,102,241,0.55)] hover:text-[#6366F1] cursor-pointer"
-            aria-label="Edit test phrase"
+            onClick={onTest}
+            disabled={testing}
+            className={[
+              "flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer",
+              // Pulse border when hover detected but audio not yet loading
+              isHovering && !testing && !testUrl
+                ? "border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.05)] text-[#6366F1]/80 animate-pulse"
+                : "border-white/15 bg-white/5 text-white hover:bg-white/10",
+              "disabled:cursor-not-allowed disabled:opacity-40",
+            ].join(" ")}
           >
-            Edit
+            {testing ? (
+              <Loader2 size={12} className="animate-spin" />
+            ) : (
+              <Play size={12} />
+            )}
+            {testing ? "Generating…" : testUrl ? "Re-preview" : "Preview"}
+          </button>
+
+          {/* Save to My Voices */}
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={saving || saved}
+            title={saved ? "Already in My Voices" : "Save to My Voices"}
+            className={[
+              "flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed",
+              saved
+                ? "border-[rgba(99,102,241,0.25)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]/70"
+                : "border-white/15 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white",
+            ].join(" ")}
+          >
+            {saving ? <Loader2 size={12} className="animate-spin" /> : saved ? <CheckCircle2 size={12} /> : <Sparkles size={12} />}
+            {saved ? "Saved" : "Use"}
           </button>
         </div>
-      )}
 
-      {/* Actions */}
-      <div className="mt-3 flex items-center gap-2">
-        <button
-          type="button"
-          onClick={onTest}
-          disabled={testing}
-          className={[
-            "flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer",
-            // Pulse border when hover detected but audio not yet loading
-            isHovering && !testing && !testUrl
-              ? "border-[rgba(99,102,241,0.3)] bg-[rgba(99,102,241,0.05)] text-[#6366F1]/80 animate-pulse"
-              : "border-white/15 bg-white/5 text-white hover:bg-white/10",
-            "disabled:cursor-not-allowed disabled:opacity-40",
-          ].join(" ")}
-        >
-          {testing ? (
-            <Loader2 size={12} className="animate-spin" />
-          ) : (
-            <Play size={12} />
-          )}
-          {testing ? "Generating…" : testUrl ? "Re-preview" : "Preview"}
-        </button>
-
-        {/* Save to My Voices */}
-        <button
-          type="button"
-          onClick={onSave}
-          disabled={saving || saved}
-          title={saved ? "Already in My Voices" : "Save to My Voices"}
-          className={[
-            "flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed",
-            saved
-              ? "border-[rgba(99,102,241,0.25)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]/70"
-              : "border-white/15 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white",
-          ].join(" ")}
-        >
-          {saving ? <Loader2 size={12} className="animate-spin" /> : saved ? <CheckCircle2 size={12} /> : <Sparkles size={12} />}
-          {saved ? "Saved" : "Use"}
-        </button>
+        {/* Audio player — kept visible while re-generating (prevUrlRef) */}
+        {(testUrl || (testing && prevUrlRef.current)) && (
+          <div className="relative mt-3 rounded-lg border border-white/10 bg-black/30 p-2">
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+            <audio src={testUrl ?? prevUrlRef.current ?? ""} controls className="w-full" style={{ height: 32 }} />
+            {testing && (
+              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
+                <Loader2 size={16} className="animate-spin text-[#6366F1]" />
+              </div>
+            )}
+          </div>
+        )}
+        {error && <p className="mt-2 text-xs text-[#F26063]">{error}</p>}
       </div>
-
-      {/* Audio player — kept visible while re-generating (prevUrlRef) */}
-      {(testUrl || (testing && prevUrlRef.current)) && (
-        <div className="relative mt-3 rounded-lg border border-white/10 bg-black/30 p-2">
-          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-          <audio src={testUrl ?? prevUrlRef.current ?? ""} controls className="w-full" style={{ height: 32 }} />
-          {testing && (
-            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
-              <Loader2 size={16} className="animate-spin text-[#6366F1]" />
-            </div>
-          )}
-        </div>
-      )}
-      {error && <p className="mt-2 text-xs text-[#F26063]">{error}</p>}
     </div>
   );
 }
@@ -1087,63 +1107,68 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
     );
   }
   return (
-    <div className="space-y-3">
-      {renders.map((r) => {
-        const audioUrl = r.r2_key ? `${R2_BASE}/${r.r2_key}` : null;
-        const isOpen = playingId === r.id;
-        return (
-          <div
-            key={r.id}
-            className="rounded-xl border border-white/10 bg-white/5 p-4"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div className="flex-1 min-w-[200px]">
-                <p className="text-sm text-white">{r.text_preview}</p>
-                <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-white/50">
-                  <span>
-                    {new Date(r.rendered_at).toLocaleString(undefined, {
-                      dateStyle: "short",
-                      timeStyle: "short",
-                    })}
-                  </span>
-                  {r.duration_seconds !== null && (
-                    <span>· {Math.round(r.duration_seconds)}s</span>
-                  )}
-                  <span>· used {r.use_count}×</span>
-                  {r.context && (
-                    <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 uppercase tracking-wider text-white/60">
-                      {r.context}
+    <div className="glass rounded-xl overflow-hidden">
+      <div className="divide-y divide-white/5">
+        {renders.map((r, index) => {
+          const audioUrl = r.r2_key ? `${R2_BASE}/${r.r2_key}` : null;
+          const isOpen = playingId === r.id;
+          return (
+            <motion.div
+              key={r.id}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: index * 0.04 }}
+              className="p-4"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="flex-1 min-w-[200px]">
+                  <p className="text-sm text-white">{r.text_preview}</p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-white/50">
+                    <span>
+                      {new Date(r.rendered_at).toLocaleString(undefined, {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                      })}
                     </span>
-                  )}
+                    {r.duration_seconds !== null && (
+                      <span>· {Math.round(r.duration_seconds)}s</span>
+                    )}
+                    <span>· used {r.use_count}×</span>
+                    {r.context && (
+                      <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 uppercase tracking-wider text-white/60">
+                        {r.context}
+                      </span>
+                    )}
+                  </div>
                 </div>
+                {audioUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setPlayingId(isOpen ? null : r.id)}
+                    className="flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/70 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer"
+                    aria-label={isOpen ? "Close audio player" : "Play render"}
+                  >
+                    {isOpen ? <Pause size={12} /> : <Play size={12} />}
+                    {isOpen ? "Close" : "Play"}
+                  </button>
+                )}
               </div>
-              {audioUrl && (
-                <button
-                  type="button"
-                  onClick={() => setPlayingId(isOpen ? null : r.id)}
-                  className="flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/70 hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer"
-                  aria-label={isOpen ? "Close audio player" : "Play render"}
-                >
-                  {isOpen ? <Pause size={12} /> : <Play size={12} />}
-                  {isOpen ? "Close" : "Play"}
-                </button>
+              {isOpen && audioUrl && (
+                <div className="mt-3 rounded-lg border border-white/10 bg-black/30 p-2">
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <audio
+                    src={audioUrl}
+                    controls
+                    autoPlay
+                    className="w-full"
+                    style={{ height: 32 }}
+                  />
+                </div>
               )}
-            </div>
-            {isOpen && audioUrl && (
-              <div className="mt-3 rounded-lg border border-white/10 bg-black/30 p-2">
-                {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                <audio
-                  src={audioUrl}
-                  controls
-                  autoPlay
-                  className="w-full"
-                  style={{ height: 32 }}
-                />
-              </div>
-            )}
-          </div>
-        );
-      })}
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }
