@@ -70,6 +70,7 @@ export default function LandingFooter() {
                 { label: "Login", href: "/login" },
                 { label: "Terms of Service", href: "/terms" },
                 { label: "Privacy Policy", href: "/privacy" },
+                { label: "Cookie Policy", href: "/cookies" },
               ].map((link) => (
                 <li key={link.label}>
                   <Link
