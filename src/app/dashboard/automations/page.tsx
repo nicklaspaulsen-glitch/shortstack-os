@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
@@ -122,12 +123,14 @@ export default function AutomationsPage() {
             >
               Browse template library
             </Link>
-            <Link
-              href="/dashboard/workflow-builder"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors border border-white/20"
-            >
-              <Plus size={15} /> New Automation
-            </Link>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                href="/dashboard/workflow-builder"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors border border-white/20"
+              >
+                <Plus size={15} /> New Automation
+              </Link>
+            </motion.div>
           </div>
         }
       />
@@ -138,14 +141,20 @@ export default function AutomationsPage() {
           { label: "Total", value: workflows.length, color: "text-white" },
           { label: "Active", value: activeCount, color: "text-emerald-400" },
           { label: "Paused", value: workflows.length - activeCount, color: "text-indigo-400" },
-        ].map(s => (
-          <div
+        ].map((s, index) => (
+          <motion.div
             key={s.label}
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center"
+            className="glass rounded-xl px-4 py-3 text-center overflow-hidden relative"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: index * 0.06 }}
+            whileHover={{ y: -2 }}
           >
-            <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <p className={`text-2xl font-bold ${s.color} mt-2`}>{s.value}</p>
             <p className="text-xs text-white/40 mt-0.5">{s.label}</p>
-          </div>
+            <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: 'rgba(99,102,241,0.3)' }} />
+          </motion.div>
         ))}
       </div>
 
@@ -156,7 +165,7 @@ export default function AutomationsPage() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search automations…"
-          className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500/50"
+          className="w-full glass rounded-lg pl-8 pr-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500/50"
         />
       </div>
 
@@ -187,15 +196,19 @@ export default function AutomationsPage() {
           }
         />
       ) : (
-        <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+        <div className="glass rounded-xl overflow-hidden">
           <div className="divide-y divide-white/5">
-            {filtered.map(w => {
+            {filtered.map((w, index) => {
               const triggerType = getTriggerType(w.nodes);
               const stepCount = (w.nodes?.length || 0) + (Array.isArray(w.edges) ? w.edges.length : 0);
               return (
-                <div
+                <motion.div
                   key={w.id}
-                  className="flex items-center gap-4 px-5 py-4 hover:bg-white/5 transition-colors"
+                  className="flex items-center gap-4 px-5 py-4 transition-colors"
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.18, delay: index * 0.04 }}
+                  whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
                 >
                   {/* Status indicator */}
                   <div
@@ -258,7 +271,7 @@ export default function AutomationsPage() {
                       )}
                     </button>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
