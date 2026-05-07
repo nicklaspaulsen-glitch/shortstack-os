@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -568,14 +569,22 @@ export default function InboxPage() {
             { label: "Unread", value: stats.unread, icon: <AlertCircle size={14} />, color: "text-amber-400" },
             { label: "Starred", value: stats.starred, icon: <Star size={14} />, color: "text-yellow-400" },
             { label: "This Week", value: stats.thisWeek, icon: <Calendar size={14} />, color: "text-emerald-400" },
-          ].map(s => (
-            <div key={s.label} className="card !py-2.5 !px-3 flex items-center gap-3">
+          ].map((s, index) => (
+            <motion.div
+              key={s.label}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: index * 0.06 }}
+              whileHover={{ y: -2 }}
+              className="glass rounded-xl overflow-hidden relative !py-2.5 !px-3 flex items-center gap-3"
+            >
+              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
               <div className={`${s.color}`}>{s.icon}</div>
               <div>
                 <p className="text-lg font-bold leading-none">{s.value}</p>
                 <p className="text-[9px] text-muted">{s.label}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
         )}
@@ -589,7 +598,7 @@ export default function InboxPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search inbox..."
-              className="input text-xs pl-9 w-full"
+              className="input text-xs pl-9 w-full glass rounded-lg"
             />
             {search && (
               <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-white">
@@ -659,7 +668,7 @@ export default function InboxPage() {
       {view === "inbox" && (
       <div className="flex-1 flex overflow-hidden px-4 md:px-6 pb-4 md:pb-6 gap-4">
         {/* Left: Category Sidebar */}
-        <div className="w-48 shrink-0 space-y-1 overflow-y-auto pr-1 hidden md:block">
+        <div className="w-48 shrink-0 space-y-1 overflow-y-auto pr-1 hidden md:block glass-md rounded-xl p-2">
           {CATEGORIES.map(c => (
             <button
               key={c.key}
@@ -725,21 +734,25 @@ export default function InboxPage() {
                 description={search ? "Try different keywords." : "Generated content will appear here."}
               />
             ) : (
-              filtered.map(item => {
+              filtered.map((item, index) => {
                 const cat = getCategoryConfig(item.type);
                 const isSelected = selectedIds.has(item.id);
                 return (
-                  <div
+                  <motion.div
                     key={item.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: index * 0.04 }}
+                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
                     onClick={() => openItem(item)}
-                    className={`group flex items-start gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all ${
+                    className={`group flex items-start gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
                       selectedItem?.id === item.id
                         ? "bg-gold/10 border border-gold/20"
                         : isSelected
                         ? "bg-white/10 border border-white/20"
                         : !item.read
-                        ? "bg-white/[0.03] hover:bg-white/[0.06] border border-transparent"
-                        : "hover:bg-white/5 border border-transparent"
+                        ? "bg-white/[0.03] border border-transparent"
+                        : "border border-transparent"
                     }`}
                   >
                     {/* Checkbox */}
@@ -798,7 +811,7 @@ export default function InboxPage() {
                         </button>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })
             )}
@@ -807,7 +820,7 @@ export default function InboxPage() {
 
         {/* Right: Detail Panel */}
         {selectedItem && (
-          <div className="w-full lg:w-[420px] shrink-0 flex flex-col overflow-hidden border-l border-border pl-4">
+          <div className="w-full lg:w-[420px] shrink-0 flex flex-col overflow-hidden border-l border-white/8 pl-4">
             {/* Detail Header */}
             <div className="flex items-start justify-between pb-3 border-b border-border mb-3 shrink-0">
               <div className="min-w-0 flex-1">
@@ -833,26 +846,26 @@ export default function InboxPage() {
 
             {/* Detail Actions */}
             <div className="flex items-center gap-1.5 pb-3 border-b border-border mb-3 shrink-0 flex-wrap">
-              <button onClick={() => copyContent(selectedItem)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs transition-all">
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => copyContent(selectedItem)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs transition-all">
                 {copied === selectedItem.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
                 {copied === selectedItem.id ? "Copied" : "Copy"}
-              </button>
+              </motion.button>
               {selectedItem.downloadable && (
-                <button onClick={() => downloadItem(selectedItem)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs transition-all">
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => downloadItem(selectedItem)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs transition-all">
                   <Download size={12} /> Download
-                </button>
+                </motion.button>
               )}
-              <button onClick={() => toggleStar(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs transition-all">
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggleStar(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs transition-all">
                 {selectedItem.starred ? <Star size={12} className="text-yellow-400 fill-yellow-400" /> : <Star size={12} />}
                 {selectedItem.starred ? "Unstar" : "Star"}
-              </button>
-              <button onClick={() => togglePin(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs transition-all">
+              </motion.button>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => togglePin(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs transition-all">
                 {selectedItem.pinned ? <PinOff size={12} /> : <Pin size={12} />}
                 {selectedItem.pinned ? "Unpin" : "Pin"}
-              </button>
-              <button onClick={() => archiveItem(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-all ml-auto">
+              </motion.button>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => archiveItem(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-all ml-auto">
                 <Archive size={12} /> Archive
-              </button>
+              </motion.button>
             </div>
 
             {/* Tags */}
@@ -907,7 +920,7 @@ export default function InboxPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {autoRuns.map(run => {
+              {autoRuns.map((run, index) => {
                 const iconMap: Record<string, React.ReactNode> = {
                   scraper: <Search size={14} className="text-gold" />,
                   outreach: <Send size={14} className="text-emerald-400" />,
@@ -925,7 +938,14 @@ export default function InboxPage() {
                 const timeStr = mins < 1 ? "just now" : mins < 60 ? `${mins}m ago` : mins < 1440 ? `${Math.floor(mins / 60)}h ago` : `${Math.floor(mins / 1440)}d ago`;
 
                 return (
-                  <div key={run.id} className="flex items-start gap-3 px-4 py-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all">
+                  <motion.div
+                    key={run.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: index * 0.04 }}
+                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    className="flex items-start gap-3 px-4 py-3 rounded-lg glass-md border border-white/5 transition-colors"
+                  >
                     {/* Icon */}
                     <div className="mt-0.5 w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
                       {iconMap[run.type] || <Zap size={14} className="text-muted" />}
@@ -954,7 +974,7 @@ export default function InboxPage() {
                         <Clock size={9} /> {timeStr}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
