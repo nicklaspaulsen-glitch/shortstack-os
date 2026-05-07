@@ -27,17 +27,17 @@ const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #636
 const containerVariants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.08 } },
-};
+} as const;
 
 const tileVariants = {
   hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.38, ease: "easeOut" } },
-};
+  visible: { opacity: 1, y: 0, transition: { duration: 0.38, ease: "easeOut" as const } },
+} as const;
 
 const panelVariants = {
   hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-};
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
+} as const;
 
 export default function BriefingPage() {
   const [stats, setStats] = useState<BriefingStats>({

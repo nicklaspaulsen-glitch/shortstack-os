@@ -59,6 +59,8 @@ function WidgetCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, duration: 0.4 }}
       whileHover={{ y: -4, scale: 1.01 }}
+    >
+    <div
       draggable
       onDragStart={onDragStart}
       onDragOver={onDragOver}
@@ -90,6 +92,7 @@ function WidgetCard({
         <p className="text-2xl font-bold text-white/30 pl-6">--</p>
         <p className="text-[10px] text-white/30 pl-6 uppercase tracking-wider">No data yet</p>
       </div>
+    </div>
     </motion.div>
   );
 }

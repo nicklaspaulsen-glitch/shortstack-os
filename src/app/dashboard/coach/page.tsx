@@ -86,17 +86,17 @@ const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #636
 const containerVariants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.06 } },
-};
+} as const;
 
 const rowVariants = {
   hidden: { opacity: 0, x: -16 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } },
-};
+  visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" as const } },
+} as const;
 
 const cardVariants = {
   hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
-};
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" as const } },
+} as const;
 
 function formatRelativeTime(iso: string): string {
   const ts = new Date(iso).getTime();

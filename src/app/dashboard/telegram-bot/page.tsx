@@ -648,7 +648,6 @@ export default function TelegramBotPage() {
                         <Trash2 size={14} />
                       </button>
                     </div>
-                  </div>
                   </motion.div>
                 );
               })}
@@ -723,7 +722,6 @@ export default function TelegramBotPage() {
                       )}
                       <p className="text-[10px] text-muted mt-1">{fmtTime(a.created_at)}</p>
                     </div>
-                  </div>
                   </motion.div>
                 );
               })}

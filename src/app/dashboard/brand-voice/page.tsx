@@ -380,7 +380,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                 {!p.active && (
                   <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-muted mt-1 inline-block">Inactive</span>
                 )}
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

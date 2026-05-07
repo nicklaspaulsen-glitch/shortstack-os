@@ -2547,7 +2547,7 @@ export default function DesignStudioPage() {
                 {styleTransferring ? <Loader size={12} className="animate-spin" /> : <Shuffle size={12} />}
                 {styleTransferring ? "Applying Style..." : "Apply Style Transfer"}
               </button>
-            </div>
+            </motion.div>
           )}
         </div>
       )}

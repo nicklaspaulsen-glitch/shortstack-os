@@ -412,8 +412,7 @@ export default function DiscordPage() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
+                  </motion.div>
                 );
               })}
             </div>
