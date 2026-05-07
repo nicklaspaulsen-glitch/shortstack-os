@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import SectionHub from "@/components/dashboard/section-hub";
 import type { RollingPreviewItem } from "@/components/RollingPreview";

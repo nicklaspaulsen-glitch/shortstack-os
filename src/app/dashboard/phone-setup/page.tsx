@@ -16,6 +16,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Phone,
   Search,
@@ -400,7 +401,7 @@ export default function PhoneSetupPage() {
 
         {/* Step 1: Pick client */}
         {step === 1 && (
-          <div className="rounded-xl border border-border/50 bg-surface-light/20 p-6">
+          <div className="glass rounded-xl p-6">
             <h2 className="mb-1 text-lg font-semibold">Which client is this number for?</h2>
             <p className="mb-5 text-sm text-muted">
               The phone will be attached to this client so their calls + SMS route correctly.
@@ -429,12 +430,15 @@ export default function PhoneSetupPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {clients.map((c) => {
+                {clients.map((c, idx) => {
                   const selected = selectedClient?.id === c.id;
                   const alreadyHas = !!c.twilio_phone_number;
                   return (
-                    <button
+                    <motion.button
                       key={c.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.04 }}
                       onClick={() => !alreadyHas && setSelectedClient(c)}
                       disabled={alreadyHas}
                       className={`flex items-center gap-3 rounded-lg border p-3 text-left transition ${
@@ -457,7 +461,7 @@ export default function PhoneSetupPage() {
                         </p>
                       </div>
                       {selected && <Check size={16} className="text-gold" />}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
@@ -477,7 +481,7 @@ export default function PhoneSetupPage() {
 
         {/* Step 2: Pick number */}
         {step === 2 && (
-          <div className="rounded-xl border border-border/50 bg-surface-light/20 p-6">
+          <div className="glass rounded-xl p-6">
             <h2 className="mb-1 text-lg font-semibold">Pick a phone number</h2>
             <p className="mb-4 text-sm text-muted">
               Search by area code and pick any available number. Numbers are $1/mo from Twilio.
@@ -537,11 +541,14 @@ export default function PhoneSetupPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {availableNumbers.map((n) => {
+                {availableNumbers.map((n, idx) => {
                   const selected = selectedNumber?.phone === n.phone;
                   return (
-                    <button
+                    <motion.button
                       key={n.phone}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.04 }}
                       onClick={() => setSelectedNumber(n)}
                       className={`rounded-lg border p-3 text-left transition ${
                         selected
@@ -553,7 +560,7 @@ export default function PhoneSetupPage() {
                       <p className="text-[11px] text-muted">
                         {n.locality || "—"}, {n.region || country}
                       </p>
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
@@ -579,7 +586,7 @@ export default function PhoneSetupPage() {
 
         {/* Step 3: Confirm */}
         {step === 3 && selectedClient && selectedNumber && (
-          <div className="rounded-xl border border-border/50 bg-surface-light/20 p-6">
+          <div className="glass rounded-xl p-6">
             <h2 className="mb-1 text-lg font-semibold">Confirm purchase</h2>
             <p className="mb-5 text-sm text-muted">
               Review before we charge your Twilio balance.

@@ -16,6 +16,7 @@
  */
 
 import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import {
@@ -193,7 +194,7 @@ export default function UpgradePage() {
 
       {/* ─── Plan cards grid ───────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
-        {PLAN_ORDER.map((tier) => {
+        {PLAN_ORDER.map((tier, i) => {
           const config = PLAN_TIERS[tier];
           const isCurrent = tier === currentTier;
           const isRecommended = tier === "Pro";
@@ -205,9 +206,13 @@ export default function UpgradePage() {
           const limits = LIMITS_BY_TIER[tier];
 
           return (
-            <div
+            <motion.div
               key={tier}
-              className={`relative rounded-2xl border p-5 flex flex-col transition-all ${
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06, duration: 0.4 }}
+              whileHover={{ y: -4, scale: 1.01 }}
+              className={`relative glass rounded-xl border p-5 flex flex-col transition-shadow ${
                 isRecommended
                   ? "border-emerald-500/30 bg-emerald-500/[0.03] ring-1 ring-emerald-500/15 shadow-card"
                   : isCurrent
@@ -312,13 +317,13 @@ export default function UpgradePage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
 
       {/* ─── Why upgrade? ──────────────────────────────────────────── */}
-      <section className="rounded-2xl border border-gold/20 bg-gradient-to-br from-gold/[0.04] to-transparent p-6">
+      <section className="glass rounded-xl p-6">
         <div className="flex items-center gap-2 mb-3">
           <Sparkles size={16} className="text-gold" />
           <h2 className="text-sm font-bold text-foreground">Why upgrade?</h2>
@@ -374,11 +379,11 @@ export default function UpgradePage() {
       {/* ─── FAQ ───────────────────────────────────────────────────── */}
       <section>
         <h2 className="text-sm font-bold text-foreground mb-4">Frequently asked questions</h2>
-        <div className="rounded-2xl border border-border bg-surface divide-y divide-border">
+        <div className="glass rounded-xl divide-y divide-border">
           {FAQS.map((faq, idx) => {
             const open = openFaq === idx;
             return (
-              <div key={idx}>
+              <motion.div key={idx} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }}>
                 <button
                   onClick={() => setOpenFaq(open ? null : idx)}
                   className="w-full flex items-center justify-between px-5 py-3.5 text-left hover:bg-surface-light/50 transition-colors"
@@ -396,14 +401,14 @@ export default function UpgradePage() {
                     {faq.a}
                   </div>
                 )}
-              </div>
+              </motion.div>
             );
           })}
         </div>
       </section>
 
       {/* ─── CTA ───────────────────────────────────────────────────── */}
-      <section className="rounded-2xl border border-border bg-surface p-6 text-center">
+      <section className="glass rounded-xl p-6 text-center">
         <p className="text-xs text-muted mb-3">Still not sure? See your current usage and invoices.</p>
         <Link
           href="/dashboard/billing"

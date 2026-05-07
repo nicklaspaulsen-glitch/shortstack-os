@@ -14,6 +14,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Mail,
   ArrowLeft,
@@ -240,7 +241,7 @@ export default function MailSetupPage() {
                 <Loader size={14} className="animate-spin" /> Loading…
               </div>
             ) : domains.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-border/50 bg-surface-light/20 p-10 text-center">
+              <div className="rounded-xl border border-dashed border-border/50 glass p-10 text-center">
                 <Mail size={28} className="mx-auto mb-3 text-muted" />
                 <h3 className="mb-1 text-base font-semibold">No custom domains yet</h3>
                 <p className="mx-auto mb-4 max-w-md text-sm text-muted">
@@ -259,15 +260,16 @@ export default function MailSetupPage() {
               </div>
             ) : (
               <div className="space-y-2">
-                {domains.map((d) => (
-                  <DomainRow
-                    key={d.resend_id || d.id}
-                    domain={d}
-                    onVerify={() => d.resend_id && verifyDomain(d.resend_id)}
-                    onView={() => setSelected(d)}
-                    onDelete={() => d.resend_id && deleteDomain(d.resend_id)}
-                    polling={polling}
-                  />
+                {domains.map((d, idx) => (
+                  <motion.div key={d.resend_id || d.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }}>
+                    <DomainRow
+                      domain={d}
+                      onVerify={() => d.resend_id && verifyDomain(d.resend_id)}
+                      onView={() => setSelected(d)}
+                      onDelete={() => d.resend_id && deleteDomain(d.resend_id)}
+                      polling={polling}
+                    />
+                  </motion.div>
                 ))}
               </div>
             )}
@@ -347,7 +349,7 @@ export default function MailSetupPage() {
             </div>
 
             {step === 1 && (
-              <div className="rounded-xl border border-border/50 bg-surface-light/20 p-6">
+              <div className="glass rounded-xl p-6">
                 <h2 className="mb-1 text-lg font-semibold">Pick a subdomain</h2>
                 <p className="mb-4 text-sm text-muted">
                   Recommended pattern: <span className="font-mono text-foreground">mail.yourdomain.com</span>
@@ -402,7 +404,7 @@ export default function MailSetupPage() {
             )}
 
             {step === 2 && (
-              <div className="rounded-xl border border-border/50 bg-surface-light/20 p-6">
+              <div className="glass rounded-xl p-6">
                 <h2 className="mb-1 text-lg font-semibold">Confirm</h2>
                 <p className="mb-5 text-sm text-muted">
                   Ready to register this domain with Resend?
@@ -558,7 +560,7 @@ function DomainRow({
         ? "× Failed"
         : "⏳ Pending";
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-border/50 bg-surface-light/20 p-3">
+    <div className="flex items-center gap-3 glass rounded-xl p-3">
       <Globe size={18} className="shrink-0 text-muted" />
       <div className="min-w-0 flex-1">
         <p className="font-mono text-sm font-semibold">{domain.domain}</p>
@@ -620,9 +622,12 @@ function DnsRecordList({
       {records.map((r, i) => {
         const rowId = `${r.type}-${r.name}-${i}`;
         return (
-          <div
+          <motion.div
             key={rowId}
-            className="rounded-lg border border-border/50 bg-background/40 p-3"
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.04 }}
+            className="glass rounded-xl p-3"
           >
             <div className="mb-2 flex items-center justify-between">
               <span className="rounded bg-gold/15 px-2 py-0.5 text-[10px] font-bold uppercase text-gold">
@@ -660,7 +665,7 @@ function DnsRecordList({
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </div>

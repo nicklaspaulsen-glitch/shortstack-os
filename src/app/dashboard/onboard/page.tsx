@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
   UserPlus, ArrowRight, ArrowLeft, Check, Sparkles,
@@ -458,7 +459,7 @@ export default function OnboardPage() {
           subtitle="Tell us who you are — we'll set up your workspace."
           gradient="gold"
         />
-        <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+        <div className="glass rounded-xl p-6">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
             <p className="text-sm text-muted">Pick one — you can change it later in Settings.</p>
@@ -495,7 +496,7 @@ export default function OnboardPage() {
             subtitle={`Trinity has been personalized for your ${soloSummary.label} business.`}
             gradient="gold"
           />
-          <div className="rounded-2xl border border-gold/30 bg-[var(--color-surface)] p-10 text-center space-y-5">
+          <div className="glass rounded-xl p-10 text-center space-y-5">
             <div className="w-20 h-20 mx-auto bg-gold/10 rounded-full flex items-center justify-center">
               <CheckCircle2 size={40} className="text-gold" />
             </div>
@@ -601,7 +602,7 @@ export default function OnboardPage() {
       {/* ── Quick Add Mode ─────────────────────────────────── */}
       {mode === "quick" && (
         quickSubmitted ? (
-          <div className="rounded-2xl border border-gold/30 bg-[var(--color-surface)] p-10 text-center space-y-5">
+          <div className="glass rounded-xl p-10 text-center space-y-5">
             <div className="w-20 h-20 mx-auto bg-gold/10 rounded-full flex items-center justify-center">
               <CheckCircle2 size={40} className="text-gold" />
             </div>
@@ -631,7 +632,7 @@ export default function OnboardPage() {
             </div>
           </div>
         ) : (
-          <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 space-y-5">
+          <div className="glass rounded-xl p-6 space-y-5">
             <div>
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <Zap size={18} className="text-gold" /> Quick Add Client
@@ -757,7 +758,7 @@ export default function OnboardPage() {
 
       {/* Template Gallery */}
       {mode === "full" && showTemplates && (
-        <div className="rounded-2xl border border-border bg-[var(--color-surface)] p-5 space-y-4">
+        <div className="glass rounded-xl p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-sm font-bold flex items-center gap-2"><Layers size={14} className="text-gold" /> Onboarding Templates</h2>
@@ -784,7 +785,7 @@ export default function OnboardPage() {
       {/* ── Full Wizard Mode ────────────────────────────── */}
       {mode === "full" && (
       wizardComplete ? (
-        <div className="rounded-2xl border border-gold/30 bg-[var(--color-surface)] p-10 text-center space-y-5">
+        <div className="glass rounded-xl p-10 text-center space-y-5">
           <div className="w-20 h-20 mx-auto bg-gold/10 rounded-full flex items-center justify-center">
             <CheckCircle2 size={40} className="text-gold" />
           </div>
@@ -800,10 +801,13 @@ export default function OnboardPage() {
               { label: "Team", value: `${accessUsers.length} members` },
               { label: "Assets", value: `${uploadedAssets} uploaded` },
             ].map((stat, i) => (
-              <div key={i} className="p-3 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)]">
-                <p className="text-[9px] text-muted">{stat.label}</p>
-                <p className="text-sm font-bold text-gold">{stat.value}</p>
-              </div>
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                <div className="p-3">
+                  <p className="text-[9px] text-muted">{stat.label}</p>
+                  <p className="text-sm font-bold text-gold">{stat.value}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
           <div className="flex items-center justify-center gap-3">
@@ -824,7 +828,7 @@ export default function OnboardPage() {
       ) : (
         <>
           {/* Progress Bar */}
-          <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs text-muted">Step {step + 1} of {STEP_META.length}</p>
               <p className="text-xs font-semibold text-gold">{progressPercent}% complete</p>
@@ -863,7 +867,7 @@ export default function OnboardPage() {
           </div>
 
           {/* Step Content Card */}
-          <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+          <div className="glass rounded-xl p-6">
 
             {/* ── Step 0: Welcome ──────────────────────────────── */}
             {step === 0 && (
@@ -886,11 +890,14 @@ export default function OnboardPage() {
                     { icon: Palette, label: "Brand Identity", desc: "Logo, colors, and fonts" },
                     { icon: Rocket, label: "Launch & Go", desc: "Portal access & automation" },
                   ].map((item, i) => (
-                    <div key={i} className="p-4 rounded-xl border border-[var(--color-border)] bg-white/[0.01] text-center">
-                      <item.icon size={20} className="mx-auto mb-2 text-gold" />
-                      <p className="text-xs font-semibold">{item.label}</p>
-                      <p className="text-[9px] text-muted mt-0.5">{item.desc}</p>
-                    </div>
+                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+                      <div className="p-4 text-center">
+                        <item.icon size={20} className="mx-auto mb-2 text-gold" />
+                        <p className="text-xs font-semibold">{item.label}</p>
+                        <p className="text-[9px] text-muted mt-0.5">{item.desc}</p>
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
 

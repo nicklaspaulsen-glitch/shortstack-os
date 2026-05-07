@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   Phone, Mail, Plus, Search, X, Check, Trash2,
   Globe, Shield, Copy, Settings, Send, AlertCircle,
@@ -493,7 +494,7 @@ export default function PhoneEmailPage() {
       />
 
       {/* ════════════════════ ROTATION STATS CARD ════════════════════ */}
-      <div className="card p-4 space-y-3">
+      <div className="glass rounded-xl p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Activity size={14} className="text-gold" />
@@ -514,51 +515,63 @@ export default function PhoneEmailPage() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Total pool capacity */}
-          <div className="p-3 rounded-lg bg-background border border-border">
-            <div className="flex items-center gap-1.5 mb-1">
-              <BarChart3 size={11} className="text-gold" />
-              <span className="text-[9px] text-muted uppercase tracking-wider">Total Capacity</span>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3">
+              <div className="flex items-center gap-1.5 mb-1">
+                <BarChart3 size={11} className="text-gold" />
+                <span className="text-[9px] text-muted uppercase tracking-wider">Total Capacity</span>
+              </div>
+              <p className="text-lg font-bold text-gold">{totalCapacity.toLocaleString()}</p>
+              <p className="text-[9px] text-muted">msgs/day across all senders</p>
             </div>
-            <p className="text-lg font-bold text-gold">{totalCapacity.toLocaleString()}</p>
-            <p className="text-[9px] text-muted">msgs/day across all senders</p>
-          </div>
+          </motion.div>
 
           {/* Used today */}
-          <div className="p-3 rounded-lg bg-background border border-border">
-            <div className="flex items-center gap-1.5 mb-1">
-              <TrendingUp size={11} className="text-cyan-400" />
-              <span className="text-[9px] text-muted uppercase tracking-wider">Used Today</span>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3">
+              <div className="flex items-center gap-1.5 mb-1">
+                <TrendingUp size={11} className="text-cyan-400" />
+                <span className="text-[9px] text-muted uppercase tracking-wider">Used Today</span>
+              </div>
+              <p className="text-lg font-bold text-cyan-400">{totalUsed.toLocaleString()}</p>
+              <div className="mt-1 h-1.5 bg-border rounded-full overflow-hidden">
+                <div className={`h-full rounded-full transition-all ${pctBarColor(totalUsed, totalCapacity)}`}
+                  style={{ width: `${pct(totalUsed, totalCapacity)}%` }} />
+              </div>
             </div>
-            <p className="text-lg font-bold text-cyan-400">{totalUsed.toLocaleString()}</p>
-            <div className="mt-1 h-1.5 bg-border rounded-full overflow-hidden">
-              <div className={`h-full rounded-full transition-all ${pctBarColor(totalUsed, totalCapacity)}`}
-                style={{ width: `${pct(totalUsed, totalCapacity)}%` }} />
-            </div>
-          </div>
+          </motion.div>
 
           {/* Phone senders */}
-          <div className="p-3 rounded-lg bg-background border border-border">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Phone size={11} className="text-purple-400" />
-              <span className="text-[9px] text-muted uppercase tracking-wider">Phone Senders</span>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Phone size={11} className="text-purple-400" />
+                <span className="text-[9px] text-muted uppercase tracking-wider">Phone Senders</span>
+              </div>
+              <p className="text-lg font-bold text-purple-400">{computedStats.phones.active}</p>
+              <p className="text-[9px] text-muted">
+                {computedStats.phones.usedToday.toLocaleString()} / {computedStats.phones.totalCapacity.toLocaleString()} used
+              </p>
             </div>
-            <p className="text-lg font-bold text-purple-400">{computedStats.phones.active}</p>
-            <p className="text-[9px] text-muted">
-              {computedStats.phones.usedToday.toLocaleString()} / {computedStats.phones.totalCapacity.toLocaleString()} used
-            </p>
-          </div>
+          </motion.div>
 
           {/* Email senders */}
-          <div className="p-3 rounded-lg bg-background border border-border">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Mail size={11} className="text-blue-400" />
-              <span className="text-[9px] text-muted uppercase tracking-wider">Email Senders</span>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 3 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Mail size={11} className="text-blue-400" />
+                <span className="text-[9px] text-muted uppercase tracking-wider">Email Senders</span>
+              </div>
+              <p className="text-lg font-bold text-blue-400">{computedStats.emails.active}</p>
+              <p className="text-[9px] text-muted">
+                {computedStats.emails.usedToday.toLocaleString()} / {computedStats.emails.totalCapacity.toLocaleString()} used
+              </p>
             </div>
-            <p className="text-lg font-bold text-blue-400">{computedStats.emails.active}</p>
-            <p className="text-[9px] text-muted">
-              {computedStats.emails.usedToday.toLocaleString()} / {computedStats.emails.totalCapacity.toLocaleString()} used
-            </p>
-          </div>
+          </motion.div>
         </div>
 
         {/* Remaining capacity bar */}
@@ -611,7 +624,7 @@ export default function PhoneEmailPage() {
           </div>
 
           {/* Active Numbers Table */}
-          <div className="card overflow-hidden">
+          <div className="glass rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-[11px]">
                 <thead>
@@ -729,7 +742,7 @@ export default function PhoneEmailPage() {
           {/* ── Buy Number Modal ── */}
           {showBuyModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <div className="card w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
+              <div className="glass rounded-xl w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
                     <Phone size={14} className="text-gold" /> Buy New Phone Number
@@ -888,7 +901,7 @@ export default function PhoneEmailPage() {
           {/* ── Manual Add Phone Modal ── */}
           {showManualPhoneModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <div className="card w-full max-w-md p-5 space-y-4 mx-4">
+              <div className="glass rounded-xl w-full max-w-md p-5 space-y-4 mx-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
                     <Phone size={14} className="text-gold" /> Add Existing Number
@@ -957,7 +970,7 @@ export default function PhoneEmailPage() {
           </div>
 
           {/* Email Addresses Table */}
-          <div className="card overflow-hidden">
+          <div className="glass rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-[11px]">
                 <thead>
@@ -1060,7 +1073,7 @@ export default function PhoneEmailPage() {
             <p className="text-[10px] text-muted">Verify your sending domains to improve deliverability and avoid spam filters</p>
 
             {domains.map(d => (
-              <div key={d.id} className="card p-4 space-y-3">
+              <div key={d.id} className="glass rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Globe size={14} className="text-gold" />
@@ -1112,7 +1125,7 @@ export default function PhoneEmailPage() {
             ))}
 
             {domains.length === 0 && (
-              <div className="card p-6 text-center text-muted text-xs">
+              <div className="glass rounded-xl p-6 text-center text-muted text-xs">
                 No domains added. Add a domain to configure SPF, DKIM, and DMARC records.
               </div>
             )}
@@ -1121,7 +1134,7 @@ export default function PhoneEmailPage() {
           {/* ── Add Email Modal ── */}
           {showEmailModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <div className="card w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
+              <div className="glass rounded-xl w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
                     <Mail size={14} className="text-gold" /> Add Email Address
@@ -1219,7 +1232,7 @@ export default function PhoneEmailPage() {
           {/* Add Domain Modal */}
           {showDomainModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <div className="card w-full max-w-md p-5 space-y-4 mx-4">
+              <div className="glass rounded-xl w-full max-w-md p-5 space-y-4 mx-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
                     <Globe size={14} className="text-gold" /> Add Domain
