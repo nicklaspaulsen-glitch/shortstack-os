@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { LayoutGroup } from "framer-motion";
+import { PageTransition } from "@/components/ui/page-transition";
 import { SkipToContent } from "@/components/a11y/SkipToContent";
 import Sidebar from "@/components/sidebar";
 import GlobalSearch from "@/components/global-search";
@@ -383,7 +384,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <main id="main" className="flex-1 lg:ml-56 min-w-0 overflow-x-hidden">
           {/* Header */}
           <div className="sticky top-0 z-30 border-b border-border electron-drag topbar-shadow"
-            style={{ background: "color-mix(in srgb, var(--color-background) 85%, transparent)", backdropFilter: "blur(16px) saturate(1.2)" }}>
+            style={{
+              background: "rgba(var(--bg-base-rgb, 10 10 13) / 0.8)",
+              backdropFilter: "blur(24px) saturate(1.2)",
+              WebkitBackdropFilter: "blur(24px) saturate(1.2)",
+              boxShadow: "inset 0 -1px 0 rgba(255,255,255,0.04), 0 1px 3px rgba(0,0,0,0.3)",
+            }}>
             <div className="flex items-center justify-between px-5 lg:px-6 h-12">
               {/* Left — mobile menu */}
               <div className="electron-no-drag flex items-center gap-2 lg:hidden">
@@ -433,9 +439,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               `.page-soft-enter` keyframe. */}
           <div className="p-4 lg:p-6 pb-24">
             <ErrorBoundary>
-              <div key={pathname} className="page-soft-enter">
+              <PageTransition>
                 {children}
-              </div>
+              </PageTransition>
             </ErrorBoundary>
           </div>
         </main>

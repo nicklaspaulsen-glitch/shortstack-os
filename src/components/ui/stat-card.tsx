@@ -178,17 +178,20 @@ export default function StatCard({
       ref={ref}
       onMouseMove={handleMouseMove}
       className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden flex flex-col gap-1.5 tilt-3d`}
-      // May 7 v2: Prism split — sharp corners, white-tinted glass,
-      // red-glow shadows. Matches 93-prism-dashboard.html reference.
+      // May 7 v3: Window-glass depth — frosted glass floating above grey
+      // base with multi-layer drop shadows + inner top-edge light.
       style={{
-        background: "rgba(255,255,255,0.035)",
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
-        border: `1px solid rgba(255,255,255,0.07)`,
+        background: "rgba(255,255,255,0.04)",
+        backdropFilter: "blur(20px) saturate(1.15)",
+        WebkitBackdropFilter: "blur(20px) saturate(1.15)",
+        border: `1px solid rgba(255,255,255,0.08)`,
+        borderTopColor: "rgba(255,255,255,0.14)",
         boxShadow: [
-          "0 1px 0 rgba(255,255,255,0.04) inset",
-          "0 2px 8px rgba(0,0,0,0.25)",
-          `0 0 24px -8px ${accent}18`,
+          "inset 0 1px 0 rgba(255,255,255,0.06)",
+          "0 1px 2px rgba(0,0,0,0.3)",
+          "0 4px 16px rgba(0,0,0,0.25)",
+          "0 12px 40px -8px rgba(0,0,0,0.4)",
+          `0 0 24px -8px ${accent}14`,
         ].join(", "),
       }}
       initial={{ opacity: 0, y: 10 }}
@@ -196,14 +199,16 @@ export default function StatCard({
       transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
       data-premium={premium ? "true" : undefined}
       whileHover={{
-        y: -2,
+        y: -3,
         borderColor: "rgba(255,255,255,0.18)",
         boxShadow: [
-          "0 1px 0 rgba(255,255,255,0.06) inset",
-          "0 4px 12px rgba(0,0,0,0.30)",
-          `0 0 32px -8px ${accent}30`,
+          "inset 0 1px 0 rgba(255,255,255,0.1)",
+          "0 2px 4px rgba(0,0,0,0.35)",
+          "0 8px 24px rgba(0,0,0,0.3)",
+          "0 20px 48px -12px rgba(0,0,0,0.5)",
+          `0 0 32px -8px ${accent}20`,
         ].join(", "),
-        transition: { duration: 0.2 },
+        transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] },
       }}
     >
       {/* Bottom accent bar — prism color per tile */}

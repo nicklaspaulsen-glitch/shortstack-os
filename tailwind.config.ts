@@ -20,10 +20,10 @@ const config: Config = {
         // NEW BRAND FOUNDATION TOKENS (canonical names — prefer these in
         // new code. See src/lib/brand/tokens.ts)
         // ─────────────────────────────────────────────────────────────────
-        "bg-base": "rgb(var(--bg-base-rgb, 7 7 8) / <alpha-value>)",
-        "bg-surface-1": "rgb(var(--bg-surface-1-rgb, 16 16 18) / <alpha-value>)",
-        "bg-surface-2": "rgb(var(--bg-surface-2-rgb, 23 23 26) / <alpha-value>)",
-        "bg-surface-3": "rgb(var(--bg-surface-3-rgb, 38 38 43) / <alpha-value>)",
+        "bg-base": "rgb(var(--bg-base-rgb, 10 10 13) / <alpha-value>)",
+        "bg-surface-1": "rgb(var(--bg-surface-1-rgb, 17 17 20) / <alpha-value>)",
+        "bg-surface-2": "rgb(var(--bg-surface-2-rgb, 25 25 29) / <alpha-value>)",
+        "bg-surface-3": "rgb(var(--bg-surface-3-rgb, 40 40 46) / <alpha-value>)",
         "border-subtle": "rgba(255, 255, 255, 0.07)",
         "border-strong": "rgba(255, 255, 255, 0.16)",
         "text-primary": "rgb(var(--text-primary-rgb, 245 245 247) / <alpha-value>)",
@@ -183,30 +183,46 @@ const config: Config = {
         "tight-display": "-0.03em",
       },
       boxShadow: {
-        card: "0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)",
-        "card-hover": "0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
-        elevated: "0 8px 24px rgba(0,0,0,0.08)",
-        soft: "0 2px 8px rgba(0,0,0,0.04)",
-        // New OLED-friendly multi-layer shadows for the lime/plum surfaces.
+        card: "0 1px 2px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08)",
+        "card-hover": "0 2px 4px rgba(0,0,0,0.08), 0 8px 24px -4px rgba(0,0,0,0.12), 0 0 32px -8px rgba(255,45,45,0.04)",
+        elevated: "0 2px 4px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.1), 0 20px 48px -12px rgba(0,0,0,0.15)",
+        soft: "0 1px 4px rgba(0,0,0,0.04), 0 4px 12px -4px rgba(0,0,0,0.06)",
+        // Window-glass depth system — multi-layer shadows for OLED surfaces
         "stack-1": [
-          "0 1px 0 rgba(255,255,255,0.04) inset",
-          "0 2px 4px rgba(0,0,0,0.45)",
-          "0 8px 24px -8px rgba(0,0,0,0.55)",
+          "inset 0 1px 0 rgba(255,255,255,0.06)",
+          "0 1px 2px rgba(0,0,0,0.3)",
+          "0 4px 16px rgba(0,0,0,0.25)",
+          "0 12px 40px -8px rgba(0,0,0,0.4)",
         ].join(", "),
         "stack-2": [
-          "0 1px 0 rgba(255,255,255,0.06) inset",
-          "0 4px 8px rgba(0,0,0,0.5)",
-          "0 16px 40px -12px rgba(0,0,0,0.6)",
+          "inset 0 1px 0 rgba(255,255,255,0.08)",
+          "0 2px 4px rgba(0,0,0,0.35)",
+          "0 8px 24px rgba(0,0,0,0.3)",
+          "0 20px 56px -12px rgba(0,0,0,0.5)",
           "0 0 0 1px rgba(255,45,45,0.06)",
         ].join(", "),
         "stack-3": [
-          "0 1px 0 rgba(255,255,255,0.08) inset",
-          "0 6px 12px rgba(0,0,0,0.55)",
-          "0 24px 56px -16px rgba(0,0,0,0.65)",
-          "0 0 0 1px rgba(255,45,45,0.12)",
-          "0 0 32px -8px rgba(255,45,45,0.18)",
+          "inset 0 1px 0 rgba(255,255,255,0.1)",
+          "0 4px 8px rgba(0,0,0,0.4)",
+          "0 12px 32px rgba(0,0,0,0.35)",
+          "0 28px 64px -16px rgba(0,0,0,0.55)",
+          "0 0 0 1px rgba(255,45,45,0.08)",
+          "0 0 40px -12px rgba(255,45,45,0.12)",
         ].join(", "),
-        "lime-glow": "0 0 24px -4px rgba(255,45,45,0.4)",
+        "lime-glow": "0 0 24px -4px rgba(255,45,45,0.35), 0 0 48px -8px rgba(255,45,45,0.15)",
+        // Window glass floating shadow — for stat cards, panels floating above base
+        "window": [
+          "inset 0 1px 0 rgba(255,255,255,0.06)",
+          "0 1px 2px rgba(0,0,0,0.3)",
+          "0 4px 16px rgba(0,0,0,0.25)",
+          "0 12px 40px -8px rgba(0,0,0,0.4)",
+        ].join(", "),
+        "window-hover": [
+          "inset 0 1px 0 rgba(255,255,255,0.1)",
+          "0 2px 4px rgba(0,0,0,0.35)",
+          "0 8px 24px rgba(0,0,0,0.3)",
+          "0 20px 48px -12px rgba(0,0,0,0.5)",
+        ].join(", "),
       },
       animation: {
         "fade-in": "fadeIn 0.4s ease-out",

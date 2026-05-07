@@ -10,10 +10,12 @@
 
 export const tokens = {
   bg: {
-    base: "#050507",
-    surface1: "#101012",
-    surface2: "#17171A",
-    surface3: "#26262B",
+    /** Base: warm-charcoal grey (not pure black) — glass panels float above.
+     *  The gap between base and surface-1 creates the "depth channel". */
+    base: "#0A0A0D",
+    surface1: "#111114",
+    surface2: "#19191D",
+    surface3: "#28282E",
   },
   border: {
     subtle: "rgba(255, 255, 255, 0.07)",
