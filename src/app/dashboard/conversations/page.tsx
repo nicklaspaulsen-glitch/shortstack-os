@@ -431,10 +431,15 @@ export default function ConversationsPage() {
               Loading…
             </div>
           ) : conversations.length === 0 ? (
-            <div className="p-8 text-center text-white/40 text-sm">
-              No conversations yet.
-              <div className="text-xs mt-2 text-white/30">
-                Inbound messages from any channel will appear here.
+            <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.12)] flex items-center justify-center">
+                <Inbox size={20} className="text-[#6366F1]/60" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-white/50 mb-1">No conversations yet</p>
+                <p className="text-[10px] text-white/25 leading-relaxed max-w-[180px]">
+                  Inbound messages from email, SMS, and social will appear here.
+                </p>
               </div>
             </div>
           ) : (
@@ -520,7 +525,10 @@ export default function ConversationsPage() {
                   Loading thread…
                 </div>
               ) : messages.length === 0 ? (
-                <div className="text-center text-white/40 text-sm py-8">No messages yet.</div>
+                <div className="flex flex-col items-center justify-center h-full gap-2 py-16 text-center">
+                  <MessageCircle size={28} className="text-white/10" />
+                  <p className="text-xs text-white/25">No messages yet — say hello</p>
+                </div>
               ) : (
                 messages.map((m) => <MessageBubble key={m.id} m={m} />)
               )}
