@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { Copy, Phone, Building2, CheckCircle, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
@@ -163,33 +164,32 @@ export default function DedupPage() {
 
       {/* Summary */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="card-premium p-4 text-center">
-          <div className="text-2xl font-bold text-white">{leads.length.toLocaleString()}</div>
-          <div className="text-xs text-muted mt-0.5">Leads scanned</div>
-        </div>
-        <div className="card-premium p-4 text-center">
-          <div className={`text-2xl font-bold ${pendingGroups.length > 0 ? "text-amber-400" : "text-emerald-400"}`}>
-            {pendingGroups.length}
-          </div>
-          <div className="text-xs text-muted mt-0.5">Duplicate groups</div>
-        </div>
-        <div className="card-premium p-4 text-center">
-          <div className="text-2xl font-bold text-emerald-400">{merged.size}</div>
-          <div className="text-xs text-muted mt-0.5">Merged this session</div>
-        </div>
+        {[
+          { value: leads.length.toLocaleString(), label: "Leads scanned", color: "text-white" },
+          { value: pendingGroups.length, label: "Duplicate groups", color: pendingGroups.length > 0 ? "text-amber-400" : "text-emerald-400" },
+          { value: merged.size, label: "Merged this session", color: "text-emerald-400" },
+        ].map((stat, i) => (
+          <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-4 text-center">
+              <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+              <div className="text-xs text-muted mt-0.5">{stat.label}</div>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="card-premium p-5 animate-pulse">
+            <div key={i} className="glass rounded-xl p-5 animate-pulse">
               <div className="h-4 bg-white/10 rounded w-1/3 mb-4" />
               <div className="h-24 bg-white/5 rounded" />
             </div>
           ))}
         </div>
       ) : pendingGroups.length === 0 ? (
-        <div className="card-premium p-12 text-center text-muted">
+        <div className="glass rounded-xl p-12 text-center text-muted">
           <CheckCircle className="w-12 h-12 mx-auto mb-4 text-emerald-400 opacity-50" />
           <p className="font-semibold text-white/70 mb-1">
             {merged.size > 0 ? "All duplicates resolved!" : "No duplicates found"}
@@ -207,14 +207,14 @@ export default function DedupPage() {
             {pendingGroups.length} duplicate group{pendingGroups.length !== 1 ? "s" : ""} found — review and merge below.
           </div>
 
-          {pendingGroups.map(group => {
+          {pendingGroups.map((group, idx) => {
             const sorted = [...group.leads].sort((a, b) => completeness(b) - completeness(a));
             const winner = sorted[0];
             const loser = sorted[1];
             const isMerging = merging[group.key];
 
             return (
-              <div key={group.key} className="card-premium overflow-hidden">
+              <motion.div key={group.key} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl overflow-hidden">
                 {/* Header */}
                 <div className="px-5 py-3 border-b border-white/5 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
@@ -264,7 +264,7 @@ export default function DedupPage() {
                     Merge sets <code className="font-mono">status = &apos;merged&apos;</code> on duplicates. No data is permanently deleted.
                   </p>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

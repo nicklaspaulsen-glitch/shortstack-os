@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   Layers, Film, Megaphone, Image as ImageIcon, Mail,
   FileText, Share2, Globe, Search, RefreshCw,
@@ -142,14 +143,17 @@ export default function GenerationsPage() {
           { label: "This Week",    value: thisWeekCount,    icon: <TrendingUp size={14} />,  color: "text-emerald-400" },
           { label: "Categories",   value: uniqueCategories, icon: <Calendar size={14} />,    color: "text-blue-400" },
           { label: "Latest",       value: latest,           icon: <Clock size={14} />,       color: "text-purple-400" },
-        ].map(s => (
-          <div key={s.label} className="card !py-2.5 !px-3 flex items-center gap-3">
-            <div className={s.color}>{s.icon}</div>
-            <div>
-              <p className="text-lg font-bold leading-none">{s.value}</p>
-              <p className="text-[9px] text-muted">{s.label}</p>
+        ].map((s, i) => (
+          <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="py-2.5 px-3 flex items-center gap-3">
+              <div className={s.color}>{s.icon}</div>
+              <div>
+                <p className="text-lg font-bold leading-none">{s.value}</p>
+                <p className="text-[9px] text-muted">{s.label}</p>
+              </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
@@ -191,7 +195,7 @@ export default function GenerationsPage() {
           </div>
         ) : filtered.length === 0 ? (
           /* Empty State */
-          <div className="card text-center py-16">
+          <div className="glass rounded-xl text-center py-16">
             <Sparkles size={32} className="mx-auto mb-3 text-muted/30" />
             <p className="text-sm text-muted font-medium mb-1">No generations yet</p>
             <p className="text-[10px] text-muted max-w-xs mx-auto">
@@ -199,12 +203,16 @@ export default function GenerationsPage() {
             </p>
           </div>
         ) : (
-          filtered.map(gen => {
+          filtered.map((gen, idx) => {
             const cat = getCategoryConfig(gen.category);
             return (
-              <div
+              <motion.div
                 key={gen.id}
-                className="card !p-0 overflow-hidden hover:border-gold/20 transition-all group"
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.04 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="glass rounded-xl !p-0 overflow-hidden hover:border-gold/20 transition-all group"
               >
                 <div className="flex items-start gap-3 px-4 py-3">
                   {/* Category Icon */}
@@ -249,7 +257,7 @@ export default function GenerationsPage() {
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })
         )}

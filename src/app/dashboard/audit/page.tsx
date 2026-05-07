@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Activity, Search, Download, CheckCircle, AlertTriangle,
   Clock, Settings,
@@ -224,26 +225,21 @@ export default function AuditPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-        <div className="card p-3 text-center">
-          <p className="text-[9px] text-muted uppercase">Total Actions</p>
-          <p className="text-xl font-bold text-gold">{stats.total}</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-[9px] text-muted uppercase">Success Rate</p>
-          <p className="text-xl font-bold text-emerald-400">{stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0}%</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-[9px] text-muted uppercase">Failures</p>
-          <p className={`text-xl font-bold ${stats.failed > 0 ? "text-red-400" : "text-emerald-400"}`}>{stats.failed}</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-[9px] text-muted uppercase">Sensitive</p>
-          <p className="text-xl font-bold text-amber-400">{stats.sensitive}</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-[9px] text-muted uppercase">Alerts</p>
-          <p className={`text-xl font-bold ${stats.unresolvedAlerts > 0 ? "text-red-400" : "text-emerald-400"}`}>{stats.unresolvedAlerts}</p>
-        </div>
+        {[
+          { label: "Total Actions", value: stats.total, color: "text-gold" },
+          { label: "Success Rate", value: `${stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0}%`, color: "text-emerald-400" },
+          { label: "Failures", value: stats.failed, color: stats.failed > 0 ? "text-red-400" : "text-emerald-400" },
+          { label: "Sensitive", value: stats.sensitive, color: "text-amber-400" },
+          { label: "Alerts", value: stats.unresolvedAlerts, color: stats.unresolvedAlerts > 0 ? "text-red-400" : "text-emerald-400" },
+        ].map((stat, i) => (
+          <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3 text-center">
+              <p className="text-[9px] text-muted uppercase">{stat.label}</p>
+              <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* Tabs */}
@@ -309,7 +305,7 @@ export default function AuditPage() {
           </div>
 
           {/* Audit Table */}
-          <div className="card overflow-x-auto">
+          <div className="glass rounded-xl overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border">
@@ -329,10 +325,10 @@ export default function AuditPage() {
                     <p className="text-sm text-muted">{loading ? "Loading audit entries..." : "No audit entries yet."}</p>
                   </td></tr>
                 )}
-                {filtered.map(entry => {
+                {filtered.map((entry, idx) => {
                   const style = ACTION_STYLES[entry.action];
                   return (
-                    <tr key={entry.id}
+                    <motion.tr key={entry.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }}
                       className="border-b border-border/30 hover:bg-surface-light/50 transition-colors cursor-pointer"
                       onClick={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}>
                       <td className="py-2.5 px-3">
@@ -363,7 +359,7 @@ export default function AuditPage() {
                           {entry.status}
                         </span>
                       </td>
-                    </tr>
+                    </motion.tr>
                   );
                 })}
               </tbody>
@@ -376,7 +372,7 @@ export default function AuditPage() {
             if (!e) return null;
             const style = ACTION_STYLES[e.action];
             return (
-              <div className="card p-4 space-y-3">
+              <div className="glass rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-bold flex items-center gap-2">
                     <span className={style.color}>{style.icon}</span> Action Details
@@ -387,28 +383,28 @@ export default function AuditPage() {
                     className="text-muted hover:text-foreground"><X size={14} /></button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <div className="p-2.5 rounded-lg bg-surface-light border border-border">
+                  <div className="p-2.5 glass rounded-xl">
                     <p className="text-[8px] text-muted uppercase">Timestamp</p>
                     <p className="text-[10px] font-mono mt-0.5">{e.timestamp}</p>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-surface-light border border-border">
+                  <div className="p-2.5 glass rounded-xl">
                     <p className="text-[8px] text-muted uppercase">User</p>
                     <p className="text-[10px] font-medium mt-0.5">{e.user}</p>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-surface-light border border-border">
+                  <div className="p-2.5 glass rounded-xl">
                     <p className="text-[8px] text-muted uppercase">Action</p>
                     <p className={`text-[10px] font-medium mt-0.5 ${style.color}`}>{style.label}</p>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-surface-light border border-border">
+                  <div className="p-2.5 glass rounded-xl">
                     <p className="text-[8px] text-muted uppercase">IP Address</p>
                     <p className="text-[10px] font-mono mt-0.5">{e.ip}</p>
                   </div>
                 </div>
-                <div className="p-3 rounded-lg bg-surface-light border border-border">
+                <div className="glass rounded-xl p-3">
                   <p className="text-[8px] text-muted uppercase mb-1">Full Details</p>
                   <p className="text-[10px]">{e.details}</p>
                 </div>
-                <div className="p-3 rounded-lg bg-surface-light border border-border">
+                <div className="glass rounded-xl p-3">
                   <p className="text-[8px] text-muted uppercase mb-1">Resource</p>
                   <p className="text-[10px] font-medium">{e.resource}</p>
                 </div>
@@ -428,7 +424,7 @@ export default function AuditPage() {
       {tab === "security" && (
         <div className="space-y-4">
           {/* Unresolved alerts */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Shield size={13} className="text-red-400" /> Unresolved Alerts</h2>
             <div className="space-y-2">
               {alerts.filter(a => !a.resolved).length === 0 && (
@@ -466,14 +462,14 @@ export default function AuditPage() {
           </div>
 
           {/* Resolved alerts */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-emerald-400" /> Resolved Alerts</h2>
             <div className="space-y-2">
               {alerts.filter(a => a.resolved).length === 0 && (
                 <p className="text-xs text-muted text-center py-6">No resolved alerts yet.</p>
               )}
               {alerts.filter(a => a.resolved).map(alert => (
-                <div key={alert.id} className="p-3 rounded-lg bg-surface-light border border-border">
+                <div key={alert.id} className="glass rounded-xl p-3">
                   <div className="flex items-center gap-3">
                     <CheckCircle size={12} className="text-emerald-400 shrink-0" />
                     <div className="flex-1 min-w-0">
@@ -488,7 +484,7 @@ export default function AuditPage() {
           </div>
 
           {/* Security Overview — computed from real entries */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-gold" /> Security Overview</h2>
             {(() => {
               const sevenDaysAgo = Date.now() - 7 * 86400000;
@@ -508,22 +504,17 @@ export default function AuditPage() {
               }
               return (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-                  <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
-                    <p className="text-[9px] text-muted uppercase">Failed Logins (7d)</p>
-                    <p className="text-lg font-bold text-red-400">{failedLogins}</p>
-                  </div>
-                  <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
-                    <p className="text-[9px] text-muted uppercase">Config Changes (7d)</p>
-                    <p className="text-lg font-bold text-amber-400">{configChanges}</p>
-                  </div>
-                  <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
-                    <p className="text-[9px] text-muted uppercase">Data Exports (7d)</p>
-                    <p className="text-lg font-bold text-purple-400">{dataExports}</p>
-                  </div>
-                  <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
-                    <p className="text-[9px] text-muted uppercase">Unique IPs (7d)</p>
-                    <p className="text-lg font-bold text-blue-400">{uniqueIps}</p>
-                  </div>
+                  {[
+                    { label: "Failed Logins (7d)", value: failedLogins, color: "text-red-400" },
+                    { label: "Config Changes (7d)", value: configChanges, color: "text-amber-400" },
+                    { label: "Data Exports (7d)", value: dataExports, color: "text-purple-400" },
+                    { label: "Unique IPs (7d)", value: uniqueIps, color: "text-blue-400" },
+                  ].map((s, i) => (
+                    <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl p-3 text-center">
+                      <p className="text-[9px] text-muted uppercase">{s.label}</p>
+                      <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
+                    </motion.div>
+                  ))}
                 </div>
               );
             })()}
@@ -534,7 +525,7 @@ export default function AuditPage() {
       {/* ═══ RETENTION TAB ═══ */}
       {tab === "retention" && (
         <div className="space-y-4">
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-gold" /> Retention Policy</h2>
             <div className="space-y-3">
               <div>
@@ -553,18 +544,18 @@ export default function AuditPage() {
               <p className="text-[10px] text-muted">Audit logs older than {retentionDays} days will be automatically archived and removed from the active view.</p>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-                <div className="p-3 rounded-lg bg-surface-light border border-border">
+                <div className="glass rounded-xl p-3">
                   <p className="text-[9px] text-muted uppercase">Active Entries</p>
                   <p className="text-lg font-bold text-gold mt-0.5">{entries.length}</p>
                 </div>
-                <div className="p-3 rounded-lg bg-surface-light border border-border">
+                <div className="glass rounded-xl p-3">
                   <p className="text-[9px] text-muted uppercase">Storage Used</p>
                   {/* Rough estimate: ~200 bytes/entry; exact size comes from backend once wired. */}
                   <p className="text-lg font-bold text-blue-400 mt-0.5">
                     {entries.length > 0 ? `${(entries.length * 0.2).toFixed(1)} KB` : "0 KB"}
                   </p>
                 </div>
-                <div className="p-3 rounded-lg bg-surface-light border border-border">
+                <div className="glass rounded-xl p-3">
                   <p className="text-[9px] text-muted uppercase">Archived</p>
                   <p className="text-lg font-bold text-muted mt-0.5">0</p>
                 </div>
@@ -572,7 +563,7 @@ export default function AuditPage() {
             </div>
           </div>
 
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Database size={13} className="text-purple-400" /> Data Lifecycle</h2>
             <div className="space-y-2">
               {[
@@ -580,14 +571,14 @@ export default function AuditPage() {
                 { stage: "Archived", desc: `${retentionDays} - ${retentionDays * 2} days`, status: "Compressed storage, on-demand access", color: "text-amber-400" },
                 { stage: "Deleted", desc: `After ${retentionDays * 2} days`, status: "Permanently removed", color: "text-red-400" },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
+                <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="glass rounded-xl flex items-center gap-3 p-3">
                   <div className={`w-2 h-2 rounded-full ${item.color === "text-emerald-400" ? "bg-emerald-400" : item.color === "text-amber-400" ? "bg-amber-400" : "bg-red-400"}`} />
                   <div className="flex-1">
                     <p className={`text-[10px] font-semibold ${item.color}`}>{item.stage}</p>
                     <p className="text-[9px] text-muted">{item.desc}</p>
                   </div>
                   <span className="text-[9px] text-muted">{item.status}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -596,7 +587,7 @@ export default function AuditPage() {
 
       {/* ═══ EXPORT TAB ═══ */}
       {tab === "export" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h2 className="section-header flex items-center gap-2"><Download size={13} className="text-gold" /> Export Audit Report</h2>
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -638,7 +629,7 @@ export default function AuditPage() {
                 {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
               </select>
             </div>
-            <div className="p-3 rounded-lg bg-surface-light border border-border text-[10px] text-muted">
+            <div className="glass rounded-xl p-3 text-[10px] text-muted">
               Estimated export size: <span className="font-bold text-gold">{exportFiltered.length} entries</span> ({(exportFiltered.length * 0.2).toFixed(1)} KB)
             </div>
             <div className="flex gap-2">

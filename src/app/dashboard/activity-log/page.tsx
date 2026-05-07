@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Activity, Search, Zap, Users, Mail, Globe, Bot,
   CreditCard, BarChart3, Shield, Download,
@@ -202,26 +203,21 @@ export default function ActivityLogPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold">{logs.length}</p>
-          <p className="text-[10px] text-muted">Total Events</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-gold">{logs.filter(l => l.timestamp.startsWith(new Date().toISOString().slice(0, 10))).length}</p>
-          <p className="text-[10px] text-muted">Today</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-blue-400">{Object.keys(userActivity).filter(u => u !== "System" && u !== "API").length}</p>
-          <p className="text-[10px] text-muted">Active Users</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-purple-400">{logs.filter(l => l.type === "automation").length}</p>
-          <p className="text-[10px] text-muted">Automations</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className={`text-lg font-bold ${suspicious.length > 0 ? "text-red-400" : "text-emerald-400"}`}>{suspicious.length}</p>
-          <p className="text-[10px] text-muted">Suspicious</p>
-        </div>
+        {[
+          { value: logs.length, label: "Total Events", color: "" },
+          { value: logs.filter(l => l.timestamp.startsWith(new Date().toISOString().slice(0, 10))).length, label: "Today", color: "text-gold" },
+          { value: Object.keys(userActivity).filter(u => u !== "System" && u !== "API").length, label: "Active Users", color: "text-blue-400" },
+          { value: logs.filter(l => l.type === "automation").length, label: "Automations", color: "text-purple-400" },
+          { value: suspicious.length, label: "Suspicious", color: suspicious.length > 0 ? "text-red-400" : "text-emerald-400" },
+        ].map((stat, i) => (
+          <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3 text-center">
+              <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
+              <p className="text-[10px] text-muted">{stat.label}</p>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* Tabs */}
@@ -262,22 +258,22 @@ export default function ActivityLogPage() {
           {/* Activity Feed */}
           <div className="space-y-1">
             {loading ? (
-              <div className="card text-center py-12">
+              <div className="glass rounded-xl text-center py-12">
                 <Loader2 size={24} className="mx-auto mb-2 text-muted/50 animate-spin" />
                 <p className="text-xs text-muted">Loading activity…</p>
               </div>
             ) : loadError ? (
-              <div className="card text-center py-12">
+              <div className="glass rounded-xl text-center py-12">
                 <AlertTriangle size={24} className="mx-auto mb-2 text-red-400/60" />
                 <p className="text-xs text-red-400">Failed to load activity: {loadError}</p>
               </div>
             ) : filtered.length === 0 ? (
-              <div className="card text-center py-12"><Activity size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No activity found</p></div>
+              <div className="glass rounded-xl text-center py-12"><Activity size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No activity found</p></div>
             ) : (
-              filtered.map(log => {
+              filtered.map((log, idx) => {
                 const config = TYPE_CONFIG[log.type] || { icon: <Activity size={12} />, color: "text-muted", label: log.type };
                 return (
-                  <div key={log.id} className="group">
+                  <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="group">
                     <div className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-white/[0.01] transition-colors border-b border-border cursor-pointer"
                       onClick={() => setExpandedLog(expandedLog === log.id ? null : log.id)}>
                       <div className={`mt-0.5 shrink-0 ${config.color}`}>{config.icon}</div>
@@ -322,7 +318,7 @@ export default function ActivityLogPage() {
                         )}
                       </div>
                     )}
-                  </div>
+                  </motion.div>
                 );
               })
             )}
@@ -332,7 +328,7 @@ export default function ActivityLogPage() {
 
       {/* Heatmap Tab */}
       {tab === "heatmap" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Activity Heatmap</h2>
           <div className="overflow-x-auto">
             <div className="grid gap-px" style={{ gridTemplateColumns: `60px repeat(24, 1fr)` }}>
@@ -366,18 +362,18 @@ export default function ActivityLogPage() {
 
       {/* Users Tab */}
       {tab === "users" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-gold" /> User Activity Breakdown</h2>
           {Object.keys(userActivity).length === 0 ? (
             <div className="text-center py-8"><Users size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No user activity yet</p></div>
           ) : (
           <div className="space-y-2">
-            {Object.entries(userActivity).sort((a, b) => b[1] - a[1]).map(([user, count]) => {
+            {Object.entries(userActivity).sort((a, b) => b[1] - a[1]).map(([user, count], idx) => {
               const pct = logs.length > 0 ? (count / logs.length) * 100 : 0;
               const types: Record<string, number> = {};
               logs.filter(l => l.user === user).forEach(l => { types[l.type] = (types[l.type] || 0) + 1; });
               return (
-                <div key={user} className="p-3 rounded-lg bg-surface-light border border-border">
+                <motion.div key={user} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl p-3">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold">{user[0]}</div>
                     <div className="flex-1">
@@ -398,7 +394,7 @@ export default function ActivityLogPage() {
                       ) : null;
                     })}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -408,14 +404,14 @@ export default function ActivityLogPage() {
 
       {/* Audit Tab */}
       {tab === "audit" && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-gold" /> Audit Trail (Before/After)</h2>
           {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).length === 0 ? (
             <div className="text-center py-8"><Eye size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No audit trail entries yet</p></div>
           ) : (
           <div className="space-y-2">
-            {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).map(log => (
-              <div key={log.id} className="p-3 rounded-lg bg-surface-light border border-border">
+            {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).map((log, idx) => (
+              <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl p-3">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-xs font-semibold">{log.details}</p>
                   <span className="text-[9px] text-muted">{new Date(log.timestamp).toLocaleString()}</span>
@@ -431,7 +427,7 @@ export default function ActivityLogPage() {
                   </div>
                 </div>
                 <p className="text-[9px] text-muted mt-1">By {log.user} from {log.ip}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
           )}
@@ -441,7 +437,7 @@ export default function ActivityLogPage() {
       {/* Security Tab */}
       {tab === "security" && (
         <div className="space-y-4">
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Shield size={13} className="text-red-400" /> Suspicious Activity Alerts</h2>
             {suspicious.length === 0 ? (
               <div className="text-center py-8"><Shield size={24} className="mx-auto text-emerald-400/30 mb-2" /><p className="text-xs text-muted">No suspicious activity detected</p></div>
@@ -459,14 +455,14 @@ export default function ActivityLogPage() {
               </div>
             )}
           </div>
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Key size={13} className="text-gold" /> Login History</h2>
             {logs.filter(l => l.type === "login").length === 0 ? (
               <div className="text-center py-8"><Key size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No login history yet</p></div>
             ) : (
               <div className="space-y-2">
-                {logs.filter(l => l.type === "login").map(log => (
-                  <div key={log.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                {logs.filter(l => l.type === "login").map((log, idx) => (
+                  <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl flex items-center gap-3 p-2.5">
                     <Key size={12} className={log.action === "failed_login" ? "text-red-400" : "text-emerald-400"} />
                     <div className="flex-1">
                       <p className="text-xs font-medium">{log.user} - {log.details}</p>
@@ -476,7 +472,7 @@ export default function ActivityLogPage() {
                     <span className={`text-[9px] px-2 py-0.5 rounded-full ${log.action === "failed_login" ? "bg-red-400/10 text-red-400" : "bg-emerald-400/10 text-emerald-400"}`}>
                       {log.action === "failed_login" ? "Failed" : "Success"}
                     </span>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             )}

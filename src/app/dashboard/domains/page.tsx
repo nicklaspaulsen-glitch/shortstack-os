@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   Globe, Globe2, Search, Loader, CheckCircle, XCircle, ExternalLink,
   ShieldCheck, Plus, RefreshCw, Copy, Trash2,
@@ -444,7 +445,7 @@ export default function DomainsPage() {
           domain → launch the brand" loop is discoverable. */}
       <a
         href="/dashboard/domains/hub-setup"
-        className="card block bg-gradient-to-br from-gold/10 to-amber-500/5 border-gold/30 hover:border-gold/50 transition"
+        className="glass rounded-xl block bg-gradient-to-br from-gold/10 to-amber-500/5 border-gold/30 hover:border-gold/50 transition p-4"
       >
         <div className="flex items-center gap-3">
           <Sparkles size={18} className="text-gold shrink-0" />
@@ -459,7 +460,7 @@ export default function DomainsPage() {
       </a>
 
       {/* ── Domain search ────────────────────────────────────────────── */}
-      <div className="card">
+      <div className="glass rounded-xl p-4">
         <h2 className="section-header flex items-center gap-2">
           <Search size={13} className="text-gold" /> Find & buy a domain
         </h2>
@@ -479,7 +480,7 @@ export default function DomainsPage() {
 
         {results.length > 0 && (
           <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
-            {results.map(r => {
+            {results.map((r, idx) => {
               // Use shared pricing helpers so the buttons match the checkout
               // price exactly (previously used hand-rolled math that could drift).
               const base = r.price || 12.99;
@@ -489,7 +490,7 @@ export default function DomainsPage() {
               const rowYearlyLoading = purchasingDomain === `${r.domain}:yearly`;
               const anyRowLoading = rowMonthlyLoading || rowYearlyLoading;
               return (
-                <div key={r.domain} className="p-3 rounded-xl border border-border bg-surface-light">
+                <motion.div key={r.domain} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-3">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2 min-w-0">
                       {r.available === true
@@ -553,7 +554,7 @@ export default function DomainsPage() {
                       </div>
                     </>
                   )}
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -561,7 +562,7 @@ export default function DomainsPage() {
       </div>
 
       {/* ── Owned domains ────────────────────────────────────────────── */}
-      <div className="card">
+      <div className="glass rounded-xl p-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="section-header flex items-center gap-2 mb-0">
             <Globe size={13} className="text-gold" /> Your domains ({domains.length})
@@ -580,8 +581,8 @@ export default function DomainsPage() {
           </div>
         ) : (
           <div className="space-y-2">
-            {domains.map(d => (
-              <div key={d.id} className="p-3 rounded-xl border border-border bg-surface-light">
+            {domains.map((d, idx) => (
+              <motion.div key={d.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-3">
                 <div className="flex items-start justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-3 min-w-0">
                     <GoDaddyIcon size={20} />
@@ -812,14 +813,14 @@ export default function DomainsPage() {
                     </div>
                   </div>
                 )}
-              </div>
+              </motion.div>
             ))}
           </div>
         )}
       </div>
 
       {/* Tip card */}
-      <div className="card border-gold/10">
+      <div className="glass rounded-xl p-4 border-gold/10">
         <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
           <AlertTriangle size={11} className="text-gold" /> How domain ownership works
         </h3>
