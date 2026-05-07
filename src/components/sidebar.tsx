@@ -183,6 +183,7 @@ const navItems: NavItem[] = [
   { label: "Funnels", href: "/dashboard/funnels", icon: <NavIcon3D name="GitBranch" size={16} />, roles: ["admin"], sub: "Brand & Web", tier: 3 },
   { label: "A/B Tests", href: "/dashboard/ab-tests", icon: <NavIcon3D name="FlaskConical" size={16} />, roles: ["admin"], sub: "Brand & Web", tier: 3 },
   { label: "Forms", href: "/dashboard/forms", icon: <NavIcon3D name="ClipboardCheck" size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web", tier: 3 },
+  { label: "Intake Forms", href: "/dashboard/intake", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin"], sub: "Brand & Web", tier: 2 },
   { label: "Surveys", href: "/dashboard/surveys", icon: <NavIcon3D name="ClipboardList" size={16} />, roles: ["admin"], sub: "Brand & Web", tier: 3 },
   { label: "Social Studio", href: "/dashboard/social-studio", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], sub: "Social", tier: 3 },
   { label: "Social Manager", href: "/dashboard/social-manager", icon: <NavIcon3D name="Share2" size={16} />, roles: ["admin", "team_member"], sub: "Social", tier: 2 },
