@@ -507,7 +507,7 @@ export default function AIVideoPage() {
 
       {/* Scorecard strip — 3-cell stagger, same pattern as analytics/clients */}
       <motion.div
-        className="grid grid-cols-3 divide-x divide-[rgba(99,102,241,0.08)] rounded-xl border border-[rgba(99,102,241,0.08)] bg-[rgba(99,102,241,0.03)] overflow-hidden"
+        className="glass grid grid-cols-3 divide-x divide-[rgba(99,102,241,0.08)] rounded-xl overflow-hidden"
         initial="hidden"
         animate="visible"
         variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
@@ -516,12 +516,17 @@ export default function AIVideoPage() {
           { label: "Videos generated", value: results.length.toString(), color: "#6366F1" },
           { label: "Plan tier", value: planTier, color: "#F5F4F1" },
           { label: "Max duration", value: Number.isFinite(maxSeconds) ? formatVideoDuration(maxSeconds) : "Unlimited", color: "#7FE5B8" },
-        ].map(({ label, value, color }) => (
+        ].map(({ label, value, color }, index) => (
           <motion.div
             key={label}
-            className="px-4 py-3 flex flex-col gap-0.5"
-            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }}
+            className="relative px-4 py-3 flex flex-col gap-0.5 overflow-hidden"
+            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] } } }}
+            whileHover={{ y: -2 }}
           >
+            <div
+              className="absolute top-0 left-0 right-0"
+              style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }}
+            />
             <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">{label}</span>
             <span className="font-display text-lg font-bold tracking-[-0.02em]" style={{ color, fontVariantNumeric: "tabular-nums" }}>{value}</span>
           </motion.div>
@@ -791,8 +796,9 @@ export default function AIVideoPage() {
                 return (
                   <motion.div
                     key={result.id}
-                    className={`hf-thumb ${aspectClass} group`}
-                    variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } } }}
+                    className={`hf-thumb glass rounded-xl ${aspectClass} group`}
+                    variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] } } }}
+                    whileHover={{ y: -4, scale: 1.02 }}
                   >
                     {result.url ? (
                       <SafeThumb

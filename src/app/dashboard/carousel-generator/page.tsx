@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useRef, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   Sparkles, Download, Copy, Check, Loader, ChevronLeft, ChevronRight,
   Palette, Type, Layers, Wand2, LayoutGrid, Zap, Edit3, RotateCcw,
@@ -863,12 +864,11 @@ export default function CarouselGeneratorPage() {
         <div className="lg:col-span-4 space-y-4">
 
           {/* Topic Input */}
-          <div
-            className="rounded-2xl p-4"
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-            }}
+          <motion.div
+            className="glass rounded-xl p-4"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0 }}
           >
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
               <Type size={13} className="text-gold" />
@@ -909,15 +909,14 @@ export default function CarouselGeneratorPage() {
                 <span className="text-[10px] text-muted">10</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Style Picker */}
-          <div
-            className="rounded-2xl p-4"
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-            }}
+          <motion.div
+            className="glass rounded-xl p-4"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.06 }}
           >
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
               <Palette size={13} className="text-gold" />
@@ -951,15 +950,14 @@ export default function CarouselGeneratorPage() {
                 </button>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Brand Colors */}
-          <div
-            className="rounded-2xl p-4"
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-            }}
+          <motion.div
+            className="glass rounded-xl p-4"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.12 }}
           >
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
               <Palette size={13} className="text-gold" />
@@ -1028,15 +1026,14 @@ export default function CarouselGeneratorPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Template Gallery */}
-          <div
-            className="rounded-2xl p-4"
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-            }}
+          <motion.div
+            className="glass rounded-xl p-4"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.18 }}
           >
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
               <LayoutGrid size={13} className="text-gold" />
@@ -1091,44 +1088,51 @@ export default function CarouselGeneratorPage() {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
 
           {/* Generate Button */}
-          <button
-            onClick={handleGenerate}
-            disabled={generating || !topic.trim()}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed text-white"
-            style={{
-              background: generating
-                ? "var(--color-muted)"
-                : "linear-gradient(135deg, var(--color-accent) 0%, color-mix(in srgb, var(--color-accent) 80%, #000) 100%)",
-              boxShadow: generating ? "none" : "0 4px 16px color-mix(in srgb, var(--color-accent) 30%, transparent)",
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.24 }}
+            whileHover={generating || !topic.trim() ? {} : { scale: 1.02 }}
+            whileTap={generating || !topic.trim() ? {} : { scale: 0.97 }}
           >
-            {generating ? (
-              <>
-                <Loader size={16} className="animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Sparkles size={16} />
-                Generate Carousel
-              </>
-            )}
-          </button>
+            <button
+              onClick={handleGenerate}
+              disabled={generating || !topic.trim()}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed text-white"
+              style={{
+                background: generating
+                  ? "var(--color-muted)"
+                  : "linear-gradient(135deg, var(--color-accent) 0%, color-mix(in srgb, var(--color-accent) 80%, #000) 100%)",
+                boxShadow: generating ? "none" : "0 4px 16px color-mix(in srgb, var(--color-accent) 30%, transparent)",
+              }}
+            >
+              {generating ? (
+                <>
+                  <Loader size={16} className="animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Sparkles size={16} />
+                  Generate Carousel
+                </>
+              )}
+            </button>
+          </motion.div>
         </div>
 
         {/* ═══════════════════════════════════════════
             RIGHT PANEL — Preview
             ═══════════════════════════════════════════ */}
         <div className="lg:col-span-8">
-          <div
-            className="rounded-2xl p-5 min-h-[500px]"
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-            }}
+          <motion.div
+            className="glass rounded-xl p-5 min-h-[500px]"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.06 }}
           >
             {/* Preview header */}
             <div className="flex items-center justify-between mb-4">
@@ -1247,13 +1251,17 @@ export default function CarouselGeneratorPage() {
                     const isLast = idx === slides.length - 1;
 
                     return (
-                      <div
+                      <motion.div
                         key={idx}
-                        className="flex-shrink-0 w-[280px] h-[280px] rounded-2xl overflow-hidden relative group cursor-pointer transition-transform hover:scale-[1.02]"
+                        className="flex-shrink-0 w-[280px] h-[280px] glass rounded-xl overflow-hidden relative group cursor-pointer"
                         style={{
                           background: bg,
                           boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
                         }}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.22, delay: idx * 0.06 }}
+                        whileHover={{ y: -4, scale: 1.02 }}
                         onClick={() => setEditingSlide(isEditing ? null : idx)}
                       >
                         {/* Slide number badge */}
@@ -1360,7 +1368,7 @@ export default function CarouselGeneratorPage() {
                             background: `linear-gradient(to top, rgba(0,0,0,0.08) 0%, transparent 100%)`,
                           }}
                         />
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
@@ -1372,9 +1380,13 @@ export default function CarouselGeneratorPage() {
                     <span className="text-xs font-semibold text-foreground">Slide Content</span>
                   </div>
                   {slides.map((slide, idx) => (
-                    <div
+                    <motion.div
                       key={idx}
                       className="flex items-start gap-3 p-3 rounded-xl transition-all"
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.22, delay: idx * 0.04 }}
+                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
                       style={{
                         background: editingSlide === idx
                           ? "color-mix(in srgb, var(--color-accent) 5%, var(--color-surface-light))"
@@ -1413,7 +1425,7 @@ export default function CarouselGeneratorPage() {
                       >
                         {editingSlide === idx ? <X size={12} /> : <Edit3 size={12} />}
                       </button>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
 
@@ -1437,7 +1449,7 @@ export default function CarouselGeneratorPage() {
                 </div>
               </>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
       </>

@@ -14,6 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import type {
   BlendMode,
@@ -628,7 +629,12 @@ export default function ThumbnailEditorProPage() {
   void flattenHistory;
 
   return (
-    <div className="fixed inset-0 bg-neutral-950 text-neutral-100 flex flex-col">
+    <motion.div
+      className="fixed inset-0 bg-neutral-950 text-neutral-100 flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.22 }}
+    >
       <TopBar
         canUndo={history.past.length > 0}
         canRedo={history.future.length > 0}
@@ -780,7 +786,7 @@ export default function ThumbnailEditorProPage() {
           }}
         />
       )}
-    </div>
+    </motion.div>
   );
 }
 
