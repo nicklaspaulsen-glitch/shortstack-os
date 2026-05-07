@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import {
   Webhook, Plus, Trash2, Copy, CheckCircle, AlertCircle,
@@ -233,17 +234,27 @@ export default function WebhooksPage() {
       />
 
       {/* Inbound webhook URL */}
-      <div className="card">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.08, duration: 0.38, ease: "easeOut" }}
+        className="glass rounded-xl p-4"
+      >
         <h2 className="section-header">Inbound Webhook URL</h2>
         <p className="text-[10px] text-muted mb-2">Send data TO Trinity from external tools (Zapier, Make, n8n)</p>
         <div className="flex gap-2">
           <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate bg-surface-light border border-border">{inboundUrl}</code>
           <button onClick={() => { navigator.clipboard.writeText(inboundUrl); toast.success("Copied"); }} className="btn-secondary text-xs px-3"><Copy size={12} /></button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Local-only disclaimer */}
-      <div className="card border-warning/20 bg-warning/5">
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.16, duration: 0.38, ease: "easeOut" }}
+        className="glass rounded-xl p-4 border-warning/20 bg-warning/5"
+      >
         <div className="flex items-start gap-2">
           <AlertCircle size={12} className="text-warning shrink-0 mt-0.5" />
           <p className="text-[10px] text-muted leading-relaxed">
@@ -253,23 +264,33 @@ export default function WebhooksPage() {
             platform webhooks it already knows about (Stripe, Resend, Telegram, GHL, ElevenLabs).
           </p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Tabs */}
-      <div className="flex gap-1">
+      <motion.div
+        className="flex gap-1 glass rounded-lg px-2 py-1.5"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.24, duration: 0.35, ease: "easeOut" }}
+      >
         {TABS.map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all ${
-              tab === t ? "bg-gold/15 text-gold border border-gold/20" : "text-muted border border-transparent hover:text-foreground"
+              tab === t ? "bg-indigo-500/15 text-indigo-300 border border-indigo-500/20" : "text-muted border border-transparent hover:text-foreground"
             }`}>{t}</button>
         ))}
-      </div>
+      </motion.div>
 
       {/* ═══ ENDPOINTS TAB ═══ */}
       {tab === "Endpoints" && (
         <div className="space-y-3">
           {showCreate && (
-            <div className="card border-gold/10">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="glass rounded-xl p-4 border-indigo-500/10"
+            >
               <h2 className="section-header">Create Outbound Webhook</h2>
               <div className="space-y-3">
                 <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
@@ -308,7 +329,7 @@ export default function WebhooksPage() {
                   <button onClick={createWebhook} className="btn-primary text-xs">Create Webhook</button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {webhooks.length === 0 && !showCreate ? (
@@ -321,8 +342,14 @@ export default function WebhooksPage() {
             />
           ) : (
             <div className="space-y-2">
-              {webhooks.map(wh => (
-                <div key={wh.id} className={`p-4 rounded-xl border ${wh.active ? "bg-surface-light border-border" : "bg-surface border-border/50 opacity-60"}`}>
+              {webhooks.map((wh, i) => (
+                <motion.div
+                  key={wh.id}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
+                  whileHover={{ backgroundColor: "rgba(99,102,241,0.04)" }}
+                  className={`p-4 rounded-xl border transition-colors ${wh.active ? "glass border-white/10" : "bg-surface border-border/50 opacity-60"}`}>
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-3">
                       <div className={`w-2.5 h-2.5 rounded-full ${wh.active ? "bg-emerald-400" : "bg-muted"}`} />
@@ -376,7 +403,7 @@ export default function WebhooksPage() {
                       </div>
                     </div>
                   )}
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -385,22 +412,27 @@ export default function WebhooksPage() {
 
       {/* ═══ DELIVERY LOG TAB ═══ */}
       {tab === "Delivery Log" && (
-        <div className="card">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          className="glass rounded-xl overflow-hidden p-4"
+        >
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-            <FileText size={14} className="text-gold" /> Delivery Log
+            <FileText size={14} className="text-indigo-400" /> Delivery Log
           </h2>
           <div className="space-y-1.5">
             {deliveries.map(d => (
               <div key={d.id}>
                 <button onClick={() => setExpandedDelivery(expandedDelivery === d.id ? null : d.id)}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border hover:border-gold/15 transition-all text-left">
+                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border hover:border-indigo-500/20 transition-all text-left">
                   <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
                     d.statusCode < 300 ? "bg-emerald-500/10 text-emerald-400" : d.statusCode < 500 ? "bg-amber-500/10 text-amber-400" : "bg-red-500/10 text-red-400"
                   }`}>{d.statusCode}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-medium">{d.webhookName}</span>
-                      <span className="text-[9px] text-gold">{d.event}</span>
+                      <span className="text-[9px] text-indigo-400">{d.event}</span>
                     </div>
                   </div>
                   <span className="text-[9px] text-muted font-mono">{d.responseTime}ms</span>
@@ -421,14 +453,19 @@ export default function WebhooksPage() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ TEST TAB ═══ */}
       {tab === "Test" && (
-        <div className="card">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          className="glass rounded-xl p-4"
+        >
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-            <Send size={14} className="text-gold" /> Test Webhook
+            <Send size={14} className="text-indigo-400" /> Test Webhook
           </h2>
           <p className="text-[10px] text-muted mb-3">Send a test payload to any configured webhook endpoint.</p>
           <div className="space-y-3">
@@ -474,43 +511,60 @@ export default function WebhooksPage() {
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ TEMPLATES TAB ═══ */}
       {tab === "Templates" && (
-        <div className="space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          className="space-y-3"
+        >
           <h2 className="text-sm font-bold flex items-center gap-2">
-            <FileText size={14} className="text-gold" /> Webhook Templates
+            <FileText size={14} className="text-indigo-400" /> Webhook Templates
           </h2>
           <p className="text-[10px] text-muted">Quick-start with pre-configured webhook templates.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {TEMPLATES.map((t, i) => (
-              <div key={i} className="card p-3 hover:border-gold/15 transition-all">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="glass rounded-xl p-3"
+              >
                 <p className="text-xs font-semibold mb-1 flex items-center gap-1.5">
                   <TemplateBrandIcon name={t.name} size={14} />
                   {t.name}
                 </p>
                 <p className="text-[9px] text-muted font-mono mb-2">{t.url}</p>
                 <div className="flex flex-wrap gap-1 mb-2">
-                  {t.events.map(e => <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-gold/8 text-gold">{e}</span>)}
+                  {t.events.map(e => <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400">{e}</span>)}
                 </div>
                 <button onClick={() => { setForm({ name: t.name, url: "", events: t.events }); setShowCreate(true); setTab("Endpoints"); }}
-                  className="text-[10px] text-gold flex items-center gap-1 hover:underline">
+                  className="text-[10px] text-indigo-400 flex items-center gap-1 hover:underline">
                   <ArrowRight size={10} /> Use Template
                 </button>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ═══ SETTINGS TAB ═══ */}
       {tab === "Settings" && (
-        <div className="space-y-4">
-          <div className="card">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          className="space-y-4"
+        >
+          <div className="glass rounded-xl p-4">
             <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-              <Shield size={14} className="text-gold" /> Global Webhook Settings
+              <Shield size={14} className="text-indigo-400" /> Global Webhook Settings
             </h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -531,33 +585,33 @@ export default function WebhooksPage() {
               </div>
             </div>
           </div>
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-              <Filter size={14} className="text-gold" /> Filter Rules
+              <Filter size={14} className="text-indigo-400" /> Filter Rules
             </h2>
             <p className="text-[10px] text-muted mb-3">Add conditions to filter which payloads get delivered.</p>
             <div className="space-y-2">
               <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]">
-                <span className="text-gold font-mono">IF</span>
+                <span className="text-indigo-400 font-mono">IF</span>
                 <span>lead.source</span>
                 <span className="text-muted">=</span>
                 <span className="text-emerald-400">&quot;google_maps&quot;</span>
                 <span className="text-muted ml-auto">Active</span>
               </div>
               <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]">
-                <span className="text-gold font-mono">IF</span>
+                <span className="text-indigo-400 font-mono">IF</span>
                 <span>deal.value</span>
                 <span className="text-muted">&gt;</span>
                 <span className="text-emerald-400">1000</span>
                 <span className="text-muted ml-auto">Active</span>
               </div>
             </div>
-            <button className="mt-2 text-[10px] text-gold flex items-center gap-1 hover:underline"><Plus size={10} /> Add Filter Rule</button>
+            <button className="mt-2 text-[10px] text-indigo-400 flex items-center gap-1 hover:underline"><Plus size={10} /> Add Filter Rule</button>
           </div>
           <div className="flex justify-end">
             <button className="btn-primary text-xs flex items-center gap-1.5"><CheckCircle size={12} /> Save Settings</button>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

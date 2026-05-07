@@ -27,6 +27,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { Plug, Sparkles, RefreshCw, ExternalLink, Key } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
@@ -643,28 +644,37 @@ export default function IntegrationsHubPage() {
 
       {/* Hero stat tiles */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard
-          label="Connected"
-          value={connectedCount}
-          icon={<Plug size={14} />}
-        />
-        <StatCard
-          label="Available"
-          value={availableCount}
-          icon={<Sparkles size={14} />}
-        />
-        <StatCard
-          label="Powered by"
-          value="Nango + Zernio"
-          icon={<Sparkles size={14} />}
-          premium
-        />
-        <StatCard label="Last sync" value={lastSyncLabel} />
+        {[
+          { label: "Connected", value: connectedCount, icon: <Plug size={14} />, bar: "from-indigo-500 to-violet-500" },
+          { label: "Available", value: availableCount, icon: <Sparkles size={14} />, bar: "from-sky-500 to-indigo-500" },
+          { label: "Powered by", value: "Nango + Zernio", icon: <Sparkles size={14} />, bar: "from-purple-500 to-indigo-500", premium: true },
+          { label: "Last sync", value: lastSyncLabel, icon: null, bar: "from-emerald-500 to-teal-500" },
+        ].map((tile, i) => (
+          <motion.div
+            key={tile.label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" }}
+            whileHover={{ y: -2 }}
+            className="glass rounded-xl overflow-hidden"
+          >
+            <div className={`h-[3px] w-full bg-gradient-to-r ${tile.bar}`} />
+            <StatCard
+              label={tile.label}
+              value={tile.value}
+              icon={tile.icon ?? undefined}
+              premium={tile.premium}
+            />
+          </motion.div>
+        ))}
       </div>
 
       {/* Category filter pills */}
-      <div
-        className="flex items-center gap-2 flex-wrap"
+      <motion.div
+        className="flex items-center gap-2 flex-wrap glass rounded-lg px-3 py-2"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.35, duration: 0.35, ease: "easeOut" }}
         role="tablist"
         aria-label="Integration category filter"
       >
@@ -680,15 +690,15 @@ export default function IntegrationsHubPage() {
               className={[
                 "px-3 py-1.5 text-[11px] font-semibold rounded-full border transition-all",
                 active
-                  ? "bg-gold/15 border-gold/40 text-gold"
-                  : "bg-surface border-border text-muted hover:text-foreground hover:border-gold/20",
+                  ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-300"
+                  : "bg-white/5 border-white/10 text-muted hover:text-foreground hover:border-indigo-500/20",
               ].join(" ")}
             >
               {cat}
             </button>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Integration grid */}
       <div>
@@ -703,18 +713,26 @@ export default function IntegrationsHubPage() {
           </span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {filteredIntegrations.map((integration) => {
+          {filteredIntegrations.map((integration, i) => {
             const conn = connectionByIntegration.get(integration.id);
             return (
-              <IntegrationCard
+              <motion.div
                 key={integration.id}
-                integration={integration}
-                status={statusFor(integration)}
-                connectedAs={conn?.display_name ?? null}
-                busy={busyIds.has(integration.id)}
-                onConnect={handleConnectClick}
-                onDisconnect={handleDisconnect}
-              />
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.4, ease: "easeOut" }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="glass rounded-xl"
+              >
+                <IntegrationCard
+                  integration={integration}
+                  status={statusFor(integration)}
+                  connectedAs={conn?.display_name ?? null}
+                  busy={busyIds.has(integration.id)}
+                  onConnect={handleConnectClick}
+                  onDisconnect={handleDisconnect}
+                />
+              </motion.div>
             );
           })}
         </div>
