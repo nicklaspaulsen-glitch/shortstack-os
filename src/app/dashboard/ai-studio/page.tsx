@@ -207,13 +207,20 @@ export default function AIStudioPage() {
               description: "Pick the thing — we'll hand you the right tool with the right defaults.",
               icon: <Sparkles size={18} />,
               component: (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                <motion.div
+                  className="grid grid-cols-2 md:grid-cols-3 gap-2.5"
+                  initial="hidden"
+                  animate="visible"
+                  variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
+                >
                   {TOOLS.map(t => {
                     const Icon = t.icon;
                     const selected = guidedIntent === t.id;
                     return (
-                      <button
+                      <motion.button
                         key={t.id}
+                        variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                        transition={{ duration: 0.2 }}
                         onClick={() => { setGuidedIntent(t.id); setActiveTool(t.id); }}
                         className={`relative text-left p-4 rounded-xl border transition-all ${
                           selected ? "border-[rgba(99,102,241,0.4)] bg-[rgba(99,102,241,0.06)] shadow-lg shadow-[rgba(99,102,241,0.1)]" : "border-border hover:border-[#6366F1]/30 bg-surface-light"
@@ -229,10 +236,10 @@ export default function AIStudioPage() {
                         </div>
                         <p className="text-sm font-bold">{t.name}</p>
                         <p className="text-[10px] text-muted mt-0.5 line-clamp-2">{t.desc}</p>
-                      </button>
+                      </motion.button>
                     );
                   })}
-                </div>
+                </motion.div>
               ),
             },
             {
@@ -331,7 +338,10 @@ export default function AIStudioPage() {
 
         {/* Wizard image results — inline strip above the workspace */}
         {wizardImages.length > 0 && (
-          <div className="mb-5 rounded-2xl border border-[#6366F1]/18 bg-[rgba(99,102,241,0.04)] p-4">
+          <motion.div
+            className="mb-5 glass-indigo rounded-2xl p-4"
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
+          >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Sparkles size={13} className="text-[#A78BFA]" />
@@ -356,7 +366,7 @@ export default function AIStudioPage() {
                 </a>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Category filter pills */}
@@ -385,7 +395,7 @@ export default function AIStudioPage() {
         <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-3 items-start">
 
           {/* Left: vertical tool list */}
-          <div className="rounded-2xl bg-[#0E0D14] border border-[rgba(255,255,255,0.06)] overflow-hidden">
+          <div className="glass rounded-2xl overflow-hidden">
             <div className="px-3 pt-3 pb-1">
               <p className="text-[8px] uppercase tracking-[0.2em] text-[#6F6D7A] font-semibold px-1 mb-2">Tools</p>
             </div>
@@ -442,7 +452,7 @@ export default function AIStudioPage() {
           {/* Right: active tool workspace */}
           <div
             ref={toolPanelRef}
-            className="rounded-2xl bg-[#0E0D14] border border-[rgba(99,102,241,0.10)] overflow-hidden shadow-2xl shadow-black/40"
+            className="glass-indigo rounded-2xl overflow-hidden shadow-glass-indigo"
           >
             {/* Tool header */}
             <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[rgba(255,255,255,0.05)]">
@@ -591,11 +601,14 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
+      <motion.div
+        className="flex items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
+      >
         <Mic size={16} className="text-blue-400" />
         <h2 className="text-sm font-bold text-foreground">Speech to Text</h2>
         <span className="text-[9px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded-full">Whisper Large V3</span>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Input */}
@@ -626,16 +639,22 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
               <option value="pt">Portuguese</option>
               <option value="ar">Arabic</option>
             </select>
-            <button onClick={handleTranscribe} disabled={processing || !file}
+            <motion.button onClick={handleTranscribe} disabled={processing || !file}
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               className="px-4 py-2 bg-blue-500 text-white text-xs font-semibold rounded-lg hover:bg-blue-600 disabled:opacity-40 flex items-center gap-1.5">
               {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
               Transcribe
-            </button>
+            </motion.button>
           </div>
         </div>
 
         {/* Output */}
-        <div className="bg-surface-light rounded-xl p-4 min-h-[200px]">
+        <motion.div
+          className="glass-md rounded-xl p-4 min-h-[200px]"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22, delay: 0.08 }}
+        >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-medium text-foreground">Transcript</span>
             {transcript && (
@@ -665,7 +684,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
           ) : (
             <p className="text-xs text-muted">Upload a file and click Transcribe to get started.</p>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -783,11 +802,14 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
+      <motion.div
+        className="flex items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
+      >
         <Palette size={16} className="text-[#6366F1]" />
         <h2 className="text-sm font-bold text-foreground">Image Generator</h2>
         <span className="text-[9px] bg-[#6366F1]/10 text-[#6366F1] px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
-      </div>
+      </motion.div>
 
       {setupRequired && (
         <div className="mb-4 p-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 flex items-start gap-2">
@@ -840,14 +862,18 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
             </div>
           </div>
 
-          <button onClick={handleGenerate} disabled={processing || !prompt.trim()}
+          <motion.button onClick={handleGenerate} disabled={processing || !prompt.trim()}
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="w-full px-4 py-2.5 bg-[#6366F1] text-white text-xs font-semibold rounded-lg hover:bg-[#5E5BFF] disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
             Generate Image
-          </button>
+          </motion.button>
         </div>
 
-        <div className="bg-surface-light rounded-xl p-4 min-h-[200px] flex items-center justify-center">
+        <motion.div
+          className="glass-md rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
+        >
           {images.length > 0 ? (
             <div className="text-center space-y-2">
               {images.map((img, i) => (
@@ -898,7 +924,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
               <p className="text-xs text-muted">Generated image will appear here</p>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -965,11 +991,14 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
+      <motion.div
+        className="flex items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
+      >
         <ArrowUpRight size={16} className="text-green-400" />
         <h2 className="text-sm font-bold text-foreground">AI Image Upscaler</h2>
         <span className="text-[9px] bg-green-500/10 text-green-400 px-2 py-0.5 rounded-full">Real-ESRGAN</span>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -1002,15 +1031,19 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
               <input type="checkbox" checked={faceEnhance} onChange={e => setFaceEnhance(e.target.checked)} className="w-3 h-3 rounded" />
               <span className="text-[10px] text-muted">Face enhance</span>
             </label>
-            <button onClick={handleUpscale} disabled={processing || !file}
+            <motion.button onClick={handleUpscale} disabled={processing || !file}
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               className="ml-auto px-4 py-2 bg-green-500 text-white text-xs font-semibold rounded-lg hover:bg-green-600 disabled:opacity-40 flex items-center gap-1.5">
               {processing ? <Loader size={12} className="animate-spin" /> : <Wand2 size={12} />}
               Upscale
-            </button>
+            </motion.button>
           </div>
         </div>
 
-        <div className="bg-surface-light rounded-xl p-4 min-h-[200px] flex items-center justify-center">
+        <motion.div
+          className="glass-md rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
+        >
           {result ? (
             <div className="text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1023,7 +1056,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
           ) : (
             <p className="text-xs text-muted">Upscaled result will appear here</p>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -1079,11 +1112,14 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
+      <motion.div
+        className="flex items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
+      >
         <Scissors size={16} className="text-pink-400" />
         <h2 className="text-sm font-bold text-foreground">Background Remover</h2>
         <span className="text-[9px] bg-pink-500/10 text-pink-400 px-2 py-0.5 rounded-full">REMBG / SAM</span>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -1112,15 +1148,19 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
               ))}
               <input type="color" value={bgColor || "#ffffff"} onChange={e => setBgColor(e.target.value)} className="w-6 h-6 rounded cursor-pointer" />
             </div>
-            <button onClick={handleRemoveBg} disabled={processing || !file}
+            <motion.button onClick={handleRemoveBg} disabled={processing || !file}
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               className="ml-auto px-4 py-2 bg-pink-500 text-white text-xs font-semibold rounded-lg hover:bg-pink-600 disabled:opacity-40 flex items-center gap-1.5">
               {processing ? <Loader size={12} className="animate-spin" /> : <Scissors size={12} />}
               Remove BG
-            </button>
+            </motion.button>
           </div>
         </div>
-        <div className="bg-surface-light rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: !result ? undefined : bgColor ? bgColor : "repeating-conic-gradient(#e0e0e0 0% 25%, #f8f8f8 0% 50%) 50% / 16px 16px" }}>
+        <motion.div
+          className="glass-md rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          style={{ background: !result ? undefined : bgColor ? bgColor : "repeating-conic-gradient(#e0e0e0 0% 25%, #f8f8f8 0% 50%) 50% / 16px 16px" }}
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
+        >
           {result ? (
             <div className="text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1133,7 +1173,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
           ) : (
             <p className="text-xs text-muted">Result with transparent background</p>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -1144,7 +1184,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [motion, setMotion] = useState(127);
+  const [motionBucket, setMotionBucket] = useState(127);
   const [fps, setFps] = useState(6);
   const [result, setResult] = useState<string | null>(null);
 
@@ -1154,7 +1194,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      fd.append("motion_bucket", String(motion));
+      fd.append("motion_bucket", String(motionBucket));
       fd.append("fps", String(fps));
       const res = await fetch("/api/ai-studio/img-to-video", { method: "POST", body: fd });
       const data = await res.json();
@@ -1176,11 +1216,14 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
+      <motion.div
+        className="flex items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
+      >
         <Film size={16} className="text-[#A78BFA]" />
         <h2 className="text-sm font-bold text-foreground">Image to Video</h2>
         <span className="text-[9px] bg-[rgba(99,102,241,0.08)] text-[#A78BFA] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -1201,9 +1244,9 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
           <div className="mt-3 space-y-2">
             <div className="flex items-center gap-3">
               <span className="text-[10px] text-muted w-16">Motion:</span>
-              <input type="range" min={1} max={255} value={motion} onChange={e => setMotion(Number(e.target.value))}
+              <input type="range" min={1} max={255} value={motionBucket} onChange={e => setMotionBucket(Number(e.target.value))}
                 className="flex-1 h-1 accent-[#6366F1]" />
-              <span className="text-[10px] text-muted w-8">{motion}</span>
+              <span className="text-[10px] text-muted w-8">{motionBucket}</span>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-[10px] text-muted w-16">FPS:</span>
@@ -1213,19 +1256,23 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
               ))}
             </div>
           </div>
-          <button onClick={handleGenerate} disabled={processing || !file}
+          <motion.button onClick={handleGenerate} disabled={processing || !file}
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="w-full mt-3 px-4 py-2.5 bg-[#6366F1] text-white text-xs font-semibold rounded-lg hover:bg-[#4F46E5] disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
             Animate Image
-          </button>
+          </motion.button>
         </div>
-        <div className="bg-surface-light rounded-xl p-4 min-h-[200px] flex items-center justify-center">
+        <motion.div
+          className="glass-md rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
+        >
           {result ? (
             <video src={result} controls autoPlay loop muted className="max-h-[300px] rounded-lg" />
           ) : (
             <p className="text-xs text-muted">Animated video will appear here</p>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -1271,12 +1318,15 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
+      <motion.div
+        className="flex items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
+      >
         <Music size={16} className="text-indigo-400" />
         <h2 className="text-sm font-bold text-foreground">AI Music Generator</h2>
         <span className="text-[9px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full">MusicGen</span>
         <span className="text-[9px] text-muted ml-auto">Royalty-free output</span>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
@@ -1310,14 +1360,18 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
             <span className="text-xs text-foreground font-mono">{duration}s</span>
           </div>
 
-          <button onClick={handleGenerate} disabled={processing || !prompt}
+          <motion.button onClick={handleGenerate} disabled={processing || !prompt}
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="w-full px-4 py-2.5 bg-indigo-500 text-white text-xs font-semibold rounded-lg hover:bg-indigo-400 disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Music size={12} />}
             Generate Music
-          </button>
+          </motion.button>
         </div>
 
-        <div className="bg-surface-light rounded-xl p-4 min-h-[200px] flex flex-col items-center justify-center">
+        <motion.div
+          className="glass-md rounded-xl p-4 min-h-[200px] flex flex-col items-center justify-center"
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
+        >
           {result ? (
             <div className="w-full text-center space-y-3">
               <div className="w-16 h-16 mx-auto rounded-full bg-indigo-500/10 flex items-center justify-center">
@@ -1332,7 +1386,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
           ) : (
             <p className="text-xs text-muted">Generated music will play here</p>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -1413,11 +1467,14 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
+      <motion.div
+        className="flex items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
+      >
         <Volume2 size={16} className="text-orange-400" />
         <h2 className="text-sm font-bold text-foreground">Voice Clone + TTS</h2>
         <span className="text-[9px] bg-orange-500/10 text-orange-400 px-2 py-0.5 rounded-full">XTTS v2</span>
-      </div>
+      </motion.div>
 
       <div className="flex gap-2 mb-4">
         {(["clone", "speak"] as const).map(m => (
@@ -1456,11 +1513,12 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
           )}
           <input value={voiceName} onChange={e => setVoiceName(e.target.value)} placeholder="Voice name (e.g. 'Client - John')"
             className="w-full text-xs bg-surface-light border border-border rounded-lg px-3 py-2 text-foreground" />
-          <button onClick={handleClone} disabled={processing || voiceFiles.length === 0}
+          <motion.button onClick={handleClone} disabled={processing || voiceFiles.length === 0}
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="w-full px-4 py-2.5 bg-orange-500 text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Volume2 size={12} />}
             Clone {voiceFiles.length > 1 ? `${voiceFiles.length} Voices` : "Voice"}
-          </button>
+          </motion.button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1474,13 +1532,17 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
             )}
             <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Enter text to speak in the cloned voice..."
               className="w-full h-32 text-xs bg-surface-light border border-border rounded-xl px-3 py-2 text-foreground resize-none" />
-            <button onClick={handleSpeak} disabled={processing || !text}
+            <motion.button onClick={handleSpeak} disabled={processing || !text}
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               className="w-full px-4 py-2.5 bg-orange-500 text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
               {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
               Generate Speech
-            </button>
+            </motion.button>
           </div>
-          <div className="bg-surface-light rounded-xl p-4 flex items-center justify-center">
+          <motion.div
+            className="glass-md rounded-xl p-4 flex items-center justify-center"
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
+          >
             {result ? (
               <div className="w-full text-center space-y-3">
                 <audio src={result} controls className="w-full" />
@@ -1491,7 +1553,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
             ) : (
               <p className="text-xs text-muted">Generated speech plays here</p>
             )}
-          </div>
+          </motion.div>
         </div>
       )}
     </div>
@@ -1549,11 +1611,14 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
+      <motion.div
+        className="flex items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
+      >
         <Brain size={16} className="text-[#A78BFA]" />
         <h2 className="text-sm font-bold text-foreground">Brand LoRA Training</h2>
         <span className="text-[9px] bg-[rgba(99,102,241,0.08)] text-[#A78BFA] px-2 py-0.5 rounded-full">Business+ Only</span>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
@@ -1599,14 +1664,18 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
             <span className="text-xs text-foreground font-mono">{steps}</span>
           </div>
 
-          <button onClick={handleTrain} disabled={processing || images.length < 5}
+          <motion.button onClick={handleTrain} disabled={processing || images.length < 5}
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="w-full px-4 py-2.5 bg-[#6366F1] text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} />}
             Start Training (~{Math.ceil(steps / 100)} min)
-          </button>
+          </motion.button>
         </div>
 
-        <div className="bg-surface-light rounded-xl p-4 min-h-[200px]">
+        <motion.div
+          className="glass-md rounded-xl p-4 min-h-[200px]"
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
+        >
           <h3 className="text-xs font-semibold text-foreground mb-3">How it works</h3>
           <div className="space-y-2">
             {[
@@ -1628,7 +1697,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
               {trainingStatus}
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
@@ -1672,11 +1741,14 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
+      <motion.div
+        className="flex items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
+      >
         <Layers size={16} className="text-cyan-400" />
         <h2 className="text-sm font-bold text-foreground">Batch Image Generation</h2>
         <span className="text-[9px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded-full">FLUX / SDXL</span>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
@@ -1725,14 +1797,18 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
             </div>
           </div>
 
-          <button onClick={handleGenerate} disabled={processing}
+          <motion.button onClick={handleGenerate} disabled={processing}
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="w-full px-4 py-2.5 bg-cyan-500 text-black text-xs font-semibold rounded-lg hover:bg-cyan-400 disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} />}
             Generate {prompts.filter(p => p.trim()).length} Images
-          </button>
+          </motion.button>
         </div>
 
-        <div className="bg-surface-light rounded-xl p-4 min-h-[200px]">
+        <motion.div
+          className="glass-md rounded-xl p-4 min-h-[200px]"
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
+        >
           <h3 className="text-xs font-semibold text-foreground mb-3">Queue ({results.length})</h3>
           {results.length > 0 ? (
             <div className="space-y-2 max-h-[300px] overflow-y-auto">
@@ -1749,7 +1825,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
           ) : (
             <p className="text-xs text-muted">Batch results will appear here</p>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
