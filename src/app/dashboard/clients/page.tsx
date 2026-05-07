@@ -625,7 +625,7 @@ export default function ClientsPage() {
   return (
     <MotionPage className="space-y-4">
       {/* ── Higgsfield compact header — 52px slim bar ── */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809]">
+      <div className="flex items-center gap-3 flex-wrap px-5 py-3 border-b border-[rgba(99,102,241,0.08)] bg-[#080809]">
         <div className="w-7 h-7 rounded-xl bg-[rgba(99,102,241,0.12)] flex items-center justify-center shrink-0">
           <Users size={13} className="text-[#6366F1]" />
         </div>
@@ -686,7 +686,8 @@ export default function ClientsPage() {
       </div>
 
       {/* Tabs (sticky) */}
-      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(99,102,241,0.08)] rounded-xl p-1 w-fit shadow-lg shadow-black/20">
+      <div className="overflow-x-auto max-w-full">
+      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(99,102,241,0.08)] rounded-xl p-1 w-fit min-w-max shadow-lg shadow-black/20">
         {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}
@@ -701,6 +702,7 @@ export default function ClientsPage() {
             {t}
           </button>
         ))}
+      </div>
       </div>
 
       {/* Enhanced Clients Tab Toolbar */}
@@ -729,7 +731,7 @@ export default function ClientsPage() {
             </button>
 
             {/* Feature 11: Sort Options */}
-            <div className="flex items-center gap-1 bg-surface rounded-lg p-0.5">
+            <div className="flex items-center gap-1 flex-wrap bg-surface rounded-lg p-0.5">
               <span className="text-[10px] text-muted px-1.5">Sort:</span>
               {([
                 { field: "business_name" as SortField, label: "Name" },

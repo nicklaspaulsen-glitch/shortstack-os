@@ -875,7 +875,7 @@ export default function AnalyticsPage() {
           {/* ── Zone 5: Scorecard strip ───────────────────────────────────── */}
           {/* Lime on Revenue Closed only. All other cells: neutral.          */}
           <div className="relative rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[#0E0D14] overflow-hidden">
-            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-[rgba(255,255,255,0.06)]">
+            <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(255,255,255,0.06)]">
               <div className="px-6 py-5 flex flex-col gap-1.5">
                 <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">Revenue Closed</span>
                 <span
