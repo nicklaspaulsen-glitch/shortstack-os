@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { Campaign, AdCreative, Client, AdAction } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
@@ -440,19 +441,38 @@ export default function AdsPage() {
         <div className="space-y-5">
           {/* KPI Cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            <StatCard label="Total Spend" value={formatCurrency(totalSpend)} icon={<DollarSign size={16} />} />
-            <StatCard label="Avg ROAS" value={`${avgROAS.toFixed(1)}x`} icon={<TrendingUp size={16} />} changeType={avgROAS >= 2 ? "positive" : avgROAS >= 1 ? "neutral" : "negative"} />
-            <StatCard label="Avg CTR" value={`${(avgCTR * 100).toFixed(2)}%`} icon={<MousePointer size={16} />} changeType={avgCTR >= 0.02 ? "positive" : "neutral"} />
-            <StatCard label="Conversions" value={totalConversions} icon={<Target size={16} />} />
-            <StatCard label="Active Campaigns" value={campaigns.filter(c => c.status === "active").length} icon={<Activity size={16} />} />
-            <StatCard label="Client MRR" value={formatCurrency(Object.values(clientMrr).reduce((s, v) => s + v, 0))} icon={<Users size={16} />} />
+            {[
+              { label: "Total Spend", value: formatCurrency(totalSpend), icon: <DollarSign size={16} />, extra: {} },
+              { label: "Avg ROAS", value: `${avgROAS.toFixed(1)}x`, icon: <TrendingUp size={16} />, extra: { changeType: (avgROAS >= 2 ? "positive" : avgROAS >= 1 ? "neutral" : "negative") as "positive" | "neutral" | "negative" } },
+              { label: "Avg CTR", value: `${(avgCTR * 100).toFixed(2)}%`, icon: <MousePointer size={16} />, extra: { changeType: (avgCTR >= 0.02 ? "positive" : "neutral") as "positive" | "neutral" } },
+              { label: "Conversions", value: totalConversions, icon: <Target size={16} />, extra: {} },
+              { label: "Active Campaigns", value: campaigns.filter(c => c.status === "active").length, icon: <Activity size={16} />, extra: {} },
+              { label: "Client MRR", value: formatCurrency(Object.values(clientMrr).reduce((s, v) => s + v, 0)), icon: <Users size={16} />, extra: {} },
+            ].map((card, index) => (
+              <motion.div
+                key={card.label}
+                className="relative overflow-hidden rounded-xl"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                whileHover={{ y: -2 }}
+              >
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", zIndex: 1 }} />
+                <StatCard label={card.label} value={card.value} icon={card.icon} {...card.extra} />
+              </motion.div>
+            ))}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Left: Performance by platform + client */}
             <div className="lg:col-span-2 space-y-4">
               {/* Platform Performance */}
-              <div className="card-static">
+              <motion.div
+                className="glass rounded-xl p-4"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: 0.36 }}
+              >
                 <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-gold" /> Platform Performance</h2>
                 <div className="space-y-2">
                   {PLATFORMS.map(p => {
@@ -496,10 +516,15 @@ export default function AdsPage() {
                     );
                   })}
                 </div>
-              </div>
+              </motion.div>
 
               {/* Per-client breakdown */}
-              <div className="card-static">
+              <motion.div
+                className="glass rounded-xl p-4"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: 0.42 }}
+              >
                 <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-gold" /> Client Ad Performance</h2>
                 {clients.length > 0 ? (
                   <div className="space-y-2">
@@ -532,12 +557,18 @@ export default function AdsPage() {
                     }).filter(Boolean)}
                   </div>
                 ) : <p className="text-xs text-muted text-center py-4">No clients with campaigns</p>}
-              </div>
+              </motion.div>
             </div>
 
             {/* Right: Autopilot Controls */}
             <div className="space-y-4">
-              <div className="card-static border-gold/20">
+              <motion.div
+                className="glass-indigo rounded-xl p-4"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: 0.36 }}
+                whileHover={{ y: -2 }}
+              >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Bot size={16} className="text-gold" />
@@ -558,10 +589,12 @@ export default function AdsPage() {
 
                 <p className="text-[10px] text-muted mb-3">AI analyzes campaigns and auto-executes allowed actions. Control exactly what it can do.</p>
 
-                <button onClick={runAutopilot} disabled={autopilotRunning || !autopilotConfig.enabled}
-                  className="btn-primary w-full text-xs flex items-center justify-center gap-2 mb-4 disabled:opacity-50">
-                  {autopilotRunning ? <><Loader size={12} className="animate-spin" /> Running...</> : <><Zap size={12} /> Run Autopilot Now</>}
-                </button>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="mb-4">
+                  <button onClick={runAutopilot} disabled={autopilotRunning || !autopilotConfig.enabled}
+                    className="btn-primary w-full text-xs flex items-center justify-center gap-2 disabled:opacity-50">
+                    {autopilotRunning ? <><Loader size={12} className="animate-spin" /> Running...</> : <><Zap size={12} /> Run Autopilot Now</>}
+                  </button>
+                </motion.div>
 
                 {/* Permission toggles */}
                 <div className="space-y-2">
@@ -622,11 +655,16 @@ export default function AdsPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Recent autopilot actions */}
               {actions.filter(a => a.status === "executed").length > 0 && (
-                <div className="card-static">
+                <motion.div
+                  className="glass rounded-xl p-4"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.42 }}
+                >
                   <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Activity size={12} className="text-success" /> Recent AI Actions</h3>
                   <div className="space-y-1.5 max-h-48 overflow-y-auto">
                     {actions.filter(a => a.status === "executed").slice(0, 8).map(a => (
@@ -637,11 +675,17 @@ export default function AdsPage() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {/* Quick stats */}
-              <div className="card-static bg-gold/[0.02] border-gold/10">
+              <motion.div
+                className="glass rounded-xl p-4"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: 0.48 }}
+                whileHover={{ y: -2 }}
+              >
                 <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings2 size={12} className="text-gold" /> How Autopilot Works</h3>
                 <ol className="space-y-1 text-[10px] text-muted">
                   <li className="flex gap-2"><span className="text-gold font-bold">1.</span> Syncs latest campaign data from all platforms</li>
@@ -650,7 +694,7 @@ export default function AdsPage() {
                   <li className="flex gap-2"><span className="text-gold font-bold">4.</span> Auto-executes only actions you&apos;ve allowed above</li>
                   <li className="flex gap-2"><span className="text-gold font-bold">5.</span> Optionally creates new AI-generated ads</li>
                 </ol>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -678,13 +722,20 @@ export default function AdsPage() {
               </div>
             </div>
           ) : (
-            filtered.map(campaign => {
+            filtered.map((campaign, index) => {
               const platform = getPlatformInfo(campaign.platform);
               const isExpanded = expandedCampaign === campaign.id;
               const campaignCreatives = creatives.filter(cr => cr.campaign_id === campaign.id);
 
               return (
-                <div key={campaign.id} className="card-static overflow-hidden">
+                <motion.div
+                  key={campaign.id}
+                  className="glass rounded-xl overflow-hidden"
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.18, delay: index * 0.04 }}
+                  whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                >
                   {/* Campaign Row */}
                   <div
                     className="flex items-center gap-4 p-4 cursor-pointer hover:bg-surface-light/50 transition-colors -m-4"
@@ -825,7 +876,7 @@ export default function AdsPage() {
                       )}
                     </div>
                   )}
-                </div>
+                </motion.div>
               );
             })
           )}
@@ -843,10 +894,17 @@ export default function AdsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {creatives.map(cr => {
+              {creatives.map((cr, index) => {
                 const platform = getPlatformInfo(cr.platform);
                 return (
-                  <div key={cr.id} className="card group">
+                  <motion.div
+                    key={cr.id}
+                    className="glass rounded-xl p-4 group"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: index * 0.06 }}
+                    whileHover={{ y: -2 }}
+                  >
                     {/* Preview */}
                     <div className="aspect-video rounded-lg bg-surface-light border border-border mb-3 overflow-hidden relative">
                       {cr.image_url ? (
@@ -884,7 +942,7 @@ export default function AdsPage() {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -896,7 +954,12 @@ export default function AdsPage() {
       {tab === "copy-lab" && (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Config Panel */}
-          <div className="lg:col-span-2 card-static space-y-4">
+          <motion.div
+            className="lg:col-span-2 glass rounded-xl p-4 space-y-4"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.12 }}
+          >
             <div className="flex items-center gap-2 mb-1">
               <Wand2 size={16} className="text-gold" />
               <h2 className="text-sm font-semibold">AI Copy Generator</h2>
@@ -955,11 +1018,13 @@ export default function AdsPage() {
                 className="input w-full text-xs" placeholder="professional, urgent, benefit-focused" />
             </div>
 
-            <button onClick={generateAdCopy} disabled={generatingCopy}
-              className="btn-primary w-full text-xs flex items-center justify-center gap-2 disabled:opacity-50">
-              {generatingCopy ? <><Loader size={13} className="animate-spin" /> Generating...</> : <><Sparkles size={13} /> Generate Ad Copy</>}
-            </button>
-          </div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button onClick={generateAdCopy} disabled={generatingCopy}
+                className="btn-primary w-full text-xs flex items-center justify-center gap-2 disabled:opacity-50">
+                {generatingCopy ? <><Loader size={13} className="animate-spin" /> Generating...</> : <><Sparkles size={13} /> Generate Ad Copy</>}
+              </button>
+            </motion.div>
+          </motion.div>
 
           {/* Results Panel */}
           <div className="lg:col-span-3 space-y-4">
@@ -982,7 +1047,14 @@ export default function AdsPage() {
                       const isHigh = perfLevel.startsWith("high");
                       const isMedium = perfLevel.startsWith("medium");
                       return (
-                      <div key={i} className="card group">
+                      <motion.div
+                        key={i}
+                        className="glass rounded-xl p-4 group"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.22, delay: i * 0.06 }}
+                        whileHover={{ y: -2 }}
+                      >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <span className="w-5 h-5 rounded-full bg-gold/10 text-gold text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
@@ -1017,7 +1089,7 @@ export default function AdsPage() {
                             </div>
                           </div>
                         )}
-                      </div>
+                      </motion.div>
                       );
                     })}
                   </div>
@@ -1025,7 +1097,12 @@ export default function AdsPage() {
 
                 {/* Image Suggestions */}
                 {(generatedCopy as Record<string, unknown>).image_suggestions && (
-                  <div className="card-static">
+                  <motion.div
+                    className="glass rounded-xl p-4"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: 0.12 }}
+                  >
                     <h3 className="text-xs font-semibold flex items-center gap-2 mb-3">
                       <ImageIcon size={13} /> Image Concepts
                     </h3>
@@ -1036,12 +1113,17 @@ export default function AdsPage() {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 )}
 
                 {/* A/B Test Plan */}
                 {(generatedCopy as Record<string, unknown>).a_b_test_plan && (
-                  <div className="card-static bg-gold/[0.03] border-gold/10">
+                  <motion.div
+                    className="glass-indigo rounded-xl p-4"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: 0.18 }}
+                  >
                     <h3 className="text-xs font-semibold flex items-center gap-2 mb-2">
                       <Zap size={13} className="text-gold" /> A/B Test Recommendation
                     </h3>
@@ -1050,12 +1132,17 @@ export default function AdsPage() {
                         ? (generatedCopy as Record<string, unknown>).a_b_test_plan as string
                         : JSON.stringify((generatedCopy as Record<string, unknown>).a_b_test_plan)}
                     </p>
-                  </div>
+                  </motion.div>
                 )}
 
                 {/* Platform Tips */}
                 {(generatedCopy as Record<string, unknown>).platform_tips && (
-                  <div className="card-static">
+                  <motion.div
+                    className="glass rounded-xl p-4"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: 0.24 }}
+                  >
                     <h3 className="text-xs font-semibold flex items-center gap-2 mb-2">
                       <Globe size={13} /> Platform Tips
                     </h3>
@@ -1064,7 +1151,7 @@ export default function AdsPage() {
                         ? (generatedCopy as Record<string, unknown>).platform_tips as string
                         : JSON.stringify((generatedCopy as Record<string, unknown>).platform_tips)}
                     </p>
-                  </div>
+                  </motion.div>
                 )}
               </>
             )}
@@ -1078,7 +1165,12 @@ export default function AdsPage() {
           {/* Left: Controls + Sync */}
           <div className="space-y-4">
             {/* AI Controls */}
-            <div className="card-static space-y-3">
+            <motion.div
+              className="glass rounded-xl p-4 space-y-3"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: 0.12 }}
+            >
               <div className="flex items-center gap-2">
                 <Bot size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">AI Ad Copilot</h2>
@@ -1111,10 +1203,15 @@ export default function AdsPage() {
                   {campaigns.length === 0 && <p className="text-[10px] text-muted text-center py-2">No campaigns to optimize</p>}
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Platform Connections & Sync */}
-            <div className="card-static space-y-3">
+            <motion.div
+              className="glass rounded-xl p-4 space-y-3"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: 0.18 }}
+            >
               <div className="flex items-center gap-2">
                 <Plug size={14} className="text-info" />
                 <h2 className="text-sm font-semibold">Ad Accounts</h2>
@@ -1163,10 +1260,16 @@ export default function AdsPage() {
                   })}
                 </div>
               ) : <p className="text-[10px] text-muted text-center">No clients yet</p>}
-            </div>
+            </motion.div>
 
             {/* How It Works */}
-            <div className="card-static bg-gold/[0.02] border-gold/10">
+            <motion.div
+              className="glass rounded-xl p-4"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: 0.24 }}
+              whileHover={{ y: -2 }}
+            >
               <div className="flex items-center gap-2 mb-2">
                 <Shield size={14} className="text-gold" />
                 <h3 className="text-xs font-semibold">How Copilot Works</h3>
@@ -1177,14 +1280,20 @@ export default function AdsPage() {
                 <li className="flex gap-2"><span className="text-gold font-bold">3.</span> You review and approve/reject each action</li>
                 <li className="flex gap-2"><span className="text-gold font-bold">4.</span> Approved actions execute on the ad platform</li>
               </ol>
-            </div>
+            </motion.div>
           </div>
 
           {/* Right: Action Queue + Insights */}
           <div className="lg:col-span-2 space-y-4">
             {/* Portfolio Insights */}
             {insights && (
-              <div className="card-static border-gold/20 bg-gold/[0.02] fade-in">
+              <motion.div
+                className="glass-indigo rounded-xl p-4"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22 }}
+                whileHover={{ y: -2 }}
+              >
                 <div className="flex items-center gap-2 mb-3">
                   <BarChart3 size={14} className="text-gold" />
                   <h2 className="text-sm font-semibold">Portfolio Insights</h2>
@@ -1198,11 +1307,16 @@ export default function AdsPage() {
                     <p className="text-[10px] text-muted">{String((insights as Record<string, unknown>).budget_recommendations)}</p>
                   </div>
                 )}
-              </div>
+              </motion.div>
             )}
 
             {/* Pending Actions */}
-            <div className="card-static">
+            <motion.div
+              className="glass rounded-xl p-4"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: 0.12 }}
+            >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Clock size={14} className="text-warning" />
@@ -1280,11 +1394,17 @@ export default function AdsPage() {
                   ))}
                 </div>
               )}
-            </div>
+            </motion.div>
 
             {/* Approved (ready to execute) */}
             {approvedActions.length > 0 && (
-              <div className="card-static border-success/20">
+              <motion.div
+                className="glass rounded-xl p-4 border border-success/20"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: 0.18 }}
+                whileHover={{ y: -2 }}
+              >
                 <div className="flex items-center gap-2 mb-3">
                   <CheckCircle2 size={14} className="text-success" />
                   <h2 className="text-sm font-semibold">Ready to Execute</h2>
@@ -1312,19 +1432,31 @@ export default function AdsPage() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {/* Recent Action History */}
             {recentActions.length > 0 && (
-              <div className="card-static">
+              <motion.div
+                className="glass rounded-xl p-4"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: 0.24 }}
+              >
                 <div className="flex items-center gap-2 mb-3">
                   <Clock size={14} className="text-muted" />
                   <h2 className="text-sm font-semibold">Recent History</h2>
                 </div>
                 <div className="space-y-1.5">
-                  {recentActions.map(action => (
-                    <div key={action.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-light transition-colors">
+                  {recentActions.map((action, index) => (
+                    <motion.div
+                      key={action.id}
+                      className="flex items-center gap-3 p-2 rounded-lg"
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: index * 0.04 }}
+                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    >
                       <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
                         action.status === "executed" ? "bg-success/10" : action.status === "failed" ? "bg-danger/10" : "bg-surface-light"
                       }`}>
@@ -1341,10 +1473,10 @@ export default function AdsPage() {
                         action.status === "failed" ? "bg-danger/10 text-danger" :
                         "bg-surface-light text-muted"
                       }`}>{action.status}</span>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
         </div>

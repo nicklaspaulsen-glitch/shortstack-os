@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState, useRef } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import {
@@ -400,21 +401,35 @@ export default function ReportsPage() {
           { label: "Weekly Reports", value: weeklyReports, icon: Calendar, color: "text-gold" },
           { label: "Monthly Reports", value: monthlyReports, icon: BarChart3, color: "text-gold" },
           { label: "Clients Covered", value: uniqueClients, icon: Users, color: "text-success" },
-        ].map(stat => (
-          <div key={stat.label} className="bg-surface border border-border/50 rounded-2xl p-4">
+        ].map((stat, index) => (
+          <motion.div
+            key={stat.label}
+            className="glass rounded-xl p-4 relative overflow-hidden"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: index * 0.06 }}
+            whileHover={{ y: -2 }}
+          >
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
             <div className="flex items-center justify-between mb-2">
               <stat.icon size={14} className={stat.color} />
             </div>
             <p className="text-xl font-bold text-foreground">{stat.value}</p>
             <p className="text-[10px] text-muted">{stat.label}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
 
       <div className="grid grid-cols-3 gap-6">
         {/* Generate Report Panel */}
         <div className="col-span-1 space-y-4">
-          <div className="bg-surface border border-border/50 rounded-2xl p-5">
+          <motion.div
+            className="glass rounded-xl p-5"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.24 }}
+            whileHover={{ y: -2 }}
+          >
             <div className="flex items-center gap-2 mb-4">
               <Sparkles size={14} className="text-gold" />
               <h2 className="text-sm font-semibold text-foreground">Generate Report</h2>
@@ -456,17 +471,19 @@ export default function ReportsPage() {
                 </div>
               </div>
 
-              <button
-                onClick={generateReport}
-                disabled={!selectedClient || generating}
-                className="btn-primary w-full text-xs flex items-center justify-center gap-2"
-              >
-                {generating ? (
-                  <><Loader size={12} className="animate-spin" /> Generating...</>
-                ) : (
-                  <><Sparkles size={12} /> Generate Report</>
-                )}
-              </button>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <button
+                  onClick={generateReport}
+                  disabled={!selectedClient || generating}
+                  className="btn-primary w-full text-xs flex items-center justify-center gap-2"
+                >
+                  {generating ? (
+                    <><Loader size={12} className="animate-spin" /> Generating...</>
+                  ) : (
+                    <><Sparkles size={12} /> Generate Report</>
+                  )}
+                </button>
+              </motion.div>
             </div>
 
             {/* Selected client preview */}
@@ -483,10 +500,16 @@ export default function ReportsPage() {
                 </div>
               );
             })()}
-          </div>
+          </motion.div>
 
           {/* Quick Generate for All */}
-          <div className="bg-surface border border-border/50 rounded-2xl p-5">
+          <motion.div
+            className="glass rounded-xl p-5"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.30 }}
+            whileHover={{ y: -2 }}
+          >
             <div className="flex items-center gap-2 mb-2">
               <Users size={14} className="text-gold" />
               <h2 className="text-sm font-semibold text-foreground">Batch Reports</h2>
@@ -498,14 +521,20 @@ export default function ReportsPage() {
               <Clock size={10} />
               <span>Next auto-run: Friday 3:00 PM</span>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Report Output & History */}
         <div className="col-span-2 space-y-4">
           {/* Current Generated Report */}
           {currentReport && (
-            <div className="bg-surface border border-gold/20 rounded-2xl p-5 fade-in">
+            <motion.div
+              className="glass-indigo rounded-xl p-5"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22 }}
+              whileHover={{ y: -2 }}
+            >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Sparkles size={14} className="text-gold" />
@@ -615,11 +644,16 @@ export default function ReportsPage() {
                   {currentReport.report}
                 </pre>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* Report History */}
-          <div className="bg-surface border border-border/50 rounded-2xl p-5">
+          <motion.div
+            className="glass rounded-xl p-5"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.12 }}
+          >
             <div className="flex items-center gap-2 mb-4">
               <Clock size={14} className="text-muted" />
               <h2 className="text-sm font-semibold text-foreground">Report History</h2>
@@ -638,8 +672,15 @@ export default function ReportsPage() {
               />
             ) : (
               <div className="space-y-2">
-                {reports.map(report => (
-                  <div key={report.id} className="border border-border/30 rounded-xl overflow-hidden">
+                {reports.map((report, index) => (
+                  <motion.div
+                    key={report.id}
+                    className="border border-border/30 rounded-xl overflow-hidden"
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: index * 0.04 }}
+                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                  >
                     <button
                       onClick={() => setExpandedReport(expandedReport === report.id ? null : report.id)}
                       className="w-full flex items-center justify-between px-4 py-3 hover:bg-surface-light transition-colors"
@@ -682,11 +723,11 @@ export default function ReportsPage() {
                         </div>
                       </div>
                     )}
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
 
