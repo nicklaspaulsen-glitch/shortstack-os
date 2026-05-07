@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { Coffee, Users, MessageSquare, Calendar, FileText, BookOpen, Loader2, Sparkles } from "lucide-react";
@@ -20,6 +21,23 @@ interface StatTile {
   color: string;
   bgColor: string;
 }
+
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
+
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+
+const tileVariants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.38, ease: "easeOut" } },
+};
+
+const panelVariants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+};
 
 export default function BriefingPage() {
   const [stats, setStats] = useState<BriefingStats>({
@@ -155,22 +173,35 @@ Be direct, specific, and action-oriented. No fluff.`;
         icon={<Coffee className="w-6 h-6" />}
         gradient="sunset"
         actions={
-          <button
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
             onClick={handleGenerateBriefing}
             disabled={generating || loading}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/15 hover:bg-white/20 disabled:opacity-40 text-white text-sm font-medium transition-colors border border-white/20"
           >
             {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {generating ? "Generating…" : "Generate AI briefing"}
-          </button>
+          </motion.button>
         }
       />
 
       {/* Stats cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
+      >
         {tiles.map(({ label, value, icon: Icon, color, bgColor }) => (
-          <div key={label} className={`card-premium p-4 border ${bgColor}`}>
-            <div className="flex items-center gap-2 mb-2">
+          <motion.div
+            key={label}
+            variants={tileVariants}
+            whileHover={{ y: -2 }}
+            className={`glass rounded-xl p-4 border relative overflow-hidden ${bgColor}`}
+          >
+            <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
+            <div className="flex items-center gap-2 mb-2 mt-1">
               <Icon className={`w-4 h-4 ${color}`} />
               <span className="text-xs text-muted">{label}</span>
             </div>
@@ -179,13 +210,18 @@ Be direct, specific, and action-oriented. No fluff.`;
             ) : (
               <div className={`text-3xl font-bold ${color}`}>{value}</div>
             )}
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Activity summary card */}
       {!loading && (
-        <div className="card-premium p-6">
+        <motion.div
+          variants={panelVariants}
+          initial="hidden"
+          animate="visible"
+          className="glass rounded-xl p-6"
+        >
           <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
             <Coffee className="w-4 h-4 text-orange-400" />
             Morning snapshot
@@ -211,12 +247,17 @@ Be direct, specific, and action-oriented. No fluff.`;
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* AI briefing output */}
       {(aiText || generating) && (
-        <div className="card-premium p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="glass rounded-xl p-6"
+        >
           <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-orange-400" />
             AI Briefing
@@ -226,7 +267,7 @@ Be direct, specific, and action-oriented. No fluff.`;
             {aiText}
             {generating && <span className="inline-block w-1 h-4 bg-orange-400 animate-pulse ml-0.5 align-middle" />}
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

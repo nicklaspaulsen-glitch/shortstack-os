@@ -16,6 +16,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Award,
   Loader2,
@@ -79,6 +80,23 @@ const SOURCE_ICONS = {
   meeting: Video,
   email_thread: Mail,
 } as const;
+
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
+
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06 } },
+};
+
+const rowVariants = {
+  hidden: { opacity: 0, x: -16 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
+};
 
 function formatRelativeTime(iso: string): string {
   const ts = new Date(iso).getTime();
@@ -178,25 +196,36 @@ export default function CoachPage() {
         eyebrow="Coaching"
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard
-          label="Calls analyzed this week"
-          value={data?.stats.analyses_this_week ?? 0}
-          icon={<Sparkles className="h-4 w-4" />}
-        />
-        <StatCard
-          label="Average coach score"
-          value={data?.stats.avg_score ?? 0}
-          icon={<TrendingUp className="h-4 w-4" />}
-        />
-        <StatCard
-          label="Top performer score"
-          value={data?.stats.top_rep_score ?? 0}
-          icon={<Award className="h-4 w-4" />}
-          premium
-        />
-      </div>
+      {/* Stat tiles with stagger entrance */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+      >
+        {[
+          { label: "Calls analyzed this week", value: data?.stats.analyses_this_week ?? 0, icon: <Sparkles className="h-4 w-4" /> },
+          { label: "Average coach score", value: data?.stats.avg_score ?? 0, icon: <TrendingUp className="h-4 w-4" /> },
+          { label: "Top performer score", value: data?.stats.top_rep_score ?? 0, icon: <Award className="h-4 w-4" />, premium: true },
+        ].map(({ label, value, icon, premium }) => (
+          <motion.div
+            key={label}
+            variants={cardVariants}
+            whileHover={{ y: -2 }}
+            className="glass rounded-xl p-4 relative overflow-hidden"
+          >
+            <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
+            <StatCard
+              label={label}
+              value={value}
+              icon={icon}
+              premium={premium}
+            />
+          </motion.div>
+        ))}
+      </motion.div>
 
+      {/* Tab bar */}
       <div className="flex flex-wrap items-center gap-2 border-b border-white/5 pb-2">
         {(
           [
@@ -205,17 +234,19 @@ export default function CoachPage() {
             { id: "leaderboard", label: "Leaderboard" },
           ] as const
         ).map((t) => (
-          <button
+          <motion.button
             key={t.id}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setTab(t.id)}
             className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
               tab === t.id
-                ? "bg-white/10 text-white"
+                ? "bg-indigo-500/15 text-indigo-300 border border-indigo-500/30"
                 : "text-white/60 hover:bg-white/5 hover:text-white"
             }`}
           >
             {t.label}
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -231,10 +262,16 @@ export default function CoachPage() {
         </div>
       )}
 
+      {/* ── RECENT CALLS ── */}
       {!loading && tab === "recent" && data && (
-        <div className="space-y-2">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="glass rounded-xl overflow-hidden"
+        >
           {data.analyses.length === 0 ? (
-            <div className="rounded-xl border border-white/5 bg-white/[0.02] px-6 py-12 text-center text-white/60">
+            <div className="px-6 py-12 text-center text-white/60">
               <Sparkles className="mx-auto mb-3 h-8 w-8 opacity-50" />
               <p className="text-base font-medium text-white">No analyses yet.</p>
               <p className="mt-1 text-sm">
@@ -248,58 +285,67 @@ export default function CoachPage() {
               const topInsight = row.insights[0];
               const talkRatio = Math.round(((row.metrics?.talk_ratio ?? 0) as number) * 100);
               return (
-                <Link
-                  key={row.id}
-                  href={`/dashboard/coach/analyses/${row.id}`}
-                  className="group flex items-center gap-4 rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3 transition-colors hover:bg-white/[0.04]"
-                >
-                  <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-white/80">
-                    <Icon className="h-4 w-4" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-white">
-                        {row.source_type === "voice_call"
-                          ? "Voice call"
-                          : row.source_type === "meeting"
-                            ? "Meeting"
-                            : "Email thread"}
-                      </span>
-                      <span className="text-xs text-white/40">
-                        {formatRelativeTime(row.created_at)}
-                      </span>
+                <motion.div key={row.id} variants={rowVariants}>
+                  <Link
+                    href={`/dashboard/coach/analyses/${row.id}`}
+                    className="group flex items-center gap-4 border-b border-white/5 last:border-0 px-4 py-3 transition-colors hover:bg-indigo-500/5"
+                  >
+                    <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-white/80">
+                      <Icon className="h-4 w-4" />
                     </div>
-                    {topInsight ? (
-                      <p className="truncate text-xs text-white/60">
-                        {topInsight.category.replace("_", " ")}: {topInsight.text}
-                      </p>
-                    ) : (
-                      <p className="text-xs text-white/40">No qualitative findings.</p>
-                    )}
-                  </div>
-                  <div className="hidden text-xs text-white/50 sm:block">
-                    Talk {talkRatio}%
-                  </div>
-                  <ScoreBadge score={row.overall_score} />
-                  <ArrowRight className="h-4 w-4 text-white/30 transition-colors group-hover:text-white/70" />
-                </Link>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-white">
+                          {row.source_type === "voice_call"
+                            ? "Voice call"
+                            : row.source_type === "meeting"
+                              ? "Meeting"
+                              : "Email thread"}
+                        </span>
+                        <span className="text-xs text-white/40">
+                          {formatRelativeTime(row.created_at)}
+                        </span>
+                      </div>
+                      {topInsight ? (
+                        <p className="truncate text-xs text-white/60">
+                          {topInsight.category.replace("_", " ")}: {topInsight.text}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-white/40">No qualitative findings.</p>
+                      )}
+                    </div>
+                    <div className="hidden text-xs text-white/50 sm:block">
+                      Talk {talkRatio}%
+                    </div>
+                    <ScoreBadge score={row.overall_score} />
+                    <ArrowRight className="h-4 w-4 text-white/30 transition-colors group-hover:text-indigo-400" />
+                  </Link>
+                </motion.div>
               );
             })
           )}
-        </div>
+        </motion.div>
       )}
 
+      {/* ── BY REP ── */}
       {!loading && tab === "by-rep" && data && (
-        <div className="space-y-3">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-3"
+        >
           {repBuckets.length === 0 ? (
-            <div className="rounded-xl border border-white/5 bg-white/[0.02] px-6 py-8 text-center text-white/60">
+            <div className="glass rounded-xl px-6 py-8 text-center text-white/60">
               No rep-level data yet.
             </div>
           ) : (
             repBuckets.map((bucket) => (
-              <div
+              <motion.div
                 key={bucket.repId}
-                className="rounded-xl border border-white/5 bg-white/[0.02] p-4"
+                variants={cardVariants}
+                whileHover={{ y: -1 }}
+                className="glass rounded-xl p-4"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -326,15 +372,21 @@ export default function CoachPage() {
                     );
                   })}
                 </div>
-              </div>
+              </motion.div>
             ))
           )}
-        </div>
+        </motion.div>
       )}
 
+      {/* ── LEADERBOARD ── */}
       {!loading && tab === "leaderboard" && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-4"
+        >
+          <motion.div variants={cardVariants} className="flex items-center gap-2">
             {(
               [
                 { id: "week", label: "This week" },
@@ -343,27 +395,29 @@ export default function CoachPage() {
                 { id: "all", label: "All time" },
               ] as const
             ).map((p) => (
-              <button
+              <motion.button
                 key={p.id}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={() => setPeriod(p.id)}
                 className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                   period === p.id
-                    ? "border-amber-500/40 bg-amber-500/10 text-amber-200"
+                    ? "border-indigo-500/40 bg-indigo-500/10 text-indigo-300"
                     : "border-white/10 text-white/60 hover:border-white/20 hover:text-white"
                 }`}
               >
                 {p.label}
-              </button>
+              </motion.button>
             ))}
-          </div>
+          </motion.div>
 
           {!leaderboard || leaderboard.leaderboard.length === 0 ? (
-            <div className="rounded-xl border border-white/5 bg-white/[0.02] px-6 py-8 text-center text-white/60">
+            <motion.div variants={cardVariants} className="glass rounded-xl px-6 py-8 text-center text-white/60">
               Leaderboard requires at least 3 analyses per rep. Once your team accumulates more
               calls, rankings will appear here.
-            </div>
+            </motion.div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-white/5 bg-white/[0.02]">
+            <motion.div variants={cardVariants} className="glass rounded-xl overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-white/[0.03] text-xs uppercase tracking-wider text-white/50">
                   <tr>
@@ -377,7 +431,11 @@ export default function CoachPage() {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {leaderboard.leaderboard.map((entry, idx) => (
-                    <tr key={entry.rep_id} className="text-white/80">
+                    <motion.tr
+                      key={entry.rep_id}
+                      variants={rowVariants}
+                      className="text-white/80 hover:bg-indigo-500/5 transition-colors"
+                    >
                       <td className="px-4 py-3 font-semibold text-white/60">{idx + 1}</td>
                       <td className="px-4 py-3 text-white">
                         {entry.rep_name || entry.rep_email || entry.rep_id.slice(0, 8)}
@@ -394,13 +452,13 @@ export default function CoachPage() {
                       <td className="px-4 py-3 text-right text-rose-300/80">
                         {entry.worst_score}
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))}
                 </tbody>
               </table>
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
       )}
     </div>
   );
