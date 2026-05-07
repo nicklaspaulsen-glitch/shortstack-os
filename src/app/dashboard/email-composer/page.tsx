@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   Mail, Send, Sparkles, Bold, Italic, Link2, List,
@@ -836,7 +837,7 @@ export default function EmailComposerPage() {
   ];
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="fade-in space-y-5 p-6 max-w-7xl mx-auto">
       <PageHero
         icon={<Mail size={28} />}
         title="Email Composer"
@@ -917,11 +918,11 @@ export default function EmailComposerPage() {
 
       {advancedMode && (<>
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+      <div className="glass rounded-xl p-1 flex gap-1 overflow-x-auto">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
-            className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+            className={`px-4 py-2 text-xs rounded-lg flex items-center gap-2 whitespace-nowrap transition-all ${
+              activeTab === t.key ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 font-medium" : "text-muted hover:text-foreground"
             }`}>{t.icon} {t.label}</button>
         ))}
       </div>
@@ -931,7 +932,12 @@ export default function EmailComposerPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 space-y-3">
             {/* Recipient + From */}
-            <div className="card space-y-2">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              className="glass rounded-xl p-5 space-y-2"
+            >
               {/* Email Provider Selector */}
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
@@ -952,11 +958,11 @@ export default function EmailComposerPage() {
                   ]).map(p => (
                     <button key={p.id} onClick={() => setProvider(p.id)}
                       className={`flex-1 text-[10px] py-1.5 rounded-lg border capitalize transition-all flex items-center justify-center gap-1.5 ${
-                        provider === p.id ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"
+                        provider === p.id ? "border-indigo-500/30 bg-indigo-500/10 text-indigo-400" : "border-border text-muted"
                       }`}>
                       {p.icon} {p.label}
                       {p.id === "smtp" && (
-                        <span className="ml-1 text-[7px] uppercase font-semibold tracking-wide px-1 py-px rounded bg-gold/20 text-gold border border-gold/30">
+                        <span className="ml-1 text-[7px] uppercase font-semibold tracking-wide px-1 py-px rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
                           Recommended
                         </span>
                       )}
@@ -1008,14 +1014,14 @@ export default function EmailComposerPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">To</label>
-                  <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="input w-full text-xs" placeholder="Recipient email or select from list..." />
+                  <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Recipient email or select from list..." />
                 </div>
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">From name</label>
                   <input
                     value={email.fromName}
                     onChange={e => setEmail({ ...email, fromName: e.target.value })}
-                    className="input w-full text-xs"
+                    className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     placeholder="e.g. Nicklas at ShortStack"
                   />
                 </div>
@@ -1027,29 +1033,29 @@ export default function EmailComposerPage() {
                     type="email"
                     value={email.fromEmail}
                     onChange={e => setEmail({ ...email, fromEmail: e.target.value })}
-                    className="input w-full text-xs"
+                    className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     placeholder="growth@yourdomain.com (uses verified domain if blank)"
                   />
                 </div>
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Reply-To</label>
-                  <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="input w-full text-xs" placeholder="replies@yourdomain.com" />
+                  <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="replies@yourdomain.com" />
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Subject + AI Subject Line Generator */}
             <div className="relative">
               <input value={email.subject} onChange={e => setEmail({ ...email, subject: e.target.value })}
-                className="input w-full text-sm font-medium pr-24" placeholder="Subject line..." />
+                className="w-full text-sm font-medium pr-24 glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Subject line..." />
               <button onClick={handleSubjectIdeas} disabled={loadingVariants}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1">
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition-all flex items-center gap-1">
                 {loadingVariants ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
               </button>
             </div>
             {showSubjectAI && (
-              <div className="card border-gold/10 p-3 space-y-1.5">
-                <p className="text-[10px] font-semibold text-gold mb-2">AI Subject Line Suggestions</p>
+              <div className="glass rounded-xl p-3 space-y-1.5">
+                <p className="text-[10px] font-semibold text-indigo-400 mb-2">AI Subject Line Suggestions</p>
                 {loadingVariants && (
                   <div className="flex items-center gap-2 text-[9px] text-muted py-2">
                     <Loader2 size={10} className="animate-spin" /> Generating...
@@ -1060,7 +1066,7 @@ export default function EmailComposerPage() {
                 )}
                 {subjectIdeas.map((idea, i) => (
                   <button key={i} onClick={() => { setEmail({ ...email, subject: idea }); setShowSubjectAI(false); }}
-                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-gold/5 transition-all text-muted hover:text-foreground">
+                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-indigo-500/5 transition-all text-muted hover:text-foreground">
                     {idea}
                   </button>
                 ))}
@@ -1068,7 +1074,7 @@ export default function EmailComposerPage() {
             )}
 
             {/* Rich Text Toolbar */}
-            <div className="flex items-center gap-1 p-1.5 rounded-lg bg-surface-light border border-border">
+            <div className="flex items-center gap-1 p-1.5 glass rounded-lg">
               {[
                 { icon: <Bold size={12} />, label: "Bold" },
                 { icon: <Italic size={12} />, label: "Italic" },
@@ -1082,11 +1088,11 @@ export default function EmailComposerPage() {
                 </button>
               ))}
               <div className="w-px h-4 bg-border mx-1" />
-              <button onClick={() => setShowVarPanel(!showVarPanel)} className="p-2 rounded text-muted hover:text-gold hover:bg-gold/5 transition-colors flex items-center gap-1" title="Insert Variable">
+              <button onClick={() => setShowVarPanel(!showVarPanel)} className="p-2 rounded text-muted hover:text-indigo-400 hover:bg-indigo-500/5 transition-colors flex items-center gap-1" title="Insert Variable">
                 <Hash size={12} /> <span className="text-[9px]">Variables</span>
               </button>
               <div className="w-px h-4 bg-border mx-1" />
-              <button onClick={() => setShowHtml(!showHtml)} className={`p-2 rounded transition-colors flex items-center gap-1 ${showHtml ? "text-gold bg-gold/10" : "text-muted hover:text-foreground hover:bg-white/5"}`}>
+              <button onClick={() => setShowHtml(!showHtml)} className={`p-2 rounded transition-colors flex items-center gap-1 ${showHtml ? "text-indigo-400 bg-indigo-500/10" : "text-muted hover:text-foreground hover:bg-white/5"}`}>
                 <Code size={12} /> <span className="text-[9px]">HTML</span>
               </button>
               <div className="ml-auto flex items-center gap-2">
@@ -1094,7 +1100,7 @@ export default function EmailComposerPage() {
                   <MousePointerClick size={9} />
                   <span>Link Tracking</span>
                   <button onClick={() => setLinkTracking(!linkTracking)}
-                    className={`w-6 h-3 rounded-full ml-1 ${linkTracking ? "bg-gold" : "bg-surface"}`}>
+                    className={`w-6 h-3 rounded-full ml-1 ${linkTracking ? "bg-indigo-500" : "bg-surface"}`}>
                     <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${linkTracking ? "ml-3" : "ml-0.5"}`} />
                   </button>
                 </label>
@@ -1103,16 +1109,16 @@ export default function EmailComposerPage() {
 
             {/* Variable Insertion Panel */}
             {showVarPanel && (
-              <div className="card border-gold/10 p-3">
+              <div className="glass rounded-xl p-3">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-[10px] font-semibold text-gold">Insert Variable</p>
+                  <p className="text-[10px] font-semibold text-indigo-400">Insert Variable</p>
                   <button onClick={() => setShowVarPanel(false)} className="text-muted hover:text-foreground"><X size={12} /></button>
                 </div>
                 <div className="grid grid-cols-3 gap-1.5">
                   {VARIABLES.map(v => (
                     <button key={v.tag} onClick={() => setEmail(prev => ({ ...prev, body: prev.body + " " + v.tag }))}
-                      className="text-left p-2 rounded bg-surface-light border border-border hover:border-gold/20 transition-all">
-                      <p className="text-[9px] font-mono text-gold">{v.tag}</p>
+                      className="text-left p-2 rounded glass hover:border-indigo-500/20 transition-all">
+                      <p className="text-[9px] font-mono text-indigo-400">{v.tag}</p>
                       <p className="text-[8px] text-muted">{v.label} ({v.example})</p>
                     </button>
                   ))}
@@ -1123,20 +1129,20 @@ export default function EmailComposerPage() {
             {/* Body Editor / HTML Source */}
             {showHtml ? (
               <textarea value={`<html><body><p>${email.body.replace(/\n/g, "</p><p>")}</p></body></html>`}
-                className="input w-full text-xs font-mono leading-relaxed" style={{ minHeight: 300, resize: "vertical" }}
+                className="w-full text-xs font-mono leading-relaxed glass rounded-lg px-3.5 py-2.5 text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
                 readOnly />
             ) : (
               <textarea value={email.body} onChange={e => setEmail({ ...email, body: e.target.value })}
-                className="input w-full text-sm leading-relaxed" style={{ minHeight: 300, resize: "vertical" }}
+                className="w-full text-sm leading-relaxed glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
                 placeholder="Write your email here..." />
             )}
 
             {/* Attachment Manager */}
-            <div className="card p-3">
+            <div className="glass rounded-xl p-3">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-[10px] font-semibold flex items-center gap-1.5"><Paperclip size={10} /> Attachments ({attachments.length})</p>
                 <button onClick={() => setAttachments(prev => [...prev, `file_${prev.length + 1}.pdf`])}
-                  className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1">
+                  className="text-[9px] px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 flex items-center gap-1">
                   <Plus size={9} /> Add
                 </button>
               </div>
@@ -1180,22 +1186,26 @@ export default function EmailComposerPage() {
                 >
                   <Save size={12} /> Draft
                 </button>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => handleSend({ testMode: true })}
                   disabled={sendingTest || sending}
-                  className="btn-secondary text-xs flex items-center gap-1 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg glass hover:border-white/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {sendingTest ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sendingTest ? "Sending..." : "Test Send"}
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => handleSend()}
                   disabled={sending || sendingTest}
-                  className="btn-primary text-xs flex items-center gap-1 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sending ? "Sending..." : "Send"}
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>
@@ -1203,44 +1213,64 @@ export default function EmailComposerPage() {
           {/* Sidebar */}
           <div className="space-y-3">
             {/* Quick stats */}
-            <div className="card">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.06 }}
+              className="glass rounded-xl p-4"
+            >
+              <div className="h-px bg-gradient-to-r from-indigo-500 via-violet-400 to-indigo-500 mb-3 rounded-full" />
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Composer Stats</h3>
               <div className="grid grid-cols-2 gap-2">
-                <div className="text-center p-2 rounded bg-surface-light">
-                  <p className="text-sm font-bold text-gold">{wordCount}</p>
-                  <p className="text-[8px] text-muted">Words</p>
-                </div>
-                <div className="text-center p-2 rounded bg-surface-light">
-                  <p className="text-sm font-bold">{VARIABLES.filter(v => email.body.includes(v.tag)).length}</p>
-                  <p className="text-[8px] text-muted">Variables</p>
-                </div>
-                <div className="text-center p-2 rounded bg-surface-light">
-                  <p className="text-sm font-bold">{attachments.length}</p>
-                  <p className="text-[8px] text-muted">Attachments</p>
-                </div>
-                <div className="text-center p-2 rounded bg-surface-light">
-                  <p className={`text-sm font-bold ${spamScore >= 80 ? "text-green-400" : "text-yellow-400"}`}>{spamScore}%</p>
-                  <p className="text-[8px] text-muted">Spam Score</p>
-                </div>
+                {[
+                  { value: wordCount, label: "Words", color: "text-indigo-400" },
+                  { value: VARIABLES.filter(v => email.body.includes(v.tag)).length, label: "Variables" },
+                  { value: attachments.length, label: "Attachments" },
+                  { value: `${spamScore}%`, label: "Spam Score", color: spamScore >= 80 ? "text-green-400" : "text-yellow-400" },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.08 + i * 0.04, duration: 0.25 }}
+                    whileHover={{ y: -2 }}
+                    className="text-center p-2 rounded-lg bg-white/[0.03] border border-white/[0.05]"
+                  >
+                    <p className={`text-sm font-bold ${stat.color ?? ""}`}>{stat.value}</p>
+                    <p className="text-[8px] text-muted">{stat.label}</p>
+                  </motion.div>
+                ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Quick Templates */}
-            <div className="card">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.1 }}
+              className="glass rounded-xl p-4"
+            >
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Quick Templates</h3>
-              <div className="space-y-1">
+              <div className="glass rounded-xl overflow-hidden">
                 {TEMPLATE_GALLERY.length === 0 && (
                   <p className="text-[9px] text-muted text-center py-3">No templates yet.</p>
                 )}
-                {TEMPLATE_GALLERY.slice(0, 6).map(t => (
-                  <button key={t.id} onClick={() => setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview }))}
-                    className="w-full text-left p-2 rounded-lg text-[10px] transition-all hover:bg-white/[0.03] border border-border">
+                {TEMPLATE_GALLERY.slice(0, 6).map((t, i) => (
+                  <motion.button
+                    key={t.id}
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.12 + i * 0.04, duration: 0.28 }}
+                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    onClick={() => setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview }))}
+                    className="w-full text-left p-2 text-[10px] transition-all border-b border-white/5 last:border-0"
+                  >
                     <p className="font-semibold">{t.name}</p>
                     <p className="text-muted truncate">{t.subject}</p>
-                  </button>
+                  </motion.button>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       )}
@@ -1252,7 +1282,7 @@ export default function EmailComposerPage() {
             {["all", "Outreach", "Value", "Sales", "Onboarding", "Client", "Billing", "Retention", "Promo"].map(c => (
               <button key={c} onClick={() => setTemplateCategory(c)}
                 className={`text-[10px] px-3 py-1.5 rounded-lg ${
-                  templateCategory === c ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+                  templateCategory === c ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "text-muted border border-white/[0.05]"
                 }`}>{c}</button>
             ))}
           </div>
@@ -1260,13 +1290,20 @@ export default function EmailComposerPage() {
             {filteredTemplates.length === 0 && (
               <div className="col-span-5 text-center py-12 text-muted text-xs">No templates yet.</div>
             )}
-            {filteredTemplates.map(t => (
-              <button key={t.id} onClick={() => { setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview })); setActiveTab("compose"); }}
-                className="text-left p-3 rounded-xl bg-surface-light border border-border hover:border-gold/10 transition-all">
+            {filteredTemplates.map((t, i) => (
+              <motion.button
+                key={t.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04, duration: 0.3 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                onClick={() => { setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview })); setActiveTab("compose"); }}
+                className="text-left p-3 glass rounded-xl hover:border-indigo-500/30 transition-all group"
+              >
                 <p className="text-[10px] font-semibold">{t.name}</p>
-                <p className="text-[9px] text-gold mt-0.5">{t.category}</p>
+                <p className="text-[9px] text-indigo-400 mt-0.5">{t.category}</p>
                 <p className="text-[9px] text-muted mt-1 line-clamp-2">{t.subject}</p>
-              </button>
+              </motion.button>
             ))}
           </div>
         </div>
@@ -1278,11 +1315,11 @@ export default function EmailComposerPage() {
           <div className="flex items-center justify-center gap-2">
             <button onClick={() => setPreviewMode("desktop")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
-                previewMode === "desktop" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+                previewMode === "desktop" ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "text-muted border border-white/[0.05]"
               }`}><Monitor size={12} /> Desktop</button>
             <button onClick={() => setPreviewMode("mobile")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
-                previewMode === "mobile" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+                previewMode === "mobile" ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "text-muted border border-white/[0.05]"
               }`}><Smartphone size={12} /> Mobile</button>
           </div>
           <div className="flex justify-center">
@@ -1327,7 +1364,12 @@ export default function EmailComposerPage() {
       {activeTab === "spam-check" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="card text-center p-6">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              className="glass rounded-xl text-center p-6"
+            >
               <div className={`w-24 h-24 rounded-full border-4 flex items-center justify-center mx-auto mb-3 ${
                 spamScore >= 80 ? "border-green-400" : spamScore >= 50 ? "border-yellow-400" : "border-red-400"
               }`}>
@@ -1340,8 +1382,13 @@ export default function EmailComposerPage() {
               <p className={`text-[10px] mt-1 ${spamScore >= 80 ? "text-green-400" : spamScore >= 50 ? "text-yellow-400" : "text-red-400"}`}>
                 {spamScore >= 80 ? "Excellent - Safe to send" : spamScore >= 50 ? "Fair - Review suggestions" : "Poor - High spam risk"}
               </p>
-            </div>
-            <div className="card col-span-1 lg:col-span-2">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.06 }}
+              className="glass rounded-xl p-5 col-span-1 lg:col-span-2"
+            >
               <h3 className="text-sm font-semibold mb-3">Deliverability Checklist</h3>
               <div className="space-y-2">
                 {spamChecks.map((check, i) => (
@@ -1356,7 +1403,7 @@ export default function EmailComposerPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       )}
@@ -1365,18 +1412,23 @@ export default function EmailComposerPage() {
       {activeTab === "scheduler" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="card">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              className="glass rounded-xl p-5"
+            >
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Calendar size={14} className="text-gold" /> Schedule Send
+                <Calendar size={14} className="text-indigo-400" /> Schedule Send
               </h3>
               <div className="space-y-3">
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Date & Time</label>
-                  <input type="datetime-local" value={scheduledTime} onChange={e => setScheduledTime(e.target.value)} className="input w-full text-xs" />
+                  <input type="datetime-local" value={scheduledTime} onChange={e => setScheduledTime(e.target.value)} className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" />
                 </div>
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Timezone</label>
-                  <select className="input w-full text-xs">
+                  <select className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all">
                     <option>America/New_York (ET)</option>
                     <option>America/Chicago (CT)</option>
                     <option>America/Los_Angeles (PT)</option>
@@ -1396,19 +1448,24 @@ export default function EmailComposerPage() {
                     }
                     toast.success("Scheduling arrives soon — send now for instant delivery");
                   }}
-                  className="btn-primary w-full text-xs flex items-center justify-center gap-1.5"
+                  className="w-full text-xs flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all"
                 >
                   <Clock size={12} /> Schedule Email
                 </button>
               </div>
-            </div>
-            <div className="card">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.06 }}
+              className="glass rounded-xl p-5"
+            >
               <h3 className="text-sm font-semibold mb-3">Optimal Send Times</h3>
               <p className="text-[10px] text-muted mb-3">Based on your audience engagement data</p>
               <div className="space-y-2">
                 <p className="text-center text-[10px] text-muted py-4">No engagement data yet. Send times will be suggested once you have audience data.</p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       )}
@@ -1488,28 +1545,42 @@ export default function EmailComposerPage() {
       {activeTab === "signatures" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Palette size={14} className="text-gold" /> Signature Builder
+            <Palette size={14} className="text-indigo-400" /> Signature Builder
           </h3>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="card space-y-3">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              className="glass rounded-xl p-5 space-y-3"
+            >
               <h4 className="text-xs font-semibold">Edit Signature</h4>
-              <input className="input w-full text-xs" placeholder="Full Name" defaultValue="" />
-              <input className="input w-full text-xs" placeholder="Title" defaultValue="" />
-              <input className="input w-full text-xs" placeholder="Phone" defaultValue="" />
-              <input className="input w-full text-xs" placeholder="Email" defaultValue="" />
-              <input className="input w-full text-xs" placeholder="Website" defaultValue="" />
-              <input className="input w-full text-xs" placeholder="Calendar link" defaultValue="" />
-              <button className="btn-primary w-full text-xs">Save Signature</button>
-            </div>
-            <div className="card">
+              <input className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Full Name" defaultValue="" />
+              <input className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Title" defaultValue="" />
+              <input className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Phone" defaultValue="" />
+              <input className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Email" defaultValue="" />
+              <input className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Website" defaultValue="" />
+              <input className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Calendar link" defaultValue="" />
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                className="w-full text-xs py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all"
+              >Save Signature</motion.button>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.06 }}
+              className="glass rounded-xl p-5"
+            >
               <h4 className="text-xs font-semibold mb-3">Preview</h4>
               <div className="p-4 rounded-lg bg-[#1a1c23]">
-                <div className="border-t-2 border-amber-500 pt-3">
+                <div className="border-t-2 border-indigo-500 pt-3">
                   <p className="text-sm font-bold text-gray-500 italic">No signature configured</p>
                   <p className="text-[10px] text-gray-500">Fill in the fields to preview your signature</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       )}

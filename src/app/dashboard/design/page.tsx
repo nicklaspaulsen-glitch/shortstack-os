@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -977,10 +978,19 @@ export default function DesignStudioPage() {
 
           {/* Design cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {(activeSection ? SECTIONS.filter(s => s.key === activeSection) : SECTIONS.slice(0, 6)).map(section => (
-              <div key={section.key} className="card card-hover rounded-xl">
+            {(activeSection ? SECTIONS.filter(s => s.key === activeSection) : SECTIONS.slice(0, 6)).map((section, i) => (
+              <motion.div
+                key={section.key}
+                className="glass rounded-xl overflow-hidden"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.4 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+              >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold">
+                  <div className="w-9 h-9 bg-[rgba(99,102,241,0.1)] rounded-xl flex items-center justify-center text-[#6366F1]">
                     {section.icon}
                   </div>
                   <div className="flex-1">
@@ -1013,7 +1023,8 @@ export default function DesignStudioPage() {
                     {generating === section.key ? "Generating..." : "Generate with AI"}
                   </button>
                 </div>
-              </div>
+                </div>
+              </motion.div>
             ))}
           </div>
 
@@ -1028,7 +1039,9 @@ export default function DesignStudioPage() {
 
           {/* Generated Prompts */}
           {generated.length > 0 && (
-            <div className="card rounded-xl">
+            <div className="glass rounded-xl overflow-hidden">
+              <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+              <div className="p-5">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="section-header flex items-center gap-2 mb-0">
                   <ImageIcon size={16} /> Generated Prompts ({generated.length})
@@ -1040,8 +1053,14 @@ export default function DesignStudioPage() {
                 }} className="btn-ghost text-[9px] flex items-center gap-1"><Copy size={10} /> Copy All</button>
               </div>
               <div className="space-y-3">
-                {generated.map(g => (
-                  <div key={g.id} className="card-hover rounded-xl">
+                {generated.map((g, i) => (
+                  <motion.div
+                    key={g.id}
+                    className="glass-md rounded-xl"
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                  >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2">
@@ -1063,8 +1082,9 @@ export default function DesignStudioPage() {
                         </a>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
+              </div>
               </div>
             </div>
           )}
@@ -1076,17 +1096,27 @@ export default function DesignStudioPage() {
         <div className="space-y-4">
           <p className="text-xs text-muted">Click a template to apply its dimensions and style to your designs</p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {TEMPLATES.map(t => (
-              <button key={t.label} onClick={() => { applyTemplate(t); setTab("create"); }}
-                className={`card card-hover text-left p-3 ${selectedTemplate?.label === t.label ? "border-gold/30" : ""}`}>
+            {TEMPLATES.map((t, i) => (
+              <motion.button
+                key={t.label}
+                onClick={() => { applyTemplate(t); setTab("create"); }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.03, duration: 0.35 }}
+                whileHover={{ y: -3, scale: 1.02 }}
+                className={`glass rounded-xl overflow-hidden text-left ${selectedTemplate?.label === t.label ? "border-[#6366F1]/40" : ""}`}
+              >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div className="p-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-gold">{t.icon}</span>
-                  <span className="text-[8px] text-muted bg-surface-light px-1.5 py-0.5 rounded capitalize">{t.category}</span>
+                  <span className="text-[#6366F1]">{t.icon}</span>
+                  <span className="text-[8px] text-muted bg-white/5 px-1.5 py-0.5 rounded capitalize">{t.category}</span>
                 </div>
                 <p className="text-[11px] font-semibold">{t.label}</p>
                 <p className="text-[9px] text-muted">{t.width}x{t.height}</p>
                 <p className="text-[8px] text-muted mt-1 line-clamp-2">{t.style}</p>
-              </button>
+                </div>
+              </motion.button>
             ))}
           </div>
         </div>
@@ -1097,25 +1127,35 @@ export default function DesignStudioPage() {
         <div className="space-y-4">
           <p className="text-xs text-muted">Select a palette to apply to AI-generated designs. AI will incorporate these colors.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-            {COLOR_PALETTES.map(palette => (
-              <button key={palette.name} onClick={() => { setSelectedPalette(palette); setTab("create"); toast.success(`Palette applied: ${palette.name}`); }}
-                className={`card card-hover p-4 text-left ${selectedPalette?.name === palette.name ? "border-gold/30" : ""}`}>
+            {COLOR_PALETTES.map((palette, i) => (
+              <motion.button
+                key={palette.name}
+                onClick={() => { setSelectedPalette(palette); setTab("create"); toast.success(`Palette applied: ${palette.name}`); }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04, duration: 0.35 }}
+                whileHover={{ y: -3, scale: 1.02 }}
+                className={`glass rounded-xl overflow-hidden text-left ${selectedPalette?.name === palette.name ? "border-[#6366F1]/40" : ""}`}
+              >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div className="p-4">
                 <p className="text-xs font-semibold mb-2">{palette.name}</p>
                 <div className="flex gap-1 mb-2">
-                  {palette.colors.map((c, i) => (
-                    <div key={i} className="flex-1 h-8 rounded-lg border border-border" style={{ background: c }} />
+                  {palette.colors.map((c, ci) => (
+                    <div key={ci} className="flex-1 h-8 rounded-lg border border-white/10" style={{ background: c }} />
                   ))}
                 </div>
                 <div className="flex flex-wrap gap-1">
-                  {palette.colors.map((c, i) => (
-                    <span key={i} className="text-[8px] text-muted font-mono">{c}</span>
+                  {palette.colors.map((c, ci) => (
+                    <span key={ci} className="text-[8px] text-muted font-mono">{c}</span>
                   ))}
                 </div>
-              </button>
+                </div>
+              </motion.button>
             ))}
           </div>
 
-          <div className="card border-gold/10">
+          <div className="glass-indigo rounded-xl p-5">
             <h3 className="section-header flex items-center gap-2"><Wand2 size={12} className="text-gold" /> Industry Styles</h3>
             <p className="text-[10px] text-muted mb-3">When you select a client, AI automatically uses an industry-appropriate style</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -1169,7 +1209,7 @@ export default function DesignStudioPage() {
 
           {/* ========== 1. Brand Kit Manager ========== */}
           {toolsTab === "brand-kit" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Paintbrush size={16} /></div>
                 <div>
@@ -1262,12 +1302,12 @@ export default function DesignStudioPage() {
                   </div>
                 </div>
               )}
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 2. Smart Resize ========== */}
           {toolsTab === "smart-resize" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Maximize2 size={16} /></div>
                 <div>
@@ -1317,12 +1357,12 @@ export default function DesignStudioPage() {
                   <Maximize2 size={10} /> Resize to {selectedResizes.length} Platform{selectedResizes.length !== 1 ? "s" : ""}
                 </button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 3. Layer Editor ========== */}
           {toolsTab === "layers" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Layers size={16} /></div>
                 <div>
@@ -1384,12 +1424,12 @@ export default function DesignStudioPage() {
               }} className="btn-secondary text-[10px] flex items-center gap-1.5 w-full justify-center">
                 <Plus size={11} /> Add Layer
               </button>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 4. Background Remover ========== */}
           {toolsTab === "bg-remover" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Scissors size={16} /></div>
                 <div>
@@ -1434,12 +1474,12 @@ export default function DesignStudioPage() {
                 {bgRemoveStatus === "processing" ? <Loader size={12} className="animate-spin" /> : <Scissors size={12} />}
                 {bgRemoveStatus === "processing" ? "Processing..." : "Remove Background"}
               </button>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 5. Mockup Generator ========== */}
           {toolsTab === "mockups" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Shirt size={16} /></div>
                 <div>
@@ -1488,12 +1528,12 @@ export default function DesignStudioPage() {
                 {mockupGenerating ? <Loader size={12} className="animate-spin" /> : <Shirt size={12} />}
                 {mockupGenerating ? "Generating Mockup..." : `Generate ${MOCKUP_PRODUCTS.find(p => p.id === selectedMockup)?.label} Mockup`}
               </button>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 6. QR Code Generator ========== */}
           {toolsTab === "qr-code" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><QrCode size={16} /></div>
                 <div>
@@ -1556,12 +1596,12 @@ export default function DesignStudioPage() {
                   <Download size={12} /> SVG
                 </button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 7. Design Version History ========== */}
           {toolsTab === "version-history" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><History size={16} /></div>
                 <div>
@@ -1629,12 +1669,12 @@ export default function DesignStudioPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 8. Color Palette Extractor ========== */}
           {toolsTab === "color-extract" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Pipette size={16} /></div>
                 <div>
@@ -1680,12 +1720,12 @@ export default function DesignStudioPage() {
                   </div>
                 </div>
               )}
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 9. Typography Pairing ========== */}
           {toolsTab === "typography" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Type size={16} /></div>
                 <div>
@@ -1733,12 +1773,12 @@ export default function DesignStudioPage() {
                   </button>
                 </div>
               )}
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 10. Pattern Generator ========== */}
           {toolsTab === "patterns" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Repeat size={16} /></div>
                 <div>
@@ -1794,12 +1834,12 @@ export default function DesignStudioPage() {
                 </button>
                 <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 11. Photo Filter Library ========== */}
           {toolsTab === "filters" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Aperture size={16} /></div>
                 <div>
@@ -1836,12 +1876,12 @@ export default function DesignStudioPage() {
                   </button>
                 </div>
               )}
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 12. Icon Library Browser ========== */}
           {toolsTab === "icons" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Search size={16} /></div>
                 <div>
@@ -1875,12 +1915,12 @@ export default function DesignStudioPage() {
                     </button>
                   ))}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 13. Infographic Builder ========== */}
           {toolsTab === "infographics" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><BarChart3 size={16} /></div>
                 <div>
@@ -1921,12 +1961,12 @@ export default function DesignStudioPage() {
                 className="btn-primary text-xs flex items-center justify-center gap-2 w-full">
                 <BarChart3 size={12} /> Generate Infographic
               </button>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 14. Social Proof Widgets ========== */}
           {toolsTab === "social-proof" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><ThumbsUp size={16} /></div>
                 <div>
@@ -1995,12 +2035,12 @@ export default function DesignStudioPage() {
                 className="btn-primary text-xs flex items-center justify-center gap-2 w-full">
                 <ThumbsUp size={12} /> Generate Widget
               </button>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 15. Seasonal Template Packs ========== */}
           {toolsTab === "seasonal" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><CalendarDays size={16} /></div>
                 <div>
@@ -2041,12 +2081,12 @@ export default function DesignStudioPage() {
                   </button>
                 </div>
               )}
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 16. Animation Preview ========== */}
           {toolsTab === "animation" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Film size={16} /></div>
                 <div>
@@ -2098,12 +2138,12 @@ export default function DesignStudioPage() {
                   <Film size={12} /> Export MP4
                 </button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 17. Design System Tokens ========== */}
           {toolsTab === "design-tokens" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Database size={16} /></div>
                 <div>
@@ -2176,12 +2216,12 @@ export default function DesignStudioPage() {
               }} className="btn-secondary text-[10px] flex items-center gap-1.5 w-full justify-center">
                 <Copy size={10} /> Export Tokens as JSON
               </button>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 18. Batch Export ========== */}
           {toolsTab === "batch-export" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Download size={16} /></div>
                 <div>
@@ -2241,12 +2281,12 @@ export default function DesignStudioPage() {
                 {batchExporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
                 {batchExporting ? "Exporting..." : `Export ${batchExportFormats.length * batchExportSizes.length} Files`}
               </button>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 19. Accessibility Checker ========== */}
           {toolsTab === "accessibility" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Accessibility size={16} /></div>
                 <div>
@@ -2329,12 +2369,12 @@ export default function DesignStudioPage() {
                   </div>
                 );
               })()}
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 20. Mood Board Builder ========== */}
           {toolsTab === "mood-board" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Heart size={16} /></div>
                 <div>
@@ -2416,12 +2456,12 @@ export default function DesignStudioPage() {
               }} className="btn-primary text-[10px] flex items-center gap-1.5 w-full justify-center">
                 <Palette size={10} /> Apply Mood Board Colors to Designs
               </button>
-            </div>
+            </motion.div>
           )}
 
           {/* ========== 21. AI Style Transfer ========== */}
           {toolsTab === "style-transfer" && (
-            <div className="card rounded-xl space-y-4">
+            <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Shuffle size={16} /></div>
                 <div>

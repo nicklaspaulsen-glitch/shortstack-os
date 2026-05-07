@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { Activity, CheckCircle, AlertTriangle, XCircle, Clock, RefreshCw, Wifi } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface ServiceHealth {
   id: string;
@@ -143,23 +144,36 @@ export default function MonitorPage() {
       />
 
       {/* Overall status banner */}
-      <div className={`flex items-center gap-3 px-5 py-4 rounded-xl border ${overallCls}`}>
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        className={`flex items-center gap-3 px-5 py-4 rounded-xl border ${overallCls}`}
+      >
         <Wifi className="w-5 h-5" />
         <span className="font-semibold">{overallLabel}</span>
         <span className="ml-auto text-xs opacity-70">Last updated {lastRefresh.toLocaleTimeString()}</span>
-      </div>
+      </motion.div>
 
       {/* Summary counts */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: "Healthy", count: annotated.filter(s => s.computedStatus === "healthy").length, cls: "text-emerald-400" },
-          { label: "Degraded", count: annotated.filter(s => s.computedStatus === "degraded").length, cls: "text-amber-400" },
-          { label: "Down", count: annotated.filter(s => s.computedStatus === "down").length, cls: "text-red-400" },
-        ].map(({ label, count, cls }) => (
-          <div key={label} className="card-premium p-4 text-center">
+          { label: "Healthy", count: annotated.filter(s => s.computedStatus === "healthy").length, cls: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
+          { label: "Degraded", count: annotated.filter(s => s.computedStatus === "degraded").length, cls: "text-amber-400", bar: "from-amber-500 to-amber-400" },
+          { label: "Down", count: annotated.filter(s => s.computedStatus === "down").length, cls: "text-red-400", bar: "from-red-500 to-red-400" },
+        ].map(({ label, count, cls, bar }, i) => (
+          <motion.div
+            key={label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: i * 0.07 }}
+            whileHover={{ y: -2 }}
+            className="glass rounded-xl p-4 text-center relative overflow-hidden"
+          >
+            <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${bar}`} />
             <div className={`text-2xl font-bold ${cls}`}>{count}</div>
             <div className="text-xs text-muted mt-0.5">{label}</div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
@@ -167,7 +181,7 @@ export default function MonitorPage() {
       {loading ? (
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="card-premium p-5 animate-pulse">
+            <div key={i} className="glass rounded-xl p-5 animate-pulse">
               <div className="h-4 bg-white/10 rounded w-1/4 mb-4" />
               <div className="space-y-2">
                 {Array.from({ length: 3 }).map((_, j) => <div key={j} className="h-10 bg-white/5 rounded" />)}
@@ -176,21 +190,33 @@ export default function MonitorPage() {
           ))}
         </div>
       ) : annotated.length === 0 ? (
-        <div className="card-premium p-10 text-center text-muted">
+        <div className="glass rounded-xl p-10 text-center text-muted">
           <Activity className="w-10 h-10 mx-auto mb-3 opacity-30" />
           <p>No services found. Health checks will appear here once running.</p>
         </div>
       ) : (
         <div className="space-y-4">
-          {Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b)).map(([category, svcs]) => (
-            <div key={category} className="card-premium overflow-hidden">
+          {Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b)).map(([category, svcs], ci) => (
+            <motion.div
+              key={category}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35, delay: ci * 0.06 }}
+              className="glass rounded-xl overflow-hidden"
+            >
               <div className="px-5 py-3 border-b border-white/5 flex items-center justify-between">
                 <span className="text-sm font-semibold text-white">{category}</span>
                 <span className="text-xs text-muted">{svcs.length} service{svcs.length !== 1 ? "s" : ""}</span>
               </div>
               <div className="divide-y divide-white/5">
-                {svcs.map(svc => (
-                  <div key={svc.id} className="px-5 py-3.5 flex items-center gap-3 flex-wrap">
+                {svcs.map((svc, si) => (
+                  <motion.div
+                    key={svc.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.25, delay: ci * 0.06 + si * 0.04 }}
+                    className="px-5 py-3.5 flex items-center gap-3 flex-wrap hover:bg-indigo-500/5 transition-colors"
+                  >
                     <StatusDot status={svc.computedStatus} />
                     <StatusIcon status={svc.computedStatus} />
                     <span className="flex-1 text-sm text-white/90">{svc.integration_name}</span>
@@ -206,10 +232,10 @@ export default function MonitorPage() {
                         {svc.error_message}
                       </span>
                     )}
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}

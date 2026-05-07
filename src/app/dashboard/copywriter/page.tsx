@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   PenTool, Sparkles, FileText, Globe, Mail, MessageSquare,
   ShoppingBag, Megaphone, Copy, BookmarkPlus, Loader, Clock,
@@ -1049,7 +1050,7 @@ export default function CopywriterPage() {
   }, [audience]);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto fade-in">
+    <div className="p-6 max-w-7xl mx-auto fade-in space-y-6">
       <PageHero
         className="mb-6"
         icon={<Pen size={28} />}
@@ -1125,22 +1126,29 @@ export default function CopywriterPage() {
 
       {/* Output preview shown in guided mode once generated */}
       {!advancedMode && output && (
-        <div className="card mb-6 space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="glass rounded-xl p-5 space-y-3"
+        >
           <div className="flex items-center justify-between">
             <h2 className="section-header flex items-center gap-2">
               <CheckCircle size={14} className="text-success" /> Your copy is ready
             </h2>
-            <button
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
               onClick={copyToClipboard}
-              className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 transition-colors"
+              className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition-colors"
             >
               <Copy size={11} /> Copy
-            </button>
+            </motion.button>
           </div>
           <div className="rounded-xl bg-surface-light border border-border p-4 max-h-[420px] overflow-y-auto">
             <pre className="text-xs text-foreground whitespace-pre-wrap font-sans leading-relaxed">{output}</pre>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Rolling preview of example copywriter outputs */}
@@ -1192,12 +1200,17 @@ export default function CopywriterPage() {
 
       {/* Template Gallery */}
       {showTemplates && (
-        <div className="mb-6 bg-surface border border-border rounded-2xl p-5 animate-fade-in">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="glass rounded-xl p-5"
+        >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Layers size={16} className="text-gold" />
+              <Layers size={16} className="text-indigo-400" />
               <h2 className="text-sm font-bold text-foreground">Template Gallery</h2>
-              <span className="text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full font-medium">
+              <span className="text-[9px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full font-medium">
                 {TEMPLATES.length} templates
               </span>
             </div>
@@ -1206,13 +1219,17 @@ export default function CopywriterPage() {
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-            {TEMPLATES.map(template => {
+            {TEMPLATES.map((template, i) => {
               const Icon = template.icon;
               return (
-                <button
+                <motion.button
                   key={template.id}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.04, duration: 0.3 }}
+                  whileHover={{ y: -4, scale: 1.01 }}
                   onClick={() => applyTemplate(template)}
-                  className="text-left p-3 rounded-xl border border-border bg-surface-light/50 hover:bg-surface-light hover:border-gold/20 transition-all group"
+                  className="text-left p-3 glass rounded-xl hover:border-indigo-500/30 transition-all group"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <div
@@ -1221,7 +1238,7 @@ export default function CopywriterPage() {
                     >
                       <Icon size={13} style={{ color: template.color }} />
                     </div>
-                    <span className="text-xs font-semibold text-foreground group-hover:text-gold transition-colors">
+                    <span className="text-xs font-semibold text-foreground group-hover:text-indigo-400 transition-colors">
                       {template.name}
                     </span>
                   </div>
@@ -1234,19 +1251,24 @@ export default function CopywriterPage() {
                       {template.tone}
                     </span>
                   </div>
-                </button>
+                </motion.button>
               );
             })}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* History Sidebar Overlay */}
       {showHistory && (
-        <div className="mb-6 bg-surface border border-border rounded-2xl p-5 animate-fade-in">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="glass rounded-xl p-5"
+        >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Clock size={16} className="text-gold" />
+              <Clock size={16} className="text-indigo-400" />
               <h2 className="text-sm font-bold text-foreground">Recent Generations</h2>
             </div>
             <button onClick={() => setShowHistory(false)} className="text-muted hover:text-foreground transition-colors" aria-label="Close history">
@@ -1260,15 +1282,19 @@ export default function CopywriterPage() {
               <p className="text-[10px] text-muted/60 mt-1">Your generated content will appear here</p>
             </div>
           ) : (
-            <div className="space-y-2 max-h-[300px] overflow-y-auto">
-              {history.map(item => {
+            <div className="glass rounded-xl overflow-hidden">
+              {history.map((item, i) => {
                 const typeConfig = CONTENT_TYPES.find(t => t.id === item.type)!;
                 const TypeIcon = typeConfig.icon;
                 return (
-                  <button
+                  <motion.button
                     key={item.id}
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.04, duration: 0.28 }}
+                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
                     onClick={() => loadFromHistory(item)}
-                    className="w-full text-left p-3 rounded-xl border border-border bg-surface-light/50 hover:bg-surface-light hover:border-gold/20 transition-all group flex items-start gap-3"
+                    className="w-full text-left p-3 border-b border-white/5 last:border-0 transition-all group flex items-start gap-3"
                   >
                     <div
                       className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
@@ -1277,7 +1303,7 @@ export default function CopywriterPage() {
                       <TypeIcon size={14} style={{ color: typeConfig.color }} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-foreground truncate group-hover:text-gold transition-colors">
+                      <p className="text-xs font-medium text-foreground truncate group-hover:text-indigo-400 transition-colors">
                         {item.topic}
                       </p>
                       <div className="flex items-center gap-2 mt-1">
@@ -1290,8 +1316,8 @@ export default function CopywriterPage() {
                         </span>
                       </div>
                     </div>
-                    <ChevronRight size={14} className="text-muted/30 group-hover:text-gold shrink-0 mt-1 transition-colors" />
-                  </button>
+                    <ChevronRight size={14} className="text-muted/30 group-hover:text-indigo-400 shrink-0 mt-1 transition-colors" />
+                  </motion.button>
                 );
               })}
             </div>
@@ -1304,7 +1330,7 @@ export default function CopywriterPage() {
               <Trash2 size={10} /> Clear history
             </button>
           )}
-        </div>
+        </motion.div>
       )}
 
       {advancedMode && (
@@ -1312,23 +1338,32 @@ export default function CopywriterPage() {
         {/* Left Column - Input Form */}
         <div className="lg:col-span-2 space-y-5">
           {/* Content Type Selector */}
-          <div className="bg-surface border border-border rounded-2xl p-5">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            className="glass rounded-xl p-5"
+          >
             <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
-              <Type size={13} className="text-gold" />
+              <Type size={13} className="text-indigo-400" />
               Content Type
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {CONTENT_TYPES.map(type => {
+              {CONTENT_TYPES.map((type, i) => {
                 const Icon = type.icon;
                 const active = contentType === type.id;
                 return (
-                  <button
+                  <motion.button
                     key={type.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    whileHover={{ y: -2 }}
                     onClick={() => setContentType(type.id)}
                     className={`text-left p-2.5 rounded-xl border transition-all ${
                       active
-                        ? "border-gold/30 bg-gold/[0.04]"
-                        : "border-border bg-surface-light/50 hover:bg-surface-light"
+                        ? "border-indigo-500/30 bg-indigo-500/[0.06]"
+                        : "border-white/10 bg-white/[0.02] hover:bg-white/[0.04]"
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -1345,14 +1380,19 @@ export default function CopywriterPage() {
                         <span className="text-[8px] text-muted leading-tight">{type.description}</span>
                       </div>
                     </div>
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
-          </div>
+          </motion.div>
 
           {/* Input Form */}
-          <div className="bg-surface border border-border rounded-2xl p-5 space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.06, duration: 0.35 }}
+            className="glass rounded-xl p-5 space-y-4"
+          >
             {/* Topic / Brief */}
             <div>
               <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
@@ -1364,7 +1404,7 @@ export default function CopywriterPage() {
                 onChange={e => setTopic(e.target.value)}
                 placeholder={`Describe what you want to write about...\n\nExample: "How AI is transforming small business marketing in 2026"`}
                 rows={4}
-                className="w-full text-xs bg-surface-light border border-border rounded-xl px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-gold focus:bg-surface focus:ring-2 focus:ring-gold/10 transition-all resize-none"
+                className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all resize-none"
               />
             </div>
 
@@ -1402,7 +1442,7 @@ export default function CopywriterPage() {
                 value={audience}
                 onChange={e => setAudience(e.target.value)}
                 placeholder="e.g., SaaS founders, e-commerce brands, local businesses"
-                className="w-full text-xs bg-surface-light border border-border rounded-xl px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-gold focus:bg-surface focus:ring-2 focus:ring-gold/10 transition-all"
+                className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
 
@@ -1417,7 +1457,7 @@ export default function CopywriterPage() {
                 value={keywords}
                 onChange={e => setKeywords(e.target.value)}
                 placeholder="Comma-separated: growth, automation, ROI, conversions"
-                className="w-full text-xs bg-surface-light border border-border rounded-xl px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-gold focus:bg-surface focus:ring-2 focus:ring-gold/10 transition-all"
+                className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
 
@@ -1451,14 +1491,12 @@ export default function CopywriterPage() {
             </div>
 
             {/* Generate Button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
               onClick={handleGenerate}
               disabled={generating || !topic.trim()}
-              className="w-full py-3 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 transition-all disabled:opacity-40"
-              style={{
-                background: generating ? "rgb(var(--color-muted-rgb, 107 114 128))" : "rgb(var(--color-accent-rgb, 201 168 76))",
-                boxShadow: generating ? "none" : "0 2px 12px rgba(201,168,76,0.25)",
-              }}
+              className="w-full py-3 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 transition-all disabled:opacity-40 bg-gradient-to-r from-indigo-500 to-violet-500 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40"
             >
               {generating ? (
                 <>
@@ -1471,35 +1509,49 @@ export default function CopywriterPage() {
                   Generate {activeType.label}
                 </>
               )}
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
           {/* Quick Stats */}
           {history.length > 0 && (
-            <div className="bg-surface border border-border rounded-2xl p-4">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12, duration: 0.35 }}
+              className="glass rounded-xl p-4"
+            >
+              <div className="h-px bg-gradient-to-r from-indigo-500 via-violet-400 to-indigo-500 mb-3 rounded-full" />
               <div className="grid grid-cols-3 gap-3">
-                <div className="text-center">
-                  <p className="text-lg font-bold text-foreground">{history.length}</p>
-                  <p className="text-[9px] text-muted">Generated</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-lg font-bold text-foreground">
-                    {history.reduce((sum, h) => sum + h.wordCount, 0).toLocaleString()}
-                  </p>
-                  <p className="text-[9px] text-muted">Total Words</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-lg font-bold text-foreground">{savedItems.size}</p>
-                  <p className="text-[9px] text-muted">Saved</p>
-                </div>
+                {[
+                  { label: "Generated", value: history.length },
+                  { label: "Total Words", value: history.reduce((sum, h) => sum + h.wordCount, 0).toLocaleString() },
+                  { label: "Saved", value: savedItems.size },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.14 + i * 0.05 }}
+                    whileHover={{ y: -2 }}
+                    className="text-center"
+                  >
+                    <p className="text-lg font-bold text-foreground">{stat.value}</p>
+                    <p className="text-[9px] text-muted">{stat.label}</p>
+                  </motion.div>
+                ))}
               </div>
-            </div>
+            </motion.div>
           )}
         </div>
 
         {/* Right Column - Output */}
         <div className="lg:col-span-3">
-          <div className="bg-surface border border-border rounded-2xl p-5 min-h-[600px] flex flex-col">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.09, duration: 0.35 }}
+            className="glass rounded-xl p-5 min-h-[600px] flex flex-col"
+          >
             {/* Output Header */}
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
               <div className="flex items-center gap-2">
@@ -1676,7 +1728,7 @@ export default function CopywriterPage() {
 
             {/* Output Footer */}
             {output && (
-              <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
+              <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="text-[9px] text-muted flex items-center gap-1">
                     <CheckCircle size={10} className="text-success" />
@@ -1686,16 +1738,18 @@ export default function CopywriterPage() {
                     {output.split(/\s+/).length} words
                   </span>
                 </div>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => { setOutput(""); handleGenerate(); }}
                   className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground transition-colors"
                 >
                   <RotateCcw size={10} />
                   Regenerate
-                </button>
+                </motion.button>
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
       )}

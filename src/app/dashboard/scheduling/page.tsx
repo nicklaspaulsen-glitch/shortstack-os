@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   Calendar, Clock, Users, Link2, Copy, Globe,
   Plus, Settings, Mail, Shuffle, BarChart3, Shield,
@@ -283,26 +284,27 @@ export default function SchedulingPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-5 gap-3">
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold">{meetingTypes.filter(m => m.active).length}</p>
-          <p className="text-[10px] text-muted">Active Types</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-gold">{totalBookings}</p>
-          <p className="text-[10px] text-muted">Total Bookings</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-emerald-400">{confirmedBookings}</p>
-          <p className="text-[10px] text-muted">Confirmed</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-blue-400">{conversionRate}%</p>
-          <p className="text-[10px] text-muted">Conversion Rate</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-orange-400">{noShowRate}%</p>
-          <p className="text-[10px] text-muted">No-Show Rate</p>
-        </div>
+        {[
+          { value: meetingTypes.filter(m => m.active).length, label: "Active Types", color: "" },
+          { value: totalBookings, label: "Total Bookings", color: "text-gold" },
+          { value: confirmedBookings, label: "Confirmed", color: "text-emerald-400" },
+          { value: `${conversionRate}%`, label: "Conversion Rate", color: "text-blue-400" },
+          { value: `${noShowRate}%`, label: "No-Show Rate", color: "text-orange-400" },
+        ].map((stat, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06, duration: 0.4 }}
+            className="glass rounded-xl overflow-hidden text-center"
+          >
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3">
+              <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
+              <p className="text-[10px] text-muted">{stat.label}</p>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* Tabs */}
@@ -330,8 +332,17 @@ export default function SchedulingPage() {
             />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {meetingTypes.map(mt => (
-                <div key={mt.id} className={`card p-4 ${!mt.active ? "opacity-50" : ""}`}>
+              {meetingTypes.map((mt, i) => (
+                <motion.div
+                  key={mt.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06, duration: 0.4 }}
+                  whileHover={{ y: -4, scale: 1.01 }}
+                  className={`glass rounded-xl overflow-hidden ${!mt.active ? "opacity-50" : ""}`}
+                >
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                  <div className="p-4">
                   <div className="flex items-start gap-3">
                     <div className="w-3 h-full rounded-full shrink-0 mt-1" style={{ background: mt.color || "#6366F1", minHeight: 40 }} />
                     <div className="flex-1 min-w-0">
@@ -435,13 +446,14 @@ export default function SchedulingPage() {
                       )}
                     </div>
                   </div>
-                </div>
+                  </div>
+                </motion.div>
               ))}
             </div>
           )}
 
           {/* Recent Bookings */}
-          <div className="card">
+          <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}>
             <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-gold" /> Recent Bookings</h2>
             {bookings.length === 0 ? (
               <div className="py-6 text-center">
@@ -450,8 +462,9 @@ export default function SchedulingPage() {
               </div>
             ) : (
               <div className="space-y-2">
-                {bookings.map(b => (
-                  <div key={b.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
+                {bookings.map((b, i) => (
+                  <motion.div key={b.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}
+                    className="glass-md flex items-center gap-3 p-3 rounded-lg">
                     <div className="text-center shrink-0 w-12">
                       <p className="text-[9px] text-muted">{new Date(b.date).toLocaleDateString("en-US", { month: "short" })}</p>
                       <p className="text-lg font-bold leading-none">{new Date(b.date).getDate()}</p>
@@ -479,14 +492,14 @@ export default function SchedulingPage() {
                       )}
                       <span className={`text-[9px] px-2 py-0.5 rounded-full ${STATUS_COLORS[b.status] ?? "text-muted"}`}>{b.status}</span>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* Confirmation Email Preview */}
-          <div className="card">
+          <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }}>
             <div className="flex items-center justify-between">
               <h2 className="section-header flex items-center gap-2 mb-0"><Mail size={13} className="text-gold" /> Confirmation Email Preview</h2>
               <button onClick={() => setShowEmailPreview(!showEmailPreview)} className="btn-ghost text-[10px]">
@@ -507,14 +520,14 @@ export default function SchedulingPage() {
                 <p className="text-muted text-[10px]">Need to reschedule? Click the link in this email to find a new time.</p>
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* ---- TAB: Availability ---- */}
       {tab === "availability" && (
         <div className="space-y-4">
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-gold" /> Weekly Availability</h2>
             <div className="space-y-2">
               {DAYS.map(day => {
@@ -551,7 +564,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Time Slots Grid Visual */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-blue-400" /> Available Slots This Week</h2>
             <div className="grid grid-cols-8 gap-px text-[9px]">
               <div />
@@ -582,7 +595,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Calendar Integration */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-gold" /> Calendar Integration</h2>
             <div className="space-y-2">
               {([] as { name: string; connected: boolean; icon: string }[]).map(cal => (
@@ -609,7 +622,7 @@ export default function SchedulingPage() {
       {tab === "ai_smart" && (
         <div className="space-y-4">
           {/* AI Suggested Times */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <Brain size={13} className="text-gold" /> AI-Suggested Optimal Meeting Times
             </h3>
@@ -643,7 +656,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Smart Conflict Detection */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <AlertTriangle size={13} className="text-amber-400" /> Smart Conflict Detection
             </h3>
@@ -680,7 +693,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Buffer Time Management */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <Timer size={13} className="text-blue-400" /> Auto Buffer Management
             </h3>
@@ -712,7 +725,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Client Timezone Display */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <MapPin size={13} className="text-emerald-400" /> Client Timezone Auto-Detection
             </h3>
@@ -734,7 +747,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Meeting Prep Cards */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <Sparkles size={13} className="text-gold" /> AI Meeting Prep Cards
             </h3>
@@ -750,30 +763,30 @@ export default function SchedulingPage() {
       {tab === "analytics" && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="card p-3 text-center">
-              <p className="text-[10px] text-muted">Bookings This Week</p>
-              <p className="text-2xl font-bold text-gold">{totalBookings}</p>
-            </div>
-            <div className="card p-3 text-center">
-              <p className="text-[10px] text-muted">Show Rate</p>
-              <p className="text-2xl font-bold text-emerald-400">
-                {totalBookings > 0 ? Math.round((bookings.filter(b => b.status === "completed").length / totalBookings) * 100) : 0}%
-              </p>
-            </div>
-            <div className="card p-3 text-center">
-              <p className="text-[10px] text-muted">No-Show Rate</p>
-              <p className="text-2xl font-bold text-orange-400">{noShowRate}%</p>
-            </div>
-            <div className="card p-3 text-center">
-              <p className="text-[10px] text-muted">Avg Duration</p>
-              <p className="text-2xl font-bold text-blue-400">
-                {meetingTypes.length > 0 ? Math.round(meetingTypes.reduce((s, m) => s + m.duration, 0) / meetingTypes.length) : 0}m
-              </p>
-            </div>
+            {[
+              { label: "Bookings This Week", value: totalBookings, color: "text-gold" },
+              { label: "Show Rate", value: `${totalBookings > 0 ? Math.round((bookings.filter(b => b.status === "completed").length / totalBookings) * 100) : 0}%`, color: "text-emerald-400" },
+              { label: "No-Show Rate", value: `${noShowRate}%`, color: "text-orange-400" },
+              { label: "Avg Duration", value: `${meetingTypes.length > 0 ? Math.round(meetingTypes.reduce((s, m) => s + m.duration, 0) / meetingTypes.length) : 0}m`, color: "text-blue-400" },
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.4 }}
+                className="glass rounded-xl overflow-hidden text-center"
+              >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div className="p-3">
+                  <p className="text-[10px] text-muted">{stat.label}</p>
+                  <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* Popular Times Heatmap */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2">
               <Zap size={13} className="text-gold" /> Popular Times Heatmap
             </h2>
@@ -827,7 +840,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Bookings by Type */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Bookings by Meeting Type</h2>
             {meetingTypes.length === 0 ? (
               <p className="text-xs text-muted text-center py-4">Create meeting types to see analytics.</p>
@@ -852,7 +865,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Popular Booking Times */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-blue-400" /> Popular Booking Times</h2>
             {bookings.length === 0 ? (
               <p className="text-xs text-muted text-center py-4">Booking data will appear here once you have bookings.</p>
@@ -878,7 +891,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Status Distribution */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-purple-400" /> Bookings by Status</h2>
             <div className="grid grid-cols-4 gap-3">
               {(["confirmed", "completed", "cancelled", "no_show"] as const).map(status => {
@@ -900,7 +913,7 @@ export default function SchedulingPage() {
       {tab === "settings" && (
         <div className="space-y-4">
           {/* Round-Robin */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Shuffle size={13} className="text-gold" /> Round-Robin Team Scheduling</h2>
             <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light mb-3">
               <div>
@@ -938,7 +951,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Timezone */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-blue-400" /> Timezone Detection</h2>
             <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light">
               <div>
@@ -953,7 +966,7 @@ export default function SchedulingPage() {
           </div>
 
           {/* Policies */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Reschedule / Cancel Policy</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import {
   Bot, Settings, Plus, Trash2, Play, Pause, Edit3, X,
@@ -506,7 +507,7 @@ export default function TelegramBotPage() {
       />
 
       {/* Tab Bar */}
-      <div className="flex gap-1 bg-surface-light border border-border rounded-xl p-1 overflow-x-auto">
+      <div className="flex gap-1 glass rounded-xl p-1 overflow-x-auto">
         {TABS.map(t => (
           <button
             key={t.key}
@@ -570,7 +571,7 @@ export default function TelegramBotPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {routines.map(r => {
+              {routines.map((r, idx) => {
                 const statusBadge = r.paused
                   ? { label: "Paused", cls: "bg-amber-500/10 text-amber-400 border-amber-500/20" }
                   : !r.enabled
@@ -579,7 +580,13 @@ export default function TelegramBotPage() {
                   ? { label: "Failing", cls: "bg-red-500/10 text-red-400 border-red-500/20" }
                   : { label: "Active", cls: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" };
                 return (
-                  <div key={r.id} className="card !p-4 flex items-center gap-4 flex-wrap md:flex-nowrap">
+                  <motion.div
+                    key={r.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.04 }}
+                    className="glass rounded-xl !p-4 flex items-center gap-4 flex-wrap md:flex-nowrap"
+                  >
                     <div className={`w-10 h-10 rounded-xl bg-surface-light border border-border flex items-center justify-center flex-shrink-0 ${colorForType(r.routine_type)}`}>
                       {iconForType(r.routine_type)}
                     </div>
@@ -642,6 +649,7 @@ export default function TelegramBotPage() {
                       </button>
                     </div>
                   </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -687,13 +695,19 @@ export default function TelegramBotPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {activity.map(a => {
+              {activity.map((a, idx) => {
                 const msgPreview = typeof a.result === "object" && a.result
                   ? (a.result as Record<string, unknown>).message as string | undefined
                   : undefined;
                 const isOk = a.status === "completed" || a.status === "success";
                 return (
-                  <div key={a.id} className="card !p-3 flex items-start gap-3">
+                  <motion.div
+                    key={a.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.04 }}
+                    className="glass-md rounded-xl !p-3 flex items-start gap-3"
+                  >
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isOk ? "bg-emerald-500/10 text-emerald-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-surface-light text-muted"}`}>
                       <Bot size={14} />
                     </div>
@@ -710,6 +724,7 @@ export default function TelegramBotPage() {
                       <p className="text-[10px] text-muted mt-1">{fmtTime(a.created_at)}</p>
                     </div>
                   </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -725,11 +740,15 @@ export default function TelegramBotPage() {
             <p className="text-xs text-muted mt-0.5">Click a template to clone it as a new routine.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {ROUTINE_TEMPLATES.map(t => (
-              <button
+            {ROUTINE_TEMPLATES.map((t, i) => (
+              <motion.button
                 key={t.key}
                 onClick={() => applyTemplate(t)}
-                className="card text-left hover:border-gold/30 hover:bg-gold/5 transition-all group"
+                className="glass rounded-xl text-left transition-all group"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                whileHover={{ y: -4, scale: 1.01 }}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className={`w-10 h-10 rounded-xl bg-surface-light border border-border flex items-center justify-center ${t.color}`}>
@@ -749,7 +768,7 @@ export default function TelegramBotPage() {
                     <Copy size={10} /> Clone
                   </span>
                 </div>
-              </button>
+              </motion.button>
             ))}
           </div>
         </div>
@@ -758,7 +777,7 @@ export default function TelegramBotPage() {
       {/* ═══════════ SETTINGS TAB ═══════════ */}
       {tab === "settings" && (
         <div className="space-y-4">
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h3 className="section-header flex items-center gap-2">
               <Wifi size={14} className="text-gold" />
               Bot Connection
@@ -786,7 +805,7 @@ export default function TelegramBotPage() {
             </div>
           </div>
 
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h3 className="section-header flex items-center gap-2">
               <MessageCircle size={14} className="text-gold" />
               Default Chat ID
@@ -801,7 +820,7 @@ export default function TelegramBotPage() {
             </div>
           </div>
 
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="section-header mb-0 flex items-center gap-2">
@@ -837,7 +856,7 @@ export default function TelegramBotPage() {
             </div>
           </div>
 
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h3 className="section-header flex items-center gap-2">
               <Clock size={14} className="text-gold" />
               Activity Retention
@@ -860,7 +879,7 @@ export default function TelegramBotPage() {
             </div>
           </div>
 
-          <div className="card border-red-500/20">
+          <div className="glass rounded-xl p-4 border-red-500/20">
             <h3 className="section-header flex items-center gap-2 text-red-400">
               <Trash2 size={14} />
               Danger Zone

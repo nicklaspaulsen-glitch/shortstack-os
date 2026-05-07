@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import {
   Search, Send, Edit3, Trash2, Plus, X, Loader, Eye, Save,
@@ -406,11 +407,11 @@ export default function TelegramPresetsPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search name, body, category..."
-            className="w-full bg-surface-light border border-border rounded-lg pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-gold/40"
+            className="w-full glass rounded-lg pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40"
           />
         </div>
 
-        <div className="flex items-center gap-1 bg-surface-light border border-border rounded-lg p-1">
+        <div className="flex items-center gap-1 glass rounded-lg p-1">
           {(["all", "global", "mine"] as const).map(s => (
             <button
               key={s}
@@ -435,7 +436,7 @@ export default function TelegramPresetsPage() {
       </div>
 
       {/* Category tabs */}
-      <div className="flex gap-1 bg-surface-light border border-border rounded-xl p-1 overflow-x-auto">
+      <div className="flex gap-1 glass rounded-xl p-1 overflow-x-auto">
         <button
           onClick={() => setActiveCategory("all")}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
@@ -494,14 +495,17 @@ export default function TelegramPresetsPage() {
         </div>
       ) : (
         <div className="space-y-2">
-          {filtered.map(p => {
+          {filtered.map((p, idx) => {
             const health = healthFor(p);
             const cfg = HEALTH_CONFIG[health];
             const isGlobal = p.user_id === null;
             return (
-              <div
+              <motion.div
                 key={p.id}
-                className="card !p-4 flex items-start gap-4 flex-wrap md:flex-nowrap"
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.04 }}
+                className="glass rounded-xl !p-4 flex items-start gap-4 flex-wrap md:flex-nowrap"
               >
                 {/* Health dot */}
                 <div className="relative flex-shrink-0 mt-1.5" title={cfg.label}>
@@ -600,7 +604,7 @@ export default function TelegramPresetsPage() {
                     <Trash2 size={14} />
                   </button>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

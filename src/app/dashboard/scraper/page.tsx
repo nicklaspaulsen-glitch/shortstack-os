@@ -20,6 +20,7 @@ import WebsiteScraper from "@/components/ui/website-scraper";
 import Modal from "@/components/ui/modal";
 import InlineSocialConnect from "@/components/inline-social-connect";
 import { Lightbulb, Megaphone, Loader2, ChevronsRight } from "lucide-react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import ErrorBoundary from "@/components/error-boundary";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
@@ -752,7 +753,7 @@ export default function ScraperPage() {
 
       {/* Estimated output */}
       {tab === "search" && (
-        <div className="bg-gold/5 border border-gold/20 rounded-xl px-4 py-3 flex items-center justify-between">
+        <div className="glass-indigo rounded-xl px-4 py-3 flex items-center justify-between">
           <span className="text-sm">Estimated output: <span className="text-gold font-bold">{estimatedLeads.toLocaleString()} leads</span></span>
           <span className="text-xs text-muted">{selectedPlatforms.length} platform(s) x {niches.length} niche(s) x {locations.length} location(s) x {maxResults} per search</span>
         </div>
@@ -797,8 +798,8 @@ export default function ScraperPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Left - Platforms + Filters */}
           <div className="space-y-4">
-            <div className="card">
-              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Globe size={14} className="text-gold" /> Platforms</h3>
+            <div className="glass rounded-xl p-4">
+              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Globe size={14} className="text-indigo-400" /> Platforms</h3>
               <ChoiceCards
                 columns={2}
                 size="sm"
@@ -816,13 +817,13 @@ export default function ScraperPage() {
                 }))}
               />
             </div>
-            <div className="card">
-              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Hash size={14} className="text-gold" /> Results per search</h3>
+            <div className="glass rounded-xl p-4">
+              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Hash size={14} className="text-indigo-400" /> Results per search</h3>
               <input type="range" min="5" max="500" value={maxResults} onChange={e => setMaxResults(parseInt(e.target.value))} className="w-full accent-gold" />
               <div className="flex justify-between text-xs text-muted mt-1"><span>5</span><span className="text-gold font-bold">{maxResults}</span><span>500</span></div>
             </div>
             {/* Advanced Filters */}
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <button onClick={() => setShowFilters(!showFilters)} className="w-full flex items-center justify-between">
                 <h3 className="text-xs font-medium flex items-center gap-2"><Filter size={13} className="text-gold" /> Filters</h3>
                 <span className="text-[10px] text-muted">{showFilters ? "Hide" : "Show"}</span>
@@ -971,7 +972,7 @@ export default function ScraperPage() {
               )}
             </div>
             {/* Lead Scoring Config */}
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <button onClick={() => setShowScoringConfig(!showScoringConfig)} className="w-full flex items-center justify-between">
                 <h3 className="text-xs font-medium flex items-center gap-2"><Target size={13} className="text-gold" /> Lead Scoring Weights</h3>
                 <span className="text-[10px] text-muted">{showScoringConfig ? "Hide" : "Configure"}</span>
@@ -990,7 +991,7 @@ export default function ScraperPage() {
               )}
             </div>
             {/* Decision Maker Targeting */}
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <button onClick={() => setFilters({ ...filters, find_decision_makers: !filters.find_decision_makers })} className="w-full flex items-center justify-between">
                 <h3 className="text-xs font-medium flex items-center gap-2"><UserPlus size={13} className="text-gold" /> Decision Maker Targeting</h3>
                 <span className="text-[10px] text-muted">{filters.find_decision_makers ? "On" : "Off"}</span>
@@ -1021,7 +1022,7 @@ export default function ScraperPage() {
               )}
             </div>
             {/* Smart AI Match */}
-            <div className="card">
+            <div className="glass-indigo rounded-xl p-4">
               <button onClick={() => setAiMatchEnabled(!aiMatchEnabled)} className="w-full flex items-center justify-between">
                 <h3 className="text-xs font-medium flex items-center gap-2"><FlaskConical size={13} className="text-gold" /> Smart AI Match</h3>
                 <span className="text-[10px] text-muted">{aiMatchEnabled ? "On" : "Off"}</span>
@@ -1055,7 +1056,7 @@ export default function ScraperPage() {
 
           {/* Middle - Niches */}
           <div className="space-y-4">
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-medium flex items-center gap-2"><Zap size={14} className="text-gold" /> Niches / Industries <span className="text-[9px] text-muted font-normal">({ALL_NICHES.length} total)</span></h3>
                 <button onClick={() => setBatchMode(!batchMode)} className="text-[9px] text-gold hover:underline">{batchMode ? "Single mode" : "Batch import"}</button>
@@ -1136,8 +1137,8 @@ export default function ScraperPage() {
                 </>
               )}
             </div>
-            <div className="card">
-              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Tag size={14} className="text-gold" /> Tags (optional)</h3>
+            <div className="glass rounded-xl p-4">
+              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Tag size={14} className="text-indigo-400" /> Tags (optional)</h3>
               <div className="flex flex-wrap gap-1.5 mb-2">
                 {tags.map(t => (
                   <span key={t} className="bg-info/10 text-info text-xs px-2 py-0.5 rounded-full flex items-center gap-1">{t} <button onClick={() => setTags(tags.filter(x => x !== t))}><X size={10} /></button></span>
@@ -1149,8 +1150,8 @@ export default function ScraperPage() {
               </div>
             </div>
             {/* Save Search */}
-            <div className="card">
-              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Save size={14} className="text-gold" /> Save This Search</h3>
+            <div className="glass rounded-xl p-4">
+              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Save size={14} className="text-indigo-400" /> Save This Search</h3>
               <div className="flex gap-2">
                 <input value={saveSearchName} onChange={e => setSaveSearchName(e.target.value)} placeholder="Search name..." className="input flex-1 text-sm py-1.5" />
                 <button onClick={saveCurrentSearch} className="btn-primary text-xs py-1.5 px-3"><Save size={12} /></button>
@@ -1159,7 +1160,7 @@ export default function ScraperPage() {
           </div>
 
           {/* Right - Locations */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><MapPin size={14} className="text-gold" /> Locations</h3>
             {/* Selected locations */}
             <div className="flex flex-wrap gap-1.5 mb-3">
@@ -1268,9 +1269,24 @@ export default function ScraperPage() {
             <>
               <div className="flex items-center justify-between">
                 <div className="flex gap-4">
-                  <div className="text-center"><p className="text-2xl font-bold text-gold">{stats.scraped}</p><p className="text-[10px] text-muted">Leads Found</p></div>
-                  <div className="text-center"><p className="text-2xl font-bold text-muted">{stats.skipped}</p><p className="text-[10px] text-muted">Duplicates</p></div>
-                  <div className="text-center"><p className="text-2xl font-bold text-success">{selectedLeads.size}</p><p className="text-[10px] text-muted">Selected</p></div>
+                  {[
+                    { value: stats.scraped, label: "Leads Found", color: "text-indigo-400", bar: "from-indigo-500 to-violet-400" },
+                    { value: stats.skipped, label: "Duplicates", color: "text-muted", bar: "from-slate-600 to-slate-500" },
+                    { value: selectedLeads.size, label: "Selected", color: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
+                  ].map((s, i) => (
+                    <motion.div
+                      key={s.label}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.07 }}
+                      whileHover={{ y: -2 }}
+                      className="glass rounded-xl px-4 py-3 text-center relative overflow-hidden min-w-[80px]"
+                    >
+                      <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${s.bar}`} />
+                      <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
+                      <p className="text-[10px] text-muted">{s.label}</p>
+                    </motion.div>
+                  ))}
                 </div>
                 <div className="flex items-center gap-1.5">
                   <button onClick={selectAllLeads} className="btn-secondary text-[10px] py-1.5"><CheckCircle size={12} /> {selectedLeads.size === results.length ? "Deselect All" : "Select All"}</button>
@@ -1299,8 +1315,15 @@ export default function ScraperPage() {
                 {results.slice(0, 9).map((r, i) => {
                   const score = r.lead_score || computeLeadScore(r);
                   return (
-                    <div key={i} onClick={() => toggleLeadSelection(i)}
-                      className={`card cursor-pointer transition-all hover:border-gold/30 ${selectedLeads.has(i) ? "border-gold bg-gold/5" : ""}`}>
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.05 }}
+                      whileHover={{ y: -3 }}
+                      onClick={() => toggleLeadSelection(i)}
+                      className={`glass rounded-xl p-4 cursor-pointer transition-all hover:border-indigo-500/20 ${selectedLeads.has(i) ? "border-indigo-500/40 bg-indigo-500/5" : ""}`}
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{r.business_name}</p>
@@ -1326,7 +1349,7 @@ export default function ScraperPage() {
                         {r.tiktok_url && <span className="text-[8px] bg-white/10 text-white px-1.5 py-0.5 rounded">TK</span>}
                         {r.linkedin_url && <span className="text-[8px] bg-blue-400/10 text-blue-400 px-1.5 py-0.5 rounded">LI</span>}
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -1349,7 +1372,7 @@ export default function ScraperPage() {
               )}
             </>
           ) : (
-            <div className="card text-center py-16">
+            <div className="glass rounded-xl text-center py-16">
               <Search size={48} className="mx-auto text-muted/30 mb-4" />
               <p className="text-muted text-sm">No results yet. Configure and run the scraper.</p>
             </div>
@@ -1360,8 +1383,8 @@ export default function ScraperPage() {
       {/* ─── ENRICHMENT TAB ─── */}
       {tab === "enrichment" && (
         <div className="space-y-4">
-          <div className="card">
-            <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><UserPlus size={14} className="text-gold" /> Lead Enrichment</h3>
+          <div className="glass rounded-xl p-4">
+            <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><UserPlus size={14} className="text-indigo-400" /> Lead Enrichment</h3>
             <p className="text-xs text-muted mb-4">Select leads from the Results tab, then choose an enrichment type to find additional data.</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
               {[
@@ -1387,10 +1410,25 @@ export default function ScraperPage() {
           </div>
           {/* Enrichment stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="card text-center p-4"><p className="text-lg font-bold text-gold">{results.filter(r => r.email).length}</p><p className="text-[10px] text-muted">With Email</p></div>
-            <div className="card text-center p-4"><p className="text-lg font-bold text-info">{results.filter(r => r.tech_stack).length}</p><p className="text-[10px] text-muted">Tech Detected</p></div>
-            <div className="card text-center p-4"><p className="text-lg font-bold text-purple-400">{results.filter(r => r.decision_maker).length}</p><p className="text-[10px] text-muted">Decision Makers</p></div>
-            <div className="card text-center p-4"><p className="text-lg font-bold text-success">{results.filter(r => (r.lead_score || 0) >= 70).length}</p><p className="text-[10px] text-muted">Hot Leads</p></div>
+            {[
+              { value: results.filter(r => r.email).length, label: "With Email", color: "text-indigo-400", bar: "from-indigo-500 to-violet-400" },
+              { value: results.filter(r => r.tech_stack).length, label: "Tech Detected", color: "text-sky-400", bar: "from-sky-500 to-blue-400" },
+              { value: results.filter(r => r.decision_maker).length, label: "Decision Makers", color: "text-violet-400", bar: "from-violet-500 to-purple-400" },
+              { value: results.filter(r => (r.lead_score || 0) >= 70).length, label: "Hot Leads", color: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
+            ].map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.07 }}
+                whileHover={{ y: -2 }}
+                className="glass rounded-xl text-center p-4 relative overflow-hidden"
+              >
+                <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${s.bar}`} />
+                <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
+                <p className="text-[10px] text-muted">{s.label}</p>
+              </motion.div>
+            ))}
           </div>
 
           {/* Single-URL website enrichment (optional) */}
@@ -1425,11 +1463,18 @@ export default function ScraperPage() {
       {tab === "saved" && (
         <div className="space-y-4">
           {savedSearches.length === 0 ? (
-            <div className="card text-center py-12"><Bookmark size={32} className="mx-auto text-muted/30 mb-3" /><p className="text-muted text-sm">No saved searches yet. Save a search from the Search tab.</p></div>
+            <div className="glass rounded-xl text-center py-12"><Bookmark size={32} className="mx-auto text-muted/30 mb-3" /><p className="text-muted text-sm">No saved searches yet. Save a search from the Search tab.</p></div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {savedSearches.map(s => (
-                <div key={s.id} className="card hover:border-gold/20 transition-all">
+              {savedSearches.map((s, si) => (
+                <motion.div
+                  key={s.id}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: si * 0.06 }}
+                  whileHover={{ y: -3 }}
+                  className="glass rounded-xl p-4 hover:border-indigo-500/20 transition-all"
+                >
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <p className="font-medium text-sm">{s.name}</p>
@@ -1449,7 +1494,7 @@ export default function ScraperPage() {
                     {s.result_count !== undefined && <span className="flex items-center gap-1"><Database size={10} /> {s.result_count} leads</span>}
                     {s.last_run && <span className="flex items-center gap-1"><Clock size={10} /> Last run: {new Date(s.last_run).toLocaleDateString()}</span>}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -1459,11 +1504,17 @@ export default function ScraperPage() {
       {/* ─── HISTORY TAB ─── */}
       {tab === "history" && (
         <div className="space-y-4">
-          <div className="card">
-            <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Clock size={14} className="text-gold" /> Search History</h3>
+          <div className="glass rounded-xl p-4">
+            <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Clock size={14} className="text-indigo-400" /> Search History</h3>
             <div className="space-y-2">
-              {searchHistory.map(h => (
-                <div key={h.id} className="p-3 border border-border rounded-lg hover:border-gold/20 transition-all">
+              {searchHistory.map((h, hi) => (
+                <motion.div
+                  key={h.id}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.28, delay: hi * 0.05 }}
+                  className="glass-md rounded-lg p-3 hover:border-indigo-500/20 transition-all"
+                >
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex flex-wrap gap-1">
                       {h.platforms.map(p => <span key={p} className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{p}</span>)}
@@ -1473,11 +1524,11 @@ export default function ScraperPage() {
                     <span className="text-[10px] text-muted">{new Date(h.timestamp).toLocaleString()}</span>
                   </div>
                   <div className="flex items-center gap-4 text-xs">
-                    <span className="text-gold font-medium">{h.results_found} found</span>
-                    <span className="text-success">{h.leads_saved} saved</span>
+                    <span className="text-indigo-400 font-medium">{h.results_found} found</span>
+                    <span className="text-emerald-400">{h.leads_saved} saved</span>
                     <span className="text-muted">{h.results_found - h.leads_saved} duplicates</span>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -1492,7 +1543,12 @@ export default function ScraperPage() {
             <button onClick={() => setShowScheduleForm(!showScheduleForm)} className="btn-primary text-xs flex items-center gap-2"><Plus size={12} /> New Schedule</button>
           </div>
           {showScheduleForm && (
-            <div className="card border-gold/20">
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.28 }}
+              className="glass-indigo rounded-xl p-4"
+            >
               <h4 className="text-xs font-medium mb-3">Create Scheduled Scrape</h4>
               <p className="text-[10px] text-muted mb-3">Uses current search config (platforms, niches, locations)</p>
               <div className="grid grid-cols-2 gap-3 mb-3">
@@ -1516,14 +1572,20 @@ export default function ScraperPage() {
                 <button onClick={addSchedule} className="btn-primary text-xs py-1.5"><Calendar size={12} /> Schedule</button>
                 <button onClick={() => setShowScheduleForm(false)} className="btn-secondary text-xs py-1.5">Cancel</button>
               </div>
-            </div>
+            </motion.div>
           )}
           {scheduledScrapes.length === 0 ? (
-            <div className="card text-center py-12"><Calendar size={32} className="mx-auto text-muted/30 mb-3" /><p className="text-muted text-sm">No scheduled scrapes yet.</p></div>
+            <div className="glass rounded-xl text-center py-12"><Calendar size={32} className="mx-auto text-muted/30 mb-3" /><p className="text-muted text-sm">No scheduled scrapes yet.</p></div>
           ) : (
             <div className="space-y-3">
-              {scheduledScrapes.map(s => (
-                <div key={s.id} className="card">
+              {scheduledScrapes.map((s, sci) => (
+                <motion.div
+                  key={s.id}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.28, delay: sci * 0.06 }}
+                  className="glass rounded-xl p-4"
+                >
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-sm flex items-center gap-2">{s.name}
@@ -1544,7 +1606,7 @@ export default function ScraperPage() {
                       <button onClick={() => setScheduledScrapes(prev => prev.filter(x => x.id !== s.id))} className="text-danger text-xs"><Trash2 size={14} /></button>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -1554,7 +1616,7 @@ export default function ScraperPage() {
       {/* Test 500 Results */}
       {testResults && (
         <div className="space-y-4">
-          <div className="card border-accent/20">
+          <div className="glass-indigo rounded-xl p-4">
             <h3 className="section-header flex items-center gap-2"><FlaskConical size={14} className="text-gold" /> 500-Lead Test Results</h3>
             <div className="grid grid-cols-4 gap-3 mb-4">
               <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border"><p className="text-lg font-bold font-mono text-gold">{testResults.totalFound}</p><p className="text-[9px] text-muted uppercase tracking-wider">Found</p></div>

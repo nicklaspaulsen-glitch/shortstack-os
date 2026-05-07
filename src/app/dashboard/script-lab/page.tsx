@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
@@ -1384,7 +1385,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
 
       {/* Tabs */}
       {advancedMode && (
-      <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">
+      <div className="glass rounded-xl p-1 flex gap-1 overflow-x-auto">
         {([
           { id: "generate" as const, label: "Generator", icon: Sparkles },
           { id: "templates" as const, label: `Templates (${scriptTemplates.length})`, icon: BookOpen },
@@ -1397,9 +1398,9 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           { id: "history" as const, label: `History (${savedScripts.length})`, icon: Clock },
         ]).map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-colors whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 py-2 text-xs rounded-lg transition-all whitespace-nowrap ${
               tab === t.id
-                ? "bg-surface-light text-gold border border-border border-b-transparent -mb-px"
+                ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 font-medium"
                 : "text-muted hover:text-foreground"
             }`}>
             <t.icon size={12} /> {t.label}
@@ -1415,15 +1416,20 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 space-y-4">
             {/* Script Type selector */}
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Type size={13} className="text-gold" /> Script Type</h2>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              className="glass rounded-xl p-5"
+            >
+              <h2 className="section-header flex items-center gap-2 mb-3"><Type size={13} className="text-indigo-400" /> Script Type</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {SCRIPT_TYPES.map(t => (
                   <button key={t.id} onClick={() => setConfig({ ...config, script_type: t.id })}
                     className={`flex items-center gap-2 p-2.5 rounded-xl border transition-all ${
-                      config.script_type === t.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                      config.script_type === t.id ? "border-indigo-500/30 bg-indigo-500/[0.07]" : "border-border hover:border-indigo-500/20"
                     }`}>
-                    <span className={config.script_type === t.id ? "text-gold" : "text-muted"}>{t.icon}</span>
+                    <span className={config.script_type === t.id ? "text-indigo-400" : "text-muted"}>{t.icon}</span>
                     <div>
                       <p className="text-[10px] font-semibold">{t.name}</p>
                       <p className="text-[8px] text-muted">{t.desc}</p>
@@ -1431,46 +1437,56 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   </button>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Framework selector */}
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Target size={13} className="text-gold" /> Script Framework</h2>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.04 }}
+              className="glass rounded-xl p-5"
+            >
+              <h2 className="section-header flex items-center gap-2 mb-3"><Target size={13} className="text-indigo-400" /> Script Framework</h2>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                 {FRAMEWORKS.map(f => (
                   <button key={f.id} onClick={() => setConfig({ ...config, framework: f.id })}
                     className={`p-2 rounded-xl border text-left transition-all ${
-                      config.framework === f.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                      config.framework === f.id ? "border-indigo-500/30 bg-indigo-500/[0.07]" : "border-border hover:border-indigo-500/20"
                     }`}>
                     <p className={`text-[10px] font-semibold ${f.color}`}>{f.name}</p>
                     <p className="text-[8px] text-muted leading-tight">{f.desc}</p>
                   </button>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Script config */}
-            <div className="card space-y-3">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.08 }}
+              className="glass rounded-xl p-5 space-y-3"
+            >
               <h2 className="section-header">Script Details</h2>
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Platform</label>
                   <select value={config.platform} onChange={e => setConfig({ ...config, platform: e.target.value })}
-                    className="input w-full text-xs">
+                    className="w-full text-xs glass rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all">
                     {PLATFORMS.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Tone</label>
                   <select value={config.tone} onChange={e => setConfig({ ...config, tone: e.target.value })}
-                    className="input w-full text-xs">
+                    className="w-full text-xs glass rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all">
                     {TONES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Target Audience</label>
                   <input value={config.target_audience} onChange={e => setConfig({ ...config, target_audience: e.target.value })}
-                    className="input w-full text-xs" placeholder="e.g., business owners 30-50" />
+                    className="w-full text-xs glass rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="e.g., business owners 30-50" />
                 </div>
               </div>
               <div>
@@ -1486,11 +1502,11 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   </select>
                 </div>
                 <input value={config.topic} onChange={e => setConfig({ ...config, topic: e.target.value })}
-                  className="input w-full text-xs" placeholder="e.g., Why most dental practices fail at social media" />
+                  className="w-full text-xs glass rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="e.g., Why most dental practices fail at social media" />
                 <div className="flex flex-wrap gap-1 mt-1.5">
                   {topicPresets.map((t, i) => (
                     <button key={i} onClick={() => setConfig({ ...config, topic: t })}
-                      className="text-[8px] px-2 py-0.5 rounded bg-surface-light/60 border border-border text-muted hover:text-foreground hover:border-gold/20 transition-all">
+                      className="text-[8px] px-2 py-0.5 rounded bg-white/[0.03] border border-white/[0.06] text-muted hover:text-foreground hover:border-indigo-500/20 transition-all">
                       {t}
                     </button>
                   ))}
@@ -1499,7 +1515,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               <div>
                 <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Pain Points to Address</label>
                 <input value={config.pain_points} onChange={e => setConfig({ ...config, pain_points: e.target.value })}
-                  className="input w-full text-xs" placeholder="e.g., no time, don't know what to post, not getting engagement" />
+                  className="w-full text-xs glass rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="e.g., no time, don't know what to post, not getting engagement" />
               </div>
               <div>
                 <div className="flex items-center justify-between mb-1">
@@ -1507,21 +1523,26 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <AIEnhanceButton value={config.viral_reference} onResult={next => setConfig({ ...config, viral_reference: next })} context="short-form video concept" variant="inline" />
                 </div>
                 <textarea value={config.viral_reference} onChange={e => setConfig({ ...config, viral_reference: e.target.value })}
-                  className="input w-full h-14 text-xs" placeholder="Paste a viral video concept, hook, or transcript to remix with your own angle..." />
+                  className="w-full h-14 text-xs glass rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all resize-none" placeholder="Paste a viral video concept, hook, or transcript to remix with your own angle..." />
               </div>
-            </div>
+            </motion.div>
 
             {/* Storyboard format picker */}
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Clapperboard size={13} className="text-gold" /> Storyboard Format (for visual breakdown)</h2>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.12 }}
+              className="glass rounded-xl p-5"
+            >
+              <h2 className="section-header flex items-center gap-2 mb-2"><Clapperboard size={13} className="text-indigo-400" /> Storyboard Format (for visual breakdown)</h2>
               <p className="text-[9px] text-muted mb-2">Pick the visual style your storyboard will follow. You can generate a shot-by-shot breakdown after your script is created.</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
                 {STORYBOARD_FORMATS.map(f => (
                   <button key={f.id} onClick={() => setStoryboardFormat(f.id)}
                     className={`flex items-center gap-1.5 p-2 rounded-xl border text-left transition-all ${
-                      storyboardFormat === f.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                      storyboardFormat === f.id ? "border-indigo-500/30 bg-indigo-500/[0.07]" : "border-border hover:border-indigo-500/20"
                     }`}>
-                    <span className={storyboardFormat === f.id ? "text-gold" : "text-muted"}>{f.icon}</span>
+                    <span className={storyboardFormat === f.id ? "text-indigo-400" : "text-muted"}>{f.icon}</span>
                     <div className="min-w-0">
                       <p className="text-[10px] font-semibold truncate">{f.name}</p>
                       <p className="text-[8px] text-muted truncate">{f.desc}</p>
@@ -1529,22 +1550,27 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   </button>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* AI Extras */}
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Wand2 size={13} className="text-gold" /> AI Options</h2>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.16 }}
+              className="glass rounded-xl p-5"
+            >
+              <h2 className="section-header flex items-center gap-2 mb-3"><Wand2 size={13} className="text-indigo-400" /> AI Options</h2>
               <div className="flex flex-wrap gap-3">
                 <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
                   <input type="checkbox" checked={config.include_voiceover_notes}
                     onChange={e => setConfig({ ...config, include_voiceover_notes: e.target.checked })}
-                    className="rounded border-border text-gold focus:ring-gold/30" />
+                    className="rounded border-border text-indigo-500 focus:ring-indigo-500/30" />
                   <Volume2 size={11} /> Voiceover Notes
                 </label>
                 <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
                   <input type="checkbox" checked={config.include_b_roll_suggestions}
                     onChange={e => setConfig({ ...config, include_b_roll_suggestions: e.target.checked })}
-                    className="rounded border-border text-gold focus:ring-gold/30" />
+                    className="rounded border-border text-indigo-500 focus:ring-indigo-500/30" />
                   <Film size={11} /> B-Roll Suggestions
                 </label>
                 <div className="flex items-center gap-2 ml-auto">
@@ -1553,7 +1579,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     {[1, 3, 5].map(n => (
                       <button key={n} onClick={() => setConfig({ ...config, batch_count: n })}
                         className={`text-[10px] px-2 py-0.5 rounded border transition-all ${
-                          config.batch_count === n ? "border-gold/30 bg-gold/[0.05] text-gold font-semibold" : "border-border text-muted hover:text-foreground"
+                          config.batch_count === n ? "border-indigo-500/30 bg-indigo-500/[0.07] text-indigo-400 font-semibold" : "border-border text-muted hover:text-foreground"
                         }`}>
                         {n}x
                       </button>
@@ -1561,40 +1587,63 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <button onClick={generateScript} disabled={generating || !config.topic}
-              className="btn-primary w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={generateScript}
+              disabled={generating || !config.topic}
+              className="w-full text-xs py-3 rounded-xl flex items-center justify-center gap-2 font-semibold text-white bg-gradient-to-r from-indigo-500 to-violet-500 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all disabled:opacity-50"
+            >
               {generating ? <Loader size={14} className="animate-spin" /> : <Sparkles size={14} />}
               {generating ? "Generating..." : config.batch_count > 1 ? `Generate ${config.batch_count} Variations` : "Generate Script"}
-            </button>
+            </motion.button>
           </div>
 
           {/* Right sidebar */}
           <div className="space-y-3">
-            <div className="card border-gold/10">
-              <h3 className="section-header flex items-center gap-2"><Zap size={12} className="text-gold" /> Pro Tips</h3>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.06 }}
+              className="glass rounded-xl p-5"
+            >
+              <div className="h-px bg-gradient-to-r from-indigo-500 via-violet-400 to-indigo-500 mb-3 rounded-full" />
+              <h3 className="section-header flex items-center gap-2 mb-2"><Zap size={12} className="text-indigo-400" /> Pro Tips</h3>
               <div className="space-y-2 text-[10px] text-muted">
-                <p><span className="text-gold font-medium">Hook:</span> First 3 seconds decide if someone watches or scrolls</p>
-                <p><span className="text-gold font-medium">PAS:</span> Best for service businesses selling to pain points</p>
-                <p><span className="text-gold font-medium">Contrarian:</span> Best for standing out and getting comments</p>
-                <p><span className="text-gold font-medium">Batch:</span> Generate 3-5 variations and A/B test hooks</p>
-                <p><span className="text-gold font-medium">Reference:</span> Find a viral video, paste the concept, AI creates your version</p>
+                <p><span className="text-indigo-400 font-medium">Hook:</span> First 3 seconds decide if someone watches or scrolls</p>
+                <p><span className="text-indigo-400 font-medium">PAS:</span> Best for service businesses selling to pain points</p>
+                <p><span className="text-indigo-400 font-medium">Contrarian:</span> Best for standing out and getting comments</p>
+                <p><span className="text-indigo-400 font-medium">Batch:</span> Generate 3-5 variations and A/B test hooks</p>
+                <p><span className="text-indigo-400 font-medium">Reference:</span> Find a viral video, paste the concept, AI creates your version</p>
               </div>
-            </div>
+            </motion.div>
 
             {research?.opportunities && (
-              <div className="card border-accent/10">
-                <h3 className="section-header flex items-center gap-2"><Search size={12} className="text-gold" /> From Research</h3>
-                <div className="space-y-1.5">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.1 }}
+                className="glass rounded-xl p-5"
+              >
+                <h3 className="section-header flex items-center gap-2 mb-2"><Search size={12} className="text-indigo-400" /> From Research</h3>
+                <div className="glass rounded-xl overflow-hidden">
                   {research.opportunities.slice(0, 4).map((opp, i) => (
-                    <button key={i} onClick={() => setConfig({ ...config, topic: opp })}
-                      className="w-full text-left text-[10px] p-2 rounded-lg border border-border hover:border-gold/15 transition-all">
+                    <motion.button
+                      key={i}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.12 + i * 0.04, duration: 0.28 }}
+                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      onClick={() => setConfig({ ...config, topic: opp })}
+                      className="w-full text-left text-[10px] p-2.5 border-b border-white/5 last:border-0 transition-all"
+                    >
                       {opp}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
 
             <div className="card border-gold/10">

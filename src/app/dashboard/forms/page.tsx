@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   FileText, Plus, Copy, Trash2, Eye, Type, Mail, Phone,
   MessageSquare, List, Hash, Star, Upload, CheckSquare,
@@ -348,9 +349,6 @@ export default function FormsPage() {
 
   function generateEmbedCode(): string {
     if (!activeForm) return "";
-    // Use the current origin so copied embed code works in both production
-    // (shortstack.work) and preview/staging environments without hardcoding
-    // the stale Vercel subdomain.
     const origin = typeof window !== "undefined" ? window.location.origin : "https://shortstack.work";
     return `<iframe src="${origin}/forms/embed/${activeForm.id}" width="100%" height="600" frameborder="0" style="border:none;border-radius:12px;"></iframe>`;
   }
@@ -426,30 +424,34 @@ export default function FormsPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold">{forms.length}</p>
-          <p className="text-[10px] text-muted">Total Forms</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-gold">{totalSubmissions}</p>
-          <p className="text-[10px] text-muted">Submissions</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-emerald-400">{avgCompletionRate}%</p>
-          <p className="text-[10px] text-muted">Avg Completion</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-blue-400">{forms.reduce((s, f) => s + f.views, 0)}</p>
-          <p className="text-[10px] text-muted">Total Views</p>
-        </div>
+        {[
+          { value: forms.length, label: "Total Forms", color: "text-white" },
+          { value: totalSubmissions, label: "Submissions", color: "text-indigo-400" },
+          { value: `${avgCompletionRate}%`, label: "Avg Completion", color: "text-emerald-400" },
+          { value: forms.reduce((s, f) => s + f.views, 0), label: "Total Views", color: "text-blue-400" },
+        ].map((tile, i) => (
+          <motion.div
+            key={tile.label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06, duration: 0.4 }}
+            className="glass rounded-xl overflow-hidden"
+          >
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <div className="p-3 text-center">
+              <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
+              <p className="text-[10px] text-muted">{tile.label}</p>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
+      <div className="flex gap-1 glass rounded-lg p-1 w-fit">
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-gold/10 text-gold font-medium" : "text-muted hover:text-foreground"
+              tab === t.id ? "bg-indigo-500/20 text-indigo-300 font-medium" : "text-muted hover:text-foreground"
             }`}>
             {t.icon} {t.label}
           </button>
@@ -460,11 +462,17 @@ export default function FormsPage() {
       {tab === "builder" && !activeForm && (
         <div className="space-y-4">
           {forms.length > 0 && (
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h2 className="section-header">Your Forms</h2>
               <div className="space-y-2">
-                {forms.map(form => (
-                  <div key={form.id} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
+                {forms.map((form, i) => (
+                  <motion.div
+                    key={form.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    className="flex items-center justify-between p-3 rounded-lg glass-md"
+                  >
                     <div className="flex items-center gap-3">
                       <div className="w-3 h-8 rounded-full" style={{ background: form.accentColor }} />
                       <div>
@@ -476,7 +484,7 @@ export default function FormsPage() {
                       <button onClick={() => { setActiveForm(form); setTab("builder"); }} className="btn-secondary text-[9px] py-1 px-2 flex items-center gap-1"><Eye size={10} /> Edit</button>
                       <button onClick={() => { setShowEmbedCode(true); setActiveForm(form); }} className="btn-ghost text-[9px] py-1 px-2 flex items-center gap-1"><Code size={10} /> Embed</button>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -495,7 +503,7 @@ export default function FormsPage() {
       {tab === "builder" && activeForm && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="space-y-4">
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="section-header mb-0">Edit Form</h2>
               </div>
@@ -508,7 +516,7 @@ export default function FormsPage() {
               {/* Fields with drag order */}
               <div className="space-y-2 mb-3">
                 {activeForm.fields.map((field) => (
-                  <div key={field.id} className="p-2.5 rounded-lg bg-surface-light border border-border">
+                  <div key={field.id} className="p-2.5 rounded-lg glass-md">
                     <div className="flex items-center gap-2">
                       <div className="flex flex-col gap-0.5">
                         <button onClick={() => moveField(field.id, "up")} className="text-muted hover:text-foreground" aria-label="Move field up"><ChevronUp size={10} /></button>
@@ -517,21 +525,21 @@ export default function FormsPage() {
                       <span className="text-muted">{FIELD_TYPES.find(t => t.type === field.type)?.icon}</span>
                       <input value={field.label} onChange={e => updateField(field.id, "label", e.target.value)}
                         className="flex-1 bg-transparent text-xs outline-none font-medium" aria-label="Field label" />
-                      <span className="text-[8px] text-muted px-1.5 py-0.5 rounded bg-surface">{field.type}</span>
+                      <span className="text-[8px] text-muted px-1.5 py-0.5 rounded bg-white/5">{field.type}</span>
                       <button onClick={() => updateField(field.id, "required", !field.required)}
-                        className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-gold/10 text-gold" : "text-muted"}`}>
+                        className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-indigo-500/10 text-indigo-300" : "text-muted"}`}>
                         {field.required ? "Required" : "Optional"}
                       </button>
                       <button onClick={() => handleRegenFieldValidation(field.id)} disabled={regenFieldId === field.id}
-                        className="text-muted hover:text-gold p-1" title="Regenerate label / placeholder">
+                        className="text-muted hover:text-indigo-300 p-1" title="Regenerate label / placeholder">
                         {regenFieldId === field.id ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
                       </button>
                       <button
                         onClick={() => setConditionEditorFieldId(conditionEditorFieldId === field.id ? null : field.id)}
                         className={`text-[8px] px-1.5 py-0.5 rounded flex items-center gap-1 ${
                           (field.conditions?.length ?? 0) > 0
-                            ? "bg-gold/10 text-gold"
-                            : "text-muted hover:text-gold"
+                            ? "bg-indigo-500/10 text-indigo-300"
+                            : "text-muted hover:text-indigo-300"
                         }`}
                         title="Add show/hide/require rules"
                       >
@@ -561,7 +569,7 @@ export default function FormsPage() {
               <div className="flex flex-wrap gap-1.5">
                 {FIELD_TYPES.map(ft => (
                   <button key={ft.type} onClick={() => addField(ft.type)}
-                    className="flex items-center gap-1 text-[9px] px-2 py-1 rounded-md text-muted hover:text-foreground bg-surface-light border border-border">
+                    className="flex items-center gap-1 text-[9px] px-2 py-1 rounded-md text-muted hover:text-foreground glass-md">
                     <Plus size={8} /> {ft.label}
                   </button>
                 ))}
@@ -569,8 +577,8 @@ export default function FormsPage() {
             </div>
 
             {/* Form Settings */}
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Settings size={12} className="text-gold" /> Form Settings</h2>
+            <div className="glass rounded-xl p-4">
+              <h2 className="section-header flex items-center gap-2"><Settings size={12} className="text-indigo-400" /> Form Settings</h2>
               <div className="space-y-3">
                 <div>
                   <label className="block text-[10px] text-muted mb-1">Submit Button Text</label>
@@ -601,14 +609,14 @@ export default function FormsPage() {
                     const u = { ...activeForm, webhookUrl: e.target.value }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
                   }} className="input w-full text-xs" placeholder="https://hooks.zapier.com/..." />
                 </div>
-                <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light">
+                <div className="flex items-center justify-between p-2.5 rounded-lg glass-md">
                   <div className="flex items-center gap-2">
-                    <Shield size={12} className="text-gold" />
+                    <Shield size={12} className="text-indigo-400" />
                     <span className="text-xs">Spam Protection</span>
                   </div>
                   <button onClick={() => {
                     const u = { ...activeForm, spamProtection: !activeForm.spamProtection }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
-                  }} className={`w-10 h-5 rounded-full transition-all relative ${activeForm.spamProtection ? "bg-gold" : "bg-surface"}`}>
+                  }} className={`w-10 h-5 rounded-full transition-all relative ${activeForm.spamProtection ? "bg-indigo-500" : "bg-white/10"}`}>
                     <div className="w-4 h-4 rounded-full bg-white absolute top-0.5" style={{ left: activeForm.spamProtection ? 22 : 2 }} />
                   </button>
                 </div>
@@ -616,8 +624,8 @@ export default function FormsPage() {
             </div>
 
             {/* Embed Code */}
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Code size={12} className="text-gold" /> Embed Code</h2>
+            <div className="glass rounded-xl p-4">
+              <h2 className="section-header flex items-center gap-2"><Code size={12} className="text-indigo-400" /> Embed Code</h2>
               <pre className="text-[9px] text-muted bg-black/20 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap">{generateEmbedCode()}</pre>
               <button onClick={() => navigator.clipboard.writeText(generateEmbedCode())} className="btn-primary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
                 <Copy size={12} /> Copy Embed Code
@@ -626,8 +634,8 @@ export default function FormsPage() {
           </div>
 
           {/* Live Preview */}
-          <div className="card sticky top-4">
-            <h2 className="section-header flex items-center gap-2"><Eye size={12} className="text-gold" /> Live Preview</h2>
+          <div className="glass rounded-xl p-4 sticky top-4">
+            <h2 className="section-header flex items-center gap-2"><Eye size={12} className="text-indigo-400" /> Live Preview</h2>
             <div className="rounded-xl p-6" style={{ background: "#ffffff" }}>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 16 }}>{activeForm.name}</h2>
               {(() => {
@@ -705,18 +713,25 @@ export default function FormsPage() {
       {tab === "templates" && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {TEMPLATES.map((tpl, i) => (
-            <button key={i} onClick={() => createFromTemplate(tpl)}
-              className="text-left p-4 rounded-xl transition-all hover:border-gold/15 bg-surface-light border border-border">
+            <motion.button
+              key={i}
+              onClick={() => createFromTemplate(tpl)}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05, duration: 0.35 }}
+              whileHover={{ y: -4, scale: 1.01 }}
+              className="text-left glass rounded-xl p-4 transition-all"
+            >
               <p className="text-sm font-bold mb-1">{tpl.name}</p>
               <p className="text-[10px] text-muted mb-2">{tpl.desc} - {tpl.fields.length} fields</p>
               <div className="flex flex-wrap gap-1">
                 {tpl.fields.map((f, j) => (
-                  <span key={j} className="text-[8px] px-1.5 py-0.5 rounded bg-surface flex items-center gap-0.5">
+                  <span key={j} className="text-[8px] px-1.5 py-0.5 rounded glass-md flex items-center gap-0.5">
                     {FIELD_TYPES.find(ft => ft.type === f.type)?.icon} {f.label}
                   </span>
                 ))}
               </div>
-            </button>
+            </motion.button>
           ))}
         </div>
       )}
@@ -738,8 +753,14 @@ export default function FormsPage() {
             />
           ) : (
             <div className="space-y-2">
-              {INITIAL_SUBMISSIONS.map(sub => (
-                <div key={sub.id} className="card p-4">
+              {INITIAL_SUBMISSIONS.map((sub, i) => (
+                <motion.div
+                  key={sub.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                  className="glass rounded-xl p-4"
+                >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] px-2 py-0.5 rounded-full bg-blue-400/10 text-blue-400">{sub.source}</span>
@@ -754,7 +775,7 @@ export default function FormsPage() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
@@ -764,8 +785,8 @@ export default function FormsPage() {
       {/* Analytics Tab */}
       {tab === "analytics" && (
         <div className="space-y-4">
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Form Funnel</h2>
+          <div className="glass rounded-xl p-4">
+            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-indigo-400" /> Form Funnel</h2>
             <div className="flex items-end gap-4 h-40 justify-center">
               {[
                 { label: "Views", value: 0, color: "#3b82f6" },
@@ -784,14 +805,14 @@ export default function FormsPage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-blue-400" /> Traffic Sources</h2>
               <div className="space-y-2">
                 <div className="text-center py-4"><p className="text-[10px] text-muted">No traffic data yet</p></div>
               </div>
             </div>
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-gold" /> Drop-off Points</h2>
+            <div className="glass rounded-xl p-4">
+              <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-indigo-400" /> Drop-off Points</h2>
               <div className="space-y-2">
                 <div className="text-center py-4"><p className="text-[10px] text-muted">No drop-off data yet</p></div>
               </div>
@@ -803,8 +824,8 @@ export default function FormsPage() {
       {/* Settings Tab */}
       {tab === "settings" && (
         <div className="space-y-4">
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-gold" /> Form Styling</h2>
+          <div className="glass rounded-xl p-4">
+            <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-indigo-400" /> Form Styling</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-[10px] text-muted mb-1">Font Family</label>
@@ -841,7 +862,7 @@ export default function FormsPage() {
               </div>
             </div>
           </div>
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Link2 size={13} className="text-blue-400" /> Integrations</h2>
             <div className="space-y-2">
               {[
@@ -849,13 +870,19 @@ export default function FormsPage() {
                 { name: "Email Notifications", connected: true },
                 { name: "Slack Alerts", connected: false },
                 { name: "Google Sheets", connected: false },
-              ].map(int => (
-                <div key={int.name} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border">
+              ].map((int, i) => (
+                <motion.div
+                  key={int.name}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                  className="flex items-center justify-between p-2.5 rounded-lg glass-md"
+                >
                   <span className="text-xs">{int.name}</span>
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${int.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-surface text-muted"}`}>
+                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${int.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-white/5 text-muted"}`}>
                     {int.connected ? "Connected" : "Connect"}
                   </span>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -921,19 +948,19 @@ function ConditionEditor({ field, otherFields, onChange }: ConditionEditorProps)
 
   if (otherFields.length === 0) {
     return (
-      <div className="mt-2 ml-8 p-2 rounded-md bg-surface border border-border/50 text-[10px] text-muted">
+      <div className="mt-2 ml-8 p-2 rounded-md glass-md text-[10px] text-muted">
         Add at least one other field above to set conditions.
       </div>
     );
   }
 
   return (
-    <div className="mt-2 ml-8 p-2.5 rounded-md bg-surface border border-gold/20 space-y-2">
+    <div className="mt-2 ml-8 p-2.5 rounded-md glass border border-indigo-500/20 space-y-2">
       <div className="flex items-center justify-between">
         <p className="text-[10px] uppercase tracking-wider text-muted">Conditions for {field.label}</p>
         <button
           onClick={addRule}
-          className="flex items-center gap-1 text-[9px] px-2 py-0.5 rounded bg-gold/10 text-gold hover:bg-gold/20"
+          className="flex items-center gap-1 text-[9px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20"
         >
           <Plus size={9} /> Add rule
         </button>

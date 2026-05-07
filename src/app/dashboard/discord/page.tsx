@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Hash, Users, MessageSquare, Volume2, Server, Shield,
   Zap, Terminal, BarChart3, UserCheck, Globe,
@@ -206,22 +207,26 @@ export default function DiscordPage() {
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="card p-3 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-green-400/10 flex items-center justify-center"><Zap size={16} className="text-green-400" /></div>
-          <div><p className="text-lg font-bold font-mono">Online</p><p className="text-[10px] text-muted">Bot Status</p></div>
-        </div>
-        <div className="card p-3 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-[#5865F2]/10 flex items-center justify-center"><Server size={16} className="text-[#5865F2]" /></div>
-          <div><p className="text-lg font-bold font-mono">0</p><p className="text-[10px] text-muted">Servers</p></div>
-        </div>
-        <div className="card p-3 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-gold/10 flex items-center justify-center"><Users size={16} className="text-gold" /></div>
-          <div><p className="text-lg font-bold font-mono">0</p><p className="text-[10px] text-muted">Total Members</p></div>
-        </div>
-        <div className="card p-3 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center"><Hash size={16} className="text-purple-400" /></div>
-          <div><p className="text-lg font-bold font-mono">0</p><p className="text-[10px] text-muted">Total Channels</p></div>
-        </div>
+        {[
+          { icon: Zap, color: "text-green-400", bg: "bg-green-400/10", value: "Online", label: "Bot Status" },
+          { icon: Server, color: "text-[#5865F2]", bg: "bg-[#5865F2]/10", value: "0", label: "Servers" },
+          { icon: Users, color: "text-gold", bg: "bg-gold/10", value: "0", label: "Total Members" },
+          { icon: Hash, color: "text-purple-400", bg: "bg-purple-500/10", value: "0", label: "Total Channels" },
+        ].map((tile, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06, duration: 0.4 }}
+            className="glass rounded-xl overflow-hidden"
+          >
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+            <div className="p-3 flex items-center gap-3">
+              <div className={`w-9 h-9 rounded-lg ${tile.bg} flex items-center justify-center`}><tile.icon size={16} className={tile.color} /></div>
+              <div><p className="text-lg font-bold font-mono">{tile.value}</p><p className="text-[10px] text-muted">{tile.label}</p></div>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* Tabs */}
@@ -238,7 +243,7 @@ export default function DiscordPage() {
       {activeTab === "Install" && (
         <div className="space-y-5">
           {/* Hero / pitch */}
-          <div className="card p-6 bg-gradient-to-br from-[#5865F2]/10 via-[#5865F2]/5 to-transparent border-[#5865F2]/20">
+          <div className="glass rounded-xl p-6 border-[#5865F2]/20" style={{ background: "linear-gradient(135deg, rgba(88,101,242,0.12), rgba(88,101,242,0.04), transparent)" }}>
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#5865F2]/20 flex items-center justify-center shrink-0">
                 <Bot size={24} className="text-[#5865F2]" />
@@ -280,7 +285,14 @@ export default function DiscordPage() {
                 { icon: Shield, color: "text-muted", title: "Minimal permissions",
                   desc: "Trinity asks for Send Messages, Embed Links, Read History, and Slash Commands. Nothing else." },
               ].map((f, i) => (
-                <div key={i} className="card p-4 flex items-start gap-3">
+                <motion.div
+                  key={i}
+                  className="glass rounded-xl p-4 flex items-start gap-3"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  whileHover={{ y: -4, scale: 1.01 }}
+                >
                   <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center shrink-0">
                     <f.icon size={16} className={f.color} />
                   </div>
@@ -288,7 +300,7 @@ export default function DiscordPage() {
                     <p className="text-xs font-semibold mb-1">{f.title}</p>
                     <p className="text-[11px] text-muted leading-relaxed">{f.desc}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -308,10 +320,16 @@ export default function DiscordPage() {
             )}
 
             <div className="space-y-3">
-              {integrations.map(int => {
+              {integrations.map((int, idx) => {
                 const channels = channelsByIntegration[int.id] || [];
                 return (
-                  <div key={int.id} className="card p-4">
+                  <motion.div
+                    key={int.id}
+                    className="glass rounded-xl p-4"
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.04 }}
+                  >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
                         {int.icon_hash ? (
@@ -395,13 +413,14 @@ export default function DiscordPage() {
                       </div>
                     </div>
                   </div>
+                </motion.div>
                 );
               })}
             </div>
           </div>
 
           {/* Day-to-day usage */}
-          <div className="card p-5">
+          <div className="glass rounded-xl p-5">
             <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
               <Zap size={14} className="text-gold" /> What agencies actually do with it
             </h3>
@@ -671,11 +690,20 @@ export default function DiscordPage() {
               { label: "New Members (7d)", value: "—", icon: UserCheck, color: "text-gold" },
               { label: "Voice Hours (7d)", value: "—", icon: Volume2, color: "text-purple-400" },
             ].map((stat, i) => (
-              <div key={i} className="card p-3 text-center">
-                <stat.icon size={16} className={`mx-auto mb-1 ${stat.color}`} />
-                <p className="text-lg font-bold font-mono">{stat.value}</p>
-                <p className="text-[10px] text-muted">{stat.label}</p>
-              </div>
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.4 }}
+                className="glass rounded-xl overflow-hidden"
+              >
+                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+                <div className="p-3 text-center">
+                  <stat.icon size={16} className={`mx-auto mb-1 ${stat.color}`} />
+                  <p className="text-lg font-bold font-mono">{stat.value}</p>
+                  <p className="text-[10px] text-muted">{stat.label}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
           {/* Daily Activity Chart */}
@@ -909,7 +937,7 @@ export default function DiscordPage() {
           <div className="flex items-center gap-2 mb-2">
             <Search size={14} className="text-muted" />
             <input value={searchMembers} onChange={e => setSearchMembers(e.target.value)} placeholder="Search members..."
-              className="text-xs border border-border rounded-lg px-3 py-1.5 bg-surface flex-1" />
+              className="text-xs rounded-lg px-3 py-1.5 flex-1 glass" />
           </div>
           {/* Member Insights */}
           <div className="card p-4">
@@ -928,11 +956,17 @@ export default function DiscordPage() {
                 { label: "Avg Active/Day", value: "0" },
                 { label: "Retention (30d)", value: "--" },
                 { label: "Avg Session", value: "--" },
-              ].map(stat => (
-                <div key={stat.label} className="text-center p-3 rounded-lg bg-surface-light border border-border">
+              ].map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="text-center p-3 glass-md rounded-lg"
+                >
                   <p className="text-lg font-bold font-mono">{stat.value}</p>
                   <p className="text-[10px] text-muted">{stat.label}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

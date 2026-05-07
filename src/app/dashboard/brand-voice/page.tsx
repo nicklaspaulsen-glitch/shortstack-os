@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -306,7 +307,11 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
       )}
 
       {showNewProfile && (
-        <div className="card border border-gold/20">
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass rounded-xl p-4 border border-indigo-500/20"
+        >
           <div className="flex items-center gap-2 mb-3">
             <Users size={16} className="text-gold" />
             <span className="text-sm font-semibold">Create New Voice Profile</span>
@@ -316,13 +321,13 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
               value={newProfileName}
               onChange={e => setNewProfileName(e.target.value)}
               placeholder="Client / Brand name..."
-              className="input flex-1 text-xs"
+              className="glass input flex-1 text-xs"
               onKeyDown={e => e.key === "Enter" && addNewProfile()}
             />
             <button onClick={addNewProfile} className="btn-primary text-xs">Create</button>
             <button onClick={() => setShowNewProfile(false)} className="btn-ghost text-xs"><X size={14} /></button>
           </div>
-        </div>
+        </motion.div>
       )}
 
       <div className="grid grid-cols-12 gap-4">
@@ -334,7 +339,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
               value={searchFilter}
               onChange={e => setSearchFilter(e.target.value)}
               placeholder="Search profiles..."
-              className="input text-xs pl-8 w-full"
+              className="glass input text-xs pl-8 w-full"
             />
           </div>
           {filteredProfiles.length === 0 && profiles.length === 0 && (
@@ -347,11 +352,15 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
             />
           )}
           <div className="space-y-2">
-            {filteredProfiles.map(p => (
-              <div
+            {filteredProfiles.map((p, i) => (
+              <motion.div
                 key={p.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.06 }}
+                whileHover={{ y: -2, scale: 1.01 }}
                 onClick={() => setSelectedProfile(p.id)}
-                className={`card cursor-pointer transition-all ${p.id === selectedProfile ? "border border-gold/40 bg-gold/5" : "hover:border-white/10"}`}
+                className={`glass rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "border border-indigo-500/40 bg-indigo-500/8" : "hover:border-white/10"}`}
               >
                 <div className="flex items-center justify-between">
                   <div>

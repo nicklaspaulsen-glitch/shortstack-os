@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import {
   Shield, Plus, Trash2, Globe, Eye,
@@ -271,33 +272,42 @@ export default function CompetitiveMonitorPage() {
 
       {/* ─── Stats Row ─── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="card p-4">
-          <div className="flex items-center gap-2 text-muted text-xs mb-1"><Target className="w-3.5 h-3.5" /> Monitoring</div>
-          <div className="text-2xl font-bold text-gold">{activeCompetitors}</div>
-          <div className="text-xs text-muted">{competitors.length} total competitors</div>
-        </div>
-        <div className="card p-4">
-          <div className="flex items-center gap-2 text-muted text-xs mb-1"><Activity className="w-3.5 h-3.5" /> Changes (7d)</div>
-          <div className="text-2xl font-bold">{totalChanges}</div>
-          <div className="text-xs text-muted">across all competitors</div>
-        </div>
-        <div className="card p-4">
-          <div className="flex items-center gap-2 text-muted text-xs mb-1"><AlertTriangle className="w-3.5 h-3.5" /> High Priority</div>
-          <div className="text-2xl font-bold text-red-400">{highSeverityChanges}</div>
-          <div className="text-xs text-muted">require attention</div>
-        </div>
-        <div className="card p-4">
-          <div className="flex items-center gap-2 text-muted text-xs mb-1"><Zap className="w-3.5 h-3.5" /> Credits</div>
-          <div className="text-2xl font-bold">{creditsUsed}/{creditsTotal}</div>
-          <div className="w-full bg-surface-light rounded-full h-1.5 mt-2">
-            <div className="bg-gold rounded-full h-1.5 transition-all" style={{ width: `${(creditsUsed / creditsTotal) * 100}%` }} />
-          </div>
-        </div>
+        {[
+          { icon: <Target className="w-3.5 h-3.5" />, label: "Monitoring", value: activeCompetitors, sub: `${competitors.length} total competitors`, color: "text-indigo-400", bar: "from-indigo-500 to-violet-400" },
+          { icon: <Activity className="w-3.5 h-3.5" />, label: "Changes (7d)", value: totalChanges, sub: "across all competitors", color: "text-white", bar: "from-indigo-500 to-blue-400" },
+          { icon: <AlertTriangle className="w-3.5 h-3.5" />, label: "High Priority", value: highSeverityChanges, sub: "require attention", color: "text-red-400", bar: "from-red-500 to-rose-400" },
+          { icon: <Zap className="w-3.5 h-3.5" />, label: "Credits", value: `${creditsUsed}/${creditsTotal}`, sub: null, color: "text-white", bar: "from-amber-500 to-yellow-400" },
+        ].map((stat, i) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: i * 0.07 }}
+            whileHover={{ y: -2 }}
+            className="glass rounded-xl p-4 relative overflow-hidden"
+          >
+            <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${stat.bar}`} />
+            <div className="flex items-center gap-2 text-muted text-xs mb-1">{stat.icon} {stat.label}</div>
+            <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+            {stat.sub ? (
+              <div className="text-xs text-muted">{stat.sub}</div>
+            ) : (
+              <div className="w-full bg-surface-light rounded-full h-1.5 mt-2">
+                <div className="bg-indigo-500 rounded-full h-1.5 transition-all" style={{ width: `${(creditsUsed / creditsTotal) * 100}%` }} />
+              </div>
+            )}
+          </motion.div>
+        ))}
       </div>
 
       {/* ─── Add Competitor Form ─── */}
       {showAddForm && (
-        <div className="card p-5 border border-gold/20">
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="glass-indigo rounded-xl p-5"
+        >
           <h3 className="section-header text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-gold" /> Add New Competitor</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -318,18 +328,25 @@ export default function CompetitiveMonitorPage() {
             </div>
           </div>
           <div className="flex gap-2 mt-4">
-            <button onClick={addCompetitor} className="px-4 py-2 bg-gold text-black rounded-lg text-sm font-medium hover:bg-gold/90 transition">Add Competitor</button>
+            <motion.button whileHover={{ scale: 1.03 }} onClick={addCompetitor} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-500 transition">Add Competitor</motion.button>
             <button onClick={() => setShowAddForm(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-white transition">Cancel</button>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* ─── Competitors Grid ─── */}
       <div>
         <h2 className="section-header text-sm mb-3 flex items-center gap-2"><Shield className="w-4 h-4 text-gold" /> Monitored Competitors</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-          {competitors.map(comp => (
-            <div key={comp.id} className="card p-4 hover:border-gold/20 transition group">
+          {competitors.map((comp, ci) => (
+            <motion.div
+              key={comp.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: ci * 0.06 }}
+              whileHover={{ y: -3 }}
+              className="glass rounded-xl p-4 hover:border-indigo-500/20 transition group"
+            >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold" style={{ backgroundColor: comp.faviconColor }}>
@@ -370,13 +387,13 @@ export default function CompetitiveMonitorPage() {
                   <Trash2 className="w-3 h-3" />
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
 
       {/* ─── Monitoring Schedule ─── */}
-      <div className="card p-4">
+      <div className="glass rounded-xl p-4">
         <h3 className="section-header text-xs flex items-center gap-2 mb-3"><Calendar className="w-3.5 h-3.5 text-gold" /> Monitoring Schedule</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {competitors.filter(c => c.status === "active").slice(0, 4).map(c => (
@@ -430,13 +447,19 @@ export default function CompetitiveMonitorPage() {
 
           {/* Changes list */}
           <div className="space-y-3">
-            {filteredChanges.map(change => {
+            {filteredChanges.map((change, chi) => {
               const meta = CHANGE_TYPE_META[change.type];
               const sevMeta = SEVERITY_META[change.severity];
               const Icon = meta.icon;
               const isExpanded = expandedChange === change.id;
               return (
-                <div key={change.id} className="card p-4 hover:border-border transition">
+                <motion.div
+                  key={change.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: chi * 0.05 }}
+                  className="glass rounded-xl p-4 hover:border-indigo-500/20 transition"
+                >
                   <div className="flex items-start gap-3">
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${meta.color}`}>
                       <Icon className="w-4.5 h-4.5" />
@@ -488,7 +511,7 @@ export default function CompetitiveMonitorPage() {
                       )}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -499,7 +522,7 @@ export default function CompetitiveMonitorPage() {
       {tab === "comparison" && (
         <div className="space-y-6">
           {/* Comparison Table */}
-          <div className="card overflow-hidden">
+          <div className="glass rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
@@ -528,7 +551,7 @@ export default function CompetitiveMonitorPage() {
           </div>
 
           {/* Spider chart representation */}
-          <div className="card p-5">
+          <div className="glass rounded-xl p-5">
             <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-gold" /> Competitive Positioning</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Simple radar visualization */}
@@ -577,7 +600,7 @@ export default function CompetitiveMonitorPage() {
           </div>
 
           {/* AI Analysis */}
-          <div className="card p-5">
+          <div className="glass-indigo rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Sparkles className="w-4 h-4 text-gold" /> AI Competitive Analysis</h3>
               <button onClick={generateAiAnalysis} disabled={generatingAnalysis} className="flex items-center gap-2 px-3 py-1.5 bg-gold/10 text-gold rounded-lg text-xs font-medium hover:bg-gold/20 transition disabled:opacity-50">
@@ -611,7 +634,12 @@ export default function CompetitiveMonitorPage() {
 
           {/* Add alert form */}
           {showAddAlert && (
-            <div className="card p-5 border border-gold/20">
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.28 }}
+              className="glass-indigo rounded-xl p-5"
+            >
               <h4 className="text-sm font-medium mb-4">New Alert Rule</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -653,19 +681,25 @@ export default function CompetitiveMonitorPage() {
                 </div>
               </div>
               <div className="flex gap-2 mt-4">
-                <button onClick={addAlertRule} className="px-4 py-2 bg-gold text-black rounded-lg text-sm font-medium hover:bg-gold/90 transition">Create Rule</button>
+                <motion.button whileHover={{ scale: 1.03 }} onClick={addAlertRule} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-500 transition">Create Rule</motion.button>
                 <button onClick={() => setShowAddAlert(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-white transition">Cancel</button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* Alert rules list */}
           <div className="space-y-2">
-            {alertRules.map(rule => {
+            {alertRules.map((rule, ri) => {
               const triggerMeta = rule.triggerType === "any" ? null : CHANGE_TYPE_META[rule.triggerType];
               const urgencyColor = rule.urgency === "critical" ? "text-red-400 bg-red-500/10" : rule.urgency === "normal" ? "text-amber-400 bg-amber-500/10" : "text-emerald-400 bg-emerald-500/10";
               return (
-                <div key={rule.id} className={`card p-4 flex items-center gap-4 ${!rule.enabled ? "opacity-50" : ""}`}>
+                <motion.div
+                  key={rule.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: ri * 0.05 }}
+                  className={`glass rounded-xl p-4 flex items-center gap-4 hover:border-indigo-500/20 transition ${!rule.enabled ? "opacity-50" : ""}`}
+                >
                   <button onClick={() => setAlertRules(prev => prev.map(r => r.id === rule.id ? { ...r, enabled: !r.enabled } : r))}
                     className={`w-10 h-5 rounded-full transition relative ${rule.enabled ? "bg-gold" : "bg-surface-light"}`}>
                     <div className={`absolute w-4 h-4 rounded-full bg-white top-0.5 transition-all ${rule.enabled ? "left-5.5" : "left-0.5"}`}
@@ -691,7 +725,7 @@ export default function CompetitiveMonitorPage() {
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -702,7 +736,7 @@ export default function CompetitiveMonitorPage() {
       {tab === "insights" && (
         <div className="space-y-6">
           {/* AI Market Summary */}
-          <div className="card p-5 border border-gold/10">
+          <div className="glass-indigo rounded-xl p-5">
             <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-gold" /> AI Market Summary</h3>
             <div className="text-sm text-muted leading-relaxed space-y-2">
               <p>The agency SaaS market continues to consolidate around AI-first platforms. Over the past week, <strong className="text-white">3 of 8 tracked competitors</strong> made AI-related announcements. Pricing is trending upward (AgencyFlow +34%), while MarketMind bucks the trend with a free tier launch. The enterprise segment is heating up with both AgencyFlow and ClientPulse making upmarket moves.</p>
@@ -711,7 +745,7 @@ export default function CompetitiveMonitorPage() {
           </div>
 
           {/* Activity Heatmap */}
-          <div className="card p-5">
+          <div className="glass rounded-xl p-5">
             <h3 className="section-header text-sm flex items-center gap-2 mb-4"><LayoutGrid className="w-4 h-4 text-gold" /> Competitor Activity Heatmap (Last 4 Weeks)</h3>
             <div className="overflow-x-auto">
               <div className="min-w-[500px]">
@@ -755,7 +789,14 @@ export default function CompetitiveMonitorPage() {
                 { competitor: "MarketMind AI", title: "Free Tier Introduction", desc: "The free plan targets your starter-tier audience. Early data suggests strong adoption -- expect 5-10% erosion of your trial-to-paid funnel within 60 days.", severity: "critical" },
                 { competitor: "ClientPulse", title: "Enterprise Sales Push", desc: "The VP of Enterprise Sales hire signals serious upmarket intent. Combined with real-time dashboards, they will compete for your mid-market accounts moving upscale.", severity: "high" },
               ].map((threat, i) => (
-                <div key={i} className="card p-4 border border-red-500/10">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.07 }}
+                  whileHover={{ y: -3 }}
+                  className="glass rounded-xl p-4 border border-red-500/10"
+                >
                   <div className="flex items-center gap-2 mb-2">
                     <AlertTriangle className="w-4 h-4 text-red-400" />
                     <span className="text-xs font-medium text-red-400">{threat.competitor}</span>
@@ -763,7 +804,7 @@ export default function CompetitiveMonitorPage() {
                   </div>
                   <div className="text-sm font-medium mb-1.5">{threat.title}</div>
                   <p className="text-xs text-muted leading-relaxed">{threat.desc}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -777,20 +818,27 @@ export default function CompetitiveMonitorPage() {
                 { title: "ContentEngine Feature Gap", desc: "ContentEngine has only 22 features vs your 42. Their customer base is content-focused and likely outgrowing the platform. Position your content features in comparison content.", impact: "medium" },
                 { title: "Enterprise White Space", desc: "No competitor has a dedicated enterprise offering with SOC2, SSO, and advanced permissions. First mover advantage could capture the growing segment of agencies with 50+ employees.", impact: "high" },
               ].map((opp, i) => (
-                <div key={i} className="card p-4 border border-gold/10">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.07 }}
+                  whileHover={{ y: -3 }}
+                  className="glass-indigo rounded-xl p-4"
+                >
                   <div className="flex items-center gap-2 mb-2">
                     <Target className="w-4 h-4 text-gold" />
                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${opp.impact === "high" ? "bg-gold/10 text-gold" : "bg-amber-500/10 text-amber-400"}`}>{opp.impact} impact</span>
                   </div>
                   <div className="text-sm font-medium mb-1.5">{opp.title}</div>
                   <p className="text-xs text-muted leading-relaxed">{opp.desc}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
 
           {/* Market Share Estimation */}
-          <div className="card p-5">
+          <div className="glass rounded-xl p-5">
             <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-gold" /> Estimated Market Share (Agency SaaS Segment)</h3>
             <div className="space-y-3">
               {[

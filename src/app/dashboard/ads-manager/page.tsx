@@ -19,6 +19,7 @@
  */
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
   Megaphone,
@@ -108,23 +109,26 @@ export default function AdsManagerPage() {
       />
 
       {/* Tabs */}
-      <div className="flex flex-wrap gap-1 border-b border-white/5 px-1">
-        {TABS.map((t) => {
+      <div className="glass rounded-xl px-2 py-1 flex flex-wrap gap-1">
+        {TABS.map((t, i) => {
           const Icon = t.icon;
           const isActive = t.id === tab;
           return (
-            <button
+            <motion.button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm border-b-2 -mb-px transition-colors ${
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.06 }}
+              className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border-b-2 -mb-px transition-colors ${
                 isActive
-                  ? "border-gold text-gold"
+                  ? "border-indigo-500 text-indigo-400 bg-indigo-500/8"
                   : "border-transparent text-muted hover:text-text"
               }`}
             >
               <Icon size={14} />
               {t.label}
-            </button>
+            </motion.button>
           );
         })}
       </div>
@@ -134,13 +138,17 @@ export default function AdsManagerPage() {
       )}
 
       {/* Tab content */}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
         {tab === "overview" && <OverviewPanel />}
         {tab === "campaigns" && <CampaignsTable />}
         {tab === "insights" && <InsightsPanel />}
         {tab === "budgets" && <BudgetsPanel />}
         {tab === "connect" && <ZernioConnectPanel />}
-      </div>
+      </motion.div>
     </div>
   );
 }

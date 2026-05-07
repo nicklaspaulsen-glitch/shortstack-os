@@ -11,6 +11,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import {
   FlaskConical,
   Plus,
@@ -70,6 +71,8 @@ const PARENT_LABEL: Record<ParentType, string> = {
   funnel_step: "Funnel Step",
   email: "Email",
 };
+
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
 
 function conversionRate(v: Variant): number {
   if (v.views <= 0) return 0;
@@ -163,15 +166,15 @@ export default function AbTestsPage() {
       />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <SummaryTile label="Running" value={summary.running} icon={<Clock size={16} />} color="text-emerald-400" />
-        <SummaryTile label="Completed" value={summary.completed} icon={<Trophy size={16} />} color="text-blue-400" />
-        <SummaryTile label="Total Lift" value={`+${summary.totalLift}%`} icon={<TrendingUp size={16} />} color="text-purple-400" />
+        <SummaryTile label="Running" value={summary.running} icon={<Clock size={16} />} color="text-emerald-400" index={0} />
+        <SummaryTile label="Completed" value={summary.completed} icon={<Trophy size={16} />} color="text-blue-400" index={1} />
+        <SummaryTile label="Total Lift" value={`+${summary.totalLift}%`} icon={<TrendingUp size={16} />} color="text-purple-400" index={2} />
       </div>
 
       {loading ? (
         <div className="grid grid-cols-1 gap-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-24 rounded-xl bg-white/4 animate-pulse" />
+            <div key={i} className="h-24 rounded-xl glass-md animate-pulse" />
           ))}
         </div>
       ) : tests.length === 0 ? (
@@ -195,7 +198,7 @@ export default function AbTestsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3">
-          {tests.map((test) => {
+          {tests.map((test, i) => {
             const sc = STATUS_CONFIG[test.status];
             const winner = bestVariant(test);
             const baseline = test.ab_variants[0];
@@ -203,9 +206,13 @@ export default function AbTestsPage() {
               ? conversionRate(winner) - conversionRate(baseline)
               : 0;
             return (
-              <div
+              <motion.div
                 key={test.id}
-                className="group relative bg-zinc-900/60 border border-white/8 rounded-xl p-4 hover:border-white/15 transition-all"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05, duration: 0.4 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="group relative glass rounded-xl p-4"
               >
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="min-w-0">
@@ -235,7 +242,7 @@ export default function AbTestsPage() {
                         className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs border ${
                           isWinner
                             ? "bg-amber-400/10 border-amber-400/30 text-amber-300"
-                            : "bg-white/4 border-white/8 text-zinc-300"
+                            : "glass-md text-zinc-300"
                         }`}
                       >
                         {isWinner && <Trophy size={11} />}
@@ -290,7 +297,7 @@ export default function AbTestsPage() {
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -306,18 +313,28 @@ function SummaryTile({
   value,
   icon,
   color,
+  index,
 }: {
   label: string;
   value: string | number;
   icon: React.ReactNode;
   color: string;
+  index: number;
 }) {
   return (
-    <div className="bg-zinc-900/40 border border-white/6 rounded-xl p-4">
-      <div className={`${color} mb-2`}>{icon}</div>
-      <div className="text-white font-bold text-xl">{value}</div>
-      <div className="text-zinc-500 text-xs mt-0.5">{label}</div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06, duration: 0.4 }}
+      className="glass rounded-xl overflow-hidden"
+    >
+      <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+      <div className="p-4">
+        <div className={`${color} mb-2`}>{icon}</div>
+        <div className="text-white font-bold text-xl">{value}</div>
+        <div className="text-zinc-500 text-xs mt-0.5">{label}</div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -363,7 +380,12 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-6 w-full max-w-md">
+      <motion.div
+        initial={{ opacity: 0, y: 12, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        className="glass rounded-2xl p-6 w-full max-w-md"
+      >
         <h2 className="text-lg font-semibold text-white mb-4">New A/B Test</h2>
         <div className="space-y-4">
           <div>
@@ -372,7 +394,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Homepage hero v2"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500"
+              className="w-full glass rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500"
             />
           </div>
           <div>
@@ -380,7 +402,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
             <select
               value={parentType}
               onChange={(e) => setParentType(e.target.value as ParentType)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+              className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
             >
               <option value="landing_page">Landing Page</option>
               <option value="funnel_step">Funnel Step</option>
@@ -393,7 +415,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
               value={parentId}
               onChange={(e) => setParentId(e.target.value)}
               placeholder="UUID of the surface to test"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500 font-mono"
+              className="w-full glass rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500 font-mono"
             />
             <p className="text-[11px] text-white/40 mt-1">
               Find this id from the URL of the landing page / funnel step / email.
@@ -403,7 +425,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
         <div className="flex gap-3 mt-6">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 text-white/80 rounded-lg text-sm transition-colors"
+            className="flex-1 px-4 py-2 glass hover:bg-white/10 text-white/80 rounded-lg text-sm transition-colors"
           >
             Cancel
           </button>
@@ -415,7 +437,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
             {submitting ? "Creating…" : "Create Test"}
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

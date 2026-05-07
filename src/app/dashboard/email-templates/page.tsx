@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   Mail, Copy, Send, X, FileText, Tag, Sparkles,
   Search, Monitor, Smartphone, Eye, BarChart3,
@@ -75,6 +76,8 @@ const categoryColors: Record<string, string> = {
   Sales: "bg-indigo-500/10 text-indigo-400",
   Retention: "bg-amber-500/10 text-amber-400",
 };
+
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
 
 export default function EmailTemplatesPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("gallery");
@@ -211,9 +214,9 @@ export default function EmailTemplatesPage() {
           <div className="flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 min-w-[200px]">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-              <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="Search templates..." aria-label="Search email templates" />
+              <input value={search} onChange={e => setSearch(e.target.value)} className="glass rounded-xl w-full pl-9 text-xs px-3 py-2 text-foreground placeholder:text-muted outline-none" placeholder="Search templates..." aria-label="Search email templates" />
             </div>
-            <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="input text-xs">
+            <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="glass rounded-xl text-xs px-3 py-2 text-foreground outline-none">
               <option value="name">Sort: Name</option>
               <option value="opens">Sort: Opens</option>
               <option value="replies">Sort: Replies</option>
@@ -233,31 +236,41 @@ export default function EmailTemplatesPage() {
             {filtered.length === 0 && (
               <div className="col-span-4 text-center py-12 text-muted text-xs">No templates yet. Click &quot;New Template&quot; to get started.</div>
             )}
-            {filtered.map(template => (
-              <div key={template.id} onClick={() => openTemplate(template)}
-                className="p-4 rounded-xl bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer group">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-semibold truncate">{template.name}</p>
-                    <p className="text-[10px] text-muted truncate mt-0.5">{template.subject}</p>
+            {filtered.map((template, i) => (
+              <motion.div
+                key={template.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05, duration: 0.4 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                onClick={() => openTemplate(template)}
+                className="glass rounded-xl overflow-hidden cursor-pointer group"
+              >
+                <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                <div className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-semibold truncate">{template.name}</p>
+                      <p className="text-[10px] text-muted truncate mt-0.5">{template.subject}</p>
+                    </div>
+                    {template.shared && <Star size={10} className="text-gold flex-shrink-0 mt-0.5" />}
                   </div>
-                  {template.shared && <Star size={10} className="text-gold flex-shrink-0 mt-0.5" />}
-                </div>
-                {/* Mini preview */}
-                <div className="bg-surface rounded-lg p-2 mb-2 text-[8px] text-muted leading-relaxed line-clamp-3">
-                  {template.body.substring(0, 120)}...
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded ${categoryColors[template.category] || "bg-white/5 text-muted"}`}>
-                    {template.category}
-                  </span>
-                  <div className="flex items-center gap-2 text-[8px] text-muted">
-                    <span className="flex items-center gap-0.5"><Eye size={8} /> {template.opens}%</span>
-                    <span className="flex items-center gap-0.5"><Mail size={8} /> {template.replies}%</span>
+                  {/* Mini preview */}
+                  <div className="glass-md rounded-lg p-2 mb-2 text-[8px] text-muted leading-relaxed line-clamp-3">
+                    {template.body.substring(0, 120)}...
                   </div>
+                  <div className="flex items-center justify-between">
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded ${categoryColors[template.category] || "bg-white/5 text-muted"}`}>
+                      {template.category}
+                    </span>
+                    <div className="flex items-center gap-2 text-[8px] text-muted">
+                      <span className="flex items-center gap-0.5"><Eye size={8} /> {template.opens}%</span>
+                      <span className="flex items-center gap-0.5"><Mail size={8} /> {template.replies}%</span>
+                    </div>
+                  </div>
+                  <p className="text-[8px] text-muted mt-1.5">v{template.version} | {template.lastEdited}</p>
                 </div>
-                <p className="text-[8px] text-muted mt-1.5">v{template.version} | {template.lastEdited}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -298,7 +311,7 @@ export default function EmailTemplatesPage() {
               </div>
               {/* Merge Tag Helper */}
               <div className="space-y-3">
-                <div className="card">
+                <div className="glass rounded-xl p-4">
                   <h4 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Merge Tags</h4>
                   <div className="space-y-1">
                     {MERGE_TAGS.map(tag => (
@@ -311,7 +324,7 @@ export default function EmailTemplatesPage() {
                   </div>
                 </div>
                 {/* Preview Modes */}
-                <div className="card">
+                <div className="glass rounded-xl p-4">
                   <h4 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Preview Mode</h4>
                   <div className="flex gap-1">
                     {[
@@ -335,10 +348,14 @@ export default function EmailTemplatesPage() {
               </div>
             </div>
           ) : (
-            <div className="card text-center py-12">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glass rounded-xl text-center py-12"
+            >
               <Edit3 size={24} className="mx-auto mb-2 text-muted/30" />
               <p className="text-sm text-muted">Select a template from the Gallery to edit</p>
-            </div>
+            </motion.div>
           )}
         </div>
       )}
@@ -353,21 +370,41 @@ export default function EmailTemplatesPage() {
               { label: "Avg Reply Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.replies, 0) / TEMPLATES.length)}%` : "0%", icon: <Mail size={12} />, color: "text-purple-400" },
               { label: "Top Performer", value: TEMPLATES.length > 0 ? [...TEMPLATES].sort((a, b) => b.replies - a.replies)[0].name : "N/A", icon: <Star size={12} />, color: "text-gold" },
             ].map((stat, i) => (
-              <div key={i} className="card text-center p-3">
-                <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
-                <p className="text-sm font-bold">{stat.value}</p>
-                <p className="text-[9px] text-muted">{stat.label}</p>
-              </div>
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.4 }}
+                className="glass rounded-xl overflow-hidden text-center"
+              >
+                <div style={{ height: 3, background: RAINBOW }} />
+                <div className="p-3">
+                  <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+                  <p className="text-sm font-bold">{stat.value}</p>
+                  <p className="text-[9px] text-muted">{stat.label}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
-          <div className="card">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="glass rounded-xl p-4"
+          >
             <h3 className="text-sm font-semibold mb-3">Template Performance Ranking</h3>
             <div className="space-y-2">
               {TEMPLATES.length === 0 && (
                 <p className="text-center text-[10px] text-muted py-6">No templates yet. Performance data will appear here once templates are created and used.</p>
               )}
               {[...TEMPLATES].sort((a, b) => b.replies - a.replies).map((t, i) => (
-                <div key={t.id} className="flex items-center gap-3 p-2.5 rounded bg-surface-light">
+                <motion.div
+                  key={t.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                  className="flex items-center gap-3 p-2.5 rounded glass-md"
+                >
                   <span className="text-[9px] text-muted font-bold w-6 text-center">#{i + 1}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium truncate">{t.name}</p>
@@ -378,10 +415,10 @@ export default function EmailTemplatesPage() {
                     <div><p className="font-bold text-green-400">{t.clicks}%</p><p className="text-[8px] text-muted">Clicks</p></div>
                     <div><p className="font-bold text-purple-400">{t.replies}%</p><p className="text-[8px] text-muted">Replies</p></div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -395,15 +432,21 @@ export default function EmailTemplatesPage() {
             {TEMPLATES.filter(t => t.version > 1).length === 0 && (
               <p className="text-center text-[10px] text-muted py-6">No version history yet. Versions will appear here as templates are edited.</p>
             )}
-            {TEMPLATES.filter(t => t.version > 1).map(t => (
-              <div key={t.id} className="card p-4">
+            {TEMPLATES.filter(t => t.version > 1).map((t, i) => (
+              <motion.div
+                key={t.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="glass rounded-xl p-4"
+              >
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-xs font-semibold">{t.name}</p>
                   <span className="text-[9px] px-2 py-0.5 rounded bg-gold/10 text-gold">v{t.version} (current)</span>
                 </div>
                 <div className="space-y-1.5">
                   {Array.from({ length: t.version }, (_, i) => t.version - i).map(v => (
-                    <div key={v} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
+                    <div key={v} className="flex items-center justify-between p-2 rounded glass-md text-[10px]">
                       <div className="flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full ${v === t.version ? "bg-gold" : "bg-muted"}`} />
                         <span className={v === t.version ? "font-semibold" : "text-muted"}>Version {v}</span>
@@ -417,7 +460,7 @@ export default function EmailTemplatesPage() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -426,7 +469,11 @@ export default function EmailTemplatesPage() {
       {/* ===== AI TEMPLATE GENERATOR ===== */}
       {activeTab === "ai-generate" && (
         <div className="space-y-4">
-          <div className="card border-gold/10 p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass rounded-xl border-gold/10 p-6"
+          >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
                 <Sparkles size={18} className="text-gold" />
@@ -484,10 +531,14 @@ export default function EmailTemplatesPage() {
                 {aiGenerating ? "Generating..." : "Generate Template"}
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {aiGenerated && (
-            <div className="card">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glass rounded-xl p-4"
+            >
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <h4 className="text-sm font-semibold">{aiGenerated.name}</h4>
@@ -526,7 +577,7 @@ export default function EmailTemplatesPage() {
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
           )}
         </div>
       )}
@@ -543,14 +594,20 @@ export default function EmailTemplatesPage() {
             <p className="text-xs text-muted text-center py-8">No variants yet.</p>
           )}
           {!variantsLoading && variants.map((v, i) => (
-            <div key={i} className="card p-3 border-gold/10">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+              className="glass rounded-xl p-3 border-gold/10"
+            >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] px-2 py-0.5 rounded bg-gold/10 text-gold font-semibold">{v.angle}</span>
                 <button onClick={() => { setEditedSubject(v.subject); setEditedBody(v.body); setShowVariantsModal(false); toast.success("Variant applied"); }} className="btn-primary text-[10px] py-1 px-2">Apply</button>
               </div>
               <p className="text-xs font-semibold mb-1">{v.subject}</p>
               <p className="text-[10px] text-muted whitespace-pre-wrap">{v.body}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </Modal>
@@ -559,7 +616,12 @@ export default function EmailTemplatesPage() {
       {activeTab === "import-export" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="card text-center p-6">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0 }}
+              className="glass rounded-xl text-center p-6"
+            >
               <Upload size={24} className="mx-auto mb-2 text-gold" />
               <h3 className="text-sm font-semibold mb-1">Import Templates</h3>
               <p className="text-[10px] text-muted mb-3">Upload HTML or JSON template files</p>
@@ -568,8 +630,13 @@ export default function EmailTemplatesPage() {
                 <p className="text-[8px] text-muted mt-1">Supports .html, .json, .mjml</p>
               </div>
               <button className="btn-secondary text-xs">Browse Files</button>
-            </div>
-            <div className="card text-center p-6">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              className="glass rounded-xl text-center p-6"
+            >
               <Download size={24} className="mx-auto mb-2 text-gold" />
               <h3 className="text-sm font-semibold mb-1">Export Templates</h3>
               <p className="text-[10px] text-muted mb-3">Download your templates for backup or sharing</p>
@@ -584,10 +651,15 @@ export default function EmailTemplatesPage() {
                   <Copy size={12} /> Export Selected Only
                 </button>
               </div>
-            </div>
+            </motion.div>
           </div>
           {/* Template Sharing */}
-          <div className="card">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="glass rounded-xl p-4"
+          >
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Share2 size={14} className="text-gold" /> Template Sharing
             </h3>
@@ -595,8 +667,14 @@ export default function EmailTemplatesPage() {
               {TEMPLATES.length === 0 && (
                 <p className="text-center text-[10px] text-muted py-4">No templates to share yet.</p>
               )}
-              {TEMPLATES.map(t => (
-                <div key={t.id} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
+              {TEMPLATES.map((t, i) => (
+                <motion.div
+                  key={t.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                  className="flex items-center justify-between p-2 rounded glass-md text-[10px]"
+                >
                   <span className="font-medium">{t.name}</span>
                   <div className="flex items-center gap-2">
                     <span className={`text-[9px] px-1.5 py-0.5 rounded ${t.shared ? "bg-green-400/10 text-green-400" : "bg-white/5 text-muted"}`}>
@@ -606,18 +684,22 @@ export default function EmailTemplatesPage() {
                       {t.shared ? "Unshare" : "Share"}
                     </button>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Template Editor Modal */}
       {selectedTemplate && activeTab === "gallery" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-surface border border-border rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col">
-            <div className="flex items-center justify-between p-4 border-b border-border">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="glass rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col"
+          >
+            <div className="flex items-center justify-between p-4 border-b border-white/10">
               <div className="flex items-center gap-2">
                 <Tag size={14} className="text-gold" />
                 <h3 className="text-sm font-bold">{selectedTemplate.name}</h3>
@@ -641,13 +723,13 @@ export default function EmailTemplatesPage() {
                 <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} rows={12} className="input w-full text-xs resize-none font-mono" />
               </div>
             </div>
-            <div className="flex items-center gap-2 p-4 border-t border-border">
+            <div className="flex items-center gap-2 p-4 border-t border-white/10">
               <button className="btn-primary flex items-center gap-1.5 text-[10px]"><Copy size={12} /> Copy</button>
               <button onClick={handleGenerateVariants} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Sparkles size={12} /> A/B Variants</button>
               <button onClick={() => { setActiveTab("editor"); }} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Edit3 size={12} /> Full Editor</button>
               <button onClick={() => setSelectedTemplate(null)} className="btn-primary flex items-center gap-1.5 text-[10px] ml-auto"><Send size={12} /> Use Template</button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

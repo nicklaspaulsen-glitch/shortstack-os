@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
@@ -49,6 +50,10 @@ function newQuestion(): Question {
     required: false,
   };
 }
+
+const RAINBOW_BAR = (
+  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
+);
 
 export default function SurveysPage() {
   const supabase = createClient();
@@ -199,7 +204,7 @@ export default function SurveysPage() {
             onClick={() => setActiveTab(t)}
             className={`px-4 py-2 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${
               activeTab === t
-                ? "border-orange-400 text-orange-400"
+                ? "border-indigo-400 text-indigo-400"
                 : "border-transparent text-white/50 hover:text-white/80"
             }`}
           >
@@ -209,10 +214,15 @@ export default function SurveysPage() {
       </div>
 
       {activeTab === "responses" ? (
-        <div className="rounded-xl border border-white/10 bg-white/5 p-8 text-center text-white/40">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="glass rounded-xl p-8 text-center text-white/40"
+        >
           <BarChart2 size={36} className="mx-auto mb-3 opacity-40" />
           <p className="text-sm">Select a survey to view its responses.</p>
-        </div>
+        </motion.div>
       ) : loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map(i => (
@@ -220,66 +230,76 @@ export default function SurveysPage() {
           ))}
         </div>
       ) : surveys.length === 0 ? (
-        <div className="rounded-xl border border-white/10 bg-white/5 p-12 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="glass rounded-xl p-12 text-center"
+        >
           <ClipboardCheck size={40} className="mx-auto mb-4 text-white/20" />
           <p className="text-white/60 mb-4">No surveys yet. Create your first one.</p>
           <button
             onClick={openCreate}
-            className="px-4 py-2 rounded-lg bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 text-sm font-medium transition-colors"
+            className="px-4 py-2 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-sm font-medium transition-colors"
           >
             <Plus size={14} className="inline mr-1" /> New Survey
           </button>
-        </div>
+        </motion.div>
       ) : (
         <div className="space-y-3">
-          {surveys.map(s => (
-            <div
+          {surveys.map((s, i) => (
+            <motion.div
               key={s.id}
-              className="rounded-xl border border-white/10 bg-white/5 hover:bg-white/[0.08] p-4 flex items-center gap-4 transition-colors"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.04, duration: 0.35 }}
+              className="glass rounded-xl overflow-hidden"
             >
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span
-                    className={`w-2 h-2 rounded-full ${s.is_active ? "bg-green-400" : "bg-white/20"}`}
-                  />
-                  <span className="font-medium text-white truncate">{s.title}</span>
+              <div className="p-4 flex items-center gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span
+                      className={`w-2 h-2 rounded-full ${s.is_active ? "bg-green-400" : "bg-white/20"}`}
+                    />
+                    <span className="font-medium text-white truncate">{s.title}</span>
+                  </div>
+                  <p className="text-xs text-white/40 truncate">
+                    {s.description || "No description"}
+                  </p>
+                  <p className="text-xs text-white/30 mt-1">
+                    {s.questions.length} questions · {s.response_count} responses
+                  </p>
                 </div>
-                <p className="text-xs text-white/40 truncate">
-                  {s.description || "No description"}
-                </p>
-                <p className="text-xs text-white/30 mt-1">
-                  {s.questions.length} questions · {s.response_count} responses
-                </p>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => toggleActive(s)}
+                    className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-colors"
+                    title={s.is_active ? "Deactivate" : "Activate"}
+                  >
+                    <ToggleLeft size={16} />
+                  </button>
+                  <button
+                    onClick={() => copyLink(s)}
+                    className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-colors"
+                    title="Copy share link"
+                  >
+                    <Share2 size={16} />
+                  </button>
+                  <button
+                    onClick={() => openEdit(s)}
+                    className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-colors"
+                  >
+                    <Edit2 size={16} />
+                  </button>
+                  <button
+                    onClick={() => deleteSurvey(s.id)}
+                    className="p-1.5 rounded-lg hover:bg-red-500/20 text-white/40 hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => toggleActive(s)}
-                  className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-colors"
-                  title={s.is_active ? "Deactivate" : "Activate"}
-                >
-                  <ToggleLeft size={16} />
-                </button>
-                <button
-                  onClick={() => copyLink(s)}
-                  className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-colors"
-                  title="Copy share link"
-                >
-                  <Share2 size={16} />
-                </button>
-                <button
-                  onClick={() => openEdit(s)}
-                  className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-colors"
-                >
-                  <Edit2 size={16} />
-                </button>
-                <button
-                  onClick={() => deleteSurvey(s.id)}
-                  className="p-1.5 rounded-lg hover:bg-red-500/20 text-white/40 hover:text-red-400 transition-colors"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
@@ -297,7 +317,7 @@ export default function SurveysPage() {
             <input
               value={title}
               onChange={e => setTitle(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-orange-400/50"
+              className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
               placeholder="e.g. Client Satisfaction Survey"
             />
           </div>
@@ -306,7 +326,7 @@ export default function SurveysPage() {
             <input
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-orange-400/50"
+              className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
               placeholder="Brief intro for respondents"
             />
           </div>
@@ -316,7 +336,7 @@ export default function SurveysPage() {
               <label className="text-xs text-white/50">Questions</label>
               <button
                 onClick={addQuestion}
-                className="flex items-center gap-1 text-xs text-orange-400 hover:text-orange-300"
+                className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300"
               >
                 <Plus size={12} /> Add
               </button>
@@ -328,7 +348,7 @@ export default function SurveysPage() {
                   draggable
                   onDragStart={() => onDragStart(idx)}
                   onDragOver={e => onDragOver(e, idx)}
-                  className="rounded-lg border border-white/10 bg-white/5 p-3"
+                  className="glass-md rounded-lg p-3"
                 >
                   <div className="flex items-start gap-2">
                     <GripVertical
@@ -340,7 +360,7 @@ export default function SurveysPage() {
                         <input
                           value={q.label}
                           onChange={e => updateQuestion(idx, { label: e.target.value })}
-                          className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-white text-sm focus:outline-none focus:border-orange-400/50"
+                          className="flex-1 glass rounded-lg px-2 py-1.5 text-white text-sm focus:outline-none focus:border-indigo-400/50"
                           placeholder="Question text"
                         />
                         <select
@@ -348,7 +368,7 @@ export default function SurveysPage() {
                           onChange={e =>
                             updateQuestion(idx, { type: e.target.value as QuestionType })
                           }
-                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-white text-xs focus:outline-none"
+                          className="glass rounded-lg px-2 py-1.5 text-white text-xs focus:outline-none"
                         >
                           {(Object.keys(QUESTION_LABELS) as QuestionType[]).map(t => (
                             <option key={t} value={t}>
@@ -364,7 +384,7 @@ export default function SurveysPage() {
                               key={oIdx}
                               value={opt}
                               onChange={e => updateOption(idx, oIdx, e.target.value)}
-                              className="w-full bg-white/5 border border-white/10 rounded px-2 py-1 text-white text-xs focus:outline-none"
+                              className="w-full glass rounded px-2 py-1 text-white text-xs focus:outline-none"
                               placeholder={`Option ${oIdx + 1}`}
                             />
                           ))}
@@ -381,7 +401,7 @@ export default function SurveysPage() {
                           type="checkbox"
                           checked={q.required}
                           onChange={e => updateQuestion(idx, { required: e.target.checked })}
-                          className="accent-orange-400"
+                          className="accent-indigo-400"
                         />
                         Required
                       </label>
@@ -408,7 +428,7 @@ export default function SurveysPage() {
             <button
               onClick={save}
               disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium transition-colors disabled:opacity-50"
             >
               {saving && <Loader size={13} className="animate-spin" />}
               {editSurvey ? "Save Changes" : "Create Survey"}
@@ -426,7 +446,7 @@ export default function SurveysPage() {
               <input
                 readOnly
                 value={shareUrl}
-                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none"
+                className="flex-1 glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none"
               />
               <button
                 onClick={() => {

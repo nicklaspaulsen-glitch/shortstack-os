@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
@@ -53,6 +54,8 @@ const STATUS_CONFIG: Record<
     icon: <CheckCircle size={11} />,
   },
 };
+
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
 
 function fmtUSD(cents: number) {
   return new Intl.NumberFormat("en-US", {
@@ -207,15 +210,43 @@ export default function CommissionTrackerPage() {
         }
       />
 
+      {/* Stat tiles */}
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { label: "Total", value: fmtUSD(totals.total), color: "text-white" },
+          { label: "Paid", value: fmtUSD(totals.paid), color: "text-emerald-400" },
+          { label: "Pending", value: fmtUSD(totals.pending), color: "text-yellow-400" },
+        ].map((tile, i) => (
+          <motion.div
+            key={tile.label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06 }}
+            className="glass rounded-xl overflow-hidden"
+          >
+            <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+            <div className="p-4">
+              <p className="text-xs text-white/40 uppercase tracking-wider mb-1">{tile.label}</p>
+              <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.18 }}
+        className="flex flex-wrap items-center gap-3"
+      >
         <div className="relative flex-1 min-w-[180px]">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search rep or deal…"
-            className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-400/50"
+            className="glass w-full rounded-lg pl-8 pr-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
           />
         </div>
         <div className="flex gap-1">
@@ -225,7 +256,7 @@ export default function CommissionTrackerPage() {
               onClick={() => setFilterStatus(s)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
                 filterStatus === s
-                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"
+                  ? "bg-indigo-500/20 text-indigo-300 border border-indigo-400/30"
                   : "bg-white/5 text-white/50 hover:text-white border border-white/10"
               }`}
             >
@@ -233,7 +264,7 @@ export default function CommissionTrackerPage() {
             </button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {loading ? (
         <div className="space-y-2">
@@ -242,12 +273,21 @@ export default function CommissionTrackerPage() {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl border border-white/10 bg-white/5 p-12 text-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="glass rounded-xl p-12 text-center"
+        >
           <DollarSign size={36} className="mx-auto mb-3 text-white/20" />
           <p className="text-white/40 text-sm">No commissions found.</p>
-        </div>
+        </motion.div>
       ) : (
-        <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="glass rounded-xl overflow-hidden"
+        >
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="border-b border-white/10 text-xs text-white/40">
@@ -261,11 +301,17 @@ export default function CommissionTrackerPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {filtered.map(c => {
+                {filtered.map((c, i) => {
                   const repName = (c.notes || "").split("|")[0] || "Unknown";
                   const cfg = STATUS_CONFIG[c.status];
                   return (
-                    <tr key={c.id} className="hover:bg-white/5 transition-colors">
+                    <motion.tr
+                      key={c.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.04 }}
+                      className="hover:bg-white/5 transition-colors"
+                    >
                       <td className="px-4 py-3 font-medium text-white">{repName}</td>
                       <td className="px-4 py-3 text-white/50">{c.deal_id || "—"}</td>
                       <td className="px-4 py-3 text-right font-medium text-white">
@@ -306,7 +352,7 @@ export default function CommissionTrackerPage() {
                           </button>
                         </div>
                       </td>
-                    </tr>
+                    </motion.tr>
                   );
                 })}
               </tbody>
@@ -332,7 +378,7 @@ export default function CommissionTrackerPage() {
               </tfoot>
             </table>
           </div>
-        </div>
+        </motion.div>
       )}
 
       <Modal
@@ -357,7 +403,7 @@ export default function CommissionTrackerPage() {
                 value={form[key]}
                 onChange={e => setF(key, e.target.value)}
                 placeholder={placeholder}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-400/50"
+                className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
               />
             </div>
           ))}

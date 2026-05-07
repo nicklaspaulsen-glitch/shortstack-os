@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { ReceiptText, Plus, Pencil, Trash2, Check, X, Loader2, Eye, Star } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
@@ -30,6 +31,8 @@ function calcSubtotal(items: LineItem[]) {
   return items.reduce((s, i) => s + i.qty * i.unit_price, 0);
 }
 
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
+
 /** Inline invoice preview modal */
 function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClose: () => void }) {
   const subtotal = calcSubtotal(template.line_items);
@@ -38,7 +41,11 @@ function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClos
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97, y: 8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="glass rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+      >
         {/* Invoice header */}
         <div className="p-8 border-b border-white/5">
           <div className="flex items-start justify-between">
@@ -101,13 +108,13 @@ function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClos
           </div>
 
           {template.notes && (
-            <div className="mt-6 p-4 bg-white/5 rounded-xl text-sm text-muted">
+            <div className="mt-6 p-4 glass-md rounded-xl text-sm text-muted">
               <p className="text-xs uppercase tracking-wider text-muted mb-1">Notes</p>
               <p>{template.notes}</p>
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -261,7 +268,11 @@ export default function InvoiceTemplatesPage() {
       />
 
       {showCreate && (
-        <div className="card p-5 border border-white/10 space-y-4">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass rounded-xl p-5 space-y-4"
+        >
           <p className="font-semibold text-white text-sm">New Template</p>
           <div className="flex flex-wrap gap-3">
             <input className="input flex-1 min-w-[180px] text-sm" placeholder="Template name"
@@ -292,11 +303,15 @@ export default function InvoiceTemplatesPage() {
               <X size={13} /> Cancel
             </button>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {loading ? <TableSkeleton rows={4} /> : templates.length === 0 ? (
-        <div className="card p-12 flex flex-col items-center gap-4 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center"
+        >
           <ReceiptText size={40} className="text-muted opacity-30" />
           <p className="text-white font-semibold">No invoice templates yet</p>
           <p className="text-muted text-sm max-w-xs">Create reusable templates to spin up invoices in seconds.</p>
@@ -304,12 +319,17 @@ export default function InvoiceTemplatesPage() {
             className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
             <Plus size={15} /> Create first template
           </button>
-        </div>
+        </motion.div>
       ) : (
         <div className="space-y-3">
-          {templates.map((t) =>
+          {templates.map((t, idx) =>
             editId === t.id ? (
-              <div key={t.id} className="card p-5 border border-white/10 space-y-4">
+              <motion.div
+                key={t.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="glass rounded-xl p-5 space-y-4"
+              >
                 <p className="font-semibold text-white text-sm">Edit Template</p>
                 <div className="flex flex-wrap gap-3">
                   <input className="input flex-1 min-w-[180px] text-sm" placeholder="Template name"
@@ -340,9 +360,17 @@ export default function InvoiceTemplatesPage() {
                     <X size={13} /> Cancel
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ) : (
-              <div key={t.id} className="card p-4 flex items-center gap-4 group hover:border-white/10 transition-colors">
+              <motion.div
+                key={t.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.04 }}
+                whileHover={{ y: -2, scale: 1.005 }}
+                className="glass rounded-xl p-4 flex items-center gap-4 group"
+              >
+                <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0", position: "absolute", left: 0, right: 0, top: 0 }} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="text-white font-medium truncate">{t.name}</p>
@@ -372,7 +400,7 @@ export default function InvoiceTemplatesPage() {
                     {deleting === t.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                   </button>
                 </div>
-              </div>
+              </motion.div>
             )
           )}
         </div>

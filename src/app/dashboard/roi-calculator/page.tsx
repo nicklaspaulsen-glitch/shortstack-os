@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
@@ -70,6 +71,8 @@ function fmtUSD(n: number | null | undefined): string {
 }
 
 const SENSITIVITY_OFFSETS = [-20, -10, 0, 10, 20];
+
+const RAINBOW = "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)";
 
 export default function RoiCalculatorPage() {
   const supabase = createClient();
@@ -182,7 +185,12 @@ export default function RoiCalculatorPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Inputs column */}
-        <div className="lg:col-span-1 rounded-xl border border-white/10 bg-white/5 p-5 space-y-4">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="lg:col-span-1 glass rounded-xl p-5 space-y-4"
+        >
           <h3 className="text-sm font-semibold text-white/80">Inputs</h3>
 
           {(
@@ -202,7 +210,7 @@ export default function RoiCalculatorPage() {
                   value={inputs[key]}
                   min={0}
                   onChange={e => setInput(key, e.target.value)}
-                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-cyan-400/50 [appearance:textfield]"
+                  className="flex-1 glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50 [appearance:textfield]"
                 />
                 {suffix ? <span className="text-white/40 text-sm">{suffix}</span> : null}
               </div>
@@ -215,33 +223,47 @@ export default function RoiCalculatorPage() {
               value={scenarioName}
               onChange={e => setScenarioName(e.target.value)}
               placeholder="Scenario name"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-cyan-400/50"
+              className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
             />
             <button
               onClick={saveScenario}
               disabled={saving}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 text-sm font-medium transition-colors disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-sm font-medium transition-colors disabled:opacity-50"
             >
               {saving ? <Loader size={13} className="animate-spin" /> : <Save size={13} />}
               Save
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Results column */}
         <div className="lg:col-span-2 space-y-5">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {metricCards.map(c => (
-              <div key={c.label} className="rounded-xl border border-white/10 bg-white/5 p-4">
-                <div className={`mb-2 ${c.color}`}>{c.icon}</div>
-                <p className={`text-xl font-bold ${c.color}`}>{c.value}</p>
-                <p className="text-xs text-white/40 mt-0.5">{c.label}</p>
-              </div>
+            {metricCards.map((c, i) => (
+              <motion.div
+                key={c.label}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06, duration: 0.4 }}
+                className="glass rounded-xl overflow-hidden"
+              >
+                <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                <div className="p-4">
+                  <div className={`mb-2 ${c.color}`}>{c.icon}</div>
+                  <p className={`text-xl font-bold ${c.color}`}>{c.value}</p>
+                  <p className="text-xs text-white/40 mt-0.5">{c.label}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Sensitivity table */}
-          <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.28, duration: 0.4 }}
+            className="glass rounded-xl p-5"
+          >
             <h3 className="text-sm font-semibold text-white/80 mb-3">
               Sensitivity: Close Rate ±20%
             </h3>
@@ -256,15 +278,18 @@ export default function RoiCalculatorPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {SENSITIVITY_OFFSETS.map(offset => {
+                  {SENSITIVITY_OFFSETS.map((offset, i) => {
                     const adjRate = Math.max(0, inputs.close_rate + offset);
                     const r = compute({ ...inputs, close_rate: adjRate });
                     const isBase = offset === 0;
                     return (
-                      <tr
+                      <motion.tr
                         key={offset}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.04 }}
                         className={`border-b border-white/5 last:border-0 ${
-                          isBase ? "text-cyan-300 font-semibold" : "text-white/70"
+                          isBase ? "text-indigo-300 font-semibold" : "text-white/70"
                         }`}
                       >
                         <td className="py-1.5">
@@ -279,13 +304,13 @@ export default function RoiCalculatorPage() {
                         >
                           {fmtN(r.roi)}%
                         </td>
-                      </tr>
+                      </motion.tr>
                     );
                   })}
                 </tbody>
               </table>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
@@ -295,17 +320,21 @@ export default function RoiCalculatorPage() {
         {loading ? (
           <div className="space-y-2">
             {[1, 2].map(i => (
-              <div key={i} className="h-12 rounded-xl bg-white/5 animate-pulse" />
+              <div key={i} className="h-12 rounded-xl glass animate-pulse" />
             ))}
           </div>
         ) : scenarios.length === 0 ? (
           <p className="text-sm text-white/30 text-center py-6">No saved scenarios yet.</p>
         ) : (
           <div className="space-y-2">
-            {scenarios.map(s => (
-              <div
+            {scenarios.map((s, i) => (
+              <motion.div
                 key={s.id}
-                className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05, duration: 0.4 }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                className="flex items-center gap-4 glass rounded-xl px-4 py-3"
               >
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-white text-sm truncate">{s.name}</p>
@@ -334,7 +363,7 @@ export default function RoiCalculatorPage() {
                     <Trash2 size={14} />
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}

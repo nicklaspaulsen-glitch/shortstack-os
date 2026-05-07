@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   MessageSquare, Plus, Pin, Heart, Send, Users,
   Megaphone, HelpCircle, Sparkles, BookOpen, ChevronDown,
@@ -768,7 +769,7 @@ export default function CommunityPage() {
       />
 
       {/* Gamification Bar -- Your Stats */}
-      <div className="card p-4 border-gold/10">
+      <div className="glass rounded-xl p-4 border-gold/10">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-sm font-bold text-gold">
@@ -815,50 +816,51 @@ export default function CommunityPage() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-3 gap-2">
-        <button onClick={() => openQuickAction("new-post")}
-          className="card p-3 text-center hover:border-blue-400/30 transition-all group">
-          <div className="w-8 h-8 mx-auto rounded-lg bg-blue-400/10 flex items-center justify-center mb-1.5 group-hover:bg-blue-400/20 transition-colors">
-            <Plus size={14} className="text-blue-400" />
-          </div>
-          <p className="text-[10px] font-semibold">New Post</p>
-          <p className="text-[9px] text-muted">Start a discussion</p>
-        </button>
-        <button onClick={() => openQuickAction("share-win")}
-          className="card p-3 text-center hover:border-gold/30 transition-all group">
-          <div className="w-8 h-8 mx-auto rounded-lg bg-gold/10 flex items-center justify-center mb-1.5 group-hover:bg-gold/20 transition-colors">
-            <Trophy size={14} className="text-gold" />
-          </div>
-          <p className="text-[10px] font-semibold">Share a Win</p>
-          <p className="text-[9px] text-muted">Celebrate success</p>
-        </button>
-        <button onClick={() => openQuickAction("ask-question")}
-          className="card p-3 text-center hover:border-yellow-400/30 transition-all group">
-          <div className="w-8 h-8 mx-auto rounded-lg bg-yellow-400/10 flex items-center justify-center mb-1.5 group-hover:bg-yellow-400/20 transition-colors">
-            <HelpCircle size={14} className="text-yellow-400" />
-          </div>
-          <p className="text-[10px] font-semibold">Ask a Question</p>
-          <p className="text-[9px] text-muted">Get community help</p>
-        </button>
+        {[
+          { action: "new-post", icon: Plus, color: "text-blue-400", bg: "bg-blue-400/10", hover: "group-hover:bg-blue-400/20", label: "New Post", sub: "Start a discussion" },
+          { action: "share-win", icon: Trophy, color: "text-gold", bg: "bg-gold/10", hover: "group-hover:bg-gold/20", label: "Share a Win", sub: "Celebrate success" },
+          { action: "ask-question", icon: HelpCircle, color: "text-yellow-400", bg: "bg-yellow-400/10", hover: "group-hover:bg-yellow-400/20", label: "Ask a Question", sub: "Get community help" },
+        ].map((qa, i) => (
+          <motion.button
+            key={qa.action}
+            onClick={() => openQuickAction(qa.action)}
+            className="glass rounded-xl p-3 text-center transition-all group"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05 }}
+            whileHover={{ y: -4, scale: 1.01 }}
+          >
+            <div className={`w-8 h-8 mx-auto rounded-lg ${qa.bg} flex items-center justify-center mb-1.5 ${qa.hover} transition-colors`}>
+              <qa.icon size={14} className={qa.color} />
+            </div>
+            <p className="text-[10px] font-semibold">{qa.label}</p>
+            <p className="text-[9px] text-muted">{qa.sub}</p>
+          </motion.button>
+        ))}
       </div>
 
       {/* Stats bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold font-mono">{MEMBERS.length}</p>
-          <p className="text-[10px] text-muted">Members</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold font-mono text-green-400">{MEMBERS.filter(m => m.online).length}</p>
-          <p className="text-[10px] text-muted">Online Now</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold font-mono">{posts.length}</p>
-          <p className="text-[10px] text-muted">Posts This Week</p>
-        </div>
-        <div className="card p-3 text-center">
-          <p className="text-lg font-bold font-mono text-gold">{events.length}</p>
-          <p className="text-[10px] text-muted">Upcoming Events</p>
-        </div>
+        {[
+          { value: MEMBERS.length, label: "Members", color: "" },
+          { value: MEMBERS.filter(m => m.online).length, label: "Online Now", color: "text-green-400" },
+          { value: posts.length, label: "Posts This Week", color: "" },
+          { value: events.length, label: "Upcoming Events", color: "text-gold" },
+        ].map((tile, i) => (
+          <motion.div
+            key={tile.label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06, duration: 0.4 }}
+            className="glass rounded-xl overflow-hidden"
+          >
+            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
+            <div className="p-3 text-center">
+              <p className={`text-lg font-bold font-mono ${tile.color}`}>{tile.value}</p>
+              <p className="text-[10px] text-muted">{tile.label}</p>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* Tabs */}

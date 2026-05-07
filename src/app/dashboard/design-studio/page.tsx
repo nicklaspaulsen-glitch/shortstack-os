@@ -2,6 +2,7 @@
 
 import React, { useEffect, useCallback } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useDesignStore, makeEmptyDoc } from "@/lib/design/store";
 import type { DesignRow } from "@/lib/design/types";
@@ -130,13 +131,18 @@ export default function DesignStudioPage() {
               <h2 className="text-lg font-semibold text-white">New Design</h2>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {SIZE_PRESETS.map((preset) => (
-                <button
+              {SIZE_PRESETS.map((preset, i) => (
+                <motion.button
                   key={`${preset.width}x${preset.height}-${preset.label}`}
                   onClick={() => createNewDesign(preset)}
                   disabled={creating}
-                  className="flex flex-col items-center gap-2 p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06, duration: 0.4 }}
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  className="glass rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#6366F1]/40 transition-colors group"
                 >
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", width: "calc(100% + 32px)", marginLeft: -16, marginRight: -16, marginBottom: 8, flexShrink: 0 }} />
                   <div
                     className="border border-white/20 bg-white/5 rounded group-hover:border-[#6366F1]/50 transition-colors"
                     style={{
@@ -152,7 +158,7 @@ export default function DesignStudioPage() {
                       {preset.width}×{preset.height}
                     </p>
                   </div>
-                </button>
+                </motion.button>
               ))}
             </div>
 
@@ -215,12 +221,17 @@ function RecentDesigns() {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {designs.map((d) => (
-        <a
+      {designs.map((d, i) => (
+        <motion.a
           key={d.id}
           href={`/dashboard/design-studio?id=${d.id}`}
-          className="block rounded-xl border border-white/10 bg-white/5 hover:bg-white/8 hover:border-white/20 overflow-hidden transition-all group"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.05, duration: 0.35 }}
+          whileHover={{ y: -4, scale: 1.01 }}
+          className="glass rounded-xl overflow-hidden hover:border-[#6366F1]/30 transition-colors group"
         >
+          <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
           <div className="relative aspect-video bg-[#1a1a2e] flex items-center justify-center">
             {d.thumbnail_url ? (
               <Image
@@ -243,7 +254,7 @@ function RecentDesigns() {
               {d.width}×{d.height}
             </p>
           </div>
-        </a>
+        </motion.a>
       ))}
     </div>
   );
