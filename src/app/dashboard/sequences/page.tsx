@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { ListOrdered } from "lucide-react";
+import { PrismPanel } from "@/components/prism";
 
 type MainTab = "builder" | "templates" | "analytics" | "enrollment" | "runs" | "settings";
 
@@ -624,7 +625,7 @@ export default function SequencesPage() {
       />
 
       {/* Recent activity panel — last 10 step executions from trinity_log */}
-      <div className="glass rounded-xl overflow-hidden p-4">
+      <PrismPanel padding="p-4" className="overflow-hidden">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-xs font-semibold flex items-center gap-2">
             <Activity size={12} className="text-gold" /> Recent activity
@@ -648,7 +649,7 @@ export default function SequencesPage() {
             ))}
           </ul>
         )}
-      </div>
+      </PrismPanel>
 
       {/* AI Summary Card */}
       {aiSummary && (
@@ -656,7 +657,8 @@ export default function SequencesPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
-          className="glass-indigo rounded-xl overflow-hidden p-4"
+          className="rounded-xl overflow-hidden p-4"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.16)" }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -750,7 +752,7 @@ export default function SequencesPage() {
                   <p className="text-[10px] text-muted">Loading sequences...</p>
                 </div>
               ) : (
-                <div className="glass rounded-xl overflow-hidden space-y-0">
+                <PrismPanel rainbow padding="p-0" className="overflow-hidden space-y-0">
                   {sequences.map((seq, index) => (
                     <motion.div
                       key={seq.id}
@@ -781,7 +783,7 @@ export default function SequencesPage() {
                       </div>
                     </motion.div>
                   ))}
-                </div>
+                </PrismPanel>
               )}
               {/* Quick create from template hint */}
               <div className="card border-gold/10 text-center py-6">
@@ -845,7 +847,8 @@ export default function SequencesPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.18, delay: i * 0.04 }}
                         whileHover={{ y: -2 }}
-                        className={`glass-md p-4 rounded-xl border ${colors.border}`}
+                        className={`p-4 rounded-xl border ${colors.border}`}
+                        style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
@@ -992,7 +995,7 @@ export default function SequencesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: i * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="glass rounded-xl overflow-hidden relative p-4"
+                className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
               >
                 <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
                 <div className="flex items-start justify-between mb-2">
@@ -1038,7 +1041,7 @@ export default function SequencesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: i * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="glass rounded-xl overflow-hidden relative text-center p-3"
+                className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
               >
                 <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
                 <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -1046,7 +1049,7 @@ export default function SequencesPage() {
               </motion.div>
             ))}
           </div>
-          <div className="glass rounded-xl overflow-hidden p-4">
+          <PrismPanel padding="p-4" className="overflow-hidden">
             <h3 className="text-sm font-semibold mb-3">Sequence Performance</h3>
             <div className="space-y-3">
               {sequences.map((seq, index) => {
@@ -1080,7 +1083,7 @@ export default function SequencesPage() {
                 );
               })}
             </div>
-          </div>
+          </PrismPanel>
         </div>
       )}
 
@@ -1145,7 +1148,7 @@ export default function SequencesPage() {
               <button onClick={() => void loadRuns()} className="btn-ghost text-[10px]">Refresh</button>
             </div>
           </div>
-          <div className="glass rounded-xl overflow-hidden p-3">
+          <PrismPanel padding="p-3" className="overflow-hidden">
             {runsLoading ? (
               <div className="text-center py-6">
                 <Loader2 size={16} className="animate-spin mx-auto text-gold mb-2" />
@@ -1199,7 +1202,7 @@ export default function SequencesPage() {
                 ))}
               </ul>
             )}
-          </div>
+          </PrismPanel>
           <p className="text-[9px] text-muted px-2">
             The cron runner ticks every minute and advances active runs. Reply on
             email/SMS/DM auto-exits the contact's runs (`exit_reason` will read

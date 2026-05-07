@@ -13,7 +13,7 @@ export default function FinalCTA() {
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse, rgba(200,168,85,0.08) 0%, transparent 70%)",
+              "radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 70%)",
             filter: "blur(40px)",
           }}
         />
@@ -22,9 +22,9 @@ export default function FinalCTA() {
           <div
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-medium mb-6"
             style={{
-              background: "rgba(200,168,85,0.08)",
-              border: "1px solid rgba(200,168,85,0.15)",
-              color: "#c8a855",
+              background: "rgba(99,102,241,0.08)",
+              border: "1px solid rgba(99,102,241,0.15)",
+              color: "#A78BFA",
             }}
           >
             <Shield size={10} />
@@ -38,7 +38,7 @@ export default function FinalCTA() {
             Run your agency on{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #c8a855, #e2c878)",
+                background: "linear-gradient(135deg, #6366F1, #A78BFA)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -58,9 +58,9 @@ export default function FinalCTA() {
               href="/pricing"
               className="group flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all hover:shadow-lg"
               style={{
-                background: "linear-gradient(135deg, #c8a855, #b89840)",
-                color: "#0b0d12",
-                boxShadow: "0 0 40px rgba(200,168,85,0.15)",
+                background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+                color: "#fff",
+                boxShadow: "0 0 40px rgba(99,102,241,0.15)",
               }}
             >
               Start your 7-day free trial

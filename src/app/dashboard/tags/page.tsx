@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
+import { PrismPanel } from "@/components/prism";
 import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -248,7 +249,7 @@ export default function TagsPage() {
 
       {/* Bulk-action bar — appears when at least one tag is selected */}
       {selected.size > 0 && (
-        <div className="glass rounded-xl p-3 flex items-center justify-between gap-3 border border-gold/30 bg-gold/5">
+        <PrismPanel padding="p-3" border="strong" className="flex items-center justify-between gap-3">
           <p className="text-xs text-white/70">
             <span className="font-semibold text-white">{selected.size}</span> tag{selected.size === 1 ? "" : "s"} selected
           </p>
@@ -261,11 +262,11 @@ export default function TagsPage() {
               Clear
             </button>
           </div>
-        </div>
+        </PrismPanel>
       )}
 
       {showMerge && selected.size > 0 && (
-        <div className="glass rounded-xl p-4 space-y-3 border border-gold/30">
+        <PrismPanel padding="p-4" border="strong" className="space-y-3">
           <p className="text-sm font-semibold text-white">Merge {selected.size} tag{selected.size === 1 ? "" : "s"} into:</p>
           <input
             className="input w-full text-sm"
@@ -288,11 +289,11 @@ export default function TagsPage() {
               Cancel
             </button>
           </div>
-        </div>
+        </PrismPanel>
       )}
 
       {showCreate && (
-        <div className="glass rounded-xl p-5 space-y-4">
+        <PrismPanel padding="p-5" className="space-y-4">
           <p className="font-semibold text-white text-sm">New Tag</p>
           <div className="flex flex-wrap gap-3">
             <input className="input flex-1 min-w-[160px] text-sm" placeholder="Tag name"
@@ -315,11 +316,11 @@ export default function TagsPage() {
               <X size={13} /> Cancel
             </button>
           </div>
-        </div>
+        </PrismPanel>
       )}
 
       {loading ? <TableSkeleton rows={6} /> : tags.length === 0 ? (
-        <div className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center">
+        <PrismPanel padding="p-12" className="flex flex-col items-center gap-4 text-center">
           <Tag size={40} className="text-muted opacity-30" />
           <p className="text-white font-semibold">No tags yet</p>
           <p className="text-muted text-sm max-w-xs">Create tags to segment and organise every record in one place.</p>
@@ -327,9 +328,9 @@ export default function TagsPage() {
             className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
             <Plus size={15} /> Create first tag
           </button>
-        </div>
+        </PrismPanel>
       ) : (
-        <div className="glass rounded-xl overflow-hidden">
+        <PrismPanel padding="p-0" className="overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/5 text-muted text-xs">
@@ -425,7 +426,7 @@ export default function TagsPage() {
               )}
             </tbody>
           </table>
-        </div>
+        </PrismPanel>
       )}
     </div>
   );

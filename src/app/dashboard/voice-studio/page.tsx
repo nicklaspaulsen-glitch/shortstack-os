@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { PrismPanel } from "@/components/prism";
 
 // ── Types ──────────────────────────────────────────────────────────
 interface VoiceClone {
@@ -197,7 +198,7 @@ export default function VoiceStudioPage() {
 
       <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
         {/* ── Tab bar — glass pill container ── */}
-        <div className="glass rounded-xl p-1">
+        <PrismPanel padding="p-1" className="rounded-xl">
           <nav className="flex gap-1 overflow-x-auto" aria-label="Voice Studio tabs">
             {TAB_ORDER.map((t) => {
               const isActive = tab === t;
@@ -218,7 +219,7 @@ export default function VoiceStudioPage() {
               );
             })}
           </nav>
-        </div>
+        </PrismPanel>
 
         {error && (
           <div className="mt-6 flex items-start gap-3 rounded-lg border border-rose-500/30 bg-rose-950/40 p-4 text-sm text-rose-200">
@@ -374,7 +375,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
   }, [files, label, description, consentKind, signedBy, onCreated]);
 
   return (
-    <div className="glass rounded-xl p-6">
+    <PrismPanel rainbow padding="p-6" className="rounded-xl">
       <div className="flex items-start gap-4">
         <div className="rounded-lg border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] p-2.5">
           <Upload size={20} className="text-[#6366F1]" />
@@ -401,7 +402,8 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="glass flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-indigo-500/30 px-4 py-6 text-sm text-[#6366F1]/80 hover:border-indigo-500/50 transition-colors"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-indigo-500/30 px-4 py-6 text-sm text-[#6366F1]/80 hover:border-indigo-500/50 transition-colors"
+            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
           >
             <Upload size={16} />
             {files.length === 0
@@ -486,7 +488,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
           </div>
         </div>
       </div>
-    </div>
+    </PrismPanel>
   );
 }
 
@@ -562,7 +564,7 @@ function CloneRow({
   }, [clone.id, clone.label, onChange]);
 
   return (
-    <div className="glass rounded-xl p-5 cursor-pointer tilt-3d">
+    <div className="rounded-xl p-5 cursor-pointer tilt-3d" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
       <div className="flex flex-wrap items-start gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.07)] text-[#6366F1]">
           <Mic size={20} />
@@ -775,7 +777,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   return (
     <div className="space-y-4">
       {/* Filter bar */}
-      <div className="glass-md space-y-2.5 rounded-xl p-3">
+      <div className="space-y-2.5 rounded-xl p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
         {/* Search row */}
         <div className="relative">
           <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
@@ -784,7 +786,8 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search presets…"
-            className="glass rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50"
+            className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#6366F1]/50"
+            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           />
         </div>
         {/* Gender row */}
@@ -949,7 +952,8 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
 
   return (
     <div
-      className="glass-indigo group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-colors duration-150"
+      className="group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-colors duration-150"
+      style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
       onMouseEnter={() => {
         setIsHovering(true);
         if (testUrl || testing) return;
@@ -1107,7 +1111,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
     );
   }
   return (
-    <div className="glass rounded-xl overflow-hidden">
+    <PrismPanel rainbow padding="p-0" className="rounded-xl overflow-hidden">
       <div className="divide-y divide-white/5">
         {renders.map((r, index) => {
           const audioUrl = r.r2_key ? `${R2_BASE}/${r.r2_key}` : null;
@@ -1169,6 +1173,6 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
           );
         })}
       </div>
-    </div>
+    </PrismPanel>
   );
 }

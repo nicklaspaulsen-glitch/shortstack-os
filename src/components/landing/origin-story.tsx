@@ -32,7 +32,7 @@ export default function OriginStory() {
       className="py-20 md:py-28 px-6"
       style={{
         background:
-          "linear-gradient(180deg, rgba(200,168,85,0.02) 0%, transparent 100%)",
+          "linear-gradient(180deg, rgba(99,102,241,0.02) 0%, transparent 100%)",
         borderTop: "1px solid rgba(255,255,255,0.03)",
       }}
     >
@@ -115,7 +115,7 @@ export default function OriginStory() {
                 className="absolute left-[18px] top-2 bottom-2 w-px"
                 style={{
                   background:
-                    "linear-gradient(180deg, rgba(200,168,85,0.3) 0%, rgba(200,168,85,0.05) 100%)",
+                    "linear-gradient(180deg, rgba(99,102,241,0.3) 0%, rgba(99,102,241,0.05) 100%)",
                 }}
               />
               {MILESTONES.map((m) => (
@@ -123,16 +123,16 @@ export default function OriginStory() {
                   <div
                     className="absolute -left-8 top-0 w-10 h-10 rounded-xl flex items-center justify-center"
                     style={{
-                      background: "#0b0d12",
-                      border: "1px solid rgba(200,168,85,0.25)",
+                      background: "#070708",
+                      border: "1px solid rgba(99,102,241,0.25)",
                     }}
                   >
-                    <m.icon size={16} style={{ color: "#c8a855" }} />
+                    <m.icon size={16} style={{ color: "#A78BFA" }} />
                   </div>
                   <div className="pl-4">
                     <p
                       className="text-[10px] uppercase tracking-widest font-semibold mb-1"
-                      style={{ color: "#c8a855" }}
+                      style={{ color: "#A78BFA" }}
                     >
                       {m.year}
                     </p>

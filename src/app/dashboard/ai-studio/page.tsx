@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { MotionPage } from "@/components/motion/motion-page";
+import { PrismPanel } from "@/components/prism";
 import PageHero from "@/components/ui/page-hero";
 import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
@@ -339,7 +340,8 @@ export default function AIStudioPage() {
         {/* Wizard image results — inline strip above the workspace */}
         {wizardImages.length > 0 && (
           <motion.div
-            className="mb-5 glass-indigo rounded-2xl p-4"
+            className="mb-5 rounded-2xl p-4"
+            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
           >
             <div className="flex items-center justify-between mb-3">
@@ -395,7 +397,7 @@ export default function AIStudioPage() {
         <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-3 items-start">
 
           {/* Left: vertical tool list */}
-          <div className="glass rounded-2xl overflow-hidden">
+          <div className="rounded-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <div className="px-3 pt-3 pb-1">
               <p className="text-[8px] uppercase tracking-[0.2em] text-[#6F6D7A] font-semibold px-1 mb-2">Tools</p>
             </div>
@@ -452,7 +454,8 @@ export default function AIStudioPage() {
           {/* Right: active tool workspace */}
           <div
             ref={toolPanelRef}
-            className="glass-indigo rounded-2xl overflow-hidden shadow-glass-indigo"
+            className="rounded-2xl overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           >
             {/* Tool header */}
             <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[rgba(255,255,255,0.05)]">
@@ -650,7 +653,8 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
 
         {/* Output */}
         <motion.div
-          className="glass-md rounded-xl p-4 min-h-[200px]"
+          className="rounded-xl p-4 min-h-[200px]"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22, delay: 0.08 }}
@@ -871,7 +875,8 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
         </div>
 
         <motion.div
-          className="glass-md rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {images.length > 0 ? (
@@ -1041,7 +1046,8 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
         </div>
 
         <motion.div
-          className="glass-md rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1157,8 +1163,8 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
           </div>
         </div>
         <motion.div
-          className="glass-md rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: !result ? undefined : bgColor ? bgColor : "repeating-conic-gradient(#e0e0e0 0% 25%, #f8f8f8 0% 50%) 50% / 16px 16px" }}
+          className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          style={{ background: !result ? "rgba(255,255,255,0.028)" : bgColor ? bgColor : "repeating-conic-gradient(#e0e0e0 0% 25%, #f8f8f8 0% 50%) 50% / 16px 16px", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1264,7 +1270,8 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
           </motion.button>
         </div>
         <motion.div
-          className="glass-md rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1369,7 +1376,8 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
         </div>
 
         <motion.div
-          className="glass-md rounded-xl p-4 min-h-[200px] flex flex-col items-center justify-center"
+          className="rounded-xl p-4 min-h-[200px] flex flex-col items-center justify-center"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1540,7 +1548,8 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
             </motion.button>
           </div>
           <motion.div
-            className="glass-md rounded-xl p-4 flex items-center justify-center"
+            className="rounded-xl p-4 flex items-center justify-center"
+            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
           >
             {result ? (
@@ -1673,7 +1682,8 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
         </div>
 
         <motion.div
-          className="glass-md rounded-xl p-4 min-h-[200px]"
+          className="rounded-xl p-4 min-h-[200px]"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           <h3 className="text-xs font-semibold text-foreground mb-3">How it works</h3>
@@ -1806,7 +1816,8 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
         </div>
 
         <motion.div
-          className="glass-md rounded-xl p-4 min-h-[200px]"
+          className="rounded-xl p-4 min-h-[200px]"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           <h3 className="text-xs font-semibold text-foreground mb-3">Queue ({results.length})</h3>

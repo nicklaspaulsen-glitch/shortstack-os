@@ -5,9 +5,9 @@ import { Float, MeshDistortMaterial, Environment } from "@react-three/drei";
 import { Suspense, useEffect, useRef, useState } from "react";
 import type { Mesh } from "three";
 
-const GOLD = "#c8a855";
-const GOLD_LIGHT = "#e4c876";
-const GOLD_DARK = "#8a6f2f";
+const GOLD = "#6366F1";
+const GOLD_LIGHT = "#A78BFA";
+const GOLD_DARK = "#4F46E5";
 
 function FloatingTorus({ position }: { position: [number, number, number] }) {
   const ref = useRef<Mesh>(null!);

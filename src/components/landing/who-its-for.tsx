@@ -57,7 +57,7 @@ export default function WhoItsFor() {
                 <span
                   style={{
                     background:
-                      "linear-gradient(135deg, #c8a855, #e2c878)",
+                      "linear-gradient(135deg, #6366F1, #A78BFA)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                   }}
@@ -83,9 +83,9 @@ export default function WhoItsFor() {
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: "rgba(200,168,85,0.08)" }}
+                  style={{ background: "rgba(99,102,241,0.08)" }}
                 >
-                  <a.icon size={18} style={{ color: "#c8a855" }} />
+                  <a.icon size={18} style={{ color: "#A78BFA" }} />
                 </div>
                 <h3 className="text-sm font-bold text-white mb-2">
                   {a.title}

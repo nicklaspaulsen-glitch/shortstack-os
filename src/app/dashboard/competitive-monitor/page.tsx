@@ -16,6 +16,7 @@ import {
   Target as TargetIcon,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 
@@ -284,7 +285,7 @@ export default function CompetitiveMonitorPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: i * 0.07 }}
             whileHover={{ y: -2 }}
-            className="glass rounded-xl p-4 relative overflow-hidden"
+            className="rounded-xl p-4 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           >
             <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${stat.bar}`} />
             <div className="flex items-center gap-2 text-muted text-xs mb-1">{stat.icon} {stat.label}</div>
@@ -306,7 +307,7 @@ export default function CompetitiveMonitorPage() {
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="glass-indigo rounded-xl p-5"
+          className="rounded-xl p-5" style={{ background: "rgba(99,102,241,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.15)" }}
         >
           <h3 className="section-header text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-gold" /> Add New Competitor</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -345,7 +346,7 @@ export default function CompetitiveMonitorPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: ci * 0.06 }}
               whileHover={{ y: -3 }}
-              className="glass rounded-xl p-4 hover:border-indigo-500/20 transition group"
+              className="rounded-xl p-4 hover:border-indigo-500/20 transition group" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
@@ -393,7 +394,7 @@ export default function CompetitiveMonitorPage() {
       </div>
 
       {/* ─── Monitoring Schedule ─── */}
-      <div className="glass rounded-xl p-4">
+      <PrismPanel padding="p-4">
         <h3 className="section-header text-xs flex items-center gap-2 mb-3"><Calendar className="w-3.5 h-3.5 text-gold" /> Monitoring Schedule</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {competitors.filter(c => c.status === "active").slice(0, 4).map(c => (
@@ -407,7 +408,7 @@ export default function CompetitiveMonitorPage() {
             </div>
           ))}
         </div>
-      </div>
+      </PrismPanel>
 
       {/* ─── Tabs ─── */}
       <div className="flex gap-1 border-b border-border overflow-x-auto">
@@ -458,7 +459,7 @@ export default function CompetitiveMonitorPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: chi * 0.05 }}
-                  className="glass rounded-xl p-4 hover:border-indigo-500/20 transition"
+                  className="rounded-xl p-4 hover:border-indigo-500/20 transition" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
                 >
                   <div className="flex items-start gap-3">
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${meta.color}`}>
@@ -522,7 +523,7 @@ export default function CompetitiveMonitorPage() {
       {tab === "comparison" && (
         <div className="space-y-6">
           {/* Comparison Table */}
-          <div className="glass rounded-xl overflow-hidden">
+          <PrismPanel padding="p-0" className="overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
@@ -548,10 +549,10 @@ export default function CompetitiveMonitorPage() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </PrismPanel>
 
           {/* Spider chart representation */}
-          <div className="glass rounded-xl p-5">
+          <PrismPanel padding="p-5">
             <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-gold" /> Competitive Positioning</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Simple radar visualization */}
@@ -597,10 +598,10 @@ export default function CompetitiveMonitorPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </PrismPanel>
 
           {/* AI Analysis */}
-          <div className="glass-indigo rounded-xl p-5">
+          <PrismPanel padding="p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Sparkles className="w-4 h-4 text-gold" /> AI Competitive Analysis</h3>
               <button onClick={generateAiAnalysis} disabled={generatingAnalysis} className="flex items-center gap-2 px-3 py-1.5 bg-gold/10 text-gold rounded-lg text-xs font-medium hover:bg-gold/20 transition disabled:opacity-50">
@@ -618,7 +619,7 @@ export default function CompetitiveMonitorPage() {
             ) : (
               <div className="text-xs text-muted text-center py-8">Click &ldquo;Generate AI Analysis&rdquo; to get an AI-written competitive assessment based on all tracked data.</div>
             )}
-          </div>
+          </PrismPanel>
         </div>
       )}
 
@@ -638,7 +639,7 @@ export default function CompetitiveMonitorPage() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.28 }}
-              className="glass-indigo rounded-xl p-5"
+              className="rounded-xl p-5" style={{ background: "rgba(99,102,241,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.15)" }}
             >
               <h4 className="text-sm font-medium mb-4">New Alert Rule</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -698,7 +699,8 @@ export default function CompetitiveMonitorPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: ri * 0.05 }}
-                  className={`glass rounded-xl p-4 flex items-center gap-4 hover:border-indigo-500/20 transition ${!rule.enabled ? "opacity-50" : ""}`}
+                  style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                  className={`rounded-xl p-4 flex items-center gap-4 hover:border-indigo-500/20 transition ${!rule.enabled ? "opacity-50" : ""}`}
                 >
                   <button onClick={() => setAlertRules(prev => prev.map(r => r.id === rule.id ? { ...r, enabled: !r.enabled } : r))}
                     className={`w-10 h-5 rounded-full transition relative ${rule.enabled ? "bg-gold" : "bg-surface-light"}`}>
@@ -736,16 +738,16 @@ export default function CompetitiveMonitorPage() {
       {tab === "insights" && (
         <div className="space-y-6">
           {/* AI Market Summary */}
-          <div className="glass-indigo rounded-xl p-5">
+          <PrismPanel padding="p-5">
             <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-gold" /> AI Market Summary</h3>
             <div className="text-sm text-muted leading-relaxed space-y-2">
               <p>The agency SaaS market continues to consolidate around AI-first platforms. Over the past week, <strong className="text-white">3 of 8 tracked competitors</strong> made AI-related announcements. Pricing is trending upward (AgencyFlow +34%), while MarketMind bucks the trend with a free tier launch. The enterprise segment is heating up with both AgencyFlow and ClientPulse making upmarket moves.</p>
               <p>Your positioning remains strong on <span className="text-emerald-400">pricing</span> and <span className="text-emerald-400">review ratings</span>, but you are falling behind on <span className="text-red-400">social media presence</span> and <span className="text-red-400">content velocity</span>. The biggest opportunity window is the 2-4 week period before competitors ship their announced features.</p>
             </div>
-          </div>
+          </PrismPanel>
 
           {/* Activity Heatmap */}
-          <div className="glass rounded-xl p-5">
+          <PrismPanel padding="p-5">
             <h3 className="section-header text-sm flex items-center gap-2 mb-4"><LayoutGrid className="w-4 h-4 text-gold" /> Competitor Activity Heatmap (Last 4 Weeks)</h3>
             <div className="overflow-x-auto">
               <div className="min-w-[500px]">
@@ -778,7 +780,7 @@ export default function CompetitiveMonitorPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </PrismPanel>
 
           {/* Top Threats */}
           <div>
@@ -795,7 +797,7 @@ export default function CompetitiveMonitorPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: i * 0.07 }}
                   whileHover={{ y: -3 }}
-                  className="glass rounded-xl p-4 border border-red-500/10"
+                  className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(239,68,68,0.1)" }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <AlertTriangle className="w-4 h-4 text-red-400" />
@@ -824,7 +826,7 @@ export default function CompetitiveMonitorPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: i * 0.07 }}
                   whileHover={{ y: -3 }}
-                  className="glass-indigo rounded-xl p-4"
+                  className="rounded-xl p-4" style={{ background: "rgba(99,102,241,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.15)" }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Target className="w-4 h-4 text-gold" />
@@ -838,7 +840,7 @@ export default function CompetitiveMonitorPage() {
           </div>
 
           {/* Market Share Estimation */}
-          <div className="glass rounded-xl p-5">
+          <PrismPanel padding="p-5">
             <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-gold" /> Estimated Market Share (Agency SaaS Segment)</h3>
             <div className="space-y-3">
               {[
@@ -863,7 +865,7 @@ export default function CompetitiveMonitorPage() {
               ))}
             </div>
             <p className="text-[10px] text-muted mt-3 text-center">Estimated based on public data, hiring signals, social metrics, and web traffic analysis. Updated weekly.</p>
-          </div>
+          </PrismPanel>
         </div>
       )}
 

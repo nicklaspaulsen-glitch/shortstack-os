@@ -16,6 +16,7 @@ import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
 import { ALLOWED_CSV, buildAccept, validateFile } from "@/lib/file-types";
 import { motion } from "framer-motion";
+import { PrismPanel } from "@/components/prism";
 
 type MainTab = "leads" | "scoring" | "routing" | "attribution" | "nurture" | "enrichment" | "funnel" | "tags";
 
@@ -849,25 +850,17 @@ export default function LeadEnginePage() {
             { label: "Avg Score", value: totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0, icon: <Target size={12} />, color: "text-blue-400" },
             { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-gold" },
           ].map((stat, index) => (
-            <motion.div
-              key={index}
-              className="glass text-center p-3 rounded-xl overflow-hidden"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.22, delay: index * 0.06 }}
-              whileHover={{ y: -2 }}
-            >
-              <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="rounded-t-sm -mx-3 -mt-3 mb-3" />
+            <PrismPanel key={index} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
               <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
               <p className="text-lg font-bold">{stat.value}</p>
               <p className="text-[9px] text-muted">{stat.label}</p>
-            </motion.div>
+            </PrismPanel>
           ))}
         </div>
       </CollapsibleStats>
 
       {/* Tabs (sticky) */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+      <div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -1304,19 +1297,11 @@ export default function LeadEnginePage() {
               { label: "Missing Email", value: 0, total: totalLeads, color: "text-red-400" },
               { label: "Missing Phone", value: 0, total: totalLeads, color: "text-red-400" },
             ].map((s, index) => (
-              <motion.div
-                key={index}
-                className="glass text-center p-3 rounded-xl overflow-hidden"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: index * 0.06 }}
-                whileHover={{ y: -2 }}
-              >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="rounded-t-sm -mx-3 -mt-3 mb-3" />
+              <PrismPanel key={index} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
                 <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
                 <p className="text-[9px] text-muted">{s.label}</p>
                 <p className="text-[8px] text-muted">of {s.total} leads</p>
-              </motion.div>
+              </PrismPanel>
             ))}
           </div>
           <div className="space-y-1.5">
@@ -1326,7 +1311,7 @@ export default function LeadEnginePage() {
             {leads.map((lead, index) => (
               <motion.div
                 key={lead.id}
-                className="glass-md flex items-center justify-between p-3 rounded-xl text-[10px]"
+                className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)" }}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: index * 0.04 }}

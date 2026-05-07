@@ -33,6 +33,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, getPlanConfig, type PlanTier } from "@/lib/plan-config";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 type UsageMap = Record<string, number>;
@@ -240,12 +241,14 @@ export default function BillingPage() {
 
       {/* ─── Current plan hero ─────────────────────────────────────── */}
       <motion.div
-        className="glass-indigo rounded-2xl p-5 flex items-center justify-between gap-4 flex-wrap relative overflow-hidden"
+        className="rounded-2xl border p-5 flex items-center justify-between gap-4 flex-wrap relative overflow-hidden"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.22 }}
         style={{
-          background: `linear-gradient(135deg, ${planConfig.color}0A 0%, transparent 60%)`,
+          background: `linear-gradient(135deg, ${planConfig.color}0A 0%, rgba(255,255,255,0.04) 60%)`,
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
           borderColor: `${planConfig.color}30`,
         }}
       >
@@ -338,9 +341,10 @@ export default function BillingPage() {
             return (
               <motion.div
                 key={meta.key}
-                className={`glass rounded-2xl overflow-hidden relative transition-all ${
+                className={`rounded-2xl border overflow-hidden relative transition-all ${
                   maxed ? "shadow-[0_0_16px_rgba(239,68,68,0.12)]" : ""
                 }`}
+                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
@@ -427,9 +431,13 @@ export default function BillingPage() {
             return (
               <motion.div
                 key={pack.id}
-                className={`relative overflow-hidden rounded-2xl p-4 transition-all ${
-                  pack.popular ? "glass-indigo" : "glass"
-                }`}
+                className="relative overflow-hidden rounded-2xl border p-4 transition-all"
+                style={{
+                  background: pack.popular ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.028)",
+                  backdropFilter: pack.popular ? "blur(20px)" : "blur(16px)",
+                  WebkitBackdropFilter: pack.popular ? "blur(20px)" : "blur(16px)",
+                  borderColor: pack.popular ? "rgba(99,102,241,0.16)" : "rgba(99,102,241,0.1)",
+                }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
@@ -484,7 +492,7 @@ export default function BillingPage() {
           </button>
         </div>
 
-        <div className="glass rounded-2xl overflow-hidden">
+        <PrismPanel padding="p-0" className="overflow-hidden">
           {invoicesLoading ? (
             <div className="p-8 text-center">
               <Loader2 size={16} className="animate-spin text-gold mx-auto" />
@@ -570,7 +578,7 @@ export default function BillingPage() {
               </tbody>
             </table>
           )}
-        </div>
+        </PrismPanel>
       </section>
     </div>
   );

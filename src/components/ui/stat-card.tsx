@@ -129,7 +129,9 @@ export default function StatCard({
   sparkline,
   index = 0,
 }: StatCardProps) {
-  const accent = accentColor ?? tokens.brand.lime;
+  // May 7: prism split — cycle through prism accents by index, fallback to indigo
+  const PRISM_CYCLE = ["#10B981", "#3B82F6", "#06B6D4", "#8B5CF6", "#F59E0B"];
+  const accent = accentColor ?? PRISM_CYCLE[index % PRISM_CYCLE.length];
   const changeColor = {
     positive: tokens.status.success,
     negative: tokens.status.error,
@@ -175,60 +177,40 @@ export default function StatCard({
     <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
-      className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden rounded-2xl flex flex-col gap-1.5 ring-1 ring-[#6366F1]/10 hover:ring-[#6366F1]/20 tilt-3d`}
-      // Apr 28 v9 fix: surface bg now uses themeTokens (CSS-var-backed)
-      // so the card flips white on light theme. Was hardcoded
-      // tokens.bg.surface1 (dark hex baked at import time, ignored
-      // theme switching).
+      className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden rounded-xl flex flex-col gap-1.5 tilt-3d`}
+      // May 7: Prism split design — glass surface with bottom accent bar,
+      // indigo-tinted border. Replaces old left-stripe pattern.
       style={{
-        background: themeTokens.bg.surface1,
-        border: `1px solid var(--border-subtle, rgba(13,148,136,0.08))`,
-        borderLeftColor: accent,
-        borderLeftWidth: "2px",
+        background: "rgba(255,255,255,0.028)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        border: `1px solid rgba(99,102,241,0.1)`,
         boxShadow: [
           "0 1px 0 rgba(255,255,255,0.04) inset",
-          "0 2px 4px rgba(0,0,0,0.10)",
-          "0 12px 28px -12px rgba(0,0,0,0.18)",
-          `0 0 24px -8px ${accent}22`,
+          "0 2px 8px rgba(0,0,0,0.20)",
+          `0 0 24px -8px ${accent}18`,
         ].join(", "),
       }}
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 12 }}
-      transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1], delay: index * 0.06 }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 10 }}
+      transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1], delay: index * 0.06 }}
       data-premium={premium ? "true" : undefined}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-2px) rotate(0.4deg)";
-        e.currentTarget.style.borderColor = "var(--border-strong, rgba(13,148,136,0.20))";
-        // Re-apply left accent after borderColor override
-        e.currentTarget.style.borderLeftColor = accent;
-        e.currentTarget.style.borderLeftWidth = "2px";
-        e.currentTarget.style.boxShadow = [
+      whileHover={{
+        y: -2,
+        borderColor: "rgba(99,102,241,0.18)",
+        boxShadow: [
           "0 1px 0 rgba(255,255,255,0.06) inset",
-          "0 4px 8px rgba(0,0,0,0.12)",
-          "0 18px 40px -12px rgba(0,0,0,0.22)",
-          `0 0 0 1px ${accent}33`,
-          `0 0 32px -8px ${accent}55`,
-        ].join(", ");
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0) rotate(0deg)";
-        e.currentTarget.style.borderColor = "var(--border-subtle, rgba(13,148,136,0.08))";
-        // Restore left accent after borderColor reset
-        e.currentTarget.style.borderLeftColor = accent;
-        e.currentTarget.style.borderLeftWidth = "2px";
-        e.currentTarget.style.boxShadow = [
-          "0 1px 0 rgba(255,255,255,0.04) inset",
-          "0 2px 4px rgba(0,0,0,0.10)",
-          "0 12px 28px -12px rgba(0,0,0,0.18)",
-          `0 0 24px -8px ${accent}22`,
-        ].join(", ");
+          "0 4px 12px rgba(0,0,0,0.24)",
+          `0 0 32px -8px ${accent}30`,
+        ].join(", "),
+        transition: { duration: 0.2 },
       }}
     >
-      {/* Static inner gradient — subtle depth from top-left accent corner */}
+      {/* Bottom accent bar — prism color per tile */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute bottom-0 left-0 right-0 h-[2px] opacity-70"
         style={{
-          background: `linear-gradient(135deg, ${accent}08 0%, transparent 60%)`,
+          background: `linear-gradient(to right, ${accent}, transparent)`,
         }}
         aria-hidden
       />
@@ -237,7 +219,7 @@ export default function StatCard({
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         style={{
-          background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${accent}10 0%, transparent 60%)`,
+          background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${accent}0C 0%, transparent 60%)`,
         }}
         aria-hidden
       />
@@ -245,8 +227,8 @@ export default function StatCard({
       <div className="relative">
         <div className="flex items-center justify-between mb-2">
           <span
-            className="text-[10px] font-semibold uppercase tracking-[0.14em]"
-            style={{ color: themeTokens.text.muted }}
+            className="text-[9px] font-medium uppercase tracking-[0.18em]"
+            style={{ color: "#6F6D7A" }}
           >
             {label}
           </span>
@@ -263,7 +245,7 @@ export default function StatCard({
         </div>
         <span
           className={`${SIZE_VALUE_CLASS[size]} tracking-[-0.025em] tabular-nums`}
-          style={{ color: themeTokens.text.primary }}
+          style={{ color: accent, fontVariantNumeric: "tabular-nums" }}
         >
           {typeof value === "string" && value.startsWith("$")
             ? `$${animatedNum.toLocaleString()}`

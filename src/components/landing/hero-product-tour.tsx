@@ -80,7 +80,7 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
           className="rounded-2xl px-6 md:px-8 py-8 md:py-10 min-h-[420px] relative overflow-hidden"
           style={{
             background:
-              "linear-gradient(180deg, rgba(200,168,85,0.03) 0%, rgba(11,13,18,1) 100%)",
+              "linear-gradient(180deg, rgba(99,102,241,0.03) 0%, rgba(11,13,18,1) 100%)",
           }}
         >
           {/* Window chrome + tab pills */}
@@ -97,13 +97,13 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
                   className="text-[10px] font-semibold px-2.5 py-1 rounded-md transition-all"
                   style={{
                     background:
-                      active === s.key ? "rgba(200,168,85,0.18)" : "rgba(255,255,255,0.03)",
+                      active === s.key ? "rgba(99,102,241,0.18)" : "rgba(255,255,255,0.03)",
                     border:
                       active === s.key
-                        ? "1px solid rgba(200,168,85,0.35)"
+                        ? "1px solid rgba(99,102,241,0.35)"
                         : "1px solid rgba(255,255,255,0.06)",
                     color:
-                      active === s.key ? "#e2c878" : "rgba(255,255,255,0.5)",
+                      active === s.key ? "#A78BFA" : "rgba(255,255,255,0.5)",
                   }}
                 >
                   {s.label}
@@ -147,7 +147,7 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
                   height: 6,
                   background:
                     active === s.key
-                      ? "#c8a855"
+                      ? "#6366F1"
                       : "rgba(255,255,255,0.25)",
                 }}
                 aria-label={s.label}
@@ -160,7 +160,7 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "linear-gradient(90deg, transparent, rgba(200,168,85,0.03), transparent)",
+                "linear-gradient(90deg, transparent, rgba(99,102,241,0.03), transparent)",
               animation: "shimmer 3s ease-in-out infinite",
             }}
           />
@@ -172,7 +172,7 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
         className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(200,168,85,0.1) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(99,102,241,0.1) 0%, transparent 70%)",
           filter: "blur(20px)",
         }}
       />
@@ -215,9 +215,9 @@ function DashboardMock() {
             className="flex-1 rounded-t transition-all"
             style={{
               height: `${h}%`,
-              background: `linear-gradient(180deg, rgba(200,168,85,${
+              background: `linear-gradient(180deg, rgba(99,102,241,${
                 0.3 + (h / 100) * 0.5
-              }) 0%, rgba(200,168,85,0.05) 100%)`,
+              }) 0%, rgba(99,102,241,0.05) 100%)`,
             }}
           />
         ))}
@@ -268,7 +268,7 @@ function LeadsMock() {
                     background:
                       r.score > 80
                         ? "linear-gradient(90deg, #10b981, #34d399)"
-                        : "linear-gradient(90deg, #c8a855, #e2c878)",
+                        : "linear-gradient(90deg, #6366F1, #A78BFA)",
                   }}
                 />
               </div>
@@ -281,8 +281,8 @@ function LeadsMock() {
                   background:
                     r.status === "Hot"
                       ? "rgba(239,68,68,0.14)"
-                      : "rgba(200,168,85,0.14)",
-                  color: r.status === "Hot" ? "#fca5a5" : "#e2c878",
+                      : "rgba(99,102,241,0.14)",
+                  color: r.status === "Hot" ? "#fca5a5" : "#A78BFA",
                 }}
               >
                 {r.status}
@@ -326,7 +326,7 @@ function VoiceMock() {
         {[
           { caller: "+1 415 555 0102", duration: "2:14", outcome: "Booked", color: "#10b981" },
           { caller: "+1 408 555 0173", duration: "0:38", outcome: "Voicemail", color: "#94a3b8" },
-          { caller: "+1 510 555 0144", duration: "3:42", outcome: "Qualified", color: "#c8a855" },
+          { caller: "+1 510 555 0144", duration: "3:42", outcome: "Qualified", color: "#6366F1" },
           { caller: "+1 650 555 0119", duration: "0:12", outcome: "Spam", color: "#ef4444" },
         ].map((row, i) => (
           <div
@@ -360,11 +360,11 @@ function VoiceMock() {
       <div
         className="mt-4 rounded-md p-2.5 flex items-center gap-2 text-[10px] text-gray-300"
         style={{
-          background: "rgba(200,168,85,0.05)",
-          border: "1px solid rgba(200,168,85,0.15)",
+          background: "rgba(99,102,241,0.05)",
+          border: "1px solid rgba(99,102,241,0.15)",
         }}
       >
-        <Sparkles size={10} style={{ color: "#c8a855" }} />
+        <Sparkles size={10} style={{ color: "#6366F1" }} />
         AI hand-off triggered for high-intent caller — booked to John Friday 2pm.
       </div>
     </div>
@@ -379,7 +379,7 @@ function ContentMock() {
     { day: 2, type: "video", icon: <SiYoutube size={9} />, color: "#FF0000" },
     { day: 3, type: "reel", icon: <SiInstagram size={9} />, color: "#E4405F" },
     { day: 4, type: "post", icon: <SiTiktok size={9} />, color: "#FFFFFF" },
-    { day: 5, type: "ai", icon: <Sparkles size={9} />, color: "#c8a855" },
+    { day: 5, type: "ai", icon: <Sparkles size={9} />, color: "#6366F1" },
   ];
   return (
     <div>
@@ -475,11 +475,11 @@ function AdsMock() {
       <div
         className="rounded-md p-2.5 flex items-start gap-2 text-[10px] text-gray-300"
         style={{
-          background: "rgba(200,168,85,0.05)",
-          border: "1px solid rgba(200,168,85,0.15)",
+          background: "rgba(99,102,241,0.05)",
+          border: "1px solid rgba(99,102,241,0.15)",
         }}
       >
-        <Sparkles size={10} style={{ color: "#c8a855" }} className="shrink-0 mt-0.5" />
+        <Sparkles size={10} style={{ color: "#6366F1" }} className="shrink-0 mt-0.5" />
         AI rebalanced budget: shifted $400/day from Meta Awareness → Google Search.
       </div>
     </div>

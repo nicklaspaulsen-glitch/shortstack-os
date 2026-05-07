@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { PrismPanel } from "@/components/prism";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 import ErrorBoundary from "@/components/error-boundary";
 
@@ -879,7 +880,7 @@ export default function OutreachHubPage() {
       </div>
 
       {/* ── Tabs (sticky) ── */}
-      <div className="sticky top-0 z-10 glass rounded-xl p-1 overflow-x-auto flex gap-1">
+      <PrismPanel padding="p-1" className="sticky top-0 z-10 overflow-x-auto flex gap-1">
         {TABS.map((t, index) => (
           <motion.button
             key={t.key}
@@ -897,7 +898,7 @@ export default function OutreachHubPage() {
             {t.icon} {t.label}
           </motion.button>
         ))}
-      </div>
+      </PrismPanel>
 
       {/* ════════════════════════════════════════════════════════════ */}
       {/*  TAB 1: CAMPAIGNS                                          */}
@@ -923,7 +924,8 @@ export default function OutreachHubPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22 }}
-              className="glass rounded-xl p-5 space-y-5"
+              className="rounded-xl p-5 space-y-5"
+              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
             >
               <h3 className="text-sm font-semibold flex items-center gap-2">
                 <Zap size={14} className="text-indigo-400" /> New Campaign
@@ -1078,7 +1080,8 @@ export default function OutreachHubPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: index * 0.05 }}
-              className="glass rounded-xl overflow-hidden space-y-3 p-4"
+              className="rounded-xl overflow-hidden space-y-3 p-4"
+              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
             >
               {/* Campaign header */}
               <div className="flex items-center justify-between">
@@ -1185,7 +1188,7 @@ export default function OutreachHubPage() {
                 transition={{ duration: 0.2, delay: index * 0.05 }}
                 whileHover={{ scale: 1.01, y: -2 }}
                 className={`text-left p-4 rounded-xl border transition-all ${
-                  activeSequence === seq.id ? "glass-indigo border-indigo-500/20" : "glass border-white/10 hover:border-white/20"
+                  activeSequence === seq.id ? "bg-[rgba(255,255,255,0.04)] backdrop-blur-[20px] border-[rgba(99,102,241,0.16)]" : "bg-[rgba(255,255,255,0.028)] backdrop-blur-[16px] border-[rgba(99,102,241,0.1)] hover:border-white/20"
                 }`}>
                 <div className="flex items-center justify-between mb-1">
                   <h3 className={`text-xs font-semibold ${activeSequence === seq.id ? "text-gold" : ""}`}>{seq.name}</h3>
@@ -1207,7 +1210,7 @@ export default function OutreachHubPage() {
 
           {/* Active Sequence Timeline */}
           {activeSequence && (
-            <div className="glass rounded-xl p-4 space-y-4">
+            <PrismPanel padding="p-4" className="space-y-4">
               <h3 className="text-xs font-semibold flex items-center gap-2">
                 <Activity size={12} className="text-indigo-400" /> Sequence Timeline: {sequences.find(s => s.id === activeSequence)?.name}
               </h3>
@@ -1229,7 +1232,7 @@ export default function OutreachHubPage() {
                       <span className={`text-[8px] font-bold ${idx === 0 ? "text-indigo-400" : "text-muted"}`}>{step.day}</span>
                     </div>
                     {/* Content */}
-                    <div className="flex-1 glass-md rounded-lg p-3 border border-white/8">
+                    <div className="flex-1 rounded-lg p-3 border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(20px)" }}>
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`${channelColor(step.channel)}`}>{channelIcon(step.channel, 12)}</span>
                         <span className="text-[10px] font-semibold capitalize">{step.channel}</span>
@@ -1241,7 +1244,7 @@ export default function OutreachHubPage() {
                   </motion.div>
                 ))}
               </div>
-            </div>
+            </PrismPanel>
           )}
 
           {/* Custom Sequence Builder */}
@@ -1324,7 +1327,7 @@ export default function OutreachHubPage() {
         <div className="space-y-4">
           {/* Template sub-tabs */}
           <div className="flex items-center gap-4">
-            <div className="flex gap-1 glass rounded-xl p-1">
+            <PrismPanel padding="p-1" className="flex gap-1">
               {([
                 { key: "calls" as TemplateSubTab, label: "Calls", icon: <PhoneCall size={12} />, count: callTemplates.length },
                 { key: "sms" as TemplateSubTab, label: "SMS", icon: <Smartphone size={12} />, count: smsTemplates.length },
@@ -1348,7 +1351,7 @@ export default function OutreachHubPage() {
                   <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${templateSubTab === t.key ? "bg-indigo-500/20" : "bg-white/5"}`}>{t.count}</span>
                 </motion.button>
               ))}
-            </div>
+            </PrismPanel>
             <div className="ml-auto flex gap-1">
               {(["all", "b2b", "b2c"] as const).map(f => (
                 <button key={f} onClick={() => setTemplateFilter(f)}
@@ -1382,7 +1385,7 @@ export default function OutreachHubPage() {
                 <h2 className="text-sm font-semibold flex items-center gap-2">
                   <Settings size={14} className="text-muted" /> Call Settings
                 </h2>
-                <div className="glass rounded-xl p-4 space-y-4">
+                <PrismPanel padding="p-4" className="space-y-4">
                   <div>
                     <label className="text-[10px] text-muted block mb-1">Agent Name</label>
                     <input value={callSettings.agentName} onChange={e => setCallSettings(p => ({ ...p, agentName: e.target.value }))}
@@ -1420,9 +1423,9 @@ export default function OutreachHubPage() {
                       {callSettings.enableVoicemail ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                     </button>
                   </div>
-                </div>
+                </PrismPanel>
                 {/* Preview */}
-                <div className="glass-indigo rounded-xl p-4 space-y-3">
+                <PrismPanel padding="p-4" border="strong" className="space-y-3">
                   <h3 className="text-xs font-semibold flex items-center gap-2"><Eye size={12} /> Live Preview</h3>
                   <div className="space-y-2">
                     <input placeholder="Business name..." value={previewVars.business_name || ""}
@@ -1437,7 +1440,7 @@ export default function OutreachHubPage() {
                       {renderPreview(callTemplates[0])}
                     </div>
                   )}
-                </div>
+                </PrismPanel>
               </div>
             </div>
           )}
@@ -1465,7 +1468,7 @@ export default function OutreachHubPage() {
                 <h2 className="text-sm font-semibold flex items-center gap-2">
                   <Settings size={14} className="text-muted" /> SMS Settings
                 </h2>
-                <div className="glass rounded-xl p-4 space-y-4">
+                <PrismPanel padding="p-4" className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs">AI Personalization</span>
                     <button onClick={() => setSmsSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
@@ -1521,7 +1524,7 @@ export default function OutreachHubPage() {
                       ))}
                     </div>
                   </div>
-                </div>
+                </PrismPanel>
               </div>
             </div>
           )}
@@ -1549,7 +1552,7 @@ export default function OutreachHubPage() {
                 <h2 className="text-sm font-semibold flex items-center gap-2">
                   <Settings size={14} className="text-muted" /> Email Settings
                 </h2>
-                <div className="glass rounded-xl p-4 space-y-4">
+                <PrismPanel padding="p-4" className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs">AI Personalization</span>
                     <button onClick={() => setEmailSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
@@ -1593,7 +1596,7 @@ export default function OutreachHubPage() {
                       <span className="text-xs font-mono w-12 text-right">{emailSettings.sendDelay}ms</span>
                     </div>
                   </div>
-                </div>
+                </PrismPanel>
               </div>
             </div>
           )}
@@ -1634,7 +1637,7 @@ export default function OutreachHubPage() {
                 <h2 className="text-sm font-semibold flex items-center gap-2">
                   <Settings size={14} className="text-muted" /> DM Settings
                 </h2>
-                <div className="glass rounded-xl p-4 space-y-4">
+                <PrismPanel padding="p-4" className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs">AI Personalization</span>
                     <button onClick={() => setDmSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
@@ -1689,7 +1692,7 @@ export default function OutreachHubPage() {
                         className="input text-xs flex-1" />
                     </div>
                   </div>
-                </div>
+                </PrismPanel>
               </div>
             </div>
           )}
@@ -1716,7 +1719,8 @@ export default function OutreachHubPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="glass rounded-xl overflow-hidden relative"
+                className="rounded-xl overflow-hidden relative"
+                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
               >
                 <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
                 <div className="p-4">
@@ -1736,7 +1740,8 @@ export default function OutreachHubPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, delay: 0.3 }}
-            className="glass rounded-xl overflow-hidden"
+            className="rounded-xl overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           >
             <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
             <div className="p-4 space-y-4">
@@ -1772,7 +1777,7 @@ export default function OutreachHubPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Response Rate Heatmap */}
-            <div className="glass rounded-xl p-4 space-y-3">
+            <PrismPanel padding="p-4" className="space-y-3">
               <h3 className="text-xs font-semibold flex items-center gap-2">
                 <Clock size={12} className="text-muted" /> Response Rate by Day
               </h3>
@@ -1793,10 +1798,10 @@ export default function OutreachHubPage() {
                 ))}
               </div>
               <p className="text-[9px] text-muted text-center">No data yet</p>
-            </div>
+            </PrismPanel>
 
             {/* Conversion Funnel */}
-            <div className="glass rounded-xl p-4 space-y-3">
+            <PrismPanel padding="p-4" className="space-y-3">
               <h3 className="text-xs font-semibold flex items-center gap-2">
                 <Target size={12} className="text-indigo-400" /> Conversion Funnel
               </h3>
@@ -1817,7 +1822,7 @@ export default function OutreachHubPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </PrismPanel>
           </div>
 
           {/* Best Performing */}
@@ -1825,7 +1830,8 @@ export default function OutreachHubPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, delay: 0.5 }}
-            className="glass rounded-xl p-6 text-center"
+            className="rounded-xl p-6 text-center"
+            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           >
             <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-3">
               <Star size={20} className="text-indigo-400" />
@@ -1842,7 +1848,7 @@ export default function OutreachHubPage() {
       {tab === "settings" && (
         <div className="max-w-2xl space-y-4">
           {/* Global AI Settings */}
-          <div className="glass rounded-xl p-5 space-y-5">
+          <PrismPanel padding="p-5" className="space-y-5">
             <h2 className="text-sm font-semibold flex items-center gap-2">
               <Sparkles size={14} className="text-indigo-400" /> Global AI Settings
             </h2>
@@ -1903,10 +1909,10 @@ export default function OutreachHubPage() {
                   onResult={v => setGlobalSettings(p => ({ ...p, customInstructions: v }))} />
               </div>
             </div>
-          </div>
+          </PrismPanel>
 
           {/* Daily Limits */}
-          <div className="glass rounded-xl p-4 space-y-4">
+          <PrismPanel padding="p-4" className="space-y-4">
             <h2 className="text-sm font-semibold flex items-center gap-2">
               <AlertCircle size={14} className="text-indigo-400" /> Daily Limits
             </h2>
@@ -1937,10 +1943,10 @@ export default function OutreachHubPage() {
                   className="input w-full text-xs" />
               </div>
             </div>
-          </div>
+          </PrismPanel>
 
           {/* Compliance */}
-          <div className="glass rounded-xl p-4 space-y-4">
+          <PrismPanel padding="p-4" className="space-y-4">
             <h2 className="text-sm font-semibold flex items-center gap-2">
               <Shield size={14} className="text-indigo-400" /> Compliance
             </h2>
@@ -1964,10 +1970,10 @@ export default function OutreachHubPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </PrismPanel>
 
           {/* Default Target Mode + Timezone + Working Hours */}
-          <div className="glass rounded-xl p-4 space-y-4">
+          <PrismPanel padding="p-4" className="space-y-4">
             <h2 className="text-sm font-semibold flex items-center gap-2">
               <Settings size={14} className="text-indigo-400" /> General
             </h2>
@@ -2006,10 +2012,10 @@ export default function OutreachHubPage() {
                   className="input text-xs flex-1" />
               </div>
             </div>
-          </div>
+          </PrismPanel>
 
           {/* Variable reference */}
-          <div className="glass rounded-xl p-4 space-y-3">
+          <PrismPanel padding="p-4" className="space-y-3">
             <h3 className="text-xs font-semibold flex items-center gap-2">
               <Hash size={12} className="text-indigo-400" /> Available Variables
             </h3>
@@ -2035,7 +2041,7 @@ export default function OutreachHubPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </PrismPanel>
         </div>
       )}
 

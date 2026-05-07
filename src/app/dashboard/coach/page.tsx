@@ -28,6 +28,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 import StatCard from "@/components/ui/stat-card";
 
 interface CoachAnalysisRow {
@@ -208,20 +209,18 @@ export default function CoachPage() {
           { label: "Average coach score", value: data?.stats.avg_score ?? 0, icon: <TrendingUp className="h-4 w-4" /> },
           { label: "Top performer score", value: data?.stats.top_rep_score ?? 0, icon: <Award className="h-4 w-4" />, premium: true },
         ].map(({ label, value, icon, premium }) => (
-          <motion.div
+          <PrismPanel
             key={label}
-            variants={cardVariants}
-            whileHover={{ y: -2 }}
-            className="glass rounded-xl p-4 relative overflow-hidden"
+            rainbow
+            padding="p-4"
           >
-            <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
             <StatCard
               label={label}
               value={value}
               icon={icon}
               premium={premium}
             />
-          </motion.div>
+          </PrismPanel>
         ))}
       </motion.div>
 
@@ -268,7 +267,7 @@ export default function CoachPage() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="glass rounded-xl overflow-hidden"
+          className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
         >
           {data.analyses.length === 0 ? (
             <div className="px-6 py-12 text-center text-white/60">
@@ -336,16 +335,16 @@ export default function CoachPage() {
           className="space-y-3"
         >
           {repBuckets.length === 0 ? (
-            <div className="glass rounded-xl px-6 py-8 text-center text-white/60">
-              No rep-level data yet.
-            </div>
+            <PrismPanel padding="px-6 py-8">
+              <p className="text-center text-white/60">No rep-level data yet.</p>
+            </PrismPanel>
           ) : (
             repBuckets.map((bucket) => (
               <motion.div
                 key={bucket.repId}
                 variants={cardVariants}
                 whileHover={{ y: -1 }}
-                className="glass rounded-xl p-4"
+                className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -412,12 +411,12 @@ export default function CoachPage() {
           </motion.div>
 
           {!leaderboard || leaderboard.leaderboard.length === 0 ? (
-            <motion.div variants={cardVariants} className="glass rounded-xl px-6 py-8 text-center text-white/60">
+            <motion.div variants={cardVariants} className="rounded-xl px-6 py-8 text-center text-white/60" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
               Leaderboard requires at least 3 analyses per rep. Once your team accumulates more
               calls, rankings will appear here.
             </motion.div>
           ) : (
-            <motion.div variants={cardVariants} className="glass rounded-xl overflow-hidden">
+            <motion.div variants={cardVariants} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
               <table className="w-full text-sm">
                 <thead className="bg-white/[0.03] text-xs uppercase tracking-wider text-white/50">
                   <tr>

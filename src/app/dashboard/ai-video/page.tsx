@@ -22,6 +22,7 @@ import {
   tierForVideoSeconds,
 } from "@/lib/plan-limits";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
+import { PrismPanel } from "@/components/prism";
 
 const PROMPT_IDEAS = [
   "A golden retriever running through a field of sunflowers at sunset, cinematic lighting",
@@ -506,32 +507,30 @@ export default function AIVideoPage() {
       </div>
 
       {/* Scorecard strip — 3-cell stagger, same pattern as analytics/clients */}
-      <motion.div
-        className="glass grid grid-cols-3 divide-x divide-[rgba(99,102,241,0.08)] rounded-xl overflow-hidden"
-        initial="hidden"
-        animate="visible"
-        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
-      >
-        {[
-          { label: "Videos generated", value: results.length.toString(), color: "#6366F1" },
-          { label: "Plan tier", value: planTier, color: "#F5F4F1" },
-          { label: "Max duration", value: Number.isFinite(maxSeconds) ? formatVideoDuration(maxSeconds) : "Unlimited", color: "#7FE5B8" },
-        ].map(({ label, value, color }, index) => (
-          <motion.div
-            key={label}
-            className="relative px-4 py-3 flex flex-col gap-0.5 overflow-hidden"
-            variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] } } }}
-            whileHover={{ y: -2 }}
-          >
-            <div
-              className="absolute top-0 left-0 right-0"
-              style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }}
-            />
-            <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">{label}</span>
-            <span className="font-display text-lg font-bold tracking-[-0.02em]" style={{ color, fontVariantNumeric: "tabular-nums" }}>{value}</span>
-          </motion.div>
-        ))}
-      </motion.div>
+      <PrismPanel rainbow padding="p-0" className="rounded-xl">
+        <motion.div
+          className="grid grid-cols-3 divide-x divide-[rgba(99,102,241,0.08)] overflow-hidden"
+          initial="hidden"
+          animate="visible"
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
+        >
+          {[
+            { label: "Videos generated", value: results.length.toString(), color: "#6366F1" },
+            { label: "Plan tier", value: planTier, color: "#F5F4F1" },
+            { label: "Max duration", value: Number.isFinite(maxSeconds) ? formatVideoDuration(maxSeconds) : "Unlimited", color: "#7FE5B8" },
+          ].map(({ label, value, color }, index) => (
+            <motion.div
+              key={label}
+              className="relative px-4 py-3 flex flex-col gap-0.5 overflow-hidden"
+              variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] } } }}
+              whileHover={{ y: -2 }}
+            >
+              <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">{label}</span>
+              <span className="font-display text-lg font-bold tracking-[-0.02em]" style={{ color, fontVariantNumeric: "tabular-nums" }}>{value}</span>
+            </motion.div>
+          ))}
+        </motion.div>
+      </PrismPanel>
 
       {/* Guided Mode — preserved untouched for beginners */}
       {!advancedMode && (
@@ -796,7 +795,8 @@ export default function AIVideoPage() {
                 return (
                   <motion.div
                     key={result.id}
-                    className={`hf-thumb glass rounded-xl ${aspectClass} group`}
+                    className={`hf-thumb rounded-xl ${aspectClass} group`}
+                    style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
                     variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] } } }}
                     whileHover={{ y: -4, scale: 1.02 }}
                   >

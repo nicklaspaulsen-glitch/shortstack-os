@@ -85,13 +85,13 @@ export default function PricingPreview() {
                 className="rounded-2xl p-7 h-full flex flex-col transition-all duration-300 hover:-translate-y-1"
                 style={{
                   background: plan.featured
-                    ? "rgba(200,168,85,0.05)"
+                    ? "rgba(99,102,241,0.05)"
                     : "rgba(255,255,255,0.02)",
                   border: plan.featured
-                    ? "1px solid rgba(200,168,85,0.3)"
+                    ? "1px solid rgba(99,102,241,0.3)"
                     : "1px solid rgba(255,255,255,0.05)",
                   boxShadow: plan.featured
-                    ? "0 0 30px rgba(200,168,85,0.08)"
+                    ? "0 0 30px rgba(99,102,241,0.08)"
                     : "none",
                 }}
               >
@@ -99,8 +99,8 @@ export default function PricingPreview() {
                   <div
                     className="self-start text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full mb-4"
                     style={{
-                      background: "#c8a855",
-                      color: "#0b0d12",
+                      background: "#A78BFA",
+                      color: "#fff",
                     }}
                   >
                     Most popular
@@ -131,7 +131,7 @@ export default function PricingPreview() {
                       <Check
                         size={14}
                         className="shrink-0 mt-0.5"
-                        style={{ color: "#c8a855" }}
+                        style={{ color: "#A78BFA" }}
                       />
                       <span>{b}</span>
                     </li>
@@ -145,8 +145,8 @@ export default function PricingPreview() {
                     plan.featured
                       ? {
                           background:
-                            "linear-gradient(135deg, #c8a855, #b89840)",
-                          color: "#0b0d12",
+                            "linear-gradient(135deg, #6366F1, #4F46E5)",
+                          color: "#fff",
                         }
                       : {
                           background: "rgba(255,255,255,0.04)",

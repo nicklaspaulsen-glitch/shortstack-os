@@ -22,6 +22,7 @@ import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
+import { PrismPanel } from "@/components/prism";
 import { ALLOWED_GENERAL_UPLOADS, buildAccept, validateFile } from "@/lib/file-types";
 
 type Tab = "scripts" | "requests" | "publish" | "calendar" | "personal" | "pipeline" | "analytics" | "seo";
@@ -631,12 +632,11 @@ export default function ContentPage() {
         {dropItems.length > 0 && (
           <div className="mt-5 space-y-4">
             {dropItems.map((item, index) => (
-              <motion.div
+              <PrismPanel
                 key={item.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: index * 0.06 }}
-                className="glass rounded-xl p-4"
+                className="rounded-xl"
+                padding="p-4"
+                delay={index * 0.06}
               >
                 {/* Header row */}
                 <div className="flex items-center justify-between mb-3">
@@ -779,7 +779,7 @@ export default function ContentPage() {
                 {item.status === "failed" && item.error && (
                   <p className="text-[10px] text-danger/80 mt-2">{item.error}</p>
                 )}
-              </motion.div>
+              </PrismPanel>
             ))}
           </div>
         )}
@@ -1061,19 +1061,14 @@ export default function ContentPage() {
                   { label: "Approved", value: publishQueue.filter((p) => p.status === "approved").length },
                   { label: "Published", value: publishQueue.filter((p) => p.status === "published").length },
                 ].map((stat, index) => (
-                  <motion.div
+                  <PrismPanel
                     key={stat.label}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.22, delay: index * 0.06 }}
-                    whileHover={{ y: -2 }}
-                    className="glass rounded-xl overflow-hidden relative"
+                    rainbow
+                    padding="pt-1 px-0 pb-0"
+                    delay={index * 0.06}
                   >
-                    <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 left-0 right-0" />
-                    <div className="pt-1">
-                      <StatCard label={stat.label} value={stat.value} />
-                    </div>
-                  </motion.div>
+                    <StatCard label={stat.label} value={stat.value} index={index} />
+                  </PrismPanel>
                 ))}
               </div>
               <DataTable
@@ -1317,20 +1312,16 @@ export default function ContentPage() {
                   { label: "Avg Engagement", value: contentAnalytics.avg_engagement, icon: <TrendingUp size={16} />, color: "text-info" },
                   { label: "AI Enhanced", value: `${contentAnalytics.ai_enhanced}%`, icon: <Sparkles size={16} />, color: "text-purple-400" },
                 ].map(stat => (
-                  <motion.div
+                  <PrismPanel
                     key={stat.label}
-                    variants={{
-                      hidden: { opacity: 0, y: 12 },
-                      visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
-                    }}
-                    whileHover={{ y: -3 }}
-                    className="glass rounded-xl overflow-hidden relative text-center p-4"
+                    rainbow
+                    padding="p-4"
+                    className="text-center"
                   >
-                    <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 left-0 right-0" />
                     <div className={`${stat.color} mx-auto mb-2`}>{stat.icon}</div>
                     <p className="text-xl font-bold">{stat.value}</p>
                     <p className="text-[10px] text-muted">{stat.label}</p>
-                  </motion.div>
+                  </PrismPanel>
                 ))}
               </motion.div>
               <div className="card">
@@ -1394,18 +1385,16 @@ export default function ContentPage() {
                         { value: seoResults.readability, label: "Readability", className: "text-sm font-medium text-info" },
                         { value: seoResults.plagiarism, label: "Plagiarism", className: "text-sm font-medium text-success" },
                       ].map((tile, index) => (
-                        <motion.div
+                        <PrismPanel
                           key={tile.label}
-                          initial={{ opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.22, delay: index * 0.06 }}
-                          whileHover={{ y: -2 }}
-                          className="glass rounded-xl overflow-hidden relative text-center p-3"
+                          rainbow
+                          padding="p-3"
+                          className="text-center"
+                          delay={index * 0.06}
                         >
-                          <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 left-0 right-0" />
                           <p className={tile.className}>{tile.value}</p>
                           <p className="text-[10px] text-muted">{tile.label}</p>
-                        </motion.div>
+                        </PrismPanel>
                       ))}
                     </div>
                     {seoResults.issues.length > 0 && (

@@ -92,8 +92,8 @@ export default function LandingNav() {
             href="/pricing"
             className="text-sm font-semibold px-5 py-2 rounded-lg transition-all hover:opacity-90 hidden sm:inline-block"
             style={{
-              background: "linear-gradient(135deg, #c8a855, #b89840)",
-              color: "#0b0d12",
+              background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+              color: "#fff",
             }}
           >
             Start free trial
@@ -141,8 +141,8 @@ export default function LandingNav() {
                 href="/pricing"
                 className="text-sm font-semibold px-5 py-2 rounded-lg transition-all hover:opacity-90 text-center"
                 style={{
-                  background: "linear-gradient(135deg, #c8a855, #b89840)",
-                  color: "#0b0d12",
+                  background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+                  color: "#fff",
                 }}
                 onClick={() => setMenuOpen(false)}
               >

@@ -5,6 +5,7 @@ import { motion, type Variants } from "framer-motion";
 import { TrendingUp, Loader2, AlertCircle } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
+import { PrismPanel } from "@/components/prism";
 import { createClient } from "@/lib/supabase/client";
 
 interface Deal {
@@ -82,7 +83,7 @@ const STAT_BARS = [
 function BarChart({ buckets }: { buckets: MonthBucket[] }) {
   const max = Math.max(...buckets.map((b) => b.weighted), 1);
   return (
-    <div className="glass rounded-xl p-5">
+    <PrismPanel rainbow padding="p-5">
       <p className="text-sm font-semibold text-white mb-5">Weighted Pipeline — Next 6 Months</p>
       <div className="flex items-end gap-3 h-40">
         {buckets.map((b, i) => {
@@ -113,7 +114,7 @@ function BarChart({ buckets }: { buckets: MonthBucket[] }) {
           );
         })}
       </div>
-    </div>
+    </PrismPanel>
   );
 }
 
@@ -156,7 +157,7 @@ export default function ForecastPage() {
       />
 
       {loading ? <TableSkeleton rows={8} /> : error ? (
-        <div className="glass rounded-xl p-8 flex flex-col items-center gap-3 text-center">
+        <PrismPanel padding="p-8" className="flex flex-col items-center gap-3 text-center">
           <AlertCircle size={32} className="text-red-400" />
           <p className="text-white font-semibold">Failed to load deals</p>
           <p className="text-muted text-sm">{error}</p>
@@ -168,7 +169,7 @@ export default function ForecastPage() {
           >
             <Loader2 size={14} /> Retry
           </motion.button>
-        </div>
+        </PrismPanel>
       ) : (
         <>
           {/* Hero stats */}
@@ -202,7 +203,8 @@ export default function ForecastPage() {
                 key={i}
                 variants={fadeUp}
                 whileHover={{ y: -2 }}
-                className="glass rounded-xl p-5 overflow-hidden relative"
+                className="rounded-2xl border p-5 overflow-hidden relative"
+                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
               >
                 <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
                 <p className="text-xs text-muted uppercase tracking-wider mb-1">{stat.label}</p>
@@ -213,19 +215,19 @@ export default function ForecastPage() {
           </motion.div>
 
           {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length === 0 ? (
-            <div className="glass rounded-xl p-10 flex flex-col items-center gap-3 text-center">
+            <PrismPanel padding="p-10" className="flex flex-col items-center gap-3 text-center">
               <TrendingUp size={36} className="text-muted opacity-30" />
               <p className="text-white font-semibold">No open deals to forecast</p>
               <p className="text-muted text-sm max-w-xs">Add deals with expected close dates and probabilities to see your revenue forecast.</p>
               <a href="/dashboard/deals" className="btn-primary text-sm px-4 py-2 rounded-lg mt-2">Go to Deals →</a>
-            </div>
+            </PrismPanel>
           ) : (
             <>
               <BarChart buckets={buckets} />
 
               {/* Likely to close this month */}
               {likelyClose.length > 0 && (
-                <div className="glass rounded-xl overflow-hidden">
+                <PrismPanel padding="p-0" className="overflow-hidden">
                   <div className="px-4 py-3 border-b border-white/5">
                     <p className="text-sm font-semibold text-white">Likely to Close This Month</p>
                     <p className="text-xs text-muted mt-0.5">Deals with ≥70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
@@ -267,11 +269,11 @@ export default function ForecastPage() {
                       ))}
                     </motion.tbody>
                   </table>
-                </div>
+                </PrismPanel>
               )}
 
               {/* Full pipeline table */}
-              <div className="glass rounded-xl overflow-hidden">
+              <PrismPanel padding="p-0" className="overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/5">
                   <p className="text-sm font-semibold text-white">Full Open Pipeline</p>
                 </div>
@@ -320,7 +322,7 @@ export default function ForecastPage() {
                       ))}
                   </motion.tbody>
                 </table>
-              </div>
+              </PrismPanel>
             </>
           )}
         </>

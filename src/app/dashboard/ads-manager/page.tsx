@@ -30,6 +30,7 @@ import {
   Plug,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 
 // Code-split the panels — only the active tab loads. Each panel has its
 // own data fetching, so this also avoids waterfall fetches at page load.
@@ -109,7 +110,7 @@ export default function AdsManagerPage() {
       />
 
       {/* Tabs */}
-      <div className="glass rounded-xl px-2 py-1 flex flex-wrap gap-1">
+      <PrismPanel padding="px-2 py-1" className="flex flex-wrap gap-1">
         {TABS.map((t, i) => {
           const Icon = t.icon;
           const isActive = t.id === tab;
@@ -131,7 +132,7 @@ export default function AdsManagerPage() {
             </motion.button>
           );
         })}
-      </div>
+      </PrismPanel>
 
       {activeTab && (
         <p className="text-xs text-muted -mt-2">{activeTab.description}</p>

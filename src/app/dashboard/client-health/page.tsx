@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 import { Heart as HeartIcon } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -170,17 +171,14 @@ export default function ClientHealthPage() {
           { icon: <ShieldAlert size={14} className="text-red-400" />, label: "Critical", value: <span className="text-red-400">{criticalCount}</span> },
           { icon: <DollarSign size={14} className="text-red-400" />, label: "At-Risk MRR", value: <span className="text-red-400">${atRiskMRR.toLocaleString()}</span> },
         ].map((tile, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                {tile.icon}
-                <span className="text-[9px] text-muted uppercase tracking-wider">{tile.label}</span>
-              </div>
-              <p className="text-2xl font-bold font-mono">{tile.value}</p>
-              {tile.extra}
+          <PrismPanel key={i} rainbow delay={i * 0.06} padding="p-4">
+            <div className="flex items-center gap-2 mb-2">
+              {tile.icon}
+              <span className="text-[9px] text-muted uppercase tracking-wider">{tile.label}</span>
             </div>
-          </motion.div>
+            <p className="text-2xl font-bold font-mono">{tile.value}</p>
+            {tile.extra}
+          </PrismPanel>
         ))}
       </div>
 
@@ -200,7 +198,7 @@ export default function ClientHealthPage() {
       {activeTab === "overview" && (
         <>
           {/* Engagement Trend Chart */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <TrendingUp size={14} className="text-gold" /> Engagement Trend (Last 6 Months)
             </h3>
@@ -376,7 +374,7 @@ export default function ClientHealthPage() {
       {/* ---- TAB: Algorithm Breakdown ---- */}
       {activeTab === "algorithm" && (
         <div className="space-y-4">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-sm font-semibold mb-1 flex items-center gap-2">
               <Zap size={14} className="text-gold" /> Health Score Algorithm
             </h3>
@@ -398,7 +396,7 @@ export default function ClientHealthPage() {
           </motion.div>
 
           {/* Score Breakdown Per Client */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <BarChart3 size={14} className="text-gold" /> Client Score Breakdown
             </h3>
@@ -443,7 +441,7 @@ export default function ClientHealthPage() {
       {/* ---- TAB: Alerts ---- */}
       {activeTab === "alerts" && (
         <div className="space-y-4">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Bell size={14} className="text-gold" /> Automated Health Alerts
             </h3>
@@ -480,7 +478,7 @@ export default function ClientHealthPage() {
           </motion.div>
 
           {/* Activity Frequency Monitor */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Clock size={14} className="text-gold" /> Last Contact Tracker
             </h3>
@@ -517,19 +515,18 @@ export default function ClientHealthPage() {
               { icon: <ThumbsUp size={20} className="text-green-400 mx-auto mb-2" />, value: clients.filter(c => c.nps >= 9).length, color: "text-green-400", label: "Promoters (9-10)" },
               { icon: <MessageSquare size={20} className="text-yellow-400 mx-auto mb-2" />, value: clients.filter(c => c.nps >= 7 && c.nps < 9).length, color: "text-yellow-400", label: "Passives (7-8)" },
             ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
-                <div className="p-4 text-center">
+              <PrismPanel key={i} rainbow delay={i * 0.06} padding="p-4">
+                <div className="text-center">
                   {tile.icon}
                   <p className={`text-3xl font-bold font-mono ${tile.color}`}>{tile.value}</p>
                   <p className="text-[10px] text-muted">{tile.label}</p>
                 </div>
-              </motion.div>
+              </PrismPanel>
             ))}
           </div>
 
           {/* NPS Distribution */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3">NPS Distribution</h3>
             <div className="flex items-end gap-1 h-20">
               {Array.from({ length: 11 }, (_, i) => {
@@ -547,7 +544,7 @@ export default function ClientHealthPage() {
           </motion.div>
 
           {/* Satisfaction Survey */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Calendar size={14} className="text-gold" /> Client Satisfaction Survey
             </h3>
@@ -591,7 +588,7 @@ export default function ClientHealthPage() {
       {/* ---- TAB: History ---- */}
       {activeTab === "history" && (
         <div className="space-y-4">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <BarChart3 size={14} className="text-gold" /> Health Score History
             </h3>
@@ -610,7 +607,7 @@ export default function ClientHealthPage() {
           </motion.div>
 
           {/* Per-client health history */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-sm font-semibold mb-3">Client Health Trends</h3>
             <div className="space-y-3">
               {clients.map(c => (

@@ -15,6 +15,7 @@ import {
 import toast from "react-hot-toast";
 import EmptyState from "@/components/empty-state";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 import { BookOpen as BookOpenIcon } from "lucide-react";
 import { useAutoSave } from "@/lib/use-auto-save";
 import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
@@ -310,7 +311,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass rounded-xl p-4 border border-indigo-500/20"
+          className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.2)" }}
         >
           <div className="flex items-center gap-2 mb-3">
             <Users size={16} className="text-gold" />
@@ -321,7 +322,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
               value={newProfileName}
               onChange={e => setNewProfileName(e.target.value)}
               placeholder="Client / Brand name..."
-              className="glass input flex-1 text-xs"
+              className="input flex-1 text-xs"
               onKeyDown={e => e.key === "Enter" && addNewProfile()}
             />
             <button onClick={addNewProfile} className="btn-primary text-xs">Create</button>
@@ -339,7 +340,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
               value={searchFilter}
               onChange={e => setSearchFilter(e.target.value)}
               placeholder="Search profiles..."
-              className="glass input text-xs pl-8 w-full"
+              className="input text-xs pl-8 w-full"
             />
           </div>
           {filteredProfiles.length === 0 && profiles.length === 0 && (
@@ -360,7 +361,8 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                 transition={{ delay: i * 0.06 }}
                 whileHover={{ y: -2, scale: 1.01 }}
                 onClick={() => setSelectedProfile(p.id)}
-                className={`glass rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "border border-indigo-500/40 bg-indigo-500/8" : "hover:border-white/10"}`}
+                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                className={`rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "!border-indigo-500/40 bg-indigo-500/8" : "hover:border-white/10"}`}
               >
                 <div className="flex items-center justify-between">
                   <div>

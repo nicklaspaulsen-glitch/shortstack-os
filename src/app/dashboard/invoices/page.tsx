@@ -13,6 +13,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 
 type MainTab = "all" | "builder" | "recurring" | "reminders" | "templates" | "aging" | "revenue";
 
@@ -174,24 +175,16 @@ export default function InvoicesPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {STATS.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: index * 0.06 }}
-            whileHover={{ y: -2 }}
-            className="glass rounded-xl text-center p-3 relative overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
+          <PrismPanel key={stat.label} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
             <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
             <p className="text-lg font-bold">{stat.value}</p>
             <p className="text-[9px] text-muted">{stat.label}</p>
-          </motion.div>
+          </PrismPanel>
         ))}
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+      <div className="flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -209,7 +202,7 @@ export default function InvoicesPage() {
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border-0 focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50"
+                className="rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-[rgba(99,102,241,0.1)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
                 placeholder="Search invoices..."
                 aria-label="Search invoices"
               />
@@ -224,7 +217,7 @@ export default function InvoicesPage() {
             </div>
           </div>
 
-          <div className="glass rounded-xl overflow-hidden">
+          <PrismPanel rainbow padding="p-0" className="overflow-hidden">
             {filtered.length === 0 ? (
               <div className="p-4">
                 <EmptyState
@@ -318,7 +311,7 @@ export default function InvoicesPage() {
                 })}
               </div>
             )}
-          </div>
+          </PrismPanel>
         </div>
       )}
 
@@ -327,7 +320,7 @@ export default function InvoicesPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2 space-y-3">
-              <div className="glass rounded-xl p-4 space-y-3">
+              <PrismPanel rainbow glow padding="p-4" className="space-y-3">
                 <h3 className="text-sm font-semibold">Invoice Builder</h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -401,12 +394,12 @@ export default function InvoicesPage() {
                     </select>
                   </div>
                 </div>
-              </div>
+              </PrismPanel>
             </div>
 
             {/* Sidebar */}
             <div className="space-y-3">
-              <div className="glass rounded-xl p-4">
+              <PrismPanel rainbow padding="p-4">
                 <h4 className="text-xs font-semibold mb-3">Invoice Summary</h4>
                 <div className="space-y-2 text-[10px]">
                   <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
@@ -423,10 +416,10 @@ export default function InvoicesPage() {
                   className="btn-secondary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
                   <FileText size={12} /> Save as Draft
                 </button>
-              </div>
+              </PrismPanel>
 
               {/* Quick Invoice from Proposal */}
-              <div className="glass-indigo rounded-xl p-4">
+              <PrismPanel rainbow padding="p-4">
                 <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                   <Zap size={12} className="text-gold" /> Quick Invoice
                 </h4>
@@ -439,10 +432,10 @@ export default function InvoicesPage() {
                   className="btn-gold w-full text-xs flex items-center justify-center gap-1.5 bg-gold/10 text-gold border border-gold/20 rounded-lg py-1.5 hover:bg-gold/20 transition-all">
                   <ArrowRight size={12} /> Create from Proposal
                 </button>
-              </div>
+              </PrismPanel>
 
               {/* Payment Link */}
-              <div className="glass rounded-xl p-4">
+              <PrismPanel rainbow padding="p-4">
                 <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                   <CreditCard size={12} className="text-gold" /> Payment Links
                 </h4>
@@ -450,7 +443,7 @@ export default function InvoicesPage() {
                 <Link href="/dashboard/clients" className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
                   <CreditCard size={12} /> Open client → Subscribe
                 </Link>
-              </div>
+              </PrismPanel>
             </div>
           </div>
         </div>
@@ -469,17 +462,17 @@ export default function InvoicesPage() {
           </div>
           <div className="space-y-2">
             {invoicesData.filter(i => i.recurring).length === 0 ? (
-              <div className="glass rounded-xl text-center py-8">
+              <PrismPanel padding="py-8 px-4" className="text-center">
                 <RefreshCw size={20} className="mx-auto mb-2 text-muted/30" />
                 <p className="text-xs text-muted">No recurring invoices yet</p>
-              </div>
+              </PrismPanel>
             ) : invoicesData.filter(i => i.recurring).map((inv, index) => (
               <motion.div
                 key={inv.id}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: index * 0.05 }}
-                className="glass rounded-xl p-4 flex items-center justify-between"
+                className="rounded-xl p-4 flex items-center justify-between border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
               >
                 <div className="flex items-center gap-3">
                   <RefreshCw size={14} className="text-gold" />
@@ -505,10 +498,10 @@ export default function InvoicesPage() {
               </motion.div>
             ))}
           </div>
-          <div className="glass rounded-xl text-center p-4">
+          <PrismPanel rainbow padding="p-4" className="text-center">
             <p className="text-sm font-bold text-gold">{formatCurrency(recurringTotal)}/mo</p>
             <p className="text-[10px] text-muted">Total monthly recurring revenue from invoices</p>
-          </div>
+          </PrismPanel>
         </div>
       )}
 
@@ -531,7 +524,7 @@ export default function InvoicesPage() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: i * 0.05 }}
-                className={`glass rounded-xl p-4 flex items-center justify-between ${!reminder.enabled ? "opacity-50" : ""}`}
+                className={`rounded-xl p-4 flex items-center justify-between border border-[rgba(99,102,241,0.1)] ${!reminder.enabled ? "opacity-50" : ""}`} style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-yellow-400/10" : i < 4 ? "bg-orange-400/10" : "bg-red-400/10"}`}>
@@ -549,7 +542,7 @@ export default function InvoicesPage() {
             ))}
           </div>
           {/* Currently overdue */}
-          <div className="glass rounded-xl p-4">
+          <PrismPanel rainbow padding="p-4">
             <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-red-400">
               <AlertTriangle size={12} /> Currently Overdue
             </h4>
@@ -571,7 +564,7 @@ export default function InvoicesPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </PrismPanel>
         </div>
       )}
 
@@ -580,10 +573,10 @@ export default function InvoicesPage() {
         <div className="space-y-4">
           <h3 className="text-sm font-semibold">Invoice Templates</h3>
           {INVOICE_TEMPLATES.length === 0 && (
-            <div className="glass rounded-xl text-center py-8">
+            <PrismPanel padding="py-8 px-4" className="text-center">
               <FileText size={20} className="mx-auto mb-2 text-muted/30" />
               <p className="text-xs text-muted">No invoice templates yet</p>
-            </div>
+            </PrismPanel>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {INVOICE_TEMPLATES.map((t, index) => (
@@ -593,7 +586,7 @@ export default function InvoicesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -3 }}
-                className="glass rounded-xl p-4 cursor-pointer"
+                className="rounded-xl p-4 cursor-pointer border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
               >
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center">
@@ -638,7 +631,7 @@ export default function InvoicesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: i * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="glass rounded-xl text-center p-3 relative overflow-hidden"
+                className="rounded-xl text-center p-3 overflow-hidden border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
               >
                 <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                 <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
@@ -647,8 +640,8 @@ export default function InvoicesPage() {
               </motion.div>
             ))}
           </div>
-          <div className="glass rounded-xl overflow-hidden">
-            <div className="p-3 border-b border-white/10">
+          <PrismPanel rainbow padding="p-0" className="overflow-hidden">
+            <div className="p-3 border-b border-[rgba(99,102,241,0.1)]">
               <h4 className="text-xs font-semibold">Invoice History</h4>
             </div>
             <div className="divide-y divide-white/5">
@@ -684,7 +677,7 @@ export default function InvoicesPage() {
                 );
               })}
             </div>
-          </div>
+          </PrismPanel>
         </div>
       )}
 
@@ -706,7 +699,7 @@ export default function InvoicesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="glass rounded-xl text-center p-5 relative overflow-hidden"
+                className="rounded-xl text-center p-5 overflow-hidden border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
               >
                 <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                 <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
@@ -716,7 +709,7 @@ export default function InvoicesPage() {
             ))}
           </div>
           {/* Monthly bar chart */}
-          <div className="glass rounded-xl p-4">
+          <PrismPanel rainbow padding="p-4">
             <h4 className="text-xs font-semibold mb-3">Monthly Revenue</h4>
             <div className="flex items-end gap-3 h-40">
               {invoicesData.length === 0 ? (
@@ -736,9 +729,9 @@ export default function InvoicesPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </PrismPanel>
           {/* Collection rate */}
-          <div className="glass rounded-xl p-4">
+          <PrismPanel rainbow padding="p-4">
             <h4 className="text-xs font-semibold mb-3">Collection Metrics</h4>
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-surface-light rounded-lg p-3 text-center">
@@ -754,7 +747,7 @@ export default function InvoicesPage() {
                 <p className="text-[9px] text-muted">Monthly Recurring</p>
               </div>
             </div>
-          </div>
+          </PrismPanel>
         </div>
       )}
     </div>

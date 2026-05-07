@@ -105,7 +105,7 @@ const JSON_LD = {
  */
 export default function LandingPage() {
   return (
-    <div className="min-h-screen" style={{ background: "#0b0d12" }}>
+    <div className="min-h-screen" style={{ background: "#070708" }}>
       {/* JSON-LD structured data for SEO */}
       <script
         type="application/ld+json"

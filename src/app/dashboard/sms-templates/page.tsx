@@ -13,6 +13,7 @@ import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { Smartphone } from "lucide-react";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
+import { PrismPanel } from "@/components/prism";
 
 type SmsIntent = "reminder" | "promo" | "confirmation" | "welcome" | "winback" | "abandon_cart" | "appointment" | "custom";
 
@@ -276,7 +277,7 @@ export default function SMSTemplatesPage() {
 
           {/* Add form */}
           {showAdd && (
-            <div className="glass rounded-xl space-y-2 p-4">
+            <PrismPanel padding="p-4" className="space-y-2">
               <h4 className="text-xs font-semibold">New SMS Template</h4>
               <div className="grid grid-cols-2 gap-2">
                 <input value={newTemplate.name} onChange={e => setNewTemplate({ ...newTemplate, name: e.target.value })} className="input text-xs" placeholder="Template name" />
@@ -339,7 +340,7 @@ export default function SMSTemplatesPage() {
                   }} className="btn-primary text-xs">Save</button>
                 </div>
               </div>
-            </div>
+            </PrismPanel>
           )}
 
           {/* Template Grid */}
@@ -348,7 +349,7 @@ export default function SMSTemplatesPage() {
               <div className="col-span-2 text-center py-12 text-muted text-xs">No templates yet. Click &quot;New&quot; to create your first SMS template.</div>
             )}
             {filtered.map((template, idx) => (
-              <motion.div key={template.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-4 group transition-all hover:border-gold/10">
+              <motion.div key={template.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="rounded-xl p-4 group transition-all hover:border-indigo-500/10" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <p className="text-xs font-semibold">{template.name}</p>
@@ -442,7 +443,7 @@ export default function SMSTemplatesPage() {
             </div>
           </div>
           {/* Template selector for preview */}
-          <div className="glass rounded-xl p-4">
+          <PrismPanel padding="p-4">
             <h4 className="text-xs font-semibold mb-2">Select Template to Preview</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
               {templates.length === 0 && (
@@ -458,7 +459,7 @@ export default function SMSTemplatesPage() {
                 </button>
               ))}
             </div>
-          </div>
+          </PrismPanel>
         </div>
       )}
 
@@ -467,7 +468,7 @@ export default function SMSTemplatesPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Compliance Checker */}
-            <div className="glass rounded-xl p-4">
+            <PrismPanel padding="p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Shield size={14} className="text-gold" /> TCPA Compliance Checker
               </h3>
@@ -496,9 +497,9 @@ export default function SMSTemplatesPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </PrismPanel>
             {/* Opt-out Footer Manager */}
-            <div className="glass rounded-xl p-4">
+            <PrismPanel padding="p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Settings size={14} className="text-gold" /> Opt-out Footer Manager
               </h3>
@@ -520,7 +521,7 @@ export default function SMSTemplatesPage() {
                   <button className="btn-primary text-xs">Save</button>
                 </div>
               </div>
-            </div>
+            </PrismPanel>
           </div>
         </div>
       )}
@@ -537,7 +538,7 @@ export default function SMSTemplatesPage() {
               { label: "Total Replies", value: totalReplies.toLocaleString(), icon: <MessageSquare size={12} />, color: "text-purple-400" },
               { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-gold" },
             ].map((stat, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
@@ -549,7 +550,7 @@ export default function SMSTemplatesPage() {
           </div>
 
           {/* Delivery Rate Monitor */}
-          <div className="glass rounded-xl p-4">
+          <PrismPanel padding="p-4">
             <h3 className="text-sm font-semibold mb-3">Delivery Rate by Template</h3>
             <div className="space-y-2">
               {templates.filter(t => t.sends > 0).length === 0 && (
@@ -576,14 +577,14 @@ export default function SMSTemplatesPage() {
                 );
               })}
             </div>
-          </div>
+          </PrismPanel>
         </div>
       )}
 
       {/* ===== SHORT LINKS ===== */}
       {activeTab === "links" && (
         <div className="space-y-4">
-          <div className="glass rounded-xl p-4">
+          <PrismPanel padding="p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Link2 size={14} className="text-gold" /> Short Link Generator
             </h3>
@@ -600,7 +601,7 @@ export default function SMSTemplatesPage() {
                 <div className="text-center py-6 text-[10px] text-muted col-span-4">No short links yet. Paste a URL above to create one.</div>
               ) : null}
             </div>
-          </div>
+          </PrismPanel>
         </div>
       )}
 
@@ -608,7 +609,7 @@ export default function SMSTemplatesPage() {
       {activeTab === "schedule" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="glass rounded-xl p-4">
+            <PrismPanel padding="p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Calendar size={14} className="text-gold" /> Schedule SMS
               </h3>
@@ -628,13 +629,13 @@ export default function SMSTemplatesPage() {
                   <Clock size={12} /> Schedule Send
                 </button>
               </div>
-            </div>
-            <div className="glass rounded-xl p-4">
+            </PrismPanel>
+            <PrismPanel padding="p-4">
               <h3 className="text-sm font-semibold mb-3">Scheduled Messages</h3>
               <div className="space-y-2">
                 <div className="text-center py-6 text-[10px] text-muted">No scheduled messages yet. Use the form to schedule one.</div>
               </div>
-            </div>
+            </PrismPanel>
           </div>
         </div>
       )}

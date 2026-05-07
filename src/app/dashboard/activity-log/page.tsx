@@ -10,6 +10,7 @@ import {
   ClipboardList, Loader2,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 
 type ActivityTab = "feed" | "heatmap" | "users" | "audit" | "security";
 
@@ -210,13 +211,10 @@ export default function ActivityLogPage() {
           { value: logs.filter(l => l.type === "automation").length, label: "Automations", color: "text-purple-400" },
           { value: suspicious.length, label: "Suspicious", color: suspicious.length > 0 ? "text-red-400" : "text-emerald-400" },
         ].map((stat, i) => (
-          <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-3 text-center">
+          <PrismPanel key={stat.label} rainbow delay={i * 0.06} padding="p-3" className="text-center">
               <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
               <p className="text-[10px] text-muted">{stat.label}</p>
-            </div>
-          </motion.div>
+          </PrismPanel>
         ))}
       </div>
 
@@ -258,17 +256,17 @@ export default function ActivityLogPage() {
           {/* Activity Feed */}
           <div className="space-y-1">
             {loading ? (
-              <div className="glass rounded-xl text-center py-12">
+              <PrismPanel padding="py-12 px-6" className="text-center">
                 <Loader2 size={24} className="mx-auto mb-2 text-muted/50 animate-spin" />
                 <p className="text-xs text-muted">Loading activity…</p>
-              </div>
+              </PrismPanel>
             ) : loadError ? (
-              <div className="glass rounded-xl text-center py-12">
+              <PrismPanel padding="py-12 px-6" className="text-center">
                 <AlertTriangle size={24} className="mx-auto mb-2 text-red-400/60" />
                 <p className="text-xs text-red-400">Failed to load activity: {loadError}</p>
-              </div>
+              </PrismPanel>
             ) : filtered.length === 0 ? (
-              <div className="glass rounded-xl text-center py-12"><Activity size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No activity found</p></div>
+              <PrismPanel padding="py-12 px-6" className="text-center"><Activity size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No activity found</p></PrismPanel>
             ) : (
               filtered.map((log, idx) => {
                 const config = TYPE_CONFIG[log.type] || { icon: <Activity size={12} />, color: "text-muted", label: log.type };
@@ -328,7 +326,7 @@ export default function ActivityLogPage() {
 
       {/* Heatmap Tab */}
       {tab === "heatmap" && (
-        <div className="glass rounded-xl p-4">
+        <PrismPanel padding="p-4">
           <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Activity Heatmap</h2>
           <div className="overflow-x-auto">
             <div className="grid gap-px" style={{ gridTemplateColumns: `60px repeat(24, 1fr)` }}>
@@ -357,12 +355,12 @@ export default function ActivityLogPage() {
             ))}
             <span className="text-[9px] text-muted">More</span>
           </div>
-        </div>
+        </PrismPanel>
       )}
 
       {/* Users Tab */}
       {tab === "users" && (
-        <div className="glass rounded-xl p-4">
+        <PrismPanel padding="p-4">
           <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-gold" /> User Activity Breakdown</h2>
           {Object.keys(userActivity).length === 0 ? (
             <div className="text-center py-8"><Users size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No user activity yet</p></div>
@@ -373,7 +371,7 @@ export default function ActivityLogPage() {
               const types: Record<string, number> = {};
               logs.filter(l => l.user === user).forEach(l => { types[l.type] = (types[l.type] || 0) + 1; });
               return (
-                <motion.div key={user} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl p-3">
+                <motion.div key={user} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold">{user[0]}</div>
                     <div className="flex-1">
@@ -399,19 +397,19 @@ export default function ActivityLogPage() {
             })}
           </div>
           )}
-        </div>
+        </PrismPanel>
       )}
 
       {/* Audit Tab */}
       {tab === "audit" && (
-        <div className="glass rounded-xl p-4">
+        <PrismPanel padding="p-4">
           <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-gold" /> Audit Trail (Before/After)</h2>
           {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).length === 0 ? (
             <div className="text-center py-8"><Eye size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No audit trail entries yet</p></div>
           ) : (
           <div className="space-y-2">
             {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).map((log, idx) => (
-              <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl p-3">
+              <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-xs font-semibold">{log.details}</p>
                   <span className="text-[9px] text-muted">{new Date(log.timestamp).toLocaleString()}</span>
@@ -431,13 +429,13 @@ export default function ActivityLogPage() {
             ))}
           </div>
           )}
-        </div>
+        </PrismPanel>
       )}
 
       {/* Security Tab */}
       {tab === "security" && (
         <div className="space-y-4">
-          <div className="glass rounded-xl p-4">
+          <PrismPanel padding="p-4">
             <h2 className="section-header flex items-center gap-2"><Shield size={13} className="text-red-400" /> Suspicious Activity Alerts</h2>
             {suspicious.length === 0 ? (
               <div className="text-center py-8"><Shield size={24} className="mx-auto text-emerald-400/30 mb-2" /><p className="text-xs text-muted">No suspicious activity detected</p></div>
@@ -454,15 +452,15 @@ export default function ActivityLogPage() {
                 ))}
               </div>
             )}
-          </div>
-          <div className="glass rounded-xl p-4">
+          </PrismPanel>
+          <PrismPanel padding="p-4">
             <h2 className="section-header flex items-center gap-2"><Key size={13} className="text-gold" /> Login History</h2>
             {logs.filter(l => l.type === "login").length === 0 ? (
               <div className="text-center py-8"><Key size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No login history yet</p></div>
             ) : (
               <div className="space-y-2">
                 {logs.filter(l => l.type === "login").map((log, idx) => (
-                  <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl flex items-center gap-3 p-2.5">
+                  <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl flex items-center gap-3 p-2.5" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                     <Key size={12} className={log.action === "failed_login" ? "text-red-400" : "text-emerald-400"} />
                     <div className="flex-1">
                       <p className="text-xs font-medium">{log.user} - {log.details}</p>
@@ -476,7 +474,7 @@ export default function ActivityLogPage() {
                 ))}
               </div>
             )}
-          </div>
+          </PrismPanel>
         </div>
       )}
     </div>

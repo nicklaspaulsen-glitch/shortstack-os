@@ -22,16 +22,16 @@ export default function Testimonials() {
             className="rounded-3xl p-10 md:p-14 text-center"
             style={{
               background:
-                "linear-gradient(135deg, rgba(200,168,85,0.05), rgba(200,168,85,0.02))",
-              border: "1px solid rgba(200,168,85,0.15)",
+                "linear-gradient(135deg, rgba(99,102,241,0.05), rgba(99,102,241,0.02))",
+              border: "1px solid rgba(99,102,241,0.15)",
             }}
           >
             <div
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest mb-5"
               style={{
-                background: "rgba(200,168,85,0.1)",
-                color: "#c8a855",
-                border: "1px solid rgba(200,168,85,0.2)",
+                background: "rgba(99,102,241,0.1)",
+                color: "#A78BFA",
+                border: "1px solid rgba(99,102,241,0.2)",
               }}
             >
               <Sparkles size={11} />
@@ -56,8 +56,8 @@ export default function Testimonials() {
               href="/pricing"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:opacity-90"
               style={{
-                background: "linear-gradient(135deg, #c8a855, #b89840)",
-                color: "#0b0d12",
+                background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+                color: "#fff",
               }}
             >
               Start your free trial

@@ -13,6 +13,7 @@ import StatusBadge from "@/components/ui/status-badge";
 import { PageLoading } from "@/components/ui/loading";
 import AIInsights from "@/components/ai-insights";
 import AgentActivityFeed from "@/components/agent-activity-feed";
+import { PrismPanel } from "@/components/prism";
 import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/utils";
 import {
   Package, CheckCircle, CreditCard, Circle, Bot,
@@ -183,7 +184,8 @@ export default function ClientPortalPage() {
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="glass rounded-xl relative overflow-hidden"
+        className="rounded-2xl border relative overflow-hidden"
+        style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
       >
         <div className="absolute inset-0 bg-mesh opacity-40" />
         <div className="relative flex items-center justify-between">
@@ -275,17 +277,18 @@ export default function ClientPortalPage() {
 
       {/* AI Marketing Plan (shows after onboarding) */}
       {generatingPlan && (
-        <div className="glass rounded-xl text-center py-6">
+        <PrismPanel padding="py-6" className="text-center">
           <Loader size={20} className="mx-auto mb-2 text-gold animate-spin" />
           <p className="text-xs text-muted">AI Chief is creating your custom marketing plan...</p>
-        </div>
+        </PrismPanel>
       )}
       {aiPlan && (
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="glass rounded-xl"
+          className="rounded-2xl border"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
         >
           <h2 className="section-header flex items-center gap-2">
             <Sparkles size={13} className="text-gold" /> Your Custom Marketing Plan
@@ -302,7 +305,8 @@ export default function ClientPortalPage() {
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.06 }}
-        className="glass rounded-xl"
+        className="rounded-2xl border"
+        style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
       >
         <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-gold" /> Active Services</h2>
         <div className="flex flex-wrap gap-2">
@@ -331,7 +335,8 @@ export default function ClientPortalPage() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
-          className="glass rounded-xl"
+          className="rounded-2xl border"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
         >
           <h2 className="section-header flex items-center gap-2">
             <CheckCircle size={13} className="text-success" /> Task Progress
@@ -373,7 +378,8 @@ export default function ClientPortalPage() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.12 }}
-          className="glass rounded-xl"
+          className="rounded-2xl border"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
         >
           <h2 className="section-header flex items-center gap-2">
             <Sparkles size={13} className="text-gold" /> Recent Activity
@@ -403,7 +409,8 @@ export default function ClientPortalPage() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.14 }}
-          className="glass rounded-xl"
+          className="rounded-2xl border"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.1)" }}
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header mb-0 flex items-center gap-2">
@@ -437,7 +444,8 @@ export default function ClientPortalPage() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="glass rounded-xl border-warning/15"
+          className="rounded-2xl border border-warning/15"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -492,7 +500,7 @@ function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
   if (!status) return null;
 
   return (
-    <div className="glass rounded-xl">
+    <PrismPanel>
       <h2 className="section-header flex items-center gap-2">
         <Phone size={13} className="text-gold" /> Your Phone Number
       </h2>
@@ -529,7 +537,7 @@ function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
           No dedicated phone number assigned yet. Your agency can provision one for you.
         </p>
       )}
-    </div>
+    </PrismPanel>
   );
 }
 
@@ -591,7 +599,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
   }, [clientId]);
 
   return (
-    <div className="glass rounded-xl">
+    <PrismPanel>
       <div className="flex items-center justify-between mb-3">
         <h2 className="section-header flex items-center gap-2 mb-0">
           <FolderOpen size={13} className="text-gold" /> Your Uploaded Files
@@ -658,7 +666,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
           </Link>
         </div>
       )}
-    </div>
+    </PrismPanel>
   );
 }
 
@@ -790,7 +798,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
       </div>
 
       {/* Step content */}
-      <div className="glass rounded-xl">
+      <PrismPanel>
         <p className="text-[10px] text-gold font-medium uppercase tracking-wider mb-0.5">Step {step + 1} of {steps.length}</p>
         <h2 className="text-sm font-semibold mb-0.5">{currentStep.title}</h2>
         <p className="text-[10px] text-muted mb-4">{currentStep.subtitle}</p>
@@ -823,7 +831,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
             </div>
           ))}
         </div>
-      </div>
+      </PrismPanel>
 
       {/* Navigation */}
       <div className="flex items-center justify-between gap-2">

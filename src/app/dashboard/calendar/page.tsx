@@ -9,6 +9,7 @@ import {
   Repeat, Eye, Star, AlertCircle, Loader2
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { GoogleIcon, OutlookIcon } from "@/components/ui/platform-icons";
 import { TableSkeleton } from "@/components/ui/skeleton";
@@ -569,7 +570,7 @@ export default function CalendarPage() {
       {!loading && tab === "agenda" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 space-y-3">
-            <div className="glass rounded-xl p-4">
+            <PrismPanel padding="p-4" rainbow>
               <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-gold" /> Today&apos;s Schedule</h2>
               {todaysEvents.length === 0 ? (
                 <EmptyState
@@ -612,10 +613,10 @@ export default function CalendarPage() {
                   ))}
                 </div>
               )}
-            </div>
+            </PrismPanel>
           </div>
           <div className="space-y-3">
-            <div className="glass rounded-xl overflow-hidden">
+            <PrismPanel padding="p-0" rainbow>
               <div className="p-4">
                 <h2 className="section-header flex items-center gap-2"><Star size={13} className="text-gold" /> Quick Stats</h2>
                 <div className="space-y-2">
@@ -631,7 +632,8 @@ export default function CalendarPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
-                      className="glass-md rounded-xl overflow-hidden relative"
+                      className="rounded-xl overflow-hidden relative"
+                      style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
                     >
                       <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 left-0 right-0" />
                       <div className="flex justify-between text-xs p-2 pt-3">
@@ -642,8 +644,8 @@ export default function CalendarPage() {
                   ))}
                 </div>
               </div>
-            </div>
-            <div className="glass rounded-xl p-4">
+            </PrismPanel>
+            <PrismPanel padding="p-4">
               <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-gold" /> Team Today</h2>
               <div className="space-y-1.5">
                 {TEAM_MEMBERS.filter(m => m !== "All").map(member => {
@@ -657,7 +659,7 @@ export default function CalendarPage() {
                   );
                 })}
               </div>
-            </div>
+            </PrismPanel>
           </div>
         </div>
       )}
@@ -665,7 +667,7 @@ export default function CalendarPage() {
       {/* Deadlines Tab */}
       {!loading && tab === "deadlines" && (
         <div className="space-y-3">
-          <div className="glass rounded-xl p-4">
+          <PrismPanel padding="p-4" rainbow>
             <h2 className="section-header flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Upcoming Deadlines</h2>
             {upcomingDeadlines.length === 0 ? (
               <p className="text-xs text-muted text-center py-8">No upcoming deadlines</p>
@@ -700,9 +702,9 @@ export default function CalendarPage() {
                 })}
               </div>
             )}
-          </div>
+          </PrismPanel>
           {/* Recurring Events */}
-          <div className="glass rounded-xl p-4">
+          <PrismPanel padding="p-4">
             <h2 className="section-header flex items-center gap-2"><Repeat size={13} className="text-purple-400" /> Recurring Events</h2>
             <div className="space-y-2">
               {events.filter(e => e.recurring).length === 0 ? (
@@ -729,7 +731,7 @@ export default function CalendarPage() {
                 ))
               )}
             </div>
-          </div>
+          </PrismPanel>
         </div>
       )}
 

@@ -24,12 +24,12 @@ export default function Hero() {
       {/* 3D R3F scene — sits behind everything, pointer-events disabled inside */}
       <Hero3DScene />
 
-      {/* Background glow effects */}
+      {/* Prism ambient glow effects */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at center, rgba(200,168,85,0.08) 0%, transparent 70%)",
+            "radial-gradient(ellipse at center, rgba(99,102,241,0.10) 0%, transparent 70%)",
           animation: "glow-pulse 4s ease-in-out infinite",
         }}
       />
@@ -37,14 +37,14 @@ export default function Hero() {
         className="absolute top-20 right-0 w-[400px] h-[400px] pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)",
         }}
       />
       <div
         className="absolute top-40 left-0 w-[300px] h-[300px] pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle, rgba(168,137,61,0.05) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)",
         }}
       />
 
@@ -54,9 +54,9 @@ export default function Hero() {
             visible ? "animate-fade-up" : "opacity-0"
           }`}
           style={{
-            background: "rgba(200,168,85,0.08)",
-            border: "1px solid rgba(200,168,85,0.15)",
-            color: "#c8a855",
+            background: "rgba(99,102,241,0.08)",
+            border: "1px solid rgba(99,102,241,0.18)",
+            color: "#A78BFA",
           }}
         >
           <Sparkles size={12} />
@@ -69,7 +69,7 @@ export default function Hero() {
           }`}
           style={{
             background:
-              "linear-gradient(135deg, #ffffff 0%, #c8a855 50%, #ffffff 100%)",
+              "linear-gradient(135deg, #ffffff 0%, #6366F1 40%, #A78BFA 60%, #ffffff 100%)",
             backgroundSize: "200% auto",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
@@ -108,9 +108,9 @@ export default function Hero() {
             href="/pricing"
             className="group flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all hover:shadow-lg"
             style={{
-              background: "linear-gradient(135deg, #c8a855, #b89840)",
-              color: "#0b0d12",
-              boxShadow: "0 0 30px rgba(200,168,85,0.15)",
+              background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+              color: "#ffffff",
+              boxShadow: "0 0 30px rgba(99,102,241,0.25)",
             }}
           >
             Start your 7-day free trial
@@ -139,15 +139,15 @@ export default function Hero() {
           style={{ opacity: 0 }}
         >
           <div className="flex items-center gap-1.5">
-            <Shield size={12} style={{ color: "#c8a855" }} />
+            <Shield size={12} style={{ color: "#6366F1" }} />
             No credit card required
           </div>
           <div className="flex items-center gap-1.5">
-            <Shield size={12} style={{ color: "#c8a855" }} />
+            <Shield size={12} style={{ color: "#6366F1" }} />
             Cancel anytime
           </div>
           <div className="flex items-center gap-1.5">
-            <Shield size={12} style={{ color: "#c8a855" }} />
+            <Shield size={12} style={{ color: "#6366F1" }} />
             You own your data
           </div>
         </div>

@@ -24,6 +24,7 @@ import PageHero from "@/components/ui/page-hero";
 import PageAI from "@/components/page-ai";
 import { InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/ui/platform-icons";
 import ErrorBoundary from "@/components/error-boundary";
+import { PrismPanel } from "@/components/prism";
 
 /* ═══════════════════════════════════════════════════════════════════
    TYPES
@@ -919,24 +920,13 @@ export default function CRMPage() {
                 { label: "With Phone", value: stats.withPhone, icon: Phone, color: "text-emerald-400" },
                 { label: "Stale Leads", value: stats.stale, icon: AlertTriangle, color: stats.stale > 0 ? "text-red-400" : "text-muted" },
               ].map((s, i) => (
-                <motion.div
-                  key={i}
-                  className="glass rounded-xl overflow-hidden relative"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.22, delay: i * 0.06 }}
-                  whileHover={{ y: -2 }}
-                >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
-                  <div className="px-3 py-2">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <s.icon size={10} className={s.color} />
-                      <span className="text-[8px] text-muted uppercase tracking-wider">{s.label}</span>
-                    </div>
-                    <p className={`text-sm font-bold ${s.color}`}>{s.value}<span className="text-[8px] text-muted font-normal">{s.suffix || ""}</span></p>
+                <PrismPanel key={i} rainbow padding="px-3 py-2" delay={i * 0.06}>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <s.icon size={10} className={s.color} />
+                    <span className="text-[8px] text-muted uppercase tracking-wider">{s.label}</span>
                   </div>
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: "rgba(99,102,241,0.3)" }} />
-                </motion.div>
+                  <p className={`text-sm font-bold ${s.color}`}>{s.value}<span className="text-[8px] text-muted font-normal">{s.suffix || ""}</span></p>
+                </PrismPanel>
               ))}
             </div>
             {/* Pipeline funnel */}
@@ -1301,7 +1291,7 @@ export default function CRMPage() {
 
           {/* ══ TABLE VIEW ══ */}
           {viewMode === "table" && (
-            <div className="glass rounded-2xl p-0 overflow-hidden">
+            <div className="rounded-2xl p-0 overflow-hidden border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}>
               <div className="overflow-x-auto">
                 <table className={`w-full ${dText}`}>
                   <thead>
@@ -1527,7 +1517,8 @@ export default function CRMPage() {
                 return (
                   <motion.div
                     key={lead.id}
-                    className={`glass rounded-xl ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-gold/30 bg-gold/5" : ""}`}
+                    className={`rounded-xl border border-[rgba(99,102,241,0.1)] ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-gold/30 bg-gold/5" : ""}`}
+                    style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
@@ -1622,7 +1613,7 @@ export default function CRMPage() {
                         return (
                           <motion.div
                             key={lead.id}
-                            className="glass-md rounded-lg p-2.5 space-y-1.5 cursor-pointer"
+                            className="rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)" }}
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
@@ -1684,7 +1675,7 @@ export default function CRMPage() {
 
         {/* ══ DETAIL SIDEBAR ══ */}
         {detailLead && (
-          <div ref={detailPanelRef} className="w-[350px] shrink-0 glass rounded-2xl p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block">
+          <div ref={detailPanelRef} className="w-[350px] shrink-0 rounded-2xl p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}>
             <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
               <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
               <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground" aria-label="Close detail panel"><X size={14} /></button>

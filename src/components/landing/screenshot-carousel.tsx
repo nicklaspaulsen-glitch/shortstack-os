@@ -7,8 +7,8 @@ import {
   Package, Globe,
 } from "lucide-react";
 
-const GOLD = "#c8a855";
-const GOLD_LIGHT = "#e4c876";
+const GOLD = "#6366F1";
+const GOLD_LIGHT = "#A78BFA";
 
 // Lucide icon compatible — accept any component that takes size + className
 type LucideLike = React.ComponentType<React.SVGProps<SVGSVGElement> & { size?: number | string }>;
@@ -71,8 +71,8 @@ const SLIDES: Slide[] = [
             transition={{ delay: i * 0.04 }}
             className="rounded-lg h-20 flex items-center justify-center"
             style={{
-              background: "rgba(200,168,85,0.06)",
-              border: "1px solid rgba(200,168,85,0.12)",
+              background: "rgba(99,102,241,0.06)",
+              border: "1px solid rgba(99,102,241,0.12)",
             }}
           >
             <Sparkles size={18} style={{ color: GOLD }} />
@@ -169,10 +169,10 @@ const SLIDES: Slide[] = [
             <div className="rounded-xl p-3 max-w-[65%] space-y-1.5"
               style={{
                 background: i % 2 ? GOLD : "rgba(255,255,255,0.05)",
-                color: i % 2 ? "#0b0d12" : "#fff",
+                color: i % 2 ? "#fff" : "#fff",
               }}>
-              <Bar width={`${80 + i * 5}px`} color={i % 2 ? "#0b0d12" : "#fff"} opacity={0.8} />
-              <Bar width={`${120 + i * 15}px`} color={i % 2 ? "#0b0d12" : "#fff"} opacity={0.5} />
+              <Bar width={`${80 + i * 5}px`} color={i % 2 ? "#fff" : "#fff"} opacity={0.8} />
+              <Bar width={`${120 + i * 15}px`} color={i % 2 ? "#fff" : "#fff"} opacity={0.5} />
             </div>
           </div>
         ))}
@@ -189,9 +189,9 @@ const SLIDES: Slide[] = [
       <div className="relative aspect-video rounded-lg overflow-hidden"
         style={{ background: `linear-gradient(135deg, #2a2f3a, #1a1d25)` }}>
         <div className="absolute top-8 left-12 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
-          style={{ background: GOLD, color: "#0b0d12" }}>1</div>
+          style={{ background: GOLD, color: "#fff" }}>1</div>
         <div className="absolute bottom-12 right-16 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
-          style={{ background: GOLD, color: "#0b0d12" }}>2</div>
+          style={{ background: GOLD, color: "#fff" }}>2</div>
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full px-4 py-2 text-xs font-medium flex items-center gap-2"
           style={{ background: "rgba(0,0,0,0.8)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}>
           <span className="w-2 h-2 rounded-full" style={{ background: GOLD }} />
@@ -244,7 +244,7 @@ const SLIDES: Slide[] = [
         <div className="grid grid-cols-3 gap-3">
           {["+312%", "42 days", "$1.8M"].map((k) => (
             <div key={k} className="rounded-lg p-3"
-              style={{ background: "rgba(200,168,85,0.06)", border: "1px solid rgba(200,168,85,0.12)" }}>
+              style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.12)" }}>
               <div className="text-lg font-bold" style={{ color: GOLD }}>{k}</div>
             </div>
           ))}
@@ -306,8 +306,8 @@ export default function ScreenshotCarousel() {
                 onClick={() => setIndex(i)}
                 className="text-xs px-3 py-1.5 rounded-full transition-all"
                 style={{
-                  background: i === index ? "rgba(200,168,85,0.15)" : "rgba(255,255,255,0.03)",
-                  border: `1px solid ${i === index ? "rgba(200,168,85,0.4)" : "rgba(255,255,255,0.06)"}`,
+                  background: i === index ? "rgba(99,102,241,0.15)" : "rgba(255,255,255,0.03)",
+                  border: `1px solid ${i === index ? "rgba(99,102,241,0.4)" : "rgba(255,255,255,0.06)"}`,
                   color: i === index ? GOLD : "rgba(255,255,255,0.6)",
                 }}
               >
@@ -327,7 +327,7 @@ export default function ScreenshotCarousel() {
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-lg flex items-center justify-center"
-                    style={{ background: "rgba(200,168,85,0.1)", border: "1px solid rgba(200,168,85,0.2)" }}>
+                    style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)" }}>
                     <Icon size={18} className="text-gold" />
                   </div>
                   <div>

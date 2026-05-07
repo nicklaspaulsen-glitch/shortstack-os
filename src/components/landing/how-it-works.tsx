@@ -58,7 +58,7 @@ export default function HowItWorks() {
       className="py-20 md:py-28 px-6 relative overflow-hidden"
       style={{
         background:
-          "linear-gradient(180deg, rgba(200,168,85,0.02) 0%, transparent 100%)",
+          "linear-gradient(180deg, rgba(99,102,241,0.02) 0%, transparent 100%)",
       }}
     >
       {/* Ambient glow blob */}
@@ -66,7 +66,7 @@ export default function HowItWorks() {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-30 pointer-events-none blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, rgba(200,168,85,0.15) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)",
         }}
       />
 
@@ -107,15 +107,15 @@ function StepCard({ step, idx }: { step: Step; idx: number }) {
         <div
           className="w-12 h-12 rounded-xl flex items-center justify-center"
           style={{
-            background: "rgba(200,168,85,0.08)",
-            border: "1px solid rgba(200,168,85,0.18)",
+            background: "rgba(99,102,241,0.08)",
+            border: "1px solid rgba(99,102,241,0.18)",
           }}
         >
-          <step.icon size={20} style={{ color: "#c8a855" }} />
+          <step.icon size={20} style={{ color: "#A78BFA" }} />
         </div>
         <span
           className="text-3xl font-extrabold opacity-30 group-hover:opacity-60 transition-opacity"
-          style={{ color: "#c8a855" }}
+          style={{ color: "#A78BFA" }}
         >
           {step.num}
         </span>
@@ -197,7 +197,7 @@ function StepVisual({ idx }: { idx: number }) {
         }}
       >
         {[
-          { Icon: Sparkles, label: "AI drafted 12 cold emails", color: "#c8a855", delay: 0 },
+          { Icon: Sparkles, label: "AI drafted 12 cold emails", color: "#A78BFA", delay: 0 },
           { Icon: Phone, label: "AI booked 3 meetings", color: "#10b981", delay: 0.5 },
           { Icon: Zap, label: "Lead enriched + scored", color: "#3b82f6", delay: 1 },
         ].map((item, i) => (
@@ -257,8 +257,8 @@ function StepVisual({ idx }: { idx: number }) {
               height: `${h}%`,
               background:
                 i === 6
-                  ? "linear-gradient(180deg, #c8a855, #a08642)"
-                  : "rgba(200,168,85,0.25)",
+                  ? "linear-gradient(180deg, #6366F1, #4F46E5)"
+                  : "rgba(99,102,241,0.25)",
               animation: "bar-grow 1.4s ease-out forwards",
               animationDelay: `${i * 0.08}s`,
               transformOrigin: "bottom",

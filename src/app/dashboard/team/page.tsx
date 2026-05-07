@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
+import { PrismPanel } from "@/components/prism";
 
 type TeamTab = "members" | "permissions" | "roles" | "activity" | "capacity";
 
@@ -277,24 +278,16 @@ export default function TeamPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
         {STATS.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: index * 0.06 }}
-            whileHover={{ y: -2 }}
-            className="glass rounded-xl p-3 relative overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
+          <PrismPanel key={stat.label} rainbow padding="p-3" delay={index * 0.06}>
             <div className="flex items-center gap-1.5 mb-1">{stat.icon}<p className="text-[10px] text-muted uppercase tracking-wider">{stat.label}</p></div>
             <p className={`text-lg font-bold ${stat.valueColor ?? ""}`}>{stat.value}</p>
             <p className={`text-[10px] ${stat.subColor ?? "text-muted"}`}>{stat.sub}</p>
-          </motion.div>
+          </PrismPanel>
         ))}
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
+      <div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
@@ -312,7 +305,7 @@ export default function TeamPage() {
             <div className="relative flex-1 min-w-[200px]">
               <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
               <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                className="glass rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-transparent border-0 focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50"
+                className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-transparent border border-[rgba(99,102,241,0.1)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
                 placeholder="Search members..." aria-label="Search team members" />
             </div>
             <div className="flex gap-1 bg-surface rounded-lg p-0.5">
@@ -324,7 +317,7 @@ export default function TeamPage() {
           </div>
 
           {/* Members Table */}
-          <div className="glass rounded-xl overflow-hidden">
+          <PrismPanel rainbow padding="p-0" className="overflow-hidden">
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-white/10">
@@ -391,7 +384,7 @@ export default function TeamPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </PrismPanel>
 
           {/* Expanded Member Detail */}
           {selectedMember && (() => {
@@ -402,7 +395,7 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="glass rounded-xl p-4 space-y-4"
+                className="rounded-xl p-4 space-y-4 border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -457,7 +450,7 @@ export default function TeamPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="glass rounded-xl overflow-x-auto p-4"
+          className="rounded-xl overflow-x-auto p-4 border border-[rgba(99,102,241,0.1)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-gold" /> Role Permissions Matrix</h2>
@@ -515,7 +508,7 @@ export default function TeamPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -3 }}
-                className="glass rounded-xl p-4 relative overflow-hidden"
+                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)", borderRadius: "0.75rem", padding: "1rem", position: "relative", overflow: "hidden" }}
               >
                 <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                 <div className="flex items-center gap-3 mb-3">
@@ -546,7 +539,8 @@ export default function TeamPage() {
             <motion.button
               whileHover={{ y: -3 }}
               onClick={() => setShowCustomRole(true)}
-              className="glass rounded-xl p-4 border-dashed hover:border-gold/20 transition-all flex flex-col items-center justify-center gap-2 min-h-[160px]"
+              className="hover:border-gold/20 transition-all flex flex-col items-center justify-center gap-2 min-h-[160px]"
+              style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px dashed rgba(99,102,241,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
             >
               <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center">
                 <Settings size={16} className="text-gold" />
@@ -564,7 +558,7 @@ export default function TeamPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="glass rounded-xl p-4"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
         >
           <h2 className="section-header flex items-center gap-2 mb-3"><Activity size={13} className="text-gold" /> Per-Member Access Log</h2>
           <div className="space-y-2">
@@ -604,7 +598,7 @@ export default function TeamPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="glass rounded-xl p-4"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
         >
           <h2 className="section-header flex items-center gap-2 mb-1"><BarChart3 size={13} className="text-gold" /> Team Capacity Tracker</h2>
           <p className="text-[10px] text-muted mb-4">See who has bandwidth and who is overloaded.</p>
@@ -662,7 +656,8 @@ export default function TeamPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
-          className="glass rounded-xl p-4 mt-4"
+          className="mt-4"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header flex items-center gap-2 mb-0">
@@ -680,7 +675,8 @@ export default function TeamPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: index * 0.05 }}
                 whileHover={{ y: -3 }}
-                className="glass-md rounded-xl flex items-center gap-3 p-3 hover:border-gold/20 transition-all"
+                className="flex items-center gap-3 hover:border-gold/20 transition-all"
+                style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.08)", borderRadius: "0.75rem", padding: "0.75rem" }}
               >
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold/30 to-amber-500/20 flex items-center justify-center text-gold text-xs font-bold shrink-0">
                   {m.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() || m.email[0].toUpperCase()}

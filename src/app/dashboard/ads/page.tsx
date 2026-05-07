@@ -16,6 +16,7 @@ import {
   Megaphone, RefreshCw, Zap,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { PRISM_GLASS, PRISM_GLASS_STRONG, PRISM_BORDERS } from "@/components/prism/constants";
 import {
   Image as ImageIcon, Type, Globe,
   Bot, CheckCircle2, XCircle, ArrowUpRight,
@@ -468,7 +469,7 @@ export default function AdsPage() {
             <div className="lg:col-span-2 space-y-4">
               {/* Platform Performance */}
               <motion.div
-                className="glass rounded-xl p-4"
+                className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.36 }}
@@ -520,7 +521,7 @@ export default function AdsPage() {
 
               {/* Per-client breakdown */}
               <motion.div
-                className="glass rounded-xl p-4"
+                className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.42 }}
@@ -563,7 +564,7 @@ export default function AdsPage() {
             {/* Right: Autopilot Controls */}
             <div className="space-y-4">
               <motion.div
-                className="glass-indigo rounded-xl p-4"
+                className="rounded-2xl border p-4" style={{ ...PRISM_GLASS_STRONG, borderColor: PRISM_BORDERS.strong }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.36 }}
@@ -660,7 +661,7 @@ export default function AdsPage() {
               {/* Recent autopilot actions */}
               {actions.filter(a => a.status === "executed").length > 0 && (
                 <motion.div
-                  className="glass rounded-xl p-4"
+                  className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.42 }}
@@ -680,7 +681,7 @@ export default function AdsPage() {
 
               {/* Quick stats */}
               <motion.div
-                className="glass rounded-xl p-4"
+                className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.48 }}
@@ -730,7 +731,7 @@ export default function AdsPage() {
               return (
                 <motion.div
                   key={campaign.id}
-                  className="glass rounded-xl overflow-hidden"
+                  className="rounded-2xl border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.18, delay: index * 0.04 }}
@@ -899,7 +900,7 @@ export default function AdsPage() {
                 return (
                   <motion.div
                     key={cr.id}
-                    className="glass rounded-xl p-4 group"
+                    className="rounded-2xl border p-4 group" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.22, delay: index * 0.06 }}
@@ -955,7 +956,7 @@ export default function AdsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Config Panel */}
           <motion.div
-            className="lg:col-span-2 glass rounded-xl p-4 space-y-4"
+            className="lg:col-span-2 rounded-2xl border p-4 space-y-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, delay: 0.12 }}
@@ -1049,7 +1050,7 @@ export default function AdsPage() {
                       return (
                       <motion.div
                         key={i}
-                        className="glass rounded-xl p-4 group"
+                        className="rounded-2xl border p-4 group" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.22, delay: i * 0.06 }}
@@ -1098,7 +1099,7 @@ export default function AdsPage() {
                 {/* Image Suggestions */}
                 {(generatedCopy as Record<string, unknown>).image_suggestions && (
                   <motion.div
-                    className="glass rounded-xl p-4"
+                    className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.22, delay: 0.12 }}
@@ -1119,7 +1120,7 @@ export default function AdsPage() {
                 {/* A/B Test Plan */}
                 {(generatedCopy as Record<string, unknown>).a_b_test_plan && (
                   <motion.div
-                    className="glass-indigo rounded-xl p-4"
+                    className="rounded-2xl border p-4" style={{ ...PRISM_GLASS_STRONG, borderColor: PRISM_BORDERS.strong }}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.22, delay: 0.18 }}
@@ -1138,7 +1139,7 @@ export default function AdsPage() {
                 {/* Platform Tips */}
                 {(generatedCopy as Record<string, unknown>).platform_tips && (
                   <motion.div
-                    className="glass rounded-xl p-4"
+                    className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.22, delay: 0.24 }}
@@ -1166,7 +1167,7 @@ export default function AdsPage() {
           <div className="space-y-4">
             {/* AI Controls */}
             <motion.div
-              className="glass rounded-xl p-4 space-y-3"
+              className="rounded-2xl border p-4 space-y-3" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22, delay: 0.12 }}
@@ -1207,7 +1208,7 @@ export default function AdsPage() {
 
             {/* Platform Connections & Sync */}
             <motion.div
-              className="glass rounded-xl p-4 space-y-3"
+              className="rounded-2xl border p-4 space-y-3" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22, delay: 0.18 }}
@@ -1264,7 +1265,7 @@ export default function AdsPage() {
 
             {/* How It Works */}
             <motion.div
-              className="glass rounded-xl p-4"
+              className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22, delay: 0.24 }}
@@ -1288,7 +1289,7 @@ export default function AdsPage() {
             {/* Portfolio Insights */}
             {insights && (
               <motion.div
-                className="glass-indigo rounded-xl p-4"
+                className="rounded-2xl border p-4" style={{ ...PRISM_GLASS_STRONG, borderColor: PRISM_BORDERS.strong }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22 }}
@@ -1312,7 +1313,7 @@ export default function AdsPage() {
 
             {/* Pending Actions */}
             <motion.div
-              className="glass rounded-xl p-4"
+              className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22, delay: 0.12 }}
@@ -1399,7 +1400,7 @@ export default function AdsPage() {
             {/* Approved (ready to execute) */}
             {approvedActions.length > 0 && (
               <motion.div
-                className="glass rounded-xl p-4 border border-success/20"
+                className="rounded-2xl border p-4 border-success/20" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.18 }}
@@ -1438,7 +1439,7 @@ export default function AdsPage() {
             {/* Recent Action History */}
             {recentActions.length > 0 && (
               <motion.div
-                className="glass rounded-xl p-4"
+                className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.24 }}

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
+import { PrismPanel } from "@/components/prism";
 
 type Depth = "shallow" | "medium" | "deep";
 
@@ -210,10 +211,10 @@ export default function ColdEmailPage() {
       />
 
       {error && (
-        <div className="glass rounded-xl p-3 border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
+        <PrismPanel padding="px-3 py-3" className="border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
           <AlertTriangle size={13} />
           <span>{error}</span>
-        </div>
+        </PrismPanel>
       )}
 
       {showCreate && (
@@ -221,7 +222,8 @@ export default function ColdEmailPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
-          className="glass-indigo rounded-xl p-4 space-y-3"
+          className="rounded-xl p-4 space-y-3"
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", borderColor: "rgba(99,102,241,0.16)" }}
         >
           <div className="flex items-center gap-2">
             <Sparkles size={13} className="text-indigo-400" />
@@ -341,7 +343,7 @@ export default function ColdEmailPage() {
         </motion.div>
       )}
 
-      <div className="glass rounded-xl overflow-hidden space-y-0">
+      <PrismPanel rainbow padding="p-0" className="overflow-hidden space-y-0">
         {loading ? (
           <div className="p-8 text-center text-[11px] text-muted">Loading…</div>
         ) : jobs.length === 0 ? (
@@ -459,7 +461,7 @@ export default function ColdEmailPage() {
                       Preview samples
                     </p>
                     {jobSamples.map((s) => (
-                      <div key={s.personalization_id} className="glass-md rounded-xl p-3 space-y-1.5">
+                      <div key={s.personalization_id} className="rounded-xl p-3 space-y-1.5" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                         {s.error ? (
                           <div className="text-[10px] text-red-400 flex items-center gap-1.5">
                             <AlertTriangle size={10} />
@@ -502,7 +504,7 @@ export default function ColdEmailPage() {
             );
           })
         )}
-      </div>
+      </PrismPanel>
     </div>
   );
 }

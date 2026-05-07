@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 import { useAuth } from "@/lib/auth-context";
 
 interface TrinityIntegration {
@@ -213,19 +214,12 @@ export default function DiscordPage() {
           { icon: Users, color: "text-gold", bg: "bg-gold/10", value: "0", label: "Total Members" },
           { icon: Hash, color: "text-purple-400", bg: "bg-purple-500/10", value: "0", label: "Total Channels" },
         ].map((tile, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06, duration: 0.4 }}
-            className="glass rounded-xl overflow-hidden"
-          >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-3 flex items-center gap-3">
+          <PrismPanel key={i} rainbow delay={i * 0.06} padding="p-3">
+            <div className="flex items-center gap-3">
               <div className={`w-9 h-9 rounded-lg ${tile.bg} flex items-center justify-center`}><tile.icon size={16} className={tile.color} /></div>
               <div><p className="text-lg font-bold font-mono">{tile.value}</p><p className="text-[10px] text-muted">{tile.label}</p></div>
             </div>
-          </motion.div>
+          </PrismPanel>
         ))}
       </div>
 
@@ -243,7 +237,7 @@ export default function DiscordPage() {
       {activeTab === "Install" && (
         <div className="space-y-5">
           {/* Hero / pitch */}
-          <div className="glass rounded-xl p-6 border-[#5865F2]/20" style={{ background: "linear-gradient(135deg, rgba(88,101,242,0.12), rgba(88,101,242,0.04), transparent)" }}>
+          <div className="rounded-xl p-6" style={{ background: "linear-gradient(135deg, rgba(88,101,242,0.12), rgba(88,101,242,0.04), transparent)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.15)" }}>
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#5865F2]/20 flex items-center justify-center shrink-0">
                 <Bot size={24} className="text-[#5865F2]" />
@@ -287,7 +281,7 @@ export default function DiscordPage() {
               ].map((f, i) => (
                 <motion.div
                   key={i}
-                  className="glass rounded-xl p-4 flex items-start gap-3"
+                  className="rounded-xl p-4 flex items-start gap-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
@@ -325,7 +319,7 @@ export default function DiscordPage() {
                 return (
                   <motion.div
                     key={int.id}
-                    className="glass rounded-xl p-4"
+                    className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.04 }}
@@ -419,7 +413,7 @@ export default function DiscordPage() {
           </div>
 
           {/* Day-to-day usage */}
-          <div className="glass rounded-xl p-5">
+          <PrismPanel padding="p-5">
             <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
               <Zap size={14} className="text-gold" /> What agencies actually do with it
             </h3>
@@ -430,7 +424,7 @@ export default function DiscordPage() {
               <li><strong className="text-foreground">Designer asks</strong> <code className="font-mono">@Trinity what did we post for Acme this week?</code> — gets a list back with links.</li>
               <li><strong className="text-foreground">Founder checks</strong> <code className="font-mono">/trinity-status</code> on their phone in bed on a Sunday. MRR went up. They smile.</li>
             </ol>
-          </div>
+          </PrismPanel>
 
           {/* Env vars — Trinity-internal admin/founder only. Clients should not see this. */}
           {isPlatformAdmin && (
@@ -694,7 +688,7 @@ export default function DiscordPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.06, duration: 0.4 }}
-                className="glass rounded-xl overflow-hidden"
+                className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
               >
                 <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} />
                 <div className="p-3 text-center">
@@ -936,7 +930,7 @@ export default function DiscordPage() {
           <div className="flex items-center gap-2 mb-2">
             <Search size={14} className="text-muted" />
             <input value={searchMembers} onChange={e => setSearchMembers(e.target.value)} placeholder="Search members..."
-              className="text-xs rounded-lg px-3 py-1.5 flex-1 glass" />
+              className="text-xs rounded-lg px-3 py-1.5 flex-1 input" />
           </div>
           {/* Member Insights */}
           <div className="card p-4">
@@ -961,7 +955,7 @@ export default function DiscordPage() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="text-center p-3 glass-md rounded-lg"
+                  className="text-center p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
                 >
                   <p className="text-lg font-bold font-mono">{stat.value}</p>
                   <p className="text-[10px] text-muted">{stat.label}</p>

@@ -13,6 +13,7 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import { useAutoSave } from "@/lib/use-auto-save";
 import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
@@ -406,7 +407,7 @@ export default function BrandKitPage() {
           className="space-y-6"
         >
           {/* URL Input */}
-          <motion.div variants={tileVariants} className="glass rounded-xl p-8 text-center space-y-4">
+          <motion.div variants={tileVariants} className="rounded-xl p-8 text-center space-y-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <div className="w-16 h-16 mx-auto bg-indigo-500/10 rounded-2xl flex items-center justify-center mb-4">
               <Globe size={28} className="text-indigo-400" />
             </div>
@@ -424,7 +425,7 @@ export default function BrandKitPage() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && scrapeBrand()}
-                  className="glass rounded-lg w-full pl-9 py-2.5 text-sm bg-transparent border-0 focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted"
+                  className="rounded-lg w-full pl-9 py-2.5 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted" style={{ border: "1px solid rgba(99,102,241,0.1)" }}
                   disabled={loading}
                 />
               </div>
@@ -475,7 +476,7 @@ export default function BrandKitPage() {
               { icon: <Palette size={18} />, title: "3. Brand Kit", desc: "Complete brand profile ready" },
               { icon: <Sparkles size={18} />, title: "4. Generate", desc: "Create on-brand content" },
             ].map((step, i) => (
-              <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="glass rounded-xl p-4 text-center relative overflow-hidden">
+              <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="rounded-xl p-4 text-center relative overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                 <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
                 <div className="w-10 h-10 mx-auto bg-indigo-500/10 rounded-lg flex items-center justify-center text-indigo-400 mb-2 mt-1">
                   {step.icon}
@@ -488,7 +489,7 @@ export default function BrandKitPage() {
 
           {/* Brand overview (after scan) */}
           {brand && (
-            <motion.div variants={tileVariants} className="glass rounded-xl p-6 space-y-4">
+            <motion.div variants={tileVariants} className="rounded-xl p-6 space-y-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
               <div className="flex items-center gap-4">
                 {brand.favicon && (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -511,7 +512,7 @@ export default function BrandKitPage() {
                     key={label}
                     variants={tileVariants}
                     whileHover={{ y: -2 }}
-                    className="glass-indigo rounded-xl p-3 text-center relative overflow-hidden"
+                    className="rounded-xl p-3 text-center relative overflow-hidden" style={{ background: "rgba(99,102,241,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.15)" }}
                   >
                     <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
                     <div className="text-indigo-400 mx-auto mb-1 mt-1 flex justify-center">{icon}</div>
@@ -543,7 +544,7 @@ export default function BrandKitPage() {
           className="space-y-6"
         >
           {/* Color palette */}
-          <motion.div variants={tileVariants} className="glass rounded-xl p-6">
+          <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold flex items-center gap-2">
                 <Palette size={14} className="text-indigo-400" /> Extracted Color Palette
@@ -587,7 +588,7 @@ export default function BrandKitPage() {
                         variants={rowVariants}
                         whileHover={{ x: 2 }}
                         onClick={() => copyColor(color)}
-                        className="flex items-center gap-2 glass rounded-lg px-2.5 py-1.5 hover:border-indigo-500/30 transition-all text-xs"
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:border-indigo-500/30 transition-all text-xs" style={{ background: "rgba(255,255,255,0.028)", border: "1px solid rgba(99,102,241,0.1)" }}
                       >
                         <div className="w-4 h-4 rounded-md border border-border/30" style={{ backgroundColor: color }} />
                         <span className="font-mono text-[10px]">{color}</span>
@@ -601,13 +602,13 @@ export default function BrandKitPage() {
 
           {/* Color harmony suggestions */}
           {brand.colors.length >= 2 && (
-            <motion.div variants={tileVariants} className="glass rounded-xl p-6">
+            <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Hash size={14} className="text-indigo-400" /> Suggested Pairings
               </h3>
               <motion.div variants={containerVariants} className="grid grid-cols-3 gap-3">
                 {brand.colors.length >= 2 && (
-                  <motion.div variants={tileVariants} className="glass-md rounded-lg p-3">
+                  <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                     <p className="text-[9px] text-muted uppercase mb-2">Primary + Accent</p>
                     <div className="flex h-12 rounded-lg overflow-hidden">
                       <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
@@ -616,7 +617,7 @@ export default function BrandKitPage() {
                   </motion.div>
                 )}
                 {brand.colors.length >= 3 && (
-                  <motion.div variants={tileVariants} className="glass-md rounded-lg p-3">
+                  <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                     <p className="text-[9px] text-muted uppercase mb-2">Tricolor</p>
                     <div className="flex h-12 rounded-lg overflow-hidden">
                       <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
@@ -626,7 +627,7 @@ export default function BrandKitPage() {
                   </motion.div>
                 )}
                 {brand.colors.length >= 4 && (
-                  <motion.div variants={tileVariants} className="glass-md rounded-lg p-3">
+                  <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                     <p className="text-[9px] text-muted uppercase mb-2">Full Palette</p>
                     <div className="flex h-12 rounded-lg overflow-hidden">
                       {brand.colors.slice(0, 5).map((c, i) => (
@@ -641,7 +642,7 @@ export default function BrandKitPage() {
 
           {/* Social links found */}
           {brand.socialLinks.length > 0 && (
-            <motion.div variants={tileVariants} className="glass rounded-xl p-6">
+            <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Share2 size={14} className="text-indigo-400" /> Social Profiles Found
               </h3>
@@ -654,7 +655,7 @@ export default function BrandKitPage() {
                     href={s.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 glass rounded-lg px-3 py-2 hover:border-indigo-500/30 transition-all text-xs"
+                    className="flex items-center gap-2 rounded-lg px-3 py-2 hover:border-indigo-500/30 transition-all text-xs" style={{ background: "rgba(255,255,255,0.028)", border: "1px solid rgba(99,102,241,0.1)" }}
                   >
                     <ExternalLink size={12} className="text-indigo-400" />
                     {s.platform}
@@ -674,7 +675,7 @@ export default function BrandKitPage() {
           animate="visible"
           className="space-y-6"
         >
-          <motion.div variants={tileVariants} className="glass rounded-xl p-6">
+          <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
               <Type size={14} className="text-indigo-400" /> Extracted Fonts
             </h3>
@@ -683,7 +684,7 @@ export default function BrandKitPage() {
             ) : (
               <motion.div variants={containerVariants} className="space-y-4">
                 {brand.fonts.map((font, i) => (
-                  <motion.div key={i} variants={tileVariants} whileHover={{ y: -1 }} className="glass-md rounded-lg p-4">
+                  <motion.div key={i} variants={tileVariants} whileHover={{ y: -1 }} className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-xs font-semibold">{font}</p>
                       <motion.button
@@ -708,7 +709,7 @@ export default function BrandKitPage() {
 
           {/* Headings from site */}
           {brand.headings.length > 0 && (
-            <motion.div variants={tileVariants} className="glass rounded-xl p-6">
+            <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <FileText size={14} className="text-indigo-400" /> Key Headlines Found
               </h3>
@@ -718,7 +719,7 @@ export default function BrandKitPage() {
                     key={i}
                     variants={rowVariants}
                     whileHover={{ x: 4, backgroundColor: "rgba(99,102,241,0.04)" }}
-                    className="flex items-center justify-between glass-md rounded-lg px-3 py-2"
+                    className="flex items-center justify-between rounded-lg px-3 py-2" style={{ background: "rgba(255,255,255,0.028)", border: "1px solid rgba(99,102,241,0.1)" }}
                   >
                     <p className="text-xs">{h}</p>
                     <button
@@ -735,7 +736,7 @@ export default function BrandKitPage() {
 
           {/* CTAs */}
           {brand.ctaTexts.length > 0 && (
-            <motion.div variants={tileVariants} className="glass rounded-xl p-6">
+            <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Zap size={14} className="text-indigo-400" /> Call-to-Action Texts
               </h3>
@@ -761,7 +762,7 @@ export default function BrandKitPage() {
         >
           {/* OG Image */}
           {brand.ogImage && (
-            <motion.div variants={tileVariants} className="glass rounded-xl p-6">
+            <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Share2 size={14} className="text-indigo-400" /> Social Preview Image (OG)
               </h3>
@@ -773,7 +774,7 @@ export default function BrandKitPage() {
           )}
 
           {/* All images */}
-          <motion.div variants={tileVariants} className="glass rounded-xl p-6">
+          <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
               <ImageIcon size={14} className="text-indigo-400" /> Extracted Images
               <span className="text-[10px] text-muted bg-white/5 px-1.5 py-0.5 rounded">{brand.images.length}</span>
@@ -825,7 +826,7 @@ export default function BrandKitPage() {
           className="space-y-6"
         >
           {/* Brand context summary */}
-          <motion.div variants={tileVariants} className="glass rounded-xl p-4 flex items-center gap-4">
+          <motion.div variants={tileVariants} className="rounded-xl p-4 flex items-center gap-4" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
             {brand.favicon && (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={brand.favicon} alt="" className="w-8 h-8 rounded-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
@@ -858,7 +859,8 @@ export default function BrandKitPage() {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => generateFromPreset(preset.id)}
                   disabled={generating}
-                  className={`text-left glass rounded-xl p-4 hover:border-indigo-500/30 transition-all group ${
+                  style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
+                  className={`text-left rounded-xl p-4 hover:border-indigo-500/30 transition-all group ${
                     selectedPreset === preset.id && generating
                       ? "border-indigo-500/50 bg-indigo-500/5"
                       : ""

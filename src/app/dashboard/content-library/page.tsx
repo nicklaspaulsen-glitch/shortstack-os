@@ -18,6 +18,7 @@ import {
 import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import PageHero from "@/components/ui/page-hero";
+import { PrismPanel } from "@/components/prism";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import SafeThumb from "@/components/safe-thumb";
 
@@ -515,8 +516,9 @@ export default function ContentLibraryPage() {
         tabIndex={0}
         onKeyDown={e => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
         className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
-          dragging ? "border-gold bg-gold/5" : "glass border-white/10 hover:border-white/20"
+          dragging ? "border-gold bg-gold/5" : "border-[rgba(99,102,241,0.1)] hover:border-[rgba(99,102,241,0.2)]"
         }`}
+        style={!dragging ? { background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" } : undefined}
       >
         {uploading ? (
           <div className="flex items-center justify-center gap-2">
@@ -534,7 +536,7 @@ export default function ContentLibraryPage() {
 
       {/* Collections Panel */}
       {showCollections && (
-        <div className="glass rounded-xl p-4">
+        <PrismPanel padding="p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Layers size={16} className="text-gold" />
@@ -563,9 +565,10 @@ export default function ContentLibraryPage() {
               {collections.map(c => (
                 <div
                   key={c.id}
-                  className={`glass-md rounded-xl cursor-pointer hover:border-white/20 transition-all p-3 relative group ${
+                  className={`rounded-xl cursor-pointer hover:border-[rgba(99,102,241,0.2)] transition-all p-3 relative group ${
                     collectionFilter === c.id ? "border border-gold/40 bg-gold/5" : ""
                   }`}
+                  style={collectionFilter !== c.id ? { background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" } : undefined}
                   onClick={() => setCollectionFilter(collectionFilter === c.id ? "all" : c.id)}
                 >
                   <button
@@ -583,7 +586,7 @@ export default function ContentLibraryPage() {
               ))}
             </div>
           )}
-        </div>
+        </PrismPanel>
       )}
 
       {/* Filters Bar */}
@@ -644,7 +647,7 @@ export default function ContentLibraryPage() {
 
       {/* Bulk Actions */}
       {selectedAssets.size > 0 && (
-        <div className="glass rounded-xl p-4 flex items-center gap-3 border border-gold/20">
+        <div className="rounded-xl p-4 flex items-center gap-3 border border-[rgba(99,102,241,0.15)]" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)" }}>
           <button onClick={selectAll} className="text-xs text-muted hover:text-white flex items-center gap-1">
             <CheckSquare size={14} /> {selectedAssets.size} selected
           </button>
@@ -670,7 +673,7 @@ export default function ContentLibraryPage() {
 
       {/* Empty State */}
       {filteredAssets.length === 0 && !uploading && (
-        <div className="glass rounded-xl p-4">
+        <PrismPanel padding="p-4">
           <EmptyState
             type={assets.length === 0 ? "no-files" : "no-content"}
             title={assets.length === 0 ? "No assets yet" : "No matching assets"}
@@ -678,7 +681,7 @@ export default function ContentLibraryPage() {
               ? "Upload files using the drop zone above or the Upload button."
               : "Try adjusting your filters or search query."}
           />
-        </div>
+        </PrismPanel>
       )}
 
       {/* Asset Grid */}
@@ -691,9 +694,10 @@ export default function ContentLibraryPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04, duration: 0.4 }}
               whileHover={{ y: -4, scale: 1.01 }}
-              className={`glass-md rounded-xl p-3 group cursor-pointer transition-all hover:border-white/20 relative ${
+              className={`rounded-xl p-3 group cursor-pointer transition-all hover:border-[rgba(99,102,241,0.2)] relative ${
                 selectedAssets.has(asset.id) ? "border border-gold/40 bg-gold/5" : ""
               }`}
+              style={!selectedAssets.has(asset.id) ? { background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" } : undefined}
             >
               {/* Select checkbox */}
               <button
@@ -746,7 +750,7 @@ export default function ContentLibraryPage() {
 
       {/* Asset List */}
       {filteredAssets.length > 0 && viewMode === "list" && (
-        <div className="glass rounded-xl overflow-hidden">
+        <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/10">
@@ -824,7 +828,8 @@ export default function ContentLibraryPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06, duration: 0.4 }}
-            className="glass rounded-xl overflow-hidden"
+            className="rounded-xl overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           >
             <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-4">
@@ -838,7 +843,7 @@ export default function ContentLibraryPage() {
       {/* Preview Modal */}
       {previewAsset && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => { setPreviewAsset(null); setEditText(null); }}>
-          <div className="glass rounded-xl p-4 max-w-lg w-full" onClick={e => e.stopPropagation()}>
+          <div className="rounded-xl p-4 max-w-lg w-full" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }} onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold">{previewAsset.name}</h3>
               <button onClick={() => { setPreviewAsset(null); setEditText(null); }} className="text-muted hover:text-white" aria-label="Close asset preview"><X size={16} /></button>

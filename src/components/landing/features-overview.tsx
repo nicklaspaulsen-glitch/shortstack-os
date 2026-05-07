@@ -34,7 +34,7 @@ const FEATURES: Feature[] = [
     title: "Lead Scraper",
     description:
       "Pull targeted leads from Google Maps, LinkedIn, niche directories, and custom sources. AI-enrich with emails, phones, socials, and fit scores.",
-    color: "#c8a855",
+    color: "#6366F1",
     metrics: [
       { label: "Sources", value: "12+" },
       { label: "Enriched", value: "98%" },
@@ -193,7 +193,7 @@ export default function FeaturesOverview() {
         className="absolute inset-0 -z-0 pointer-events-none opacity-30"
         style={{
           background:
-            "radial-gradient(ellipse 80% 50% at 50% 30%, rgba(200,168,85,0.04) 0%, transparent 70%)",
+            "radial-gradient(ellipse 80% 50% at 50% 30%, rgba(99,102,241,0.04) 0%, transparent 70%)",
         }}
       />
       <div className="max-w-6xl mx-auto relative">

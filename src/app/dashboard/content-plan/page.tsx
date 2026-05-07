@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/platform-icons";
 import InlineSocialConnect from "@/components/inline-social-connect";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
+import { PrismPanel } from "@/components/prism";
 import { createClient } from "@/lib/supabase/client";
 
 /* ──────────────── Types ──────────────── */
@@ -670,18 +671,18 @@ export default function ContentPlanPage() {
 
           {/* Loading / Empty / Content */}
           {loading ? (
-            <div className="glass rounded-xl flex items-center justify-center py-20">
+            <PrismPanel padding="py-20 px-6" className="flex items-center justify-center">
               <DotsPulse label="Loading posts..." />
-            </div>
+            </PrismPanel>
           ) : filteredPosts.length === 0 ? (
-            <div className="glass rounded-xl p-8">
+            <PrismPanel padding="p-8">
               <EmptyState
                 type="no-calendar"
                 title="No content yet"
                 description="Connect a social account or schedule a post to see it here. Content from every platform appears in this unified view."
                 action={<div className="w-full max-w-md mx-auto mt-2"><InlineSocialConnect platforms={["instagram", "facebook", "tiktok", "linkedin"]} /></div>}
               />
-            </div>
+            </PrismPanel>
           ) : (
             <>
               {viewMode === "grid" && (
@@ -717,7 +718,7 @@ export default function ContentPlanPage() {
 
         {/* ── RIGHT: AI Insights sidebar ─────────────────── */}
         <aside className="space-y-4 xl:sticky xl:top-4 xl:self-start">
-          <div className="glass rounded-xl">
+          <PrismPanel rainbow padding="px-6 py-4">
             <div className="flex items-center justify-between mb-2.5">
               <h3 className="text-xs font-semibold flex items-center gap-1.5">
                 <Sparkles size={12} className="text-gold" /> AI Insights
@@ -734,7 +735,7 @@ export default function ContentPlanPage() {
             <p className="text-[10px] text-muted">
               AI analysis of your recent posts, trending topics in your niche, and thumbnail suggestions.
             </p>
-          </div>
+          </PrismPanel>
 
           <InsightSection
             title="Top performing this week"
@@ -839,7 +840,7 @@ function InsightSection({
   const childArray = Array.isArray(children) ? children : [children];
   const hasItems = childArray.filter(Boolean).length > 0;
   return (
-    <div className="glass rounded-xl">
+    <PrismPanel padding="px-6 py-4">
       <h4 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2 text-foreground">
         {icon} {title}
       </h4>
@@ -852,7 +853,7 @@ function InsightSection({
           <p className="text-[10px] text-muted italic">{emptyText}</p>
         )}
       </div>
-    </div>
+    </PrismPanel>
   );
 }
 
@@ -873,9 +874,10 @@ function PostGrid({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.06, duration: 0.4 }}
           whileHover={{ y: -4, scale: 1.01 }}
-          className={`glass rounded-xl overflow-hidden cursor-pointer group transition-shadow ${
+          className={`rounded-xl overflow-hidden cursor-pointer group transition-shadow ${
             selectedIds.has(p.id) ? "border-gold bg-gold/5" : ""
           }`}
+          style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}
           onClick={() => onOpen(p)}
         >
           {/* Thumbnail area */}
@@ -954,7 +956,7 @@ function PostList({
   }, [insights]);
 
   return (
-    <div className="glass rounded-xl p-0 overflow-hidden">
+    <div className="rounded-xl p-0 overflow-hidden" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)" }}>
       <div className="overflow-x-auto">
         <table className="w-full text-[11px]">
           <thead className="bg-surface-light border-b border-border">
@@ -1068,7 +1070,7 @@ function PostCalendar({
   const today = new Date();
 
   return (
-    <div className="glass rounded-xl">
+    <div className="rounded-xl" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)", padding: "1.25rem 1.5rem" }}>
       {/* Calendar header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -1361,7 +1363,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
 
 function Stat({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
-    <div className="glass-md rounded-lg text-center">
+    <div className="rounded-lg text-center" style={{ background: "rgba(255,255,255,0.028)", backdropFilter: "blur(16px)", border: "1px solid rgba(99,102,241,0.1)", padding: "0.5rem" }}>
       <div className="text-[10px] text-muted flex items-center justify-center gap-1 mb-0.5">{icon} {label}</div>
       <div className="text-sm font-semibold text-foreground">{value}</div>
     </div>

@@ -79,8 +79,8 @@ export default function ReplaceStack() {
             className="text-center mt-10 py-7 rounded-2xl relative overflow-hidden"
             style={{
               background:
-                "linear-gradient(135deg, rgba(200,168,85,0.08), rgba(226,200,120,0.04))",
-              border: "1px solid rgba(200,168,85,0.18)",
+                "linear-gradient(135deg, rgba(99,102,241,0.08), rgba(167,139,250,0.04))",
+              border: "1px solid rgba(99,102,241,0.18)",
             }}
           >
             {/* Soft glow */}
@@ -88,7 +88,7 @@ export default function ReplaceStack() {
               className="absolute inset-0 -z-0 opacity-40 blur-3xl pointer-events-none"
               style={{
                 background:
-                  "radial-gradient(circle at 30% 50%, rgba(200,168,85,0.18) 0%, transparent 60%)",
+                  "radial-gradient(circle at 30% 50%, rgba(99,102,241,0.18) 0%, transparent 60%)",
               }}
             />
             <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1.5 relative">
@@ -98,7 +98,7 @@ export default function ReplaceStack() {
               className="text-4xl md:text-5xl font-extrabold mb-2 relative"
               style={{
                 background:
-                  "linear-gradient(135deg, #c8a855, #e2c878 60%, #fff8e1)",
+                  "linear-gradient(135deg, #6366F1, #A78BFA 60%, #E0E7FF)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}

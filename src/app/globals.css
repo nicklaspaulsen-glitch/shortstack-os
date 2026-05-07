@@ -1523,24 +1523,38 @@ body {
   box-shadow: 0 0 12px -2px rgba(var(--brand-accent-rgb, 99 102 241) / 0.35);
 }
 
-/* ═══════════ GLASS PANEL SYSTEM ═══════════ */
+/* ═══════════ GLASS PANEL SYSTEM (prism split) ═══════════ */
+/* May 7: upgraded to prism design — indigo-tinted borders,
+   visible on OLED black, matches analytics/clients reference */
 .glass {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.04);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.07);
+  border: 1px solid rgba(99,102,241,0.10);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 2px 8px rgba(0,0,0,0.25),
+    0 0 0 0.5px rgba(99,102,241,0.06);
 }
 .glass-md {
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(99,102,241,0.14);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.05) inset,
+    0 4px 12px rgba(0,0,0,0.30),
+    0 0 0 0.5px rgba(99,102,241,0.10);
 }
 .glass-strong {
   background: rgba(255,255,255,0.07);
   backdrop-filter: blur(32px) saturate(200%);
   -webkit-backdrop-filter: blur(32px) saturate(200%);
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid rgba(99,102,241,0.18);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    0 6px 20px rgba(0,0,0,0.35),
+    0 0 0 0.5px rgba(99,102,241,0.14);
 }
 /* Indigo-tinted glass for brand surfaces */
 .glass-indigo {

@@ -16,6 +16,7 @@ import {
 import toast from "react-hot-toast";
 import { StripeIcon, PayPalIcon, SquareIcon } from "@/components/ui/platform-icons";
 import PageHero from "@/components/ui/page-hero";
+import { PRISM_GLASS, PRISM_BORDERS } from "@/components/prism/constants";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { StatSkeleton } from "@/components/ui/skeleton";
 
@@ -539,7 +540,7 @@ export default function FinancialsPage() {
               { icon: <TrendingUp size={12} className={netProfit >= 0 ? "text-green-400" : "text-red-400"} />, label: "Net Profit", value: formatCurrency(netProfit), color: netProfit >= 0 ? "text-green-400" : "text-red-400", sub: <span className="flex items-center gap-0.5">{marginPct >= 0 ? <ArrowUpRight size={10} className="text-green-400" /> : <ArrowDownRight size={10} className="text-red-400" />}{marginPct.toFixed(1)}% margin</span> },
               { icon: <AlertTriangle size={12} className={churnRate > 5 ? "text-red-400" : "text-yellow-400"} />, label: "Churn Rate", value: `${churnRate.toFixed(1)}%`, color: churnRate > 5 ? "text-red-400" : "text-yellow-400", sub: `${churnedThisMonth} churned / ${totalClients} total` },
             ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-2xl border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className="flex items-center gap-1.5 mb-1">
@@ -561,7 +562,7 @@ export default function FinancialsPage() {
               { icon: <Zap size={12} className="text-gold" />, label: "Client LTV", value: formatCurrency(clv), color: "text-gold", sub: `avg ${avgClientLifeMonths} months` },
               { icon: <Shield size={12} className="text-orange-400" />, label: "Est. Annual Tax", value: formatCurrency(estimatedTax), color: "text-orange-400", sub: `${estimatedTaxRate}% effective rate` },
             ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.06, duration: 0.4 }} className="rounded-2xl border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className="flex items-center gap-1.5 mb-1">
@@ -576,7 +577,7 @@ export default function FinancialsPage() {
           </div>
 
           {/* Revenue vs Expenses Bar */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
               <BarChart3 size={13} className="text-gold" /> Revenue vs Expenses vs Profit
             </p>
@@ -613,7 +614,7 @@ export default function FinancialsPage() {
 
           {/* MRR Trend */}
           {mrrTrend.length > 1 && (
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="glass rounded-xl p-4">
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                 <TrendingUp size={13} className="text-gold" /> MRR Growth Trend
               </p>
@@ -636,7 +637,7 @@ export default function FinancialsPage() {
           )}
 
           {/* Revenue by Plan Tier */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
               <Layers size={13} className="text-gold" /> Revenue by Plan Tier
             </p>
@@ -658,7 +659,7 @@ export default function FinancialsPage() {
           </motion.div>
 
           {/* Payment Method Distribution */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }} className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
               <CreditCard size={13} className="text-gold" /> Payment Method Distribution
             </p>
@@ -698,7 +699,7 @@ export default function FinancialsPage() {
               { icon: <Layers size={12} className="text-blue-400" />, label: "Categories", value: String(categoryTotals.length), color: "text-blue-400" },
               { icon: <Percent size={12} className={marginPct >= 0 ? "text-green-400" : "text-red-400"} />, label: "Profit Margin", value: `${marginPct.toFixed(1)}%`, color: marginPct >= 0 ? "text-green-400" : "text-red-400" },
             ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-2xl border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className="flex items-center gap-1.5 mb-1">
@@ -712,7 +713,7 @@ export default function FinancialsPage() {
           </div>
 
           {/* Budget vs Actual */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
               <Target size={13} className="text-gold" /> Budget vs Actual
             </p>
@@ -747,7 +748,7 @@ export default function FinancialsPage() {
 
           {/* Category Breakdown */}
           {categoryTotals.length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="glass rounded-xl p-4">
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="rounded-2xl border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                 <Receipt size={13} className="text-gold" /> Expense Categories
               </p>
@@ -864,7 +865,7 @@ export default function FinancialsPage() {
               { label: "Renewals ≤7d", value: String(upcomingRenewals), color: "text-amber-400", sub: "Upcoming charges" },
               { label: "Top Cost", value: mostExpensive?.tool_name || "—", color: "text-gold", sub: mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data", small: true },
             ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-2xl border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-4">
                   <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
@@ -1002,7 +1003,7 @@ export default function FinancialsPage() {
               { icon: <FileText size={12} className="text-blue-400" />, label: "Pending", value: formatCurrency(invoiceTotals.pending), color: "text-blue-400", sub: `${invoices.filter(i => i.status === "pending").length} invoices` },
               { icon: <CheckCircle size={12} className="text-green-400" />, label: "Paid", value: formatCurrency(invoiceTotals.paid), color: "text-green-400", sub: `${invoices.filter(i => i.status === "paid").length} invoices` },
             ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-2xl border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
                   <div className="flex items-center gap-1.5 mb-1">
