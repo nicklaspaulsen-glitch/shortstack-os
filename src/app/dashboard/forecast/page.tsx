@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion, type Variants } from "framer-motion";
 import { TrendingUp, Loader2, AlertCircle } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
@@ -57,26 +58,58 @@ function buildBuckets(deals: Deal[]): MonthBucket[] {
   return buckets;
 }
 
+const containerVariants: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+};
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } },
+};
+
+const slideX: Variants = {
+  hidden: { opacity: 0, x: -18 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } },
+};
+
+const STAT_BARS = [
+  "bg-gradient-to-r from-indigo-500 to-violet-500",
+  "bg-gradient-to-r from-yellow-500 to-amber-500",
+  "bg-gradient-to-r from-green-500 to-emerald-500",
+];
+
 function BarChart({ buckets }: { buckets: MonthBucket[] }) {
   const max = Math.max(...buckets.map((b) => b.weighted), 1);
   return (
-    <div className="card p-5">
+    <div className="glass rounded-xl p-5">
       <p className="text-sm font-semibold text-white mb-5">Weighted Pipeline — Next 6 Months</p>
       <div className="flex items-end gap-3 h-40">
-        {buckets.map((b) => {
+        {buckets.map((b, i) => {
           const heightPct = (b.weighted / max) * 100;
           const isThisMonth = b.month === new Date().toISOString().slice(0, 7);
           return (
-            <div key={b.month} className="flex-1 flex flex-col items-center gap-1.5 min-w-0">
+            <motion.div
+              key={b.month}
+              initial={{ opacity: 0, scaleY: 0 }}
+              animate={{ opacity: 1, scaleY: 1 }}
+              transition={{ duration: 0.5, delay: i * 0.07, ease: [0.32, 0.72, 0, 1] }}
+              style={{ transformOrigin: "bottom" }}
+              className="flex-1 flex flex-col items-center gap-1.5 min-w-0"
+            >
               <span className="text-[10px] text-muted">{b.weighted > 0 ? fmt(b.weighted) : ""}</span>
               <div className="w-full relative" style={{ height: "100px" }}>
                 <div
-                  className={`absolute bottom-0 w-full rounded-t-md transition-all duration-500 ${isThisMonth ? "bg-yellow-400/80" : "bg-blue-500/60"}`}
+                  className={`absolute bottom-0 w-full rounded-t-md transition-all duration-500 ${
+                    isThisMonth
+                      ? "bg-gradient-to-t from-indigo-600/80 to-indigo-400/80"
+                      : "bg-gradient-to-t from-indigo-800/50 to-indigo-600/30"
+                  }`}
                   style={{ height: `${heightPct}%` }}
                 />
               </div>
               <span className="text-[10px] text-muted text-center leading-tight">{b.label}</span>
-            </div>
+            </motion.div>
           );
         })}
       </div>
@@ -123,39 +156,64 @@ export default function ForecastPage() {
       />
 
       {loading ? <TableSkeleton rows={8} /> : error ? (
-        <div className="card p-8 flex flex-col items-center gap-3 text-center">
+        <div className="glass rounded-xl p-8 flex flex-col items-center gap-3 text-center">
           <AlertCircle size={32} className="text-red-400" />
           <p className="text-white font-semibold">Failed to load deals</p>
           <p className="text-muted text-sm">{error}</p>
-          <button onClick={fetchDeals} className="btn-primary text-sm px-4 py-2 rounded-lg flex items-center gap-2 mt-2">
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={fetchDeals}
+            className="btn-primary text-sm px-4 py-2 rounded-lg flex items-center gap-2 mt-2"
+          >
             <Loader2 size={14} /> Retry
-          </button>
+          </motion.button>
         </div>
       ) : (
         <>
           {/* Hero stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="card p-5">
-              <p className="text-xs text-muted uppercase tracking-wider mb-1">Total Weighted Pipeline</p>
-              <p className="text-3xl font-bold text-white">{fmt(totalPipeline)}</p>
-              <p className="text-xs text-muted mt-1">across {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length} open deals</p>
-            </div>
-            <div className="card p-5">
-              <p className="text-xs text-muted uppercase tracking-wider mb-1">Likely This Month</p>
-              <p className="text-3xl font-bold text-yellow-400">
-                {fmt(likelyClose.reduce((s, d) => s + d.value * (d.probability / 100), 0))}
-              </p>
-              <p className="text-xs text-muted mt-1">{likelyClose.length} deal{likelyClose.length !== 1 ? "s" : ""} ≥70% probability</p>
-            </div>
-            <div className="card p-5">
-              <p className="text-xs text-muted uppercase tracking-wider mb-1">Closed Won (All Time)</p>
-              <p className="text-3xl font-bold text-green-400">{fmt(wonTotal)}</p>
-              <p className="text-xs text-muted mt-1">{deals.filter((d) => d.stage === "closed_won").length} deals won</p>
-            </div>
-          </div>
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+          >
+            {[
+              {
+                label: "Total Weighted Pipeline",
+                value: fmt(totalPipeline),
+                sub: `across ${deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length} open deals`,
+                valueClass: "text-white",
+              },
+              {
+                label: "Likely This Month",
+                value: fmt(likelyClose.reduce((s, d) => s + d.value * (d.probability / 100), 0)),
+                sub: `${likelyClose.length} deal${likelyClose.length !== 1 ? "s" : ""} ≥70% probability`,
+                valueClass: "text-yellow-400",
+              },
+              {
+                label: "Closed Won (All Time)",
+                value: fmt(wonTotal),
+                sub: `${deals.filter((d) => d.stage === "closed_won").length} deals won`,
+                valueClass: "text-green-400",
+              },
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp}
+                whileHover={{ y: -2 }}
+                className="glass rounded-xl p-5 overflow-hidden relative"
+              >
+                <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
+                <p className="text-xs text-muted uppercase tracking-wider mb-1">{stat.label}</p>
+                <p className={`text-3xl font-bold ${stat.valueClass}`}>{stat.value}</p>
+                <p className="text-xs text-muted mt-1">{stat.sub}</p>
+              </motion.div>
+            ))}
+          </motion.div>
 
           {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length === 0 ? (
-            <div className="card p-10 flex flex-col items-center gap-3 text-center">
+            <div className="glass rounded-xl p-10 flex flex-col items-center gap-3 text-center">
               <TrendingUp size={36} className="text-muted opacity-30" />
               <p className="text-white font-semibold">No open deals to forecast</p>
               <p className="text-muted text-sm max-w-xs">Add deals with expected close dates and probabilities to see your revenue forecast.</p>
@@ -167,7 +225,7 @@ export default function ForecastPage() {
 
               {/* Likely to close this month */}
               {likelyClose.length > 0 && (
-                <div className="card overflow-hidden">
+                <div className="glass rounded-xl overflow-hidden">
                   <div className="px-4 py-3 border-b border-white/5">
                     <p className="text-sm font-semibold text-white">Likely to Close This Month</p>
                     <p className="text-xs text-muted mt-0.5">Deals with ≥70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
@@ -182,9 +240,18 @@ export default function ForecastPage() {
                         <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Weighted</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5">
+                    <motion.tbody
+                      className="divide-y divide-white/5"
+                      variants={containerVariants}
+                      initial="hidden"
+                      animate="show"
+                    >
                       {likelyClose.map((d) => (
-                        <tr key={d.id} className="hover:bg-white/[0.02]">
+                        <motion.tr
+                          key={d.id}
+                          variants={slideX}
+                          className="hover:bg-indigo-500/5 transition-colors"
+                        >
                           <td className="px-4 py-3 text-white font-medium">{d.title}</td>
                           <td className="px-4 py-3 text-muted hidden sm:table-cell">{d.client_name}</td>
                           <td className="px-4 py-3 text-right text-white">{fmt(d.value)}</td>
@@ -196,15 +263,15 @@ export default function ForecastPage() {
                           <td className="px-4 py-3 text-right text-yellow-400 font-medium hidden md:table-cell">
                             {fmt(d.value * d.probability / 100)}
                           </td>
-                        </tr>
+                        </motion.tr>
                       ))}
-                    </tbody>
+                    </motion.tbody>
                   </table>
                 </div>
               )}
 
               {/* Full pipeline table */}
-              <div className="card overflow-hidden">
+              <div className="glass rounded-xl overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/5">
                   <p className="text-sm font-semibold text-white">Full Open Pipeline</p>
                 </div>
@@ -218,12 +285,21 @@ export default function ForecastPage() {
                       <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Weighted</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <motion.tbody
+                    className="divide-y divide-white/5"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="show"
+                  >
                     {deals
                       .filter((d) => !CLOSED_STAGES.has(d.stage))
                       .sort((a, b) => b.value * b.probability - a.value * a.probability)
                       .map((d) => (
-                        <tr key={d.id} className="hover:bg-white/[0.02]">
+                        <motion.tr
+                          key={d.id}
+                          variants={slideX}
+                          className="hover:bg-indigo-500/5 transition-colors"
+                        >
                           <td className="px-4 py-3">
                             <p className="text-white">{d.title}</p>
                             <p className="text-muted text-xs">{d.client_name}</p>
@@ -240,9 +316,9 @@ export default function ForecastPage() {
                           <td className="px-4 py-3 text-right text-yellow-400 hidden md:table-cell">
                             {fmt(d.value * d.probability / 100)}
                           </td>
-                        </tr>
+                        </motion.tr>
                       ))}
-                  </tbody>
+                  </motion.tbody>
                 </table>
               </div>
             </>

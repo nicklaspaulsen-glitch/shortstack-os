@@ -11,6 +11,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { motion, type Variants } from "framer-motion";
 import {
   FileCheck,
   Plus,
@@ -46,6 +47,27 @@ const STATUS_STYLES: Record<Proposal["status"], { label: string; tint: string }>
   sent: { label: "Sent", tint: "bg-sky-500/15 text-sky-300" },
   signed: { label: "Signed", tint: "bg-emerald-500/15 text-emerald-300" },
   declined: { label: "Declined", tint: "bg-rose-500/15 text-rose-300" },
+};
+
+const STAT_BARS = [
+  "bg-gradient-to-r from-indigo-500 to-violet-500",
+  "bg-gradient-to-r from-emerald-500 to-green-500",
+  "bg-gradient-to-r from-sky-500 to-blue-500",
+];
+
+const containerVariants: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+};
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } },
+};
+
+const slideX: Variants = {
+  hidden: { opacity: 0, x: -18 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } },
 };
 
 export default function ProposalsPage() {
@@ -117,31 +139,45 @@ export default function ProposalsPage() {
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <div className="card">
-            <p className="text-[10px] uppercase tracking-wider text-muted">Total value</p>
-            <p className="mt-1 text-2xl font-bold">
-              ${stats.total.toLocaleString()}
-            </p>
-            <p className="mt-0.5 text-[11px] text-muted">{proposals.length} proposals</p>
-          </div>
-          <div className="card">
-            <p className="text-[10px] uppercase tracking-wider text-muted">Signed</p>
-            <p className="mt-1 text-2xl font-bold text-emerald-300">{stats.signed}</p>
-            <p className="mt-0.5 text-[11px] text-muted">
-              ${stats.signedValue.toLocaleString()} closed
-            </p>
-          </div>
-          <div className="card">
-            <p className="text-[10px] uppercase tracking-wider text-muted">Win rate</p>
-            <p className="mt-1 text-2xl font-bold">
-              {proposals.length === 0
-                ? "—"
-                : `${Math.round((stats.signed / proposals.length) * 100)}%`}
-            </p>
-            <p className="mt-0.5 text-[11px] text-muted">signed / total</p>
-          </div>
-        </div>
+        <motion.div
+          className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
+          {[
+            {
+              label: "Total value",
+              value: `$${stats.total.toLocaleString()}`,
+              sub: `${proposals.length} proposals`,
+              valueClass: "",
+            },
+            {
+              label: "Signed",
+              value: String(stats.signed),
+              sub: `$${stats.signedValue.toLocaleString()} closed`,
+              valueClass: "text-emerald-300",
+            },
+            {
+              label: "Win rate",
+              value: proposals.length === 0 ? "—" : `${Math.round((stats.signed / proposals.length) * 100)}%`,
+              sub: "signed / total",
+              valueClass: "",
+            },
+          ].map((stat, i) => (
+            <motion.div
+              key={i}
+              variants={fadeUp}
+              whileHover={{ y: -2 }}
+              className="glass rounded-xl overflow-hidden relative p-4"
+            >
+              <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
+              <p className="text-[10px] uppercase tracking-wider text-muted">{stat.label}</p>
+              <p className={`mt-1 text-2xl font-bold ${stat.valueClass}`}>{stat.value}</p>
+              <p className="mt-0.5 text-[11px] text-muted">{stat.sub}</p>
+            </motion.div>
+          ))}
+        </motion.div>
 
         {/* Toolbar */}
         <div className="flex items-center justify-between">
@@ -150,12 +186,14 @@ export default function ProposalsPage() {
               ? "Loading…"
               : `${proposals.length} proposal${proposals.length === 1 ? "" : "s"}`}
           </p>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
             onClick={() => setShowNew(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black transition hover:bg-gold/90"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400"
           >
             <Plus size={14} /> New proposal
-          </button>
+          </motion.button>
         </div>
 
         {/* Create form */}
@@ -176,23 +214,30 @@ export default function ProposalsPage() {
             <Loader size={14} className="animate-spin" /> Loading…
           </div>
         ) : proposals.length === 0 ? (
-          <div className="card">
+          <div className="glass rounded-xl p-6">
             <EmptyState
               icon={<FileCheck size={36} />}
               title="No proposals yet"
               description="Draft your first proposal — track who signed, who ghosted, and close more deals."
               action={
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
                   onClick={() => setShowNew(true)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white"
                 >
                   <Plus size={14} /> Create proposal
-                </button>
+                </motion.button>
               }
             />
           </div>
         ) : (
-          <div className="space-y-2">
+          <motion.div
+            className="space-y-2"
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+          >
             {proposals.map((p) => (
               <ProposalCard
                 key={p.id}
@@ -201,11 +246,11 @@ export default function ProposalsPage() {
                 onMarkSent={() => markSent(p.id)}
               />
             ))}
-          </div>
+          </motion.div>
         )}
 
         {/* Help */}
-        <div className="mt-8 rounded-xl border border-border/40 bg-background/40 p-5 text-[12px] text-muted">
+        <div className="mt-8 glass rounded-xl p-5 text-[12px] text-muted">
           <p className="mb-2 font-semibold text-foreground">Coming soon</p>
           <ul className="ml-4 list-disc space-y-1">
             <li>Claude-drafted proposals from a short brief</li>
@@ -213,11 +258,11 @@ export default function ProposalsPage() {
             <li>Workflow triggers on <code>proposal_signed</code> (onboarding, invoice, welcome)</li>
             <li>
               Related:{" "}
-              <Link href="/dashboard/deals" className="text-gold underline">
+              <Link href="/dashboard/deals" className="text-indigo-400 underline">
                 Deals
               </Link>
               {" · "}
-              <Link href="/dashboard/clients" className="text-gold underline">
+              <Link href="/dashboard/clients" className="text-indigo-400 underline">
                 Clients
               </Link>
             </li>
@@ -243,7 +288,14 @@ function ProposalCard({
 }) {
   const style = STATUS_STYLES[proposal.status];
   return (
-    <div className="rounded-lg border border-border/50 bg-surface-light/20 transition hover:border-gold/40">
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, x: -18 },
+        show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: [0.32, 0.72, 0, 1] } },
+      }}
+      whileHover={{ y: -3 }}
+      className="glass rounded-xl hover:border-indigo-500/20 transition-colors"
+    >
       <div className="flex items-center gap-3 p-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-500/15 text-purple-300">
           <FileCheck size={16} />
@@ -267,30 +319,34 @@ function ProposalCard({
         </div>
         <div className="flex shrink-0 items-center gap-1">
           {proposal.status === "draft" && (
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={onMarkSent}
               className="inline-flex items-center gap-1 rounded bg-sky-500/15 px-2.5 py-1.5 text-[11px] text-sky-300 hover:bg-sky-500/25"
               title="Mark as sent"
             >
               <Send size={11} /> Send
-            </button>
+            </motion.button>
           )}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={onDelete}
             className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-300 hover:bg-rose-500/20"
             title="Delete"
             aria-label="Delete proposal"
           >
             <Trash2 size={11} />
-          </button>
+          </motion.button>
         </div>
       </div>
       {proposal.summary && (
-        <div className="border-t border-border/30 bg-background/40 p-3">
+        <div className="border-t border-white/5 bg-white/[0.02] p-3 rounded-b-xl">
           <p className="text-[12px] leading-relaxed text-muted">{proposal.summary}</p>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -334,7 +390,11 @@ function NewProposalForm({
   }
 
   return (
-    <div className="rounded-xl border border-gold/30 bg-gold/5 p-5">
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="glass-indigo rounded-xl p-5"
+    >
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground" aria-label="Back to proposals list">
@@ -354,7 +414,7 @@ function NewProposalForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Q2 Social Media Retainer"
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -366,7 +426,7 @@ function NewProposalForm({
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
             placeholder="Acme Inc."
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -378,7 +438,7 @@ function NewProposalForm({
             value={clientEmail}
             onChange={(e) => setClientEmail(e.target.value)}
             placeholder="hello@acme.com"
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -390,7 +450,7 @@ function NewProposalForm({
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="5000"
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -400,7 +460,7 @@ function NewProposalForm({
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
           >
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
@@ -417,7 +477,7 @@ function NewProposalForm({
             onChange={(e) => setSummary(e.target.value)}
             placeholder="One-paragraph pitch — scope, deliverables, timeline."
             rows={4}
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
           />
         </div>
       </div>
@@ -429,10 +489,12 @@ function NewProposalForm({
         >
           Cancel
         </button>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
           onClick={submit}
           disabled={!canSubmit || submitting}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-5 py-2 text-sm font-semibold text-black transition hover:bg-gold/90 disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400 disabled:opacity-40"
         >
           {submitting ? (
             <Loader size={14} className="animate-spin" />
@@ -441,8 +503,8 @@ function NewProposalForm({
               <CheckCircle2 size={14} /> Save draft
             </>
           )}
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }
