@@ -555,14 +555,16 @@ export default function ContentPage() {
         subtitle="Scripts, requests, publishing & personal brand."
         gradient="purple"
         actions={
-          <button onClick={() => setShowGenerateModal(true)} className="btn-primary flex items-center gap-2">
-            <Sparkles size={16} /> Generate Script
-          </button>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <button onClick={() => setShowGenerateModal(true)} className="btn-primary flex items-center gap-2">
+              <Sparkles size={16} /> Generate Script
+            </button>
+          </motion.div>
         }
       />
 
       {/* ── Drop & Go ───────────────────────────────────────────── */}
-      <div className="card border border-gold/30 bg-gradient-to-br from-gold/5 to-transparent">
+      <div className="glass-indigo rounded-xl p-4 border border-gold/30 bg-gradient-to-br from-gold/5 to-transparent">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="section-header flex items-center gap-2 mb-1">
@@ -628,8 +630,14 @@ export default function ContentPage() {
 
         {dropItems.length > 0 && (
           <div className="mt-5 space-y-4">
-            {dropItems.map((item) => (
-              <div key={item.id} className="border border-gold/20 rounded-xl p-4 bg-surface/50">
+            {dropItems.map((item, index) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.06 }}
+                className="glass rounded-xl p-4"
+              >
                 {/* Header row */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2 min-w-0">
@@ -771,14 +779,14 @@ export default function ContentPage() {
                 {item.status === "failed" && item.error && (
                   <p className="text-[10px] text-danger/80 mt-2">{item.error}</p>
                 )}
-              </div>
+              </motion.div>
             ))}
           </div>
         )}
 
         {/* Plan preview (week / month / year) */}
         {weekPlan.length > 0 && (
-          <div className="mt-5 border border-gold/30 rounded-xl p-4 bg-gold/5">
+          <div className="mt-5 glass-indigo rounded-xl p-4">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
               <h3 className="text-sm font-medium flex items-center gap-2">
                 <Calendar size={14} className="text-gold" />
@@ -833,7 +841,14 @@ export default function ContentPage() {
                 const isPublishing = status === "publishing" || publishingId === p.calendar_id;
                 const canPublishNow = !!p.calendar_id && !p.needs_creation && status !== "posted" && !isPublishing;
                 return (
-                  <div key={i} className={`flex items-center gap-3 text-[11px] p-2 border rounded ${p.needs_creation ? "border-amber-500/30 bg-amber-500/5" : "border-border bg-surface/50"}`}>
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: i * 0.04 }}
+                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    className={`flex items-center gap-3 text-[11px] p-2 border rounded ${p.needs_creation ? "border-amber-500/30 bg-amber-500/5" : "border-border bg-surface/50"}`}
+                  >
                     <span className="text-gold font-medium w-12 shrink-0">{p.day}</span>
                     <span className="text-muted w-16 shrink-0">{p.date?.slice(5)}</span>
                     <span className="text-muted w-14 shrink-0">{p.post_time}</span>
@@ -891,7 +906,7 @@ export default function ContentPage() {
                         <Send size={10} /> Publish now
                       </button>
                     )}
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -1041,9 +1056,25 @@ export default function ContentPage() {
           {tab === "publish" && (
             <div className="space-y-4">
               <div className="grid grid-cols-3 gap-4">
-                <StatCard label="Pending Review" value={publishQueue.filter((p) => p.status === "pending").length} />
-                <StatCard label="Approved" value={publishQueue.filter((p) => p.status === "approved").length} />
-                <StatCard label="Published" value={publishQueue.filter((p) => p.status === "published").length} />
+                {[
+                  { label: "Pending Review", value: publishQueue.filter((p) => p.status === "pending").length },
+                  { label: "Approved", value: publishQueue.filter((p) => p.status === "approved").length },
+                  { label: "Published", value: publishQueue.filter((p) => p.status === "published").length },
+                ].map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: index * 0.06 }}
+                    whileHover={{ y: -2 }}
+                    className="glass rounded-xl overflow-hidden relative"
+                  >
+                    <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 left-0 right-0" />
+                    <div className="pt-1">
+                      <StatCard label={stat.label} value={stat.value} />
+                    </div>
+                  </motion.div>
+                ))}
               </div>
               <DataTable
                 columns={[
@@ -1293,8 +1324,9 @@ export default function ContentPage() {
                       visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
                     }}
                     whileHover={{ y: -3 }}
-                    className="card text-center p-4"
+                    className="glass rounded-xl overflow-hidden relative text-center p-4"
                   >
+                    <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 left-0 right-0" />
                     <div className={`${stat.color} mx-auto mb-2`}>{stat.icon}</div>
                     <p className="text-xl font-bold">{stat.value}</p>
                     <p className="text-[10px] text-muted">{stat.label}</p>
@@ -1335,11 +1367,11 @@ export default function ContentPage() {
                 <div className="space-y-3">
                   <div>
                     <label className="text-[10px] text-muted uppercase tracking-wider">Target Keyword (optional)</label>
-                    <input value={seoKeyword} onChange={e => setSeoKeyword(e.target.value)} placeholder="e.g. digital marketing agency" className="input w-full text-sm mt-1" />
+                    <input value={seoKeyword} onChange={e => setSeoKeyword(e.target.value)} placeholder="e.g. digital marketing agency" className="input glass rounded-lg w-full text-sm mt-1" />
                   </div>
                   <div>
                     <label className="text-[10px] text-muted uppercase tracking-wider">Content</label>
-                    <textarea value={seoText} onChange={e => setSeoText(e.target.value)} placeholder="Paste your content here..." rows={8} className="input w-full text-sm mt-1" />
+                    <textarea value={seoText} onChange={e => setSeoText(e.target.value)} placeholder="Paste your content here..." rows={8} className="input glass rounded-lg w-full text-sm mt-1" />
                     <button
                       onClick={() => enhanceText(seoText, `Improve this content for SEO.${seoKeyword ? ` Target keyword: "${seoKeyword}".` : ""} Make it more engaging, add relevant headers, improve readability, and naturally incorporate keywords. Keep the same topic and message.`, setSeoText, "seo")}
                       disabled={!seoText.trim() || enhancing === "seo"}
@@ -1356,22 +1388,25 @@ export default function ContentPage() {
                 {seoResults && (
                   <div className="mt-4 space-y-3 pt-4 border-t border-border">
                     <div className="grid grid-cols-4 gap-3">
-                      <div className="text-center p-3 rounded-lg border border-border">
-                        <p className={`text-2xl font-bold ${seoResults.score >= 70 ? "text-success" : seoResults.score >= 40 ? "text-warning" : "text-danger"}`}>{seoResults.score}</p>
-                        <p className="text-[10px] text-muted">SEO Score</p>
-                      </div>
-                      <div className="text-center p-3 rounded-lg border border-border">
-                        <p className="text-2xl font-bold text-foreground">{seoResults.wordCount}</p>
-                        <p className="text-[10px] text-muted">Word Count</p>
-                      </div>
-                      <div className="text-center p-3 rounded-lg border border-border">
-                        <p className="text-sm font-medium text-info">{seoResults.readability}</p>
-                        <p className="text-[10px] text-muted">Readability</p>
-                      </div>
-                      <div className="text-center p-3 rounded-lg border border-border">
-                        <p className="text-sm font-medium text-success">{seoResults.plagiarism}</p>
-                        <p className="text-[10px] text-muted">Plagiarism</p>
-                      </div>
+                      {[
+                        { value: seoResults.score, label: "SEO Score", className: `text-2xl font-bold ${seoResults.score >= 70 ? "text-success" : seoResults.score >= 40 ? "text-warning" : "text-danger"}` },
+                        { value: seoResults.wordCount, label: "Word Count", className: "text-2xl font-bold text-foreground" },
+                        { value: seoResults.readability, label: "Readability", className: "text-sm font-medium text-info" },
+                        { value: seoResults.plagiarism, label: "Plagiarism", className: "text-sm font-medium text-success" },
+                      ].map((tile, index) => (
+                        <motion.div
+                          key={tile.label}
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.22, delay: index * 0.06 }}
+                          whileHover={{ y: -2 }}
+                          className="glass rounded-xl overflow-hidden relative text-center p-3"
+                        >
+                          <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 left-0 right-0" />
+                          <p className={tile.className}>{tile.value}</p>
+                          <p className="text-[10px] text-muted">{tile.label}</p>
+                        </motion.div>
+                      ))}
                     </div>
                     {seoResults.issues.length > 0 && (
                       <div className="p-3 bg-danger/5 border border-danger/10 rounded-lg">

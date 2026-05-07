@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   Calendar, Clock, Plus, Phone, Video, MapPin,
   ChevronLeft, ChevronRight, Check, X, Filter,
@@ -314,9 +315,11 @@ export default function CalendarPage() {
             <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
               <Filter size={12} /> Filters
             </button>
-            <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
-              <Plus size={12} /> New Event
-            </button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+                <Plus size={12} /> New Event
+              </button>
+            </motion.div>
           </>
         }
       />
@@ -566,7 +569,7 @@ export default function CalendarPage() {
       {!loading && tab === "agenda" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 space-y-3">
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-gold" /> Today&apos;s Schedule</h2>
               {todaysEvents.length === 0 ? (
                 <EmptyState
@@ -577,8 +580,14 @@ export default function CalendarPage() {
                 />
               ) : (
                 <div className="space-y-2">
-                  {todaysEvents.map(evt => (
-                    <div key={evt.id} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-white/[0.02] transition-colors">
+                  {todaysEvents.map((evt, index) => (
+                    <motion.div
+                      key={evt.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: index * 0.04 }}
+                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      className="flex items-center gap-3 p-3 rounded-lg border border-border transition-colors">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${CATEGORY_CONFIG[evt.category].bg}`}>
                         <span className={CATEGORY_CONFIG[evt.category].color}>{TYPE_ICONS[evt.type]}</span>
                       </div>
@@ -599,35 +608,42 @@ export default function CalendarPage() {
                         <button onClick={() => confirmEvent(evt.id)} title="Mark complete" aria-label="Mark complete" className="p-1.5 rounded-md hover:bg-emerald-500/10 text-emerald-500/60 hover:text-emerald-500 transition-colors"><Check size={12} /></button>
                         <button onClick={() => declineEvent(evt.id)} title="Remove" aria-label="Remove event" className="p-1.5 rounded-md hover:bg-red-500/10 text-red-500/60 hover:text-red-500 transition-colors"><X size={12} /></button>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               )}
             </div>
           </div>
           <div className="space-y-3">
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Star size={13} className="text-gold" /> Quick Stats</h2>
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs p-2 rounded-lg bg-surface-light">
-                  <span className="text-muted">Today</span>
-                  <span className="font-bold">{todaysEvents.length} events</span>
-                </div>
-                <div className="flex justify-between text-xs p-2 rounded-lg bg-surface-light">
-                  <span className="text-muted">This Week</span>
-                  <span className="font-bold">{filteredEvents.filter(e => weekDays.some(d => d.toISOString().split("T")[0] === e.date)).length} events</span>
-                </div>
-                <div className="flex justify-between text-xs p-2 rounded-lg bg-surface-light">
-                  <span className="text-muted">Calls Today</span>
-                  <span className="font-bold text-emerald-400">{todaysEvents.filter(e => e.category === "call").length}</span>
-                </div>
-                <div className="flex justify-between text-xs p-2 rounded-lg bg-surface-light">
-                  <span className="text-muted">Recurring</span>
-                  <span className="font-bold text-purple-400">{events.filter(e => e.recurring).length} events</span>
+            <div className="glass rounded-xl overflow-hidden">
+              <div className="p-4">
+                <h2 className="section-header flex items-center gap-2"><Star size={13} className="text-gold" /> Quick Stats</h2>
+                <div className="space-y-2">
+                  {[
+                    { label: "Today", value: `${todaysEvents.length} events`, color: "" },
+                    { label: "This Week", value: `${filteredEvents.filter(e => weekDays.some(d => d.toISOString().split("T")[0] === e.date)).length} events`, color: "" },
+                    { label: "Calls Today", value: todaysEvents.filter(e => e.category === "call").length, color: "text-emerald-400" },
+                    { label: "Recurring", value: `${events.filter(e => e.recurring).length} events`, color: "text-purple-400" },
+                  ].map((stat, index) => (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: index * 0.06 }}
+                      whileHover={{ y: -2 }}
+                      className="glass-md rounded-xl overflow-hidden relative"
+                    >
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #f97316, #6366f1)" }} className="absolute top-0 left-0 right-0" />
+                      <div className="flex justify-between text-xs p-2 pt-3">
+                        <span className="text-muted">{stat.label}</span>
+                        <span className={`font-bold ${stat.color}`}>{stat.value}</span>
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
             </div>
-            <div className="card">
+            <div className="glass rounded-xl p-4">
               <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-gold" /> Team Today</h2>
               <div className="space-y-1.5">
                 {TEAM_MEMBERS.filter(m => m !== "All").map(member => {
@@ -649,16 +665,23 @@ export default function CalendarPage() {
       {/* Deadlines Tab */}
       {!loading && tab === "deadlines" && (
         <div className="space-y-3">
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Upcoming Deadlines</h2>
             {upcomingDeadlines.length === 0 ? (
               <p className="text-xs text-muted text-center py-8">No upcoming deadlines</p>
             ) : (
               <div className="space-y-2">
-                {upcomingDeadlines.map(dl => {
+                {upcomingDeadlines.map((dl, index) => {
                   const daysLeft = Math.ceil((new Date(dl.date).getTime() - new Date(today).getTime()) / 86400000);
                   return (
-                    <div key={dl.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                    <motion.div
+                      key={dl.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: index * 0.04 }}
+                      whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                      className="flex items-center gap-3 p-3 rounded-lg border border-border"
+                    >
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${daysLeft <= 1 ? "bg-red-400/10" : daysLeft <= 3 ? "bg-yellow-400/10" : "bg-blue-400/10"}`}>
                         <AlertCircle size={16} className={daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-blue-400"} />
                       </div>
@@ -672,21 +695,28 @@ export default function CalendarPage() {
                           {daysLeft === 0 ? "Today!" : `${daysLeft} day${daysLeft !== 1 ? "s" : ""} left`}
                         </p>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
             )}
           </div>
           {/* Recurring Events */}
-          <div className="card">
+          <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2"><Repeat size={13} className="text-purple-400" /> Recurring Events</h2>
             <div className="space-y-2">
               {events.filter(e => e.recurring).length === 0 ? (
                 <p className="text-xs text-muted text-center py-8">No recurring events</p>
               ) : (
-                events.filter(e => e.recurring).map(evt => (
-                  <div key={evt.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                events.filter(e => e.recurring).map((evt, index) => (
+                  <motion.div
+                    key={evt.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.18, delay: index * 0.04 }}
+                    whileHover={{ backgroundColor: "rgba(99,102,241,0.06)" }}
+                    className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border"
+                  >
                     <Repeat size={12} className="text-purple-400 shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium truncate">{evt.title}</p>
@@ -695,7 +725,7 @@ export default function CalendarPage() {
                     <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${CATEGORY_CONFIG[evt.category].bg} ${CATEGORY_CONFIG[evt.category].color}`}>
                       {CATEGORY_CONFIG[evt.category].label}
                     </span>
-                  </div>
+                  </motion.div>
                 ))
               )}
             </div>
