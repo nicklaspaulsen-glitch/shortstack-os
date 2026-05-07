@@ -5,18 +5,18 @@ import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
 const AGENTS = [
-  { id: "lead-engine", name: "Scout", role: "Leads", color: "#10b981", emoji: "🔍" },
-  { id: "outreach", name: "Echo", role: "Outreach", color: "#3b82f6", emoji: "📨" },
+  { id: "lead-engine", name: "Scout", role: "Leads", color: "#FF2D2D", emoji: "🔍" },
+  { id: "outreach", name: "Echo", role: "Outreach", color: "#FF2D2D", emoji: "📨" },
   { id: "content", name: "Pixel", role: "Content", color: "#a855f7", emoji: "✨" },
   { id: "ads", name: "Blaze", role: "Ads", color: "#f59e0b", emoji: "🔥" },
   { id: "trinity", name: "Trinity", role: "Boss", color: "#c8a855", emoji: "👑" },
-  { id: "analytics", name: "Lens", role: "Analytics", color: "#06b6d4", emoji: "📊" },
+  { id: "analytics", name: "Lens", role: "Analytics", color: "#FF5252", emoji: "📊" },
   { id: "reviews", name: "Star", role: "Reviews", color: "#eab308", emoji: "⭐" },
   { id: "seo", name: "Rank", role: "SEO", color: "#84cc16", emoji: "🌐" },
   { id: "invoice", name: "Ledger", role: "Billing", color: "#22c55e", emoji: "💰" },
   { id: "retention", name: "Keep", role: "Retention", color: "#f43f5e", emoji: "❤️" },
   { id: "social-media", name: "Wave", role: "Social", color: "#ec4899", emoji: "📱" },
-  { id: "scheduler", name: "Clock", role: "Calendar", color: "#14b8a6", emoji: "📅" },
+  { id: "scheduler", name: "Clock", role: "Calendar", color: "#FF2D2D", emoji: "📅" },
 ];
 
 export default function AgentOffice() {

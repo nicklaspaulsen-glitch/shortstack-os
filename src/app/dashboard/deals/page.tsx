@@ -34,11 +34,11 @@ interface Deal {
 }
 
 const STAGES = [
-  { key: "prospect", label: "Prospect", color: "#3b82f6" },
+  { key: "prospect", label: "Prospect", color: "#FF2D2D" },
   { key: "qualified", label: "Qualified", color: "#8b5cf6" },
   { key: "proposal_sent", label: "Proposal Sent", color: "#f59e0b" },
   { key: "negotiation", label: "Negotiation", color: "#f97316" },
-  { key: "closed_won", label: "Closed Won", color: "#10b981" },
+  { key: "closed_won", label: "Closed Won", color: "#FF2D2D" },
   { key: "closed_lost", label: "Closed Lost", color: "#ef4444" },
 ];
 

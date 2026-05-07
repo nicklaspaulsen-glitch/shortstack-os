@@ -62,13 +62,13 @@ export interface IntegrationCardProps {
  *  palette so two adjacent cards never look identical. */
 function fallbackHue(id: string): string {
   const palette = [
-    "#3B82F6", // blue
+    "#FF2D2D", // blue
     "#8B5CF6", // violet
     "#EC4899", // pink
     "#F59E0B", // amber
-    "#10B981", // emerald
+    "#FF2D2D", // emerald
     "#EF4444", // red
-    "#06B6D4", // cyan
+    "#FF5252", // cyan
     "#F97316", // orange
   ];
   let h = 0;
@@ -78,7 +78,7 @@ function fallbackHue(id: string): string {
 
 function StatusDot({ status }: { status: IntegrationStatus }) {
   const config = {
-    connected: { color: "#10B981", label: "Connected" },
+    connected: { color: "#FF2D2D", label: "Connected" },
     not_connected: { color: "#6B7280", label: "Not connected" },
     coming_soon: { color: "#F59E0B", label: "Coming soon" },
   }[status];

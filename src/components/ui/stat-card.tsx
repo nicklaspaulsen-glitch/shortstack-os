@@ -130,7 +130,7 @@ export default function StatCard({
   index = 0,
 }: StatCardProps) {
   // May 7 v2: real prism split — red leads, then cycles through spectrum
-  const PRISM_CYCLE = ["#FF2D2D", "#8B5CF6", "#3B82F6", "#06B6D4", "#10B981", "#F59E0B"];
+  const PRISM_CYCLE = ["#FF2D2D", "#8B5CF6", "#FF2D2D", "#FF5252", "#FF2D2D", "#F59E0B"];
   const accent = accentColor ?? PRISM_CYCLE[index % PRISM_CYCLE.length];
   const changeColor = {
     positive: tokens.status.success,

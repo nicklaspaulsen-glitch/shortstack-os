@@ -184,7 +184,7 @@ const COLOR_PALETTES = [
   { name: "Forest Moss", colors: ["#1B3A2D", "#2D5016", "#5B8C3E", "#A8C686", "#F0F5E8"] },
   { name: "Royal Purple", colors: ["#1A0533", "#2D1B69", "#6D28D9", "#FF6B6B", "#EDE9FE"] },
   { name: "Warm Autumn", colors: ["#451A03", "#9A3412", "#EA580C", "#F97316", "#FED7AA"] },
-  { name: "Ice Blue", colors: ["#0C1929", "#1E3A5F", "#2563EB", "#60A5FA", "#DBEAFE"] },
+  { name: "Ice Blue", colors: ["#0C1929", "#1E3A5F", "#E02020", "#FF6B6B", "#FFE0E0"] },
   { name: "Rose Gold", colors: ["#1A1A1A", "#4A2040", "#B76E79", "#E8C4B8", "#FFF5F5"] },
   { name: "Monochrome Gray", colors: ["#111111", "#333333", "#666666", "#AAAAAA", "#F0F0F0"] },
   { name: "Tropical Punch", colors: ["#FF6347", "#FF8C00", "#FFD700", "#00CED1", "#FF69B4"] },

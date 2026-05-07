@@ -50,15 +50,15 @@ interface Comment {
 // ── Column config ──────────────────────────────────────────────
 const COLUMNS: { key: Status; label: string; color: string }[] = [
   { key: "backlog",     label: "Backlog",     color: "#6b7280" },
-  { key: "todo",        label: "To Do",       color: "#3b82f6" },
+  { key: "todo",        label: "To Do",       color: "#FF2D2D" },
   { key: "in_progress", label: "In Progress", color: "#f59e0b" },
   { key: "review",      label: "Review",      color: "#8b5cf6" },
-  { key: "done",        label: "Done",        color: "#10b981" },
+  { key: "done",        label: "Done",        color: "#FF2D2D" },
 ];
 
 const PRIORITY_META: Record<Priority, { label: string; color: string; bg: string }> = {
   low:    { label: "Low",    color: "#6b7280", bg: "rgba(107,114,128,0.12)" },
-  medium: { label: "Medium", color: "#3b82f6", bg: "rgba(59,130,246,0.12)" },
+  medium: { label: "Medium", color: "#FF2D2D", bg: "rgba(255,45,45,0.12)" },
   high:   { label: "High",   color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
   urgent: { label: "Urgent", color: "#ef4444", bg: "rgba(239,68,68,0.14)" },
 };

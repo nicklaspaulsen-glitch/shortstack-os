@@ -91,18 +91,18 @@ interface BusinessInfo {
    ══════════════════════════════════════════════════════════════════ */
 
 const COLOR_SCHEMES = [
-  { id: "modern-dark", name: "Modern Dark", bg: "#0f172a", primary: "#3b82f6", accent: "#60a5fa", text: "#f1f5f9" },
-  { id: "clean-light", name: "Clean Light", bg: "#ffffff", primary: "#2563eb", accent: "#3b82f6", text: "#1e293b" },
+  { id: "modern-dark", name: "Modern Dark", bg: "#0f172a", primary: "#FF2D2D", accent: "#FF6B6B", text: "#f1f5f9" },
+  { id: "clean-light", name: "Clean Light", bg: "#ffffff", primary: "#E02020", accent: "#FF2D2D", text: "#1e293b" },
   { id: "bold-gradient", name: "Bold Gradient", bg: "linear-gradient(135deg,#FF2D2D,#ec4899)", primary: "#8b5cf6", accent: "#f472b6", text: "#ffffff" },
   { id: "minimal", name: "Minimal", bg: "#fafafa", primary: "#18181b", accent: "#71717a", text: "#18181b" },
   { id: "luxury-gold", name: "Luxury Gold", bg: "#0a0a0a", primary: "#FF2D2D", accent: "#d4af37", text: "#f5f5f5" },
 ];
 
 const TEMPLATES = [
-  { id: "saas", name: "SaaS Landing", desc: "Hero + features + pricing + testimonials", icon: Monitor, color: "#3b82f6", gradient: "from-blue-600 to-cyan-500" },
+  { id: "saas", name: "SaaS Landing", desc: "Hero + features + pricing + testimonials", icon: Monitor, color: "#FF2D2D", gradient: "from-blue-600 to-cyan-500" },
   { id: "agency", name: "Agency Portfolio", desc: "Hero + services + case studies + contact", icon: Building2, color: "#8b5cf6", gradient: "from-purple-600 to-pink-500" },
   { id: "restaurant", name: "Restaurant", desc: "Hero + menu highlights + location + reservations", icon: UtensilsCrossed, color: "#f59e0b", gradient: "from-amber-500 to-orange-500" },
-  { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: Home, color: "#10b981", gradient: "from-emerald-500 to-teal-500" },
+  { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: Home, color: "#FF2D2D", gradient: "from-emerald-500 to-teal-500" },
   { id: "fitness", name: "Fitness Studio", desc: "Classes + trainers + pricing + schedule", icon: Dumbbell, color: "#ef4444", gradient: "from-red-500 to-rose-500" },
   { id: "ecommerce", name: "E-commerce", desc: "Product hero + features + reviews + CTA", icon: ShoppingBag, color: "#f97316", gradient: "from-orange-500 to-yellow-500" },
   { id: "consultant", name: "Consultant", desc: "About + services + testimonials + booking", icon: Briefcase, color: "#FF2D2D", gradient: "from-indigo-500 to-purple-500" },

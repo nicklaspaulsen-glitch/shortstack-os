@@ -118,7 +118,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         { ...defaultBlock("text"), content: { body: "We're thrilled to announce the launch of our newest product. Built from the ground up based on your feedback." } },
         defaultBlock("image"),
         { ...defaultBlock("text"), content: { body: "Key features:\n- Lightning-fast performance\n- AI-powered insights\n- Seamless integrations\n- Beautiful, intuitive design" } },
-        { ...defaultBlock("button"), content: { label: "Get Early Access", url: "#", color: "#10b981" } },
+        { ...defaultBlock("button"), content: { label: "Get Early Access", url: "#", color: "#FF2D2D" } },
         footer,
       ];
     case "weekly_digest":
@@ -138,7 +138,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
       return [
         header, hero,
         { ...defaultBlock("text"), content: { body: "Join us for an exclusive digital marketing masterclass.\n\nDate: [add date]\nTime: [add time]\nLocation: [add location or Zoom link]\n\nLearn the latest strategies for scaling your business through paid media and organic growth." } },
-        { ...defaultBlock("button"), content: { label: "Reserve Your Spot", url: "#", color: "#3B82F6" } },
+        { ...defaultBlock("button"), content: { label: "Reserve Your Spot", url: "#", color: "#FF2D2D" } },
         { ...defaultBlock("text"), content: { body: "Seats are limited. Reserve yours today." } },
         footer,
       ];
@@ -827,7 +827,7 @@ export default function NewsletterPage() {
                       <div>
                         <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Color</label>
                         <div className="flex gap-1.5">
-                          {["#FF2D2D", "#3B82F6", "#10b981", "#EF4444", "#8B5CF6", "#1a1a2e"].map(c => (
+                          {["#FF2D2D", "#FF2D2D", "#FF2D2D", "#EF4444", "#8B5CF6", "#1a1a2e"].map(c => (
                             <button key={c} onClick={() => updateBlockContent(block.id, "color", c)}
                               className={`w-6 h-6 rounded-md border-2 transition-all ${block.content.color === c ? "border-white scale-110" : "border-transparent"}`}
                               style={{ background: c }}

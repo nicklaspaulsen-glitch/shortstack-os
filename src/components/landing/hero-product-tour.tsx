@@ -267,7 +267,7 @@ function LeadsMock() {
                     width: `${r.score}%`,
                     background:
                       r.score > 80
-                        ? "linear-gradient(90deg, #10b981, #34d399)"
+                        ? "linear-gradient(90deg, #FF2D2D, #FF6B6B)"
                         : "linear-gradient(90deg, #FF2D2D, #FF6B6B)",
                   }}
                 />
@@ -324,7 +324,7 @@ function VoiceMock() {
       </div>
       <div className="space-y-1.5">
         {[
-          { caller: "+1 415 555 0102", duration: "2:14", outcome: "Booked", color: "#10b981" },
+          { caller: "+1 415 555 0102", duration: "2:14", outcome: "Booked", color: "#FF2D2D" },
           { caller: "+1 408 555 0173", duration: "0:38", outcome: "Voicemail", color: "#94a3b8" },
           { caller: "+1 510 555 0144", duration: "3:42", outcome: "Qualified", color: "#FF2D2D" },
           { caller: "+1 650 555 0119", duration: "0:12", outcome: "Spam", color: "#ef4444" },
@@ -465,7 +465,7 @@ function AdsMock() {
             <div className="text-[10px] text-gray-500">{row.spend}</div>
             <div
               className="text-[10px] font-bold px-2 py-0.5 rounded"
-              style={{ background: "rgba(16,185,129,0.14)", color: "#34d399" }}
+              style={{ background: "rgba(255,45,45,0.14)", color: "#FF6B6B" }}
             >
               {row.roas}
             </div>

@@ -596,7 +596,7 @@ export default function FormsPage() {
                 <div>
                   <label className="block text-[10px] text-muted mb-1">Accent Color</label>
                   <div className="flex gap-2">
-                    {["#FF2D2D", "#3b82f6", "#10b981", "#ef4444", "#8b5cf6", "#ec4899", "#f59e0b"].map(c => (
+                    {["#FF2D2D", "#FF2D2D", "#FF2D2D", "#ef4444", "#8b5cf6", "#ec4899", "#f59e0b"].map(c => (
                       <button key={c} onClick={() => {
                         const u = { ...activeForm, accentColor: c }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
                       }} className={`w-6 h-6 rounded-full transition-all ${activeForm.accentColor === c ? "ring-2 ring-white/30 scale-110" : ""}`}
@@ -790,9 +790,9 @@ export default function FormsPage() {
             <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-indigo-400" /> Form Funnel</h2>
             <div className="flex items-end gap-4 h-40 justify-center">
               {[
-                { label: "Views", value: 0, color: "#3b82f6" },
+                { label: "Views", value: 0, color: "#FF2D2D" },
                 { label: "Starts", value: 0, color: "#8b5cf6" },
-                { label: "Completions", value: 0, color: "#10b981" },
+                { label: "Completions", value: 0, color: "#FF2D2D" },
               ].map(item => {
                 const maxVal = Math.max(1, ...[0, 0, 0]);
                 return (

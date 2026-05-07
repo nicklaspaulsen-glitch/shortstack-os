@@ -48,7 +48,7 @@ const ICON_MAP = {
 const URGENCY_COLORS = {
   high: { glow: "rgba(239,68,68,0.18)", accent: "#ef4444", text: "text-red-300", border: "rgba(239,68,68,0.25)" },
   medium: { glow: "rgba(200,168,85,0.16)", accent: "#c8a855", text: "text-amber-300", border: "rgba(200,168,85,0.25)" },
-  low: { glow: "rgba(59,130,246,0.14)", accent: "#3b82f6", text: "text-blue-300", border: "rgba(59,130,246,0.22)" },
+  low: { glow: "rgba(255,45,45,0.14)", accent: "#FF2D2D", text: "text-blue-300", border: "rgba(255,45,45,0.22)" },
 } as const;
 
 export default function AiToday() {

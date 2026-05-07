@@ -215,7 +215,7 @@ function getLeadScore(lead: CRMLead): number {
 function getScoreInfo(score: number) {
   if (score >= 70) return { label: "HOT", color: "#ef4444", bg: "bg-red-500/10 text-red-400" };
   if (score >= 40) return { label: "WARM", color: "#f59e0b", bg: "bg-amber-500/10 text-amber-400" };
-  return { label: "COLD", color: "#3b82f6", bg: "bg-blue-500/10 text-blue-400" };
+  return { label: "COLD", color: "#FF2D2D", bg: "bg-blue-500/10 text-blue-400" };
 }
 
 function getTagStyle(colorId: string) {
@@ -934,7 +934,7 @@ export default function CRMPage() {
               {STATUS_TABS.filter(t => t.key !== "all").map((t, i) => {
                 const count = statusCounts[t.key] || 0;
                 const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
-                const colors: Record<string, string> = { new: "#3b82f6", contacted: "#f59e0b", replied: "#10b981", booked: "#a855f7", converted: "#FF2D2D" };
+                const colors: Record<string, string> = { new: "#FF2D2D", contacted: "#f59e0b", replied: "#FF2D2D", booked: "#a855f7", converted: "#FF2D2D" };
                 return (
                   <div key={t.key} className="flex-1 group cursor-pointer" onClick={() => setActiveTab(t.key as CRMStatus)}>
                     <div className="h-2 rounded-full transition-all group-hover:h-3" style={{ background: colors[t.key], opacity: count > 0 ? 1 : 0.2 }} />
@@ -1589,7 +1589,7 @@ export default function CRMPage() {
             <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: "500px" }}>
               {STATUS_TABS.filter(t => t.key !== "all").map(stage => {
                 const stageLeads = searchFiltered.filter(l => mapToCRMStatus(l.status) === stage.key);
-                const colors: Record<string, string> = { new: "#3b82f6", contacted: "#f59e0b", replied: "#10b981", booked: "#a855f7", converted: "#FF2D2D" };
+                const colors: Record<string, string> = { new: "#FF2D2D", contacted: "#f59e0b", replied: "#FF2D2D", booked: "#a855f7", converted: "#FF2D2D" };
                 const color = colors[stage.key] || "#6b7280";
                 return (
                   <div key={stage.key} className="flex-shrink-0 w-[260px]">

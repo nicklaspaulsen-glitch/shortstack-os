@@ -76,7 +76,7 @@ const INDUSTRIES = [
 ];
 
 const BRAND_COLORS = [
-  { name: "Ocean Blue", primary: "#2563eb", secondary: "#93c5fd" },
+  { name: "Ocean Blue", primary: "#E02020", secondary: "#FF8080" },
   { name: "Forest Green", primary: "#16a34a", secondary: "#86efac" },
   { name: "Royal Purple", primary: "#7c3aed", secondary: "#c4b5fd" },
   { name: "Sunset Orange", primary: "#ea580c", secondary: "#fdba74" },

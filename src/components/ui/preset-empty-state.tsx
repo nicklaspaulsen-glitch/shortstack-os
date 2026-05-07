@@ -33,8 +33,8 @@ export function PresetEmptyState({ onReset, label = "presets" }: PresetEmptyStat
             <stop offset="100%" stopColor="#8A7430" />
           </linearGradient>
           <linearGradient id="pe-blue" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#60A5FA" />
-            <stop offset="100%" stopColor="#2563EB" />
+            <stop offset="0%" stopColor="#FF6B6B" />
+            <stop offset="100%" stopColor="#E02020" />
           </linearGradient>
         </defs>
 

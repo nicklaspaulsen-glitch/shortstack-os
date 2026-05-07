@@ -794,7 +794,7 @@ export function Timeline({
               const left = msToPx(clip.start);
               const width = Math.max(4, msToPx(clip.duration));
               const color =
-                clip.color || safeProject.tracks[trackIdx].accent || "#60A5FA";
+                clip.color || safeProject.tracks[trackIdx].accent || "#FF6B6B";
               const isSelected = selectedIds.includes(clip.id);
 
               if (clip.isMarker) {

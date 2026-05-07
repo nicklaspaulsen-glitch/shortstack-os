@@ -19,11 +19,11 @@ interface AgentAvatarProps {
 }
 
 const STATUS_COLORS: Record<AgentStatus, { glow: string; accent: string }> = {
-  idle:     { glow: "rgba(59, 130, 246, 0.4)",  accent: "#60A5FA" },
+  idle:     { glow: "rgba(255, 45, 45, 0.4)",  accent: "#FF6B6B" },
   working:  { glow: "rgba(255, 45, 45, 0.5)",   accent: "#FF2D2D" },
   thinking: { glow: "rgba(168, 85, 247, 0.5)",  accent: "#A855F7" },
   error:    { glow: "rgba(239, 68, 68, 0.5)",   accent: "#EF4444" },
-  success:  { glow: "rgba(16, 185, 129, 0.5)",  accent: "#10B981" },
+  success:  { glow: "rgba(255, 45, 45, 0.5)",  accent: "#FF2D2D" },
   offline:  { glow: "rgba(120, 120, 120, 0.2)", accent: "#6B7280" },
 };
 
@@ -254,7 +254,7 @@ function renderFace(face: AgentFace, accent: string, status: AgentStatus) {
           <line x1="50" y1="16" x2="50" y2="88" stroke="#222" strokeWidth="1" />
           {/* Human eye */}
           <circle cx="38" cy="48" r="4" fill="#fff" />
-          <circle cx="38" cy="48" r="2" fill={eyesActive ? "#3B82F6" : "#888"} />
+          <circle cx="38" cy="48" r="2" fill={eyesActive ? "#FF2D2D" : "#888"} />
           {/* Robot eye */}
           <rect x="58" y="44" width="10" height="8" rx="1" fill="#111" />
           <circle cx="63" cy="48" r="2.5" fill={eyesActive ? "#EF4444" : "#555"}>
@@ -269,8 +269,8 @@ function renderFace(face: AgentFace, accent: string, status: AgentStatus) {
       return (
         <>
           {/* Large head */}
-          <ellipse cx="50" cy="48" rx="32" ry="38" fill="#6EE7B7" />
-          <ellipse cx="50" cy="38" rx="30" ry="10" fill="#A7F3D0" opacity="0.4" />
+          <ellipse cx="50" cy="48" rx="32" ry="38" fill="#FF8080" />
+          <ellipse cx="50" cy="38" rx="30" ry="10" fill="#FFB3B3" opacity="0.4" />
           {/* Large eyes */}
           <ellipse cx="38" cy="48" rx="7" ry="11" fill="#111" />
           <ellipse cx="62" cy="48" rx="7" ry="11" fill="#111" />

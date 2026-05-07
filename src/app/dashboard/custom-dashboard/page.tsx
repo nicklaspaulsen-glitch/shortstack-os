@@ -15,12 +15,12 @@ import toast from "react-hot-toast";
 // ── Widget definitions ─────────────────────────────────────────────────────────
 const WIDGET_TYPES = [
   { id: "leads_today", label: "Leads Today", icon: <Users className="w-5 h-5" />, color: "#FF2D2D", bg: "from-[#FF2D2D]/15 to-[#FF2D2D]/5" },
-  { id: "revenue_month", label: "Revenue This Month", icon: <DollarSign className="w-5 h-5" />, color: "#10B981", bg: "from-emerald-500/15 to-emerald-500/5" },
-  { id: "active_clients", label: "Active Clients", icon: <Activity className="w-5 h-5" />, color: "#3B82F6", bg: "from-blue-500/15 to-blue-500/5" },
+  { id: "revenue_month", label: "Revenue This Month", icon: <DollarSign className="w-5 h-5" />, color: "#FF2D2D", bg: "from-emerald-500/15 to-emerald-500/5" },
+  { id: "active_clients", label: "Active Clients", icon: <Activity className="w-5 h-5" />, color: "#FF2D2D", bg: "from-blue-500/15 to-blue-500/5" },
   { id: "pipeline_value", label: "Pipeline Value", icon: <TrendingUp className="w-5 h-5" />, color: "#8B5CF6", bg: "from-violet-500/15 to-violet-500/5" },
   { id: "messages_inbox", label: "Messages Inbox", icon: <MessageSquare className="w-5 h-5" />, color: "#F59E0B", bg: "from-amber-500/15 to-amber-500/5" },
   { id: "reviews_week", label: "Reviews This Week", icon: <Star className="w-5 h-5" />, color: "#EC4899", bg: "from-pink-500/15 to-pink-500/5" },
-  { id: "upcoming_calls", label: "Upcoming Calls", icon: <Phone className="w-5 h-5" />, color: "#06B6D4", bg: "from-cyan-500/15 to-cyan-500/5" },
+  { id: "upcoming_calls", label: "Upcoming Calls", icon: <Phone className="w-5 h-5" />, color: "#FF5252", bg: "from-cyan-500/15 to-cyan-500/5" },
 ] as const;
 
 type WidgetId = typeof WIDGET_TYPES[number]["id"];

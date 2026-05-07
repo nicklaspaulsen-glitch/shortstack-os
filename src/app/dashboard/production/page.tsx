@@ -303,7 +303,7 @@ export default function ProductionPage() {
                         <div className="h-full rounded-full bg-blue-400/50" style={{ width: `${pctEst * 3}%` }} />
                       </div>
                       <div className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${pctAct * 3}%`, background: overBudget ? "#ef4444" : "#10b981" }} />
+                        <div className="h-full rounded-full" style={{ width: `${pctAct * 3}%`, background: overBudget ? "#ef4444" : "#FF2D2D" }} />
                       </div>
                     </div>
                   </div>

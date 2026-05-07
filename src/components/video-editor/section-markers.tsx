@@ -29,7 +29,7 @@ interface SectionMarkersProps {
 }
 
 const SECTION_COLORS = {
-  intro: "rgba(96,165,250,0.12)",    // blue-400 @ 12%
+  intro: "rgba(255,107,107,0.12)",    // blue-400 @ 12%
   body:  "rgba(250,204,21,0.06)",    // yellow-400 @ 6%
   outro: "rgba(239,68,68,0.12)",     // red-500 @ 12%
 } as const;

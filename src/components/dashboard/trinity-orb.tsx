@@ -226,7 +226,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
         <div className="absolute top-[120px] left-[20%] w-[160px] h-[160px] rounded-full blur-3xl"
              style={{ background: "radial-gradient(circle, rgba(139,92,246,0.15), transparent 70%)" }} />
         <div className="absolute top-[120px] right-[20%] w-[160px] h-[160px] rounded-full blur-3xl"
-             style={{ background: "radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%)" }} />
+             style={{ background: "radial-gradient(circle, rgba(255,45,45,0.12), transparent 70%)" }} />
       </div>
 
       {/* ─── TTS controls (lazy) ───────────────────────────────── */}

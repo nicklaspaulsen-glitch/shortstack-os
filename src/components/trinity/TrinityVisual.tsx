@@ -135,7 +135,7 @@ export default function TrinityOrbVisual({
           aria-hidden
         >
           <defs>
-            {/* May 2026: migrated from teal (#2DD4BF) to indigo/violet palette
+            {/* May 2026: migrated from teal (#FF6B6B) to indigo/violet palette
                 to match the new brand direction. The lit-side facets use a
                 holographic gradient (soft-indigo → violet → deep-indigo) so the
                 head reads as iridescent crystal glass. */}

@@ -189,6 +189,78 @@ const config: Config = {
           900: "#660E0E",
           950: "#4D0A0A",
         },
+        // Green alias — redirected to prism red. Semantic "success" states
+        // use the lighter end of the red scale (soft pink reads as positive
+        // on dark backgrounds when combined with a checkmark icon).
+        green: {
+          50: "#FFF5F5",
+          100: "#FFE0E0",
+          200: "#FFB3B3",
+          300: "#FF8080",
+          400: "#FF5252",
+          500: "#FF2D2D",
+          600: "#E02020",
+          700: "#CC1A1A",
+          800: "#991414",
+          900: "#660E0E",
+          950: "#4D0A0A",
+        },
+        // Emerald alias → prism red
+        emerald: {
+          50: "#FFF5F5",
+          100: "#FFE0E0",
+          200: "#FFB3B3",
+          300: "#FF8080",
+          400: "#FF5252",
+          500: "#FF2D2D",
+          600: "#E02020",
+          700: "#CC1A1A",
+          800: "#991414",
+          900: "#660E0E",
+          950: "#4D0A0A",
+        },
+        // Teal alias → prism red
+        teal: {
+          50: "#FFF5F5",
+          100: "#FFE0E0",
+          200: "#FFB3B3",
+          300: "#FF8080",
+          400: "#FF5252",
+          500: "#FF2D2D",
+          600: "#E02020",
+          700: "#CC1A1A",
+          800: "#991414",
+          900: "#660E0E",
+          950: "#4D0A0A",
+        },
+        // Cyan alias → prism red
+        cyan: {
+          50: "#FFF5F5",
+          100: "#FFE0E0",
+          200: "#FFB3B3",
+          300: "#FF8080",
+          400: "#FF5252",
+          500: "#FF2D2D",
+          600: "#E02020",
+          700: "#CC1A1A",
+          800: "#991414",
+          900: "#660E0E",
+          950: "#4D0A0A",
+        },
+        // Sky alias → prism red
+        sky: {
+          50: "#FFF5F5",
+          100: "#FFE0E0",
+          200: "#FFB3B3",
+          300: "#FF8080",
+          400: "#FF5252",
+          500: "#FF2D2D",
+          600: "#E02020",
+          700: "#CC1A1A",
+          800: "#991414",
+          900: "#660E0E",
+          950: "#4D0A0A",
+        },
       },
       fontFamily: {
         // Body — kept as default font-sans so existing pages don't change.

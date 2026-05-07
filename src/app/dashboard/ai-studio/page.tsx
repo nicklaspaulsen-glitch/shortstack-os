@@ -54,15 +54,15 @@ interface JobResult {
 
 // ── Tool configs ─────────────────────────────────────────────────
 const TOOLS = [
-  { id: "transcribe", name: "Transcribe", desc: "Audio/video to text with timestamps", icon: Mic, color: "#60a5fa", tag: "Whisper V3" },
+  { id: "transcribe", name: "Transcribe", desc: "Audio/video to text with timestamps", icon: Mic, color: "#FF6B6B", tag: "Whisper V3" },
   { id: "image-gen", name: "Image Gen", desc: "Generate images from text prompts", icon: Palette, color: "#FF5252", tag: "FLUX/DALL-E" },
-  { id: "upscale", name: "Upscale", desc: "4x AI image upscaling", icon: ArrowUpRight, color: "#34d399", tag: "Real-ESRGAN" },
+  { id: "upscale", name: "Upscale", desc: "4x AI image upscaling", icon: ArrowUpRight, color: "#FF6B6B", tag: "Real-ESRGAN" },
   { id: "remove-bg", name: "Remove BG", desc: "One-click background removal", icon: Scissors, color: "#f472b6", tag: "REMBG/SAM" },
   { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video", icon: Film, color: "#FF6B6B", tag: "SVD" },
   { id: "music-gen", name: "Music Gen", desc: "AI background music for videos", icon: Music, color: "#fbbf24", tag: "MusicGen" },
   { id: "voice-clone", name: "Voice Clone", desc: "Clone voice from 6 sec audio", icon: Volume2, color: "#fb923c", tag: "XTTS v2" },
   { id: "train-lora", name: "Brand LoRA", desc: "Train custom image style models", icon: Brain, color: "#e879f9", tag: "LoRA", badge: "Business+" },
-  { id: "batch-gen", name: "Batch Generate", desc: "50+ images in one go", icon: Layers, color: "#22d3ee", tag: "FLUX/SDXL" },
+  { id: "batch-gen", name: "Batch Generate", desc: "50+ images in one go", icon: Layers, color: "#FF6B6B", tag: "FLUX/SDXL" },
 ] as const;
 
 type ToolId = typeof TOOLS[number]["id"];

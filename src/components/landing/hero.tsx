@@ -37,14 +37,14 @@ export default function Hero() {
         className="absolute top-20 right-0 w-[400px] h-[400px] pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(255,45,45,0.06) 0%, transparent 70%)",
         }}
       />
       <div
         className="absolute top-40 left-0 w-[300px] h-[300px] pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(255,45,45,0.05) 0%, transparent 70%)",
         }}
       />
 

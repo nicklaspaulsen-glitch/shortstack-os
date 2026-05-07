@@ -26,7 +26,7 @@ export default function GroupLayer({ layer, page, isSelected, selectedIds, scale
     height: layer.height,
     transform: `rotate(${layer.rotation}deg)`,
     opacity: layer.opacity,
-    outline: isSelected ? `${Math.max(1, 2 / scale)}px dashed #3b82f6` : "none",
+    outline: isSelected ? `${Math.max(1, 2 / scale)}px dashed #FF2D2D` : "none",
     outlineOffset: -1,
     cursor: "pointer",
   };

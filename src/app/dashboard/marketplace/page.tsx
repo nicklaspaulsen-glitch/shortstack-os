@@ -79,10 +79,10 @@ function iconForCategory(category: Category): { icon: React.ReactNode; color: st
   switch (category) {
     case "crm": return { icon: <Users size={22} />, color: "#F59E0B" };
     case "marketing": return { icon: <Megaphone size={22} />, color: "#EC4899" };
-    case "analytics": return { icon: <BarChart3 size={22} />, color: "#3B82F6" };
+    case "analytics": return { icon: <BarChart3 size={22} />, color: "#FF2D2D" };
     case "ai": return { icon: <Brain size={22} />, color: "#FF6B6B" };
-    case "automation": return { icon: <Zap size={22} />, color: "#10B981" };
-    case "communication": return { icon: <MessageSquare size={22} />, color: "#06B6D4" };
+    case "automation": return { icon: <Zap size={22} />, color: "#FF2D2D" };
+    case "communication": return { icon: <MessageSquare size={22} />, color: "#FF5252" };
     default: return { icon: <Puzzle size={22} />, color: "#D4AF37" };
   }
 }

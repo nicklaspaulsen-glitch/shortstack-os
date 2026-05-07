@@ -345,7 +345,7 @@ function DirectorBriefDisplay({
 }) {
   const gradeColor =
     brief.overall_grade === "A"
-      ? "#10b981"
+      ? "#FF2D2D"
       : brief.overall_grade === "B"
       ? "#22c55e"
       : brief.overall_grade === "C"

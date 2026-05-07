@@ -14,8 +14,8 @@ function Defs({ id }: { id: string }) {
       </linearGradient>
       {/* Blue gradient */}
       <linearGradient id={`${id}-blue`} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#60A5FA" />
-        <stop offset="100%" stopColor="#2563EB" />
+        <stop offset="0%" stopColor="#FF6B6B" />
+        <stop offset="100%" stopColor="#E02020" />
       </linearGradient>
       {/* Purple gradient */}
       <linearGradient id={`${id}-purple`} x1="0" y1="0" x2="1" y2="1">
@@ -24,8 +24,8 @@ function Defs({ id }: { id: string }) {
       </linearGradient>
       {/* Success/green gradient */}
       <linearGradient id={`${id}-green`} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#6EE7B7" />
-        <stop offset="100%" stopColor="#059669" />
+        <stop offset="0%" stopColor="#FF8080" />
+        <stop offset="100%" stopColor="#E02020" />
       </linearGradient>
       {/* Warm sunset */}
       <linearGradient id={`${id}-sunset`} x1="0" y1="0" x2="1" y2="1">

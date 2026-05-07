@@ -16,9 +16,9 @@ export const PRISM_RED = "#FF2D2D";
 export const PRISM_ACCENTS = [
   "#FF2D2D", // red (hero)
   "#8B5CF6", // violet
-  "#3B82F6", // blue
-  "#06B6D4", // cyan
-  "#10B981", // green
+  "#FF2D2D", // blue
+  "#FF5252", // cyan
+  "#FF2D2D", // green
   "#F59E0B", // amber
 ] as const;
 
@@ -66,7 +66,7 @@ export const PRISM_BORDERS = {
 
 /** Prismatic gradient for the signature top bars (red leads) */
 export const PRISM_RAINBOW_GRADIENT =
-  "linear-gradient(90deg, #FF2D2D, #8B5CF6, #3B82F6, #06B6D4, #10B981, #F59E0B)";
+  "linear-gradient(90deg, #FF2D2D, #8B5CF6, #FF2D2D, #FF5252, #FF2D2D, #F59E0B)";
 
 /** Text color tokens — pure white for emphasis, not off-white */
 export const PRISM_TEXT = {

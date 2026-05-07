@@ -12,8 +12,8 @@
 const CATEGORY_GRADIENTS: Record<string, [string, string]> = {
   // Video editor presets
   hooks: ["#7C3AED", "#EC4899"],
-  content: ["#1D4ED8", "#06B6D4"],
-  captions: ["#0F766E", "#10B981"],
+  content: ["#CC1A1A", "#FF5252"],
+  captions: ["#CC1A1A", "#FF2D2D"],
   effects: ["#DC2626", "#F97316"],
   ads: ["#CA8A04", "#FACC15"],
   social: ["#DB2777", "#F43F5E"],
@@ -21,12 +21,12 @@ const CATEGORY_GRADIENTS: Record<string, [string, string]> = {
   // Thumbnail presets
   youtube: ["#EF4444", "#F97316"],
   podcast: ["#7C3AED", "#A855F7"],
-  education: ["#0284C7", "#38BDF8"],
-  business: ["#064E3B", "#10B981"],
+  education: ["#E02020", "#FF6B6B"],
+  business: ["#991414", "#FF2D2D"],
   personal: ["#BE185D", "#F472B6"],
   // Telegram presets
-  onboarding: ["#0369A1", "#38BDF8"],
-  nurture: ["#059669", "#6EE7B7"],
+  onboarding: ["#CC1A1A", "#FF6B6B"],
+  nurture: ["#E02020", "#FF8080"],
   reactivation: ["#B45309", "#FBBF24"],
   default: ["#4B5563", "#9CA3AF"],
 };

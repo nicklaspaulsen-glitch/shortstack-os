@@ -35,9 +35,9 @@ type ViewMode = "table" | "card";
 const TAG_PRESETS: ClientTag[] = [
   { label: "VIP", color: "#FF2D2D" },
   { label: "At Risk", color: "#f43f5e" },
-  { label: "New", color: "#38bdf8" },
+  { label: "New", color: "#FF6B6B" },
   { label: "Enterprise", color: "#8b5cf6" },
-  { label: "Growing", color: "#10b981" },
+  { label: "Growing", color: "#FF2D2D" },
   { label: "Needs Attention", color: "#f59e0b" },
 ];
 
@@ -618,9 +618,9 @@ export default function ClientsPage() {
 
   // ─── Prism color map for stat tiles ─────────────────────────────────────
   const CLIENT_PRISM = [
-    { accent: "#10B981", bar: "from-[#10B981] to-transparent" },  // Total
-    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },  // Active
-    { accent: "#06B6D4", bar: "from-[#06B6D4] to-transparent" },  // MRR
+    { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },  // Total
+    { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },  // Active
+    { accent: "#FF5252", bar: "from-[#FF5252] to-transparent" },  // MRR
     { accent: "#F59E0B", bar: "from-[#F59E0B] to-transparent" },  // At Risk
   ] as const;
 
@@ -704,7 +704,7 @@ export default function ClientsPage() {
           transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* Prism rainbow top bar */}
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#10B981] via-[#3B82F6] via-[#06B6D4] to-[#F59E0B]" />
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF2D2D] via-[#FF5252] to-[#F59E0B]" />
           <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(255,255,255,0.08)]">
             {[
               { label: "Total Clients", value: String(clients.length), sub: `${clients.filter(c => !c.is_active).length} inactive` },
@@ -1286,12 +1286,12 @@ export default function ClientsPage() {
               <div className="border border-t-0 border-[rgba(255,255,255,0.12)] rounded-b-xl px-4 pb-4" style={{ background: "rgba(255,255,255,0.022)", backdropFilter: "blur(12px)" }}>
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
-                    { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#10B981" },
+                    { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#FF2D2D" },
                     { label: "Health", value: `${client.health_score ?? "—"}%`, color: client.health_score >= 70 ? "#7FE5B8" : client.health_score >= 40 ? "#FFC062" : "#F26063" },
                     { label: "Package", value: client.package_tier ?? "—", color: "#FF6B6B" },
                     { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
                   ].map((tile, ti) => {
-                    const bars = ["from-[#10B981]","from-[#7FE5B8]","from-[#FF6B6B]","from-[#6F6D7A]"];
+                    const bars = ["from-[#FF2D2D]","from-[#7FE5B8]","from-[#FF6B6B]","from-[#6F6D7A]"];
                     return (
                       <div key={tile.label} className="relative rounded-xl border border-[rgba(255,255,255,0.1)] p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
                         <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${bars[ti]} to-transparent opacity-60`} />
@@ -1410,9 +1410,9 @@ export default function ClientsPage() {
           {/* Billing Stats — prism glass tiles */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#10B981", bar: "from-[#10B981] to-transparent" },
-              { label: "Active Subs", value: String(clientsWithSubs.length), color: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },
-              { label: "Paid Invoices", value: String(paidInvoices.length), color: "#06B6D4", bar: "from-[#06B6D4] to-transparent" },
+              { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },
+              { label: "Active Subs", value: String(clientsWithSubs.length), color: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },
+              { label: "Paid Invoices", value: String(paidInvoices.length), color: "#FF5252", bar: "from-[#FF5252] to-transparent" },
               { label: "Overdue", value: String(overdueInvoices.length), color: overdueInvoices.length > 0 ? "#F26063" : "#6F6D7A", bar: overdueInvoices.length > 0 ? "from-[#F26063] to-transparent" : "from-[#6F6D7A] to-transparent" },
             ].map((tile, i) => (
               <motion.div

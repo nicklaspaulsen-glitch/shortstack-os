@@ -148,7 +148,7 @@ export default function CompetitiveMonitorPage() {
 
   function addCompetitor() {
     if (!addUrl || !addName) { toast.error("URL and name are required"); return; }
-    const colors = ["#FF2D2D", "#ec4899", "#f59e0b", "#10b981", "#8b5cf6", "#0ea5e9", "#ef4444", "#d946ef"];
+    const colors = ["#FF2D2D", "#ec4899", "#f59e0b", "#FF2D2D", "#8b5cf6", "#FF2D2D", "#ef4444", "#d946ef"];
     const newComp: Competitor = {
       id: `c${Date.now()}`, name: addName, url: addUrl, industry: addIndustry || "Unknown",
       notes: addNotes, status: "active", lastChecked: "Never", changeCount: 0,
@@ -849,7 +849,7 @@ export default function CompetitiveMonitorPage() {
                 { name: "SocialSpark", share: 15, color: "#f59e0b" },
                 { name: "Trinity (You)", share: 12, color: "#FF2D2D" },
                 { name: "ClientPulse", share: 10, color: "#ec4899" },
-                { name: "ContentEngine", share: 8, color: "#0ea5e9" },
+                { name: "ContentEngine", share: 8, color: "#FF2D2D" },
                 { name: "Others", share: 15, color: "#64748b" },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">

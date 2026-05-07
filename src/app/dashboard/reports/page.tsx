@@ -170,7 +170,7 @@ export default function ReportsPage() {
         <tbody>
           <tr style="border-bottom:1px solid #E8E5E0;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">Leads</td>
-            <td style="padding:10px 14px;font-size:13px;color:#374151;text-align:right;font-weight:600;">${m.leads}${m.leads_trend !== "N/A" ? ` <span style="color:${parseInt(m.leads_trend) >= 0 ? "#10b981" : "#EF4444"};font-size:11px;">(${parseInt(m.leads_trend) >= 0 ? "+" : ""}${m.leads_trend}%)</span>` : ""}</td>
+            <td style="padding:10px 14px;font-size:13px;color:#374151;text-align:right;font-weight:600;">${m.leads}${m.leads_trend !== "N/A" ? ` <span style="color:${parseInt(m.leads_trend) >= 0 ? "#FF2D2D" : "#EF4444"};font-size:11px;">(${parseInt(m.leads_trend) >= 0 ? "+" : ""}${m.leads_trend}%)</span>` : ""}</td>
           </tr>
           <tr style="border-bottom:1px solid #E8E5E0;background:#FEFDFB;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">Outreach</td>
@@ -186,7 +186,7 @@ export default function ReportsPage() {
           </tr>
           <tr style="border-bottom:1px solid #E8E5E0;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">Health Score</td>
-            <td style="padding:10px 14px;font-size:13px;text-align:right;font-weight:600;color:${m.health_score >= 70 ? "#10b981" : m.health_score >= 40 ? "#F59E0B" : "#EF4444"};">${m.health_score}%</td>
+            <td style="padding:10px 14px;font-size:13px;text-align:right;font-weight:600;color:${m.health_score >= 70 ? "#FF2D2D" : m.health_score >= 40 ? "#F59E0B" : "#EF4444"};">${m.health_score}%</td>
           </tr>
           <tr style="background:#FEFDFB;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">MRR</td>

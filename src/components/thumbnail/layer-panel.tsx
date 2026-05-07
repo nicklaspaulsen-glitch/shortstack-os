@@ -91,12 +91,12 @@ export interface LayerPanelProps {
 
 const COLOR_SWATCHES: Array<{ id: string; name: string; colors: [string, string] }> = [
   { id: "red_black", name: "Red + Black", colors: ["#FF2D2D", "#0A0A0A"] },
-  { id: "blue_white", name: "Blue + White", colors: ["#2563EB", "#FFFFFF"] },
-  { id: "green_gold", name: "Green + Gold", colors: ["#059669", "#FACC15"] },
+  { id: "blue_white", name: "Blue + White", colors: ["#E02020", "#FFFFFF"] },
+  { id: "green_gold", name: "Green + Gold", colors: ["#E02020", "#FACC15"] },
   { id: "purple_black", name: "Purple + Black", colors: ["#7C3AED", "#0B0120"] },
   { id: "orange_teal", name: "Orange + Teal", colors: ["#EA580C", "#0E7490"] },
   { id: "pink_black", name: "Pink + Black", colors: ["#EC4899", "#111111"] },
-  { id: "yellow_navy", name: "Yellow + Navy", colors: ["#FACC15", "#1E3A8A"] },
+  { id: "yellow_navy", name: "Yellow + Navy", colors: ["#FACC15", "#991414"] },
   { id: "white_black", name: "Mono B/W", colors: ["#FFFFFF", "#0A0A0A"] },
 ];
 

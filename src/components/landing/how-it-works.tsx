@@ -198,8 +198,8 @@ function StepVisual({ idx }: { idx: number }) {
       >
         {[
           { Icon: Sparkles, label: "AI drafted 12 cold emails", color: "#FF6B6B", delay: 0 },
-          { Icon: Phone, label: "AI booked 3 meetings", color: "#10b981", delay: 0.5 },
-          { Icon: Zap, label: "Lead enriched + scored", color: "#3b82f6", delay: 1 },
+          { Icon: Phone, label: "AI booked 3 meetings", color: "#FF2D2D", delay: 0.5 },
+          { Icon: Zap, label: "Lead enriched + scored", color: "#FF2D2D", delay: 1 },
         ].map((item, i) => (
           <div
             key={i}
@@ -212,7 +212,7 @@ function StepVisual({ idx }: { idx: number }) {
           >
             <item.Icon size={11} style={{ color: item.color }} />
             <span className="flex-1 truncate">{item.label}</span>
-            <CheckCircle2 size={10} style={{ color: "#10b981" }} />
+            <CheckCircle2 size={10} style={{ color: "#FF2D2D" }} />
           </div>
         ))}
         <style jsx>{`

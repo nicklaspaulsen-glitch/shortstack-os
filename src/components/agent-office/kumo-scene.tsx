@@ -229,7 +229,7 @@ function CoachingStation({ glowing, glowColor }: { glowing: boolean; glowColor: 
       {/* Clipboard */}
       <g transform="translate(-28, -3)">
         <rect x={-6} y={-10} width={12} height={14} fill="#FAFAFA" />
-        <rect x={-2} y={-12} width={4} height={3} fill="#0F766E" />
+        <rect x={-2} y={-12} width={4} height={3} fill="#CC1A1A" />
         <rect x={-4} y={-7} width={8} height={1} fill="#94A3B8" />
         <rect x={-4} y={-4} width={6} height={1} fill="#94A3B8" />
         <rect x={-4} y={-1} width={7} height={1} fill="#94A3B8" />
@@ -249,18 +249,18 @@ function AnalyticsDesk({ glowing, glowColor }: { glowing: boolean; glowColor: st
       <rect x={-25} y={-44} width={50} height={36} rx={2} fill="#0A0A0B" />
       <rect x={-23} y={-42} width={46} height={32} fill={glowing ? glowColor : "#1F2937"} opacity={glowing ? 0.85 : 1} />
       {/* Bar chart bars on screen */}
-      <rect x={-19} y={-22} width={5} height={11} fill="#5EEAD4" />
-      <rect x={-12} y={-26} width={5} height={15} fill="#5EEAD4" />
-      <rect x={-5} y={-32} width={5} height={21} fill="#5EEAD4" />
-      <rect x={2} y={-28} width={5} height={17} fill="#5EEAD4" />
-      <rect x={9} y={-34} width={5} height={23} fill="#5EEAD4" />
-      <rect x={16} y={-30} width={5} height={19} fill="#5EEAD4" />
+      <rect x={-19} y={-22} width={5} height={11} fill="#FF8080" />
+      <rect x={-12} y={-26} width={5} height={15} fill="#FF8080" />
+      <rect x={-5} y={-32} width={5} height={21} fill="#FF8080" />
+      <rect x={2} y={-28} width={5} height={17} fill="#FF8080" />
+      <rect x={9} y={-34} width={5} height={23} fill="#FF8080" />
+      <rect x={16} y={-30} width={5} height={19} fill="#FF8080" />
       <line x1={-21} y1={-11} x2={21} y2={-11} stroke="rgba(255,255,255,0.35)" strokeWidth={0.5} />
       {glowing && <ellipse cx={0} cy={-26} rx={32} ry={11} fill={glowColor} opacity={0.30} filter="url(#blur-soft)" />}
       {/* Coffee mug */}
       <g transform="translate(28, -2)">
         <ellipse cx={0} cy={0} rx={3} ry={1} fill="rgba(0,0,0,0.35)" />
-        <rect x={-2.5} y={-4} width={5} height={4} rx={0.5} fill="#0F766E" />
+        <rect x={-2.5} y={-4} width={5} height={4} rx={0.5} fill="#CC1A1A" />
       </g>
     </g>
   );
@@ -276,23 +276,23 @@ function WhiteboardStation({ glowing, glowColor }: { glowing: boolean; glowColor
       <rect x={-47} y={-47} width={94} height={64} fill="#FAFAFA" />
       {/* Sticky notes */}
       <rect x={-40} y={-40} width={14} height={14} fill="#FCD34D" transform="rotate(-3 -33 -33)" />
-      <rect x={-22} y={-42} width={14} height={14} fill="#5EEAD4" transform="rotate(2 -15 -35)" />
+      <rect x={-22} y={-42} width={14} height={14} fill="#FF8080" transform="rotate(2 -15 -35)" />
       <rect x={-2} y={-38} width={14} height={14} fill="#FECACA" transform="rotate(-1 5 -31)" />
-      <rect x={18} y={-40} width={14} height={14} fill="#A7F3D0" transform="rotate(4 25 -33)" />
+      <rect x={18} y={-40} width={14} height={14} fill="#FFB3B3" transform="rotate(4 25 -33)" />
       {/* Whiteboard scribbles */}
-      <line x1={-40} y1={-15} x2={-15} y2={-15} stroke="#0F766E" strokeWidth={1.5} />
-      <line x1={-40} y1={-10} x2={-25} y2={-10} stroke="#0F766E" strokeWidth={1.5} />
-      <circle cx={-5} cy={-12} r={4} fill="none" stroke="#0F766E" strokeWidth={1.5} />
-      <line x1={5} y1={-15} x2={20} y2={-15} stroke="#0D9488" strokeWidth={1.5} />
-      <line x1={5} y1={-10} x2={30} y2={-10} stroke="#0D9488" strokeWidth={1.5} />
+      <line x1={-40} y1={-15} x2={-15} y2={-15} stroke="#CC1A1A" strokeWidth={1.5} />
+      <line x1={-40} y1={-10} x2={-25} y2={-10} stroke="#CC1A1A" strokeWidth={1.5} />
+      <circle cx={-5} cy={-12} r={4} fill="none" stroke="#CC1A1A" strokeWidth={1.5} />
+      <line x1={5} y1={-15} x2={20} y2={-15} stroke="#FF2D2D" strokeWidth={1.5} />
+      <line x1={5} y1={-10} x2={30} y2={-10} stroke="#FF2D2D" strokeWidth={1.5} />
       <path d="M -40 0 L -32 -3 L -25 0 L -18 -5 L -10 -1 L 0 -4 L 12 0 L 25 -2"
-        fill="none" stroke="#0F766E" strokeWidth={1.2} />
+        fill="none" stroke="#CC1A1A" strokeWidth={1.2} />
       {glowing && (
         <rect x={-47} y={-47} width={94} height={64} fill={glowColor} opacity={0.18} />
       )}
       {/* Marker tray */}
       <rect x={-40} y={20} width={80} height={3} fill="#374151" />
-      <rect x={-30} y={17} width={4} height={3} fill="#0F766E" />
+      <rect x={-30} y={17} width={4} height={3} fill="#CC1A1A" />
       <rect x={-22} y={17} width={4} height={3} fill="#FECACA" />
       <rect x={-14} y={17} width={4} height={3} fill="#FCD34D" />
       {/* Eraser */}
@@ -380,7 +380,7 @@ function ContentEasel({ glowing, glowColor }: { glowing: boolean; glowColor: str
       <line x1={18} y1={36} x2={10} y2={-30} stroke="#3F2D1F" strokeWidth={2} />
       {/* Canvas / calendar grid */}
       <rect x={-30} y={-50} width={60} height={50} fill="#FAFAFA" />
-      <rect x={-30} y={-50} width={60} height={6} fill={glowing ? glowColor : "#0F766E"} />
+      <rect x={-30} y={-50} width={60} height={6} fill={glowing ? glowColor : "#CC1A1A"} />
       <text x={0} y={-46} fontFamily="Inter" fontSize={4} textAnchor="middle" fill="#FFFFFF" fontWeight={700}>APR 2026</text>
       {/* 7-col calendar grid */}
       {Array.from({ length: 5 }).map((_, row) =>
@@ -402,7 +402,7 @@ function ContentEasel({ glowing, glowColor }: { glowing: boolean; glowColor: str
                   cx={-24 + col * 8.4}
                   cy={-35 + row * 7}
                   r={1.5}
-                  fill={glowing ? glowColor : "#0D9488"}
+                  fill={glowing ? glowColor : "#FF2D2D"}
                   opacity={0.85}
                 />
               )}
@@ -436,11 +436,11 @@ function DesignStation({ glowing, glowColor }: { glowing: boolean; glowColor: st
         <rect x={-26} y={0} width={11} height={9} fill="#FAFAFA" />
         <rect x={-25} y={1} width={9} height={7} fill="#FCA5A5" />
         <rect x={-12} y={2} width={11} height={9} fill="#FAFAFA" transform="rotate(-3 -6.5 6.5)" />
-        <rect x={-11} y={3} width={9} height={7} fill="#5EEAD4" transform="rotate(-3 -6.5 6.5)" />
+        <rect x={-11} y={3} width={9} height={7} fill="#FF8080" transform="rotate(-3 -6.5 6.5)" />
         <rect x={2} y={1} width={11} height={9} fill="#FAFAFA" />
         <rect x={3} y={2} width={9} height={7} fill="#FCD34D" />
         <rect x={16} y={3} width={11} height={9} fill="#FAFAFA" transform="rotate(2 21.5 7.5)" />
-        <rect x={17} y={4} width={9} height={7} fill="#A7F3D0" transform="rotate(2 21.5 7.5)" />
+        <rect x={17} y={4} width={9} height={7} fill="#FFB3B3" transform="rotate(2 21.5 7.5)" />
         {/* Pin dots */}
         {[-21, -7, 8, 22].map(px => (
           <circle key={px} cx={px} cy={1} r={0.8} fill="#FCD34D" />
@@ -467,7 +467,7 @@ function AdsDashboard({ glowing, glowColor }: { glowing: boolean; glowColor: str
       <polyline
         points="-25,-15 -19,-18 -13,-22 -7,-19 -1,-25 5,-23 11,-30 17,-28 23,-35"
         fill="none"
-        stroke="#5EEAD4"
+        stroke="#FF8080"
         strokeWidth={1.6}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -566,7 +566,7 @@ function MeetingTable({ cx, cy }: { cx: number; cy: number }) {
       <ellipse cx={0} cy={0} rx={r} ry={r * 0.5} fill="url(#table-grad)" />
       <ellipse cx={0} cy={-2} rx={r - 4} ry={r * 0.5 - 3} fill="url(#table-top-grad)" />
       <rect x={-15} y={-4} width={14} height={8} fill="#FAFAFA" />
-      <rect x={3} y={-2} width={1.5} height={10} fill="#0F766E" />
+      <rect x={3} y={-2} width={1.5} height={10} fill="#CC1A1A" />
     </g>
   );
 }
@@ -577,8 +577,8 @@ function CoffeeTable({ cx, cy }: { cx: number; cy: number }) {
       <ellipse cx={0} cy={14} rx={50} ry={7} fill="rgba(0,0,0,0.32)" filter="url(#blur-soft)" />
       <rect x={-46} y={-4} width={92} height={14} rx={3} fill="url(#table-grad)" />
       <rect x={-46} y={-4} width={92} height={5} fill="url(#table-top-grad)" />
-      <rect x={-30} y={-10} width={20} height={6} rx={0.5} fill="#0F766E" />
-      <rect x={-30} y={-13} width={20} height={3} rx={0.5} fill="#5EEAD4" />
+      <rect x={-30} y={-10} width={20} height={6} rx={0.5} fill="#CC1A1A" />
+      <rect x={-30} y={-13} width={20} height={3} rx={0.5} fill="#FF8080" />
     </g>
   );
 }
@@ -591,13 +591,13 @@ function KitchenCounter({ cx, cy }: { cx: number; cy: number }) {
       <rect x={-70} y={-2} width={140} height={5} fill="url(#counter-top-grad)" />
       <g transform="translate(-40, -4)">
         <rect x={-12} y={-22} width={24} height={22} rx={1} fill="#1F2937" />
-        <rect x={-10} y={-20} width={20} height={6} rx={0.5} fill="#5EEAD4" opacity={0.6} />
+        <rect x={-10} y={-20} width={20} height={6} rx={0.5} fill="#FF8080" opacity={0.6} />
         <rect x={-3} y={-12} width={6} height={3} fill="#0A0A0B" />
       </g>
       {[0, 1, 2, 3].map(i => (
         <g key={i} transform={`translate(${-5 + i * 12}, -6)`}>
           <rect x={-3} y={-6} width={6} height={6} rx={1} fill="#FAFAFA" />
-          <ellipse cx={0} cy={-6} rx={3} ry={0.8} fill="#0F766E" />
+          <ellipse cx={0} cy={-6} rx={3} ry={0.8} fill="#CC1A1A" />
         </g>
       ))}
     </g>
@@ -609,7 +609,7 @@ function FloorPlant({ cx, cy, scale = 1 }: { cx: number; cy: number; scale?: num
     <g transform={`translate(${cx}, ${cy}) scale(${scale})`}>
       <ellipse cx={0} cy={20} rx={14} ry={4} fill="rgba(0,0,0,0.32)" filter="url(#blur-soft)" />
       <path d="M -10 0 L 10 0 L 8 18 L -8 18 Z" fill="url(#pot-grad)" />
-      <ellipse cx={0} cy={0} rx={10} ry={3} fill="#0F766E" />
+      <ellipse cx={0} cy={0} rx={10} ry={3} fill="#CC1A1A" />
       <ellipse cx={0} cy={0} rx={8} ry={2.4} fill="#042F2E" />
       <path d="M 0 0 Q -8 -16 -12 -22 Q -4 -28 0 -18 Z" fill="url(#leaf-grad)" />
       <path d="M 0 0 Q 8 -16 12 -22 Q 4 -28 0 -18 Z" fill="url(#leaf-grad)" />
@@ -627,7 +627,7 @@ function Window({ cx, cy, w = 100, h = 40 }: { cx: number; cy: number; w?: numbe
       <rect x={-w / 2} y={-h / 2} width={w} height={h} fill="url(#sky-grad)" />
       <path
         d={`M ${-w / 2} ${h / 2 - 2} L ${-w / 2} 8 L ${-w / 2 + 12} 8 L ${-w / 2 + 12} 2 L ${-w / 2 + 24} 2 L ${-w / 2 + 24} -4 L ${-w / 2 + 36} -4 L ${-w / 2 + 36} 4 L ${-w / 2 + 50} 4 L ${-w / 2 + 50} -8 L ${-w / 2 + 60} -8 L ${-w / 2 + 60} 0 L ${-w / 2 + 70} 0 L ${-w / 2 + 70} -4 L ${-w / 2 + 84} -4 L ${-w / 2 + 84} 6 L ${w / 2} 6 L ${w / 2} ${h / 2 - 2} Z`}
-        fill="#0F766E"
+        fill="#CC1A1A"
         opacity={0.85}
       />
       <line x1={0} y1={-h / 2} x2={0} y2={h / 2} stroke="#0A0A0B" strokeWidth={1} />
@@ -717,9 +717,9 @@ export default function KumoScene({
         <defs>
           {/* Sky behind windows */}
           <linearGradient id="sky-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#5EEAD4" />
-            <stop offset="60%" stopColor="#14B8A6" />
-            <stop offset="100%" stopColor="#0D9488" />
+            <stop offset="0%" stopColor="#FF8080" />
+            <stop offset="60%" stopColor="#FF2D2D" />
+            <stop offset="100%" stopColor="#FF2D2D" />
           </linearGradient>
 
           {/* Wood floor */}
@@ -736,26 +736,26 @@ export default function KumoScene({
 
           {/* Wall + floor glows */}
           <linearGradient id="wall-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#0F766E" />
+            <stop offset="0%" stopColor="#CC1A1A" />
             <stop offset="100%" stopColor="#0A1F1E" />
           </linearGradient>
           <radialGradient id="floor-glow" cx="50%" cy="55%" r="55%">
-            <stop offset="0%" stopColor="#14B8A6" stopOpacity="0.32" />
-            <stop offset="60%" stopColor="#0F766E" stopOpacity="0.08" />
+            <stop offset="0%" stopColor="#FF2D2D" stopOpacity="0.32" />
+            <stop offset="60%" stopColor="#CC1A1A" stopOpacity="0.08" />
             <stop offset="100%" stopColor="#042F2E" stopOpacity="0" />
           </radialGradient>
 
           {/* Desks */}
           <linearGradient id="desk-top-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#5EEAD4" />
-            <stop offset="100%" stopColor="#0D9488" />
+            <stop offset="0%" stopColor="#FF8080" />
+            <stop offset="100%" stopColor="#FF2D2D" />
           </linearGradient>
           <linearGradient id="desk-side-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#0D9488" />
-            <stop offset="100%" stopColor="#0F766E" />
+            <stop offset="0%" stopColor="#FF2D2D" />
+            <stop offset="100%" stopColor="#CC1A1A" />
           </linearGradient>
           <linearGradient id="desk-front-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#0F766E" />
+            <stop offset="0%" stopColor="#CC1A1A" />
             <stop offset="100%" stopColor="#0A2625" />
           </linearGradient>
 
@@ -816,10 +816,10 @@ export default function KumoScene({
             <stop offset="0%" stopColor="#7F5530" /><stop offset="100%" stopColor="#3F2D1F" />
           </linearGradient>
           <radialGradient id="leaf-grad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#34D399" /><stop offset="100%" stopColor="#047857" />
+            <stop offset="0%" stopColor="#FF6B6B" /><stop offset="100%" stopColor="#CC1A1A" />
           </radialGradient>
           <radialGradient id="leaf-grad-light" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#6EE7B7" /><stop offset="100%" stopColor="#10B981" />
+            <stop offset="0%" stopColor="#FF8080" /><stop offset="100%" stopColor="#FF2D2D" />
           </radialGradient>
 
           {/* Avatar gradients (head + shirt per agent) */}
@@ -852,8 +852,8 @@ export default function KumoScene({
 
         {/* BACK WALL */}
         <rect x={0} y={0} width={VB_W} height={150} fill="url(#wall-grad)" />
-        <rect x={0} y={148} width={VB_W} height={2} fill="#5EEAD4" opacity={0.32} />
-        <ellipse cx={VB_W / 2} cy={150} rx={VB_W / 2} ry={50} fill="#14B8A6" opacity={0.18} filter="url(#blur-glow)" />
+        <rect x={0} y={148} width={VB_W} height={2} fill="#FF8080" opacity={0.32} />
+        <ellipse cx={VB_W / 2} cy={150} rx={VB_W / 2} ry={50} fill="#FF2D2D" opacity={0.18} filter="url(#blur-glow)" />
         <Window cx={200} cy={70} w={140} h={70} />
         <Window cx={500} cy={70} w={140} h={70} />
         <Window cx={800} cy={70} w={140} h={70} />

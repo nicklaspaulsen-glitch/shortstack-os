@@ -52,11 +52,11 @@ const TIMEZONES = [
 
 function categoryToColor(category: EventCategory): string {
   switch (category) {
-    case "meeting": return "#3b82f6";
+    case "meeting": return "#FF2D2D";
     case "deadline": return "#ef4444";
     case "content": return "#8b5cf6";
-    case "call": return "#10b981";
-    default: return "#3b82f6";
+    case "call": return "#FF2D2D";
+    default: return "#FF2D2D";
   }
 }
 
@@ -395,7 +395,7 @@ export default function CalendarPage() {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border transition-all ${
                     selectedCategories.includes(cat) ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border text-muted"
                   }`}>
-                  <div className="w-2 h-2 rounded-full" style={{ background: cat === "meeting" ? "#3b82f6" : cat === "deadline" ? "#ef4444" : cat === "content" ? "#8b5cf6" : "#10b981" }} />
+                  <div className="w-2 h-2 rounded-full" style={{ background: cat === "meeting" ? "#FF2D2D" : cat === "deadline" ? "#ef4444" : cat === "content" ? "#8b5cf6" : "#FF2D2D" }} />
                   {CATEGORY_CONFIG[cat].label}
                 </button>
               ))}

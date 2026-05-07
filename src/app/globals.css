@@ -637,7 +637,7 @@ body {
     @apply outline-none;
     box-shadow:
       0 0 0 2px var(--color-background, #ffffff),
-      0 0 0 4px #3b82f6;
+      0 0 0 4px #FF2D2D;
   }
 
   /* ═══════════ INPUTS ═══════════ */
@@ -662,7 +662,7 @@ body {
     box-shadow:
       inset 0 1px 2px rgba(0,0,0,0.1),
       0 0 0 2px var(--color-background, #ffffff),
-      0 0 0 4px #3b82f6,
+      0 0 0 4px #FF2D2D,
       0 0 18px -4px color-mix(in srgb, var(--color-accent, #C9A84C) 40%, transparent);
   }
 
@@ -773,8 +773,8 @@ body {
   }
   /* Preset accent colors — override --card-accent-color or stack classes */
   .card-accent-gold   { --card-accent-color: #FF2D2D; }
-  .card-accent-blue   { --card-accent-color: #3B82F6; }
-  .card-accent-green  { --card-accent-color: #10B981; }
+  .card-accent-blue   { --card-accent-color: #FF2D2D; }
+  .card-accent-green  { --card-accent-color: #FF2D2D; }
   .card-accent-purple { --card-accent-color: #A855F7; }
   .card-accent-warning{ --card-accent-color: #F59E0B; }
   .card-accent-danger { --card-accent-color: #EF4444; }
@@ -1093,10 +1093,10 @@ body {
     background: radial-gradient(circle at 30% 10%, rgba(201, 168, 76, 0.22) 0%, transparent 60%);
   }
   .accent-glow-blue::before {
-    background: radial-gradient(circle at 30% 10%, rgba(59, 130, 246, 0.2) 0%, transparent 60%);
+    background: radial-gradient(circle at 30% 10%, rgba(255, 45, 45, 0.2) 0%, transparent 60%);
   }
   .accent-glow-green::before {
-    background: radial-gradient(circle at 30% 10%, rgba(16, 185, 129, 0.2) 0%, transparent 60%);
+    background: radial-gradient(circle at 30% 10%, rgba(255, 45, 45, 0.2) 0%, transparent 60%);
   }
   .accent-glow-red::before {
     background: radial-gradient(circle at 30% 10%, rgba(239, 68, 68, 0.2) 0%, transparent 60%);
@@ -1252,27 +1252,27 @@ body {
    * drop-shadows are progressively offset darker copies that read as
    * the icon "sitting forward" with depth behind it. */
   filter:
-    drop-shadow(1px 2px 0 rgba(13, 148, 136, 0.28))
-    drop-shadow(2px 4px 0 rgba(13, 148, 136, 0.20))
-    drop-shadow(3px 6px 0 rgba(13, 148, 136, 0.12))
+    drop-shadow(1px 2px 0 rgba(255, 45, 45, 0.28))
+    drop-shadow(2px 4px 0 rgba(255, 45, 45, 0.20))
+    drop-shadow(3px 6px 0 rgba(255, 45, 45, 0.12))
     drop-shadow(0 8px 14px rgba(0, 0, 0, 0.40));
 }
 [data-theme="light"] .hero-3d-icon-img {
   /* Light theme — same extrusion idea but lighter alphas + a slate
    * ground shadow so the icon doesn't blow out the white surface. */
   filter:
-    drop-shadow(1px 2px 0 rgba(13, 148, 136, 0.20))
-    drop-shadow(2px 4px 0 rgba(13, 148, 136, 0.14))
-    drop-shadow(3px 6px 0 rgba(13, 148, 136, 0.08))
+    drop-shadow(1px 2px 0 rgba(255, 45, 45, 0.20))
+    drop-shadow(2px 4px 0 rgba(255, 45, 45, 0.14))
+    drop-shadow(3px 6px 0 rgba(255, 45, 45, 0.08))
     drop-shadow(0 8px 14px rgba(15, 23, 42, 0.14));
 }
 .hero-3d-icon:hover .hero-3d-icon-img {
   transform: rotateX(0deg) rotateY(0deg) translateY(-4px) scale(1.06);
   filter:
-    drop-shadow(1px 3px 0 rgba(13, 148, 136, 0.32))
-    drop-shadow(2px 6px 0 rgba(13, 148, 136, 0.22))
-    drop-shadow(3px 9px 0 rgba(13, 148, 136, 0.14))
-    drop-shadow(0 14px 22px rgba(13, 148, 136, 0.30));
+    drop-shadow(1px 3px 0 rgba(255, 45, 45, 0.32))
+    drop-shadow(2px 6px 0 rgba(255, 45, 45, 0.22))
+    drop-shadow(3px 9px 0 rgba(255, 45, 45, 0.14))
+    drop-shadow(0 14px 22px rgba(255, 45, 45, 0.30));
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-3d-icon-img {
@@ -1570,18 +1570,48 @@ body {
 
 /* ═══════════ PRISM AMBIENT BACKGROUND ═══════════ */
 /* Applied to body via globals — red/violet/blue radial glows */
+/* Prism ambient: dramatic diagonal color rays — red dominant, white-tinted edges */
 .prism-ambient::before {
   content: '';
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 900px 600px at 15% 25%, rgba(255,45,45,0.12), transparent 70%),
-    radial-gradient(ellipse 700px 700px at 80% 60%, rgba(139,92,246,0.08), transparent 70%),
-    radial-gradient(ellipse 600px 500px at 50% 5%, rgba(59,130,246,0.06), transparent 70%),
-    radial-gradient(ellipse 500px 400px at 60% 90%, rgba(255,45,45,0.07), transparent 70%),
-    radial-gradient(ellipse 400px 600px at 5% 80%, rgba(6,182,212,0.05), transparent 70%);
+    /* Primary red ray — top-left, sweeps diagonally */
+    radial-gradient(ellipse 1200px 800px at 10% 15%, rgba(255,45,45,0.18), transparent 65%),
+    /* Secondary red ray — bottom-right mirror */
+    radial-gradient(ellipse 1000px 700px at 85% 80%, rgba(255,45,45,0.14), transparent 65%),
+    /* White diffusion — center-top, creates the "split" feel */
+    radial-gradient(ellipse 800px 400px at 50% 0%, rgba(255,255,255,0.04), transparent 60%),
+    /* Violet accent — subtle, mid-right */
+    radial-gradient(ellipse 600px 600px at 75% 45%, rgba(139,92,246,0.08), transparent 60%),
+    /* Red glow — center halo */
+    radial-gradient(ellipse 500px 500px at 45% 50%, rgba(255,45,45,0.06), transparent 55%),
+    /* White edge — bottom-left corner diffusion */
+    radial-gradient(ellipse 700px 500px at 5% 95%, rgba(255,255,255,0.025), transparent 55%);
   pointer-events: none;
   z-index: 0;
+}
+/* Animated prism ray sweep — slow diagonal movement */
+.prism-ambient::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    conic-gradient(from 200deg at 30% 30%,
+      transparent 0deg,
+      rgba(255,45,45,0.06) 40deg,
+      transparent 80deg,
+      rgba(255,255,255,0.02) 160deg,
+      transparent 200deg,
+      rgba(255,45,45,0.04) 300deg,
+      transparent 360deg);
+  pointer-events: none;
+  z-index: 0;
+  animation: prismRayRotate 45s linear infinite;
+}
+@keyframes prismRayRotate {
+  0%   { transform: rotate(0deg) scale(1.5); }
+  100% { transform: rotate(360deg) scale(1.5); }
 }
 .ambient-red::before {
   content: '';

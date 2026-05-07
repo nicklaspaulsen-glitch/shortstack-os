@@ -78,12 +78,12 @@ export default function ChangelogPage() {
           {ENTRIES.map((entry, i) => (
             <div key={i} className="relative pl-6" style={{ borderLeft: "1px solid rgba(255,255,255,0.06)" }}>
               <div className="absolute left-0 top-0 w-2 h-2 rounded-full -translate-x-[4.5px]"
-                style={{ background: entry.tag === "New" ? "#c8a855" : entry.tag === "Launch" ? "#10b981" : "#3b82f6" }} />
+                style={{ background: entry.tag === "New" ? "#c8a855" : entry.tag === "Launch" ? "#FF2D2D" : "#FF2D2D" }} />
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs text-gray-500">{entry.date}</span>
                 <span className="text-[9px] px-2 py-0.5 rounded-full font-medium" style={{
-                  background: entry.tag === "New" ? "rgba(200,168,85,0.1)" : entry.tag === "Launch" ? "rgba(16,185,129,0.1)" : "rgba(59,130,246,0.1)",
-                  color: entry.tag === "New" ? "#c8a855" : entry.tag === "Launch" ? "#10b981" : "#3b82f6",
+                  background: entry.tag === "New" ? "rgba(200,168,85,0.1)" : entry.tag === "Launch" ? "rgba(255,45,45,0.1)" : "rgba(255,45,45,0.1)",
+                  color: entry.tag === "New" ? "#c8a855" : entry.tag === "Launch" ? "#FF2D2D" : "#FF2D2D",
                 }}>{entry.tag}</span>
               </div>
               <h2 className="text-lg font-bold text-white mb-3">{entry.title}</h2>

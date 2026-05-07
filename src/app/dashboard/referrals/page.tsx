@@ -366,7 +366,7 @@ export default function ReferralsPage() {
       {/* ─── Stat cards ─────────────────────────────────────────────── */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {[
-          { icon: <TrendingUp size={14} />, accent: "#10b981", label: "This month", value: meLoading ? "—" : fmtCents(me?.stats.this_month_cents ?? 0), sublabel: "Current cycle" },
+          { icon: <TrendingUp size={14} />, accent: "#FF2D2D", label: "This month", value: meLoading ? "—" : fmtCents(me?.stats.this_month_cents ?? 0), sublabel: "Current cycle" },
           { icon: <Wallet size={14} />, accent: "#c8a855", label: "All time earned", value: meLoading ? "—" : fmtCents(me?.stats.total_earned_cents ?? 0), sublabel: `${me?.stats.total_referrals ?? 0} total referral${me?.stats.total_referrals === 1 ? "" : "s"}` },
           { icon: <Clock size={14} />, accent: "#a855f7", label: "Pending payout", value: meLoading ? "—" : fmtCents(me?.stats.pending_payout_cents ?? 0), sublabel: "Paid on the 1st" },
         ].map((tile, i) => (

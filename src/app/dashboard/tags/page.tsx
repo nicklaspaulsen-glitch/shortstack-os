@@ -23,8 +23,8 @@ interface TagRow {
 }
 
 const PRESET_COLORS = [
-  "#ef4444","#f97316","#f59e0b","#84cc16","#10b981",
-  "#06b6d4","#3b82f6","#8b5cf6","#ec4899","#6b7280",
+  "#ef4444","#f97316","#f59e0b","#84cc16","#FF2D2D",
+  "#FF5252","#FF2D2D","#8b5cf6","#ec4899","#6b7280",
 ];
 
 function TagBadge({ tag }: { tag: Pick<TagRow, "name" | "color"> }) {

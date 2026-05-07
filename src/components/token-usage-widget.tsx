@@ -52,7 +52,7 @@ function getRingColor(pct: number): string {
   if (pct >= 0.9) return "#ef4444"; // red
   if (pct >= 0.75) return "#f59e0b"; // amber
   if (pct >= 0.5) return "#eab308"; // yellow
-  return "#10b981"; // green
+  return "#FF2D2D"; // green
 }
 
 export default function TokenUsageWidget() {
@@ -128,7 +128,7 @@ export default function TokenUsageWidget() {
       effectiveLimit: limit,
       unlimited: isUnlimited,
       clampedPct: cPct,
-      ringColor: isUnlimited ? "#10b981" : getRingColor(cPct),
+      ringColor: isUnlimited ? "#FF2D2D" : getRingColor(cPct),
       atLimit: !isUnlimited && used >= limit && limit > 0,
       circumference: circ,
       dashOffset: circ * (1 - cPct),

@@ -274,7 +274,7 @@ const CAPTION_STYLES: { id: string; name: string; previewBg: string; previewCss:
   { id: "typewriter",     name: "Typewriter",            previewBg: "#1a1a1a", previewCss: { color: "#d1fae5", fontFamily: "monospace", fontSize: 11, letterSpacing: 2 } },
   { id: "bounce",         name: "Bounce",                previewBg: "#111827", previewCss: { color: "#fbbf24", fontWeight: 900, fontSize: 14, textShadow: "0 4px 0 rgba(0,0,0,0.4)" } },
   { id: "gradient_text",  name: "Gradient Text",         previewBg: "#0a0a0a", previewCss: { background: "linear-gradient(90deg,#FF2D2D,#ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontWeight: 800, fontSize: 13 } },
-  { id: "neon_glow",      name: "Neon Glow",             previewBg: "#050505", previewCss: { color: "#67e8f9", fontWeight: 700, fontSize: 12, textShadow: "0 0 8px #67e8f9, 0 0 20px #22d3ee" } },
+  { id: "neon_glow",      name: "Neon Glow",             previewBg: "#050505", previewCss: { color: "#67e8f9", fontWeight: 700, fontSize: 12, textShadow: "0 0 8px #67e8f9, 0 0 20px #FF6B6B" } },
   { id: "handwritten",    name: "Handwritten",           previewBg: "#1c1917", previewCss: { color: "#fef3c7", fontFamily: "cursive", fontSize: 13, fontStyle: "italic" } },
   { id: "subtitle_bar",   name: "Netflix Style",         previewBg: "#000", previewCss: { color: "#fff", background: "rgba(0,0,0,0.85)", padding: "1px 8px", fontSize: 11, fontWeight: 500 } },
   { id: "pop_in",         name: "Pop-In Words",          previewBg: "#111", previewCss: { color: "#fff", fontWeight: 900, fontSize: 15, letterSpacing: -0.5 } },
@@ -577,9 +577,9 @@ const EFFECTS_LIBRARY: Array<{ id: string; name: string; category: string; previ
   { id: "film_grain", name: "Film Grain", category: "Distortion", preview: "bg-gradient-to-br from-neutral-800 via-neutral-700 to-neutral-900", desc: "Analog film texture" },
   { id: "scan_lines", name: "Scan Lines", category: "Distortion", preview: "bg-[repeating-linear-gradient(0deg,#000_0_2px,#0f0_2px_4px)]", desc: "CRT horizontal scan" },
   { id: "digital_noise", name: "Digital Noise", category: "Distortion", preview: "bg-gradient-to-br from-slate-700 via-slate-800 to-black", desc: "Static/noise overlay" },
-  { id: "pixelation", name: "Pixelation", category: "Distortion", preview: "bg-[conic-gradient(at_top_left,#f97316,#eab308,#22c55e,#06b6d4,#8b5cf6)]", desc: "Mosaic-style pixels" },
+  { id: "pixelation", name: "Pixelation", category: "Distortion", preview: "bg-[conic-gradient(at_top_left,#f97316,#eab308,#22c55e,#FF5252,#8b5cf6)]", desc: "Mosaic-style pixels" },
   { id: "mosaic", name: "Mosaic", category: "Distortion", preview: "bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400", desc: "Tiled mosaic blur" },
-  { id: "kaleidoscope", name: "Kaleidoscope", category: "Distortion", preview: "bg-[conic-gradient(from_0deg,#ec4899,#8b5cf6,#06b6d4,#22c55e,#eab308,#ec4899)]", desc: "Mirrored pattern FX" },
+  { id: "kaleidoscope", name: "Kaleidoscope", category: "Distortion", preview: "bg-[conic-gradient(from_0deg,#ec4899,#8b5cf6,#FF5252,#22c55e,#eab308,#ec4899)]", desc: "Mirrored pattern FX" },
 
   // Color FX
   { id: "duotone", name: "Duotone", category: "Color FX", preview: "bg-gradient-to-br from-fuchsia-600 to-cyan-400", desc: "Two-color pop art" },
@@ -597,7 +597,7 @@ const EFFECTS_LIBRARY: Array<{ id: string; name: string; category: string; previ
   { id: "motion_blur", name: "Motion Blur", category: "Motion FX", preview: "bg-gradient-to-r from-transparent via-white to-transparent", desc: "Smear along motion" },
   { id: "speed_ramp", name: "Speed Ramp", category: "Motion FX", preview: "bg-gradient-to-r from-slate-500 via-sky-400 to-slate-800", desc: "Dynamic time-remap" },
   { id: "freeze_frame", name: "Freeze Frame", category: "Motion FX", preview: "bg-gradient-to-br from-slate-700 to-slate-900", desc: "Pause on moment" },
-  { id: "time_warp", name: "Time Warp", category: "Motion FX", preview: "bg-[conic-gradient(from_90deg,#8b5cf6,#06b6d4,#8b5cf6)]", desc: "Warped time curve" },
+  { id: "time_warp", name: "Time Warp", category: "Motion FX", preview: "bg-[conic-gradient(from_90deg,#8b5cf6,#FF5252,#8b5cf6)]", desc: "Warped time curve" },
   { id: "reverse", name: "Reverse", category: "Motion FX", preview: "bg-gradient-to-l from-slate-800 via-sky-500 to-slate-800", desc: "Backward playback" },
   { id: "slowmo_ramp", name: "Slow-mo Ramp", category: "Motion FX", preview: "bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-700", desc: "Ease into slow motion" },
   { id: "ghosting", name: "Ghosting", category: "Motion FX", preview: "bg-gradient-to-br from-white/60 via-slate-400/50 to-black/70", desc: "Trailing ghost images" },
@@ -1385,7 +1385,7 @@ export default function VideoEditorPage() {
           start: at,
           duration: durSec * 1000,
           label: String(drop.payload.label || drop.id).slice(0, 32),
-          color: "#60A5FA",
+          color: "#FF6B6B",
           thumbnailUrl:
             typeof drop.payload.thumbnail_url === "string"
               ? (drop.payload.thumbnail_url as string)
@@ -1434,7 +1434,7 @@ export default function VideoEditorPage() {
         duration: durMs,
         tracks: DEFAULT_TIMELINE_TRACKS,
         clips: [
-          { id: "main", trackId: "v1", start: 0, duration: durMs, label: "Rendered video", color: "#60A5FA", thumbnailUrl: undefined },
+          { id: "main", trackId: "v1", start: 0, duration: durMs, label: "Rendered video", color: "#FF6B6B", thumbnailUrl: undefined },
         ],
       });
     }
@@ -7047,7 +7047,7 @@ export default function VideoEditorPage() {
                   } else if (sug.type === "caption") {
                     clip = { id: `sug-${sug.id}`, trackId: "cap", start: at, duration: 2000, label: sug.reasoning.slice(0, 32), color: "#A855F7", isMarker: false };
                   } else if (sug.type === "broll_insert") {
-                    clip = { id: `sug-${sug.id}`, trackId: "v2", start: at, duration: Math.round((Number((sug.payload as Record<string, unknown>).duration_sec) || 3) * 1000), label: `B-roll: ${String((sug.payload as Record<string, unknown>).query || "")}`.slice(0, 32), color: "#60A5FA" };
+                    clip = { id: `sug-${sug.id}`, trackId: "v2", start: at, duration: Math.round((Number((sug.payload as Record<string, unknown>).duration_sec) || 3) * 1000), label: `B-roll: ${String((sug.payload as Record<string, unknown>).query || "")}`.slice(0, 32), color: "#FF6B6B" };
                   } else {
                     clip = { id: `sug-${sug.id}`, trackId: "fx", start: at, duration: 400, label: sug.reasoning.slice(0, 32), color: "#EF4444", isMarker: true };
                   }

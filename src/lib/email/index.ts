@@ -285,7 +285,7 @@ export async function sendWelcomeEmail(
           <h3 style="color:#fff;font-size:13px;margin:0 0 8px;">Your License</h3>
           <p style="color:#a0a0a0;font-size:12px;line-height:1.6;margin:0;">
             Plan: <strong style="color:#c8a855;">${planTier}</strong><br/>
-            Status: <span style="color:#10b981;">Active</span><br/>
+            Status: <span style="color:#FF2D2D;">Active</span><br/>
             Billing: Monthly, auto-renews. Manage at <a href="${appUrl}/dashboard/settings" style="color:#c8a855;text-decoration:none;">Settings &rarr; Billing</a>
           </p>
         </div>
@@ -346,7 +346,7 @@ export async function sendInvoiceEmail(
       <div style="${baseStyle}">
         <h1 style="color:#fff;font-size:20px;margin-bottom:8px;">Invoice</h1>
         <p style="color:#a0a0a0;font-size:14px;line-height:1.6;">
-          Hi ${clientName}, your invoice for <strong style="color:#10b981;">$${amount.toFixed(2)}</strong> is ready.
+          Hi ${clientName}, your invoice for <strong style="color:#FF2D2D;">$${amount.toFixed(2)}</strong> is ready.
         </p>
         ${invoiceUrl ? `
           <div style="text-align:center;margin:24px 0;">

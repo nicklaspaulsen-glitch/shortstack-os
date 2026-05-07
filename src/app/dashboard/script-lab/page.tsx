@@ -1096,12 +1096,12 @@ export default function ScriptLabPage() {
   .section-name { font-weight: 700; font-size: 12px; color: #FF2D2D; text-transform: uppercase; }
   .section-meta { font-size: 11px; color: #888; }
   .dialogue { font-size: 14px; line-height: 1.6; margin-top: 8px; }
-  .visual { font-size: 11px; color: #0ea5e9; margin-top: 6px; }
+  .visual { font-size: 11px; color: #FF2D2D; margin-top: 6px; }
   .cta-box { background: #1a1a1a; color: white; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0; }
   .cta-text { font-size: 18px; font-weight: 700; color: #FF2D2D; }
   .caption { background: #f5f5f5; border-radius: 8px; padding: 16px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
   .hashtags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .hashtag { background: #e8f4fd; color: #0ea5e9; font-size: 11px; padding: 3px 8px; border-radius: 20px; }
+  .hashtag { background: #e8f4fd; color: #FF2D2D; font-size: 11px; padding: 3px 8px; border-radius: 20px; }
   .footer { margin-top: 40px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee; padding-top: 16px; }
   @media print { body { padding: 20px; } }
 </style></head><body>

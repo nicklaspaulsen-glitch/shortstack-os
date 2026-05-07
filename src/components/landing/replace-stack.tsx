@@ -45,7 +45,7 @@ const TOOLS: Tool[] = [
   { name: "Loom", category: "Client Updates", saved: 15, Icon: SiLoom, color: "#625DF5" },
   { name: "Zapier", category: "Integrations", saved: 29, Icon: SiZapier, color: "#FF4F00" },
   { name: "Slack Premium", category: "Team Comms", saved: 8, Icon: SiSlack, color: "#4A154B" },
-  { name: "AgencyAnalytics", category: "Reporting", saved: 59, Icon: BarChart3, color: "#0EA5E9" },
+  { name: "AgencyAnalytics", category: "Reporting", saved: 59, Icon: BarChart3, color: "#FF2D2D" },
 ];
 
 const TOTAL_SAVED = TOOLS.reduce((sum, t) => sum + t.saved, 0);
@@ -153,7 +153,7 @@ function ToolCard({ tool }: { tool: Tool }) {
           <p className="text-[10px] text-gray-500 mt-0.5 truncate">{category}</p>
           <p
             className="text-[10px] font-bold mt-1.5"
-            style={{ color: "#10b981" }}
+            style={{ color: "#FF2D2D" }}
           >
             Save ${saved}/mo
           </p>

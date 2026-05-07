@@ -377,9 +377,9 @@ export default function AnalyticsPage() {
 
   // ─── Prism color map for stat tiles ─────────────────────────────────────
   const PRISM_TILES = [
-    { accent: "#10B981", bar: "from-[#10B981] to-transparent" },   // MRR → emerald
-    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },   // Leads → blue
-    { accent: "#06B6D4", bar: "from-[#06B6D4] to-transparent" },   // DMs → cyan
+    { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },   // MRR → emerald
+    { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },   // Leads → blue
+    { accent: "#FF5252", bar: "from-[#FF5252] to-transparent" },   // DMs → cyan
     { accent: "#8B5CF6", bar: "from-[#8B5CF6] to-transparent" },   // Deals → violet
   ] as const;
 
@@ -520,10 +520,10 @@ export default function AnalyticsPage() {
               transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Prism rainbow top bar */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#10B981] via-[#3B82F6] via-[#06B6D4] via-[#8B5CF6] to-[#F59E0B]" />
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF2D2D] via-[#FF5252] via-[#8B5CF6] to-[#F59E0B]" />
               {/* Ambient glow */}
               <div className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 rounded-full bg-[#FF2D2D] opacity-[0.06] blur-3xl" />
-              <div className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#10B981] opacity-[0.04] blur-2xl" />
+              <div className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#FF2D2D] opacity-[0.04] blur-2xl" />
 
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A] mb-3">
                 Monthly Recurring Revenue
@@ -901,12 +901,12 @@ export default function AnalyticsPage() {
             transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Prism top bar */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#10B981] via-[#3B82F6] via-[#06B6D4] via-[#8B5CF6] to-[#F59E0B]" />
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF2D2D] via-[#FF5252] via-[#8B5CF6] to-[#F59E0B]" />
             <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(255,255,255,0.08)]">
               {[
-                { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#10B981" },
-                { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#3B82F6" : "#F26063" },
-                { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#06B6D4" },
+                { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#FF2D2D" },
+                { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#FF2D2D" : "#F26063" },
+                { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#FF5252" },
                 { label: "Active Clients", value: String(stats.activeClients), sub: `${formatCurrency(stats.totalMRR)} MRR`, color: "#8B5CF6" },
               ].map((cell, i) => (
                 <motion.div

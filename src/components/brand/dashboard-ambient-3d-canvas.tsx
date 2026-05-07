@@ -23,9 +23,9 @@ import { Float, MeshDistortMaterial, Environment } from "@react-three/drei";
 import { Suspense, useRef } from "react";
 import type { Mesh } from "three";
 
-const TEAL = "#14B8A6";
-const TEAL_LIGHT = "#5EEAD4";
-const TEAL_DARK = "#0F766E";
+const TEAL = "#FF2D2D";
+const TEAL_LIGHT = "#FF8080";
+const TEAL_DARK = "#CC1A1A";
 
 function FloatingTorus({ position }: { position: [number, number, number] }) {
   const ref = useRef<Mesh>(null!);

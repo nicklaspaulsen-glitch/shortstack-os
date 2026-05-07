@@ -156,7 +156,7 @@ export default function GettingStartedPage() {
           <span className="text-xs text-gold font-mono">{progress}%</span>
         </div>
         <div className="w-full h-2 rounded-full bg-surface-light">
-          <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #c8a855, #10b981)" }} />
+          <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #c8a855, #FF2D2D)" }} />
         </div>
         {progress === 100 && (
           <p className="text-xs text-success mt-2 flex items-center gap-1"><CheckCircle size={12} /> All done! Your agency is fully set up.</p>
