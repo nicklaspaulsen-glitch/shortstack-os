@@ -265,7 +265,7 @@ export default function CompetitiveMonitorPage() {
         subtitle="Track competitor changes, pricing & features."
         gradient="sunset"
         actions={
-          <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-white/15 border border-white/25 text-white rounded-lg hover:bg-white/25 transition text-sm font-medium">
+          <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-black/10 border border-black/20 text-[#0A0A0B] rounded-lg hover:bg-black/15 transition text-sm font-medium">
             <Plus className="w-4 h-4" /> Add Competitor
           </button>
         }
@@ -275,9 +275,9 @@ export default function CompetitiveMonitorPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { icon: <Target className="w-3.5 h-3.5" />, label: "Monitoring", value: activeCompetitors, sub: `${competitors.length} total competitors`, color: "text-indigo-400", bar: "from-indigo-500 to-violet-400" },
-          { icon: <Activity className="w-3.5 h-3.5" />, label: "Changes (7d)", value: totalChanges, sub: "across all competitors", color: "text-white", bar: "from-indigo-500 to-blue-400" },
+          { icon: <Activity className="w-3.5 h-3.5" />, label: "Changes (7d)", value: totalChanges, sub: "across all competitors", color: "text-[#0A0A0B]", bar: "from-indigo-500 to-blue-400" },
           { icon: <AlertTriangle className="w-3.5 h-3.5" />, label: "High Priority", value: highSeverityChanges, sub: "require attention", color: "text-red-400", bar: "from-red-500 to-rose-400" },
-          { icon: <Zap className="w-3.5 h-3.5" />, label: "Credits", value: `${creditsUsed}/${creditsTotal}`, sub: null, color: "text-white", bar: "from-amber-500 to-yellow-400" },
+          { icon: <Zap className="w-3.5 h-3.5" />, label: "Credits", value: `${creditsUsed}/${creditsTotal}`, sub: null, color: "text-[#0A0A0B]", bar: "from-amber-500 to-yellow-400" },
         ].map((stat, i) => (
           <motion.div
             key={stat.label}
@@ -285,7 +285,7 @@ export default function CompetitiveMonitorPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: i * 0.07 }}
             whileHover={{ y: -2 }}
-            className="rounded-xl p-4 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            className="rounded-xl p-4 relative overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
           >
             <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${stat.bar}`} />
             <div className="flex items-center gap-2 text-muted text-xs mb-1">{stat.icon} {stat.label}</div>
@@ -307,7 +307,7 @@ export default function CompetitiveMonitorPage() {
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="rounded-xl p-5" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.15)" }}
+          className="rounded-xl p-5" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.12)" }}
         >
           <h3 className="section-header text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-gold" /> Add New Competitor</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -330,7 +330,7 @@ export default function CompetitiveMonitorPage() {
           </div>
           <div className="flex gap-2 mt-4">
             <motion.button whileHover={{ scale: 1.03 }} onClick={addCompetitor} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-500 transition">Add Competitor</motion.button>
-            <button onClick={() => setShowAddForm(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-white transition">Cancel</button>
+            <button onClick={() => setShowAddForm(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-[#0A0A0B] transition">Cancel</button>
           </div>
         </motion.div>
       )}
@@ -346,7 +346,7 @@ export default function CompetitiveMonitorPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: ci * 0.06 }}
               whileHover={{ y: -3 }}
-              className="rounded-xl p-4 hover:border-indigo-500/20 transition group" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              className="rounded-xl p-4 hover:border-indigo-500/20 transition group" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
@@ -378,10 +378,10 @@ export default function CompetitiveMonitorPage() {
                 <button onClick={() => checkNow(comp.id)} disabled={checkingId === comp.id} className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-gold/10 text-gold rounded text-[10px] font-medium hover:bg-gold/20 transition disabled:opacity-50">
                   {checkingId === comp.id ? <Loader className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />} Check
                 </button>
-                <button onClick={() => togglePause(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-white transition">
+                <button onClick={() => togglePause(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-[#0A0A0B] transition">
                   {comp.status === "paused" ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
                 </button>
-                <button onClick={() => { setFilterCompetitor(comp.id); setTab("changes"); }} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-white transition">
+                <button onClick={() => { setFilterCompetitor(comp.id); setTab("changes"); }} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-[#0A0A0B] transition">
                   <Eye className="w-3 h-3" />
                 </button>
                 <button onClick={() => removeCompetitor(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-red-400 transition">
@@ -414,7 +414,7 @@ export default function CompetitiveMonitorPage() {
       <div className="flex gap-1 border-b border-border overflow-x-auto">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${tab === t.key ? "border-gold text-gold" : "border-transparent text-muted hover:text-white"}`}>
+            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${tab === t.key ? "border-gold text-gold" : "border-transparent text-muted hover:text-[#0A0A0B]"}`}>
             <t.icon className="w-4 h-4" /> {t.label}
           </button>
         ))}
@@ -459,7 +459,7 @@ export default function CompetitiveMonitorPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: chi * 0.05 }}
-                  className="rounded-xl p-4 hover:border-indigo-500/20 transition" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                  className="rounded-xl p-4 hover:border-indigo-500/20 transition" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
                 >
                   <div className="flex items-start gap-3">
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${meta.color}`}>
@@ -472,7 +472,7 @@ export default function CompetitiveMonitorPage() {
                         <span className={`text-[10px] px-2 py-0.5 rounded-full ${meta.color}`}>{meta.label}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-muted mb-2">
-                        <span className="font-medium text-white/80">{change.competitorName}</span>
+                        <span className="font-medium text-black/65">{change.competitorName}</span>
                         <span>&#183;</span>
                         <span>{formatTime(change.detectedAt)}</span>
                       </div>
@@ -611,10 +611,10 @@ export default function CompetitiveMonitorPage() {
             </div>
             {showAiAnalysis ? (
               <div className="p-4 bg-gold/5 border border-gold/10 rounded-lg text-sm text-muted leading-relaxed space-y-3">
-                <p><strong className="text-white">Market Position:</strong> Trinity occupies a strong mid-market position in the agency SaaS space. Your pricing is competitive against 6 of 8 tracked competitors, and your feature count (42) exceeds the median (32). However, MarketMind AI&apos;s introduction of a free tier and AgencyFlow&apos;s upmarket push are creating a squeeze that requires strategic response.</p>
-                <p><strong className="text-white">Key Threats:</strong> The convergence of AgencyFlow and ClientPulse toward enterprise signals a market bifurcation. SocialSpark&apos;s rapid growth (5,000 customers) and AI content calendar launch pose the most immediate feature-parity threat. MarketMind&apos;s free tier could erode your starter plan acquisition.</p>
-                <p><strong className="text-white">Opportunities:</strong> AgencyFlow&apos;s 34% price increase creates a window for targeted switching campaigns. ContentEngine&apos;s limited feature set (22) makes their customer base vulnerable. The enterprise space is underserved by purpose-built agency tools -- an enterprise tier with SSO and advanced reporting could capture this growing segment.</p>
-                <p><strong className="text-white">Recommended Actions:</strong> (1) Ship AI scheduling to match SocialSpark within 30 days. (2) Launch a &ldquo;Switch from AgencyFlow&rdquo; campaign targeting price-sensitive users. (3) Evaluate a free tier or extended trial to counter MarketMind. (4) Invest in content marketing to close the blog frequency gap.</p>
+                <p><strong className="text-[#0A0A0B]">Market Position:</strong> Trinity occupies a strong mid-market position in the agency SaaS space. Your pricing is competitive against 6 of 8 tracked competitors, and your feature count (42) exceeds the median (32). However, MarketMind AI&apos;s introduction of a free tier and AgencyFlow&apos;s upmarket push are creating a squeeze that requires strategic response.</p>
+                <p><strong className="text-[#0A0A0B]">Key Threats:</strong> The convergence of AgencyFlow and ClientPulse toward enterprise signals a market bifurcation. SocialSpark&apos;s rapid growth (5,000 customers) and AI content calendar launch pose the most immediate feature-parity threat. MarketMind&apos;s free tier could erode your starter plan acquisition.</p>
+                <p><strong className="text-[#0A0A0B]">Opportunities:</strong> AgencyFlow&apos;s 34% price increase creates a window for targeted switching campaigns. ContentEngine&apos;s limited feature set (22) makes their customer base vulnerable. The enterprise space is underserved by purpose-built agency tools -- an enterprise tier with SSO and advanced reporting could capture this growing segment.</p>
+                <p><strong className="text-[#0A0A0B]">Recommended Actions:</strong> (1) Ship AI scheduling to match SocialSpark within 30 days. (2) Launch a &ldquo;Switch from AgencyFlow&rdquo; campaign targeting price-sensitive users. (3) Evaluate a free tier or extended trial to counter MarketMind. (4) Invest in content marketing to close the blog frequency gap.</p>
               </div>
             ) : (
               <div className="text-xs text-muted text-center py-8">Click &ldquo;Generate AI Analysis&rdquo; to get an AI-written competitive assessment based on all tracked data.</div>
@@ -639,7 +639,7 @@ export default function CompetitiveMonitorPage() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.28 }}
-              className="rounded-xl p-5" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.15)" }}
+              className="rounded-xl p-5" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.12)" }}
             >
               <h4 className="text-sm font-medium mb-4">New Alert Rule</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -675,7 +675,7 @@ export default function CompetitiveMonitorPage() {
                 <div className="flex gap-2">
                   {CHANNEL_OPTIONS.map(ch => (
                     <button key={ch} onClick={() => toggleAlertChannel(ch)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${newAlertChannels.includes(ch) ? "bg-gold/20 text-gold border border-gold/30" : "bg-surface-light text-muted border border-border hover:text-white"}`}>
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${newAlertChannels.includes(ch) ? "bg-gold/20 text-gold border border-gold/30" : "bg-surface-light text-muted border border-border hover:text-[#0A0A0B]"}`}>
                       {ch}
                     </button>
                   ))}
@@ -683,7 +683,7 @@ export default function CompetitiveMonitorPage() {
               </div>
               <div className="flex gap-2 mt-4">
                 <motion.button whileHover={{ scale: 1.03 }} onClick={addAlertRule} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-500 transition">Create Rule</motion.button>
-                <button onClick={() => setShowAddAlert(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-white transition">Cancel</button>
+                <button onClick={() => setShowAddAlert(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-[#0A0A0B] transition">Cancel</button>
               </div>
             </motion.div>
           )}
@@ -699,7 +699,7 @@ export default function CompetitiveMonitorPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: ri * 0.05 }}
-                  style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                  style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
                   className={`rounded-xl p-4 flex items-center gap-4 hover:border-indigo-500/20 transition ${!rule.enabled ? "opacity-50" : ""}`}
                 >
                   <button onClick={() => setAlertRules(prev => prev.map(r => r.id === rule.id ? { ...r, enabled: !r.enabled } : r))}
@@ -741,7 +741,7 @@ export default function CompetitiveMonitorPage() {
           <PrismPanel padding="p-5">
             <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-gold" /> AI Market Summary</h3>
             <div className="text-sm text-muted leading-relaxed space-y-2">
-              <p>The agency SaaS market continues to consolidate around AI-first platforms. Over the past week, <strong className="text-white">3 of 8 tracked competitors</strong> made AI-related announcements. Pricing is trending upward (AgencyFlow +34%), while MarketMind bucks the trend with a free tier launch. The enterprise segment is heating up with both AgencyFlow and ClientPulse making upmarket moves.</p>
+              <p>The agency SaaS market continues to consolidate around AI-first platforms. Over the past week, <strong className="text-[#0A0A0B]">3 of 8 tracked competitors</strong> made AI-related announcements. Pricing is trending upward (AgencyFlow +34%), while MarketMind bucks the trend with a free tier launch. The enterprise segment is heating up with both AgencyFlow and ClientPulse making upmarket moves.</p>
               <p>Your positioning remains strong on <span className="text-emerald-400">pricing</span> and <span className="text-emerald-400">review ratings</span>, but you are falling behind on <span className="text-red-400">social media presence</span> and <span className="text-red-400">content velocity</span>. The biggest opportunity window is the 2-4 week period before competitors ship their announced features.</p>
             </div>
           </PrismPanel>
@@ -797,7 +797,7 @@ export default function CompetitiveMonitorPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: i * 0.07 }}
                   whileHover={{ y: -3 }}
-                  className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(239,68,68,0.1)" }}
+                  className="rounded-xl p-4" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(239,68,68,0.1)" }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <AlertTriangle className="w-4 h-4 text-red-400" />
@@ -826,7 +826,7 @@ export default function CompetitiveMonitorPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: i * 0.07 }}
                   whileHover={{ y: -3 }}
-                  className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.15)" }}
+                  className="rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.12)" }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Target className="w-4 h-4 text-gold" />
@@ -858,7 +858,7 @@ export default function CompetitiveMonitorPage() {
                   </div>
                   <div className="flex-1 bg-surface-light rounded-full h-5 overflow-hidden">
                     <div className="h-full rounded-full flex items-center pl-2 transition-all duration-700" style={{ width: `${item.share * 3}%`, backgroundColor: item.color }}>
-                      <span className="text-[10px] text-white font-bold">{item.share}%</span>
+                      <span className="text-[10px] text-[#0A0A0B] font-bold">{item.share}%</span>
                     </div>
                   </div>
                 </div>
@@ -883,3 +883,6 @@ export default function CompetitiveMonitorPage() {
     </div>
   );
 }
+
+
+

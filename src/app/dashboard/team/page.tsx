@@ -56,14 +56,14 @@ interface PermissionRow {
 
 const RAINBOW_BAR = {
   height: 3,
-  background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)",
+  background: "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)",
 };
 
 const ROLE_DEFINITIONS: RoleDefinition[] = [
-  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#FF2D2D", memberCount: 0 },
-  { id: "admin", label: "Admin", description: "Everything except billing management and workspace deletion", color: "#FF2D2D", memberCount: 0 },
+  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#CC2424", memberCount: 0 },
+  { id: "admin", label: "Admin", description: "Everything except billing management and workspace deletion", color: "#CC2424", memberCount: 0 },
   { id: "manager", label: "Manager", description: "Client management, reports, content creation and approval", color: "#8b5cf6", memberCount: 0 },
-  { id: "creator", label: "Creator", description: "Content creation only - no client or financial access", color: "#FF2D2D", memberCount: 0 },
+  { id: "creator", label: "Creator", description: "Content creation only - no client or financial access", color: "#CC2424", memberCount: 0 },
   { id: "viewer", label: "Viewer", description: "Read-only access to dashboards and reports", color: "#6b7280", memberCount: 0 },
 ];
 
@@ -268,7 +268,7 @@ export default function TeamPage() {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => setShowInvite(true)}
-            className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5"
           >
             <UserPlus size={12} /> Invite Member
           </motion.button>
@@ -287,7 +287,7 @@ export default function TeamPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
+      <div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
@@ -305,7 +305,7 @@ export default function TeamPage() {
             <div className="relative flex-1 min-w-[200px]">
               <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
               <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-transparent border border-[rgba(255,255,255,0.1)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+                className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-white border border-[rgba(0,0,0,0.08)] focus:outline-none focus:ring-1 focus:ring-[#CC2424]/40 placeholder:text-[#71717A]"
                 placeholder="Search members..." aria-label="Search team members" />
             </div>
             <div className="flex gap-1 bg-surface rounded-lg p-0.5">
@@ -320,7 +320,7 @@ export default function TeamPage() {
           <PrismPanel rainbow padding="p-0" className="overflow-hidden">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-white/10">
+                <tr className="border-b border-[rgba(0,0,0,0.08)]">
                   <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Member</th>
                   <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Role</th>
                   <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden md:table-cell">Status</th>
@@ -339,7 +339,7 @@ export default function TeamPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    className="border-b border-white/5 hover:bg-indigo-500/5 transition-colors cursor-pointer"
+                    className="border-b border-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.03)] transition-colors cursor-pointer"
                     onClick={() => setSelectedMember(selectedMember === member.id ? null : member.id)}
                   >
                     <td className="py-2.5 px-3">
@@ -395,7 +395,7 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="rounded-xl p-4 space-y-4 border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+                className="rounded-xl p-4 space-y-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -450,7 +450,7 @@ export default function TeamPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="rounded-xl overflow-x-auto p-4 border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+          className="rounded-xl overflow-x-auto p-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-gold" /> Role Permissions Matrix</h2>
@@ -468,7 +468,7 @@ export default function TeamPage() {
               <p className="text-[9px] text-muted uppercase tracking-wider font-bold mb-2 px-2">{category}</p>
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-white/10">
+                  <tr className="border-b border-[rgba(0,0,0,0.08)]">
                     <th className="text-left py-2 pr-4 text-muted font-semibold text-[10px] w-48 pl-2">Feature</th>
                     {ROLE_DEFINITIONS.map(role => (
                       <th key={role.id} className="text-center py-2 px-2 text-[10px] font-semibold" style={{ color: role.color }}>{role.label}</th>
@@ -477,7 +477,7 @@ export default function TeamPage() {
                 </thead>
                 <tbody>
                   {perms.map((perm, idx) => (
-                    <tr key={idx} className="border-b border-white/5 hover:bg-indigo-500/5 transition-colors">
+                    <tr key={idx} className="border-b border-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.03)] transition-colors">
                       <td className="py-2 pr-4 font-medium pl-2">{perm.feature}</td>
                       {(["owner", "admin", "manager", "creator", "viewer"] as RoleId[]).map(roleId => (
                         <td key={roleId} className="text-center py-2">
@@ -508,7 +508,7 @@ export default function TeamPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -3 }}
-                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "0.75rem", padding: "1rem", position: "relative", overflow: "hidden" }}
+                style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "0.75rem", padding: "1rem", position: "relative", overflow: "hidden" }}
               >
                 <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                 <div className="flex items-center gap-3 mb-3">
@@ -540,7 +540,7 @@ export default function TeamPage() {
               whileHover={{ y: -3 }}
               onClick={() => setShowCustomRole(true)}
               className="hover:border-gold/20 transition-all flex flex-col items-center justify-center gap-2 min-h-[160px]"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
+              style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px dashed rgba(0,0,0,0.12)", borderRadius: "0.75rem", padding: "1rem" }}
             >
               <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center">
                 <Settings size={16} className="text-gold" />
@@ -558,7 +558,7 @@ export default function TeamPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
+          style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "0.75rem", padding: "1rem" }}
         >
           <h2 className="section-header flex items-center gap-2 mb-3"><Activity size={13} className="text-gold" /> Per-Member Access Log</h2>
           <div className="space-y-2">
@@ -575,7 +575,7 @@ export default function TeamPage() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: idx * 0.04 }}
-                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-indigo-500/5 border-b border-white/5 transition-colors"
+                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)] border-b border-[rgba(0,0,0,0.05)] transition-colors"
               >
                 <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-[9px] font-bold text-gold shrink-0">{act.avatar}</div>
                 <div className="flex-1 min-w-0">
@@ -598,7 +598,7 @@ export default function TeamPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
+          style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "0.75rem", padding: "1rem" }}
         >
           <h2 className="section-header flex items-center gap-2 mb-1"><BarChart3 size={13} className="text-gold" /> Team Capacity Tracker</h2>
           <p className="text-[10px] text-muted mb-4">See who has bandwidth and who is overloaded.</p>
@@ -609,7 +609,7 @@ export default function TeamPage() {
               const combinedLoad = Math.min(Math.round((taskLoad + hourLoad) / 2), 100);
               const loadLevel = combinedLoad > 80 ? "Overloaded" : combinedLoad > 50 ? "Balanced" : "Available";
               const loadColor = combinedLoad > 80 ? "text-red-400" : combinedLoad > 50 ? "text-gold" : "text-emerald-400";
-              const barColor = combinedLoad > 80 ? "#ef4444" : combinedLoad > 50 ? "#FF2D2D" : "#FF2D2D";
+              const barColor = combinedLoad > 80 ? "#ef4444" : combinedLoad > 50 ? "#CC2424" : "#16a34a";
               return (
                 <motion.div
                   key={m.id}
@@ -657,7 +657,7 @@ export default function TeamPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
           className="mt-4"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "0.75rem", padding: "1rem" }}
+          style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "0.75rem", padding: "1rem" }}
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header flex items-center gap-2 mb-0">
@@ -676,7 +676,7 @@ export default function TeamPage() {
                 transition={{ duration: 0.18, delay: index * 0.05 }}
                 whileHover={{ y: -3 }}
                 className="flex items-center gap-3 hover:border-gold/20 transition-all"
-                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "0.75rem", padding: "0.75rem" }}
+                style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "0.75rem", padding: "0.75rem" }}
               >
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold/30 to-amber-500/20 flex items-center justify-center text-gold text-xs font-bold shrink-0">
                   {m.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() || m.email[0].toUpperCase()}
@@ -693,10 +693,10 @@ export default function TeamPage() {
                   </div>
                   <p className="text-[10px] text-muted">{m.email}</p>
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
-                    {m.can_manage_clients && <span className="text-[8px] px-1 py-0.5 rounded bg-white/5 text-muted">Clients</span>}
-                    {m.can_manage_outreach && <span className="text-[8px] px-1 py-0.5 rounded bg-white/5 text-muted">Outreach</span>}
-                    {m.can_manage_content && <span className="text-[8px] px-1 py-0.5 rounded bg-white/5 text-muted">Content</span>}
-                    {m.can_manage_ads && <span className="text-[8px] px-1 py-0.5 rounded bg-white/5 text-muted">Ads</span>}
+                    {m.can_manage_clients && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Clients</span>}
+                    {m.can_manage_outreach && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Outreach</span>}
+                    {m.can_manage_content && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Content</span>}
+                    {m.can_manage_ads && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Ads</span>}
                     {m.can_view_financials && <span className="text-[8px] px-1 py-0.5 rounded bg-amber-400/10 text-amber-400">Financials</span>}
                     {m.client_access_mode === "specific" && (
                       <span className="text-[8px] px-1 py-0.5 rounded bg-blue-400/10 text-blue-400">
@@ -710,7 +710,7 @@ export default function TeamPage() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setEditingMember(m)}
-                    className="p-1.5 rounded hover:bg-white/5 text-muted hover:text-foreground"
+                    className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-muted hover:text-foreground"
                     title="Edit"
                   >
                     <Pencil size={11} />
@@ -1034,3 +1034,4 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
     </div>
   );
 }
+

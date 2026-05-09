@@ -10,49 +10,41 @@
 
 export const tokens = {
   bg: {
-    /** Base: warm-charcoal grey (not pure black) — glass panels float above.
-     *  The gap between base and surface-1 creates the "depth channel". */
-    base: "#0A0A0D",
-    surface1: "#111114",
-    surface2: "#19191D",
-    surface3: "#28282E",
+    base: "#FFFFFF",
+    surface1: "#FAFAFB",
+    surface2: "#F2F2F4",
+    surface3: "#E4E4E7",
   },
   border: {
-    subtle: "rgba(255, 255, 255, 0.07)",
-    strong: "rgba(255, 255, 255, 0.16)",
+    subtle: "rgba(0, 0, 0, 0.08)",
+    strong: "rgba(0, 0, 0, 0.16)",
   },
   text: {
-    primary: "#F0F0F4",
-    secondary: "#A8A8B2",
-    muted: "#4A4A5A",
+    primary: "#0A0A0B",
+    secondary: "#52525B",
+    muted: "#A1A1AA",
   },
   brand: {
-    /** The brand accent — PRISM RED (May 7). Sharp, distinctive, anti-AI-slop.
+    /** The brand accent — PRISM RED. Sharp, distinctive.
      *  Three variants:
-     *    accent     — #FF2D2D — primary on dark surfaces (hero red)
-     *    accentSoft — #FF6B6B — hover / highlight on dark
-     *    accentDim  — #CC2424 — primary on LIGHT surfaces (AA on white)
-     *  Prism split: red leads, then rainbow cycle for variety. */
-    accent: "#FF2D2D",
-    accentSoft: "#FF6B6B",
-    accentDim: "#CC2424",
-    accentGlow: "rgba(255, 45, 45, 0.4)",
+     *    accent     — #CC2424 — AA on white surfaces
+     *    accentSoft — #FF4040 — hover / highlight on light
+     *    accentDim  — #991B1B — deep red for emphasis */
+    accent: "#CC2424",
+    accentSoft: "#FF4040",
+    accentDim: "#991B1B",
+    accentGlow: "rgba(204, 36, 36, 0.25)",
 
-    /** Legacy alias — `tokens.brand.lime` now resolves to the prism red.
-     *  Do not introduce new uses; existing call sites are intentionally left
-     *  pointing at this so the visual system migrates without a sweeping
-     *  refactor of the 100+ pages still referencing it. */
-    lime: "#FF2D2D",
-    limeSoft: "#FF6B6B",
-    limeDim: "#CC2424",
-    limeGlow: "rgba(255, 45, 45, 0.4)",
+    lime: "#CC2424",
+    limeSoft: "#FF4040",
+    limeDim: "#991B1B",
+    limeGlow: "rgba(204, 36, 36, 0.25)",
 
-    /** Editorial complement — neutral charcoal (replaces the old plum). */
-    plum: "#1F1F23",
-    plumHover: "#2C2C32",
+    /** Editorial complement — light neutral surface. */
+    plum: "#F0F0F4",
+    plumHover: "#E4E4E7",
 
-    /** `indigo` alias — resolves to the prism red accent. */
-    indigo: "#FF2D2D",
+    indigo: "#CC2424",
   },
   status: {
     success: "#7FE5B8",

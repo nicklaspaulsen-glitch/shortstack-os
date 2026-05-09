@@ -215,7 +215,7 @@ function getLeadScore(lead: CRMLead): number {
 function getScoreInfo(score: number) {
   if (score >= 70) return { label: "HOT", color: "#ef4444", bg: "bg-red-500/10 text-red-400" };
   if (score >= 40) return { label: "WARM", color: "#f59e0b", bg: "bg-amber-500/10 text-amber-400" };
-  return { label: "COLD", color: "#FF2D2D", bg: "bg-blue-500/10 text-blue-400" };
+  return { label: "COLD", color: "#6b7280", bg: "bg-gray-500/10 text-gray-500" };
 }
 
 function getTagStyle(colorId: string) {
@@ -934,7 +934,7 @@ export default function CRMPage() {
               {STATUS_TABS.filter(t => t.key !== "all").map((t, i) => {
                 const count = statusCounts[t.key] || 0;
                 const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
-                const colors: Record<string, string> = { new: "#FF2D2D", contacted: "#f59e0b", replied: "#FF2D2D", booked: "#a855f7", converted: "#FF2D2D" };
+                const colors: Record<string, string> = { new: "#CC2424", contacted: "#f59e0b", replied: "#CC2424", booked: "#a855f7", converted: "#CC2424" };
                 return (
                   <div key={t.key} className="flex-1 group cursor-pointer" onClick={() => setActiveTab(t.key as CRMStatus)}>
                     <div className="h-2 rounded-full transition-all group-hover:h-3" style={{ background: colors[t.key], opacity: count > 0 ? 1 : 0.2 }} />
@@ -1291,7 +1291,7 @@ export default function CRMPage() {
 
           {/* ══ TABLE VIEW ══ */}
           {viewMode === "table" && (
-            <div className=" p-0 overflow-hidden border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}>
+            <div className=" p-0 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
               <div className="overflow-x-auto">
                 <table className={`w-full ${dText}`}>
                   <thead>
@@ -1335,7 +1335,7 @@ export default function CRMPage() {
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                            whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
                             onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                             {columns.filter(c => c.visible).map(col => {
                               if (col.key === "select") return (
@@ -1517,12 +1517,12 @@ export default function CRMPage() {
                 return (
                   <motion.div
                     key={lead.id}
-                    className={`rounded-xl border border-[rgba(255,255,255,0.1)] ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-gold/30 bg-gold/5" : ""}`}
-                    style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+                    className={`rounded-xl border border-[rgba(0,0,0,0.08)] ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-gold/30 bg-gold/5" : ""}`}
+                    style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
                     onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-1.5 min-w-0">
@@ -1589,7 +1589,7 @@ export default function CRMPage() {
             <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: "500px" }}>
               {STATUS_TABS.filter(t => t.key !== "all").map(stage => {
                 const stageLeads = searchFiltered.filter(l => mapToCRMStatus(l.status) === stage.key);
-                const colors: Record<string, string> = { new: "#FF2D2D", contacted: "#f59e0b", replied: "#FF2D2D", booked: "#a855f7", converted: "#FF2D2D" };
+                const colors: Record<string, string> = { new: "#CC2424", contacted: "#f59e0b", replied: "#CC2424", booked: "#a855f7", converted: "#CC2424" };
                 const color = colors[stage.key] || "#6b7280";
                 return (
                   <div key={stage.key} className="flex-shrink-0 w-[260px]">
@@ -1613,11 +1613,11 @@ export default function CRMPage() {
                         return (
                           <motion.div
                             key={lead.id}
-                            className="rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)" }}
+                            className="rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "#FFFFFF" }}
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                            whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
                             onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                             <div className="flex items-start justify-between">
                               <div className="min-w-0">
@@ -1675,7 +1675,7 @@ export default function CRMPage() {
 
         {/* ══ DETAIL SIDEBAR ══ */}
         {detailLead && (
-          <div ref={detailPanelRef} className="w-[350px] shrink-0  p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}>
+          <div ref={detailPanelRef} className="w-[350px] shrink-0  p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
             <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
               <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
               <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground" aria-label="Close detail panel"><X size={14} /></button>
@@ -2001,4 +2001,5 @@ export default function CRMPage() {
     </div>
   );
 }
+
 

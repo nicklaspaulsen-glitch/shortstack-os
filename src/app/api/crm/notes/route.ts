@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
   const { data, error } = await supabase
     .from("lead_notes")
-    .insert({ profile_id: ownerId, lead_id, body: noteBody })
+    .insert({ profile_id: ownerId, lead_id, body: noteBody.slice(0, 50_000) })
     .select()
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

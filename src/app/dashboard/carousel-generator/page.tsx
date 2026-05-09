@@ -1270,7 +1270,7 @@ export default function CarouselGeneratorPage() {
                           style={{
                             background: "rgba(255,255,255,0.2)",
                             color: colors.headline,
-                            backdropFilter: "blur(8px)",
+                            backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
                           }}
                         >
                           {slide.slideNumber}
@@ -1284,7 +1284,7 @@ export default function CarouselGeneratorPage() {
                             className="w-6 h-6 rounded-full flex items-center justify-center"
                             style={{
                               background: "rgba(255,255,255,0.2)",
-                              backdropFilter: "blur(8px)",
+                              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
                             }}
                           >
                             <Edit3 size={10} style={{ color: colors.headline }} />
@@ -1298,7 +1298,7 @@ export default function CarouselGeneratorPage() {
                             style={{
                               background: "rgba(255,255,255,0.15)",
                               color: colors.headline,
-                              backdropFilter: "blur(8px)",
+                              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
                             }}
                           >
                             {isFirst ? "Hook" : "CTA"}
@@ -1337,7 +1337,7 @@ export default function CarouselGeneratorPage() {
                                 style={{
                                   background: "rgba(255,255,255,0.2)",
                                   color: colors.headline,
-                                  backdropFilter: "blur(8px)",
+                                  backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
                                 }}
                               >
                                 <Check size={9} /> Done

@@ -637,7 +637,7 @@ export default function SequencesPage() {
         ) : (
           <ul className="space-y-1">
             {activity.map(a => (
-              <li key={a.id} className="flex items-center justify-between text-[10px] py-1 border-b border-white/[0.03] last:border-0">
+              <li key={a.id} className="flex items-center justify-between text-[10px] py-1 border-b border-black/[0.05] last:border-0">
                 <span className="flex items-center gap-2">
                   <span className={`px-1.5 py-0.5 rounded text-[9px] ${a.status === "completed" ? "bg-green-500/10 text-green-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-gray-500/10 text-gray-400"}`}>
                     {a.status || "run"}
@@ -658,7 +658,7 @@ export default function SequencesPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
           className="rounded-xl overflow-hidden p-4"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.16)" }}
+          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.12)" }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -759,8 +759,8 @@ export default function SequencesPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
-                      className="p-4 flex items-center justify-between border-b border-white/[0.05] last:border-0"
+                      whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                      className="p-4 flex items-center justify-between border-b border-black/[0.05] last:border-0"
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-2.5 h-2.5 rounded-full ${seq.active ? "bg-green-400 animate-pulse" : "bg-muted"}`} />
@@ -848,7 +848,7 @@ export default function SequencesPage() {
                         transition={{ duration: 0.18, delay: i * 0.04 }}
                         whileHover={{ y: -2 }}
                         className={`p-4 rounded-xl border ${colors.border}`}
-                        style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+                        style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
@@ -856,7 +856,7 @@ export default function SequencesPage() {
                               {STEP_ICONS[step.type]} {step.type === "wait" ? `Wait ${step.delay_days}d` : step.type === "condition" ? "Condition" : step.type}
                             </span>
                             <span className="text-[9px] text-muted">Step {i + 1}</span>
-                            {step.channel && <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-muted capitalize">{step.channel}</span>}
+                            {step.channel && <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/[0.04] text-muted capitalize">{step.channel}</span>}
                           </div>
                           <button onClick={() => removeStep(step.id)} className="text-muted hover:text-red-400 p-1"><Trash2 size={12} /></button>
                         </div>
@@ -983,7 +983,7 @@ export default function SequencesPage() {
             {templateCategories.map(c => (
               <button key={c} onClick={() => setTemplateFilter(c)}
                 className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                  templateFilter === c ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+                  templateFilter === c ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-black/[0.08]"
                 }`}>{c}</button>
             ))}
           </div>
@@ -995,7 +995,7 @@ export default function SequencesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: i * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
                 <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
                 <div className="flex items-start justify-between mb-2">
@@ -1041,7 +1041,7 @@ export default function SequencesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: i * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
                 <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
                 <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -1060,7 +1060,7 @@ export default function SequencesPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
                     className="p-3 rounded-lg bg-surface-light border border-border"
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -1167,7 +1167,7 @@ export default function SequencesPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
                     className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]"
                   >
                     <div className="flex items-center gap-2">
@@ -1274,3 +1274,4 @@ export default function SequencesPage() {
     </div>
   );
 }
+

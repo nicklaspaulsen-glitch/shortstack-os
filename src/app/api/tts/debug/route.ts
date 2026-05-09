@@ -24,6 +24,16 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Diagnostic endpoint exposes env-var presence — restrict to admin/founder only.
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+  if (!profile || !["admin", "founder"].includes(profile.role ?? "")) {
+    return NextResponse.json({ error: "Forbidden — admin only" }, { status: 403 });
+  }
+
   const probeText = "hi";
 
   const results: Record<string, { configured: boolean; reachable?: boolean; reason?: string; bytes?: number }> = {

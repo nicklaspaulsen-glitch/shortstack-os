@@ -639,7 +639,7 @@ function BrandPreviewRow({ brand }: { brand: BrandPreview }) {
         className="w-5 h-5 rounded-md shrink-0"
         style={{
           background: swatch,
-          boxShadow: `0 0 0 1px rgba(255,255,255,0.06), 0 0 8px -2px ${swatch}88`,
+          boxShadow: `0 0 0 1px rgba(0,0,0,0.08), 0 0 8px -2px ${swatch}44`,
         }}
         aria-label={`Brand color ${swatch}`}
       />

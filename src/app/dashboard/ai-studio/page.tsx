@@ -149,12 +149,12 @@ export default function AIStudioPage() {
         actions={
           <>
             {history.length > 0 && (
-              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[#FF6B6B]">
+              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#CC2424]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
                 {history.filter(j => j.status === "completed").length} done
               </span>
             )}
-            <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
+            <span className="hidden md:flex items-center gap-1 text-[10px] text-[#71717A] px-2.5 py-1 rounded-md bg-[rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.06)]">
               {TOOLS.find(t => t.id === activeTool)?.name ?? "—"}
             </span>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
@@ -208,11 +208,24 @@ export default function AIStudioPage() {
                         } ${
                           selected
                             ? "border-[#FF2D2D]/50 bg-[rgba(255,45,45,0.07)] shadow-lg shadow-[rgba(255,45,45,0.12)]"
-                            : "border-border hover:border-[#FF2D2D]/35 bg-surface-light"
+                            : isFeatured
+                              ? "border-[rgba(255,45,45,0.18)] bg-[rgba(255,45,45,0.03)] hover:border-[#FF2D2D]/40"
+                              : "border-border hover:border-[#FF2D2D]/35 bg-surface-light"
                         }`}
                       >
+                        {/* always-visible top accent on featured tiles */}
+                        {isFeatured && !selected && (
+                          <div className="absolute top-0 left-0 right-0 h-[1px] rounded-t-xl bg-gradient-to-r from-transparent via-[#FF2D2D]/40 to-transparent" />
+                        )}
+                        {/* ambient glow on featured tiles */}
+                        {isFeatured && (
+                          <>
+                            <div className="pointer-events-none absolute -right-10 -bottom-10 w-36 h-36 rounded-full bg-[#FF2D2D] opacity-[0.05] blur-3xl" />
+                            <div className="pointer-events-none absolute -left-4 -top-4 w-20 h-20 rounded-full bg-[#FF6B6B] opacity-[0.03] blur-2xl" />
+                          </>
+                        )}
                         {"badge" in t && t.badge && (
-                          <span className="absolute top-2.5 right-2.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(255,255,255,0.1)] text-[#FF2D2D]">
+                          <span className="absolute top-2.5 right-2.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(204,36,36,0.1)] text-[#CC2424]">
                             {t.badge}
                           </span>
                         )}
@@ -256,11 +269,11 @@ export default function AIStudioPage() {
                       : "e.g., A minimalist logo mockup on a black marble surface, studio lighting"
                   }
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(255,255,255,0.45)] focus:ring-2 focus:ring-[rgba(255,255,255,0.12)] transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[rgba(0,0,0,0.08)] transition-all resize-none"
                   autoFocus
                 />
               ) : (
-                <div className="card bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.15)] text-center py-8">
+                <div className="card bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.08)] text-center py-8">
                   <Upload size={28} className="mx-auto mb-2 text-[#FF2D2D]" />
                   <p className="text-sm font-semibold">
                     {TOOLS.find(t => t.id === guidedIntent)?.name} uses files — hit Finish to open the tool.
@@ -274,7 +287,7 @@ export default function AIStudioPage() {
               description: "We'll take you to the tool with everything pre-filled.",
               icon: <Wand2 size={18} />,
               component: (
-                <div className="card bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.15)] space-y-2">
+                <div className="card bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.08)] space-y-2">
                   <div className="flex items-center gap-2">
                     {(() => {
                       const t = TOOLS.find(x => x.id === guidedIntent);
@@ -331,17 +344,17 @@ export default function AIStudioPage() {
         {/* Wizard image results — inline strip above the workspace */}
         {wizardImages.length > 0 && (
           <motion.div
-            className="mb-5  p-4"
-            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            className="mb-5 p-4"
+            style={{ background: "#FAFAFB", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Sparkles size={13} className="text-[#FF6B6B]" />
-                <span className="text-sm font-semibold text-[#F5F4F1]">Latest generation</span>
-                <span className="text-[10px] text-[#9F9DAA]">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
+                <span className="text-sm font-semibold text-[#0A0A0B]">Latest generation</span>
+                <span className="text-[10px] text-[#52525B]">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
               </div>
-              <button onClick={() => setWizardImages([])} className="text-[9px] text-[#6F6D7A] hover:text-[#F5F4F1] transition-colors">
+              <button onClick={() => setWizardImages([])} className="text-[9px] text-[#71717A] hover:text-[#0A0A0B] transition-colors">
                 Clear
               </button>
             </div>
@@ -362,35 +375,69 @@ export default function AIStudioPage() {
           </motion.div>
         )}
 
+        {/* Editorial stats strip — shown when there's job history */}
+        {history.length > 0 && (
+          <motion.div
+            className="grid grid-cols-3 gap-2 mb-4"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {[
+              { label: "Jobs Run", value: String(history.length), sub: "this session" },
+              { label: "Completed", value: String(history.filter(j => j.status === "completed").length), sub: `${Math.round((history.filter(j => j.status === "completed").length / history.length) * 100)}% success` },
+              { label: "Active Tool", value: TOOLS.find(t => t.id === activeTool)?.name ?? "—", sub: TOOLS.find(t => t.id === activeTool)?.tag ?? "" },
+            ].map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                className="relative rounded-xl border border-[rgba(0,0,0,0.08)] px-4 py-3 overflow-hidden"
+                style={{ background: "#FFFFFF" }}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.24, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {i === 0 && <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] to-transparent" />}
+                <p className="text-[8px] uppercase tracking-[0.18em] text-[#71717A] mb-1">{stat.label}</p>
+                <p className="font-display text-lg font-bold text-[#CC2424] tracking-tight tabular-nums truncate">{stat.value}</p>
+                <p className="text-[9px] text-[#5A5A68] truncate">{stat.sub}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+
         {/* Category filter pills */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5 p-1 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)" }}>
             {(["all", "visual", "audio", "utility"] as ToolCategory[]).map(cat => (
               <button
                 key={cat}
                 onClick={() => setToolCategory(cat)}
-                className={`text-[9px] font-semibold px-2.5 py-1.5 rounded-lg transition-all capitalize ${
+                className={`relative text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all capitalize ${
                   toolCategory === cat
-                    ? "bg-[#FF2D2D] text-white"
-                    : "text-[#6F6D7A] bg-[rgba(255,255,255,0.04)] hover:text-[#9F9DAA] border border-[rgba(255,255,255,0.05)]"
+                    ? "text-white"
+                    : "text-[#71717A] hover:text-[#52525B]"
                 }`}
+                style={toolCategory === cat ? {
+                  background: "linear-gradient(180deg, #FF4040 0%, #CC2424 100%)",
+                  boxShadow: "0 1px 0 rgba(255,255,255,0.15) inset, 0 2px 8px rgba(255,45,45,0.35)",
+                } : undefined}
               >
-                {cat === "all" ? "All 9" : cat}
+                {cat === "all" ? "All" : cat}
               </button>
             ))}
           </div>
-          <span className="text-[9px] text-[#6F6D7A]">
+          <span className="text-[10px] font-mono text-[#5A5A68]">
             {TOOLS.filter(t => toolCategory === "all" || TOOL_CATEGORIES[t.id] === toolCategory).length} tools
           </span>
         </div>
 
-        {/* COMMAND CENTER: compact tool rail left + workspace right — Higgsfield split pane */}
-        <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-3 items-start">
+        {/* COMMAND CENTER: tool rail left + workspace center + history right */}
+        <div className={`grid grid-cols-1 gap-3 items-start ${history.length > 0 ? "md:grid-cols-[200px_1fr_188px]" : "md:grid-cols-[200px_1fr]"}`}>
 
           {/* Left: vertical tool list */}
-          <div className=" overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <div className="overflow-hidden" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
             <div className="px-3 pt-3 pb-1">
-              <p className="text-[8px] uppercase tracking-[0.2em] text-[#6F6D7A] font-semibold px-1 mb-2">Tools</p>
+              <p className="text-[8px] uppercase tracking-[0.2em] text-[#71717A] font-semibold px-1 mb-2">Tools</p>
             </div>
             <div className="px-2 pb-3 space-y-0.5">
               {TOOLS.filter(t => toolCategory === "all" || TOOL_CATEGORIES[t.id] === toolCategory).map((tool, i) => {
@@ -408,15 +455,15 @@ export default function AIStudioPage() {
                     }}
                     className={`relative w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl border ${
                       active
-                        ? "border-[rgba(255,255,255,0.18)]"
-                        : "hover:bg-[rgba(255,255,255,0.03)] border-transparent"
+                        ? "border-[rgba(0,0,0,0.12)]"
+                        : "hover:bg-[rgba(0,0,0,0.02)] border-transparent"
                     }`}
                   >
                     {active && (
                       <>
                         <motion.div
                           layoutId="tool-active-bg"
-                          className="absolute inset-0 rounded-xl bg-[rgba(255,255,255,0.07)]"
+                          className="absolute inset-0 rounded-xl bg-[rgba(0,0,0,0.04)]"
                           transition={{ type: "spring", stiffness: 380, damping: 32 }}
                         />
                         <motion.div
@@ -433,13 +480,13 @@ export default function AIStudioPage() {
                       <Icon size={12} style={{ color: active ? "#FF2D2D" : tool.color }} />
                     </div>
                     <div className="relative z-10 min-w-0 flex-1">
-                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#FF2D2D]" : "text-[#F5F4F1]"}`}>
+                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#CC2424]" : "text-[#0A0A0B]"}`}>
                         {tool.name}
                       </p>
-                      <p className="text-[8px] font-mono text-[#6F6D7A] truncate">{tool.tag}</p>
+                      <p className="text-[8px] font-mono text-[#71717A] truncate">{tool.tag}</p>
                     </div>
                     {"badge" in tool && tool.badge && (
-                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(255,255,255,0.1)] text-[#FF2D2D] shrink-0">
+                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(0,0,0,0.05)] text-[#FF2D2D] shrink-0">
                         Biz+
                       </span>
                     )}
@@ -453,12 +500,12 @@ export default function AIStudioPage() {
           <div
             ref={toolPanelRef}
             className="relative overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
           >
             {/* Prism accent top bar */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF6B6B] to-[#CC2424]" />
             {/* Tool header */}
-            <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[rgba(255,255,255,0.05)]">
+            <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[rgba(0,0,0,0.06)]">
               {(() => {
                 const t = TOOLS.find(x => x.id === activeTool);
                 if (!t) return null;
@@ -469,11 +516,11 @@ export default function AIStudioPage() {
                       <Icon size={14} style={{ color: t.color }} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-bold text-[#F5F4F1] leading-tight">{t.name}</p>
-                      <p className="text-[9px] font-mono text-[#6F6D7A]">{t.tag}</p>
+                      <p className="text-sm font-bold text-[#0A0A0B] leading-tight">{t.name}</p>
+                      <p className="text-[9px] font-mono text-[#71717A]">{t.tag}</p>
                     </div>
                     {"badge" in t && t.badge && (
-                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.08)] text-[#FF2D2D] border border-[rgba(255,255,255,0.2)]">
+                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.05)] text-[#CC2424] border border-[rgba(0,0,0,0.10)]">
                         {t.badge}
                       </span>
                     )}
@@ -506,6 +553,60 @@ export default function AIStudioPage() {
               </motion.div>
             </AnimatePresence>
           </div>
+
+          {/* Right: history panel — only rendered when jobs exist */}
+          {history.length > 0 && (
+            <motion.div
+              className="hidden md:flex flex-col gap-2 overflow-hidden"
+              style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
+              initial={{ opacity: 0, x: 12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="px-3 pt-3 pb-1 border-b border-[rgba(0,0,0,0.06)]">
+                <div className="flex items-center justify-between">
+                  <p className="text-[8px] uppercase tracking-[0.2em] text-[#71717A] font-bold">History</p>
+                  <span className="text-[8px] font-mono text-[#71717A]">{history.length}</span>
+                </div>
+              </div>
+              <div className="px-2 pb-3 space-y-1.5 overflow-y-auto max-h-[640px]">
+                {history.slice().reverse().map((job, i) => (
+                  <motion.div
+                    key={job.id}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.18, delay: i * 0.04 }}
+                    className="relative rounded-xl overflow-hidden border border-[rgba(0,0,0,0.06)] cursor-pointer hover:border-[rgba(0,0,0,0.12)] transition-all"
+                    style={{ background: "rgba(0,0,0,0.02)" }}
+                  >
+                    {job.result && (job.type === "image-gen" || job.type === "upscale" || job.type === "remove-bg" || job.type === "img-to-video") ? (
+                      <SafeThumb
+                        src={job.result}
+                        alt={`${job.type} result`}
+                        className="w-full"
+                        style={{ aspectRatio: "1/1", objectFit: "cover" }}
+                        wrapperClassName="w-full"
+                      />
+                    ) : (
+                      <div className="flex flex-col gap-1 p-2.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${job.status === "completed" ? "bg-emerald-500" : job.status === "failed" ? "bg-red-500" : "bg-[#CC2424] animate-pulse"}`} />
+                          <span className="text-[9px] font-semibold text-[#52525B] truncate">{job.type}</span>
+                        </div>
+                        <p className="text-[8px] text-[#71717A] font-mono truncate">{job.status}</p>
+                      </div>
+                    )}
+                    {/* Status overlay on visual jobs */}
+                    {job.result && (
+                      <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1" style={{ background: "linear-gradient(transparent, rgba(255,255,255,0.85))" }}>
+                        <p className="text-[7px] font-mono text-[#52525B] truncate">{job.type}</p>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
 
         </div>
       </div>
@@ -654,7 +755,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         {/* Output */}
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22, delay: 0.08 }}
@@ -876,7 +977,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {images.length > 0 ? (
@@ -1047,7 +1148,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1164,7 +1265,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
         </div>
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: !result ? "rgba(255,255,255,0.035)" : bgColor ? bgColor : "repeating-conic-gradient(#e0e0e0 0% 25%, #f8f8f8 0% 50%) 50% / 16px 16px", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: !result ? "#FAFAFB" : bgColor ? bgColor : "repeating-conic-gradient(#e0e0e0 0% 25%, #f8f8f8 0% 50%) 50% / 16px 16px", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1228,13 +1329,13 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
       >
         <Film size={16} className="text-[#FF6B6B]" />
         <h2 className="text-sm font-bold text-foreground">Image to Video</h2>
-        <span className="text-[9px] bg-[rgba(255,255,255,0.08)] text-[#FF6B6B] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
+        <span className="text-[9px] bg-[rgba(0,0,0,0.05)] text-[#CC2424] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(255,255,255,0.3)] transition-all">
+            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(0,0,0,0.20)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { setFile(f); setPreview(URL.createObjectURL(f)); setResult(null); } }} />
             {preview ? (
               /* eslint-disable-next-line @next/next/no-img-element */
@@ -1271,7 +1372,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
         </div>
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1377,7 +1478,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex flex-col items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1549,7 +1650,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
           </div>
           <motion.div
             className="rounded-xl p-4 flex items-center justify-center"
-            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
           >
             {result ? (
@@ -1626,13 +1727,13 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
       >
         <Brain size={16} className="text-[#FF6B6B]" />
         <h2 className="text-sm font-bold text-foreground">Brand LoRA Training</h2>
-        <span className="text-[9px] bg-[rgba(255,255,255,0.08)] text-[#FF6B6B] px-2 py-0.5 rounded-full">Business+ Only</span>
+        <span className="text-[9px] bg-[rgba(0,0,0,0.05)] text-[#CC2424] px-2 py-0.5 rounded-full">Business+ Only</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(255,255,255,0.3)] transition-all">
+            className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(0,0,0,0.3)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
             <Layers size={24} className="mx-auto mb-2 text-muted" />
             <p className="text-xs text-foreground font-medium">
@@ -1683,7 +1784,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           <h3 className="text-xs font-semibold text-foreground mb-3">How it works</h3>
@@ -1695,7 +1796,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
               { step: 4, text: "Use the trained LoRA in Design Studio & Thumbnail Generator" },
             ].map(({ step, text }) => (
               <div key={step} className="flex items-start gap-2">
-                <div className="w-5 h-5 rounded-full bg-[rgba(255,255,255,0.08)] flex items-center justify-center shrink-0">
+                <div className="w-5 h-5 rounded-full bg-[rgba(0,0,0,0.05)] flex items-center justify-center shrink-0">
                   <span className="text-[9px] font-bold text-[#FF6B6B]">{step}</span>
                 </div>
                 <p className="text-[10px] text-muted leading-relaxed">{text}</p>
@@ -1703,7 +1804,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
             ))}
           </div>
           {trainingStatus && (
-            <div className="mt-4 p-3 rounded-lg bg-[rgba(255,255,255,0.08)] text-xs text-[#FF6B6B]">
+            <div className="mt-4 p-3 rounded-lg bg-[rgba(204,36,36,0.06)] text-xs text-[#CC2424]">
               {trainingStatus}
             </div>
           )}
@@ -1817,7 +1918,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           <h3 className="text-xs font-semibold text-foreground mb-3">Queue ({results.length})</h3>

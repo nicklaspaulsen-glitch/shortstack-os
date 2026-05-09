@@ -123,7 +123,7 @@ export default function VerticalsIndexPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d]">
+    <div className="min-h-screen bg-[#FAFAFB]">
       <PageHero
         title="Vertical Templates"
         subtitle="Pre-configured ShortStack OS bundles for specific agency niches. Pick a vertical, choose modules, and we provision automations, content, scripts, and a course in your tenant — typically a 5-day onboarding compressed into 5 minutes."
@@ -141,11 +141,11 @@ export default function VerticalsIndexPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className=" bg-white/5 h-72 animate-pulse" />
+              <div key={i} className=" bg-black/5 h-72 animate-pulse" />
             ))}
           </div>
         ) : verticals.length === 0 ? (
-          <div className="text-center py-24 text-white/40">
+          <div className="text-center py-24 text-black/40">
             <Briefcase size={48} className="mx-auto mb-4 opacity-30" />
             <p className="text-lg">No vertical templates available</p>
           </div>
@@ -185,10 +185,10 @@ export default function VerticalsIndexPage() {
                     <Icon size={22} />
                   </div>
 
-                  <h2 className="text-xl font-semibold text-white mb-1">
+                  <h2 className="text-xl font-semibold text-[#0A0A0B] mb-1">
                     {v.display_name}
                   </h2>
-                  <p className="text-sm text-white/60 mb-5">{v.tagline}</p>
+                  <p className="text-sm text-black/60 mb-5">{v.tagline}</p>
 
                   {/* Counts grid */}
                   <div className="grid grid-cols-3 gap-2 mb-5">
@@ -201,10 +201,10 @@ export default function VerticalsIndexPage() {
                   </div>
 
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-white/40">
+                    <span className="text-black/40">
                       Course: {v.counts.course_modules} modules · {v.counts.course_lessons} lessons
                     </span>
-                    <span className="inline-flex items-center gap-1 text-white/80 group-hover:text-white">
+                    <span className="inline-flex items-center gap-1 text-black/65 group-hover:text-[#0A0A0B]">
                       Configure
                       <ArrowRight
                         size={14}
@@ -226,8 +226,8 @@ export default function VerticalsIndexPage() {
 function CountTile({ label, value }: { label: string; value: number }) {
   return (
     <div className="glass rounded-lg px-3 py-2">
-      <div className="text-lg font-semibold text-white">{value}</div>
-      <div className="text-[10px] uppercase tracking-wide text-white/50">{label}</div>
+      <div className="text-lg font-semibold text-[#0A0A0B]">{value}</div>
+      <div className="text-[10px] uppercase tracking-wide text-black/50">{label}</div>
     </div>
   );
 }

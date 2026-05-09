@@ -1422,7 +1422,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h2 className="section-header flex items-center gap-2 mb-3"><Type size={13} className="text-indigo-400" /> Script Type</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -1447,7 +1447,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.04 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h2 className="section-header flex items-center gap-2 mb-3"><Target size={13} className="text-indigo-400" /> Script Framework</h2>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
@@ -1469,7 +1469,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.08 }}
               className="rounded-xl p-5 space-y-3"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h2 className="section-header">Script Details</h2>
               <div className="grid grid-cols-3 gap-3">
@@ -1477,7 +1477,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Platform</label>
                   <select value={config.platform} onChange={e => setConfig({ ...config, platform: e.target.value })}
                     className="w-full text-xs rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
-                    style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                    style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
                     {PLATFORMS.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
                 </div>
@@ -1485,7 +1485,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Tone</label>
                   <select value={config.tone} onChange={e => setConfig({ ...config, tone: e.target.value })}
                     className="w-full text-xs rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
-                    style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                    style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
                     {TONES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
                   </select>
                 </div>
@@ -1493,7 +1493,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Target Audience</label>
                   <input value={config.target_audience} onChange={e => setConfig({ ...config, target_audience: e.target.value })}
                     className="w-full text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="e.g., business owners 30-50"
-                  style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }} />
+                  style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }} />
                 </div>
               </div>
               <div>
@@ -1510,11 +1510,11 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 </div>
                 <input value={config.topic} onChange={e => setConfig({ ...config, topic: e.target.value })}
                   className="w-full text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="e.g., Why most dental practices fail at social media"
-                  style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }} />
+                  style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }} />
                 <div className="flex flex-wrap gap-1 mt-1.5">
                   {topicPresets.map((t, i) => (
                     <button key={i} onClick={() => setConfig({ ...config, topic: t })}
-                      className="text-[8px] px-2 py-0.5 rounded bg-white/[0.03] border border-white/[0.06] text-muted hover:text-foreground hover:border-indigo-500/20 transition-all">
+                      className="text-[8px] px-2 py-0.5 rounded bg-black/[0.03] border border-black/[0.06] text-muted hover:text-foreground hover:border-indigo-500/20 transition-all">
                       {t}
                     </button>
                   ))}
@@ -1524,7 +1524,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Pain Points to Address</label>
                 <input value={config.pain_points} onChange={e => setConfig({ ...config, pain_points: e.target.value })}
                   className="w-full text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="e.g., no time, don't know what to post, not getting engagement"
-                  style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }} />
+                  style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }} />
               </div>
               <div>
                 <div className="flex items-center justify-between mb-1">
@@ -1533,7 +1533,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 </div>
                 <textarea value={config.viral_reference} onChange={e => setConfig({ ...config, viral_reference: e.target.value })}
                   className="w-full h-14 text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all resize-none" placeholder="Paste a viral video concept, hook, or transcript to remix with your own angle..."
-                  style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }} />
+                  style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }} />
               </div>
             </motion.div>
 
@@ -1543,7 +1543,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.12 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h2 className="section-header flex items-center gap-2 mb-2"><Clapperboard size={13} className="text-indigo-400" /> Storyboard Format (for visual breakdown)</h2>
               <p className="text-[9px] text-muted mb-2">Pick the visual style your storyboard will follow. You can generate a shot-by-shot breakdown after your script is created.</p>
@@ -1569,7 +1569,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.16 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h2 className="section-header flex items-center gap-2 mb-3"><Wand2 size={13} className="text-indigo-400" /> AI Options</h2>
               <div className="flex flex-wrap gap-3">
@@ -1620,7 +1620,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <div className="h-px bg-gradient-to-r from-indigo-500 via-violet-400 to-indigo-500 mb-3 rounded-full" />
               <h3 className="section-header flex items-center gap-2 mb-2"><Zap size={12} className="text-indigo-400" /> Pro Tips</h3>
@@ -1639,19 +1639,19 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.1 }}
                 className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
                 <h3 className="section-header flex items-center gap-2 mb-2"><Search size={12} className="text-indigo-400" /> From Research</h3>
-                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
                   {research.opportunities.slice(0, 4).map((opp, i) => (
                     <motion.button
                       key={i}
                       initial={{ opacity: 0, x: -16 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.12 + i * 0.04, duration: 0.28 }}
-                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
                       onClick={() => setConfig({ ...config, topic: opp })}
-                      className="w-full text-left text-[10px] p-2.5 border-b border-white/5 last:border-0 transition-all"
+                      className="w-full text-left text-[10px] p-2.5 border-b border-black/[0.05] last:border-0 transition-all"
                     >
                       {opp}
                     </motion.button>
@@ -3005,3 +3005,4 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
     </div>
   );
 }
+

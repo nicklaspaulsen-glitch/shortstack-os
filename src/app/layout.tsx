@@ -76,7 +76,7 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("ss-theme")||"nordic";var l=(t==="nordic"||t==="light");document.documentElement.setAttribute("data-theme",l?"light":"dark");if(!l){document.documentElement.style.backgroundColor="#0A0A0D";}}catch(e){}})();`,
+            __html: `document.documentElement.setAttribute("data-theme","light");document.documentElement.style.backgroundColor="#FFFFFF";`,
           }}
         />
         {/* Apr 28 v5: non-blocking font loading.

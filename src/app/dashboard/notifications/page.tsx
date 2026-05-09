@@ -305,13 +305,13 @@ export default function NotificationsPage() {
         actions={
           <>
             {unreadCount > 0 && (
-              <span className="text-[10px] font-medium text-white bg-white/15 border border-white/25 px-2.5 py-1 rounded-full">
+              <span className="text-[10px] font-medium text-[#0A0A0B] bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] px-2.5 py-1 rounded-full">
                 {unreadCount} unread
               </span>
             )}
             <button
               onClick={() => fetchNotifications()}
-              className="p-2 rounded-xl text-white bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
+              className="p-2 rounded-xl text-[#0A0A0B] bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.09)] transition-colors"
               title="Refresh"
             >
               <RefreshCw size={14} />
@@ -321,7 +321,7 @@ export default function NotificationsPage() {
                 <button
                   onClick={markAllRead}
                   disabled={markingAll}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-white bg-white/15 border border-white/25 hover:bg-white/25 transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-[#0A0A0B] bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.10)] transition-colors disabled:opacity-50"
                 >
                   {markingAll ? <Loader size={12} className="animate-spin" /> : <Check size={12} />}
                   Mark All Read
@@ -437,7 +437,7 @@ export default function NotificationsPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                       className={`glass rounded-xl group relative overflow-hidden transition-all duration-200 hover:shadow-md ${
                         !n.read
                           ? "border-l-2 border-l-indigo-500"
@@ -535,7 +535,7 @@ export default function NotificationsPage() {
               >
                 <div
                   className="absolute top-0 left-0 right-0"
-                  style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }}
+                  style={{ height: 3, background: "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)" }}
                 />
                 <div className="flex items-center justify-center gap-1.5 mb-1 mt-1">
                   <span className="text-muted">{tab.icon}</span>

@@ -1041,7 +1041,7 @@ export default function NewsletterPage() {
 
           {/* Email client chrome */}
           <div className="flex justify-center">
-            <div className={`bg-[#1a1c23]  shadow-2xl overflow-hidden transition-all duration-300 ${previewMode === "desktop" ? "w-full max-w-2xl" : "w-[375px]"}`}>
+            <div className={`bg-[#FAFAFB]  shadow-2xl overflow-hidden transition-all duration-300 ${previewMode === "desktop" ? "w-full max-w-2xl" : "w-[375px]"}`}>
               {/* Window chrome */}
               <div className="bg-surface p-3 border-b border-border">
                 <div className="flex items-center gap-2">
@@ -1057,14 +1057,14 @@ export default function NewsletterPage() {
               </div>
 
               {/* Email header bar */}
-              <div className="p-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                <p className="text-sm font-semibold text-white mb-1">{subject || "No subject"}</p>
-                <p className="text-[10px] text-white/40">From: ShortStack &lt;hello@shortstack.work&gt;</p>
-                <p className="text-[10px] text-white/40">To: {selectedList?.label} ({selectedList?.count} recipients)</p>
+              <div className="p-4 border-b" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
+                <p className="text-sm font-semibold text-[#0A0A0B] mb-1">{subject || "No subject"}</p>
+                <p className="text-[10px] text-[#0A0A0B]/40">From: ShortStack &lt;hello@shortstack.work&gt;</p>
+                <p className="text-[10px] text-[#0A0A0B]/40">To: {selectedList?.label} ({selectedList?.count} recipients)</p>
               </div>
 
               {/* Rendered newsletter */}
-              <div className="p-4 bg-[#f5f3ee]">
+              <div className="p-4 bg-[#F2F2F4]">
                 {/* Render each block as a real-email-looking preview */}
                 <div className="mx-auto bg-white rounded-xl overflow-hidden shadow-sm" style={{ maxWidth: previewMode === "desktop" ? 580 : "100%", border: "1px solid #e8e5e0" }}>
                   {blocks.map(block => (

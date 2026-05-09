@@ -181,17 +181,14 @@ export default function StatCard({
       // May 7 v3: Window-glass depth — frosted glass floating above grey
       // base with multi-layer drop shadows + inner top-edge light.
       style={{
-        background: "rgba(255,255,255,0.04)",
-        backdropFilter: "blur(20px) saturate(1.15)",
-        WebkitBackdropFilter: "blur(20px) saturate(1.15)",
-        border: `1px solid rgba(255,255,255,0.08)`,
-        borderTopColor: "rgba(255,255,255,0.14)",
+        background: "#FFFFFF",
+        border: `1px solid rgba(0,0,0,0.08)`,
+        borderTopColor: "rgba(0,0,0,0.12)",
+        borderRadius: "12px",
         boxShadow: [
-          "inset 0 1px 0 rgba(255,255,255,0.06)",
-          "0 1px 2px rgba(0,0,0,0.3)",
-          "0 4px 16px rgba(0,0,0,0.25)",
-          "0 12px 40px -8px rgba(0,0,0,0.4)",
-          `0 0 24px -8px ${accent}14`,
+          "0 1px 3px rgba(0,0,0,0.06)",
+          "0 4px 12px -4px rgba(0,0,0,0.08)",
+          "0 12px 32px -8px rgba(0,0,0,0.10)",
         ].join(", "),
       }}
       initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
@@ -204,15 +201,12 @@ export default function StatCard({
       data-premium={premium ? "true" : undefined}
       whileHover={{
         y: -3,
-        borderColor: "rgba(255,255,255,0.18)",
+        borderColor: "rgba(0,0,0,0.14)",
         boxShadow: [
-          "inset 0 1px 0 rgba(255,255,255,0.1)",
-          "0 2px 4px rgba(0,0,0,0.35)",
-          "0 8px 24px rgba(0,0,0,0.3)",
-          "0 20px 48px -12px rgba(0,0,0,0.5)",
-          `0 0 32px -8px ${accent}20`,
+          "0 2px 8px rgba(0,0,0,0.10)",
+          "0 8px 24px rgba(0,0,0,0.12)",
+          "0 20px 48px -12px rgba(0,0,0,0.14)",
         ].join(", "),
-        // Premium expo-out — snappy, confident hover response
         transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
       }}
     >
@@ -238,7 +232,7 @@ export default function StatCard({
         <div className="flex items-center justify-between mb-2">
           <span
             className="text-[11px] font-medium uppercase tracking-[1.2px]"
-            style={{ color: "#4A4A5A" }}
+            style={{ color: "#71717A" }}
           >
             {label}
           </span>
@@ -255,7 +249,7 @@ export default function StatCard({
         </div>
         <span
           className={`${SIZE_VALUE_CLASS[size]} tracking-[-0.5px] tabular-nums`}
-          style={{ color: "#F0F0F4", fontFamily: "'JetBrains Mono', monospace", fontVariantNumeric: "tabular-nums" }}
+          style={{ color: "#0A0A0B", fontFamily: "'JetBrains Mono', monospace", fontVariantNumeric: "tabular-nums" }}
         >
           {typeof value === "string" && value.startsWith("$")
             ? `$${animatedNum.toLocaleString()}`

@@ -925,7 +925,7 @@ export default function OutreachHubPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22 }}
               className="rounded-xl p-5 space-y-5"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h3 className="text-sm font-semibold flex items-center gap-2">
                 <Zap size={14} className="text-indigo-400" /> New Campaign
@@ -1081,7 +1081,7 @@ export default function OutreachHubPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: index * 0.05 }}
               className="rounded-xl overflow-hidden space-y-3 p-4"
-              style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               {/* Campaign header */}
               <div className="flex items-center justify-between">
@@ -1188,7 +1188,7 @@ export default function OutreachHubPage() {
                 transition={{ duration: 0.2, delay: index * 0.05 }}
                 whileHover={{ scale: 1.01, y: -2 }}
                 className={`text-left p-4 rounded-xl border transition-all ${
-                  activeSequence === seq.id ? "bg-[rgba(255,255,255,0.04)] backdrop-blur-[20px] border-[rgba(255,255,255,0.16)]" : "bg-[rgba(255,255,255,0.035)] backdrop-blur-[16px] border-[rgba(255,255,255,0.1)] hover:border-white/20"
+                  activeSequence === seq.id ? "bg-[rgba(0,0,0,0.03)] backdrop-blur-[20px] border-[rgba(0,0,0,0.12)]" : "bg-[rgba(255,255,255,0.9)] backdrop-blur-[16px] border-[rgba(0,0,0,0.10)] hover:border-black/20"
                 }`}>
                 <div className="flex items-center justify-between mb-1">
                   <h3 className={`text-xs font-semibold ${activeSequence === seq.id ? "text-gold" : ""}`}>{seq.name}</h3>
@@ -1232,7 +1232,7 @@ export default function OutreachHubPage() {
                       <span className={`text-[8px] font-bold ${idx === 0 ? "text-indigo-400" : "text-muted"}`}>{step.day}</span>
                     </div>
                     {/* Content */}
-                    <div className="flex-1 rounded-lg p-3 border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(20px)" }}>
+                    <div className="flex-1 rounded-lg p-3 border border-[rgba(0,0,0,0.10)]" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}>
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`${channelColor(step.channel)}`}>{channelIcon(step.channel, 12)}</span>
                         <span className="text-[10px] font-semibold capitalize">{step.channel}</span>
@@ -1720,14 +1720,14 @@ export default function OutreachHubPage() {
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
                 className="rounded-xl overflow-hidden relative"
-                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
                 <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
                 <div className="p-4">
                   <p className="text-[10px] text-muted mb-1">{stat.label}</p>
                   <p className="text-xl font-bold">{stat.value}</p>
                   <div className="flex items-center gap-1 mt-1">
-                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-white/5 text-muted">{stat.change}</span>
+                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-black/[0.04] text-muted">{stat.change}</span>
                     <span className="text-[9px] text-muted">vs last period</span>
                   </div>
                 </div>
@@ -1741,7 +1741,7 @@ export default function OutreachHubPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, delay: 0.3 }}
             className="rounded-xl overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
           >
             <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
             <div className="p-4 space-y-4">
@@ -1831,7 +1831,7 @@ export default function OutreachHubPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, delay: 0.5 }}
             className="rounded-xl p-6 text-center"
-            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
           >
             <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-3">
               <Star size={20} className="text-indigo-400" />
@@ -2051,3 +2051,4 @@ export default function OutreachHubPage() {
     </div>
   );
 }
+

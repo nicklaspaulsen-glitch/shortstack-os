@@ -311,7 +311,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.2)" }}
+          className="rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
         >
           <div className="flex items-center gap-2 mb-3">
             <Users size={16} className="text-gold" />
@@ -361,8 +361,8 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                 transition={{ delay: i * 0.06 }}
                 whileHover={{ y: -2, scale: 1.01 }}
                 onClick={() => setSelectedProfile(p.id)}
-                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
-                className={`rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "!border-indigo-500/40 bg-indigo-500/8" : "hover:border-white/10"}`}
+                style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
+                className={`rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "!border-indigo-500/40 bg-indigo-500/8" : "hover:border-[rgba(0,0,0,0.12)]"}`}
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -392,13 +392,13 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
           {profile ? (
             <>
               {/* Tabs */}
-              <div className="flex gap-1 bg-white/5 rounded-lg p-1">
+              <div className="flex gap-1 bg-[rgba(0,0,0,0.05)] rounded-lg p-1">
                 {TABS.map(t => (
                   <button
                     key={t.key}
                     onClick={() => setTab(t.key)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-all ${
-                      tab === t.key ? "bg-gold/20 text-gold" : "text-muted hover:text-white"
+                      tab === t.key ? "bg-gold/20 text-gold" : "text-muted hover:text-[#0A0A0B]"
                     }`}
                   >
                     {t.icon} {t.label}
@@ -426,13 +426,13 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           <ChevronDown size={12} />
                         </button>
                         {showPresetMenu && (
-                          <div className="absolute right-0 top-full mt-1 bg-[#1a1a2e] border border-white/10 rounded-lg shadow-xl z-10 min-w-[160px]">
+                          <div className="absolute right-0 top-full mt-1 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg shadow-xl z-10 min-w-[160px]">
                             {VOICE_PRESETS.map(p => (
                               <button
                                 key={p.key}
                                 onClick={() => applyPreset(p.key)}
-                                className={`w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-white/5 transition-colors ${
-                                  profile.preset === p.key ? "text-gold" : "text-white"
+                                className={`w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-[rgba(0,0,0,0.04)] transition-colors ${
+                                  profile.preset === p.key ? "text-gold" : "text-[#0A0A0B]"
                                 }`}
                               >
                                 {p.icon} {p.label}
@@ -505,10 +505,10 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                     </div>
                     {profile.guidelines ? (
                       <div className="relative">
-                        <pre className="text-xs text-muted whitespace-pre-wrap bg-white/5 rounded-lg p-3 max-h-60 overflow-y-auto">{profile.guidelines}</pre>
+                        <pre className="text-xs text-muted whitespace-pre-wrap bg-[rgba(0,0,0,0.05)] rounded-lg p-3 max-h-60 overflow-y-auto">{profile.guidelines}</pre>
                         <button
                           onClick={() => { navigator.clipboard.writeText(profile.guidelines); toast.success("Copied to clipboard"); }}
-                          className="absolute top-2 right-2 p-1 rounded bg-white/10 hover:bg-white/20 transition-colors"
+                          className="absolute top-2 right-2 p-1 rounded bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.10)] transition-colors"
                         >
                           <Copy size={12} />
                         </button>
@@ -759,7 +759,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           {checkerResult.score}/100
                         </div>
                       </div>
-                      <div className="w-full bg-white/10 rounded-full h-2 mb-4">
+                      <div className="w-full bg-[rgba(0,0,0,0.08)] rounded-full h-2 mb-4">
                         <div
                           className={`h-2 rounded-full transition-all ${
                             checkerResult.score >= 80 ? "bg-green-400" :
@@ -806,3 +806,4 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
     </div>
   );
 }
+

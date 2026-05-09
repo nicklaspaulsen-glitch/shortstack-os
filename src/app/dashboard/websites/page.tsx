@@ -853,14 +853,14 @@ export default function WebsitesPage() {
         gradient="sunset"
         actions={
           <>
-            <div className="flex items-center gap-1.5 text-[10px] text-white/80 bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
+            <div className="flex items-center gap-1.5 text-[10px] text-black/65 bg-black/8 border border-black/15 px-2 py-1 rounded-lg">
               <VercelIcon size={12} /> Vercel
               <span className="opacity-40">&middot;</span>
               <GoDaddyIcon size={12} /> GoDaddy
             </div>
             <button
               onClick={startBlank}
-              className="text-xs px-3 py-2 rounded-lg border border-white/25 text-white/90 hover:bg-white/10 hover:border-white/40 flex items-center gap-1.5"
+              className="text-xs px-3 py-2 rounded-lg border border-black/20 text-[#0A0A0B] hover:bg-black/8 hover:border-black/30 flex items-center gap-1.5"
             >
               <Plus size={13} /> Build from scratch
             </button>
@@ -947,12 +947,12 @@ export default function WebsitesPage() {
                 type="button"
                 onClick={() => setNicheFilter(filterKey)}
                 className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF2D2D]/60"
-                style={{ color: isActive ? "#FF2D2D" : "rgba(255,255,255,0.45)" }}
+                style={{ color: isActive ? "#CC2424" : "rgba(0,0,0,0.40)" }}
               >
                 {isActive && (
                   <motion.span
                     layoutId="niche-filter-pill"
-                    className="absolute inset-0 rounded-full border border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.08)]"
+                    className="absolute inset-0 rounded-full border border-[rgba(0,0,0,0.12)] bg-[rgba(0,0,0,0.06)]"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -1074,7 +1074,7 @@ export default function WebsitesPage() {
                   href={active.preview_url || active.vercel_url || "#"}
                   target="_blank"
                   rel="noopener"
-                  className="text-[10px] px-3 py-2 rounded-lg bg-white/5 border border-border text-foreground hover:bg-white/10 flex items-center gap-1"
+                  className="text-[10px] px-3 py-2 rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/8 flex items-center gap-1"
                 >
                   <ExternalLink size={11} /> View demo
                 </a>
@@ -1470,7 +1470,7 @@ function PricingModal({
             </h2>
             <p className="text-[11px] text-muted">{project.name} — pick a plan to go live.</p>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/5"><X size={14} /></button>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-black/5"><X size={14} /></button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

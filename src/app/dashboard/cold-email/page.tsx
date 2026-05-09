@@ -201,7 +201,7 @@ export default function ColdEmailPage() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <button
               onClick={() => setShowCreate((v) => !v)}
-              className="text-[11px] px-3 py-1.5 rounded-lg bg-white/15 text-white border border-white/25 hover:bg-white/25 transition-all flex items-center gap-1.5"
+              className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-[#0A0A0B] border border-black/20 hover:bg-black/15 transition-all flex items-center gap-1.5"
             >
               <Sparkles size={11} />
               New Campaign
@@ -223,7 +223,7 @@ export default function ColdEmailPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
           className="rounded-xl p-4 space-y-3"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.16)" }}
+          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", borderColor: "rgba(0,0,0,0.12)" }}
         >
           <div className="flex items-center gap-2">
             <Sparkles size={13} className="text-indigo-400" />
@@ -239,7 +239,7 @@ export default function ColdEmailPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Q2 dental outreach"
-                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-white/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40"
+                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40"
               />
             </div>
             <div>
@@ -250,7 +250,7 @@ export default function ColdEmailPage() {
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 placeholder="new"
-                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-white/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40"
+                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40"
               />
               <p className="text-[9px] text-muted mt-0.5">
                 We pull all leads with this status that have an email.
@@ -266,7 +266,7 @@ export default function ColdEmailPage() {
               value={templateSeed}
               onChange={(e) => setTemplateSeed(e.target.value)}
               rows={4}
-              className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-white/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40 font-mono"
+              className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40 font-mono"
             />
             <p className="text-[9px] text-muted mt-0.5">
               Tokens: <code>{"{{first_name}}"}</code>, <code>{"{{business_name}}"}</code>,{" "}
@@ -315,7 +315,7 @@ export default function ColdEmailPage() {
                 onChange={(e) => setThrottle(parseInt(e.target.value || "100") || 100)}
                 min={1}
                 max={5000}
-                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-white/10 text-foreground focus:outline-none focus:border-indigo-500/40"
+                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground focus:outline-none focus:border-indigo-500/40"
               />
               <p className="text-[9px] text-muted mt-0.5">
                 Recommended: 100/hr to protect domain reputation.
@@ -370,8 +370,8 @@ export default function ColdEmailPage() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: index * 0.04 }}
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
-                className="relative p-4 space-y-3 border-b border-white/[0.05] last:border-0"
+                whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
+                className="relative p-4 space-y-3 border-b border-black/[0.05] last:border-0"
               >
                 {/* Rainbow top bar (first item only decorative, per-card via absolute) */}
                 <div
@@ -456,12 +456,12 @@ export default function ColdEmailPage() {
                 </div>
 
                 {jobSamples.length > 0 && (
-                  <div className="space-y-2 pt-2 border-t border-white/[0.05]">
+                  <div className="space-y-2 pt-2 border-t border-black/[0.05]">
                     <p className="text-[9px] text-muted uppercase tracking-wider">
                       Preview samples
                     </p>
                     {jobSamples.map((s) => (
-                      <div key={s.personalization_id} className="rounded-xl p-3 space-y-1.5" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                      <div key={s.personalization_id} className="rounded-xl p-3 space-y-1.5" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
                         {s.error ? (
                           <div className="text-[10px] text-red-400 flex items-center gap-1.5">
                             <AlertTriangle size={10} />
@@ -508,3 +508,5 @@ export default function ColdEmailPage() {
     </div>
   );
 }
+
+

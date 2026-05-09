@@ -18,11 +18,19 @@ import { createServiceClient } from "@/lib/supabase/server";
  * We write synchronously so it's instant.
  */
 
-const SECRET =
-  process.env.UNSUBSCRIBE_SECRET || process.env.CRON_SECRET || "dev-unsub-secret";
+/**
+ * Fail-closed getter — throws at REQUEST time if the env var is absent.
+ * Never falls back to CRON_SECRET or a hardcoded default.
+ * Set UNSUBSCRIBE_SECRET in .env.local for dev.
+ */
+function getSecret(): string {
+  const s = process.env.UNSUBSCRIBE_SECRET;
+  if (!s) throw new Error("[unsubscribe] UNSUBSCRIBE_SECRET env var is not set");
+  return s;
+}
 
 function generateUnsubscribeToken(email: string): string {
-  return createHmac("sha256", SECRET)
+  return createHmac("sha256", getSecret())
     .update(email.toLowerCase().trim())
     .digest("hex")
     .slice(0, 32);

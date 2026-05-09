@@ -43,7 +43,7 @@ const formatCurrency = (amount: number, currency: string = "USD") => {
 
 const RAINBOW_BAR = {
   height: 3,
-  background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)",
+  background: "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)",
 };
 
 export default function InvoicesPage() {
@@ -159,7 +159,7 @@ export default function InvoicesPage() {
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => setActiveTab("builder")}
-              className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all"
+              className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
             >
               <Plus size={12} /> New Invoice
             </motion.button>
@@ -176,7 +176,7 @@ export default function InvoicesPage() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {STATS.map((stat, index) => (
           <PrismPanel key={stat.label} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
-            <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+            <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
             <p className="text-lg font-bold">{stat.value}</p>
             <p className="text-[9px] text-muted">{stat.label}</p>
           </PrismPanel>
@@ -184,7 +184,7 @@ export default function InvoicesPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
+      <div className="flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(0,0,0,0.08)]" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -202,7 +202,7 @@ export default function InvoicesPage() {
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-[rgba(255,255,255,0.1)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+                className="rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-[rgba(0,0,0,0.08)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
                 placeholder="Search invoices..."
                 aria-label="Search invoices"
               />
@@ -211,7 +211,7 @@ export default function InvoicesPage() {
               {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (
                 <button key={f} onClick={() => setFilter(f)}
                   className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                    filter === f ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+                    filter === f ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-[rgba(0,0,0,0.06)]"
                   }`}>{f}</button>
               ))}
             </div>
@@ -232,7 +232,7 @@ export default function InvoicesPage() {
                 />
               </div>
             ) : (
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-[rgba(0,0,0,0.06)]">
                 {filtered.map((inv, index) => {
                   const isOverdue = (inv.status === "sent" && inv.dueDate < today) || inv.status === "overdue";
                   return (
@@ -273,7 +273,7 @@ export default function InvoicesPage() {
                           <span className={`text-[9px] px-2 py-0.5 rounded-full ${
                             inv.status === "paid" ? "bg-green-400/10 text-green-400" :
                             isOverdue ? "bg-red-400/10 text-red-400" :
-                            inv.status === "draft" ? "bg-white/10 text-muted border border-white/10" :
+                            inv.status === "draft" ? "bg-[rgba(0,0,0,0.05)] text-muted border border-[rgba(0,0,0,0.08)]" :
                             inv.status === "sent" ? "bg-blue-400/10 text-blue-400" :
                             "bg-yellow-400/10 text-yellow-400"
                           }`}>{isOverdue ? "overdue" : inv.status}</span>
@@ -404,7 +404,7 @@ export default function InvoicesPage() {
                 <div className="space-y-2 text-[10px]">
                   <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
                   <div className="flex justify-between"><span className="text-muted">Tax ({taxRate}%)</span><span>{formatCurrency(Math.round(2497 * taxRate / 100), selectedCurrency)}</span></div>
-                  <div className="border-t border-white/10 pt-2 flex justify-between font-bold">
+                  <div className="border-t border-[rgba(0,0,0,0.08)] pt-2 flex justify-between font-bold">
                     <span>Total</span><span className="text-gold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
                   </div>
                 </div>
@@ -472,7 +472,7 @@ export default function InvoicesPage() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: index * 0.05 }}
-                className="rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+                className="rounded-xl p-4 flex items-center justify-between border border-[rgba(0,0,0,0.08)]" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
               >
                 <div className="flex items-center gap-3">
                   <RefreshCw size={14} className="text-gold" />
@@ -524,7 +524,7 @@ export default function InvoicesPage() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: i * 0.05 }}
-                className={`rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.1)] ${!reminder.enabled ? "opacity-50" : ""}`} style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+                className={`rounded-xl p-4 flex items-center justify-between border border-[rgba(0,0,0,0.08)] ${!reminder.enabled ? "opacity-50" : ""}`} style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-yellow-400/10" : i < 4 ? "bg-orange-400/10" : "bg-red-400/10"}`}>
@@ -586,7 +586,7 @@ export default function InvoicesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -3 }}
-                className="rounded-xl p-4 cursor-pointer border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+                className="rounded-xl p-4 cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
               >
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center">
@@ -599,7 +599,7 @@ export default function InvoicesPage() {
                 </div>
                 <div className="flex gap-1.5 mt-2">
                   {t.sections.map(s => (
-                    <span key={s} className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-muted">{s}</span>
+                    <span key={s} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.03)] text-muted">{s}</span>
                   ))}
                 </div>
                 <button
@@ -631,7 +631,7 @@ export default function InvoicesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: i * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="rounded-xl text-center p-3 overflow-hidden border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+                className="rounded-xl text-center p-3 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
               >
                 <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                 <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
@@ -641,10 +641,10 @@ export default function InvoicesPage() {
             ))}
           </div>
           <PrismPanel rainbow padding="p-0" className="overflow-hidden">
-            <div className="p-3 border-b border-[rgba(255,255,255,0.1)]">
+            <div className="p-3 border-b border-[rgba(0,0,0,0.08)]">
               <h4 className="text-xs font-semibold">Invoice History</h4>
             </div>
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-[rgba(0,0,0,0.06)]">
               <div className="grid grid-cols-6 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-3">
                 <span>Invoice</span><span>Client</span><span>Amount</span><span>Due Date</span><span>Status</span><span>Age</span>
               </div>
@@ -699,7 +699,7 @@ export default function InvoicesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
-                className="rounded-xl text-center p-5 overflow-hidden border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+                className="rounded-xl text-center p-5 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
               >
                 <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                 <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
@@ -753,3 +753,4 @@ export default function InvoicesPage() {
     </div>
   );
 }
+

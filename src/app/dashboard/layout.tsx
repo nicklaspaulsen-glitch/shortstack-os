@@ -8,7 +8,6 @@ import Sidebar from "@/components/sidebar";
 import GlobalSearch from "@/components/global-search";
 import ClientSwitcher from "@/components/client-switcher";
 import Notifications from "@/components/notifications";
-import ThemeToggle from "@/components/ui/theme-toggle";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import ManagedClientBanner from "@/components/managed-client-banner";
 import { QuotaWallProvider } from "@/components/billing/quota-wall";
@@ -383,12 +382,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <main id="main" className="flex-1 lg:ml-56 min-w-0 overflow-x-hidden">
           {/* Header */}
-          <div className="sticky top-0 z-30 border-b border-border electron-drag topbar-shadow"
+          <div className="sticky top-0 z-30 border-b border-[rgba(0,0,0,0.08)] electron-drag topbar-shadow"
             style={{
-              background: "rgba(var(--bg-base-rgb, 10 10 13) / 0.8)",
+              background: "rgba(255,255,255,0.92)",
               backdropFilter: "blur(24px) saturate(1.2)",
               WebkitBackdropFilter: "blur(24px) saturate(1.2)",
-              boxShadow: "inset 0 -1px 0 rgba(255,255,255,0.04), 0 1px 3px rgba(0,0,0,0.3)",
+              boxShadow: "0 1px 0 rgba(0,0,0,0.08)",
             }}>
             <div className="flex items-center justify-between px-5 lg:px-6 h-12">
               {/* Left — mobile menu */}
@@ -419,8 +418,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 )}
                 <ClientSwitcher />
                 <Notifications />
-                <ThemeToggle />
                 <GlobalSearch />
+                {/* User avatar — links to settings */}
+                <Link
+                  href="/dashboard/settings"
+                  title={profile?.full_name || profile?.nickname || "Settings"}
+                  className="shrink-0 rounded-full ring-1 ring-black/10 hover:ring-brand-accent/40 transition-all duration-200"
+                >
+                  {profile?.avatar_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={profile.avatar_url}
+                      alt=""
+                      width={28}
+                      height={28}
+                      className="rounded-full object-cover w-7 h-7"
+                    />
+                  ) : (
+                    <div className="w-7 h-7 rounded-full bg-[rgba(204,36,36,0.08)] flex items-center justify-center">
+                      <span className="text-brand-accent text-[10px] font-bold font-display leading-none">
+                        {(profile?.nickname || profile?.full_name)?.charAt(0).toUpperCase() || "?"}
+                      </span>
+                    </div>
+                  )}
+                </Link>
               </div>
             </div>
           </div>

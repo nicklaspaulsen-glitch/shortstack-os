@@ -384,10 +384,10 @@ export default function ConversationsPage() {
   const selected = conversations.find((c) => c.id === selectedId) || null;
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-[#0b0d12] text-white">
+    <div className="flex h-[calc(100vh-4rem)] bg-[#FAFAFB] text-[#0A0A0B]">
       {/* ── LEFT: conversation list — hidden on mobile when viewing a thread ── */}
-      <aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-white/5 flex-col`}>
-        <div className="p-4 border-b border-white/5">
+      <aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.08)] flex-col`}>
+        <div className="p-4 border-b border-[rgba(0,0,0,0.08)]">
           <h1 className="text-lg font-semibold mb-3 flex items-center gap-2">
             <Inbox size={18} className="text-indigo-400" />
             Conversations
@@ -395,20 +395,20 @@ export default function ConversationsPage() {
           <div className="relative">
             <Search
               size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[#71717A]"
             />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search…"
-              className="w-full glass rounded-lg pl-9 pr-3 py-2 text-sm placeholder-white/40 focus:outline-none focus:border-indigo-500/40"
+              className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg pl-9 pr-3 py-2 text-sm placeholder-[#71717A] focus:outline-none focus:border-[#CC2424]/40"
             />
           </div>
         </div>
 
         {/* Filter tabs */}
-        <div className="flex flex-wrap gap-1 px-3 py-2 border-b border-white/5">
+        <div className="flex flex-wrap gap-1 px-3 py-2 border-b border-[rgba(0,0,0,0.08)]">
           {FILTERS.map((f, i) => (
             <motion.button
               key={f.key}
@@ -417,8 +417,8 @@ export default function ConversationsPage() {
               onClick={() => setFilter(f.key)}
               className={`text-xs px-2.5 py-1 rounded-md transition ${
                 filter === f.key
-                  ? "bg-indigo-500/20 text-indigo-200 border border-indigo-500/30"
-                  : "text-white/60 hover:text-white hover:bg-white/5 border border-transparent"
+                  ? "bg-[#CC2424]/10 text-[#CC2424] border border-[#CC2424]/20"
+                  : "text-[#52525B] hover:text-white hover:bg-[rgba(0,0,0,0.04)] border border-transparent"
               }`}
               title={`Shortcut: ${i + 1}`}
             >
@@ -447,12 +447,12 @@ export default function ConversationsPage() {
             </div>
           ) : conversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
-              <div className="w-12 h-12  bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.12)] flex items-center justify-center">
-                <Inbox size={20} className="text-[#FF2D2D]/60" />
+              <div className="w-12 h-12 bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.08)] flex items-center justify-center">
+                <Inbox size={20} className="text-[#CC2424]/60" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white/50 mb-1">No conversations yet</p>
-                <p className="text-[10px] text-white/25 leading-relaxed max-w-[180px]">
+                <p className="text-sm font-medium text-[#71717A] mb-1">No conversations yet</p>
+                <p className="text-[10px] text-[#71717A] leading-relaxed max-w-[180px]">
                   Inbound messages from email, SMS, and social will appear here.
                 </p>
               </div>
@@ -477,18 +477,18 @@ export default function ConversationsPage() {
       {/* ── MIDDLE: thread — hidden on mobile when showing the list ── */}
       <main className={`${mobileView === "list" ? "hidden" : "flex"} md:flex flex-1 flex-col min-w-0`}>
         {!selected ? (
-          <div className="flex-1 flex items-center justify-center text-white/40 text-sm">
+          <div className="flex-1 flex items-center justify-center text-[#71717A] text-sm">
             Select a conversation to view
           </div>
         ) : (
           <>
             {/* Header */}
-            <header className="px-5 py-3 border-b border-white/5 flex items-center justify-between gap-3">
+            <header className="px-5 py-3 border-b border-[rgba(0,0,0,0.08)] flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   {/* Back button — mobile only */}
                   <button
-                    className="flex md:hidden items-center gap-1 text-white/60 hover:text-white mr-1"
+                    className="flex md:hidden items-center gap-1 text-[#52525B] hover:text-white mr-1"
                     onClick={() => setMobileView("list")}
                     aria-label="Back to conversations"
                   >
@@ -502,15 +502,15 @@ export default function ConversationsPage() {
                   </span>
                 </div>
                 {selected.subject && (
-                  <div className="text-xs text-white/40 mt-0.5 truncate">{selected.subject}</div>
+                  <div className="text-xs text-[#71717A] mt-0.5 truncate">{selected.subject}</div>
                 )}
               </div>
-              <div className="flex items-center gap-1 text-white/60">
+              <div className="flex items-center gap-1 text-[#52525B]">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setStatus(selected.id, "snoozed")}
-                  className="p-1.5 rounded hover:bg-white/5"
+                  className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
                   title="Snooze (s)"
                 >
                   <Clock size={15} />
@@ -519,7 +519,7 @@ export default function ConversationsPage() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setStatus(selected.id, "archived")}
-                  className="p-1.5 rounded hover:bg-white/5"
+                  className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
                   title="Archive (e)"
                 >
                   <Archive size={15} />
@@ -528,7 +528,7 @@ export default function ConversationsPage() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setStatus(selected.id, "closed")}
-                  className="p-1.5 rounded hover:bg-white/5"
+                  className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
                   title="Close (c)"
                 >
                   <CheckCircle2 size={15} />
@@ -552,7 +552,7 @@ export default function ConversationsPage() {
               ) : messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full gap-2 py-16 text-center">
                   <MessageCircle size={28} className="text-white/10" />
-                  <p className="text-xs text-white/25">No messages yet — say hello</p>
+                  <p className="text-xs text-[#71717A]">No messages yet — say hello</p>
                 </div>
               ) : (
                 messages.map((m) => <MessageBubble key={m.id} m={m} />)
@@ -560,18 +560,18 @@ export default function ConversationsPage() {
             </div>
 
             {/* Composer */}
-            <div className="border-t border-white/5 p-3">
+            <div className="border-t border-[rgba(0,0,0,0.08)] p-3">
               <div className="flex items-end gap-2 glass rounded-lg p-2">
                 <button
                   type="button"
-                  className="p-1.5 text-white/40 hover:text-white rounded"
+                  className="p-1.5 text-[#71717A] hover:text-white rounded"
                   title="Attach"
                 >
                   <Paperclip size={16} />
                 </button>
                 <button
                   type="button"
-                  className="p-1.5 text-white/40 hover:text-white rounded"
+                  className="p-1.5 text-[#71717A] hover:text-white rounded"
                   title="Emoji"
                 >
                   <Smile size={16} />
@@ -595,13 +595,13 @@ export default function ConversationsPage() {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleSend}
                   disabled={sending || !composerText.trim()}
-                  className="px-3 py-1.5 rounded bg-indigo-500 text-white text-sm font-medium disabled:opacity-40 hover:bg-indigo-400 flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded bg-[#CC2424] text-white text-sm font-medium disabled:opacity-40 hover:bg-[#b01e1e] flex items-center gap-1.5"
                 >
                   {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                   Send
                 </motion.button>
               </div>
-              <div className="text-[11px] text-white/30 mt-1.5 pl-2">
+              <div className="text-[11px] text-[#71717A] mt-1.5 pl-2">
                 Sending as {CHANNEL_META[selected.channel].label}
               </div>
             </div>
@@ -611,7 +611,7 @@ export default function ConversationsPage() {
 
       {/* ── RIGHT: contact + actions — desktop only ── */}
       {selected && (
-        <aside className="hidden md:block w-[280px] flex-shrink-0 border-l border-white/5 overflow-y-auto glass-md">
+        <aside className="hidden md:block w-[280px] flex-shrink-0 border-l border-[rgba(0,0,0,0.08)] overflow-y-auto glass-md">
           <ContactPanel conversation={selected} contact={contact} onStatus={(s) => setStatus(selected.id, s)} />
         </aside>
       )}
@@ -639,10 +639,10 @@ function ConversationRow({
       initial={{ opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.18, delay: index * 0.04 }}
-      whileHover={{ backgroundColor: active ? undefined : "rgba(255,255,255,0.06)" }}
+      whileHover={{ backgroundColor: active ? undefined : "rgba(0,0,0,0.03)" }}
       onClick={onClick}
-      className={`w-full text-left px-4 py-3 border-b border-white/5 transition-colors ${
-        active ? "bg-indigo-500/10 border-l-2 border-l-indigo-500/60" : ""
+      className={`w-full text-left px-4 py-3 border-b border-[rgba(0,0,0,0.08)] transition-colors ${
+        active ? "bg-[#CC2424]/5 border-l-2 border-l-[#CC2424]/40" : ""
       }`}
     >
       <div className="flex items-start justify-between gap-2 mb-1">
@@ -650,22 +650,22 @@ function ConversationRow({
           <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] border ${meta.tone}`}>
             {meta.icon}
           </span>
-          <span className={`text-sm truncate ${c.unread_count > 0 ? "font-semibold text-white" : "text-white/80"}`}>
+          <span className={`text-sm truncate ${c.unread_count > 0 ? "font-semibold text-white" : "text-[#0A0A0B]"}`}>
             {name}
           </span>
         </div>
         <div className="flex items-center gap-1 flex-shrink-0">
           {c.unread_count > 0 && (
-            <span className="w-2 h-2 rounded-full bg-indigo-400" />
+            <span className="w-2 h-2 rounded-full bg-[#CC2424]" />
           )}
-          <span className="text-[11px] text-white/40">{fmtTime(c.last_message_at)}</span>
+          <span className="text-[11px] text-[#71717A]">{fmtTime(c.last_message_at)}</span>
         </div>
       </div>
-      <div className="text-xs text-white/50 truncate pl-0.5">
-        {c.last_message_preview || <em className="text-white/30">No preview</em>}
+      <div className="text-xs text-[#71717A] truncate pl-0.5">
+        {c.last_message_preview || <em className="text-[#71717A]">No preview</em>}
       </div>
       {c.status !== "open" && (
-        <div className="mt-1 text-[10px] uppercase tracking-wider text-white/40">
+        <div className="mt-1 text-[10px] uppercase tracking-wider text-[#71717A]">
           {c.status}
         </div>
       )}
@@ -697,12 +697,12 @@ function MessageBubble({ m }: { m: Message }) {
       <div
         className={`max-w-[70%]  px-4 py-2.5 text-sm leading-relaxed ${
           inbound
-            ? "glass text-white/90"
-            : "bg-indigo-500/90 text-white"
+            ? "bg-[#F2F2F4] text-[#0A0A0B] border border-[rgba(0,0,0,0.08)]"
+            : "bg-[#CC2424] text-white"
         }`}
       >
         <div className="whitespace-pre-wrap break-words">{m.body || <em className="opacity-60">No content</em>}</div>
-        <div className={`text-[10px] mt-1 ${inbound ? "text-white/40" : "text-white/60"}`}>
+        <div className={`text-[10px] mt-1 ${inbound ? "text-[#71717A]" : "text-[#52525B]"}`}>
           {fmtTime(m.sent_at)}
         </div>
       </div>
@@ -723,28 +723,28 @@ function ContactPanel({
   return (
     <div className="p-4 space-y-4">
       <section className="glass-md rounded-xl p-3">
-        <h3 className="text-[11px] uppercase tracking-wider text-white/40 mb-2">Contact</h3>
+        <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Contact</h3>
         {contact ? (
           <div className="space-y-1 text-sm">
             <div className="font-medium">{contact.business_name}</div>
             {contact.contact_name && (
-              <div className="text-white/60 text-xs">{contact.contact_name}</div>
+              <div className="text-[#52525B] text-xs">{contact.contact_name}</div>
             )}
             {contact.email && (
-              <div className="text-white/60 text-xs flex items-center gap-1.5">
+              <div className="text-[#52525B] text-xs flex items-center gap-1.5">
                 <Mail size={11} /> {contact.email}
               </div>
             )}
             {contact.phone && (
-              <div className="text-white/60 text-xs flex items-center gap-1.5">
+              <div className="text-[#52525B] text-xs flex items-center gap-1.5">
                 <Phone size={11} /> {contact.phone}
               </div>
             )}
           </div>
         ) : (
-          <div className="text-xs text-white/40 space-y-1">
+          <div className="text-xs text-[#71717A] space-y-1">
             <div>Unknown sender</div>
-            <div className="font-mono text-[11px] text-white/30">
+            <div className="font-mono text-[11px] text-[#71717A]">
               {conversation.external_thread_id}
             </div>
           </div>
@@ -752,16 +752,16 @@ function ContactPanel({
       </section>
 
       <section className="glass-md rounded-xl p-3">
-        <h3 className="text-[11px] uppercase tracking-wider text-white/40 mb-2">Thread</h3>
-        <div className="text-xs space-y-1.5 text-white/60">
+        <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Thread</h3>
+        <div className="text-xs space-y-1.5 text-[#52525B]">
           <div className="flex items-center gap-2">
-            <Circle size={8} className={conversation.status === "open" ? "text-emerald-400 fill-emerald-400" : "text-white/30 fill-white/30"} />
+            <Circle size={8} className={conversation.status === "open" ? "text-emerald-500 fill-emerald-500" : "text-[#71717A] fill-[#71717A]"} />
             <span className="capitalize">{conversation.status}</span>
           </div>
           {conversation.tags && conversation.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-1">
               {conversation.tags.map((t) => (
-                <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 border border-white/10">
+                <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.10)]">
                   {t}
                 </span>
               ))}
@@ -771,36 +771,36 @@ function ContactPanel({
       </section>
 
       <section className="glass-md rounded-xl p-3">
-        <h3 className="text-[11px] uppercase tracking-wider text-white/40 mb-2">Actions</h3>
+        <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Actions</h3>
         <div className="space-y-1">
           <button
             onClick={() => onStatus("snoozed")}
-            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-white/5 flex items-center gap-2"
+            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-[rgba(0,0,0,0.04)] flex items-center gap-2"
           >
             <Clock size={12} /> Snooze thread
           </button>
           <button
             onClick={() => onStatus("closed")}
-            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-white/5 flex items-center gap-2"
+            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-[rgba(0,0,0,0.04)] flex items-center gap-2"
           >
             <CheckCircle2 size={12} /> Mark closed
           </button>
           <button
             onClick={() => onStatus("archived")}
-            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-white/5 flex items-center gap-2"
+            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-[rgba(0,0,0,0.04)] flex items-center gap-2"
           >
             <Archive size={12} /> Archive
           </button>
           <button
             disabled
-            className="w-full text-left px-2.5 py-1.5 rounded text-xs text-white/40 flex items-center gap-2 cursor-not-allowed"
+            className="w-full text-left px-2.5 py-1.5 rounded text-xs text-[#71717A] flex items-center gap-2 cursor-not-allowed"
             title="Coming soon"
           >
             <UserPlus size={12} /> Assign to teammate
           </button>
           <button
             disabled
-            className="w-full text-left px-2.5 py-1.5 rounded text-xs text-white/40 flex items-center gap-2 cursor-not-allowed"
+            className="w-full text-left px-2.5 py-1.5 rounded text-xs text-[#71717A] flex items-center gap-2 cursor-not-allowed"
             title="Coming soon"
           >
             <Tag size={12} /> Add tag
@@ -810,17 +810,17 @@ function ContactPanel({
 
       {contact && (
         <section>
-          <h3 className="text-[11px] uppercase tracking-wider text-white/40 mb-2">Jump to</h3>
+          <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Jump to</h3>
           <div className="space-y-1">
             <Link
               href={`/dashboard/clients`}
-              className="block text-xs px-2.5 py-1.5 rounded hover:bg-white/5 text-white/70"
+              className="block text-xs px-2.5 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-[#52525B]"
             >
               Client record →
             </Link>
             <Link
               href={`/dashboard/deals`}
-              className="block text-xs px-2.5 py-1.5 rounded hover:bg-white/5 text-white/70"
+              className="block text-xs px-2.5 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-[#52525B]"
             >
               Create deal →
             </Link>
@@ -829,16 +829,16 @@ function ContactPanel({
       )}
 
       <section>
-        <h3 className="text-[11px] uppercase tracking-wider text-white/40 mb-2">Shortcuts</h3>
-        <div className="text-[11px] text-white/40 space-y-0.5">
+        <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Shortcuts</h3>
+        <div className="text-[11px] text-[#71717A] space-y-0.5">
           <div>
-            <kbd className="px-1 rounded bg-white/5">j</kbd> / <kbd className="px-1 rounded bg-white/5">k</kbd> next / prev
+            <kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">j</kbd> / <kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">k</kbd> next / prev
           </div>
-          <div><kbd className="px-1 rounded bg-white/5">r</kbd> reply</div>
-          <div><kbd className="px-1 rounded bg-white/5">e</kbd> archive</div>
-          <div><kbd className="px-1 rounded bg-white/5">s</kbd> snooze</div>
-          <div><kbd className="px-1 rounded bg-white/5">c</kbd> close</div>
-          <div><kbd className="px-1 rounded bg-white/5">1</kbd>–<kbd className="px-1 rounded bg-white/5">9</kbd> jump filter</div>
+          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">r</kbd> reply</div>
+          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">e</kbd> archive</div>
+          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">s</kbd> snooze</div>
+          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">c</kbd> close</div>
+          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">1</kbd>–<kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">9</kbd> jump filter</div>
         </div>
       </section>
     </div>

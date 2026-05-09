@@ -225,7 +225,7 @@ export default function CoachPage() {
       </motion.div>
 
       {/* Tab bar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-white/5 pb-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-black/5 pb-2">
         {(
           [
             { id: "recent", label: "Recent Calls" },
@@ -241,7 +241,7 @@ export default function CoachPage() {
             className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
               tab === t.id
                 ? "bg-indigo-500/15 text-indigo-300 border border-indigo-500/30"
-                : "text-white/60 hover:bg-white/5 hover:text-white"
+                : "text-black/60 hover:bg-black/5 hover:text-[#0A0A0B]"
             }`}
           >
             {t.label}
@@ -250,7 +250,7 @@ export default function CoachPage() {
       </div>
 
       {loading && (
-        <div className="flex items-center gap-2 text-white/60 text-sm">
+        <div className="flex items-center gap-2 text-black/60 text-sm">
           <Loader2 className="h-4 w-4 animate-spin" /> Loading analyses…
         </div>
       )}
@@ -267,12 +267,12 @@ export default function CoachPage() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
         >
           {data.analyses.length === 0 ? (
-            <div className="px-6 py-12 text-center text-white/60">
+            <div className="px-6 py-12 text-center text-black/60">
               <Sparkles className="mx-auto mb-3 h-8 w-8 opacity-50" />
-              <p className="text-base font-medium text-white">No analyses yet.</p>
+              <p className="text-base font-medium text-[#0A0A0B]">No analyses yet.</p>
               <p className="mt-1 text-sm">
                 The coach runs hourly on new voice calls and meetings. Trigger one manually from a
                 call detail page.
@@ -287,37 +287,37 @@ export default function CoachPage() {
                 <motion.div key={row.id} variants={rowVariants}>
                   <Link
                     href={`/dashboard/coach/analyses/${row.id}`}
-                    className="group flex items-center gap-4 border-b border-white/5 last:border-0 px-4 py-3 transition-colors hover:bg-indigo-500/5"
+                    className="group flex items-center gap-4 border-b border-black/5 last:border-0 px-4 py-3 transition-colors hover:bg-indigo-500/5"
                   >
-                    <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-white/80">
+                    <div className="rounded-lg border border-black/10 bg-black/5 p-2 text-black/65">
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-white">
+                        <span className="text-sm font-medium text-[#0A0A0B]">
                           {row.source_type === "voice_call"
                             ? "Voice call"
                             : row.source_type === "meeting"
                               ? "Meeting"
                               : "Email thread"}
                         </span>
-                        <span className="text-xs text-white/40">
+                        <span className="text-xs text-black/40">
                           {formatRelativeTime(row.created_at)}
                         </span>
                       </div>
                       {topInsight ? (
-                        <p className="truncate text-xs text-white/60">
+                        <p className="truncate text-xs text-black/60">
                           {topInsight.category.replace("_", " ")}: {topInsight.text}
                         </p>
                       ) : (
-                        <p className="text-xs text-white/40">No qualitative findings.</p>
+                        <p className="text-xs text-black/40">No qualitative findings.</p>
                       )}
                     </div>
-                    <div className="hidden text-xs text-white/50 sm:block">
+                    <div className="hidden text-xs text-black/50 sm:block">
                       Talk {talkRatio}%
                     </div>
                     <ScoreBadge score={row.overall_score} />
-                    <ArrowRight className="h-4 w-4 text-white/30 transition-colors group-hover:text-indigo-400" />
+                    <ArrowRight className="h-4 w-4 text-black/35 transition-colors group-hover:text-indigo-400" />
                   </Link>
                 </motion.div>
               );
@@ -336,7 +336,7 @@ export default function CoachPage() {
         >
           {repBuckets.length === 0 ? (
             <PrismPanel padding="px-6 py-8">
-              <p className="text-center text-white/60">No rep-level data yet.</p>
+              <p className="text-center text-black/60">No rep-level data yet.</p>
             </PrismPanel>
           ) : (
             repBuckets.map((bucket) => (
@@ -344,14 +344,14 @@ export default function CoachPage() {
                 key={bucket.repId}
                 variants={cardVariants}
                 whileHover={{ y: -1 }}
-                className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                className="rounded-xl p-4" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm font-semibold text-white">
+                    <div className="text-sm font-semibold text-[#0A0A0B]">
                       {bucket.repId === "__owner" ? "Unassigned" : bucket.repId.slice(0, 8)}
                     </div>
-                    <div className="text-xs text-white/50">
+                    <div className="text-xs text-black/50">
                       {bucket.rows.length} analyses • avg {bucket.avg}
                     </div>
                   </div>
@@ -402,7 +402,7 @@ export default function CoachPage() {
                 className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                   period === p.id
                     ? "border-indigo-500/40 bg-indigo-500/10 text-indigo-300"
-                    : "border-white/10 text-white/60 hover:border-white/20 hover:text-white"
+                    : "border-black/10 text-black/60 hover:border-black/15 hover:text-[#0A0A0B]"
                 }`}
               >
                 {p.label}
@@ -411,14 +411,14 @@ export default function CoachPage() {
           </motion.div>
 
           {!leaderboard || leaderboard.leaderboard.length === 0 ? (
-            <motion.div variants={cardVariants} className="rounded-xl px-6 py-8 text-center text-white/60" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+            <motion.div variants={cardVariants} className="rounded-xl px-6 py-8 text-center text-black/60" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
               Leaderboard requires at least 3 analyses per rep. Once your team accumulates more
               calls, rankings will appear here.
             </motion.div>
           ) : (
-            <motion.div variants={cardVariants} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+            <motion.div variants={cardVariants} className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <table className="w-full text-sm">
-                <thead className="bg-white/[0.03] text-xs uppercase tracking-wider text-white/50">
+                <thead className="bg-black/[0.03] text-xs uppercase tracking-wider text-black/50">
                   <tr>
                     <th className="px-4 py-2 text-left">#</th>
                     <th className="px-4 py-2 text-left">Rep</th>
@@ -428,18 +428,18 @@ export default function CoachPage() {
                     <th className="px-4 py-2 text-right">Worst</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-black/5">
                   {leaderboard.leaderboard.map((entry, idx) => (
                     <motion.tr
                       key={entry.rep_id}
                       variants={rowVariants}
-                      className="text-white/80 hover:bg-indigo-500/5 transition-colors"
+                      className="text-black/65 hover:bg-indigo-500/5 transition-colors"
                     >
-                      <td className="px-4 py-3 font-semibold text-white/60">{idx + 1}</td>
-                      <td className="px-4 py-3 text-white">
+                      <td className="px-4 py-3 font-semibold text-black/60">{idx + 1}</td>
+                      <td className="px-4 py-3 text-[#0A0A0B]">
                         {entry.rep_name || entry.rep_email || entry.rep_id.slice(0, 8)}
                       </td>
-                      <td className="px-4 py-3 text-right text-white/70">
+                      <td className="px-4 py-3 text-right text-black/65">
                         {entry.analyses_count}
                       </td>
                       <td className="px-4 py-3 text-right">
@@ -462,3 +462,6 @@ export default function CoachPage() {
     </div>
   );
 }
+
+
+

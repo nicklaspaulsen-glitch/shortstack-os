@@ -212,7 +212,7 @@ export default function AIVideoPage() {
                   key={cat.label}
                   type="button"
                   onClick={() => setPrompt(cat.prompt)}
-                  className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.3)] px-3 py-1.5 rounded-full border border-border/50 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-[rgba(0,0,0,0.05)] hover:border-[rgba(0,0,0,0.15)] px-3 py-1.5 rounded-full border border-border/50 transition-all cursor-pointer"
                 >
                   <span className="text-[10px] leading-none">{cat.icon}</span>
                   {cat.label}
@@ -509,7 +509,7 @@ export default function AIVideoPage() {
       {/* Scorecard strip — 3-cell stagger, same pattern as analytics/clients */}
       <PrismPanel rainbow padding="p-0" className="rounded-xl">
         <motion.div
-          className="grid grid-cols-3 divide-x divide-[rgba(255,255,255,0.08)] overflow-hidden"
+          className="grid grid-cols-3 divide-x divide-[rgba(0,0,0,0.08)] overflow-hidden"
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
@@ -589,7 +589,7 @@ export default function AIVideoPage() {
                     key={cat.label}
                     type="button"
                     onClick={() => setPrompt(cat.prompt)}
-                    className="inline-flex items-center gap-1.5 text-[11px] text-white/45 hover:text-white/90 px-3 py-1.5 rounded-full border border-white/10 hover:border-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.1)] transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-[11px] text-black/40 hover:text-black/80 px-3 py-1.5 rounded-full border border-black/10 hover:border-[rgba(0,0,0,0.25)] hover:bg-[rgba(0,0,0,0.04)] transition-all cursor-pointer"
                   >
                     <span className="text-[10px] leading-none">{cat.icon}</span>
                     {cat.label}
@@ -796,7 +796,7 @@ export default function AIVideoPage() {
                   <motion.div
                     key={result.id}
                     className={`hf-thumb rounded-xl ${aspectClass} group`}
-                    style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                    style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
                     variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] } } }}
                     whileHover={{ y: -4, scale: 1.02 }}
                   >
@@ -994,13 +994,14 @@ export default function AIVideoPage() {
 
       {/* Setup / GPU env note — admin-only; clients should never see env-var names */}
       {advancedMode && isPlatformAdmin && (
-        <div className="flex items-center gap-2 text-[9px] text-white/25 px-1">
+        <div className="flex items-center gap-2 text-[9px] text-[#0A0A0B]/35 px-1">
           <Zap size={10} />
           <span>
-            GPU rendering requires <code className="text-white/45 bg-white/5 px-1 py-0.5 rounded">HIGGSFIELD_URL</code> + <code className="text-white/45 bg-white/5 px-1 py-0.5 rounded">RUNPOD_API_KEY</code>. Without them, you&apos;ll get a scene plan instead.
+            GPU rendering requires <code className="text-[#0A0A0B]/55 bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded">HIGGSFIELD_URL</code> + <code className="text-[#0A0A0B]/55 bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded">RUNPOD_API_KEY</code>. Without them, you&apos;ll get a scene plan instead.
           </span>
         </div>
       )}
     </div>
   );
 }
+

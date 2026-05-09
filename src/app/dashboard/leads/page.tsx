@@ -424,7 +424,7 @@ function ScoreBadge({ score, onClick }: { score: number | null; onClick?: () => 
     return (
       <button
         onClick={(e) => { e.stopPropagation(); onClick?.(); }}
-        className="text-[9px] px-2 py-0.5 rounded bg-white/5 text-muted hover:bg-gold/10 hover:text-gold border border-dashed border-border transition-all"
+        className="text-[9px] px-2 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted hover:bg-gold/10 hover:text-gold border border-dashed border-border transition-all"
         title="Score this lead with AI"
       >
         Score
@@ -494,12 +494,12 @@ function LeadDetailPanel({
   const qualScore = qualChecks.filter((q) => q.ok).length;
 
   return (
-    <div className="relative flex flex-col gap-3 rounded-xl border border-[rgba(255,255,255,0.12)] bg-[#15141A] p-4 shadow-2xl">
+    <div className="relative flex flex-col gap-3 rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-4 shadow-2xl">
       {/* Close */}
       <button
         type="button"
         onClick={onClose}
-        className="absolute right-3 top-3 rounded-lg p-1 text-white/40 hover:text-white/80 hover:bg-white/5 transition-colors cursor-pointer"
+        className="absolute right-3 top-3 rounded-lg p-1 text-[#71717A] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.04)] transition-colors cursor-pointer"
         aria-label="Close preview"
       >
         <X size={14} />
@@ -507,9 +507,9 @@ function LeadDetailPanel({
 
       {/* Name + score */}
       <div className="pr-6">
-        <h3 className="text-sm font-semibold text-white leading-snug">{lead.business_name}</h3>
+        <h3 className="text-sm font-semibold text-[#0A0A0B] leading-snug">{lead.business_name}</h3>
         {lead.industry && (
-          <span className="mt-1 inline-block rounded-full bg-white/5 border border-white/10 px-2 py-0.5 text-[10px] text-white/50">
+          <span className="mt-1 inline-block rounded-full bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] px-2 py-0.5 text-[10px] text-[#71717A]">
             {lead.industry}
           </span>
         )}
@@ -517,16 +517,16 @@ function LeadDetailPanel({
 
       {/* Score row */}
       <div className="flex items-center justify-between">
-        <span className="text-[10px] text-white/40 uppercase tracking-wider">AI Score</span>
+        <span className="text-[10px] text-[#71717A] uppercase tracking-wider">AI Score</span>
         {lead.score !== null ? (
-          <span className={`text-sm font-bold ${lead.score >= 70 ? "text-[#FF2D2D]" : lead.score >= 40 ? "text-yellow-400" : "text-red-400"}`}>
-            {lead.score}<span className="text-white/30">/100</span>
+          <span className={`text-sm font-bold ${lead.score >= 70 ? "text-[#CC2424]" : lead.score >= 40 ? "text-yellow-600" : "text-red-500"}`}>
+            {lead.score}<span className="text-[#71717A]">/100</span>
           </span>
         ) : (
           <button
             onClick={() => onScore(lead)}
             disabled={scoring}
-            className="flex items-center gap-1 rounded-lg bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.2)] px-2.5 py-1 text-[10px] font-medium text-[#FF2D2D] hover:bg-[rgba(255,255,255,0.15)] disabled:opacity-50 transition-colors cursor-pointer"
+            className="flex items-center gap-1 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] px-2.5 py-1 text-[10px] font-medium text-[#CC2424] hover:bg-[rgba(0,0,0,0.08)] disabled:opacity-50 transition-colors cursor-pointer"
           >
             {scoring ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
             Score with AI
@@ -537,26 +537,26 @@ function LeadDetailPanel({
       {/* Score breakdown bars */}
       {lead.score_breakdown && <ScoreBreakdownBars breakdown={lead.score_breakdown} />}
       {lead.score_reasoning && (
-        <p className="text-[10px] text-white/40 italic leading-relaxed">{lead.score_reasoning}</p>
+        <p className="text-[10px] text-[#71717A] italic leading-relaxed">{lead.score_reasoning}</p>
       )}
 
       {/* Contact info */}
-      <div className="space-y-1.5 border-t border-white/[0.06] pt-3">
+      <div className="space-y-1.5 border-t border-[rgba(0,0,0,0.08)] pt-3">
         {lead.phone && (
-          <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-[11px] text-white/70 hover:text-[#FF2D2D] transition-colors">
-            <Phone size={11} className="text-white/30 flex-shrink-0" />
+          <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-[11px] text-[#52525B] hover:text-[#CC2424] transition-colors">
+            <Phone size={11} className="text-[#71717A] flex-shrink-0" />
             <span className="truncate">{lead.phone}</span>
           </a>
         )}
         {lead.email && (
-          <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-white/70 hover:text-[#FF2D2D] transition-colors">
-            <Mail size={11} className="text-white/30 flex-shrink-0" />
+          <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-[#52525B] hover:text-[#CC2424] transition-colors">
+            <Mail size={11} className="text-[#71717A] flex-shrink-0" />
             <span className="truncate">{lead.email}</span>
           </a>
         )}
         {location && (
-          <div className="flex items-center gap-2 text-[11px] text-white/50">
-            <MapPin size={11} className="text-white/30 flex-shrink-0" />
+          <div className="flex items-center gap-2 text-[11px] text-[#71717A]">
+            <MapPin size={11} className="text-[#71717A] flex-shrink-0" />
             <span>{location}</span>
           </div>
         )}
@@ -565,48 +565,48 @@ function LeadDetailPanel({
             href={lead.website.startsWith("http") ? lead.website : `https://${lead.website}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-[11px] text-white/50 hover:text-[#FF2D2D] transition-colors"
+            className="flex items-center gap-2 text-[11px] text-[#71717A] hover:text-[#CC2424] transition-colors"
           >
-            <Globe size={11} className="text-white/30 flex-shrink-0" />
+            <Globe size={11} className="text-[#71717A] flex-shrink-0" />
             <span className="truncate">{lead.website.replace(/^https?:\/\//i, "")}</span>
           </a>
         )}
         {lead.google_rating && (
-          <div className="flex items-center gap-1 text-[11px] text-white/50">
-            <Star size={11} className="text-[#FF2D2D] flex-shrink-0" />
+          <div className="flex items-center gap-1 text-[11px] text-[#71717A]">
+            <Star size={11} className="text-[#CC2424] flex-shrink-0" />
             <span>{lead.google_rating} rating</span>
-            {lead.review_count ? <span className="text-white/30">({lead.review_count} reviews)</span> : null}
+            {lead.review_count ? <span className="text-[#71717A]">({lead.review_count} reviews)</span> : null}
           </div>
         )}
       </div>
 
       {/* Qualification checklist */}
-      <div className="border-t border-white/[0.06] pt-3">
+      <div className="border-t border-[rgba(0,0,0,0.08)] pt-3">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] uppercase tracking-wider text-white/40">Qualification</span>
-          <span className="text-[10px] font-semibold text-[#FF2D2D]">{qualScore}/{qualChecks.length}</span>
+          <span className="text-[10px] uppercase tracking-wider text-[#71717A]">Qualification</span>
+          <span className="text-[10px] font-semibold text-[#CC2424]">{qualScore}/{qualChecks.length}</span>
         </div>
         <div className="grid grid-cols-2 gap-1">
           {qualChecks.map((q) => (
             <div key={q.label} className="flex items-center gap-1.5 text-[10px]">
               {q.ok
-                ? <CheckCircle size={9} className="text-[#FF2D2D] flex-shrink-0" />
-                : <div className="w-2.5 h-2.5 rounded-full border border-white/20 flex-shrink-0" />}
-              <span className={q.ok ? "text-white/70" : "text-white/30"}>{q.label}</span>
+                ? <CheckCircle size={9} className="text-[#CC2424] flex-shrink-0" />
+                : <div className="w-2.5 h-2.5 rounded-full border border-[rgba(0,0,0,0.16)] flex-shrink-0" />}
+              <span className={q.ok ? "text-[#52525B]" : "text-[#71717A]"}>{q.label}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Quick action buttons */}
-      <div className="flex gap-2 border-t border-white/[0.06] pt-3">
+      <div className="flex gap-2 border-t border-[rgba(0,0,0,0.08)] pt-3">
         <a
           href={lead.phone ? `tel:${lead.phone}` : undefined}
           onClick={(e) => { if (!lead.phone) e.preventDefault(); }}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-medium transition-colors ${
             lead.phone
-              ? "border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.06)] text-[#FF2D2D] hover:bg-[rgba(255,255,255,0.12)]"
-              : "border-white/10 bg-white/[0.03] text-white/25 cursor-not-allowed"
+              ? "border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#CC2424] hover:bg-[rgba(0,0,0,0.07)]"
+              : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] text-[#71717A] cursor-not-allowed opacity-50"
           }`}
           title={lead.phone || "No phone"}
         >
@@ -617,8 +617,8 @@ function LeadDetailPanel({
           onClick={(e) => { if (!lead.email) e.preventDefault(); }}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-medium transition-colors ${
             lead.email
-              ? "border-white/15 bg-white/5 text-white/70 hover:bg-white/10"
-              : "border-white/10 bg-white/[0.03] text-white/25 cursor-not-allowed"
+              ? "border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] text-[#52525B] hover:bg-[rgba(0,0,0,0.06)]"
+              : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] text-[#71717A] cursor-not-allowed opacity-50"
           }`}
           title={lead.email || "No email"}
         >
@@ -626,7 +626,7 @@ function LeadDetailPanel({
         </a>
         <a
           href="/dashboard/dm-controller"
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] py-1.5 text-[11px] font-medium text-white/50 hover:bg-white/8 hover:text-white/70 transition-colors"
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] py-1.5 text-[11px] font-medium text-[#71717A] hover:bg-[rgba(0,0,0,0.05)] hover:text-[#52525B] transition-colors"
         >
           <MessageSquare size={10} /> DM
         </a>
@@ -635,7 +635,7 @@ function LeadDetailPanel({
       {/* Source + status row */}
       <div className="flex flex-wrap items-center gap-1.5">
         {lead.source && (
-          <span className="rounded-full bg-white/5 border border-white/10 px-2 py-0.5 text-[10px] text-white/40">
+          <span className="rounded-full bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] px-2 py-0.5 text-[10px] text-[#71717A]">
             via {lead.source}
           </span>
         )}
@@ -645,7 +645,7 @@ function LeadDetailPanel({
             lead.status === "booked" ? "bg-green-400/10 text-green-400" :
             lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
             lead.status === "contacted" ? "bg-yellow-400/10 text-yellow-400" :
-            "bg-white/5 text-white/40"
+            "bg-[rgba(0,0,0,0.05)] text-[#71717A]"
           }`}>
             {lead.status}
           </span>
@@ -808,16 +808,16 @@ export default function LeadEnginePage() {
         actions={
           <>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button onClick={() => setShowImportModal(true)} aria-label="Import leads from CSV" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
+              <button onClick={() => setShowImportModal(true)} aria-label="Import leads from CSV" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
             </motion.div>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button onClick={handleExport} disabled={exporting} aria-label="Export leads to CSV" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5 disabled:opacity-50">
+              <button onClick={handleExport} disabled={exporting} aria-label="Export leads to CSV" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5 disabled:opacity-50">
                 {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
                 {exporting ? "Exporting..." : "Export"}
               </button>
             </motion.div>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button onClick={() => setShowAddModal(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
+              <button onClick={() => setShowAddModal(true)} className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.08)] border border-[rgba(0,0,0,0.12)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.12)] transition-all flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
             </motion.div>
           </>
         }
@@ -861,7 +861,7 @@ export default function LeadEnginePage() {
       </CollapsibleStats>
 
       {/* Tabs (sticky) */}
-      <div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
+      <div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -986,8 +986,8 @@ export default function LeadEnginePage() {
                   }}
                   className={`grid grid-cols-12 items-center py-1.5 px-3 rounded-lg border transition-all cursor-pointer text-[10px] ${
                     selectedLead?.id === lead.id
-                      ? "bg-[rgba(255,255,255,0.04)] border-[rgba(255,255,255,0.15)]"
-                      : "bg-surface-light border-border hover:border-[rgba(255,255,255,0.1)]"
+                      ? "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.16)]"
+                      : "bg-surface-light border-border hover:border-[rgba(0,0,0,0.10)]"
                   }`}>
                   <div className="col-span-3">
                     <p className="text-xs font-semibold">{lead.business_name}</p>
@@ -1189,7 +1189,7 @@ export default function LeadEnginePage() {
                 ].map((r, i) => (
                   <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
                     <div className="flex items-center gap-2">
-                      <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-muted">{r.category}</span>
+                      <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">{r.category}</span>
                       <span>{r.factor}</span>
                     </div>
                     <span className={`font-bold ${r.points.startsWith("+") ? "text-green-400" : "text-red-400"}`}>{r.points}</span>
@@ -1331,11 +1331,11 @@ export default function LeadEnginePage() {
             {leads.map((lead, index) => (
               <motion.div
                 key={lead.id}
-                className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)" }}
+                className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB" }}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: index * 0.04 }}
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
@@ -1462,3 +1462,4 @@ export default function LeadEnginePage() {
     </div>
   );
 }
+

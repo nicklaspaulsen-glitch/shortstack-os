@@ -397,13 +397,13 @@ export default function MarketplacePage() {
       {/* ── Stats bar ── */}
       <div className="flex items-center gap-6 border-b border-border pb-4">
         <div className="text-sm text-muted">
-          <span className="font-semibold text-white">{filteredPlugins.length}</span> plugins found
+          <span className="font-semibold text-[#0A0A0B]">{filteredPlugins.length}</span> plugins found
         </div>
         <div className="text-sm text-muted">
-          <span className="font-semibold text-white">{pluginCatalog.filter((p) => p.price === 0).length}</span> free
+          <span className="font-semibold text-[#0A0A0B]">{pluginCatalog.filter((p) => p.price === 0).length}</span> free
         </div>
         <div className="text-sm text-muted">
-          <span className="font-semibold text-white">{pluginCatalog.filter((p) => p.verified).length}</span> verified
+          <span className="font-semibold text-[#0A0A0B]">{pluginCatalog.filter((p) => p.verified).length}</span> verified
         </div>
       </div>
 
@@ -730,11 +730,11 @@ export default function MarketplacePage() {
           onClick={() => setSelectedPlugin(null)}
         >
           <div
-            className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto  border border-border bg-[#0f1117] shadow-2xl"
+            className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto  border border-border bg-white shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal header */}
-            <div className="sticky top-0 z-10 border-b border-border bg-[#0f1117]/95 backdrop-blur-sm px-6 py-4">
+            <div className="sticky top-0 z-10 border-b border-border bg-white/95 backdrop-blur-sm px-6 py-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div
@@ -745,7 +745,7 @@ export default function MarketplacePage() {
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg font-bold text-white">{selectedPlugin.name}</h2>
+                      <h2 className="text-lg font-bold text-[#0A0A0B]">{selectedPlugin.name}</h2>
                       {selectedPlugin.verified && (
                         <div className="flex items-center gap-0.5 rounded-full bg-blue-500/10 px-2 py-0.5">
                           <Shield size={10} className="text-blue-400" />
@@ -765,7 +765,7 @@ export default function MarketplacePage() {
                 </div>
                 <button
                   onClick={() => setSelectedPlugin(null)}
-                  className="rounded-lg p-1.5 text-muted hover:bg-surface hover:text-white transition-colors"
+                  className="rounded-lg p-1.5 text-muted hover:bg-surface hover:text-[#0A0A0B] transition-colors"
                 >
                   <X size={18} />
                 </button>
@@ -780,7 +780,7 @@ export default function MarketplacePage() {
                     className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
                       detailTab === tab
                         ? "bg-gold/10 text-gold"
-                        : "text-muted hover:text-white"
+                        : "text-muted hover:text-[#0A0A0B]"
                     }`}
                   >
                     {tab}
@@ -1015,7 +1015,7 @@ export default function MarketplacePage() {
             </div>
 
             {/* Modal footer */}
-            <div className="sticky bottom-0 border-t border-border bg-[#0f1117]/95 backdrop-blur-sm px-6 py-4">
+            <div className="sticky bottom-0 border-t border-border bg-white/95 backdrop-blur-sm px-6 py-4">
               {installedIds.has(selectedPlugin.id) ? (
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-1.5 text-xs text-emerald-400">
@@ -1077,7 +1077,7 @@ export default function MarketplacePage() {
           onClick={() => setConfirmUninstall(null)}
         >
           <div
-            className="w-full max-w-sm rounded-xl border border-border bg-[#0f1117] p-6 shadow-2xl"
+            className="w-full max-w-sm rounded-xl border border-border bg-white p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 mb-4">
@@ -1085,18 +1085,18 @@ export default function MarketplacePage() {
                 <Trash2 size={18} className="text-red-400" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white">Uninstall Plugin</h3>
+                <h3 className="text-sm font-bold text-[#0A0A0B]">Uninstall Plugin</h3>
                 <p className="text-xs text-muted">This will remove all plugin data</p>
               </div>
             </div>
             <p className="text-xs text-muted mb-4">
-              Are you sure you want to uninstall <span className="text-white font-medium">{selectedPlugin.name}</span>?
+              Are you sure you want to uninstall <span className="text-[#0A0A0B] font-medium">{selectedPlugin.name}</span>?
               All configuration and data will be permanently deleted.
             </p>
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setConfirmUninstall(null)}
-                className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-white transition-colors"
+                className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-[#0A0A0B] transition-colors"
               >
                 Cancel
               </button>

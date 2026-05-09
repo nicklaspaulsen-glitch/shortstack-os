@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { BookOpen, Plus, Users, DollarSign, Eye, EyeOff, Trash2, Pencil, Lock } from "lucide-react";
@@ -110,7 +110,7 @@ export default function CoursesPage() {
   const filtered = courses.filter(c => filter === "all" || c.status === filter);
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d]">
+    <div className="min-h-screen bg-[#FAFAFB]">
       <PageHero
         title="Courses"
         subtitle="Build and sell membership courses. Your students access them at their portal."
@@ -136,8 +136,8 @@ export default function CoursesPage() {
               onClick={() => setFilter(f)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium capitalize transition-colors ${
                 filter === f
-                  ? "bg-purple-600 text-white"
-                  : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"
+                  ? "bg-purple-600 text-[#0A0A0B]"
+                  : "bg-black/5 text-black/60 hover:text-[#0A0A0B] hover:bg-black/10"
               }`}
             >
               {f}
@@ -153,7 +153,7 @@ export default function CoursesPage() {
             ))}
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-24 text-white/40">
+          <div className="text-center py-24 text-black/40">
             <BookOpen size={48} className="mx-auto mb-4 opacity-30" />
             <p className="text-lg">No courses yet</p>
             <p className="text-sm mt-1">Click &ldquo;New Course&rdquo; to create your first one</p>
@@ -177,25 +177,25 @@ export default function CoursesPage() {
       {showCreate && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="glass  p-6 w-full max-w-md">
-            <h2 className="text-lg font-semibold text-white mb-4">New Course</h2>
+            <h2 className="text-lg font-semibold text-[#0A0A0B] mb-4">New Course</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-white/60 mb-1">Title *</label>
+                <label className="block text-sm text-black/60 mb-1">Title *</label>
                 <input
                   value={newTitle}
                   onChange={e => setNewTitle(e.target.value)}
                   placeholder="e.g. 12-Week Fitness Program"
-                  className="w-full glass rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500"
+                  className="w-full glass rounded-lg px-3 py-2 text-[#0A0A0B] placeholder-black/35 text-sm focus:outline-none focus:border-purple-500"
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/60 mb-1">Description</label>
+                <label className="block text-sm text-black/60 mb-1">Description</label>
                 <textarea
                   value={newDescription}
                   onChange={e => setNewDescription(e.target.value)}
                   rows={2}
-                  placeholder="Brief description…"
-                  className="w-full glass rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500 resize-none"
+                  placeholder="Brief descriptionâ€¦"
+                  className="w-full glass rounded-lg px-3 py-2 text-[#0A0A0B] placeholder-black/35 text-sm focus:outline-none focus:border-purple-500 resize-none"
                 />
               </div>
               <div className="flex items-center gap-3">
@@ -206,17 +206,17 @@ export default function CoursesPage() {
                     onChange={e => setNewIsFree(e.target.checked)}
                     className="accent-purple-500"
                   />
-                  <span className="text-sm text-white/80">Free course</span>
+                  <span className="text-sm text-black/65">Free course</span>
                 </label>
                 {!newIsFree && (
                   <div className="flex items-center gap-1 ml-auto">
-                    <span className="text-white/40 text-sm">$</span>
+                    <span className="text-black/40 text-sm">$</span>
                     <input
                       type="number"
                       value={newPrice}
                       onChange={e => setNewPrice(e.target.value)}
                       placeholder="0.00"
-                      className="w-24 glass rounded-lg px-2 py-1.5 text-white text-sm focus:outline-none focus:border-purple-500"
+                      className="w-24 glass rounded-lg px-2 py-1.5 text-[#0A0A0B] text-sm focus:outline-none focus:border-purple-500"
                     />
                   </div>
                 )}
@@ -225,7 +225,7 @@ export default function CoursesPage() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowCreate(false)}
-                className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 text-white/80 rounded-lg text-sm transition-colors"
+                className="flex-1 px-4 py-2 bg-black/5 hover:bg-black/10 text-black/65 rounded-lg text-sm transition-colors"
               >
                 Cancel
               </button>
@@ -234,7 +234,7 @@ export default function CoursesPage() {
                 disabled={creating}
                 className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
               >
-                {creating ? "Creating…" : "Create Course"}
+                {creating ? "Creatingâ€¦" : "Create Course"}
               </button>
             </div>
           </div>
@@ -279,23 +279,23 @@ function CourseCard({
           className={`absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full font-medium ${
             course.status === "published"
               ? "bg-green-500/20 text-green-400 border border-green-500/30"
-              : "bg-white/10 text-white/50 border border-white/20"
+              : "bg-black/10 text-black/50 border border-black/15"
           }`}
         >
           {course.status}
         </span>
         {/* Price badge */}
-        <span className="absolute top-2 left-2 text-xs px-2 py-0.5 rounded-full bg-black/40 text-white/80 border border-white/10">
+        <span className="absolute top-2 left-2 text-xs px-2 py-0.5 rounded-full bg-black/10 text-black/65 border border-black/10">
           {course.is_free ? "Free" : `$${Number(course.price).toFixed(2)}`}
         </span>
       </div>
 
       <div className="p-3">
-        <h3 className="font-medium text-white text-sm line-clamp-1 mb-1">{course.title}</h3>
+        <h3 className="font-medium text-[#0A0A0B] text-sm line-clamp-1 mb-1">{course.title}</h3>
         {course.description && (
-          <p className="text-xs text-white/40 line-clamp-2 mb-2">{course.description}</p>
+          <p className="text-xs text-black/40 line-clamp-2 mb-2">{course.description}</p>
         )}
-        <div className="flex items-center gap-3 text-xs text-white/40">
+        <div className="flex items-center gap-3 text-xs text-black/40">
           <span className="flex items-center gap-1">
             <Users size={11} />
             {course.student_count}
@@ -315,7 +315,7 @@ function CourseCard({
         </div>
 
         {/* Actions */}
-        <div className="flex gap-1 mt-3 pt-3 border-t border-white/5">
+        <div className="flex gap-1 mt-3 pt-3 border-t border-black/5">
           <Link
             href={`/dashboard/courses/${course.id}`}
             className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg text-xs transition-colors"
@@ -325,7 +325,7 @@ function CourseCard({
           </Link>
           <button
             onClick={() => onTogglePublish(course)}
-            className="flex items-center gap-1 px-2 py-1.5 bg-white/5 hover:bg-white/10 text-white/60 rounded-lg text-xs transition-colors"
+            className="flex items-center gap-1 px-2 py-1.5 bg-black/5 hover:bg-black/10 text-black/60 rounded-lg text-xs transition-colors"
             title={course.status === "published" ? "Unpublish" : "Publish"}
           >
             {course.status === "published" ? <EyeOff size={12} /> : <Eye size={12} />}
@@ -342,3 +342,5 @@ function CourseCard({
     </motion.div>
   );
 }
+
+

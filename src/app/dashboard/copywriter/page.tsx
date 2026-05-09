@@ -1292,9 +1292,9 @@ export default function CopywriterPage() {
                     initial={{ opacity: 0, x: -16 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.04, duration: 0.28 }}
-                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                     onClick={() => loadFromHistory(item)}
-                    className="w-full text-left p-3 border-b border-white/5 last:border-0 transition-all group flex items-start gap-3"
+                    className="w-full text-left p-3 border-b border-[rgba(0,0,0,0.08)] last:border-0 transition-all group flex items-start gap-3"
                   >
                     <div
                       className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"

@@ -78,7 +78,7 @@ const categoryColors: Record<string, string> = {
   Retention: "bg-amber-500/10 text-amber-400",
 };
 
-const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
+const RAINBOW = "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)";
 
 export default function EmailTemplatesPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("gallery");
@@ -215,9 +215,9 @@ export default function EmailTemplatesPage() {
           <div className="flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 min-w-[200px]">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-              <input value={search} onChange={e => setSearch(e.target.value)} className="rounded-xl w-full pl-9 text-xs px-3 py-2 text-foreground placeholder:text-muted outline-none bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)]" placeholder="Search templates..." aria-label="Search email templates" />
+              <input value={search} onChange={e => setSearch(e.target.value)} className="rounded-xl w-full pl-9 text-xs px-3 py-2 text-foreground placeholder:text-muted outline-none bg-[#FFFFFF] border border-[rgba(0,0,0,0.10)]" placeholder="Search templates..." aria-label="Search email templates" />
             </div>
-            <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="rounded-xl text-xs px-3 py-2 text-foreground outline-none bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.1)]">
+            <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="rounded-xl text-xs px-3 py-2 text-foreground outline-none bg-[#FFFFFF] border border-[rgba(0,0,0,0.10)]">
               <option value="name">Sort: Name</option>
               <option value="opens">Sort: Opens</option>
               <option value="replies">Sort: Replies</option>
@@ -227,7 +227,7 @@ export default function EmailTemplatesPage() {
             {CATEGORIES.map(cat => (
               <button key={cat} onClick={() => setFilterCategory(cat)}
                 className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-colors ${
-                  filterCategory === cat ? "bg-gold/10 text-gold border border-gold/20" : "bg-white/5 text-muted border border-white/10 hover:bg-white/10"
+                  filterCategory === cat ? "bg-gold/10 text-gold border border-gold/20" : "bg-[rgba(0,0,0,0.03)] text-muted border border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.06)]"
                 }`}>{cat}</button>
             ))}
           </div>
@@ -245,7 +245,7 @@ export default function EmailTemplatesPage() {
                 transition={{ delay: i * 0.05, duration: 0.4 }}
                 whileHover={{ y: -4, scale: 1.01 }}
                 onClick={() => openTemplate(template)}
-                className="rounded-xl overflow-hidden cursor-pointer group" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                className="rounded-xl overflow-hidden cursor-pointer group" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
                 <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
                 <div className="p-4">
@@ -257,7 +257,7 @@ export default function EmailTemplatesPage() {
                     {template.shared && <Star size={10} className="text-gold flex-shrink-0 mt-0.5" />}
                   </div>
                   {/* Mini preview */}
-                  <div className="rounded-lg p-2 mb-2 text-[8px] text-muted leading-relaxed line-clamp-3" style={{ background: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <div className="rounded-lg p-2 mb-2 text-[8px] text-muted leading-relaxed line-clamp-3" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}>
                     {template.body.substring(0, 120)}...
                   </div>
                   <div className="flex items-center justify-between">
@@ -312,7 +312,7 @@ export default function EmailTemplatesPage() {
               </div>
               {/* Merge Tag Helper */}
               <div className="space-y-3">
-                <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <div className="rounded-xl p-4" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
                   <h4 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Merge Tags</h4>
                   <div className="space-y-1">
                     {MERGE_TAGS.map(tag => (
@@ -325,7 +325,7 @@ export default function EmailTemplatesPage() {
                   </div>
                 </div>
                 {/* Preview Modes */}
-                <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <div className="rounded-xl p-4" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
                   <h4 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Preview Mode</h4>
                   <div className="flex gap-1">
                     {[
@@ -352,7 +352,7 @@ export default function EmailTemplatesPage() {
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl text-center py-12" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              className="rounded-xl text-center py-12" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <Edit3 size={24} className="mx-auto mb-2 text-muted/30" />
               <p className="text-sm text-muted">Select a template from the Gallery to edit</p>
@@ -376,7 +376,7 @@ export default function EmailTemplatesPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.06, duration: 0.4 }}
-                className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                className="rounded-xl overflow-hidden text-center" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
                 <div style={{ height: 3, background: RAINBOW }} />
                 <div className="p-3">
@@ -391,7 +391,7 @@ export default function EmailTemplatesPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            className="rounded-xl p-4" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
           >
             <h3 className="text-sm font-semibold mb-3">Template Performance Ranking</h3>
             <div className="space-y-2">
@@ -404,7 +404,7 @@ export default function EmailTemplatesPage() {
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.04 }}
-                  className="flex items-center gap-3 p-2.5 rounded" style={{ background: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.08)" }}
+                  className="flex items-center gap-3 p-2.5 rounded" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
                 >
                   <span className="text-[9px] text-muted font-bold w-6 text-center">#{i + 1}</span>
                   <div className="flex-1 min-w-0">
@@ -439,7 +439,7 @@ export default function EmailTemplatesPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                className="rounded-xl p-4" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-xs font-semibold">{t.name}</p>
@@ -473,7 +473,7 @@ export default function EmailTemplatesPage() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            className="rounded-xl p-6" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
@@ -538,7 +538,7 @@ export default function EmailTemplatesPage() {
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              className="rounded-xl p-4" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <div className="flex items-center justify-between mb-3">
                 <div>
@@ -600,7 +600,7 @@ export default function EmailTemplatesPage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              className="rounded-xl p-3" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] px-2 py-0.5 rounded bg-gold/10 text-gold font-semibold">{v.angle}</span>
@@ -621,7 +621,7 @@ export default function EmailTemplatesPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0 }}
-              className="rounded-xl text-center p-6" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              className="rounded-xl text-center p-6" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <Upload size={24} className="mx-auto mb-2 text-gold" />
               <h3 className="text-sm font-semibold mb-1">Import Templates</h3>
@@ -636,7 +636,7 @@ export default function EmailTemplatesPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
-              className="rounded-xl text-center p-6" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+              className="rounded-xl text-center p-6" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <Download size={24} className="mx-auto mb-2 text-gold" />
               <h3 className="text-sm font-semibold mb-1">Export Templates</h3>
@@ -659,7 +659,7 @@ export default function EmailTemplatesPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            className="rounded-xl p-4" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
           >
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Share2 size={14} className="text-gold" /> Template Sharing
@@ -698,9 +698,9 @@ export default function EmailTemplatesPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.97, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+            className="rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
           >
-            <div className="flex items-center justify-between p-4 border-b border-white/10">
+            <div className="flex items-center justify-between p-4 border-b border-[rgba(0,0,0,0.10)]">
               <div className="flex items-center gap-2">
                 <Tag size={14} className="text-gold" />
                 <h3 className="text-sm font-bold">{selectedTemplate.name}</h3>
@@ -724,7 +724,7 @@ export default function EmailTemplatesPage() {
                 <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} rows={12} className="input w-full text-xs resize-none font-mono" />
               </div>
             </div>
-            <div className="flex items-center gap-2 p-4 border-t border-white/10">
+            <div className="flex items-center gap-2 p-4 border-t border-[rgba(0,0,0,0.10)]">
               <button className="btn-primary flex items-center gap-1.5 text-[10px]"><Copy size={12} /> Copy</button>
               <button onClick={handleGenerateVariants} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Sparkles size={12} /> A/B Variants</button>
               <button onClick={() => { setActiveTab("editor"); }} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Edit3 size={12} /> Full Editor</button>
@@ -756,3 +756,4 @@ function Save({ size, className }: { size: number; className?: string }) {
     </svg>
   );
 }
+

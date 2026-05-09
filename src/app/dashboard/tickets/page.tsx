@@ -16,7 +16,6 @@ import { motion } from "framer-motion";
 import {
   LifeBuoy,
   Mail,
-  Calendar,
   MessageCircle,
   ArrowRight,
   Clock,
@@ -25,8 +24,6 @@ import {
 import PageHero from "@/components/ui/page-hero";
 
 const SUPPORT_EMAIL = "support@shortstack.work";
-// Replace with the real Calendly link once configured. Falls back to mailto.
-const SUPPORT_SCHEDULE_URL = "https://calendly.com/shortstack-support/30min";
 const DISCORD_COMMUNITY_URL = "https://discord.gg/shortstack";
 
 interface SupportChannel {
@@ -53,17 +50,6 @@ const SUPPORT_CHANNELS: SupportChannel[] = [
     accent: "gold",
   },
   {
-    icon: <Calendar size={22} />,
-    title: "Schedule a call",
-    description:
-      "Walk through a workflow on a 30-minute screenshare. Best for onboarding, integrations, and complex issues.",
-    responseTime: "Same-week availability",
-    cta: "Book a time",
-    href: SUPPORT_SCHEDULE_URL,
-    external: true,
-    accent: "blue",
-  },
-  {
     icon: <MessageCircle size={22} />,
     title: "Discord community",
     description:
@@ -82,12 +68,6 @@ const ACCENT_STYLES: Record<string, { ring: string; iconBg: string; iconText: st
     iconBg: "bg-gold/10",
     iconText: "text-gold",
     cta: "bg-gold text-black hover:bg-gold/90",
-  },
-  blue: {
-    ring: "border-sky-500/30 hover:border-sky-500/60 hover:shadow-[0_0_0_1px_rgba(14,165,233,0.18)]",
-    iconBg: "bg-sky-500/10",
-    iconText: "text-sky-300",
-    cta: "bg-sky-500 text-white hover:bg-sky-500/90",
   },
   purple: {
     ring: "border-purple-500/30 hover:border-purple-500/60 hover:shadow-[0_0_0_1px_rgba(168,85,247,0.18)]",
@@ -109,7 +89,7 @@ export default function ContactSupportPage() {
 
       <div className="mx-auto max-w-5xl space-y-6 px-6 pb-12 pt-5">
         {/* Three support channels */}
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {SUPPORT_CHANNELS.map((channel, i) => {
             const accent = ACCENT_STYLES[channel.accent];
             return (

@@ -349,16 +349,16 @@ export default function SMSTemplatesPage() {
               <div className="col-span-2 text-center py-12 text-muted text-xs">No templates yet. Click &quot;New&quot; to create your first SMS template.</div>
             )}
             {filtered.map((template, idx) => (
-              <motion.div key={template.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="rounded-xl p-4 group transition-all hover:border-indigo-500/10" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <motion.div key={template.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="rounded-xl p-4 group transition-all hover:border-indigo-500/10" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <p className="text-xs font-semibold">{template.name}</p>
                     <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold">{template.category}</span>
                   </div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => { navigator.clipboard.writeText(template.body); }} className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><Copy size={10} /></button>
-                    <button onClick={() => setPreviewTemplate(template)} className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><Eye size={10} /></button>
-                    <button onClick={() => setEditing(editing === template.id ? null : template.id)} className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><Edit3 size={10} /></button>
+                    <button onClick={() => { navigator.clipboard.writeText(template.body); }} className="p-1 rounded hover:bg-black/[0.04] text-muted hover:text-foreground"><Copy size={10} /></button>
+                    <button onClick={() => setPreviewTemplate(template)} className="p-1 rounded hover:bg-black/[0.04] text-muted hover:text-foreground"><Eye size={10} /></button>
+                    <button onClick={() => setEditing(editing === template.id ? null : template.id)} className="p-1 rounded hover:bg-black/[0.04] text-muted hover:text-foreground"><Edit3 size={10} /></button>
                     <button onClick={() => setTemplates(prev => prev.filter(t => t.id !== template.id))} className="p-1 rounded hover:bg-red-400/10 text-muted hover:text-red-400"><Trash2 size={10} /></button>
                   </div>
                 </div>
@@ -538,10 +538,10 @@ export default function SMSTemplatesPage() {
               { label: "Total Replies", value: totalReplies.toLocaleString(), icon: <MessageSquare size={12} />, color: "text-purple-400" },
               { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-gold" },
             ].map((stat, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
                 <div className="p-3">
-                  <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+                  <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-black/[0.04] ${stat.color}`}>{stat.icon}</div>
                   <p className="text-lg font-bold">{stat.value}</p>
                   <p className="text-[9px] text-muted">{stat.label}</p>
                 </div>
@@ -642,3 +642,4 @@ export default function SMSTemplatesPage() {
     </div>
   );
 }
+

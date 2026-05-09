@@ -677,19 +677,19 @@ export default function Sidebar() {
           onMouseLeave={() => setHoveredItem(null)}
           className={`nav-item-hover flex items-center justify-center px-2.5 py-1.5 my-[1px] rounded-lg text-[12.5px] transition-all duration-220 ease-out-expo-foundation ${
             isActive
-              ? "active text-brand-accent bg-[rgba(255,45,45,0.06)] shadow-[0_0_14px_rgba(255,45,45,0.08)]"
-              : "text-text-secondary hover:text-text-primary hover:bg-white/[0.02]"
+              ? "active text-brand-accent bg-[rgba(204,36,36,0.08)]"
+              : "text-text-secondary hover:text-text-primary hover:bg-[rgba(0,0,0,0.04)]"
           }`}
           title={unreadCount > 0 ? `${label} (${unreadCount})` : label}
         >
-          <span className={`relative shrink-0 transition-colors duration-220 ease-out-expo-foundation nav-icon-alive ${isActive ? "text-brand-accent drop-shadow-[0_0_4px_rgba(255,45,45,0.55)]" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
+          <span className={`relative shrink-0 transition-colors duration-220 ease-out-expo-foundation nav-icon-alive ${isActive ? "text-brand-accent" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
             {customIcon || item.icon}
             {unreadCount > 0 && <UnreadDotMini />}
           </span>
           {isActive && (
             <motion.div
               layoutId="sidebar-active-accent"
-              className="absolute -left-px top-1/2 w-[2px] h-[68%] rounded-r bg-brand-accent shadow-[0_0_10px_rgba(255,45,45,0.65)]"
+              className="absolute -left-px top-1/2 w-[2px] h-[68%] rounded-r bg-brand-accent"
               style={{ y: "-50%" }}
               transition={{ type: "spring", stiffness: 380, damping: 32 }}
             />
@@ -722,10 +722,10 @@ export default function Sidebar() {
         collapsed ? "w-[56px]" : "w-60"
       } ${hoverExpanded && !pinned ? "shadow-[8px_0_36px_-10px_rgba(0,0,0,0.55)]" : ""}`}
       style={{
-        background: "rgba(var(--bg-base-rgb, 10 10 13) / 0.50)",
+        background: "rgba(255,255,255,0.92)",
         backdropFilter: "blur(32px) saturate(1.5)",
         WebkitBackdropFilter: "blur(32px) saturate(1.5)",
-        borderRight: "1px solid rgba(255, 255, 255, 0.06)",
+        borderRight: "1px solid rgba(0,0,0,0.08)",
       }}
     >
       {/* LED light strip — lives on the sidebar's right edge, theme-colored */}
@@ -1024,8 +1024,8 @@ export default function Sidebar() {
                           title={`Open ${group.section} hub →`}
                           className={`group/hub inline-flex items-center gap-0.5 text-[9px] font-semibold px-2 py-[3px] rounded-full border transition-all duration-220 ease-out-expo-foundation ${
                             hubActive
-                              ? "bg-[rgba(255,255,255,0.18)] border-[rgba(255,255,255,0.35)] text-brand-accent"
-                              : "bg-[rgba(255,255,255,0.07)] border-border-subtle text-text-muted hover:bg-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] hover:text-text-primary"
+                              ? "bg-[rgba(204,36,36,0.10)] border-[rgba(204,36,36,0.30)] text-brand-accent"
+                              : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.10)] text-text-muted hover:bg-[rgba(0,0,0,0.07)] hover:border-[rgba(0,0,0,0.18)] hover:text-text-primary"
                           }`}
                         >
                           {group.section}
@@ -1053,7 +1053,7 @@ export default function Sidebar() {
                       onClick={() => toggleSection(group.section!)}
                       className="w-full flex items-center justify-between gap-1.5 px-2.5 pt-2.5 pb-1 group/sec cursor-pointer"
                     >
-                      <span className="inline-flex items-center text-[9px] font-semibold px-2 py-[3px] rounded-full border border-border-subtle bg-[rgba(255,255,255,0.07)] text-text-muted group-hover/sec:bg-[rgba(255,255,255,0.1)] group-hover/sec:text-text-primary group-hover/sec:border-[rgba(255,255,255,0.15)] transition-all duration-220">
+                      <span className="inline-flex items-center text-[9px] font-semibold px-2 py-[3px] rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-text-muted group-hover/sec:bg-[rgba(0,0,0,0.07)] group-hover/sec:text-text-primary group-hover/sec:border-[rgba(0,0,0,0.16)] transition-all duration-220">
                         {group.section}
                       </span>
                       <ChevronDown

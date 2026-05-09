@@ -38,10 +38,10 @@ const PLAN_TIERS = [
 ];
 
 const STATUS_BADGE: Record<Subaccount["status"], string> = {
-  pending: "bg-amber-500/20 text-amber-300",
-  active: "bg-emerald-500/20 text-emerald-300",
-  suspended: "bg-orange-500/20 text-orange-300",
-  cancelled: "bg-white/10 text-white/40",
+  pending: "bg-amber-500/20 text-amber-600",
+  active: "bg-emerald-500/20 text-emerald-700",
+  suspended: "bg-orange-500/20 text-orange-600",
+  cancelled: "bg-black/8 text-black/40",
 };
 
 function formatMrr(cents: number): string {
@@ -176,10 +176,10 @@ export default function SubaccountsPage() {
           <Loader2 className="w-6 h-6 animate-spin text-[#FF2D2D]" />
         </div>
       ) : subs.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-white/10 p-10 text-center">
-          <Building2 className="w-10 h-10 text-white/20 mx-auto mb-3" />
-          <p className="text-white/60 text-sm">No subaccounts yet.</p>
-          <p className="text-white/40 text-xs mt-1">
+        <div className="rounded-xl border border-dashed border-black/10 p-10 text-center">
+          <Building2 className="w-10 h-10 text-black/20 mx-auto mb-3" />
+          <p className="text-black/60 text-sm">No subaccounts yet.</p>
+          <p className="text-black/40 text-xs mt-1">
             Invite your first client to get started -- they sign up under your brand and you keep the markup.
           </p>
           <button
@@ -193,7 +193,7 @@ export default function SubaccountsPage() {
       ) : (
         <div className="glass rounded-xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-white/3 text-xs uppercase tracking-widest text-white/40">
+            <thead className="bg-black/3 text-xs uppercase tracking-widest text-black/40">
               <tr>
                 <th className="text-left px-4 py-3">Subaccount</th>
                 <th className="text-left px-4 py-3">Plan</th>
@@ -206,20 +206,20 @@ export default function SubaccountsPage() {
               {subs.map((sub, i) => (
                 <motion.tr
                   key={sub.id}
-                  className="border-t border-white/5 hover:bg-white/3 transition-all"
+                  className="border-t border-black/5 hover:bg-black/3 transition-all"
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.04 }}
                 >
                   <td className="px-4 py-3">
-                    <p className="text-white font-medium">{sub.name}</p>
-                    <p className="text-xs text-white/40 flex items-center gap-1 mt-0.5">
+                    <p className="text-[#0A0A0B] font-medium">{sub.name}</p>
+                    <p className="text-xs text-black/40 flex items-center gap-1 mt-0.5">
                       <Mail className="w-3 h-3" />
                       {sub.email}
                     </p>
                   </td>
-                  <td className="px-4 py-3 text-white/70 capitalize">{sub.plan_tier}</td>
-                  <td className="px-4 py-3 text-white">{formatMrr(sub.monthly_amount_cents)}</td>
+                  <td className="px-4 py-3 text-black/65 capitalize">{sub.plan_tier}</td>
+                  <td className="px-4 py-3 text-[#0A0A0B]">{formatMrr(sub.monthly_amount_cents)}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-block px-2 py-0.5 rounded-md text-xs font-semibold capitalize ${STATUS_BADGE[sub.status]}`}>
                       {sub.status}
@@ -228,12 +228,12 @@ export default function SubaccountsPage() {
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center gap-2 justify-end">
                       {sub.status === "active" && (
-                        <button onClick={() => updateStatus(sub.id, "suspended")} className="p-1.5 rounded hover:bg-white/10 text-white/60" title="Suspend">
+                        <button onClick={() => updateStatus(sub.id, "suspended")} className="p-1.5 rounded hover:bg-black/8 text-black/60" title="Suspend">
                           <Pause className="w-4 h-4" />
                         </button>
                       )}
                       {(sub.status === "suspended" || sub.status === "pending") && (
-                        <button onClick={() => updateStatus(sub.id, "active")} className="p-1.5 rounded hover:bg-white/10 text-emerald-400" title="Activate">
+                        <button onClick={() => updateStatus(sub.id, "active")} className="p-1.5 rounded hover:bg-black/8 text-emerald-600" title="Activate">
                           <Play className="w-4 h-4" />
                         </button>
                       )}
@@ -253,67 +253,67 @@ export default function SubaccountsPage() {
 
       {showInvite && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="relative w-full max-w-md  border border-white/10 bg-[#0e0e10] p-6 shadow-2xl">
-            <button onClick={() => setShowInvite(false)} className="absolute top-4 right-4 p-1.5 rounded hover:bg-white/10 text-white/60">
+          <div className="relative w-full max-w-md  border border-black/10 bg-white p-6 shadow-2xl">
+            <button onClick={() => setShowInvite(false)} className="absolute top-4 right-4 p-1.5 rounded hover:bg-black/8 text-black/60">
               <X className="w-4 h-4" />
             </button>
             <div className="flex items-center gap-2 mb-1">
               <Building2 className="w-5 h-5 text-[#FF2D2D]" />
-              <h2 className="text-lg font-bold text-white">Invite Subaccount</h2>
+              <h2 className="text-lg font-bold text-[#0A0A0B]">Invite Subaccount</h2>
             </div>
-            <p className="text-xs text-white/50 mb-5">
+            <p className="text-xs text-black/50 mb-5">
               They will receive an email invite under your brand. Once they sign up, billing flows through your Stripe Connect account.
             </p>
             <div className="flex flex-col gap-3">
               <div>
-                <label className="text-xs text-white/60 mb-1 block">Name</label>
+                <label className="text-xs text-black/60 mb-1 block">Name</label>
                 <input
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   placeholder="Client Name"
-                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[#FF2D2D]/50"
+                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#CC2424]/50"
                 />
               </div>
               <div>
-                <label className="text-xs text-white/60 mb-1 block">Email</label>
+                <label className="text-xs text-black/60 mb-1 block">Email</label>
                 <input
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="client@theircompany.com"
-                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[#FF2D2D]/50"
+                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#CC2424]/50"
                 />
               </div>
               <div>
-                <label className="text-xs text-white/60 mb-1 block">Plan</label>
+                <label className="text-xs text-black/60 mb-1 block">Plan</label>
                 <select
                   value={form.plan_tier}
                   onChange={(e) => setForm({ ...form, plan_tier: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[#FF2D2D]/50"
+                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#CC2424]/50"
                 >
                   {PLAN_TIERS.map((t) => (
-                    <option key={t.value} value={t.value} className="bg-[#0e0e10]">
+                    <option key={t.value} value={t.value} className="bg-white">
                       {t.label}
                     </option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="text-xs text-white/60 mb-1 block">Monthly amount (USD cents)</label>
+                <label className="text-xs text-black/60 mb-1 block">Monthly amount (USD cents)</label>
                 <input
                   type="number"
                   min={0}
                   value={form.monthly_amount_cents}
                   onChange={(e) => setForm({ ...form, monthly_amount_cents: Number(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[#FF2D2D]/50"
+                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#CC2424]/50"
                 />
-                <p className="text-xs text-white/40 mt-1">
+                <p className="text-xs text-black/40 mt-1">
                   e.g. 9900 = $99.00. This is what you charge the client. ShortStack base fee is deducted via Stripe Connect.
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2 mt-5">
-              <button onClick={() => setShowInvite(false)} className="flex-1 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm font-medium">
+              <button onClick={() => setShowInvite(false)} className="flex-1 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/8 text-[#0A0A0B] text-sm font-medium">
                 Cancel
               </button>
               <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#FF2D2D] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60">
@@ -321,7 +321,7 @@ export default function SubaccountsPage() {
                 Send Invite
               </button>
             </div>
-            <p className="mt-4 text-xs text-white/40 flex items-start gap-1.5">
+            <p className="mt-4 text-xs text-black/40 flex items-start gap-1.5">
               <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
               Email delivery for invites is deferred to v2 -- see PR notes.
             </p>

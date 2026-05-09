@@ -119,7 +119,7 @@ export default function DesignStudioPage() {
   // No design loaded — show picker
   if (!designId && !design) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#0a0a14]">
+      <div className="min-h-screen flex flex-col bg-[#FAFAFB]">
         <PageHero
           title="Design Studio"
           subtitle="Create on-brand visuals with AI — text, shapes, images, templates."
@@ -129,7 +129,7 @@ export default function DesignStudioPage() {
         <div className="flex-1 p-8">
           <div className="max-w-3xl mx-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-white">New Design</h2>
+              <h2 className="text-lg font-semibold text-[#0A0A0B]">New Design</h2>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {SIZE_PRESETS.map((preset, i) => (
@@ -142,18 +142,18 @@ export default function DesignStudioPage() {
                   transition={{ delay: i * 0.06, duration: 0.4 }}
                   whileHover={{ y: -4, scale: 1.02 }}
                   className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#FF2D2D]/40 transition-colors group"
-                  style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                  style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
                 >
                   <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", width: "calc(100% + 32px)", marginLeft: -16, marginRight: -16, marginBottom: 8, flexShrink: 0 }} />
                   <div
-                    className="border border-white/20 bg-white/5 rounded group-hover:border-[#FF2D2D]/50 transition-colors"
+                    className="border border-black/15 bg-black/5 rounded group-hover:border-[#FF2D2D]/50 transition-colors"
                     style={{
                       width: 48,
                       height: Math.round(48 * (preset.height / preset.width)),
                     }}
                   />
                   <div className="text-center">
-                    <p className="text-xs font-medium text-gray-300 group-hover:text-white">
+                    <p className="text-xs font-medium text-gray-700 group-hover:text-[#0A0A0B]">
                       {preset.label}
                     </p>
                     <p className="text-[10px] text-gray-600">
@@ -165,7 +165,7 @@ export default function DesignStudioPage() {
             </div>
 
             <div className="mt-10">
-              <h2 className="text-lg font-semibold text-white mb-4">Recent Designs</h2>
+              <h2 className="text-lg font-semibold text-[#0A0A0B] mb-4">Recent Designs</h2>
               <RecentDesigns />
             </div>
           </div>
@@ -176,7 +176,7 @@ export default function DesignStudioPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0a14]">
+      <div className="min-h-screen flex items-center justify-center bg-[#FAFAFB]">
         <Loader2 size={32} className="animate-spin text-[#FF2D2D]" />
       </div>
     );
@@ -232,10 +232,10 @@ function RecentDesigns() {
           transition={{ delay: i * 0.05, duration: 0.35 }}
           whileHover={{ y: -4, scale: 1.01 }}
           className="rounded-xl overflow-hidden hover:border-[#FF2D2D]/30 transition-colors group"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
         >
           <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
-          <div className="relative aspect-video bg-[#1a1a2e] flex items-center justify-center">
+          <div className="relative aspect-video bg-[#F2F2F4] flex items-center justify-center">
             {d.thumbnail_url ? (
               <Image
                 src={d.thumbnail_url}
@@ -250,7 +250,7 @@ function RecentDesigns() {
             )}
           </div>
           <div className="p-2">
-            <p className="text-xs font-medium text-gray-300 group-hover:text-white truncate">
+            <p className="text-xs font-medium text-gray-700 group-hover:text-[#0A0A0B] truncate">
               {d.title}
             </p>
             <p className="text-[10px] text-gray-600">
@@ -262,3 +262,5 @@ function RecentDesigns() {
     </div>
   );
 }
+
+

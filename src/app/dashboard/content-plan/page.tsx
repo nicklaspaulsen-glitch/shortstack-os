@@ -537,7 +537,7 @@ export default function ContentPlanPage() {
             {advancedMode && (
               <button
                 onClick={() => { loadPosts(); loadInsights(); }}
-                className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all"
+                className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-black/15 text-[#0A0A0B] font-medium hover:bg-black/15 transition-all"
               >
                 <RefreshCw size={12} /> Refresh
               </button>
@@ -877,7 +877,7 @@ function PostGrid({
           className={`rounded-xl overflow-hidden cursor-pointer group transition-shadow ${
             selectedIds.has(p.id) ? "border-gold bg-gold/5" : ""
           }`}
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
           onClick={() => onOpen(p)}
         >
           {/* Thumbnail area */}
@@ -894,7 +894,7 @@ function PostGrid({
             {/* Selection checkbox */}
             <label
               onClick={e => e.stopPropagation()}
-              className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm rounded p-1 border border-white/10"
+              className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm rounded p-1 border border-black/10"
             >
               <input
                 type="checkbox"
@@ -904,7 +904,7 @@ function PostGrid({
               />
             </label>
             {/* Platform badge */}
-            <span className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-md p-1 border border-white/10 flex items-center gap-1 text-[9px] text-white">
+            <span className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-md p-1 border border-black/10 flex items-center gap-1 text-[9px] text-white">
               {PLATFORM_ICON[p.platform.toLowerCase()] || null}
               {platformLabel(p.platform)}
             </span>
@@ -956,7 +956,7 @@ function PostList({
   }, [insights]);
 
   return (
-    <div className="rounded-xl p-0 overflow-hidden" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+    <div className="rounded-xl p-0 overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
       <div className="overflow-x-auto">
         <table className="w-full text-[11px]">
           <thead className="bg-surface-light border-b border-border">
@@ -1070,7 +1070,7 @@ function PostCalendar({
   const today = new Date();
 
   return (
-    <div className="rounded-xl" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", padding: "1.25rem 1.5rem" }}>
+    <div className="rounded-xl" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)", padding: "1.25rem 1.5rem" }}>
       {/* Calendar header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -1363,9 +1363,11 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
 
 function Stat({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
-    <div className="rounded-lg text-center" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", padding: "0.5rem" }}>
+    <div className="rounded-lg text-center" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)", padding: "0.5rem" }}>
       <div className="text-[10px] text-muted flex items-center justify-center gap-1 mb-0.5">{icon} {label}</div>
       <div className="text-sm font-semibold text-foreground">{value}</div>
     </div>
   );
 }
+
+

@@ -34,12 +34,12 @@ interface Deal {
 }
 
 const STAGES = [
-  { key: "prospect", label: "Prospect", color: "#FF2D2D" },
-  { key: "qualified", label: "Qualified", color: "#8b5cf6" },
-  { key: "proposal_sent", label: "Proposal Sent", color: "#f59e0b" },
-  { key: "negotiation", label: "Negotiation", color: "#f97316" },
-  { key: "closed_won", label: "Closed Won", color: "#FF2D2D" },
-  { key: "closed_lost", label: "Closed Lost", color: "#ef4444" },
+  { key: "prospect", label: "Prospect", color: "#CC2424" },
+  { key: "qualified", label: "Qualified", color: "#7c3aed" },
+  { key: "proposal_sent", label: "Proposal Sent", color: "#d97706" },
+  { key: "negotiation", label: "Negotiation", color: "#ea580c" },
+  { key: "closed_won", label: "Closed Won", color: "#16a34a" },
+  { key: "closed_lost", label: "Closed Lost", color: "#dc2626" },
 ];
 
 const RAINBOW_BARS = [
@@ -190,7 +190,7 @@ export default function DealsPage() {
         gradient="gold"
         actions={
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
-            <button onClick={() => setShowCreateModal(!showCreateModal)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+            <button onClick={() => setShowCreateModal(!showCreateModal)} className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.08)] border border-[rgba(0,0,0,0.12)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.12)] transition-all flex items-center gap-1.5">
               <Plus size={12} /> New Deal
             </button>
           </motion.div>
@@ -229,7 +229,7 @@ export default function DealsPage() {
             { label: "Avg Deal", value: formatCurrency(avgDealSize), icon: <BarChart3 size={12} />, color: "text-gold" },
           ].map((stat, i) => (
             <PrismPanel key={i} rainbow padding="p-3" className="text-center" delay={i * 0.06}>
-              <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+              <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
               <p className="text-lg font-bold">{stat.value}</p>
               <p className="text-[9px] text-muted">{stat.label}</p>
             </PrismPanel>
@@ -238,7 +238,7 @@ export default function DealsPage() {
       </CollapsibleStats>
 
       {/* Tabs (sticky) */}
-      <div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
+      <div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -316,7 +316,7 @@ export default function DealsPage() {
                         draggable
                         onDragStart={() => onDragStart(deal.id)}
                         onClick={() => setExpandedDeal(expandedDeal === deal.id ? null : deal.id)}
-                        className="rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-indigo-500/20 transition-colors border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}>
+                        className="rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-[rgba(0,0,0,0.12)] transition-colors border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
                         <p className="text-[11px] font-semibold truncate">{deal.title}</p>
                         <p className="text-[9px] text-muted">{deal.client_name}</p>
                         <p className="text-sm font-bold mt-1" style={{ color: stage.color }}>{formatCurrency(Number(deal.value))}</p>
@@ -325,7 +325,7 @@ export default function DealsPage() {
                           <span className="text-[8px] text-muted">{deal.probability}% prob</span>
                         </div>
                         {expandedDeal === deal.id && (
-                          <div className="mt-2 pt-2 border-t border-white/10 space-y-1.5">
+                          <div className="mt-2 pt-2 border-t border-[rgba(0,0,0,0.08)] space-y-1.5">
                             <p className="text-[9px]"><span className="text-muted">Source:</span> {deal.source || "N/A"}</p>
                             <p className="text-[9px]"><span className="text-muted">Email:</span> {deal.contact_email || "N/A"}</p>
                             <p className="text-[9px]"><span className="text-muted">Close:</span> {deal.expected_close_date || "N/A"}</p>
@@ -374,7 +374,7 @@ export default function DealsPage() {
                 { stage: "Proposal to Negotiation", avg: "0 days", trend: "faster" },
                 { stage: "Negotiation to Close", avg: "0 days", trend: "faster" },
               ].map((v, i) => (
-                <motion.div key={i} variants={fadeUp} className="rounded-lg p-3 text-center border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}>
+                <motion.div key={i} variants={fadeUp} className="rounded-lg p-3 text-center border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
                   <p className="text-[9px] text-muted mb-1">{v.stage}</p>
                   <p className="text-sm font-bold">{v.avg}</p>
                   <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-green-400" : "text-red-400"}`}>
@@ -405,7 +405,7 @@ export default function DealsPage() {
               {(["month", "quarter"] as const).map(p => (
                 <button key={p} onClick={() => setForecastPeriod(p)}
                   className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                    forecastPeriod === p ? "bg-indigo-500/15 text-indigo-300 border border-indigo-500/25" : "text-muted border border-white/[0.05]"
+                    forecastPeriod === p ? "bg-[#CC2424]/10 text-[#CC2424] border border-[#CC2424]/20" : "text-muted border border-[rgba(0,0,0,0.08)]"
                   }`}>{p}</button>
               ))}
             </div>
@@ -489,8 +489,8 @@ export default function DealsPage() {
               const scoreColor = score >= 70 ? "text-green-400" : score >= 40 ? "text-yellow-400" : "text-red-400";
               const scoreBg = score >= 70 ? "bg-green-400" : score >= 40 ? "bg-yellow-400" : "bg-red-400";
               return (
-                <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="rounded-xl p-4 flex items-center gap-4 border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)" }}>
+                <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="rounded-xl p-4 flex items-center gap-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border border-[rgba(0,0,0,0.08)]" style={{ background: "#F2F2F4" }}>
                     <p className={`text-lg font-bold ${scoreColor}`}>{score}</p>
                   </div>
                   <div className="flex-1 min-w-0">
@@ -498,7 +498,7 @@ export default function DealsPage() {
                       <p className="text-xs font-semibold truncate">{deal.title}</p>
                       <span className="text-[9px] text-muted">({deal.client_name})</span>
                     </div>
-                    <div className="w-full bg-white/5 rounded-full h-1.5 mt-1.5">
+                    <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 mt-1.5">
                       <div className={`${scoreBg} rounded-full h-1.5`} style={{ width: `${score}%` }} />
                     </div>
                     <div className="flex gap-4 mt-1.5 text-[9px] text-muted">
@@ -530,7 +530,7 @@ export default function DealsPage() {
                 { trigger: "Proposal viewed 3+ times", action: "Notify owner + move to Negotiation" },
                 { trigger: "Deal value > $5,000", action: "Require manager approval before close" },
               ].map((rule, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-[rgba(255,255,255,0.1)] opacity-60" style={{ background: "rgba(255,255,255,0.035)" }}>
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-[rgba(0,0,0,0.08)] opacity-60" style={{ background: "#FAFAFB" }}>
                   <div className="flex items-center gap-2">
                     <Zap size={12} className="text-gold" />
                     <div>
@@ -538,7 +538,7 @@ export default function DealsPage() {
                       <p className="text-[9px] text-muted">Then: {rule.action}</p>
                     </div>
                   </div>
-                  <div className="w-8 h-4 rounded-full bg-white/5">
+                  <div className="w-8 h-4 rounded-full bg-[rgba(0,0,0,0.06)]">
                     <div className="w-3 h-3 bg-white rounded-full mt-0.5 ml-0.5" />
                   </div>
                 </div>
@@ -568,7 +568,7 @@ export default function DealsPage() {
                     key={i}
                     whileHover={{ y: -2 }}
                     onClick={() => toast("Contract templates coming soon — needs API")}
-                    className="flex items-center justify-between p-3 rounded-lg hover:border-indigo-500/20 transition-all cursor-pointer border border-[rgba(255,255,255,0.1)]" style={{ background: "rgba(255,255,255,0.035)" }}
+                    className="flex items-center justify-between p-3 rounded-lg hover:border-[rgba(0,0,0,0.12)] transition-all cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB" }}
                   >
                     <div className="flex items-center gap-2">
                       <FileText size={14} className="text-muted" />
@@ -603,7 +603,7 @@ export default function DealsPage() {
                     <button
                       key={s}
                       onClick={() => toast(`${s} service selection coming soon — needs proposal builder`)}
-                      className="text-[9px] px-2 py-1 rounded border border-white/10 hover:border-indigo-500/30 hover:bg-indigo-500/5 text-muted hover:text-indigo-300 transition-all"
+                      className="text-[9px] px-2 py-1 rounded border border-[rgba(0,0,0,0.10)] hover:border-[#CC2424]/30 hover:bg-[#CC2424]/5 text-muted hover:text-[#CC2424] transition-all"
                     >{s}</button>
                   ))}
                 </div>
@@ -647,7 +647,7 @@ export default function DealsPage() {
           </motion.div>
           {/* Deal-by-deal breakdown */}
           <PrismPanel rainbow padding="p-0" className="overflow-hidden">
-            <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.1)]">
+            <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.08)]">
               <h4 className="text-xs font-semibold">Commission Breakdown</h4>
             </div>
             <div className="p-4 space-y-1.5">
@@ -671,7 +671,7 @@ export default function DealsPage() {
                     <motion.div
                       key={deal.id}
                       variants={slideX}
-                      className="grid grid-cols-5 text-[10px] py-2 px-2 rounded-lg hover:bg-indigo-500/5 items-center transition-colors border border-[rgba(255,255,255,0.08)]" style={{ background: "rgba(255,255,255,0.035)" }}
+                      className="grid grid-cols-5 text-[10px] py-2 px-2 rounded-lg hover:bg-[rgba(0,0,0,0.02)] items-center transition-colors border border-[rgba(0,0,0,0.06)]" style={{ background: "#FAFAFB" }}
                     >
                       <span className="font-medium truncate">{deal.title}</span>
                       <span>{formatCurrency(amt)}</span>
@@ -691,3 +691,4 @@ export default function DealsPage() {
     </div>
   );
 }
+

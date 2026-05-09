@@ -34,11 +34,11 @@ type SortDir = "asc" | "desc";
 type ViewMode = "table" | "card";
 
 const TAG_PRESETS: ClientTag[] = [
-  { label: "VIP", color: "#FF2D2D" },
+  { label: "VIP", color: "#CC2424" },
   { label: "At Risk", color: "#F26063" },
   { label: "New", color: "#FF6B6B" },
   { label: "Enterprise", color: "#FF6B6B" },
-  { label: "Growing", color: "#FF2D2D" },
+  { label: "Growing", color: "#CC2424" },
   { label: "Needs Attention", color: "#F26063" },
 ];
 
@@ -49,7 +49,7 @@ function HealthArc({ score }: { score: number }) {
   const color = pct >= 70 ? "#FF6B6B" : pct >= 40 ? "#CC2424" : "#F26063";
   return (
     <svg width="42" height="42" viewBox="0 0 42 42" className="-rotate-90">
-      <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="3" />
+      <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(0,0,0,0.08)" strokeWidth="3" />
       <circle cx="21" cy="21" r={r} fill="none" stroke={color} strokeWidth="3"
         strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
       <text x="21" y="21" textAnchor="middle" dominantBaseline="central"
@@ -77,7 +77,7 @@ function ClientInitialsBadge({ name }: { name: string }) {
       border: `1.5px solid rgba(255,45,45,${alpha * 2.2})`,
       display: "flex", alignItems: "center", justifyContent: "center",
     }}>
-      <span style={{ fontSize: 12, fontWeight: 700, color: "#FF6B6B", letterSpacing: "0.05em" }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color: "#CC2424", letterSpacing: "0.05em" }}>
         {initials}
       </span>
     </div>
@@ -643,15 +643,15 @@ export default function ClientsPage() {
 
   // ─── Prism color map for stat tiles ─────────────────────────────────────
   const CLIENT_PRISM = [
-    { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },  // Total
-    { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },  // Active
+    { accent: "#CC2424", bar: "from-[#CC2424] to-transparent" },  // Total
+    { accent: "#CC2424", bar: "from-[#CC2424] to-transparent" },  // Active
     { accent: "#FF6B6B", bar: "from-[#FF6B6B] to-transparent" },  // MRR
     { accent: "#F26063", bar: "from-[#F26063] to-transparent" },  // At Risk
   ] as const;
 
   if (loading) return (
     <div className="space-y-4">
-      <div className="animate-pulse h-28  bg-[#0E0D14] border border-[rgba(255,255,255,0.04)]" />
+      <div className="animate-pulse h-28 rounded-xl bg-[#F2F2F4] border border-[rgba(0,0,0,0.06)]" />
       <TableSkeleton rows={8} />
     </div>
   );
@@ -672,36 +672,36 @@ export default function ClientsPage() {
           <>
             {clients.length > 0 && (
               <div className="hidden sm:flex items-center gap-1.5">
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[10px] font-medium text-[#FF2D2D]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
+                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(204,36,36,0.08)] border border-[rgba(204,36,36,0.15)] text-[10px] font-medium text-[#CC2424]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#CC2424] animate-pulse" />
                   {clients.length}
                 </span>
                 {totalMRR > 0 && (
-                  <span className="px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[10px] font-medium text-[#A8A8B2]">
+                  <span className="px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[10px] font-medium text-[#52525B]">
                     {formatCurrency(totalMRR)}
                   </span>
                 )}
               </div>
             )}
             {(callerRole === "admin" || callerRole === "founder") && (
-              <div className="flex items-center bg-[#0E0E10] border border-[rgba(255,255,255,0.06)] rounded-lg p-0.5">
+              <div className="flex items-center bg-[#F2F2F4] border border-[rgba(0,0,0,0.08)] rounded-lg p-0.5">
                 <button
                   onClick={() => setScope("all")}
                   className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                    scope === "all" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
+                    scope === "all" ? "bg-[#CC2424] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
                   }`}
                 >All</button>
                 <button
                   onClick={() => setScope("mine")}
                   className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                    scope === "mine" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
+                    scope === "mine" ? "bg-[#CC2424] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
                   }`}
                 >Mine</button>
               </div>
             )}
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D2D] text-white text-xs font-semibold hover:bg-[#CC2424] transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#CC2424] text-white text-xs font-semibold hover:bg-[#CC2424] transition-all"
             >
               <Plus size={13} /> Add Client
             </button>
@@ -709,51 +709,65 @@ export default function ClientsPage() {
         }
       />
 
-      {/* Prism stat strip — 4 glass tiles with per-tile color accent */}
+      {/* Clients command strip — MRR focal left, 3 stats inline right */}
       {clients.length > 0 && (
         <motion.div
-          className="relative  border border-[rgba(255,255,255,0.1)] overflow-hidden"
-          style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+          className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-3"
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Prism rainbow top bar */}
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF6B6B] to-[#CC2424]" />
-          <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(255,255,255,0.08)]">
+          {/* MRR focal tile */}
+          <div
+            className="relative overflow-hidden rounded-xl px-8 py-7"
+            style={{
+              background: "#FFFFFF",
+              border: "1px solid rgba(204,36,36,0.16)",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px -4px rgba(0,0,0,0.08)",
+            }}
+          >
+            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent, #CC2424 40%, #FF4040 50%, #CC2424 60%, transparent)" }} />
+            <div className="pointer-events-none absolute -right-20 -top-20 w-72 h-72 rounded-full bg-[#CC2424] opacity-[0.04] blur-[64px]" />
+            <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#52525B] mb-2">Monthly Recurring Revenue</p>
+            <p className="font-display font-black leading-[0.88] text-[#CC2424]" style={{ fontSize: "clamp(48px,6vw,80px)", letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums" }}>
+              {formatCurrency(totalMRR)}
+            </p>
+            <p className="mt-3 text-[10px] text-[#52525B]">
+              <span className="text-[#71717A] font-medium">{activeClients.length}</span> active · <span className="text-[#71717A] font-medium">{Math.round((activeClients.length / (clients.length || 1)) * 100)}%</span> retention
+            </p>
+          </div>
+
+          {/* 3 secondary stats stacked */}
+          <div className="flex lg:flex-col gap-3 min-w-[200px]">
             {[
               { label: "Total Clients", value: String(clients.length), sub: `${clients.filter(c => !c.is_active).length} inactive` },
-              { label: "Active", value: String(activeClients.length), sub: `${Math.round((activeClients.length / (clients.length || 1)) * 100)}% retention` },
-              { label: "MRR", value: formatCurrency(totalMRR), sub: "monthly recurring" },
-              { label: "At Risk", value: String(clients.filter(c => c.health_score < 40).length), sub: "health score <40" },
-            ].map((cell, i) => {
-              const tile = CLIENT_PRISM[i];
-              return (
-                <motion.div
-                  key={cell.label}
-                  className="relative px-6 py-4 flex flex-col gap-1 overflow-hidden"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.34, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">{cell.label}</span>
-                  <span
-                    className="font-display text-2xl font-bold tracking-[-0.03em] font-mono"
-                    style={{ color: tile.accent, fontVariantNumeric: "tabular-nums" }}
-                  >
-                    {cell.value}
-                  </span>
-                  <span className="text-[10px] text-[#6F6D7A]">{cell.sub}</span>
-                </motion.div>
-              );
-            })}
+              { label: "At Risk", value: String(clients.filter(c => c.health_score < 40).length), sub: "health < 40", danger: clients.filter(c => c.health_score < 40).length > 0 },
+              { label: "Active", value: String(activeClients.length), sub: "currently live" },
+            ].map((cell, i) => (
+              <motion.div
+                key={cell.label}
+                className="flex-1 relative rounded-xl px-5 py-4 overflow-hidden"
+                style={{
+                  background: "#FFFFFF",
+                  border: `1px solid ${cell.danger ? "rgba(204,36,36,0.22)" : "rgba(0,0,0,0.08)"}`,
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+                }}
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.34, delay: 0.1 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <span className="text-[8px] font-semibold uppercase tracking-[0.18em] text-[#71717A]">{cell.label}</span>
+                <span className="block font-display text-2xl font-bold tracking-[-0.03em] mt-0.5" style={{ color: cell.danger ? "#CC2424" : "#0A0A0B", fontVariantNumeric: "tabular-nums" }}>{cell.value}</span>
+                <span className="text-[10px] text-[#71717A]">{cell.sub}</span>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       )}
 
       {/* Tabs (sticky) */}
       <div className="overflow-x-auto max-w-full">
-      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 backdrop-blur-sm flex gap-1 bg-[#15141A]/95 border border-[rgba(255,255,255,0.08)] rounded-xl p-1 w-fit min-w-max shadow-lg shadow-black/20">
+      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 flex gap-1 rounded-xl p-1 w-fit min-w-max" style={{ background: "#FAFAFB", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
         {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}
@@ -761,7 +775,7 @@ export default function ClientsPage() {
             aria-selected={tab === t}
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
-              tab === t ? "bg-[#FF2D2D] text-white font-medium" : "text-muted hover:text-foreground"
+              tab === t ? "bg-[#CC2424] text-white font-medium" : "text-muted hover:text-foreground"
             }`}
           >
             {t === "billing" && <CreditCard size={14} />}
@@ -789,7 +803,7 @@ export default function ClientsPage() {
 
             {/* Feature 9: Advanced Filters Toggle */}
             <button onClick={() => setShowFilters(!showFilters)}
-              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(255,255,255,0.1)] text-[#FF2D2D] border-[rgba(255,255,255,0.25)]" : ""}`}>
+              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(204,36,36,0.08)] text-[#CC2424] border-[rgba(204,36,36,0.25)]" : ""}`}>
               <Filter size={14} /> Filters
               {(filterIndustry || filterStatus !== "all" || filterTag || filterMrrMin || filterMrrMax) && (
                 <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D]" />
@@ -808,7 +822,7 @@ export default function ClientsPage() {
               ]).map(s => (
                 <button key={s.field} onClick={() => handleSort(s.field)}
                   className={`px-2 py-1 text-[10px] rounded-md transition-all flex items-center gap-0.5 ${
-                    sortField === s.field ? "bg-[#FF2D2D] text-white font-medium" : "text-muted hover:text-foreground"
+                    sortField === s.field ? "bg-[#CC2424] text-white font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {s.label}
                   {sortField === s.field && (
@@ -821,11 +835,11 @@ export default function ClientsPage() {
             {/* Feature 15: View Mode Toggle */}
             <div className="flex items-center gap-0.5 bg-surface rounded-lg p-0.5">
               <button onClick={() => setViewMode("table")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#FF2D2D] text-white" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#CC2424] text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutList size={14} />
               </button>
               <button onClick={() => setViewMode("card")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#FF2D2D] text-white" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#CC2424] text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutGrid size={14} />
               </button>
             </div>
@@ -859,7 +873,7 @@ export default function ClientsPage() {
                 className={`text-[10px] px-2 py-1 rounded-full border transition-all ${
                   activityFilter === chip.key
                     ? chip.color + " border"
-                    : "bg-surface text-muted border-border hover:border-gold/30"
+                    : "bg-surface text-muted border-border hover:border-[rgba(255,45,45,0.30)]"
                 }`}
               >
                 {chip.label}
@@ -914,14 +928,14 @@ export default function ClientsPage() {
               <div className="flex items-center justify-between mt-3 pt-2 border-t border-border">
                 <span className="text-[10px] text-muted">{filteredClients.length} clients matched</span>
                 <button onClick={() => { setFilterIndustry(""); setFilterStatus("all"); setFilterTag(""); setFilterMrrMin(""); setFilterMrrMax(""); }}
-                  className="text-[10px] text-gold hover:underline">Clear all filters</button>
+                  className="text-[10px] text-[#CC2424] hover:underline">Clear all filters</button>
               </div>
             </div>
           )}
 
           {/* Feature 4: Bulk Actions Bar */}
           {selectedClients.size > 0 && (
-            <div className="card p-2.5 flex items-center gap-3 bg-gold/5 border-gold/20 flex-wrap">
+            <div className="card p-2.5 flex items-center gap-3 bg-[rgba(255,45,45,0.05)] border-[rgba(255,45,45,0.20)] flex-wrap">
               <span className="text-xs font-medium">{selectedClients.size} selected</span>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <button onClick={() => handleBulkAction("email")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
@@ -951,7 +965,7 @@ export default function ClientsPage() {
         </div>
       )}
 
-      {/* Feature 15: Card View */}
+      {/* Feature 15: Card View — editorial bento: first card spans 2 cols as featured tile */}
       {tab === "clients" && viewMode === "card" && (
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
@@ -959,12 +973,13 @@ export default function ClientsPage() {
           animate="visible"
           variants={staggerContainerFast}
         >
-          {filteredClients.map(c => {
+          {filteredClients.map((c, cardIdx) => {
             const revenue = getClientRevenue(c.id);
             const contractInfo = getContractStatus(c.id);
             const onboarding = getOnboardingProgress(c);
             const nextAction = getNextAction(c);
             const tags = clientTags[c.id] || [];
+            const isFeatured = cardIdx === 0 && filteredClients.length > 1;
 
             const status = getLifecycleStatus(c);
             const statusStyles = STATUS_STYLES[status];
@@ -976,19 +991,24 @@ export default function ClientsPage() {
               "card-accent-gold"; // trial
             return (
               <motion.div key={c.id}
-                className={`card card-accent ${accentClass} p-4 transition-all cursor-pointer group relative`}
-                style={{ background: "rgba(255,255,255,0.03)", backdropFilter: "blur(12px)" }}
+                className={`card card-accent ${accentClass} ${isFeatured ? "md:col-span-2" : ""} p-4 transition-all cursor-pointer group relative overflow-hidden`}
+                style={{ background: isFeatured ? "rgba(204,36,36,0.04)" : "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
                 variants={fadeUp}
-                whileHover={{ y: -4, borderColor: "rgba(255,255,255,0.22)", boxShadow: "0 12px 40px rgba(0,0,0,0.45), 0 0 40px rgba(255,255,255,0.06)", transition: { duration: 0.22 } }}
+                whileHover={{ y: -4, borderColor: "rgba(0,0,0,0.16)", boxShadow: "0 12px 40px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.08)", transition: { duration: 0.22 } }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
                 onMouseEnter={() => setHoveredClient(c.id)}
                 onMouseLeave={() => setHoveredClient(null)}>
+
+                {/* Featured tile: subtle prism glow */}
+                {isFeatured && (
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#CC2424] via-[#FF6B6B] to-transparent" />
+                )}
 
                 {/* Feature 4: Selection checkbox */}
                 <div className="absolute top-3 left-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-gold border-gold text-black" : "border-border hover:border-gold/50"
+                      selectedClients.has(c.id) ? "bg-[#FF2D2D] border-[#CC2424] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -998,28 +1018,39 @@ export default function ClientsPage() {
                 <div className="absolute top-3 right-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleCompare(c.id)}
                     className={`text-[9px] px-1.5 py-0.5 rounded transition-all ${
-                      compareClients.includes(c.id) ? "bg-gold/20 text-gold" : "text-muted hover:text-foreground"
+                      compareClients.includes(c.id) ? "bg-[rgba(204,36,36,0.12)] text-[#CC2424]" : "text-muted hover:text-foreground"
                     }`}>
                     <Columns size={10} />
                   </button>
                 </div>
 
-                {/* Feature 1: Health indicator + initials badge */}
-                <div className="flex items-start gap-3 mb-3 mt-1">
+                {/* Feature 1: Health indicator + initials badge — wider layout for featured tile */}
+                <div className={`flex items-start gap-3 mb-3 mt-1 ${isFeatured ? "md:flex-row md:items-center" : ""}`}>
                   <div className="shrink-0 flex flex-col items-center gap-1.5">
                     <ClientInitialsBadge name={c.business_name || "?"} />
                     <HealthArc score={c.health_score} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <p className="font-medium text-sm truncate">{c.business_name}</p>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <p className={`font-semibold truncate ${isFeatured ? "text-base" : "text-sm"}`}>{c.business_name}</p>
+                      {isFeatured && <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-[#CC2424] bg-[rgba(204,36,36,0.10)] px-2 py-0.5 rounded-full">Top Account</span>}
                       <span className={`inline-flex items-center gap-1 text-[8px] px-1.5 py-0.5 rounded-full font-medium border ${statusStyles.pill}`}>
                         <span className={`w-1 h-1 rounded-full ${statusStyles.dot}`} aria-hidden="true" />
                         {statusStyles.label}
                       </span>
                     </div>
                     <p className="text-[10px] text-muted">{c.contact_name}</p>
+                    {isFeatured && c.industry && (
+                      <p className="text-[10px] text-muted mt-0.5">{c.industry}</p>
+                    )}
                   </div>
+                  {/* Featured: big MRR callout */}
+                  {isFeatured && (
+                    <div className="hidden md:flex flex-col items-end shrink-0 ml-auto">
+                      <span className="text-[9px] uppercase tracking-[0.15em] text-[#71717A]">MRR</span>
+                      <span className="font-display text-2xl font-bold text-[#CC2424] tracking-tight tabular-nums">{formatCurrency(c.mrr)}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Tags */}
@@ -1033,14 +1064,14 @@ export default function ClientsPage() {
                 )}
 
                 {/* Stats grid — bordered editorial layout */}
-                <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(255,255,255,0.08)] overflow-hidden">
+                <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(0,0,0,0.08)] overflow-hidden">
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">MRR</p>
-                    <p className="text-xs font-bold text-[#FF2D2D]">{formatCurrency(c.mrr)}</p>
+                    <p className="text-xs font-bold text-[#CC2424]">{formatCurrency(c.mrr)}</p>
                   </div>
-                  <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-[rgba(255,255,255,0.08)]">
+                  <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-[rgba(0,0,0,0.08)]">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Paid</p>
-                    <p className="text-xs font-bold text-[#F5F4F1]">{formatCurrency(revenue.totalPaid)}</p>
+                    <p className="text-xs font-bold text-[#0A0A0B]">{formatCurrency(revenue.totalPaid)}</p>
                   </div>
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Owed</p>
@@ -1156,7 +1187,7 @@ export default function ClientsPage() {
             columns={[
               { key: "select", label: (
                 <button onClick={selectAllClients} className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                  selectedClients.size === filteredClients.length && filteredClients.length > 0 ? "bg-gold border-gold text-black" : "border-border hover:border-gold/50"
+                  selectedClients.size === filteredClients.length && filteredClients.length > 0 ? "bg-[#FF2D2D] border-[#CC2424] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
                 }`}>
                   {selectedClients.size === filteredClients.length && filteredClients.length > 0 && <Check size={10} />}
                 </button>
@@ -1164,7 +1195,7 @@ export default function ClientsPage() {
                 <div onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-gold border-gold text-black" : "border-border hover:border-gold/50"
+                      selectedClients.has(c.id) ? "bg-[#FF2D2D] border-[#CC2424] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1314,19 +1345,19 @@ export default function ClientsPage() {
             const revenue = getClientRevenue(expandedRow);
             const note = clientNotes[expandedRow];
             return (
-              <div className="border border-t-0 border-[rgba(255,255,255,0.12)] rounded-b-xl px-4 pb-4" style={{ background: "rgba(255,255,255,0.022)", backdropFilter: "blur(12px)" }}>
+              <div className="border border-t-0 border-[rgba(0,0,0,0.08)] rounded-b-xl px-4 pb-4" style={{ background: "#FAFAFB" }}>
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
-                    { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#FF2D2D" },
+                    { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#CC2424" },
                     { label: "Health", value: `${client.health_score ?? "—"}%`, color: client.health_score >= 70 ? "#FF6B6B" : client.health_score >= 40 ? "#CC2424" : "#F26063" },
                     { label: "Package", value: client.package_tier ?? "—", color: "#FF6B6B" },
                     { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
                   ].map((tile, ti) => {
-                    const bars = ["from-[#FF2D2D]","from-[#FF6B6B]","from-[#CC2424]","from-[#6F6D7A]"];
+                    const bars = ["from-[#CC2424]","from-[#FF6B6B]","from-[#CC2424]","from-[#6F6D7A]"];
                     return (
-                      <div key={tile.label} className="relative rounded-xl border border-[rgba(255,255,255,0.1)] p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
+                      <div key={tile.label} className="relative rounded-xl border border-[rgba(0,0,0,0.08)] p-3 overflow-hidden" style={{ background: "#FFFFFF" }}>
                         <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${bars[ti]} to-transparent opacity-60`} />
-                        <div className="text-[10px] uppercase tracking-wider text-[#6F6D7A]">{tile.label}</div>
+                        <div className="text-[10px] uppercase tracking-wider text-[#71717A]">{tile.label}</div>
                         <div className="mt-1 text-lg font-bold font-mono" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</div>
                       </div>
                     );
@@ -1342,7 +1373,7 @@ export default function ClientsPage() {
                       {[
                         { action: "Invoice sent", time: "2 hours ago", icon: <FileText size={10} className="text-info" /> },
                         { action: "Content published", time: "1 day ago", icon: <CheckCircle size={10} className="text-success" /> },
-                        { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-[#FF2D2D]" /> },
+                        { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-[#CC2424]" /> },
                         { action: "Contract signed", time: "1 week ago", icon: <FileText size={10} className="text-gold" /> },
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-2 text-[10px]">
@@ -1441,22 +1472,22 @@ export default function ClientsPage() {
           {/* Billing Stats — prism glass tiles */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },
-              { label: "Active Subs", value: String(clientsWithSubs.length), color: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },
+              { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#CC2424", bar: "from-[#CC2424] to-transparent" },
+              { label: "Active Subs", value: String(clientsWithSubs.length), color: "#CC2424", bar: "from-[#CC2424] to-transparent" },
               { label: "Paid Invoices", value: String(paidInvoices.length), color: "#FF6B6B", bar: "from-[#FF6B6B] to-transparent" },
               { label: "Overdue", value: String(overdueInvoices.length), color: overdueInvoices.length > 0 ? "#F26063" : "#6F6D7A", bar: overdueInvoices.length > 0 ? "from-[#F26063] to-transparent" : "from-[#6F6D7A] to-transparent" },
             ].map((tile, i) => (
               <motion.div
                 key={tile.label}
-                className="relative rounded-xl border border-[rgba(255,255,255,0.08)] px-4 py-3 overflow-hidden"
-                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(12px)" }}
+                className="relative rounded-xl border border-[rgba(0,0,0,0.08)] px-4 py-3 overflow-hidden"
+                style={{ background: "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.36, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -2, transition: { duration: 0.2 } }}
               >
                 <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${tile.bar} opacity-70`} />
-                <p className="text-[10px] text-[#6F6D7A] uppercase tracking-wider">{tile.label}</p>
+                <p className="text-[10px] text-[#71717A] uppercase tracking-wider">{tile.label}</p>
                 <p className="text-xl font-bold font-mono mt-1" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</p>
               </motion.div>
             ))}

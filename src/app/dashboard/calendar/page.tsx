@@ -52,11 +52,11 @@ const TIMEZONES = [
 
 function categoryToColor(category: EventCategory): string {
   switch (category) {
-    case "meeting": return "#FF2D2D";
-    case "deadline": return "#ef4444";
-    case "content": return "#8b5cf6";
-    case "call": return "#FF2D2D";
-    default: return "#FF2D2D";
+    case "meeting": return "#CC2424";
+    case "deadline": return "#dc2626";
+    case "content": return "#7c3aed";
+    case "call": return "#CC2424";
+    default: return "#CC2424";
   }
 }
 
@@ -313,11 +313,11 @@ export default function CalendarPage() {
         gradient="gold"
         actions={
           <>
-            <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+            <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all flex items-center gap-1.5">
               <Filter size={12} /> Filters
             </button>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+              <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5">
                 <Plus size={12} /> New Event
               </button>
             </motion.div>
@@ -395,7 +395,7 @@ export default function CalendarPage() {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border transition-all ${
                     selectedCategories.includes(cat) ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border text-muted"
                   }`}>
-                  <div className="w-2 h-2 rounded-full" style={{ background: cat === "meeting" ? "#FF2D2D" : cat === "deadline" ? "#ef4444" : cat === "content" ? "#8b5cf6" : "#FF2D2D" }} />
+                  <div className="w-2 h-2 rounded-full" style={{ background: cat === "meeting" ? "#CC2424" : cat === "deadline" ? "#dc2626" : cat === "content" ? "#7c3aed" : "#CC2424" }} />
                   {CATEGORY_CONFIG[cat].label}
                 </button>
               ))}
@@ -521,7 +521,7 @@ export default function CalendarPage() {
                       })}
                       {dayAppts.length === 0 && (
                         <button onClick={() => { setNewEvent({ ...newEvent, date: dateStr }); setShowCreate(true); }}
-                          className="w-full py-3 text-[9px] text-muted/30 hover:text-muted transition-colors text-center rounded-lg border border-dashed border-white/5 hover:border-white/10">
+                          className="w-full py-3 text-[9px] text-[#71717A]/50 hover:text-[#71717A] transition-colors text-center rounded-lg border border-dashed border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.16)]">
                           + Add
                         </button>
                       )}
@@ -587,7 +587,7 @@ export default function CalendarPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                       className="flex items-center gap-3 p-3 rounded-lg border border-border transition-colors">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${CATEGORY_CONFIG[evt.category].bg}`}>
                         <span className={CATEGORY_CONFIG[evt.category].color}>{TYPE_ICONS[evt.type]}</span>
@@ -633,9 +633,9 @@ export default function CalendarPage() {
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
                       className="rounded-xl overflow-hidden relative"
-                      style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
+                      style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.08)" }}
                     >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 left-0 right-0" />
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)" }} className="absolute top-0 left-0 right-0" />
                       <div className="flex justify-between text-xs p-2 pt-3">
                         <span className="text-muted">{stat.label}</span>
                         <span className={`font-bold ${stat.color}`}>{stat.value}</span>
@@ -651,7 +651,7 @@ export default function CalendarPage() {
                 {TEAM_MEMBERS.filter(m => m !== "All").map(member => {
                   const count = todaysEvents.filter(e => e.teamMember === member).length;
                   return (
-                    <div key={member} className="flex items-center gap-2 text-xs p-1.5 rounded-lg hover:bg-white/[0.02]">
+                    <div key={member} className="flex items-center gap-2 text-xs p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)]">
                       <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center text-[9px] font-bold text-gold">{member[0]}</div>
                       <span className="flex-1">{member}</span>
                       <span className="text-muted">{count} event{count !== 1 ? "s" : ""}</span>
@@ -681,7 +681,7 @@ export default function CalendarPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                       className="flex items-center gap-3 p-3 rounded-lg border border-border"
                     >
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${daysLeft <= 1 ? "bg-red-400/10" : daysLeft <= 3 ? "bg-yellow-400/10" : "bg-blue-400/10"}`}>
@@ -716,7 +716,7 @@ export default function CalendarPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                     className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border"
                   >
                     <Repeat size={12} className="text-purple-400 shrink-0" />
@@ -837,3 +837,4 @@ export default function CalendarPage() {
     </div>
   );
 }
+

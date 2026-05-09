@@ -161,43 +161,43 @@ export default function VoicemailDropPage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22 }}
-            className="w-full max-w-md  border border-white/10 bg-[#111] shadow-2xl overflow-hidden"
+            className="w-full max-w-md  border border-black/10 bg-white shadow-2xl overflow-hidden"
           >
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
-              <p className="font-semibold text-white">Upload voicemail</p>
-              <button onClick={() => setShowUpload(false)} className="text-white/40 hover:text-white">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-black/8">
+              <p className="font-semibold text-[#0A0A0B]">Upload voicemail</p>
+              <button onClick={() => setShowUpload(false)} className="text-black/40 hover:text-[#0A0A0B]">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <div className="p-5 flex flex-col gap-4">
               <div>
-                <label className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-1.5 block">Name</label>
+                <label className="text-xs font-semibold text-black/60 uppercase tracking-wider mb-1.5 block">Name</label>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Sales follow-up"
-                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30"
+                  className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm placeholder:text-black/30"
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-1.5 block">Audio file (mp3 or wav, max 5 MB)</label>
+                <label className="text-xs font-semibold text-black/60 uppercase tracking-wider mb-1.5 block">Audio file (mp3 or wav, max 5 MB)</label>
                 <input
                   type="file"
                   accept="audio/mpeg,audio/mp3,audio/wav,audio/wave"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="w-full text-white/70 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/10 file:text-indigo-300 hover:file:bg-indigo-500/20"
+                  className="w-full text-black/65 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/10 file:text-indigo-600 hover:file:bg-indigo-500/20"
                 />
                 {file && (
-                  <p className="text-xs text-white/40 mt-1.5">
+                  <p className="text-xs text-black/40 mt-1.5">
                     {file.name} — {(file.size / 1024).toFixed(1)} KB
                   </p>
                 )}
               </div>
             </div>
-            <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-white/8">
+            <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-black/8">
               <button
                 onClick={() => setShowUpload(false)}
-                className="px-4 py-2 rounded-lg text-sm font-medium text-white/60 hover:text-white bg-white/5 hover:bg-white/10"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-black/60 hover:text-[#0A0A0B] bg-black/5 hover:bg-black/8"
               >
                 Cancel
               </button>
@@ -223,31 +223,31 @@ export default function VoicemailDropPage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22 }}
-            className="w-full max-w-md  border border-white/10 bg-[#111] shadow-2xl overflow-hidden"
+            className="w-full max-w-md  border border-black/10 bg-white shadow-2xl overflow-hidden"
           >
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
-              <p className="font-semibold text-white">Drop &quot;{showDrop.name}&quot;</p>
-              <button onClick={() => setShowDrop(null)} className="text-white/40 hover:text-white">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-black/8">
+              <p className="font-semibold text-[#0A0A0B]">Drop &quot;{showDrop.name}&quot;</p>
+              <button onClick={() => setShowDrop(null)} className="text-black/40 hover:text-[#0A0A0B]">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <div className="p-5 flex flex-col gap-4">
               <div>
-                <label className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-1.5 block">Recipient phone</label>
+                <label className="text-xs font-semibold text-black/60 uppercase tracking-wider mb-1.5 block">Recipient phone</label>
                 <input
                   value={dropTo}
                   onChange={(e) => setDropTo(e.target.value)}
                   placeholder="+15551234567"
-                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm font-mono placeholder:text-white/30"
+                  className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm font-mono placeholder:text-black/30"
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-1.5 block">From number (optional)</label>
+                <label className="text-xs font-semibold text-black/60 uppercase tracking-wider mb-1.5 block">From number (optional)</label>
                 <input
                   value={dropFrom}
                   onChange={(e) => setDropFrom(e.target.value)}
                   placeholder="Leave blank to use TWILIO_DEFAULT_NUMBER"
-                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm font-mono placeholder:text-white/30"
+                  className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm font-mono placeholder:text-black/30"
                 />
               </div>
               {/* TCPA compliance gate — required before any voicemail drop */}
@@ -263,14 +263,14 @@ export default function VoicemailDropPage() {
                   I confirm I have prior express written consent to contact this recipient by phone (TCPA). Dropping a voicemail without consent may violate US federal law.
                 </span>
               </label>
-              <p className="text-[11px] text-white/30">
+              <p className="text-[11px] text-black/30">
                 The call is initiated immediately. When answered or routed to voicemail, the pre-recorded audio plays via Twilio TwiML.
               </p>
             </div>
-            <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-white/8">
+            <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-black/8">
               <button
                 onClick={() => { setShowDrop(null); setTcpaConsent(false); }}
-                className="px-4 py-2 rounded-lg text-sm font-medium text-white/60 hover:text-white bg-white/5 hover:bg-white/10"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-black/60 hover:text-[#0A0A0B] bg-black/5 hover:bg-black/8"
               >
                 Cancel
               </button>
@@ -299,10 +299,10 @@ export default function VoicemailDropPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
-          className="glass rounded-xl border-2 border-dashed border-white/8 flex flex-col items-center justify-center py-14 gap-3 text-center"
+          className="glass rounded-xl border-2 border-dashed border-black/8 flex flex-col items-center justify-center py-14 gap-3 text-center"
         >
-          <Voicemail className="w-10 h-10 text-white/20" />
-          <p className="text-white/40 text-sm">No voicemail templates yet</p>
+          <Voicemail className="w-10 h-10 text-black/20" />
+          <p className="text-black/40 text-sm">No voicemail templates yet</p>
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -321,8 +321,8 @@ export default function VoicemailDropPage() {
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.18, delay: index * 0.04 }}
-              whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
-              className="border-b border-white/8 last:border-b-0 p-4 flex items-center gap-3 transition-colors"
+              whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+              className="border-b border-black/8 last:border-b-0 p-4 flex items-center gap-3 transition-colors"
             >
               <button
                 onClick={() => togglePlay(t)}
@@ -332,8 +332,8 @@ export default function VoicemailDropPage() {
                 {playingId === t.id ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
               </button>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white truncate">{t.name}</p>
-                <p className="text-xs text-white/40">
+                <p className="text-sm font-semibold text-[#0A0A0B] truncate">{t.name}</p>
+                <p className="text-xs text-black/40">
                   {t.duration_seconds ? `${t.duration_seconds}s` : "—"} · {new Date(t.created_at).toLocaleDateString()}
                 </p>
               </div>
@@ -348,7 +348,7 @@ export default function VoicemailDropPage() {
               </motion.button>
               <button
                 onClick={() => handleDelete(t.id)}
-                className="text-white/40 hover:text-red-400 p-1.5"
+                className="text-black/40 hover:text-red-500 p-1.5"
                 aria-label="Delete template"
               >
                 <Trash2 className="w-4 h-4" />

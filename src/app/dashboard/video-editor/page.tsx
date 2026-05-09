@@ -3376,13 +3376,13 @@ export default function VideoEditorPage() {
         }
       `}</style>
       {/* Higgsfield-style slim header */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(255,255,255,0.08)] bg-[#080809] -mx-4 sm:-mx-6 mb-4">
-        <div className="w-7 h-7 rounded-xl bg-[rgba(255,255,255,0.12)] flex items-center justify-center shrink-0">
-          <Film size={13} className="text-[#FF2D2D]" />
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(0,0,0,0.08)] bg-[#FAFAFB] -mx-4 sm:-mx-6 mb-4">
+        <div className="w-7 h-7 rounded-xl bg-[rgba(0,0,0,0.06)] flex items-center justify-center shrink-0">
+          <Film size={13} className="text-[#CC2424]" />
         </div>
         <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Video Editor</h1>
-          <p className="text-[9px] text-[#6F6D7A]">AI writes the script · GPU renders the cuts</p>
+          <h1 className="text-sm font-semibold text-[#0A0A0B] leading-tight">Video Editor</h1>
+          <p className="text-[9px] text-[#71717A]">AI writes the script · GPU renders the cuts</p>
         </div>
         <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
       </div>
@@ -3669,7 +3669,7 @@ export default function VideoEditorPage() {
             <div className="flex items-center gap-2 flex-wrap">
               <button
                 onClick={() => setVideoWizardOpen(true)}
-                className="text-[11px] px-3 py-2 rounded-lg border border-white/10 bg-white/[0.03] text-white/60 hover:text-white/90 hover:border-white/20 flex items-center gap-1.5 transition-all"
+                className="text-[11px] px-3 py-2 rounded-lg border border-black/10 bg-black/[0.03] text-black/60 hover:text-black/85 hover:border-black/20 flex items-center gap-1.5 transition-all"
                 title="Step-by-step guided wizard"
               >
                 <Sparkles size={11} strokeWidth={1.5} /> Guided
@@ -3685,7 +3685,7 @@ export default function VideoEditorPage() {
               <select
                 value={selectedClient}
                 onChange={e => setSelectedClient(e.target.value)}
-                className="text-[11px] py-2 px-2.5 rounded-lg border border-white/10 bg-white/[0.03] text-white/60 min-w-[140px] focus:outline-none focus:border-white/25"
+                className="text-[11px] py-2 px-2.5 rounded-lg border border-black/10 bg-black/[0.03] text-black/60 min-w-[140px] focus:outline-none focus:border-black/25"
               >
                 <option value="">No client</option>
                 {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
@@ -6416,7 +6416,7 @@ export default function VideoEditorPage() {
                 {!stylesExpanded && (
                   <button
                     onClick={() => setStylesExpanded(true)}
-                    className="p-2 rounded-xl border border-dashed border-[rgba(255,255,255,0.2)] text-left transition-all hover:border-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.03)] col-span-2"
+                    className="p-2 rounded-xl border border-dashed border-[rgba(0,0,0,0.15)] text-left transition-all hover:border-[rgba(0,0,0,0.25)] hover:bg-[rgba(0,0,0,0.03)] col-span-2"
                   >
                     <p className="text-[10px] font-semibold text-muted">+{STYLES.length - 6} more styles</p>
                     <p className="text-[8px] text-muted/60">Browse all</p>
@@ -6425,7 +6425,7 @@ export default function VideoEditorPage() {
                 {stylesExpanded && (
                   <button
                     onClick={() => setStylesExpanded(false)}
-                    className="p-2 rounded-xl border border-dashed border-[rgba(255,255,255,0.12)] text-left transition-all hover:border-[rgba(255,255,255,0.25)] col-span-2 md:col-span-4"
+                    className="p-2 rounded-xl border border-dashed border-[rgba(0,0,0,0.10)] text-left transition-all hover:border-[rgba(0,0,0,0.15)] col-span-2 md:col-span-4"
                   >
                     <p className="text-[10px] text-muted">Show fewer</p>
                   </button>
@@ -6697,8 +6697,8 @@ export default function VideoEditorPage() {
                       <button key={c.id} onClick={() => setConfig({ ...config, caption_style: c.id })}
                         className={`w-full text-left text-[10px] rounded-lg border transition-all flex items-center overflow-hidden ${
                           config.caption_style === c.id
-                            ? "border-[rgba(255,255,255,0.30)] bg-[rgba(255,255,255,0.05)]"
-                            : "border-border hover:border-[rgba(255,255,255,0.15)]"
+                            ? "border-[rgba(0,0,0,0.20)] bg-[rgba(0,0,0,0.05)]"
+                            : "border-border hover:border-[rgba(0,0,0,0.12)]"
                         }`}>
                         {/* Mini CSS-only style preview */}
                         <div

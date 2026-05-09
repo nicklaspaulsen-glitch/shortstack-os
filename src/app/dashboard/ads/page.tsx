@@ -735,7 +735,7 @@ export default function AdsPage() {
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.18, delay: index * 0.04 }}
-                  whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                  whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
                 >
                   {/* Campaign Row */}
                   <div
@@ -1456,7 +1456,7 @@ export default function AdsPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                      whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
                     >
                       <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
                         action.status === "executed" ? "bg-success/10" : action.status === "failed" ? "bg-danger/10" : "bg-surface-light"

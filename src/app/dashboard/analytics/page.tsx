@@ -30,16 +30,16 @@ interface ActivityItem { id: string; type: "lead" | "payment" | "post" | "deal" 
 // ─── Tooltip style (shared) ────────────────────────────────────────────────
 const TT = {
   contentStyle: {
-    background: "#0E0D14",
-    border: "1px solid rgba(255,255,255,0.08)",
+    background: "#FFFFFF",
+    border: "1px solid rgba(0,0,0,0.08)",
     borderRadius: "8px",
     fontSize: "11px",
-    color: "#F5F4F1",
-    boxShadow: "0 12px 32px rgba(0,0,0,0.6)",
+    color: "#0A0A0B",
+    boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
     padding: "8px 10px",
   },
-  labelStyle: { color: "#6F6D7A", fontSize: "9px", marginBottom: "4px", textTransform: "uppercase" as const, letterSpacing: "0.1em" },
-  itemStyle: { color: "#F5F4F1", fontSize: "11px" },
+  labelStyle: { color: "#52525B", fontSize: "9px", marginBottom: "4px", textTransform: "uppercase" as const, letterSpacing: "0.1em" },
+  itemStyle: { color: "#0A0A0B", fontSize: "11px" },
 };
 
 // ─── Accordion item ───────────────────────────────────────────────────────
@@ -51,16 +51,16 @@ function Accordion({
 }) {
   return (
     <div
-      className=" border border-[rgba(255,255,255,0.1)] overflow-hidden"
-      style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}
+      className="rounded-xl border border-[rgba(0,0,0,0.08)] overflow-hidden"
+      style={{ background: "#FFFFFF" }}
     >
       <button
         onClick={onToggle}
-        className="flex items-center justify-between w-full px-6 py-4 hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-150"
+        className="flex items-center justify-between w-full px-6 py-4 hover:bg-[rgba(0,0,0,0.04)] transition-colors duration-150"
       >
         <div className="flex items-center gap-2.5">
           <span className="text-[#6F6D7A]">{icon}</span>
-          <span className="font-display text-sm font-semibold text-[#F5F4F1] tracking-[-0.01em]">{label}</span>
+          <span className="font-display text-sm font-semibold text-[#0A0A0B] tracking-[-0.01em]">{label}</span>
           {badge}
         </div>
         {expanded
@@ -77,7 +77,7 @@ function Accordion({
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             style={{ overflow: "hidden" }}
           >
-            <div className="px-6 pb-6 border-t border-[rgba(255,255,255,0.04)]">
+            <div className="px-6 pb-6 border-t border-[rgba(0,0,0,0.08)]">
               {children}
             </div>
           </motion.div>
@@ -426,22 +426,16 @@ export default function AnalyticsPage() {
         actions={
           <>
             {stats.totalMRR > 0 && (
-              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[#FF6B6B]">
+              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(204,36,36,0.08)] border border-[rgba(204,36,36,0.18)] text-[#CC2424]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
                 {formatCurrency(stats.totalMRR)} MRR
               </span>
             )}
             {!isLoading && replyRate > 0 && (
-              <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
+              <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                 {replyRate}% reply rate
               </span>
             )}
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-3 py-1.5 text-xs font-semibold text-[#FF2D2D] hover:bg-[rgba(255,255,255,0.08)] transition-colors duration-150"
-            >
-              <Download size={13} /> Export
-            </button>
           </>
         }
       />
@@ -502,15 +496,15 @@ export default function AnalyticsPage() {
 
           {/* ── Date range + export ──────────────────────────────────────── */}
           <div className="flex items-center justify-end flex-wrap gap-2.5">
-            <div className="flex items-center gap-0.5 bg-[#0E0D14] rounded-lg p-0.5 border border-[rgba(255,255,255,0.06)]">
+            <div className="flex items-center gap-0.5 rounded-xl p-1 border border-[rgba(0,0,0,0.08)]" style={{ background: "#F2F2F4" }}>
               {(["7d", "30d", "90d", "custom"] as const).map(r => (
                 <button
                   key={r}
                   onClick={() => setDateRange(r)}
                   className={`px-3 py-1 text-[10px] rounded-md transition-colors duration-150 ${
                     dateRange === r
-                      ? "bg-[#FF2D2D] text-white font-semibold"
-                      : "text-[#6F6D7A] hover:text-[#F5F4F1]"
+                      ? "bg-[#CC2424] text-white font-semibold"
+                      : "text-[#6F6D7A] hover:text-[#0A0A0B]"
                   }`}
                 >
                   {r === "custom" ? "Custom" : r}
@@ -528,119 +522,99 @@ export default function AnalyticsPage() {
             )}
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 text-[10px] text-[#9F9DAA] hover:text-[#F5F4F1] transition-colors border border-[rgba(255,255,255,0.06)] px-3 py-1.5 rounded-lg"
+              className="flex items-center gap-1.5 text-[10px] text-[#71717A] hover:text-[#0A0A0B] transition-colors border border-[rgba(0,0,0,0.08)] px-3 py-1.5 rounded-lg"
             >
               <Download size={11} /> Export
             </button>
           </div>
 
-          {/* ── Zone 1: Hero KPI ─────────────────────────────────────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-4">
+          {/* ── Zone 1: Command Strip ────────────────────────────────────── */}
+          <motion.div
+            className="relative overflow-hidden rounded-xl"
+            style={{
+              background: "#FFFFFF",
+              border: "1px solid rgba(0,0,0,0.08)",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 4px 16px -4px rgba(0,0,0,0.10)",
+            }}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {/* Red top rail */}
+            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent 0%, #CC2424 30%, #FF4040 50%, #CC2424 70%, transparent 100%)" }} />
+            {/* Subtle red glow at top */}
+            <div className="pointer-events-none absolute top-0 left-0 right-0 h-20" style={{ background: "linear-gradient(180deg, rgba(204,36,36,0.04) 0%, transparent 100%)" }} />
 
-            {/* Left — MRR hero with prism top bar */}
-            <motion.div
-              className="relative border border-[rgba(255,255,255,0.16)] bg-[rgba(255,255,255,0.035)] px-8 py-8 overflow-hidden"
-              style={{ backdropFilter: "blur(16px)" }}
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {/* Prism rainbow top bar */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF6B6B] to-[#CC2424]" />
-              {/* Ambient glow */}
-              <div className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 rounded-full bg-[#FF2D2D] opacity-[0.06] blur-3xl" />
-              <div className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#FF2D2D] opacity-[0.04] blur-2xl" />
-
-              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A] mb-3">
+            <div className="relative px-8 pt-8 pb-7">
+              {/* MRR label */}
+              <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#52525B] mb-2">
                 Monthly Recurring Revenue
               </p>
-              <p
-                className="font-display font-bold leading-none text-[#FF2D2D]"
-                style={{ fontSize: "clamp(40px,6vw,68px)", letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums" }}
+              {/* Giant MRR */}
+              <motion.p
+                className="font-display font-black leading-[0.88] text-[#CC2424]"
+                style={{ fontSize: "clamp(60px,9vw,104px)", letterSpacing: "-0.045em", fontVariantNumeric: "tabular-nums" }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.52, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
               >
                 {formatCurrency(stats.totalMRR)}
-              </p>
-              <div className="mt-4 flex items-center gap-4">
-                <span className="text-[11px] text-[#6F6D7A]">
-                  <span className="text-[#F5F4F1] font-medium [font-variant-numeric:tabular-nums]">{stats.activeClients}</span>{" "}
-                  active client{stats.activeClients !== 1 ? "s" : ""}
-                </span>
-                {stats.contentPublished > 0 && (
-                  <span className="text-[11px] text-[#6F6D7A]">
-                    <span className="text-[#F5F4F1] font-medium [font-variant-numeric:tabular-nums]">{stats.contentPublished}</span>{" "}
-                    posts published
-                  </span>
-                )}
-              </div>
-            </motion.div>
+              </motion.p>
 
-            {/* Right — 4 prism stat tiles with sparkline trend */}
-            <div className="grid grid-cols-2 lg:grid-cols-1 gap-3">
-              {[
-                {
-                  label: "Total Leads", value: stats.totalLeads.toLocaleString(),
-                  sub: leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "—", subOk: leadGrowth >= 0,
-                  spark: leadsByDay.slice(-14).map(d => d.count), sparkId: "leads",
-                },
-                {
-                  label: "DMs Sent", value: stats.dmsSent.toLocaleString(),
-                  sub: `${replyRate}% reply rate`, subOk: replyRate >= 5,
-                  spark: outreachByDay.slice(-14).map(d => d.sent), sparkId: "dms",
-                },
-                {
-                  label: "Calls Booked", value: stats.callsBooked.toLocaleString(),
-                  sub: "this period", subOk: true,
-                  spark: [] as number[], sparkId: "calls",
-                },
-                {
-                  label: "Deals Won", value: stats.totalDeals.toLocaleString(),
-                  sub: formatCurrency(stats.dealValue) + " closed", subOk: true,
-                  spark: revenueByMonth.map(d => d.deals), sparkId: "deals",
-                },
-              ].map((cell, i) => {
-                const tile = PRISM_TILES[i];
-                return (
+              {/* Divider */}
+              <div className="my-6 h-px bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.08)] to-transparent" />
+
+              {/* 4 stats — inline, no individual cards */}
+              <div className="grid grid-cols-2 md:grid-cols-4">
+                {[
+                  { label: "Total Leads", value: stats.totalLeads.toLocaleString(), sub: leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "—", subOk: leadGrowth >= 0 },
+                  { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate >= 5 },
+                  { label: "Calls Booked", value: stats.callsBooked.toLocaleString(), sub: "this period", subOk: true },
+                  { label: "Deals Won", value: stats.totalDeals.toLocaleString(), sub: `${formatCurrency(stats.dealValue)} closed`, subOk: true },
+                ].map((stat, i) => (
                   <motion.div
-                    key={cell.label}
-                    className="relative rounded-xl bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.07)] px-4 py-3 overflow-hidden"
-                    style={{ backdropFilter: "blur(12px)" }}
-                    initial={{ opacity: 0, y: 10 }}
+                    key={stat.label}
+                    className={`py-1 ${i > 0 ? "pl-6 border-l border-[rgba(0,0,0,0.08)]" : ""} ${i < 3 ? "pr-6" : ""}`}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.38, delay: 0.07 * (i + 1), ease: [0.22, 1, 0.36, 1] }}
-                    whileHover={{ y: -2, borderColor: "rgba(255,255,255,0.14)", transition: { duration: 0.2 } }}
+                    transition={{ duration: 0.38, delay: 0.15 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    {/* Bottom accent bar (prism color per tile) */}
-                    <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${tile.bar} opacity-70`} />
-                    <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-[#6F6D7A]">{cell.label}</p>
-                    <p
-                      className="font-display text-xl font-bold tracking-[-0.02em] mt-1"
-                      style={{ color: tile.accent, fontVariantNumeric: "tabular-nums" }}
-                    >
-                      {cell.value}
+                    <p className="text-[8px] font-semibold uppercase tracking-[0.18em] text-[#52525B]">{stat.label}</p>
+                    <p className="font-display text-[28px] font-bold tracking-[-0.03em] mt-1 text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                      {stat.value}
                     </p>
-                    <div className="mt-1 flex items-end justify-between gap-2">
-                      <p className="text-[10px]" style={{ color: cell.subOk ? "#6F6D7A" : "#F26063" }}>
-                        {cell.sub}
-                      </p>
-                      {cell.spark.length >= 2 && (
-                        <Sparkline values={cell.spark} color={tile.accent} id={cell.sparkId} />
-                      )}
-                    </div>
+                    <p className="text-[10px] mt-0.5" style={{ color: stat.subOk ? "#52525B" : "#F26063" }}>{stat.sub}</p>
                   </motion.div>
-                );
-              })}
+                ))}
+              </div>
+
+              {/* Footer context */}
+              {(stats.activeClients > 0 || stats.contentPublished > 0) && (
+                <div className="mt-5 pt-4 border-t border-[rgba(0,0,0,0.08)] flex items-center gap-4">
+                  <span className="text-[10px] text-[#52525B]">
+                    <span className="text-[#71717A] font-medium [font-variant-numeric:tabular-nums]">{stats.activeClients}</span>{" "}
+                    active client{stats.activeClients !== 1 ? "s" : ""}
+                  </span>
+                  {stats.contentPublished > 0 && (
+                    <span className="text-[10px] text-[#52525B]">
+                      <span className="text-[#71717A] font-medium [font-variant-numeric:tabular-nums]">{stats.contentPublished}</span>{" "}
+                      posts published
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
-          </div>
+          </motion.div>
 
           {/* ── Zone 2: Lead velocity + Lead sources ─────────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-4">
 
             {/* Lead velocity area chart */}
-            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-4" style={{ background: "#FFFFFF" }}>
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Acquisition</p>
-                  <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5">
+                  <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5">
                     Lead Velocity
                     <span className="ml-2 text-[10px] font-normal text-[#4F4D58]">· {dateRange === "custom" ? "Custom" : dateRange}</span>
                   </h2>
@@ -660,10 +634,10 @@ export default function AnalyticsPage() {
                           <stop offset="85%" stopColor="#FF2D2D" stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                      <CartesianGrid strokeDasharray="2 6" stroke="rgba(0,0,0,0.08)" vertical={false} />
                       <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
                       <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={28} />
-                      <Tooltip {...TT} cursor={{ stroke: "rgba(255,255,255,0.15)", strokeDasharray: "2 4" }} />
+                      <Tooltip {...TT} cursor={{ stroke: "rgba(0,0,0,0.12)", strokeDasharray: "2 4" }} />
                       <Area
                         type="monotone" dataKey="count" name="Leads"
                         stroke="#FF2D2D" strokeWidth={1.5}
@@ -676,9 +650,9 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Lead sources */}
-            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5" style={{ background: "#FFFFFF" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Channels</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Lead Sources</h2>
+              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Lead Sources</h2>
               {leadsBySource.length === 0 ? (
                 <div className="flex items-center justify-center h-40 text-[11px] text-[#4F4D58]">
                   No source data yet
@@ -693,7 +667,7 @@ export default function AnalyticsPage() {
                         <span className="text-[10px] text-[#9F9DAA] w-20 text-right shrink-0 capitalize truncate">
                           {s.source.replace(/_/g, " ")}
                         </span>
-                        <div className="flex-1 h-1.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
                           <motion.div
                             className="h-full rounded-full"
                             style={{ background: CHART_COLORS[i % CHART_COLORS.length] }}
@@ -703,7 +677,7 @@ export default function AnalyticsPage() {
                           />
                         </div>
                         <span
-                          className="text-[10px] font-bold text-[#F5F4F1] w-5 text-right shrink-0"
+                          className="text-[10px] font-bold text-[#0A0A0B] w-5 text-right shrink-0"
                           style={{ fontVariantNumeric: "tabular-nums" }}
                         >
                           {s.count}
@@ -720,9 +694,9 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-4">
 
             {/* Conversion funnel */}
-            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5" style={{ background: "#FFFFFF" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Sales Pipeline</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Conversion Funnel</h2>
+              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Conversion Funnel</h2>
               <div className="space-y-3">
                 {funnelData.map((stage, i) => {
                   const maxVal = funnelData[0].value;
@@ -736,7 +710,7 @@ export default function AnalyticsPage() {
                         <span className="text-[10px] text-[#9F9DAA]">{stage.name}</span>
                         <div className="flex items-center gap-2.5">
                           <span
-                            className="text-[11px] font-bold text-[#F5F4F1]"
+                            className="text-[11px] font-bold text-[#0A0A0B]"
                             style={{ fontVariantNumeric: "tabular-nums" }}
                           >
                             {stage.value.toLocaleString()}
@@ -748,7 +722,7 @@ export default function AnalyticsPage() {
                           )}
                         </div>
                       </div>
-                      <div className="h-1.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
                         <motion.div
                           className="h-full rounded-full"
                           style={{ background: stage.fill }}
@@ -761,10 +735,10 @@ export default function AnalyticsPage() {
                   );
                 })}
               </div>
-              <div className="mt-5 pt-4 border-t border-[rgba(255,255,255,0.05)] flex items-baseline justify-between">
+              <div className="mt-5 pt-4 border-t border-[rgba(0,0,0,0.08)] flex items-baseline justify-between">
                 <span className="text-[10px] text-[#6F6D7A]">Overall conversion</span>
                 <span
-                  className="font-display text-xl font-bold text-[#F5F4F1] tracking-[-0.02em]"
+                  className="font-display text-xl font-bold text-[#0A0A0B] tracking-[-0.02em]"
                   style={{ fontVariantNumeric: "tabular-nums" }}
                 >
                   {funnelData[0].value > 0
@@ -775,9 +749,9 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Outreach performance */}
-            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-4" style={{ background: "#FFFFFF" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Engagement</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-4">Outreach Performance</h2>
+              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-4">Outreach Performance</h2>
               {outreachByDay.length === 0 ? (
                 <div className="h-48 flex items-center justify-center text-[11px] text-[#4F4D58]">
                   No outreach data for this period
@@ -786,7 +760,7 @@ export default function AnalyticsPage() {
                 <div className="h-48">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={outreachByDay} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                      <CartesianGrid strokeDasharray="2 6" stroke="rgba(0,0,0,0.08)" vertical={false} />
                       <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
                       <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={28} />
                       <Tooltip {...TT} />
@@ -809,13 +783,19 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          {/* ── Zone 4: Industries + Goals + Benchmarks (3-col dense) ──────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* ── Zone 4: Industries + Goals + Benchmarks (bento asymmetric) ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-[4fr_5fr_7fr] gap-4 items-start">
 
             {/* Top industries */}
-            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <motion.div
+              className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5"
+              style={{ background: "#FFFFFF" }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.44, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+            >
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Verticals</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Top Industries</h2>
+              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Top Industries</h2>
               {leadsByIndustry.length === 0 ? (
                 <p className="text-[11px] text-[#4F4D58] py-4">No industry data yet</p>
               ) : (
@@ -834,7 +814,7 @@ export default function AnalyticsPage() {
                         <span className="text-[10px] text-[#9F9DAA] w-20 shrink-0 truncate capitalize">
                           {ind.industry.replace(/_/g, " ")}
                         </span>
-                        <div className="flex-1 h-1 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+                        <div className="flex-1 h-1 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
                           <motion.div
                             className="h-full rounded-full bg-[#FF6B6B]"
                             initial={{ width: 0 }}
@@ -843,7 +823,7 @@ export default function AnalyticsPage() {
                           />
                         </div>
                         <span
-                          className="text-[10px] font-bold text-[#F5F4F1] w-4 shrink-0 text-right"
+                          className="text-[10px] font-bold text-[#0A0A0B] w-4 shrink-0 text-right"
                           style={{ fontVariantNumeric: "tabular-nums" }}
                         >
                           {ind.count}
@@ -853,12 +833,20 @@ export default function AnalyticsPage() {
                   })}
                 </div>
               )}
-            </div>
+            </motion.div>
 
             {/* Monthly goals */}
-            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <motion.div
+              className="relative rounded-xl border border-[rgba(255,45,45,0.22)] px-6 pt-5 pb-5 overflow-hidden"
+              style={{ background: "rgba(255,45,45,0.06)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", boxShadow: "0 1px 0 rgba(255,45,45,0.08) inset, 0 0 0 1px rgba(255,45,45,0.08)" }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.44, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Focal tile top accent */}
+              <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#FF2D2D]/50 to-transparent" />
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Progress</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
+              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
               <div className="space-y-3.5">
                 {goals.map(goal => {
                   const pct = goal.target > 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
@@ -874,7 +862,7 @@ export default function AnalyticsPage() {
                           {Math.round(pct)}%
                         </span>
                       </div>
-                      <div className="h-1 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+                      <div className="h-1 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
                         <motion.div
                           className="h-full rounded-full"
                           style={{ background: barColor }}
@@ -887,12 +875,18 @@ export default function AnalyticsPage() {
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
 
             {/* Benchmarks */}
-            <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+            <motion.div
+              className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5"
+              style={{ background: "#FFFFFF" }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.44, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            >
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">vs Industry</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5 mb-5">Benchmarks</h2>
+              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Benchmarks</h2>
               <div className="space-y-3">
                 {benchmarks.map(b => {
                   const isAbove = b.yours >= b.industry;
@@ -901,10 +895,10 @@ export default function AnalyticsPage() {
                   return (
                     <div key={b.metric} className="flex items-center gap-2.5">
                       <span className="text-[10px] text-[#6F6D7A] w-24 shrink-0 truncate">{b.metric}</span>
-                      <div className="flex-1 relative h-1.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
+                      <div className="flex-1 relative h-1.5 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
                         {/* Industry avg */}
                         <div
-                          className="absolute h-full rounded-full bg-[rgba(255,255,255,0.1)]"
+                          className="absolute h-full rounded-full bg-[rgba(0,0,0,0.08)]"
                           style={{ width: `${indPct}%` }}
                         />
                         {/* Your score */}
@@ -926,9 +920,9 @@ export default function AnalyticsPage() {
                   );
                 })}
               </div>
-              <div className="flex items-center gap-3 mt-4 pt-3 border-t border-[rgba(255,255,255,0.04)]">
+              <div className="flex items-center gap-3 mt-4 pt-3 border-t border-[rgba(0,0,0,0.08)]">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-1.5 rounded-full bg-[rgba(255,255,255,0.1)]" />
+                  <div className="w-3 h-1.5 rounded-full bg-[rgba(0,0,0,0.08)]" />
                   <span className="text-[9px] text-[#4F4D58]">Industry avg</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -936,20 +930,20 @@ export default function AnalyticsPage() {
                   <span className="text-[9px] text-[#4F4D58]">Yours</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* ── Zone 5: Scorecard strip (prism glass, staggered entrance) ── */}
           <motion.div
-            className="relative border border-[rgba(255,255,255,0.1)] overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
+            className="relative rounded-xl border border-[rgba(0,0,0,0.08)] overflow-hidden"
+            style={{ background: "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08)" }}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Prism top bar */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF6B6B] to-[#CC2424]" />
-            <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(255,255,255,0.08)]">
+            <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(0,0,0,0.08)]">
               {[
                 { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#FF2D2D" },
                 { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#FF2D2D" : "#F26063" },
@@ -977,11 +971,11 @@ export default function AnalyticsPage() {
           </motion.div>
 
           {/* ── Zone 6: Real-time activity feed ──────────────────────────── */}
-          <div className=" border border-[rgba(255,255,255,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.025)", backdropFilter: "blur(12px)" }}>
+          <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5" style={{ background: "#FFFFFF" }}>
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Live Stream</p>
-                <h2 className="font-display text-[15px] font-semibold text-[#F5F4F1] tracking-[-0.02em] mt-0.5">
+                <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5">
                   Real-time Activity
                 </h2>
               </div>
@@ -994,7 +988,7 @@ export default function AnalyticsPage() {
               {activityFeed.length > 0 ? activityFeed.map((item, idx) => (
                 <motion.div
                   key={item.id}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-100"
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[rgba(0,0,0,0.04)] transition-colors duration-100"
                   initial={{ opacity: 0, x: -4 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.2, delay: idx * 0.025 }}
@@ -1030,7 +1024,7 @@ export default function AnalyticsPage() {
             icon={<TrendingUp size={13} />}
             badge={
               revenueForecast.length > 0 ? (
-                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(255,255,255,0.12)] text-[#FF2D2D]">
+                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(204,36,36,0.10)] text-[#FF2D2D]">
                   {formatCurrency(revenueForecast[0]?.projected || 0)} next mo.
                 </span>
               ) : undefined
@@ -1060,7 +1054,7 @@ export default function AnalyticsPage() {
                             <stop offset="85%" stopColor="#FF2D2D" stopOpacity={0} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                        <CartesianGrid strokeDasharray="2 6" stroke="rgba(0,0,0,0.08)" vertical={false} />
                         <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
                         <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={32} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
                         <Tooltip {...TT} formatter={(v) => formatCurrency(Number(v) || 0)} />
@@ -1071,15 +1065,15 @@ export default function AnalyticsPage() {
                     </ResponsiveContainer>
                   </div>
                   {revenueForecast.length > 0 && (
-                    <div className="grid grid-cols-3 mt-4 pt-4 border-t border-[rgba(255,255,255,0.04)]">
+                    <div className="grid grid-cols-3 mt-4 pt-4 border-t border-[rgba(0,0,0,0.08)]">
                       {revenueForecast.map((f, i) => (
                         <div
                           key={f.month}
-                          className={`${i > 0 ? "border-l border-[rgba(255,255,255,0.04)] pl-4" : ""} ${i < 2 ? "pr-4" : ""}`}
+                          className={`${i > 0 ? "border-l border-[rgba(0,0,0,0.08)] pl-4" : ""} ${i < 2 ? "pr-4" : ""}`}
                         >
                           <p className="text-[9px] text-[#6F6D7A] uppercase tracking-wider">{f.month}</p>
                           <p
-                            className="font-display text-lg font-bold text-[#F5F4F1] mt-1"
+                            className="font-display text-lg font-bold text-[#0A0A0B] mt-1"
                             style={{ fontVariantNumeric: "tabular-nums" }}
                           >
                             {formatCurrency(f.projected)}
@@ -1107,7 +1101,7 @@ export default function AnalyticsPage() {
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-[rgba(255,255,255,0.05)]">
+                  <tr className="border-b border-[rgba(0,0,0,0.08)]">
                     {["Platform", "Spend", "Revenue", "ROI", "CPL"].map((h, i) => (
                       <th
                         key={h}
@@ -1129,9 +1123,9 @@ export default function AnalyticsPage() {
                       </td>
                     </tr>
                   ) : platformROI.map(p => (
-                    <tr key={p.platform} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.03)] transition-colors group">
+                    <tr key={p.platform} className="border-b border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.04)] transition-colors group">
 
-                      <td className="py-3 font-medium text-[#F5F4F1]">{p.platform}</td>
+                      <td className="py-3 font-medium text-[#0A0A0B]">{p.platform}</td>
                       <td className="py-3 text-right text-[#9F9DAA]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.spend)}</td>
                       <td className="py-3 text-right text-[#FF6B6B] font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.revenue)}</td>
                       <td className="py-3 text-right">
@@ -1166,15 +1160,15 @@ export default function AnalyticsPage() {
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px] mx-auto">No churn signals detected. At-risk clients appear here when engagement drops.</p>
                 </div>
               ) : churnRiskClients.map(client => (
-                <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)]">
-                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F26063]" : client.risk === "medium" ? "bg-[#FF6B6B]" : "bg-[rgba(255,255,255,0.25)]"}`} />
+                <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F26063]" : client.risk === "medium" ? "bg-[#FF6B6B]" : "bg-[rgba(0,0,0,0.2)]"}`} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-[#F5F4F1] truncate">{client.name}</p>
+                    <p className="text-xs font-medium text-[#0A0A0B] truncate">{client.name}</p>
                     <p className="text-[9px] text-[#6F6D7A]">{client.reason}</p>
                   </div>
                   <span
                     className="text-[10px] font-bold shrink-0"
-                    style={{ color: client.risk === "high" ? "#F26063" : client.risk === "medium" ? "#FF6B6B" : "rgba(255,255,255,0.4)", fontVariantNumeric: "tabular-nums" }}
+                    style={{ color: client.risk === "high" ? "#F26063" : client.risk === "medium" ? "#FF6B6B" : "rgba(0,0,0,0.35)", fontVariantNumeric: "tabular-nums" }}
                   >
                     {client.score}%
                   </span>
@@ -1194,7 +1188,7 @@ export default function AnalyticsPage() {
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-[rgba(255,255,255,0.05)]">
+                  <tr className="border-b border-[rgba(0,0,0,0.08)]">
                     {["Metric", "3 mo. ago", "Last month", "This month", "Trend"].map((h, i) => (
                       <th
                         key={h}
@@ -1214,15 +1208,15 @@ export default function AnalyticsPage() {
                   ].map(row => {
                     const growth = row.last > 0 ? Math.round(((row.current - row.last) / row.last) * 100) : 0;
                     return (
-                      <tr key={row.label} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.03)] transition-colors">
-                        <td className="py-3 font-medium text-[#F5F4F1]">{row.label}</td>
+                      <tr key={row.label} className="border-b border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.04)] transition-colors">
+                        <td className="py-3 font-medium text-[#0A0A0B]">{row.label}</td>
                         <td className="py-3 text-right text-[#4F4D58]" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.three) : row.three}
                         </td>
                         <td className="py-3 text-right text-[#9F9DAA]" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.last) : row.last}
                         </td>
-                        <td className="py-3 text-right font-bold text-[#F5F4F1]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        <td className="py-3 text-right font-bold text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.current) : row.current}
                         </td>
                         <td className="py-3 text-right">
@@ -1259,13 +1253,13 @@ export default function AnalyticsPage() {
                   </Link>
                 </div>
               ) : teamMembers.map((member, i) => (
-                <div key={member.name} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)]">
+                <div key={member.name} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                   <span className="text-[9px] font-mono text-[#4F4D58] w-4 shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
                     {i + 1}
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <p className="text-xs font-medium text-[#F5F4F1]">{member.name}</p>
+                      <p className="text-xs font-medium text-[#0A0A0B]">{member.name}</p>
                       {i === 0 && <Star size={9} className="text-[#FF2D2D]" />}
                     </div>
                     <p className="text-[9px] text-[#6F6D7A]">{member.leads} leads · {member.deals} deals · {member.calls} calls</p>
@@ -1342,7 +1336,7 @@ export default function AnalyticsPage() {
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px]">Attribution appears once campaigns are live and conversions tracked</p>
                 </div>
               ) : campaignData.map((c, i) => (
-                <div key={c.campaign} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)]">
+                <div key={c.campaign} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                   <div
                     className="w-5 h-5 rounded flex items-center justify-center text-[9px] font-bold shrink-0"
                     style={{ background: CHART_COLORS[i % CHART_COLORS.length] + "22", color: CHART_COLORS[i % CHART_COLORS.length] }}
@@ -1350,7 +1344,7 @@ export default function AnalyticsPage() {
                     {i + 1}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[11px] font-medium text-[#F5F4F1] truncate">{c.campaign}</p>
+                    <p className="text-[11px] font-medium text-[#0A0A0B] truncate">{c.campaign}</p>
                     <p className="text-[9px] text-[#6F6D7A]">{c.conversions} conversions</p>
                   </div>
                   <div className="text-right shrink-0">
@@ -1383,9 +1377,9 @@ export default function AnalyticsPage() {
               ) : (
                 <div className="space-y-2">
                   {clvData.map(tier => (
-                    <div key={tier.name} className="p-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)]">
+                    <div key={tier.name} className="p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium text-[#F5F4F1]">{tier.name}</span>
+                        <span className="text-xs font-medium text-[#0A0A0B]">{tier.name}</span>
                         <span className="text-[10px] text-[#6F6D7A]">{tier.count} clients</span>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
@@ -1395,7 +1389,7 @@ export default function AnalyticsPage() {
                         </div>
                         <div>
                           <p className="text-[9px] text-[#6F6D7A] uppercase">Avg Lifetime</p>
-                          <p className="text-sm font-bold text-[#F5F4F1]" style={{ fontVariantNumeric: "tabular-nums" }}>{tier.avgMonths} mo.</p>
+                          <p className="text-sm font-bold text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>{tier.avgMonths} mo.</p>
                         </div>
                       </div>
                     </div>
@@ -1429,7 +1423,7 @@ export default function AnalyticsPage() {
                         <span className="text-[10px] text-[#9F9DAA]">{s.service}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-mono font-medium text-[#F5F4F1]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(s.revenue)}</span>
+                        <span className="text-[10px] font-mono font-medium text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(s.revenue)}</span>
                         <span className="text-[9px] text-[#6F6D7A]">{s.clients} clients</span>
                       </div>
                     </div>

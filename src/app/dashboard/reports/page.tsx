@@ -679,7 +679,7 @@ export default function ReportsPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                    whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
                   >
                     <button
                       onClick={() => setExpandedReport(expandedReport === report.id ? null : report.id)}

@@ -227,7 +227,7 @@ export default function WebhooksPage() {
         subtitle={`${webhooks.length} endpoints · ${webhooks.filter(w => w.active).length} active`}
         gradient="gold"
         actions={
-          <button onClick={() => { setShowCreate(true); setTab("Endpoints"); }} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+          <button onClick={() => { setShowCreate(true); setTab("Endpoints"); }} className="px-3 py-1.5 rounded-lg bg-black/8 border border-black/15 text-[#0A0A0B] text-xs font-semibold hover:bg-black/12 transition-all flex items-center gap-1.5">
             <Plus size={12} /> New Webhook
           </button>
         }
@@ -348,8 +348,8 @@ export default function WebhooksPage() {
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
-                  whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
-                  className={`p-4 rounded-xl border transition-colors ${wh.active ? "glass border-white/10" : "bg-surface border-border/50 opacity-60"}`}>
+                  whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                  className={`p-4 rounded-xl border transition-colors ${wh.active ? "glass border-black/10" : "bg-surface border-border/50 opacity-60"}`}>
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-3">
                       <div className={`w-2.5 h-2.5 rounded-full ${wh.active ? "bg-emerald-400" : "bg-muted"}`} />
@@ -383,7 +383,7 @@ export default function WebhooksPage() {
                     <span>Limit: {wh.rateLimit}/min</span>
                   </div>
                   {showSecret === wh.id && (
-                    <div className="mt-2 p-2 rounded-lg bg-black/20 border border-border">
+                    <div className="mt-2 p-2 rounded-lg bg-black/5 border border-border">
                       <div className="flex items-center gap-2">
                         <span className="text-[9px] text-muted">Signing Secret:</span>
                         <code className="text-[10px] font-mono text-gold">{wh.secret}</code>
@@ -439,7 +439,7 @@ export default function WebhooksPage() {
                   <span className="text-[9px] text-muted">{d.timestamp}</span>
                 </button>
                 {expandedDelivery === d.id && (
-                  <div className="mx-3 mb-2 p-3 rounded-lg bg-black/20 border border-border space-y-2">
+                  <div className="mx-3 mb-2 p-3 rounded-lg bg-black/5 border border-border space-y-2">
                     <div>
                       <p className="text-[9px] text-muted uppercase mb-1">Request Payload</p>
                       <pre className="text-[10px] font-mono text-emerald-400 whitespace-pre-wrap">{d.payload}</pre>
@@ -486,7 +486,7 @@ export default function WebhooksPage() {
             </div>
             <div>
               <label className="text-[9px] text-muted uppercase mb-1 block">Payload Preview</label>
-              <pre className="bg-black/30 rounded-lg p-3 text-[10px] font-mono text-emerald-400">
+              <pre className="bg-black/5 rounded-lg p-3 text-[10px] font-mono text-emerald-700">
 {`{
   "event": "${testEvent}",
   "timestamp": "${new Date().toISOString()}",

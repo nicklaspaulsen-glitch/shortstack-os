@@ -507,11 +507,11 @@ export default function SchedulingPage() {
               </button>
             </div>
             {showEmailPreview && (
-              <div className="mt-3 rounded-xl bg-[#1a1c23] p-5 text-foreground text-xs">
+              <div className="mt-3 rounded-xl bg-[#FAFAFB] p-5 text-foreground text-xs">
                 <p className="font-bold text-base mb-2" style={{ color: "#FF2D2D" }}>ShortStack Creative</p>
                 <p className="mb-3">Hi <strong>[Client Name]</strong>,</p>
                 <p className="mb-2">Your <strong>[Meeting Type]</strong> has been confirmed!</p>
-                <div className="bg-white/5 rounded-lg p-3 mb-3">
+                <div className="bg-black/[0.04] rounded-lg p-3 mb-3">
                   <p><strong>Date:</strong> [Date]</p>
                   <p><strong>Time:</strong> [Time] ([Timezone])</p>
                   <p><strong>Duration:</strong> [Duration] minutes</p>
@@ -813,8 +813,8 @@ export default function SchedulingPage() {
                           <td key={h} className="py-0.5 px-0.5">
                             <div className="w-full h-7 rounded flex items-center justify-center text-[8px] font-bold transition-all"
                               style={{
-                                background: intensity > 0.7 ? "rgba(201,168,76,0.35)" : intensity > 0.4 ? "rgba(201,168,76,0.2)" : intensity > 0.1 ? "rgba(201,168,76,0.08)" : "rgba(255,255,255,0.02)",
-                                color: intensity > 0.4 ? "#FF2D2D" : "rgba(255,255,255,0.2)"
+                                background: intensity > 0.7 ? "rgba(201,168,76,0.35)" : intensity > 0.4 ? "rgba(201,168,76,0.2)" : intensity > 0.1 ? "rgba(201,168,76,0.08)" : "rgba(0,0,0,0.03)",
+                                color: intensity > 0.4 ? "#FF2D2D" : "rgba(0,0,0,0.25)"
                               }}>
                               {val}
                             </div>

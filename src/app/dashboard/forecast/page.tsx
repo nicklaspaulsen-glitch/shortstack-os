@@ -84,7 +84,7 @@ function BarChart({ buckets }: { buckets: MonthBucket[] }) {
   const max = Math.max(...buckets.map((b) => b.weighted), 1);
   return (
     <PrismPanel rainbow padding="p-5">
-      <p className="text-sm font-semibold text-white mb-5">Weighted Pipeline — Next 6 Months</p>
+      <p className="text-sm font-semibold text-[#0A0A0B] mb-5">Weighted Pipeline — Next 6 Months</p>
       <div className="flex items-end gap-3 h-40">
         {buckets.map((b, i) => {
           const heightPct = (b.weighted / max) * 100;
@@ -159,7 +159,7 @@ export default function ForecastPage() {
       {loading ? <TableSkeleton rows={8} /> : error ? (
         <PrismPanel padding="p-8" className="flex flex-col items-center gap-3 text-center">
           <AlertCircle size={32} className="text-red-400" />
-          <p className="text-white font-semibold">Failed to load deals</p>
+          <p className="text-[#0A0A0B] font-semibold">Failed to load deals</p>
           <p className="text-muted text-sm">{error}</p>
           <motion.button
             whileHover={{ scale: 1.04 }}
@@ -184,7 +184,7 @@ export default function ForecastPage() {
                 label: "Total Weighted Pipeline",
                 value: fmt(totalPipeline),
                 sub: `across ${deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length} open deals`,
-                valueClass: "text-white",
+                valueClass: "text-[#0A0A0B]",
               },
               {
                 label: "Likely This Month",
@@ -204,7 +204,7 @@ export default function ForecastPage() {
                 variants={fadeUp}
                 whileHover={{ y: -2 }}
                 className=" border p-5 overflow-hidden relative"
-                style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.1)" }}
+                style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", borderColor: "rgba(0,0,0,0.08)" }}
               >
                 <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
                 <p className="text-xs text-muted uppercase tracking-wider mb-1">{stat.label}</p>
@@ -217,7 +217,7 @@ export default function ForecastPage() {
           {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length === 0 ? (
             <PrismPanel padding="p-10" className="flex flex-col items-center gap-3 text-center">
               <TrendingUp size={36} className="text-muted opacity-30" />
-              <p className="text-white font-semibold">No open deals to forecast</p>
+              <p className="text-[#0A0A0B] font-semibold">No open deals to forecast</p>
               <p className="text-muted text-sm max-w-xs">Add deals with expected close dates and probabilities to see your revenue forecast.</p>
               <a href="/dashboard/deals" className="btn-primary text-sm px-4 py-2 rounded-lg mt-2">Go to Deals →</a>
             </PrismPanel>
@@ -228,13 +228,13 @@ export default function ForecastPage() {
               {/* Likely to close this month */}
               {likelyClose.length > 0 && (
                 <PrismPanel padding="p-0" className="overflow-hidden">
-                  <div className="px-4 py-3 border-b border-white/5">
-                    <p className="text-sm font-semibold text-white">Likely to Close This Month</p>
+                  <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
+                    <p className="text-sm font-semibold text-[#0A0A0B]">Likely to Close This Month</p>
                     <p className="text-xs text-muted mt-0.5">Deals with ≥70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
                   </div>
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-white/5 text-muted text-xs">
+                      <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
                         <th className="text-left px-4 py-2.5 font-medium">Deal</th>
                         <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Client</th>
                         <th className="text-right px-4 py-2.5 font-medium">Value</th>
@@ -243,7 +243,7 @@ export default function ForecastPage() {
                       </tr>
                     </thead>
                     <motion.tbody
-                      className="divide-y divide-white/5"
+                      className="divide-y divide-[rgba(0,0,0,0.06)]"
                       variants={containerVariants}
                       initial="hidden"
                       animate="show"
@@ -254,9 +254,9 @@ export default function ForecastPage() {
                           variants={slideX}
                           className="hover:bg-indigo-500/5 transition-colors"
                         >
-                          <td className="px-4 py-3 text-white font-medium">{d.title}</td>
+                          <td className="px-4 py-3 text-[#0A0A0B] font-medium">{d.title}</td>
                           <td className="px-4 py-3 text-muted hidden sm:table-cell">{d.client_name}</td>
-                          <td className="px-4 py-3 text-right text-white">{fmt(d.value)}</td>
+                          <td className="px-4 py-3 text-right text-[#0A0A0B]">{fmt(d.value)}</td>
                           <td className="px-4 py-3 text-right hidden md:table-cell">
                             <span className="text-xs bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full">
                               {d.probability}%
@@ -274,12 +274,12 @@ export default function ForecastPage() {
 
               {/* Full pipeline table */}
               <PrismPanel padding="p-0" className="overflow-hidden">
-                <div className="px-4 py-3 border-b border-white/5">
-                  <p className="text-sm font-semibold text-white">Full Open Pipeline</p>
+                <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
+                  <p className="text-sm font-semibold text-[#0A0A0B]">Full Open Pipeline</p>
                 </div>
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-white/5 text-muted text-xs">
+                    <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
                       <th className="text-left px-4 py-2.5 font-medium">Deal</th>
                       <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Stage</th>
                       <th className="text-right px-4 py-2.5 font-medium">Value</th>
@@ -288,7 +288,7 @@ export default function ForecastPage() {
                     </tr>
                   </thead>
                   <motion.tbody
-                    className="divide-y divide-white/5"
+                    className="divide-y divide-[rgba(0,0,0,0.06)]"
                     variants={containerVariants}
                     initial="hidden"
                     animate="show"
@@ -303,13 +303,13 @@ export default function ForecastPage() {
                           className="hover:bg-indigo-500/5 transition-colors"
                         >
                           <td className="px-4 py-3">
-                            <p className="text-white">{d.title}</p>
+                            <p className="text-[#0A0A0B]">{d.title}</p>
                             <p className="text-muted text-xs">{d.client_name}</p>
                           </td>
                           <td className="px-4 py-3 text-muted text-xs hidden sm:table-cell">
                             {d.stage.replace(/_/g, " ")}
                           </td>
-                          <td className="px-4 py-3 text-right text-white">{fmt(d.value)}</td>
+                          <td className="px-4 py-3 text-right text-[#0A0A0B]">{fmt(d.value)}</td>
                           <td className="px-4 py-3 text-right text-muted hidden md:table-cell">
                             {d.expected_close_date
                               ? new Date(d.expected_close_date).toLocaleDateString()
@@ -330,3 +330,4 @@ export default function ForecastPage() {
     </div>
   );
 }
+

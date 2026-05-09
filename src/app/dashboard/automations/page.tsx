@@ -119,14 +119,14 @@ export default function AutomationsPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard/automations/library"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-sm font-medium transition-colors border border-indigo-500/30"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 text-sm font-medium transition-colors border border-indigo-500/20"
             >
               Browse template library
             </Link>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Link
                 href="/dashboard/workflow-builder"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors border border-white/20"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-sm font-medium transition-colors border border-[rgba(0,0,0,0.10)]"
               >
                 <Plus size={15} /> New Automation
               </Link>
@@ -138,7 +138,7 @@ export default function AutomationsPage() {
       {/* Stats bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
-          { label: "Total", value: workflows.length, color: "text-white" },
+          { label: "Total", value: workflows.length, color: "text-[#0A0A0B]" },
           { label: "Active", value: activeCount, color: "text-emerald-400" },
           { label: "Paused", value: workflows.length - activeCount, color: "text-indigo-400" },
         ].map((s, index) => (
@@ -150,29 +150,29 @@ export default function AutomationsPage() {
             transition={{ duration: 0.22, delay: index * 0.06 }}
             whileHover={{ y: -2 }}
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)" }} />
             <p className={`text-2xl font-bold ${s.color} mt-2`}>{s.value}</p>
-            <p className="text-xs text-white/40 mt-0.5">{s.label}</p>
-            <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: 'rgba(255,255,255,0.3)' }} />
+            <p className="text-xs text-[#71717A] mt-0.5">{s.label}</p>
+            <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: 'rgba(0,0,0,0.08)' }} />
           </motion.div>
         ))}
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#71717A]" />
         <input
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search automations…"
-          className="w-full glass rounded-lg pl-8 pr-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500/50"
+          className="w-full glass rounded-lg pl-8 pr-3 py-2 text-[#0A0A0B] text-sm focus:outline-none focus:border-indigo-500/50"
         />
       </div>
 
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="h-20 rounded-xl bg-white/5 animate-pulse" />
+            <div key={i} className="h-20 rounded-xl bg-[rgba(0,0,0,0.04)] animate-pulse" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
@@ -188,7 +188,7 @@ export default function AutomationsPage() {
             !search ? (
               <Link
                 href="/dashboard/workflow-builder"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-sm font-medium transition-colors border border-indigo-500/30"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 text-sm font-medium transition-colors border border-indigo-500/20"
               >
                 <Plus size={14} /> Create your first automation
               </Link>
@@ -197,7 +197,7 @@ export default function AutomationsPage() {
         />
       ) : (
         <div className="glass rounded-xl overflow-hidden">
-          <div className="divide-y divide-white/5">
+          <div className="divide-y divide-[rgba(0,0,0,0.06)]">
             {filtered.map((w, index) => {
               const triggerType = getTriggerType(w.nodes);
               const stepCount = (w.nodes?.length || 0) + (Array.isArray(w.edges) ? w.edges.length : 0);
@@ -208,31 +208,31 @@ export default function AutomationsPage() {
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.18, delay: index * 0.04 }}
-                  whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                  whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                 >
                   {/* Status indicator */}
                   <div
                     className={`w-2 h-2 rounded-full shrink-0 ${
-                      w.active ? "bg-emerald-400" : "bg-white/20"
+                      w.active ? "bg-emerald-500" : "bg-[rgba(0,0,0,0.16)]"
                     }`}
                   />
 
                   {/* Name & meta */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-medium text-white text-sm truncate">
+                      <span className="font-medium text-[#0A0A0B] text-sm truncate">
                         {w.name}
                       </span>
                       {/* Trigger chip */}
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-white/10 text-white/50 border border-white/10 shrink-0">
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-[rgba(0,0,0,0.06)] text-[#52525B] border border-[rgba(0,0,0,0.08)] shrink-0">
                         {getTriggerIcon(triggerType)}
                         {triggerType}
                       </span>
                     </div>
                     {w.description && (
-                      <p className="text-xs text-white/40 truncate">{w.description}</p>
+                      <p className="text-xs text-[#71717A] truncate">{w.description}</p>
                     )}
-                    <div className="flex items-center gap-3 mt-1 text-xs text-white/25">
+                    <div className="flex items-center gap-3 mt-1 text-xs text-[#71717A]">
                       {stepCount > 0 && (
                         <span className="flex items-center gap-1">
                           <Play size={9} /> {stepCount} step{stepCount !== 1 ? "s" : ""}
@@ -248,7 +248,7 @@ export default function AutomationsPage() {
                   <div className="flex items-center gap-2 shrink-0">
                     <Link
                       href={`/dashboard/workflows`}
-                      className="text-xs text-white/30 hover:text-white/60 px-2 py-1 rounded border border-white/10 hover:border-white/20 transition-colors"
+                      className="text-xs text-[#52525B] hover:text-[#0A0A0B] px-2 py-1 rounded border border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.16)] transition-colors"
                     >
                       Edit
                     </Link>
@@ -258,7 +258,7 @@ export default function AutomationsPage() {
                       className={`p-1.5 rounded-lg transition-colors disabled:opacity-50 ${
                         w.active
                           ? "text-emerald-400 hover:bg-emerald-500/10"
-                          : "text-white/30 hover:bg-white/10 hover:text-white/60"
+                          : "text-[#71717A] hover:bg-[rgba(0,0,0,0.06)] hover:text-[#52525B]"
                       }`}
                       title={w.active ? "Pause" : "Enable"}
                     >
@@ -279,9 +279,9 @@ export default function AutomationsPage() {
       )}
 
       {/* Footer hint */}
-      <p className="text-xs text-white/25 text-center">
+      <p className="text-xs text-[#71717A] text-center">
         To build advanced automations with branching logic, use the{" "}
-        <Link href="/dashboard/workflow-builder" className="text-white/40 hover:text-white/60 underline underline-offset-2">
+        <Link href="/dashboard/workflow-builder" className="text-[#52525B] hover:text-[#0A0A0B] underline underline-offset-2">
           Workflow Builder
         </Link>
         .

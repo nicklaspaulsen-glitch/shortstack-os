@@ -277,11 +277,11 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
         className="absolute inset-0 bg-black/70 backdrop-blur-md"
         onClick={onClose}
       />
-      <div className="relative z-10 w-full max-w-md mx-4 bg-[#15141A] border border-[rgba(255,255,255,0.12)]  p-6 shadow-2xl">
+      <div className="relative z-10 w-full max-w-md mx-4 bg-white border border-[rgba(0,0,0,0.08)]  p-6 shadow-2xl">
         <div className="flex items-center gap-3 mb-4">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{ background: "rgba(255,255,255,0.08)" }}
+            style={{ background: "rgba(0,0,0,0.05)" }}
           >
             {isZernio ? (
               <ExternalLink size={18} className="text-[#FF2D2D]" />
@@ -290,20 +290,20 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
             )}
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-[#F5F4F1]">
+            <h2 className="text-sm font-semibold text-[#0A0A0B]">
               Connect {integration.name}
             </h2>
-            <p className="text-[11px] text-[#9F9DAA]">
+            <p className="text-[11px] text-[#52525B]">
               {isZernio ? "Via Zernio dashboard" : "Requires API credentials"}
             </p>
           </div>
         </div>
 
         {isZernio ? (
-          <div className="space-y-3 text-[12px] text-[#9F9DAA]">
+          <div className="space-y-3 text-[12px] text-[#52525B]">
             <p>
               {integration.name} accounts are managed through{" "}
-              <strong className="text-[#F5F4F1]">Zernio</strong>. Connect your
+              <strong className="text-[#0A0A0B]">Zernio</strong>. Connect your
               account there — ShortStack will automatically detect it.
             </p>
             <ol className="list-decimal list-inside space-y-1.5 pl-1">
@@ -323,7 +323,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
             </ol>
           </div>
         ) : (
-          <div className="space-y-3 text-[12px] text-[#9F9DAA]">
+          <div className="space-y-3 text-[12px] text-[#52525B]">
             <p>
               Add the following environment variable(s) to your Vercel project,
               then redeploy.
@@ -332,7 +332,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               {(integration.requiredEnv ?? []).map((envVar) => (
                 <code
                   key={envVar}
-                  className="block w-full bg-[#0A0A0B] border border-[rgba(255,255,255,0.1)] rounded-lg px-3 py-2 text-[#FF2D2D] text-[11px] font-mono"
+                  className="block w-full bg-[#FAFAFB] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-[#CC2424] text-[11px] font-mono"
                 >
                   {envVar}
                 </code>
@@ -351,7 +351,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               style={{
                 background: "#FF2D2D",
                 boxShadow:
-                  "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(255,255,255,0.45)",
+                  "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(204,36,36,0.3)",
               }}
             >
               <ExternalLink size={11} />
@@ -361,7 +361,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 text-[11px] font-medium px-3 py-2 rounded-lg border border-[rgba(255,255,255,0.12)] text-[#9F9DAA] hover:text-[#F5F4F1] transition-colors"
+            className="flex-1 text-[11px] font-medium px-3 py-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#52525B] hover:text-[#0A0A0B] transition-colors"
           >
             Close
           </button>
@@ -691,7 +691,7 @@ export default function IntegrationsHubPage() {
                 "px-3 py-1.5 text-[11px] font-semibold rounded-full border transition-all",
                 active
                   ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-300"
-                  : "bg-white/5 border-white/10 text-muted hover:text-foreground hover:border-indigo-500/20",
+                  : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-muted hover:text-foreground hover:border-indigo-500/20",
               ].join(" ")}
             >
               {cat}

@@ -84,20 +84,20 @@ function MicroStat({ icon, label, value, highlight = false }: MicroStatProps) {
     <div
       className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg"
       style={{
-        background: highlight ? `${tokens.brand.lime}1a` : "rgba(255,255,255,0.06)",
-        border: `1px solid ${highlight ? tokens.border.strong : "rgba(255,255,255,0.08)"}`,
+        background: highlight ? `${tokens.brand.accent}18` : "rgba(0,0,0,0.05)",
+        border: `1px solid ${highlight ? tokens.brand.accent : "rgba(0,0,0,0.08)"}`,
       }}
     >
-      <span style={{ color: highlight ? tokens.brand.lime : "rgba(255,255,255,0.7)" }}>{icon}</span>
+      <span style={{ color: highlight ? tokens.brand.accent : "rgba(0,0,0,0.5)" }}>{icon}</span>
       <span
         className="text-[11px] font-mono tabular-nums font-bold"
-        style={{ color: highlight ? tokens.brand.lime : "rgba(255,255,255,0.95)" }}
+        style={{ color: highlight ? tokens.brand.accent : "rgba(0,0,0,0.85)" }}
       >
         {value}
       </span>
       <span
         className="text-[9px] uppercase tracking-wider"
-        style={{ color: "rgba(255,255,255,0.55)" }}
+        style={{ color: "rgba(0,0,0,0.45)" }}
       >
         {label}
       </span>
