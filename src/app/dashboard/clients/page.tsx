@@ -968,7 +968,7 @@ export default function ClientsPage() {
       {/* Feature 15: Card View — editorial bento: first card spans 2 cols as featured tile */}
       {tab === "clients" && viewMode === "card" && (
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
           initial="hidden"
           animate="visible"
           variants={staggerContainerFast}
@@ -1027,8 +1027,21 @@ export default function ClientsPage() {
                 {/* Feature 1: Health indicator + initials badge — wider layout for featured tile */}
                 <div className={`flex items-start gap-3 mb-3 mt-1 ${isFeatured ? "md:flex-row md:items-center" : ""}`}>
                   <div className="shrink-0 flex flex-col items-center gap-1.5">
-                    <ClientInitialsBadge name={c.business_name || "?"} />
-                    <HealthArc score={c.health_score} />
+                    {/* Avatar with health ring overlay on compact cards */}
+                    <div className="relative">
+                      <ClientInitialsBadge name={c.business_name || "?"} />
+                      {!isFeatured && (
+                        <div
+                          className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white"
+                          style={{
+                            background: c.health_score >= 70 ? '#22C55E' : c.health_score >= 40 ? '#F59E0B' : '#EF4444',
+                          }}
+                          title={`Health: ${c.health_score}`}
+                        />
+                      )}
+                    </div>
+                    {/* Health arc only on featured tile (has space for it) */}
+                    {isFeatured && <HealthArc score={c.health_score} />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
@@ -1042,6 +1055,12 @@ export default function ClientsPage() {
                     <p className="text-[10px] text-muted">{c.contact_name}</p>
                     {isFeatured && c.industry && (
                       <p className="text-[10px] text-muted mt-0.5">{c.industry}</p>
+                    )}
+                    {/* Revenue badge — compact cards only (featured has dedicated MRR callout) */}
+                    {!isFeatured && c.mrr > 0 && (
+                      <span className="inline-block mt-0.5 text-[9px] font-semibold bg-[rgba(0,0,0,0.04)] text-[#52525B] px-2 py-0.5 rounded-full border border-[rgba(0,0,0,0.08)]">
+                        {formatCurrency(c.mrr)}/mo
+                      </span>
                     )}
                   </div>
                   {/* Featured: big MRR callout */}
@@ -1093,7 +1112,7 @@ export default function ClientsPage() {
                   </div>
                 </div>
 
-                {/* Feature 7: Contract status + Feature 14: Next action */}
+                {/* Feature 7: Contract status + Feature 14: Next action + last-active */}
                 <div className="flex items-center justify-between text-[10px] border-t border-border pt-2">
                   <div className="flex items-center gap-1.5">
                     {contractInfo.warning ? (
@@ -1102,9 +1121,22 @@ export default function ClientsPage() {
                       <StatusBadge status={c.is_active ? "active" : "inactive"} />
                     )}
                   </div>
-                  <span className={`flex items-center gap-0.5 ${nextAction.urgent ? "text-warning" : "text-muted"}`}>
-                    <Clock size={9} /> {nextAction.action}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    {/* Last-active timestamp */}
+                    {(() => {
+                      const ms = getLastActivity(c);
+                      const diffDays = Math.floor((Date.now() - ms) / 86400000);
+                      const label = diffDays === 0 ? "today" : diffDays === 1 ? "yesterday" : diffDays < 7 ? `${diffDays}d ago` : diffDays < 30 ? `${Math.floor(diffDays / 7)}w ago` : `${Math.floor(diffDays / 30)}mo ago`;
+                      return (
+                        <span className="text-[10px] text-[#A1A1AA] flex items-center gap-0.5">
+                          <Clock size={9} /> {label}
+                        </span>
+                      );
+                    })()}
+                    <span className={`flex items-center gap-0.5 ${nextAction.urgent ? "text-warning" : "text-muted"}`}>
+                      {nextAction.action}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Feature 2: Quick Actions on hover */}

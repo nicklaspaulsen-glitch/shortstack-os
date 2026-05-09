@@ -564,28 +564,53 @@ export default function AnalyticsPage() {
               {/* Divider */}
               <div className="my-6 h-px bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.08)] to-transparent" />
 
-              {/* 4 stats — inline, no individual cards */}
-              <div className="grid grid-cols-2 md:grid-cols-4">
-                {[
-                  { label: "Total Leads", value: stats.totalLeads.toLocaleString(), sub: leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "—", subOk: leadGrowth >= 0 },
-                  { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate >= 5 },
-                  { label: "Calls Booked", value: stats.callsBooked.toLocaleString(), sub: "this period", subOk: true },
-                  { label: "Deals Won", value: stats.totalDeals.toLocaleString(), sub: `${formatCurrency(stats.dealValue)} closed`, subOk: true },
-                ].map((stat, i) => (
-                  <motion.div
-                    key={stat.label}
-                    className={`py-1 ${i > 0 ? "pl-6 border-l border-[rgba(0,0,0,0.08)]" : ""} ${i < 3 ? "pr-6" : ""}`}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.38, delay: 0.15 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+              {/* Stats — editorial split: hero first stat + 3-stat support strip */}
+              <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
+                {/* Hero stat — Total Leads, larger editorial treatment */}
+                <motion.div
+                  className="py-1 pr-6 md:pr-8 shrink-0"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.38, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <p className="text-xs text-[#52525B] uppercase tracking-widest font-normal">Total Leads</p>
+                  <p
+                    className="font-display text-4xl font-bold tracking-[-0.04em] mt-1 text-[#0A0A0B]"
+                    style={{ fontVariantNumeric: "tabular-nums" }}
                   >
-                    <p className="text-[8px] font-semibold uppercase tracking-[0.18em] text-[#52525B]">{stat.label}</p>
-                    <p className="font-display text-[28px] font-bold tracking-[-0.03em] mt-1 text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>
-                      {stat.value}
-                    </p>
-                    <p className="text-[10px] mt-0.5" style={{ color: stat.subOk ? "#52525B" : "#F26063" }}>{stat.sub}</p>
-                  </motion.div>
-                ))}
+                    {stats.totalLeads.toLocaleString()}
+                  </p>
+                  <p className="text-[10px] mt-0.5" style={{ color: leadGrowth >= 0 ? "#52525B" : "#F26063" }}>
+                    {leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "—"}
+                  </p>
+                </motion.div>
+
+                {/* Divider */}
+                <div className="hidden md:block w-px self-stretch bg-[rgba(0,0,0,0.08)] mx-0" />
+                <div className="block md:hidden h-px w-full bg-[rgba(0,0,0,0.08)] my-3" />
+
+                {/* Support stats strip — 3 remaining */}
+                <div className="flex flex-1 grid-cols-3 md:pl-6">
+                  {[
+                    { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate >= 5 },
+                    { label: "Calls Booked", value: stats.callsBooked.toLocaleString(), sub: "this period", subOk: true },
+                    { label: "Deals Won", value: stats.totalDeals.toLocaleString(), sub: `${formatCurrency(stats.dealValue)} closed`, subOk: true },
+                  ].map((stat, i) => (
+                    <motion.div
+                      key={stat.label}
+                      className={`flex-1 py-1 ${i > 0 ? "pl-6 border-l border-[rgba(0,0,0,0.08)]" : ""} ${i < 2 ? "pr-6" : ""}`}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.38, delay: 0.22 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <p className="text-xs text-[#52525B] uppercase tracking-widest font-normal">{stat.label}</p>
+                      <p className="font-display text-xl font-semibold tracking-[-0.03em] mt-1 text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        {stat.value}
+                      </p>
+                      <p className="text-[10px] mt-0.5" style={{ color: stat.subOk ? "#52525B" : "#F26063" }}>{stat.sub}</p>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
 
               {/* Footer context */}
@@ -837,20 +862,22 @@ export default function AnalyticsPage() {
 
             {/* Monthly goals */}
             <motion.div
-              className="relative rounded-xl border border-[rgba(255,45,45,0.22)] px-6 pt-5 pb-5 overflow-hidden"
-              style={{ background: "rgba(255,45,45,0.06)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", boxShadow: "0 1px 0 rgba(255,45,45,0.08) inset, 0 0 0 1px rgba(255,45,45,0.08)" }}
+              className="relative rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5 overflow-hidden"
+              style={{
+                background: "rgba(204,36,36,0.03)",
+                borderTop: "2px solid rgba(204,36,36,0.4)",
+              }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Focal tile top accent */}
-              <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#FF2D2D]/50 to-transparent" />
+              {/* No pseudo accent div needed — top border handles it */}
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Progress</p>
               <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
               <div className="space-y-3.5">
                 {goals.map(goal => {
                   const pct = goal.target > 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
-                  const barColor = pct >= 100 ? "#FF2D2D" : pct >= 70 ? "#FF2D2D" : pct >= 40 ? "#FF6B6B" : "#4F4D58";
+                  const barColor = pct >= 100 ? "#CC2424" : pct >= 70 ? "#CC2424" : pct >= 40 ? "#CC2424" : "#4F4D58";
                   return (
                     <div key={goal.label}>
                       <div className="flex items-center justify-between mb-1.5">

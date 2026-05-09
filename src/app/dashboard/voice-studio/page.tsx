@@ -878,6 +878,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: index * 0.05 }}
+              className={index === 0 && filtered.length >= 3 ? "sm:col-span-2 lg:col-span-1 lg:row-span-1" : ""}
             >
               <PresetCard
                 preset={p}
@@ -886,6 +887,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                 onUrlCached={(url) => setPreviewCache((prev) => ({ ...prev, [p.id]: url }))}
                 onTextChanged={(text) => setTextCache((prev) => ({ ...prev, [p.id]: text }))}
                 onSaved={onRefresh}
+                featured={index === 0 && filtered.length >= 3}
               />
             </motion.div>
           ))}
@@ -905,9 +907,11 @@ interface PresetCardProps {
   onTextChanged: (text: string) => void;
   /** Called after the preset is saved to My Voices so the parent can refresh. */
   onSaved?: () => void;
+  /** First card in a filtered set — gets a "Featured" badge and shadow uplift. */
+  featured?: boolean;
 }
 
-function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged, onSaved }: PresetCardProps) {
+function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged, onSaved, featured }: PresetCardProps) {
   const [testing, setTesting] = useState(false);
   const [testUrl, setTestUrl] = useState<string | null>(cachedUrl);
   const [error, setError] = useState<string | null>(null);
@@ -967,8 +971,8 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
 
   return (
     <div
-      className="group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-colors duration-150 min-h-[220px]"
-      style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
+      className="group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-all duration-200 min-h-[220px] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+      style={{ background: "#FFFFFF", border: featured ? "1px solid rgba(204,36,36,0.18)" : "1px solid rgba(0,0,0,0.08)" }}
       onMouseEnter={() => {
         setIsHovering(true);
         if (testUrl || testing) return;
@@ -987,12 +991,17 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#CC2424]">
             <Mic size={16} />
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
+          <div className="flex items-center gap-1.5 flex-wrap justify-end">
+            {featured && (
+              <span className="text-[10px] font-semibold bg-[rgba(204,36,36,0.1)] text-[#CC2424] px-2 py-0.5 rounded-full uppercase tracking-wide">
+                Featured
+              </span>
+            )}
+            <span className="rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#71717A]">
               {lang}
             </span>
             {gender && (
-              <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
+              <span className="rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#71717A]">
                 {gender === "female" ? "F" : "M"}
               </span>
             )}

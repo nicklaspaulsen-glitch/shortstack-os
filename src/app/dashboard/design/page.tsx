@@ -1113,7 +1113,7 @@ export default function DesignStudioPage() {
                 <div className="p-3">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-[#FF2D2D]">{t.icon}</span>
-                  <span className="text-[8px] text-muted bg-white/5 px-1.5 py-0.5 rounded capitalize">{t.category}</span>
+                  <span className="text-[8px] text-muted bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded capitalize">{t.category}</span>
                 </div>
                 <p className="text-[11px] font-semibold">{t.label}</p>
                 <p className="text-[9px] text-muted">{t.width}x{t.height}</p>
@@ -1146,7 +1146,7 @@ export default function DesignStudioPage() {
                 <p className="text-xs font-semibold mb-2">{palette.name}</p>
                 <div className="flex gap-1 mb-2">
                   {palette.colors.map((c, ci) => (
-                    <div key={ci} className="flex-1 h-8 rounded-lg border border-white/10" style={{ background: c }} />
+                    <div key={ci} className="flex-1 h-8 rounded-lg border border-[rgba(0,0,0,0.10)]" style={{ background: c }} />
                   ))}
                 </div>
                 <div className="flex flex-wrap gap-1">

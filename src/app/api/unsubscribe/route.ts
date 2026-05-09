@@ -12,7 +12,7 @@ import { createServiceClient } from "@/lib/supabase/server";
  * POST /api/unsubscribe                 → JSON body { email, token } → { ok: true }
  *
  * Token: HMAC-SHA256(email.toLowerCase(), UNSUBSCRIBE_SECRET) sliced to 32 hex chars.
- * Falls back to CRON_SECRET if UNSUBSCRIBE_SECRET is not set.
+ * UNSUBSCRIBE_SECRET is required — the endpoint throws at request time if unset.
  *
  * CAN-SPAM / GDPR requirement: must be honoured within 10 business days.
  * We write synchronously so it's instant.

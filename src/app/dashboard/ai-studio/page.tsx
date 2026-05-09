@@ -42,7 +42,7 @@ const TOOLS = [
   { id: "upscale", name: "Upscale", desc: "4x AI image upscaling", icon: ArrowUpRight, color: "#FF6B6B", tag: "Real-ESRGAN" },
   { id: "remove-bg", name: "Remove BG", desc: "One-click background removal", icon: Scissors, color: "#FF6B6B", tag: "REMBG/SAM" },
   { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video", icon: Film, color: "#FF6B6B", tag: "SVD" },
-  { id: "music-gen", name: "Music Gen", desc: "AI background music for videos", icon: Music, color: "#CC2424", tag: "MusicGen" },
+  { id: "music-gen", name: "Music Gen", desc: "AI background music for videos", icon: Music, color: "#CC2424", tag: "MusicGen", newBadge: true },
   { id: "voice-clone", name: "Voice Clone", desc: "Clone voice from 6 sec audio", icon: Volume2, color: "#FF6B6B", tag: "XTTS v2" },
   { id: "train-lora", name: "Brand LoRA", desc: "Train custom image style models", icon: Brain, color: "#CC2424", tag: "LoRA", badge: "Business+" },
   { id: "batch-gen", name: "Batch Generate", desc: "50+ images in one go", icon: Layers, color: "#FF6B6B", tag: "FLUX/SDXL" },
@@ -378,7 +378,7 @@ export default function AIStudioPage() {
         {/* Editorial stats strip — shown when there's job history */}
         {history.length > 0 && (
           <motion.div
-            className="grid grid-cols-3 gap-2 mb-4"
+            className="grid grid-cols-[1fr_1fr_1.4fr] gap-2 mb-4"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
@@ -453,10 +453,10 @@ export default function AIStudioPage() {
                       setActiveTool(tool.id);
                       setTimeout(() => toolPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), 0);
                     }}
-                    className={`relative w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl border ${
+                    className={`relative w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl border transition-shadow duration-200 ${
                       active
-                        ? "border-[rgba(0,0,0,0.12)]"
-                        : "hover:bg-[rgba(0,0,0,0.02)] border-transparent"
+                        ? "border-[rgba(0,0,0,0.12)] shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+                        : "hover:bg-[rgba(0,0,0,0.02)] border-transparent hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
                     }`}
                   >
                     {active && (
@@ -485,6 +485,11 @@ export default function AIStudioPage() {
                       </p>
                       <p className="text-[8px] font-mono text-[#71717A] truncate">{tool.tag}</p>
                     </div>
+                    {"newBadge" in tool && tool.newBadge && (
+                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(204,36,36,0.1)] text-[#CC2424] shrink-0 uppercase tracking-wide">
+                        New
+                      </span>
+                    )}
                     {"badge" in tool && tool.badge && (
                       <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(0,0,0,0.05)] text-[#FF2D2D] shrink-0">
                         Biz+

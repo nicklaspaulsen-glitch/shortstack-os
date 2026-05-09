@@ -187,7 +187,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
       <div className="card w-full max-w-2xl p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold flex items-center gap-2"><Upload size={14} className="text-gold" /> Import CSV</h2>
-          <button onClick={onClose} className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><X size={14} /></button>
+          <button onClick={onClose} className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-foreground"><X size={14} /></button>
         </div>
 
         {/* Upload step */}
@@ -332,7 +332,7 @@ function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
       <div className="card w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold flex items-center gap-2"><UserPlus size={14} className="text-gold" /> Add Lead</h2>
-          <button onClick={onClose} className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><X size={14} /></button>
+          <button onClick={onClose} className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-foreground"><X size={14} /></button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -935,7 +935,7 @@ export default function LeadEnginePage() {
             {loading && (
               <div className="space-y-1 py-1">
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="grid grid-cols-12 items-center gap-2 px-3 py-3 rounded-lg bg-white/[0.02]">
+                  <div key={i} className="grid grid-cols-12 items-center gap-2 px-3 py-3 rounded-lg bg-[rgba(0,0,0,0.02)]">
                     <div className="col-span-3 space-y-1.5">
                       <Skeleton className="h-3 w-4/5" />
                       <Skeleton className="h-2 w-3/5" />
@@ -1011,7 +1011,7 @@ export default function LeadEnginePage() {
                     lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
                     lead.status === "contacted" || lead.status === "called" ? "bg-yellow-400/10 text-yellow-400" :
                     lead.status === "replied" ? "bg-emerald-400/10 text-emerald-400" :
-                    "bg-white/5 text-muted"
+                    "bg-[rgba(0,0,0,0.05)] text-muted"
                   }`}>{lead.status || "new"}</span>
                   <div className="text-center flex items-center justify-center gap-0.5">
                     {lead.google_rating ? (
@@ -1032,20 +1032,20 @@ export default function LeadEnginePage() {
                       href={lead.phone ? `tel:${lead.phone}` : undefined}
                       onClick={(e) => { if (!lead.phone) { e.preventDefault(); toast.error("No phone number"); } }}
                       aria-label={lead.phone ? `Call ${lead.business_name}` : "No phone number"}
-                      className={`p-1 rounded hover:bg-white/5 text-muted hover:text-gold ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
+                      className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-gold ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
                       title={lead.phone || "No phone"}
                     ><Phone size={10} /></a>
                     <a
                       href={lead.email ? `mailto:${lead.email}` : undefined}
                       onClick={(e) => { if (!lead.email) { e.preventDefault(); toast.error("No email"); } }}
                       aria-label={lead.email ? `Email ${lead.business_name}` : "No email address"}
-                      className={`p-1 rounded hover:bg-white/5 text-muted hover:text-gold ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
+                      className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-gold ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
                       title={lead.email || "No email"}
                     ><Mail size={10} /></a>
                     <Link
                       href="/dashboard/dm-controller"
                       aria-label={`Send DM to ${lead.business_name}`}
-                      className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"
+                      className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-gold"
                       title="DM via DM Controller"
                     ><MessageSquare size={10} /></Link>
                   </div>
