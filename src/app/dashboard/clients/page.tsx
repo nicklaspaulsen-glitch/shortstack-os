@@ -24,7 +24,6 @@ import { motion } from "framer-motion";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
-import PageHero from "@/components/ui/page-hero";
 
 // --- Types for new features ---
 type ClientTag = { label: string; color: string };
@@ -34,18 +33,18 @@ type ViewMode = "table" | "card";
 
 const TAG_PRESETS: ClientTag[] = [
   { label: "VIP", color: "#FF2D2D" },
-  { label: "At Risk", color: "#f43f5e" },
+  { label: "At Risk", color: "#F26063" },
   { label: "New", color: "#FF6B6B" },
-  { label: "Enterprise", color: "#8b5cf6" },
+  { label: "Enterprise", color: "#FF6B6B" },
   { label: "Growing", color: "#FF2D2D" },
-  { label: "Needs Attention", color: "#f59e0b" },
+  { label: "Needs Attention", color: "#F26063" },
 ];
 
 function HealthArc({ score }: { score: number }) {
   const pct = Math.min(100, Math.max(0, score ?? 0));
   const r = 16, circ = 2 * Math.PI * r;
   const dash = (pct / 100) * circ;
-  const color = pct >= 70 ? "#7FE5B8" : pct >= 40 ? "#FFC062" : "#F26063";
+  const color = pct >= 70 ? "#FF6B6B" : pct >= 40 ? "#CC2424" : "#F26063";
   return (
     <svg width="42" height="42" viewBox="0 0 42 42" className="-rotate-90">
       <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="3" />
@@ -620,8 +619,8 @@ export default function ClientsPage() {
   const CLIENT_PRISM = [
     { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },  // Total
     { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },  // Active
-    { accent: "#FF5252", bar: "from-[#FF5252] to-transparent" },  // MRR
-    { accent: "#F59E0B", bar: "from-[#F59E0B] to-transparent" },  // At Risk
+    { accent: "#FF6B6B", bar: "from-[#FF6B6B] to-transparent" },  // MRR
+    { accent: "#F26063", bar: "from-[#F26063] to-transparent" },  // At Risk
   ] as const;
 
   if (loading) return (
@@ -633,66 +632,57 @@ export default function ClientsPage() {
 
   return (
     <MotionPage className="space-y-4">
-      <PageHero
-        title="Clients"
-        subtitle={
-          callerRole === "admin" || callerRole === "founder"
-            ? scope === "all"
-              ? `${clients.length} clients across the platform`
-              : "Your agency clients"
-            : "Accounts · Contracts · Invoices"
-        }
-        icon={<Users size={28} />}
-        gradient="purple"
-        actions={
-          <div className="flex items-center gap-2">
-            {/* Stat chips */}
-            {clients.length > 0 && (
-              <div className="hidden sm:flex items-center gap-1.5">
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.18)] text-[10px] font-medium text-[#FF2D2D]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
-                  {clients.length}
+      {/* ── Slim editorial header ── */}
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(255,255,255,0.06)] bg-[#080809] -mx-4 sm:-mx-6 mb-2">
+        <div className="w-7 h-7 rounded-xl bg-[rgba(255,45,45,0.12)] flex items-center justify-center shrink-0">
+          <Users size={13} className="text-[#FF2D2D]" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Clients</h1>
+          <p className="text-[9px] text-[#6F6D7A]">
+            {callerRole === "admin" || callerRole === "founder"
+              ? scope === "all" ? `${clients.length} clients across the platform` : "Your agency clients"
+              : "Accounts · Contracts · Invoices"}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          {clients.length > 0 && (
+            <div className="hidden sm:flex items-center gap-1.5">
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[10px] font-medium text-[#FF2D2D]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
+                {clients.length}
+              </span>
+              {totalMRR > 0 && (
+                <span className="px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[10px] font-medium text-[#A8A8B2]">
+                  {formatCurrency(totalMRR)}
                 </span>
-                {totalMRR > 0 && (
-                  <span className="px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[10px] font-medium text-[#A8A8B2]">
-                    {formatCurrency(totalMRR)}
-                  </span>
-                )}
-              </div>
-            )}
-            {/* Scope switcher (admin/founder only) */}
-            {(callerRole === "admin" || callerRole === "founder") && (
-              <div className="flex items-center bg-[#15141A] border border-[rgba(255,255,255,0.06)] rounded-lg p-0.5">
-                <button
-                  onClick={() => setScope("all")}
-                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                    scope === "all" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
-                  }`}
-                  title="See every client across every agency"
-                >
-                  All
-                </button>
-                <button
-                  onClick={() => setScope("mine")}
-                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                    scope === "mine" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
-                  }`}
-                  title="See only the clients you personally added"
-                >
-                  Mine
-                </button>
-              </div>
-            )}
-            {/* Add Client CTA */}
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D2D] text-white text-xs font-semibold hover:bg-[#CC2424] transition-all"
-            >
-              <Plus size={13} /> Add Client
-            </button>
-          </div>
-        }
-      />
+              )}
+            </div>
+          )}
+          {(callerRole === "admin" || callerRole === "founder") && (
+            <div className="flex items-center bg-[#0E0E10] border border-[rgba(255,255,255,0.06)] rounded-lg p-0.5">
+              <button
+                onClick={() => setScope("all")}
+                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                  scope === "all" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
+                }`}
+              >All</button>
+              <button
+                onClick={() => setScope("mine")}
+                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                  scope === "mine" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
+                }`}
+              >Mine</button>
+            </div>
+          )}
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D2D] text-white text-xs font-semibold hover:bg-[#CC2424] transition-all"
+          >
+            <Plus size={13} /> Add Client
+          </button>
+        </div>
+      </div>
 
       {/* Prism stat strip — 4 glass tiles with per-tile color accent */}
       {clients.length > 0 && (
@@ -704,7 +694,7 @@ export default function ClientsPage() {
           transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* Prism rainbow top bar */}
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF2D2D] via-[#FF5252] to-[#F59E0B]" />
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF6B6B] to-[#CC2424]" />
           <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(255,255,255,0.08)]">
             {[
               { label: "Total Clients", value: String(clients.length), sub: `${clients.filter(c => !c.is_active).length} inactive` },
@@ -1044,7 +1034,7 @@ export default function ClientsPage() {
                     <span className="text-[9px] font-mono font-medium">{onboarding}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-[#7FE5B8]" : onboarding >= 60 ? "bg-[#FF2D2D]" : "bg-[#FFC062]"}`}
+                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-[#FF2D2D]" : onboarding >= 60 ? "bg-[#FF2D2D]" : "bg-[#CC2424]"}`}
                       style={{ width: `${onboarding}%` }} />
                   </div>
                 </div>
@@ -1287,11 +1277,11 @@ export default function ClientsPage() {
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
                     { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#FF2D2D" },
-                    { label: "Health", value: `${client.health_score ?? "—"}%`, color: client.health_score >= 70 ? "#7FE5B8" : client.health_score >= 40 ? "#FFC062" : "#F26063" },
+                    { label: "Health", value: `${client.health_score ?? "—"}%`, color: client.health_score >= 70 ? "#FF6B6B" : client.health_score >= 40 ? "#CC2424" : "#F26063" },
                     { label: "Package", value: client.package_tier ?? "—", color: "#FF6B6B" },
                     { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
                   ].map((tile, ti) => {
-                    const bars = ["from-[#FF2D2D]","from-[#7FE5B8]","from-[#FF6B6B]","from-[#6F6D7A]"];
+                    const bars = ["from-[#FF2D2D]","from-[#FF6B6B]","from-[#CC2424]","from-[#6F6D7A]"];
                     return (
                       <div key={tile.label} className="relative rounded-xl border border-[rgba(255,255,255,0.1)] p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
                         <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${bars[ti]} to-transparent opacity-60`} />
@@ -1412,7 +1402,7 @@ export default function ClientsPage() {
             {[
               { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },
               { label: "Active Subs", value: String(clientsWithSubs.length), color: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },
-              { label: "Paid Invoices", value: String(paidInvoices.length), color: "#FF5252", bar: "from-[#FF5252] to-transparent" },
+              { label: "Paid Invoices", value: String(paidInvoices.length), color: "#FF6B6B", bar: "from-[#FF6B6B] to-transparent" },
               { label: "Overdue", value: String(overdueInvoices.length), color: overdueInvoices.length > 0 ? "#F26063" : "#6F6D7A", bar: overdueInvoices.length > 0 ? "from-[#F26063] to-transparent" : "from-[#6F6D7A] to-transparent" },
             ].map((tile, i) => (
               <motion.div

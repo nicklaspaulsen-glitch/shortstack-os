@@ -9,7 +9,7 @@ import { getPlanConfig } from "@/lib/plan-config";
 import { BRAND } from "@/lib/brand-config";
 import DesktopIndicator from "@/components/desktop-indicator";
 import Stack3D from "@/components/brand/stack-3d";
-import MandalaMark from "@/components/brand/mandala-mark";
+import { LogoMark } from "@/components/brand/logo-mark";
 import NavIcon3D from "@/components/brand/nav-icon-3d";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -659,7 +659,7 @@ export default function Sidebar() {
             indented ? "px-3 ml-1" : "px-2.5"
           } ${
             isActive
-              ? "active text-brand-accent font-semibold bg-[rgba(94,91,255,0.10)]"
+              ? "active text-brand-accent font-semibold bg-[rgba(255,45,45,0.10)]"
               : "text-text-secondary hover:text-text-primary hover:bg-white/[0.03]"
           }`}
         >
@@ -695,19 +695,19 @@ export default function Sidebar() {
           onMouseLeave={() => setHoveredItem(null)}
           className={`nav-item-hover flex items-center justify-center px-2.5 py-1.5 my-[1px] rounded-lg text-[12.5px] transition-all duration-220 ease-out-expo-foundation ${
             isActive
-              ? "active text-brand-lime bg-[rgba(94,91,255,0.06)] shadow-[0_0_14px_rgba(94,91,255,0.08)]"
+              ? "active text-brand-accent bg-[rgba(255,45,45,0.06)] shadow-[0_0_14px_rgba(255,45,45,0.08)]"
               : "text-text-secondary hover:text-text-primary hover:bg-white/[0.02]"
           }`}
           title={unreadCount > 0 ? `${label} (${unreadCount})` : label}
         >
-          <span className={`relative shrink-0 transition-colors duration-220 ease-out-expo-foundation nav-icon-alive ${isActive ? "text-brand-lime drop-shadow-[0_0_4px_rgba(94,91,255,0.55)]" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
+          <span className={`relative shrink-0 transition-colors duration-220 ease-out-expo-foundation nav-icon-alive ${isActive ? "text-brand-accent drop-shadow-[0_0_4px_rgba(255,45,45,0.55)]" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
             {customIcon || item.icon}
             {unreadCount > 0 && <UnreadDotMini />}
           </span>
           {isActive && (
             <motion.div
               layoutId="sidebar-active-accent"
-              className="absolute -left-px top-1/2 w-[2px] h-[68%] rounded-r bg-brand-lime shadow-[0_0_10px_rgba(94,91,255,0.65)]"
+              className="absolute -left-px top-1/2 w-[2px] h-[68%] rounded-r bg-brand-accent shadow-[0_0_10px_rgba(255,45,45,0.65)]"
               style={{ y: "-50%" }}
               transition={{ type: "spring", stiffness: 380, damping: 32 }}
             />
@@ -741,7 +741,7 @@ export default function Sidebar() {
       } ${hoverExpanded && !pinned ? "shadow-[8px_0_36px_-10px_rgba(0,0,0,0.55)]" : ""}`}
       style={{
         background: "var(--bg-surface-1, #15141A)",
-        borderRight: "1px solid var(--border-subtle, rgba(94,91,255,0.08))",
+        borderRight: "1px solid var(--border-subtle, rgba(255,255,255,0.07))",
       }}
     >
       {/* LED light strip — lives on the sidebar's right edge, theme-colored */}
@@ -770,7 +770,7 @@ export default function Sidebar() {
             }
             return (
               <Link href="/dashboard" className="flex items-center justify-center" aria-label={displayName}>
-                <MandalaMark size="sm" />
+                <LogoMark size="sm" />
               </Link>
             );
           }
@@ -782,7 +782,7 @@ export default function Sidebar() {
                 <img src={wl.logo_url || "/icons/shortstack-logo.svg"} alt={displayName} width={28} height={28} className="shrink-0 object-contain" />
               ) : (
                 <div className="shrink-0 transition-transform duration-220 ease-out-expo-foundation group-hover:scale-105">
-                  <MandalaMark size="sm" />
+                  <LogoMark size="sm" />
                 </div>
               )}
               <div className="min-w-0 leading-tight">
@@ -799,7 +799,7 @@ export default function Sidebar() {
             onClick={() => setPinned(!pinned)}
             className={`p-1 rounded-md transition-colors duration-220 ease-out-expo-foundation shrink-0 ${
               pinned
-                ? "text-brand-accent bg-[rgba(94,91,255,0.10)]"
+                ? "text-brand-accent bg-[rgba(255,45,45,0.10)]"
                 : "text-text-muted hover:text-brand-accent hover:bg-white/[0.02]"
             }`}
             aria-label={pinned ? "Unpin sidebar (auto-collapse)" : "Pin sidebar open"}
@@ -816,7 +816,7 @@ export default function Sidebar() {
       {/* Chrome Extension banner — admin only, dismissible */}
       {!collapsed && userRole === "admin" && !extDismissed && (
         <div className="mx-2 mb-1 mt-2">
-          <div className="flex items-center gap-1.5 h-[34px] px-2.5 rounded-lg bg-[rgba(94,91,255,0.05)] border border-border-subtle">
+          <div className="flex items-center gap-1.5 h-[34px] px-2.5 rounded-lg bg-white/[0.03] border border-border-subtle">
             <Puzzle size={13} className="shrink-0 text-brand-lime" />
             <a href="/downloads/shortstack-extension.zip" download
               className="text-[11px] text-brand-lime/90 hover:text-brand-lime font-medium transition-colors duration-220"
@@ -891,7 +891,7 @@ export default function Sidebar() {
                     aria-label={item.label}
                     className={`flex-1 flex items-center justify-center py-1 rounded-md transition-all duration-150 ${
                       isActive
-                        ? "bg-[rgba(94,91,255,0.15)] text-brand-accent"
+                        ? "bg-[rgba(255,45,45,0.15)] text-brand-accent"
                         : "text-text-muted hover:text-text-primary hover:bg-white/[0.04]"
                     }`}
                   >
@@ -1196,7 +1196,7 @@ export default function Sidebar() {
       )}
 
       {/* User — refined profile footer with email + actions */}
-      <div className="px-2 py-2.5 border-t border-border-subtle bg-[rgba(94,91,255,0.015)]">
+      <div className="px-2 py-2.5 border-t border-border-subtle bg-white/[0.015]">
         {!collapsed ? (
           <div className="flex items-center gap-2">
             <Link
@@ -1211,8 +1211,8 @@ export default function Sidebar() {
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img src={profile.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover ring-1 ring-border-subtle" style={{ boxShadow: glow }} />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-[rgba(94,91,255,0.08)] ring-1 ring-border-subtle flex items-center justify-center" style={{ boxShadow: glow }}>
-                    <span className="text-brand-lime text-[11px] font-bold font-display">{(profile?.nickname || profile?.full_name)?.charAt(0).toUpperCase() || "?"}</span>
+                  <div className="w-8 h-8 rounded-full bg-white/[0.05] ring-1 ring-border-subtle flex items-center justify-center" style={{ boxShadow: glow }}>
+                    <span className="text-brand-accent text-[11px] font-bold font-display">{(profile?.nickname || profile?.full_name)?.charAt(0).toUpperCase() || "?"}</span>
                   </div>
                 );
               })()}
@@ -1245,8 +1245,8 @@ export default function Sidebar() {
         ) : (
           <div className="flex flex-col items-center gap-1.5">
             <Link href="/dashboard/settings" className="flex justify-center" title="Open settings">
-              <div className="w-8 h-8 rounded-full bg-[rgba(94,91,255,0.08)] ring-1 ring-border-subtle flex items-center justify-center">
-                <span className="text-brand-lime text-[10px] font-bold font-display">{profile?.full_name?.charAt(0).toUpperCase() || "?"}</span>
+              <div className="w-8 h-8 rounded-full bg-white/[0.05] ring-1 ring-border-subtle flex items-center justify-center">
+                <span className="text-brand-accent text-[10px] font-bold font-display">{profile?.full_name?.charAt(0).toUpperCase() || "?"}</span>
               </div>
             </Link>
             <button

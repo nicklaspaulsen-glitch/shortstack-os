@@ -16,10 +16,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
 import { StatSkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
-import PageHero from "@/components/ui/page-hero";
 import Link from "next/link";
 
-const CHART_COLORS = ["#FF2D2D", "#FF6B6B", "#7FE5B8", "#F26063", "#FFC062", "#CC2424"];
+const CHART_COLORS = ["#FF2D2D", "#FF6B6B", "#CC2424", "#F26063", "#FF8585", "#8B1A1A"];
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 interface ChurnClient { name: string; risk: "high" | "medium" | "low"; score: number; reason: string; mrr: number }
@@ -306,10 +305,10 @@ export default function AnalyticsPage() {
 
   const funnelData = useMemo(() => [
     { name: "Leads", value: stats.totalLeads || 0, fill: "#FF2D2D" },
-    { name: "Contacted", value: stats.dmsSent || 0, fill: "#5B5BE6" },
-    { name: "Calls Booked", value: stats.callsBooked || 0, fill: "#FF6B6B" },
-    { name: "Proposals", value: 0, fill: "#7C3AED" },
-    { name: "Closed Won", value: stats.totalDeals || 0, fill: "#7FE5B8" },
+    { name: "Contacted", value: stats.dmsSent || 0, fill: "#FF6B6B" },
+    { name: "Calls Booked", value: stats.callsBooked || 0, fill: "#CC2424" },
+    { name: "Proposals", value: 0, fill: "#CC2424" },
+    { name: "Closed Won", value: stats.totalDeals || 0, fill: "#FF6B6B" },
   ], [stats]);
 
   const goals = useMemo<GoalEntry[]>(() => [
@@ -363,9 +362,9 @@ export default function AnalyticsPage() {
   const activityIcon = (type: string) => {
     switch (type) {
       case "lead": return <Zap size={10} style={{ color: "#FF2D2D" }} />;
-      case "payment": return <DollarSign size={10} style={{ color: "#7FE5B8" }} />;
+      case "payment": return <DollarSign size={10} style={{ color: "#FF6B6B" }} />;
       case "post": return <Film size={10} style={{ color: "#FF6B6B" }} />;
-      case "deal": return <Trophy size={10} style={{ color: "#7FE5B8" }} />;
+      case "deal": return <Trophy size={10} style={{ color: "#FF2D2D" }} />;
       case "call": return <Phone size={10} style={{ color: "#FF6B6B" }} />;
       default: return <Activity size={10} style={{ color: "#6F6D7A" }} />;
     }
@@ -379,46 +378,48 @@ export default function AnalyticsPage() {
   const PRISM_TILES = [
     { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },   // MRR → emerald
     { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },   // Leads → blue
-    { accent: "#FF5252", bar: "from-[#FF5252] to-transparent" },   // DMs → cyan
-    { accent: "#8B5CF6", bar: "from-[#8B5CF6] to-transparent" },   // Deals → violet
+    { accent: "#FF6B6B", bar: "from-[#FF6B6B] to-transparent" },   // DMs
+    { accent: "#CC2424", bar: "from-[#CC2424] to-transparent" },   // Deals
   ] as const;
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <MotionPage className="space-y-4">
 
-      <PageHero
-        title="Analytics"
-        subtitle="Leads · Revenue · Content ROI"
-        icon={<BarChart3 size={28} />}
-        gradient="blue"
-        actions={
-          <div className="flex items-center gap-2">
-            {stats.totalMRR > 0 && (
-              <motion.span
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.15)] text-[#FF6B6B]"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
-                {formatCurrency(stats.totalMRR)} MRR
-              </motion.span>
-            )}
-            {!isLoading && (
-              <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
-                {replyRate}% reply rate
-              </span>
-            )}
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.06)] px-3 py-1.5 text-xs font-semibold text-[#FF2D2D] hover:bg-[rgba(255,255,255,0.12)] transition-colors duration-150"
+      {/* ── Slim editorial header ── */}
+      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(255,255,255,0.06)] bg-[#080809] -mx-4 sm:-mx-6 mb-2">
+        <div className="w-7 h-7 rounded-xl bg-[rgba(255,45,45,0.12)] flex items-center justify-center shrink-0">
+          <BarChart3 size={13} className="text-[#FF2D2D]" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Analytics</h1>
+          <p className="text-[9px] text-[#6F6D7A]">Leads · Revenue · Content ROI</p>
+        </div>
+        <div className="flex items-center gap-2">
+          {stats.totalMRR > 0 && (
+            <motion.span
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[#FF6B6B]"
             >
-              <Download size={13} /> Export
-            </button>
-          </div>
-        }
-      />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
+              {formatCurrency(stats.totalMRR)} MRR
+            </motion.span>
+          )}
+          {!isLoading && (
+            <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
+              {replyRate}% reply rate
+            </span>
+          )}
+          <button
+            onClick={handleExport}
+            className="flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-3 py-1.5 text-xs font-semibold text-[#FF2D2D] hover:bg-[rgba(255,255,255,0.08)] transition-colors duration-150"
+          >
+            <Download size={13} /> Export
+          </button>
+        </div>
+      </div>
 
       {/* ── Loading ──────────────────────────────────────────────────────── */}
       {isLoading && (
@@ -513,14 +514,14 @@ export default function AnalyticsPage() {
 
             {/* Left — MRR hero with prism top bar */}
             <motion.div
-              className="relative  border border-[rgba(255,255,255,0.16)] bg-[rgba(255,255,255,0.035)] px-8 py-8 overflow-hidden"
+              className="relative border border-[rgba(255,255,255,0.16)] bg-[rgba(255,255,255,0.035)] px-8 py-8 overflow-hidden"
               style={{ backdropFilter: "blur(16px)" }}
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Prism rainbow top bar */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF2D2D] via-[#FF5252] via-[#8B5CF6] to-[#F59E0B]" />
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF6B6B] to-[#CC2424]" />
               {/* Ambient glow */}
               <div className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 rounded-full bg-[#FF2D2D] opacity-[0.06] blur-3xl" />
               <div className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-[#FF2D2D] opacity-[0.04] blur-2xl" />
@@ -744,7 +745,7 @@ export default function AnalyticsPage() {
                       <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={28} />
                       <Tooltip {...TT} />
                       <Line type="monotone" dataKey="sent" stroke="#FF2D2D" strokeWidth={1.5} dot={false} name="Sent" />
-                      <Line type="monotone" dataKey="replies" stroke="#7FE5B8" strokeWidth={1.5} dot={false} name="Replies" />
+                      <Line type="monotone" dataKey="replies" stroke="#CC2424" strokeWidth={1.5} dot={false} name="Replies" />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -755,7 +756,7 @@ export default function AnalyticsPage() {
                   <span className="text-[9px] text-[#6F6D7A]">Sent</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-4 h-px bg-[#7FE5B8]" />
+                  <div className="w-4 h-px bg-[#CC2424]" />
                   <span className="text-[9px] text-[#6F6D7A]">Replies</span>
                 </div>
               </div>
@@ -815,14 +816,14 @@ export default function AnalyticsPage() {
               <div className="space-y-3.5">
                 {goals.map(goal => {
                   const pct = goal.target > 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
-                  const barColor = pct >= 100 ? "#7FE5B8" : pct >= 70 ? "#FF2D2D" : pct >= 40 ? "#FF6B6B" : "#4F4D58";
+                  const barColor = pct >= 100 ? "#FF2D2D" : pct >= 70 ? "#FF2D2D" : pct >= 40 ? "#FF6B6B" : "#4F4D58";
                   return (
                     <div key={goal.label}>
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="text-[10px] text-[#9F9DAA]">{goal.label}</span>
                         <span
                           className="text-[10px] font-mono"
-                          style={{ color: pct >= 70 ? "#7FE5B8" : "#4F4D58", fontVariantNumeric: "tabular-nums" }}
+                          style={{ color: pct >= 70 ? "#FF6B6B" : "#4F4D58", fontVariantNumeric: "tabular-nums" }}
                         >
                           {Math.round(pct)}%
                         </span>
@@ -894,20 +895,20 @@ export default function AnalyticsPage() {
 
           {/* ── Zone 5: Scorecard strip (prism glass, staggered entrance) ── */}
           <motion.div
-            className="relative  border border-[rgba(255,255,255,0.1)] overflow-hidden"
+            className="relative border border-[rgba(255,255,255,0.1)] overflow-hidden"
             style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)" }}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Prism top bar */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF2D2D] via-[#FF5252] via-[#8B5CF6] to-[#F59E0B]" />
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF6B6B] to-[#CC2424]" />
             <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(255,255,255,0.08)]">
               {[
                 { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#FF2D2D" },
                 { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#FF2D2D" : "#F26063" },
-                { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#FF5252" },
-                { label: "Active Clients", value: String(stats.activeClients), sub: `${formatCurrency(stats.totalMRR)} MRR`, color: "#8B5CF6" },
+                { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#FF6B6B" },
+                { label: "Active Clients", value: String(stats.activeClients), sub: `${formatCurrency(stats.totalMRR)} MRR`, color: "#CC2424" },
               ].map((cell, i) => (
                 <motion.div
                   key={cell.label}
@@ -939,8 +940,8 @@ export default function AnalyticsPage() {
                 </h2>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#7FE5B8] animate-pulse" />
-                <span className="text-[9px] text-[#7FE5B8] font-semibold tracking-[0.1em]">LIVE</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
+                <span className="text-[9px] text-[#FF2D2D] font-semibold tracking-[0.1em]">LIVE</span>
               </div>
             </div>
             <div ref={activityRef} className="max-h-44 overflow-y-auto space-y-0.5">
@@ -1017,7 +1018,7 @@ export default function AnalyticsPage() {
                         <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
                         <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={32} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
                         <Tooltip {...TT} formatter={(v) => formatCurrency(Number(v) || 0)} />
-                        <Area type="monotone" dataKey="optimistic" stroke="#7FE5B8" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Optimistic" />
+                        <Area type="monotone" dataKey="optimistic" stroke="#CC2424" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Optimistic" />
                         <Area type="monotone" dataKey="projected" stroke="#FF2D2D" fill="url(#forecastGrad)" strokeWidth={1.5} name="Projected" />
                         <Area type="monotone" dataKey="conservative" stroke="#FF2D2D" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Conservative" />
                       </AreaChart>
@@ -1086,11 +1087,11 @@ export default function AnalyticsPage() {
 
                       <td className="py-3 font-medium text-[#F5F4F1]">{p.platform}</td>
                       <td className="py-3 text-right text-[#9F9DAA]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.spend)}</td>
-                      <td className="py-3 text-right text-[#7FE5B8] font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.revenue)}</td>
+                      <td className="py-3 text-right text-[#FF6B6B] font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.revenue)}</td>
                       <td className="py-3 text-right">
                         <span
                           className="text-[10px] font-bold"
-                          style={{ color: p.roi > 200 ? "#7FE5B8" : p.roi > 100 ? "#FF2D2D" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+                          style={{ color: p.roi > 200 ? "#FF6B6B" : p.roi > 100 ? "#FF2D2D" : "#F26063", fontVariantNumeric: "tabular-nums" }}
                         >
                           {p.roi}%
                         </span>
@@ -1114,20 +1115,20 @@ export default function AnalyticsPage() {
             <div className="mt-4 space-y-2">
               {churnRiskClients.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <CheckCircle size={16} className="text-[#7FE5B8]/40" />
+                  <CheckCircle size={16} className="text-white/20" />
                   <p className="text-[11px] text-[#9F9DAA]">All clients healthy</p>
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px] mx-auto">No churn signals detected. At-risk clients appear here when engagement drops.</p>
                 </div>
               ) : churnRiskClients.map(client => (
                 <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)]">
-                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F26063]" : client.risk === "medium" ? "bg-[#FFC062]" : "bg-[#7FE5B8]"}`} />
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F26063]" : client.risk === "medium" ? "bg-[#FF6B6B]" : "bg-[rgba(255,255,255,0.25)]"}`} />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-[#F5F4F1] truncate">{client.name}</p>
                     <p className="text-[9px] text-[#6F6D7A]">{client.reason}</p>
                   </div>
                   <span
                     className="text-[10px] font-bold shrink-0"
-                    style={{ color: client.risk === "high" ? "#F26063" : client.risk === "medium" ? "#FFC062" : "#7FE5B8", fontVariantNumeric: "tabular-nums" }}
+                    style={{ color: client.risk === "high" ? "#F26063" : client.risk === "medium" ? "#FF6B6B" : "rgba(255,255,255,0.4)", fontVariantNumeric: "tabular-nums" }}
                   >
                     {client.score}%
                   </span>
@@ -1181,7 +1182,7 @@ export default function AnalyticsPage() {
                         <td className="py-3 text-right">
                           <span
                             className="text-[10px] font-mono font-bold"
-                            style={{ color: growth >= 0 ? "#7FE5B8" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+                            style={{ color: growth >= 0 ? "#FF6B6B" : "#F26063", fontVariantNumeric: "tabular-nums" }}
                           >
                             {growth >= 0 ? "+" : ""}{growth}%
                           </span>
@@ -1307,7 +1308,7 @@ export default function AnalyticsPage() {
                     <p className="text-[9px] text-[#6F6D7A]">{c.conversions} conversions</p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-[11px] font-bold text-[#7FE5B8]" style={{ fontVariantNumeric: "tabular-nums" }}>{c.roas.toFixed(1)}x</p>
+                    <p className="text-[11px] font-bold text-[#FF6B6B]" style={{ fontVariantNumeric: "tabular-nums" }}>{c.roas.toFixed(1)}x</p>
                     <p className="text-[9px] text-[#6F6D7A]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(c.revenue)}</p>
                   </div>
                 </div>
