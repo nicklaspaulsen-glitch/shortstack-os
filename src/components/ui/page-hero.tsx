@@ -157,7 +157,7 @@ function autoTheme3dFromPath(path: string): PageHero3DTheme {
  */
 
 export type HeroGradient = "gold" | "blue" | "purple" | "green" | "sunset" | "ocean";
-export type HeroVariant = "default" | "hero" | "compact";
+export type HeroVariant = "default" | "hero" | "compact" | "editorial";
 
 interface PageHeroProps {
   title: string;
@@ -215,35 +215,36 @@ interface TreatmentStyle {
 const TREATMENTS: Record<Treatment, TreatmentStyle> = {
   lime: {
     bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.bg.surface1} 60%, ${tokens.brand.plum} 130%)`,
-    accent: tokens.brand.lime,
-    underline: `linear-gradient(90deg, ${tokens.brand.lime} 0%, transparent 70%)`,
-    iconBg: "rgba(212, 255, 0, 0.1)",
+    accent: tokens.brand.accent,
+    underline: `linear-gradient(90deg, ${tokens.brand.accent} 0%, transparent 70%)`,
+    iconBg: "rgba(255, 45, 45, 0.1)",
     iconBorder: tokens.border.strong,
   },
   plum: {
     bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.brand.plum} 70%, ${tokens.brand.plumHover} 130%)`,
-    accent: tokens.brand.lime,
-    underline: `linear-gradient(90deg, ${tokens.brand.lime} 0%, transparent 70%)`,
-    iconBg: "rgba(212, 255, 0, 0.08)",
+    accent: tokens.brand.accent,
+    underline: `linear-gradient(90deg, ${tokens.brand.accent} 0%, transparent 70%)`,
+    iconBg: "rgba(255, 45, 45, 0.08)",
     iconBorder: tokens.border.strong,
   },
   indigo: {
-    bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.bg.surface2} 50%, ${tokens.brand.indigo}30 130%)`,
-    accent: tokens.brand.indigo,
-    underline: `linear-gradient(90deg, ${tokens.brand.indigo} 0%, transparent 70%)`,
-    iconBg: "rgba(94, 91, 255, 0.12)",
-    iconBorder: "rgba(94, 91, 255, 0.35)",
+    bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.bg.surface2} 50%, ${tokens.brand.accent}30 130%)`,
+    accent: tokens.brand.accent,
+    underline: `linear-gradient(90deg, ${tokens.brand.accent} 0%, transparent 70%)`,
+    iconBg: "rgba(255, 45, 45, 0.12)",
+    iconBorder: "rgba(255, 45, 45, 0.35)",
   },
 };
 
 const VARIANT_PADDING: Record<HeroVariant, string> = {
+  editorial: "",  // not used — editorial exits early
   compact: "px-5 py-4 sm:px-6 sm:py-5",
   default: "px-6 py-6 sm:px-8 sm:py-8",
   hero: "px-7 py-10 sm:px-10 sm:py-14",
 };
 
 const VARIANT_TITLE_CLASS: Record<HeroVariant, string> = {
-  // Satoshi display, fluid clamp, tight tracking — readable across viewports.
+  editorial: "",  // not used — editorial exits early
   compact: "font-display text-[clamp(1.5rem,1.2rem+1vw,2rem)] leading-[1.05]",
   default: "font-display text-[clamp(1.85rem,1.4rem+1.6vw,2.85rem)] leading-[1.02]",
   hero: "font-display text-[clamp(2.5rem,1.5rem+4vw,5rem)] leading-[1.0]",
@@ -262,9 +263,65 @@ export default function PageHero({
   photoUrl,
   showStack3D = false,
   theme3d,
-  variant = "default",
+  variant = "editorial",
   className = "",
 }: PageHeroProps) {
+  // ── Editorial variant — sharp OLED header with red accent rail ──
+  if (variant === "editorial") {
+    return (
+      <div
+        className={`relative overflow-hidden -mx-4 sm:-mx-6 mb-4 ${className}`}
+        style={{
+          background: "linear-gradient(135deg, #080809 0%, #0f0f11 60%, #14101000 100%)",
+          borderBottom: "1px solid rgba(255,255,255,0.07)",
+        }}
+      >
+        {/* Red accent rail — left edge */}
+        <div
+          className="absolute left-0 top-0 bottom-0 w-[3px]"
+          style={{ background: "linear-gradient(180deg, #FF2D2D 0%, #CC2424 60%, transparent 100%)" }}
+          aria-hidden
+        />
+
+        <div className="flex items-center gap-4 pl-6 pr-5 py-4">
+          {icon && (
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 [&_svg]:w-4 [&_svg]:h-4"
+              style={{
+                background: "rgba(255,45,45,0.10)",
+                border: "1px solid rgba(255,45,45,0.22)",
+                color: "#FF2D2D",
+                boxShadow: "0 0 12px rgba(255,45,45,0.15)",
+              }}
+            >
+              {icon}
+            </div>
+          )}
+
+          <div className="flex-1 min-w-0">
+            {eyebrow && (
+              <p className="font-editorial text-[10px] text-[#FF6B6B] tracking-wide mb-0.5 truncate">
+                {eyebrow}
+              </p>
+            )}
+            <h1 className="font-display text-[clamp(1.05rem,0.9rem+0.5vw,1.35rem)] font-semibold text-[#F0F0F4] leading-[1.1] tracking-[-0.02em] truncate">
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="text-[11px] text-[#6F6D7A] mt-0.5 truncate">{subtitle}</p>
+            )}
+          </div>
+
+          {actions && (
+            <div className="flex items-center gap-2 shrink-0">
+              {actions}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   const treatment = TREATMENTS[TREATMENT_BY_GRADIENT[gradient]];
   const reduceMotion = useReducedMotion();
   // Auto-pick theme from pathname when caller didn't pass one. This
