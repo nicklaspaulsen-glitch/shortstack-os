@@ -105,8 +105,8 @@ const nextConfig = {
               // NOTE: api.fontshare.com was missing — caused Satoshi to silently fall back to
               // system fonts across the entire product. Fixed May 2026.
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com",
-              // font-src: fontshare serves the actual font files in addition to the CSS
-              "font-src 'self' https://fonts.gstatic.com https://api.fontshare.com data:",
+              // font-src: api.fontshare.com serves the CSS; cdn.fontshare.com serves the actual binaries
+              "font-src 'self' https://fonts.gstatic.com https://api.fontshare.com https://cdn.fontshare.com data:",
               // Images: R2 public bucket, Supabase storage, Unsplash, data URIs
               "img-src 'self' data: blob: https:",
               // API connections: Supabase (REST + Realtime), Stripe, Anthropic, AI providers,
