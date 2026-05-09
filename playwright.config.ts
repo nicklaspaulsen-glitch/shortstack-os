@@ -1,4 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
+import { config as loadEnv } from "dotenv";
+
+// Load E2E credentials from gitignored .env.test.local (set E2E_TEST_EMAIL + E2E_TEST_PASSWORD there)
+loadEnv({ path: ".env.test.local" });
 
 /**
  * Playwright config.
