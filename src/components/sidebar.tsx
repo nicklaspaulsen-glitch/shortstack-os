@@ -722,8 +722,10 @@ export default function Sidebar() {
         collapsed ? "w-[56px]" : "w-60"
       } ${hoverExpanded && !pinned ? "shadow-[8px_0_36px_-10px_rgba(0,0,0,0.55)]" : ""}`}
       style={{
-        background: "var(--bg-surface-1, #15141A)",
-        borderRight: "1px solid var(--border-subtle, rgba(255,255,255,0.07))",
+        background: "rgba(var(--bg-base-rgb, 10 10 13) / 0.50)",
+        backdropFilter: "blur(32px) saturate(1.5)",
+        WebkitBackdropFilter: "blur(32px) saturate(1.5)",
+        borderRight: "1px solid rgba(255, 255, 255, 0.06)",
       }}
     >
       {/* LED light strip — lives on the sidebar's right edge, theme-colored */}
