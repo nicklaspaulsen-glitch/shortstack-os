@@ -213,11 +213,22 @@ a[role="button"]:hover,
   --status-warning-rgb: 255 192 98;
   --status-error-rgb: 242 96 99;
 
-  /* Motion */
+  /* Motion — two easing curves for different personality:
+     foundation = smooth ease-out (standard interactions)
+     premium    = expo-out (impeccable: "snappy, confident") for hero/feature moments */
   --motion-standard: 220ms cubic-bezier(0.32, 0.72, 0, 1);
-  --motion-hero-reveal: 480ms cubic-bezier(0.32, 0.72, 0, 1);
-  --motion-page-transition: 320ms cubic-bezier(0.32, 0.72, 0, 1);
+  --motion-hero-reveal: 480ms cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-page-transition: 320ms cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-expo-foundation: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out-expo-premium: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Duration scale (impeccable 100/300/500 rule):
+     micro = 100ms (toggles, icon swaps, focus rings)
+     standard = 300ms (card hover, panel open, tooltip)
+     hero = 500ms (page entrance, feature reveal, modal) */
+  --duration-micro: 100ms;
+  --duration-standard: 300ms;
+  --duration-hero: 500ms;
 
   /* Premium card shadow tokens — used by .hover-lift and inline card styles */
   --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px -4px rgba(0,0,0,0.12), 0 14px 32px -12px rgba(0,0,0,0.14);
@@ -1381,9 +1392,9 @@ body {
 }
 
 @keyframes pulseRing {
-  0% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.4); }
-  70% { box-shadow: 0 0 0 6px rgba(201, 168, 76, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(255, 45, 45, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(255, 45, 45, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 45, 45, 0); }
 }
 
 /* ═══════════ SIDEBAR LED STRIP EFFECT ═══════════ */
@@ -1511,11 +1522,12 @@ body {
 }
 
 /* ═══════════ MICRO-INTERACTIONS ═══════════ */
-/* Window-glass hover: lifts panel + deepens shadow + brightens top edge */
+/* Window-glass hover: lifts panel + deepens shadow + brightens top edge.
+   Uses premium expo-out for snappy, confident feel (impeccable motion ref). */
 .hover-lift {
-  transition: transform 220ms cubic-bezier(0.32,0.72,0,1),
-              box-shadow 220ms cubic-bezier(0.32,0.72,0,1),
-              border-color 220ms ease;
+  transition: transform 300ms cubic-bezier(0.16,1,0.3,1),
+              box-shadow 300ms cubic-bezier(0.16,1,0.3,1),
+              border-color 300ms ease;
 }
 .hover-lift:hover {
   transform: translateY(-2px);
@@ -1533,10 +1545,11 @@ body {
               0 4px 16px rgba(0,0,0,0.2);
 }
 
-/* Scale-lift for cards — subtle zoom + shadow deepening */
+/* Scale-lift for cards — subtle zoom + shadow deepening.
+   Premium expo-out easing for snappy response. */
 .hover-scale {
-  transition: transform 220ms cubic-bezier(0.32,0.72,0,1),
-              box-shadow 220ms cubic-bezier(0.32,0.72,0,1);
+  transition: transform 300ms cubic-bezier(0.16,1,0.3,1),
+              box-shadow 300ms cubic-bezier(0.16,1,0.3,1);
 }
 .hover-scale:hover {
   transform: translateY(-3px) scale(1.015);
@@ -1609,11 +1622,13 @@ body {
 .glass:hover, .glass-md:hover, .glass-strong:hover, .glass-indigo:hover {
   border-top-color: rgba(255,255,255,0.22);
 }
-/* Elevated window variant — for hero cards, feature panels, modals */
+/* Elevated window variant — spatial-tier depth for hero cards, feature
+   panels, modals. blur(40px) + saturate(1.6) from VisionOS spatial UI
+   reference — the deepest glass layer in the system. */
 .glass-elevated {
   background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(32px) saturate(1.3);
-  -webkit-backdrop-filter: blur(32px) saturate(1.3);
+  backdrop-filter: blur(40px) saturate(1.6);
+  -webkit-backdrop-filter: blur(40px) saturate(1.6);
   border: 1px solid rgba(255,255,255,0.12);
   border-top-color: rgba(255,255,255,0.24);
   box-shadow:
@@ -1624,6 +1639,58 @@ body {
     0 24px 64px -16px rgba(0,0,0,0.55),
     0 0 0 1px rgba(255,45,45,0.06),
     0 0 48px -12px rgba(255,45,45,0.08);
+}
+.glass-elevated:hover {
+  backdrop-filter: blur(44px) saturate(1.7);
+  -webkit-backdrop-filter: blur(44px) saturate(1.7);
+  border-top-color: rgba(255,255,255,0.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    inset 0 0 0 1px rgba(255,255,255,0.04),
+    0 4px 8px rgba(0,0,0,0.4),
+    0 12px 32px rgba(0,0,0,0.35),
+    0 32px 72px -16px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(255,45,45,0.1),
+    0 0 56px -12px rgba(255,45,45,0.12);
+}
+
+/* ═══════════ PREMIUM MOTION MATERIALS ═══════════
+ * From impeccable motion-design.md — blur reveals + shadow bloom.
+ * These are opt-in utilities for hero/premium surfaces. */
+
+/* Blur-reveal entrance — element fades in from a soft blur.
+   Apply as initial state via JS/Framer; CSS provides the transition. */
+.blur-reveal {
+  transition:
+    filter var(--duration-hero, 500ms) var(--ease-out-expo-premium, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--duration-hero, 500ms) var(--ease-out-expo-premium, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+/* Shadow bloom — shadow expands outward on hover for "breathing" depth.
+   Pairs with .glass or .card elements. */
+.shadow-bloom {
+  transition:
+    box-shadow var(--duration-standard, 300ms) var(--ease-out-expo-premium, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--duration-standard, 300ms) var(--ease-out-expo-premium, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.shadow-bloom:hover {
+  box-shadow:
+    0 4px 8px rgba(0,0,0,0.3),
+    0 12px 32px rgba(0,0,0,0.25),
+    0 24px 56px -16px rgba(0,0,0,0.45),
+    0 0 40px -8px rgba(255,45,45,0.08);
+  transform: translateY(-2px);
+}
+
+/* Focus-scale — subtle scale on :focus-visible for keyboard users.
+   VisionOS spatial UI: scale(1.02) on focus = premium "selected" feel. */
+.focus-scale:focus-visible {
+  transform: scale(1.02);
+  outline: 2px solid rgba(255,45,45,0.4);
+  outline-offset: 2px;
+  transition:
+    transform var(--duration-micro, 100ms) var(--ease-out-expo-premium, cubic-bezier(0.16, 1, 0.3, 1)),
+    outline var(--duration-micro, 100ms) ease;
 }
 
 /* ═══════════ 3D PERSPECTIVE TILT ═══════════ */
@@ -1791,10 +1858,10 @@ body {
   transform: translateY(-2px);
 }
 
-/* Input focus glow (gold) */
+/* Input focus glow */
 .input-glow:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+  box-shadow: 0 0 0 3px rgba(255, 45, 45, 0.15);
   transition: box-shadow 0.2s ease;
 }
 
@@ -2052,11 +2119,11 @@ body {
    Used by /dashboard/ai-video and /dashboard/video-editor.
    Deep-black canvas, gold→amber radial CTA, pulsing glow, progress ring. */
 
-/* Deep cinematic canvas background with subtle violet/gold wash */
+/* Deep cinematic canvas background with subtle violet/red wash */
 .hf-canvas {
   background:
     radial-gradient(ellipse at 20% -10%, rgba(168, 85, 247, 0.06) 0%, transparent 45%),
-    radial-gradient(ellipse at 90% 110%, rgba(201, 168, 76, 0.05) 0%, transparent 40%),
+    radial-gradient(ellipse at 90% 110%, rgba(255, 45, 45, 0.05) 0%, transparent 40%),
     #0a0a0a;
   border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow:
@@ -2128,14 +2195,14 @@ body {
 @keyframes hfBreathe {
   0%, 100% {
     box-shadow:
-      0 0 0 0 rgba(201, 168, 76, 0.35),
-      0 8px 24px -6px rgba(201, 168, 76, 0.5),
+      0 0 0 0 rgba(255, 45, 45, 0.35),
+      0 8px 24px -6px rgba(255, 45, 45, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
   50% {
     box-shadow:
-      0 0 0 10px rgba(201, 168, 76, 0),
-      0 12px 32px -6px rgba(201, 168, 76, 0.65),
+      0 0 0 10px rgba(255, 45, 45, 0),
+      0 12px 32px -6px rgba(255, 45, 45, 0.65),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 }
@@ -2180,15 +2247,15 @@ body {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .hf-tile:hover {
-  border-color: rgba(201, 168, 76, 0.3);
-  background: rgba(201, 168, 76, 0.04);
+  border-color: rgba(255, 45, 45, 0.3);
+  background: rgba(255, 45, 45, 0.04);
   color: rgba(255, 255, 255, 0.95);
 }
 .hf-tile[data-active="true"] {
-  border-color: rgba(201, 168, 76, 0.6);
-  background: rgba(201, 168, 76, 0.1);
-  color: #E4C876;
-  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.2), 0 4px 16px -4px rgba(201, 168, 76, 0.25);
+  border-color: rgba(255, 45, 45, 0.6);
+  background: rgba(255, 45, 45, 0.1);
+  color: #FF6B6B;
+  box-shadow: 0 0 0 1px rgba(255, 45, 45, 0.2), 0 4px 16px -4px rgba(255, 45, 45, 0.25);
 }
 
 /* Collapsible sidebar — expand on hover */
@@ -2262,8 +2329,8 @@ body {
   transition: all 0.2s ease;
 }
 .hf-tile[data-active="true"] .hf-aspect-frame {
-  border-color: #E4C876;
-  box-shadow: 0 0 0 1px rgba(228, 200, 118, 0.2), inset 0 0 12px rgba(228, 200, 118, 0.12);
+  border-color: #FF6B6B;
+  box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.2), inset 0 0 12px rgba(255, 107, 107, 0.12);
 }
 
 /* Reduced motion — kill breathing */

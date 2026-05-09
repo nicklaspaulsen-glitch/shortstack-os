@@ -2,6 +2,11 @@
 
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import { staggerContainer, fadeUpHero } from "@/lib/motion-variants";
+
+// Re-export canonical variants so existing consumers don't break.
+export { staggerContainer, fadeUpHero };
+export { fadeUp, scaleIn, slideInLeft, slideInRight, tabSwitch, routeTransition } from "@/lib/motion-variants";
 
 /**
  * Wraps a dashboard page with a soft fade-up entrance.

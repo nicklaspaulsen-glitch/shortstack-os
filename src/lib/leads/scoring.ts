@@ -17,7 +17,7 @@
  * returns a structured `ScoreComputation`. Pulling the signals from the DB and
  * persisting the result lives in `score-recompute.ts`.
  */
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 
 // -------------------- Types --------------------
 
@@ -413,7 +413,7 @@ async function computeAIBonus(
   const { systemPrompt, userPrompt } = buildAIPrompt(signals);
 
   try {
-    const res = await callLLM({
+    const res = await callLLMTraced({
       taskType: "simple_classification",
       systemPrompt,
       userPrompt,
@@ -421,6 +421,8 @@ async function computeAIBonus(
       temperature: 0,
       userId: signals.profile.user_id,
       context,
+      surface: "lead-scoring",
+      humanize: false,
     });
     const parsed = parseAIBonus(res.text);
     if (parsed) return parsed;

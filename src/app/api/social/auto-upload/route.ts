@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 import { pickRecommendedTimes } from "@/lib/social-studio/time-recommender";
 import { ALL_PLATFORMS, FALLBACK_HASHTAGS } from "@/lib/social-studio/constants";
 import type {
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
   let analysis: ClaudeAnalysis | null = null;
 
   try {
-    const response = await callLLM({
+    const response = await callLLMTraced({
       // Caption generation across platforms — Haiku is plenty.
       taskType: "caption_generation",
       systemPrompt: SYSTEM_PROMPT,
@@ -127,6 +127,8 @@ export async function POST(request: NextRequest) {
       maxTokens: 2400,
       userId: user.id,
       context: "/api/social/auto-upload",
+      surface: "social-caption",
+      humanize: true,
     });
     analysis = safeJsonParse<ClaudeAnalysis>(response.text);
   } catch (err) {

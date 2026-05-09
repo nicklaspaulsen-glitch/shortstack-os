@@ -103,11 +103,10 @@ const config: Config = {
           800: "#991414",
           900: "#660E0E",
         },
-        // amber, purple, indigo, green, emerald, teal, cyan, sky — REMOVED
-        // custom overrides. Tailwind built-in prismatic colors now render
-        // natively, giving the design real spectral vibrancy (red + amber +
-        // green + cyan + violet). Only gold/lime (brand→red), blue (→grey),
-        // and plum (→charcoal) retain custom scales.
+        // amber, purple, green, emerald, teal, cyan, sky — Tailwind defaults
+        // render natively. amber/yellow stay literal for warning/paused status
+        // indicators. indigo is overridden (→ red scale) below — ~40 pages
+        // use indigo-* which would bleed through as Tailwind violet otherwise.
         //
         // NOTE: yellow-* is intentionally NOT shimmed. It remains Tailwind's
         // literal yellow and is used semantically for "paused" / "warning"
@@ -124,8 +123,21 @@ const config: Config = {
           800: "#18181B",
           900: "#101012",
         },
-        // indigo: removed custom override — Tailwind default indigo (violet)
-        // renders natively for prismatic accent.
+        // Indigo alias — redirected to prism red so `bg-indigo-500`,
+        // `text-indigo-400`, etc. in the ~40 pages that still use them
+        // render as brand red instead of Tailwind's default violet.
+        indigo: {
+          50: "#FFF5F5",
+          100: "#FFE0E0",
+          200: "#FFB3B3",
+          300: "#FF8080",
+          400: "#FF5252",
+          500: "#FF2D2D",
+          600: "#E02020",
+          700: "#CC1A1A",
+          800: "#991414",
+          900: "#660E0E",
+        },
         // Lime alias — kept registered so `text-lime-*` / `bg-lime-*` in
         // old code still resolves, redirected to prism red accent.
         lime: {
@@ -234,6 +246,10 @@ const config: Config = {
         "fade-in-foundation": "fadeInFoundation 320ms cubic-bezier(0.32, 0.72, 0, 1) both",
         "lime-pulse": "limePulse 2.4s ease-in-out infinite",
         "stack-rotate": "stackRotate 16s linear infinite",
+        // Premium blur-reveal — element fades in from soft blur (impeccable motion ref)
+        "blur-reveal": "blurReveal 500ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        // Shadow bloom pulse — gentle breathing for featured cards
+        "shadow-breathe": "shadowBreathe 4s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
@@ -264,14 +280,28 @@ const config: Config = {
           from: { transform: "rotateY(0deg)" },
           to: { transform: "rotateY(360deg)" },
         },
+        blurReveal: {
+          from: { opacity: "0", filter: "blur(8px)" },
+          to: { opacity: "1", filter: "blur(0px)" },
+        },
+        shadowBreathe: {
+          "0%, 100%": { boxShadow: "0 0 24px -8px rgba(255,45,45,0.08)" },
+          "50%": { boxShadow: "0 0 40px -8px rgba(255,45,45,0.16)" },
+        },
       },
       transitionTimingFunction: {
         "out-expo-foundation": "cubic-bezier(0.32, 0.72, 0, 1)",
+        // Premium expo-out — snappier, more confident (impeccable motion ref)
+        "out-expo-premium": "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       transitionDuration: {
+        // Impeccable 100/300/500 duration scale
+        100: "100ms",
         220: "220ms",
+        300: "300ms",
         320: "320ms",
         480: "480ms",
+        500: "500ms",
       },
     },
   },

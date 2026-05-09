@@ -9,7 +9,7 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 
 export const dynamic = "force-dynamic";
 
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       ? body.channel
       : "doc";
 
-  const result = await callLLMHumanized({
+  const result = await callLLMTraced({
     taskType: "generation_short",
     systemPrompt:
       "Write a short piece of copy that matches the supplied voice context as closely as possible. Plain text only, no markdown, no commentary.",
@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
     voiceProfile: { subjectKind, subjectId: body.subjectId },
     humanize: true,
     channel,
+    surface: "voice-profile-gen",
   });
 
   return NextResponse.json({

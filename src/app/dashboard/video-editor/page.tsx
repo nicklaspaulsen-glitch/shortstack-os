@@ -1889,6 +1889,10 @@ export default function VideoEditorPage() {
   const [selectedMusicId, setSelectedMusicId] = useState<string>("");
   const [musicMoodFilter, setMusicMoodFilter] = useState<string>("all");
   const [musicBpmFilter, setMusicBpmFilter] = useState<string>("all"); // "all" | "slow" | "medium" | "fast"
+  // ACE-Step / AI music generation
+  const [aiMusicPrompt, setAiMusicPrompt] = useState<string>("");
+  const [aiMusicLoading, setAiMusicLoading] = useState(false);
+  const [aiMusicUrl, setAiMusicUrl] = useState<string | null>(null);
   // Track which mood tile the user is hovering (to show waveform + play tone)
   const [hoveredMood, setHoveredMood] = useState<string | null>(null);
 
@@ -1952,6 +1956,55 @@ export default function VideoEditorPage() {
   const [brollSuggestions, setBrollSuggestions] = useState<
     Array<{ time_range: [number, number]; description: string; search_terms: string[]; priority: string; pexels_video_url?: string }>
   >([]);
+
+  // Generate background music with ACE-Step (or MusicGen fallback)
+  async function generateAiMusic() {
+    const desc = aiMusicPrompt.trim() || config.music_mood || "upbeat background music";
+    setAiMusicLoading(true);
+    setAiMusicUrl(null);
+    try {
+      const res = await fetch("/api/ai/music-gen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: desc,
+          duration: Math.min(config.duration || 30, 60),
+          mood: config.music_mood || "upbeat",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || "Music gen failed");
+
+      if (data.audio) {
+        // Inline base64 or direct URL
+        const url = data.audio.startsWith("data:") || data.audio.startsWith("http")
+          ? data.audio
+          : `data:audio/wav;base64,${data.audio}`;
+        setAiMusicUrl(url);
+        toast.success(`Music generated${data.provider === "acestep" ? " with ACE-Step" : ""}`);
+      } else if (data.job_id) {
+        // Async job — poll until done (max 30 attempts × 2s)
+        const pollUrl = data.status_url;
+        for (let i = 0; i < 30; i++) {
+          await new Promise((r) => setTimeout(r, 2000));
+          const poll = await fetch(pollUrl).then((r) => r.json());
+          if (poll.status === "completed" && poll.audio) {
+            const url = poll.audio.startsWith("data:") || poll.audio.startsWith("http")
+              ? poll.audio
+              : `data:audio/wav;base64,${poll.audio}`;
+            setAiMusicUrl(url);
+            toast.success(`Music generated${poll.provider === "acestep" ? " with ACE-Step" : ""}`);
+            break;
+          }
+          if (poll.status === "failed") throw new Error("Music job failed");
+        }
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Music generation failed");
+    } finally {
+      setAiMusicLoading(false);
+    }
+  }
 
   const [musicMatchLoading, setMusicMatchLoading] = useState(false);
   const [musicMatch, setMusicMatch] = useState<{
@@ -6245,7 +6298,30 @@ export default function VideoEditorPage() {
               </button>
               {openAssetPanels.music && (
                 <>
-                  <p className="text-[9px] text-muted mb-2">Royalty-free tracks filtered by BPM + mood.</p>
+                  {/* AI Music Generation (ACE-Step / MusicGen) */}
+                  <div className="mb-3 p-2 rounded-lg bg-[rgba(255,45,45,0.05)] border border-[rgba(255,45,45,0.12)]">
+                    <p className="text-[8px] uppercase tracking-wider text-[#FF2D2D] font-semibold mb-1.5">AI Generate</p>
+                    <textarea
+                      value={aiMusicPrompt}
+                      onChange={(e) => setAiMusicPrompt(e.target.value)}
+                      placeholder={`e.g. "chill lo-fi beats with soft piano" (leave blank to use mood)`}
+                      className="input w-full text-[10px] py-1.5 resize-none h-12 mb-1.5"
+                    />
+                    <button
+                      onClick={generateAiMusic}
+                      disabled={aiMusicLoading}
+                      className="w-full flex items-center justify-center gap-1.5 text-[10px] font-semibold py-1.5 rounded-lg bg-[#FF2D2D] text-white hover:bg-[#CC2424] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {aiMusicLoading ? <Loader2 size={10} className="animate-spin" /> : <Waves size={10} />}
+                      {aiMusicLoading ? "Generating…" : "Generate music"}
+                    </button>
+                    {aiMusicUrl && (
+                      <div className="mt-1.5">
+                        <audio controls src={aiMusicUrl} className="w-full h-7" style={{ height: 28 }} />
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[9px] text-muted mb-2">Or pick from royalty-free library:</p>
                   <div className="grid grid-cols-2 gap-2 mb-2">
                     <div>
                       <label className="text-[8px] text-muted uppercase tracking-wider block mb-1">Mood</label>

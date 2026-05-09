@@ -11,7 +11,7 @@
  * fails, and tracks per-call cost in `llm_usage_events`.
  */
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 
 export interface ActionItem {
   id?: string;
@@ -114,13 +114,15 @@ ${transcript}${segmentBlock}
 
 Return the JSON object defined in the system prompt.`;
 
-  const response = await callLLM({
+  const response = await callLLMTraced({
     taskType: "extraction",
     systemPrompt: SYSTEM_PROMPT,
     userPrompt: userMessage,
     maxTokens: 4000,
     userId: opts?.userId,
     context: "/api/meetings/analyze",
+    surface: "meeting-analysis",
+    humanize: false,
   });
 
   const parsed = safeJsonParse<Omit<MeetingAnalysis, "cost_usd">>(response.text);

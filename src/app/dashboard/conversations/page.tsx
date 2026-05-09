@@ -27,6 +27,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
+import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import {
   Mail,
@@ -429,9 +430,20 @@ export default function ConversationsPage() {
         {/* List */}
         <div className="flex-1 overflow-y-auto">
           {loading ? (
-            <div className="p-6 text-center text-white/40 text-sm">
-              <Loader2 className="animate-spin mx-auto mb-2" size={18} />
-              Loading…
+            <div className="p-2 space-y-px">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <div key={i} className="flex items-start gap-3 px-3 py-3 rounded-lg">
+                  <Skeleton className="w-8 h-8 rounded-full shrink-0" />
+                  <div className="flex-1 space-y-2 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <Skeleton className="h-3 w-28" />
+                      <Skeleton className="h-2 w-10" />
+                    </div>
+                    <Skeleton className="h-2 w-full" />
+                    <Skeleton className="h-2 w-3/4" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : conversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
@@ -530,9 +542,12 @@ export default function ConversationsPage() {
               className="flex-1 overflow-y-auto px-5 py-4 space-y-3"
             >
               {loadingThread ? (
-                <div className="text-center text-white/40 text-sm py-8">
-                  <Loader2 className="animate-spin mx-auto mb-2" size={18} />
-                  Loading thread…
+                <div className="space-y-4 py-2">
+                  <div className="flex justify-start"><div className="space-y-1 flex flex-col items-start"><Skeleton className="h-10 rounded-2xl w-32" /><Skeleton className="h-2 w-12" /></div></div>
+                  <div className="flex justify-end"><div className="space-y-1 flex flex-col items-end"><Skeleton className="h-10 rounded-2xl w-44" /><Skeleton className="h-2 w-12" /></div></div>
+                  <div className="flex justify-start"><div className="space-y-1 flex flex-col items-start"><Skeleton className="h-10 rounded-2xl w-24" /><Skeleton className="h-2 w-12" /></div></div>
+                  <div className="flex justify-end"><div className="space-y-1 flex flex-col items-end"><Skeleton className="h-10 rounded-2xl w-40" /><Skeleton className="h-2 w-12" /></div></div>
+                  <div className="flex justify-start"><div className="space-y-1 flex flex-col items-start"><Skeleton className="h-10 rounded-2xl w-36" /><Skeleton className="h-2 w-12" /></div></div>
                 </div>
               ) : messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full gap-2 py-16 text-center">

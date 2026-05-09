@@ -11,35 +11,19 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 import { MotionPage } from "@/components/motion/motion-page";
 import { PrismPanel } from "@/components/prism";
 import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
-import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import SafeThumb from "@/components/safe-thumb";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
+import PageHero from "@/components/ui/page-hero";
 
-// Static AI-generated-style image previews (Unsplash wide crops) shown in
-// the marquee on the AI Studio landing state when nothing has been
-// generated yet.
-const AI_STUDIO_PREVIEW_FALLBACK: RollingPreviewItem[] = [
-  { id: "ai1", src: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=640&h=360&fit=crop", alt: "Neon sci-fi", tag: "Cyberpunk" },
-  { id: "ai2", src: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=640&h=360&fit=crop", alt: "Dreamy sunset", tag: "Dreamscape" },
-  { id: "ai3", src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=640&h=360&fit=crop", alt: "Moody forest", tag: "Moody" },
-  { id: "ai4", src: "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=640&h=360&fit=crop", alt: "Luxury product", tag: "Product" },
-  { id: "ai5", src: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=640&h=360&fit=crop", alt: "Tech abstract", tag: "Tech" },
-  { id: "ai6", src: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=640&h=360&fit=crop", alt: "Nature", tag: "Nature" },
-  { id: "ai7", src: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=640&h=360&fit=crop", alt: "Cinematic", tag: "Cinematic" },
-  { id: "ai8", src: "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?w=640&h=360&fit=crop", alt: "Automotive", tag: "Automotive" },
-  { id: "ai9", src: "https://images.unsplash.com/photo-1515894203077-9cd36032142f?w=640&h=360&fit=crop", alt: "Portrait light", tag: "Portrait" },
-  { id: "ai10", src: "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=640&h=360&fit=crop", alt: "Futuristic", tag: "Futurism" },
-  { id: "ai11", src: "https://images.unsplash.com/photo-1554080353-a576cf803bda?w=640&h=360&fit=crop", alt: "Abstract pastel", tag: "Abstract" },
-  { id: "ai12", src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=640&h=360&fit=crop", alt: "Epic landscape", tag: "Epic" },
-];
 
 // ── Types ────────────────────────────────────────────────────────
 interface JobResult {
@@ -156,44 +140,39 @@ export default function AIStudioPage() {
   return (
     <MotionPage className="p-0">
 
-      {/* ── Slim editorial header ── */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(255,255,255,0.06)] bg-[#080809] -mx-4 sm:-mx-6 mb-2">
-        <div className="w-7 h-7 rounded-xl bg-[rgba(255,45,45,0.12)] flex items-center justify-center shrink-0">
-          <Layers size={13} className="text-[#FF2D2D]" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">AI Studio</h1>
-          <p className="text-[9px] text-[#6F6D7A]">Creative Suite · 9 tools</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {history.length > 0 && (
-            <motion.span
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[#FF6B6B]"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
-              {history.filter(j => j.status === "completed").length} done
-            </motion.span>
-          )}
-          <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
-            {TOOLS.find(t => t.id === activeTool)?.name ?? "—"}
-          </span>
-          <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-          {advancedMode && (
-            <button
-              onClick={() => {
-                setActiveTool("image-gen");
-                setCreationWizardOpen(true);
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D2D] text-white text-xs font-bold hover:bg-[#CC2424] transition-all"
-            >
-              <Sparkles size={13} />
-              New with AI
-            </button>
-          )}
-        </div>
-      </div>
+      <PageHero
+        variant="editorial"
+        title="AI Studio"
+        subtitle="Creative Suite · 9 tools"
+        eyebrow="Generative Media"
+        icon={<Layers size={16} />}
+        actions={
+          <>
+            {history.length > 0 && (
+              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[#FF6B6B]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
+                {history.filter(j => j.status === "completed").length} done
+              </span>
+            )}
+            <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
+              {TOOLS.find(t => t.id === activeTool)?.name ?? "—"}
+            </span>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            {advancedMode && (
+              <button
+                onClick={() => {
+                  setActiveTool("image-gen");
+                  setCreationWizardOpen(true);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D2D] text-white text-xs font-bold hover:bg-[#CC2424] transition-all"
+              >
+                <Sparkles size={13} />
+                New with AI
+              </button>
+            )}
+          </>
+        }
+      />
 
       {/* ── GUIDED MODE ─────────────────────────────────────────── */}
       {!advancedMode && (
@@ -211,7 +190,7 @@ export default function AIStudioPage() {
                   className="grid grid-cols-2 md:grid-cols-4 gap-2.5"
                   initial="hidden"
                   animate="visible"
-                  variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
+                  variants={staggerContainerFast}
                 >
                   {TOOLS.map(t => {
                     const Icon = t.icon;
@@ -221,7 +200,7 @@ export default function AIStudioPage() {
                     return (
                       <motion.button
                         key={t.id}
-                        variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                        variants={fadeUp}
                         transition={{ duration: 0.2 }}
                         onClick={() => { setGuidedIntent(t.id); setActiveTool(t.id); }}
                         className={`relative text-left rounded-xl border transition-all ${
@@ -434,11 +413,18 @@ export default function AIStudioPage() {
                     }`}
                   >
                     {active && (
-                      <motion.div
-                        layoutId="tool-active-bg"
-                        className="absolute inset-0 rounded-xl bg-[rgba(255,255,255,0.07)]"
-                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                      />
+                      <>
+                        <motion.div
+                          layoutId="tool-active-bg"
+                          className="absolute inset-0 rounded-xl bg-[rgba(255,255,255,0.07)]"
+                          transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                        />
+                        <motion.div
+                          layoutId="tool-active-accent"
+                          className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-[#FF2D2D]"
+                          transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                        />
+                      </>
                     )}
                     <div
                       className="relative z-10 w-6 h-6 rounded-md flex items-center justify-center shrink-0"
@@ -466,9 +452,11 @@ export default function AIStudioPage() {
           {/* Right: active tool workspace */}
           <div
             ref={toolPanelRef}
-            className=" overflow-hidden"
+            className="relative overflow-hidden"
             style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
           >
+            {/* Prism accent top bar */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF6B6B] to-[#CC2424]" />
             {/* Tool header */}
             <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[rgba(255,255,255,0.05)]">
               {(() => {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireExtensionUser } from "@/lib/extension/auth";
 import { checkRateLimit } from "@/lib/extension/rate-limit";
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
 
 // ─── Research Prospect Endpoint ─────────────────────────────────────
@@ -173,7 +173,7 @@ export async function POST(req: NextRequest) {
 
     const { linkedin_url, name, company } = parsed.data;
 
-    const llmRes = await callLLM({
+    const llmRes = await callLLMTraced({
       taskType: "complex_analysis",
       systemPrompt: SYSTEM_PROMPT,
       userPrompt: buildUserPrompt({ name, company, linkedin_url }),
@@ -181,6 +181,8 @@ export async function POST(req: NextRequest) {
       temperature: 0.4,
       userId: user.id,
       context: "/api/ai/research-prospect",
+      surface: "prospect-research",
+      humanize: false,
     });
 
     const parsedJson = safeJsonParse<unknown>(llmRes.text);

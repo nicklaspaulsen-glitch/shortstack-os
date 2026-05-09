@@ -20,9 +20,11 @@ import {
 import { useAppStore } from "@/lib/store";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // --- Types for new features ---
@@ -55,6 +57,30 @@ function HealthArc({ score }: { score: number }) {
         {pct}
       </text>
     </svg>
+  );
+}
+
+function ClientInitialsBadge({ name }: { name: string }) {
+  const words = (name || "?").trim().split(/\s+/);
+  const initials = words.length >= 2
+    ? (words[0][0] + words[1][0]).toUpperCase()
+    : (name || "?").slice(0, 2).toUpperCase();
+  // Deterministic red-family tint from name hash
+  const TINTS = [0.10, 0.13, 0.08, 0.12, 0.11, 0.09, 0.14, 0.10];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) & 0xffffff;
+  const alpha = TINTS[hash % TINTS.length];
+  return (
+    <div style={{
+      width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+      background: `rgba(255,45,45,${alpha})`,
+      border: `1.5px solid rgba(255,45,45,${alpha * 2.2})`,
+      display: "flex", alignItems: "center", justifyContent: "center",
+    }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color: "#FF6B6B", letterSpacing: "0.05em" }}>
+        {initials}
+      </span>
+    </div>
   );
 }
 
@@ -632,57 +658,56 @@ export default function ClientsPage() {
 
   return (
     <MotionPage className="space-y-4">
-      {/* ── Slim editorial header ── */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(255,255,255,0.06)] bg-[#080809] -mx-4 sm:-mx-6 mb-2">
-        <div className="w-7 h-7 rounded-xl bg-[rgba(255,45,45,0.12)] flex items-center justify-center shrink-0">
-          <Users size={13} className="text-[#FF2D2D]" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Clients</h1>
-          <p className="text-[9px] text-[#6F6D7A]">
-            {callerRole === "admin" || callerRole === "founder"
-              ? scope === "all" ? `${clients.length} clients across the platform` : "Your agency clients"
-              : "Accounts · Contracts · Invoices"}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {clients.length > 0 && (
-            <div className="hidden sm:flex items-center gap-1.5">
-              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[10px] font-medium text-[#FF2D2D]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
-                {clients.length}
-              </span>
-              {totalMRR > 0 && (
-                <span className="px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[10px] font-medium text-[#A8A8B2]">
-                  {formatCurrency(totalMRR)}
+      <PageHero
+        variant="editorial"
+        title="Clients"
+        subtitle={
+          callerRole === "admin" || callerRole === "founder"
+            ? scope === "all" ? `${clients.length} clients across the platform` : "Your agency clients"
+            : "Accounts · Contracts · Invoices"
+        }
+        eyebrow="Client Management"
+        icon={<Users size={16} />}
+        actions={
+          <>
+            {clients.length > 0 && (
+              <div className="hidden sm:flex items-center gap-1.5">
+                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[10px] font-medium text-[#FF2D2D]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
+                  {clients.length}
                 </span>
-              )}
-            </div>
-          )}
-          {(callerRole === "admin" || callerRole === "founder") && (
-            <div className="flex items-center bg-[#0E0E10] border border-[rgba(255,255,255,0.06)] rounded-lg p-0.5">
-              <button
-                onClick={() => setScope("all")}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                  scope === "all" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
-                }`}
-              >All</button>
-              <button
-                onClick={() => setScope("mine")}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                  scope === "mine" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
-                }`}
-              >Mine</button>
-            </div>
-          )}
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D2D] text-white text-xs font-semibold hover:bg-[#CC2424] transition-all"
-          >
-            <Plus size={13} /> Add Client
-          </button>
-        </div>
-      </div>
+                {totalMRR > 0 && (
+                  <span className="px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[10px] font-medium text-[#A8A8B2]">
+                    {formatCurrency(totalMRR)}
+                  </span>
+                )}
+              </div>
+            )}
+            {(callerRole === "admin" || callerRole === "founder") && (
+              <div className="flex items-center bg-[#0E0E10] border border-[rgba(255,255,255,0.06)] rounded-lg p-0.5">
+                <button
+                  onClick={() => setScope("all")}
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                    scope === "all" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
+                  }`}
+                >All</button>
+                <button
+                  onClick={() => setScope("mine")}
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                    scope === "mine" ? "bg-[#FF2D2D] text-white" : "text-[#A8A8B2] hover:text-[#F5F5F7]"
+                  }`}
+                >Mine</button>
+              </div>
+            )}
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D2D] text-white text-xs font-semibold hover:bg-[#CC2424] transition-all"
+            >
+              <Plus size={13} /> Add Client
+            </button>
+          </>
+        }
+      />
 
       {/* Prism stat strip — 4 glass tiles with per-tile color accent */}
       {clients.length > 0 && (
@@ -932,7 +957,7 @@ export default function ClientsPage() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
           initial="hidden"
           animate="visible"
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
+          variants={staggerContainerFast}
         >
           {filteredClients.map(c => {
             const revenue = getClientRevenue(c.id);
@@ -953,10 +978,7 @@ export default function ClientsPage() {
               <motion.div key={c.id}
                 className={`card card-accent ${accentClass} p-4 transition-all cursor-pointer group relative`}
                 style={{ background: "rgba(255,255,255,0.03)", backdropFilter: "blur(12px)" }}
-                variants={{
-                  hidden: { opacity: 0, y: 16 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
-                }}
+                variants={fadeUp}
                 whileHover={{ y: -4, borderColor: "rgba(255,255,255,0.22)", boxShadow: "0 12px 40px rgba(0,0,0,0.45), 0 0 40px rgba(255,255,255,0.06)", transition: { duration: 0.22 } }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
                 onMouseEnter={() => setHoveredClient(c.id)}
@@ -982,9 +1004,10 @@ export default function ClientsPage() {
                   </button>
                 </div>
 
-                {/* Feature 1: Health indicator */}
+                {/* Feature 1: Health indicator + initials badge */}
                 <div className="flex items-start gap-3 mb-3 mt-1">
-                  <div className="shrink-0">
+                  <div className="shrink-0 flex flex-col items-center gap-1.5">
+                    <ClientInitialsBadge name={c.business_name || "?"} />
                     <HealthArc score={c.health_score} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -1231,6 +1254,24 @@ export default function ClientsPage() {
                   <span className={`text-[10px] flex items-center gap-1 ${action.urgent ? "text-warning font-medium" : "text-muted"}`}>
                     {action.urgent ? <AlertTriangle size={9} /> : <Clock size={9} />}
                     {action.action}
+                  </span>
+                );
+              }},
+              { key: "last_activity", label: "Last Activity", render: (c: Client) => {
+                const ms = getLastActivity(c);
+                const diffMs = Date.now() - ms;
+                const diffDays = Math.floor(diffMs / 86400000);
+                let label: string;
+                if (diffDays === 0) label = "today";
+                else if (diffDays === 1) label = "yesterday";
+                else if (diffDays < 7) label = `${diffDays}d ago`;
+                else if (diffDays < 30) label = `${Math.floor(diffDays / 7)}w ago`;
+                else if (diffDays < 365) label = `${Math.floor(diffDays / 30)}mo ago`;
+                else label = `${Math.floor(diffDays / 365)}y ago`;
+                const fresh = diffDays < 7;
+                return (
+                  <span className={`text-[10px] ${fresh ? "text-success" : "text-muted"}`}>
+                    {label}
                   </span>
                 );
               }},

@@ -66,8 +66,7 @@ export default function LandingFooter() {
             </p>
             <ul className="space-y-2">
               {[
-                { label: "Book a demo", href: "/book" },
-                { label: "Login", href: "/login" },
+{ label: "Login", href: "/login" },
                 { label: "Terms of Service", href: "/terms" },
                 { label: "Privacy Policy", href: "/privacy" },
                 { label: "Cookie Policy", href: "/cookies" },

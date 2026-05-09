@@ -319,7 +319,7 @@ export function getTaskRouting(): Readonly<Record<LLMTaskType, RouteRule>> {
 
 import { recallFacts, rememberFact, type SubjectKind } from "./mem0-client";
 import { traceLLMCall } from "./langfuse-client";
-import { callLLMHumanized } from "./call-llm-humanized";
+import { callLLMHumanized, type CallLLMHumanizedResponse } from "./call-llm-humanized";
 import type { HumanizeOptions } from "./humanizer";
 import type { VoiceSubjectKind } from "./voice-profile";
 
@@ -417,7 +417,7 @@ async function extractFactFromResponse(args: {
  */
 export async function callLLMTraced(
   opts: CallLLMTracedOptions,
-): Promise<LLMResponse> {
+): Promise<CallLLMHumanizedResponse> {
   const {
     surface,
     subject,
@@ -454,7 +454,7 @@ export async function callLLMTraced(
   // single call. The humanizer soft-fails on its own errors so callers see
   // at minimum the raw LLM output.
   const enrichedRequest: LLMRequest = { ...llmRequest, systemPrompt };
-  const runner = (): Promise<LLMResponse> =>
+  const runner = (): Promise<CallLLMHumanizedResponse> =>
     callLLMHumanized({
       ...enrichedRequest,
       voiceProfile,
@@ -464,7 +464,7 @@ export async function callLLMTraced(
 
   const result =
     subject && surface
-      ? await traceLLMCall<LLMResponse>({
+      ? await traceLLMCall<CallLLMHumanizedResponse>({
           agencyOwnerId: subject.agencyOwnerId,
           surface,
           taskType: llmRequest.taskType,

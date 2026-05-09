@@ -31,8 +31,10 @@ const SHADOWS = {
   lift: "shadow-lift",
 } as const;
 
-/** Easing curve: out-expo-foundation from brand tokens */
-const EASE_OUT_EXPO: [number, number, number, number] = [0.32, 0.72, 0, 1];
+/** Foundation easing — smooth, standard interactions */
+const EASE_FOUNDATION: [number, number, number, number] = [0.32, 0.72, 0, 1];
+/** Premium easing — snappy, confident for hero/feature moments (impeccable ref) */
+const EASE_PREMIUM: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 export function GlassPanel({
   children,
@@ -47,19 +49,34 @@ export function GlassPanel({
 }: GlassPanelProps) {
   const reducedMotion = useReducedMotion();
   const staggerDelay = reducedMotion ? 0 : index * 0.06;
+  const isElevated = variant === "elevated";
 
   return (
     <motion.div
-      className={`relative ${VARIANTS[variant]} ${SHADOWS[shadow]} ${tilt ? "tilt-3d" : ""} ${hover ? "hover-lift" : ""} ${ambient ? "ambient-radial" : ""} ${className}`.trim()}
-      initial={reducedMotion ? false : { opacity: 0, y: 14, scale: 0.985 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      className={`relative ${VARIANTS[variant]} ${SHADOWS[shadow]} ${tilt ? "tilt-3d" : ""} ${hover ? "hover-lift focus-scale" : ""} ${ambient ? "ambient-radial" : ""} ${className}`.trim()}
+      // Blur-reveal entrance for elevated panels, fade+slide for others
+      initial={reducedMotion ? false : {
+        opacity: 0,
+        y: isElevated ? 18 : 14,
+        scale: isElevated ? 0.97 : 0.985,
+        filter: isElevated ? "blur(6px)" : "blur(0px)",
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+      }}
       transition={{
-        duration: reducedMotion ? 0 : 0.44,
-        ease: EASE_OUT_EXPO,
+        duration: reducedMotion ? 0 : isElevated ? 0.5 : 0.44,
+        ease: isElevated ? EASE_PREMIUM : EASE_FOUNDATION,
         delay: staggerDelay,
       }}
       {...(hover && !reducedMotion ? {
-        whileHover: { y: -2, transition: { duration: 0.22, ease: EASE_OUT_EXPO } },
+        whileHover: {
+          y: -2,
+          transition: { duration: 0.3, ease: EASE_PREMIUM },
+        },
       } : {})}
       {...props}
     >

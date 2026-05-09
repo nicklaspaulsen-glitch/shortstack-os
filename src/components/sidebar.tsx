@@ -346,20 +346,6 @@ export default function Sidebar() {
   const [navFilter, setNavFilter] = useState("");
   const filterInputRef = useRef<HTMLInputElement>(null);
 
-  // Tier v2: show/hide tier-3 "Advanced" items. Persisted to localStorage
-  // so users who unlock the full list don't have to click every session.
-  // Tier 1 + 2 always render; tier 3 gates behind this toggle.
-  // Tier 4 (Settings/Notifications/Status) render in the footer independently.
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    try { return localStorage.getItem("sidebar-show-advanced") === "true"; } catch { return false; }
-  });
-
-  const toggleAdvanced = () => {
-    const next = !showAdvanced;
-    setShowAdvanced(next);
-    try { localStorage.setItem("sidebar-show-advanced", String(next)); } catch {}
-  };
 
   // Use profile role when available. If profile hasn't loaded yet but auth
   // loading is complete (user is logged in, profile just failed to fetch),
@@ -513,14 +499,10 @@ export default function Sidebar() {
     if ((userRole === "admin" || userRole === "team_member") && enabledHrefs && enabledHrefs.length > 0) {
       if (!enabledHrefs.includes(item.href)) return false;
     }
-    // Tier v2: hide tier-3 items unless showAdvanced is true.
-    // When a live filter is active we show everything that matches (tier ignored)
-    // so the user can reach any item by typing, regardless of tier.
     // Tier 4 items are handled separately in the nav footer — exclude from main list.
     // Client portal items have no tier, so they always pass.
     const itemTier = item.tier;
     if (itemTier === 4) return false; // footer renders these
-    if (itemTier === 3 && !showAdvanced && !navFilter.trim()) return false;
     // Apr 28: live filter applied last so the user can substring-search
     // across label / section / sub. Empty filter passes everything.
     if (navFilter.trim()) {
@@ -1139,31 +1121,6 @@ export default function Sidebar() {
           );
         })}
 
-        {/* Tier v2: "Show advanced" toggle — only when sidebar is expanded and
-            no live filter is active (filter already reveals all matching items). */}
-        {!collapsed && !navFilter.trim() && (
-          <div className="px-2 pt-2 pb-1">
-            <button
-              onClick={toggleAdvanced}
-              className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[11px] text-text-muted hover:text-text-primary hover:bg-white/[0.03] transition-colors duration-220 ease-out-expo-foundation group"
-              aria-label={showAdvanced ? "Show fewer navigation items" : "Show all navigation items"}
-              title={showAdvanced ? "Collapse advanced items" : "Expand to show all items"}
-            >
-              <ChevronDown
-                size={10}
-                className={`shrink-0 transition-transform duration-220 ${showAdvanced ? "" : "-rotate-90"}`}
-              />
-              <span className="flex-1 text-left tracking-wide">
-                {showAdvanced ? "Show less" : "Show more"}
-              </span>
-              {!showAdvanced && (
-                <span className="text-[10px] text-text-muted/50 tabular-nums">
-                  {navItems.filter(i => i.tier === 3 && !!userRole && i.roles.includes(userRole)).length}
-                </span>
-              )}
-            </button>
-          </div>
-        )}
 
         {/* Tier 4 — Settings/admin footer items, always visible in the nav area */}
         {!collapsed && tier4Nav.length > 0 && (

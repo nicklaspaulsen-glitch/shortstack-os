@@ -9,7 +9,7 @@
  * routes and UI can render either source uniformly.
  */
 
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
 import type {
   CoachAnalysis,
@@ -318,7 +318,7 @@ Return the JSON object defined in the system prompt.`;
   let parsed: RawEmailLLMOutput | null = null;
   let costUsd = 0;
   try {
-    const response = await callLLM({
+    const response = await callLLMTraced({
       taskType: "complex_analysis",
       systemPrompt: SYSTEM_PROMPT,
       userPrompt,
@@ -326,6 +326,8 @@ Return the JSON object defined in the system prompt.`;
       temperature: 0.2,
       userId: args.userId,
       context: args.context ?? "lib/coach/analyzeEmailThread",
+      surface: "email-coaching",
+      humanize: false,
     });
     costUsd = Math.round(response.costUsd * 10000) / 10000;
     parsed = safeJsonParse<RawEmailLLMOutput>(response.text);

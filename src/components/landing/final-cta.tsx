@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { ArrowRight, Calendar, Shield } from "lucide-react";
+import { ArrowRight, Shield } from "lucide-react";
 import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
 
@@ -68,17 +68,6 @@ export default function FinalCTA() {
                 size={16}
                 className="group-hover:translate-x-0.5 transition-transform"
               />
-            </Link>
-            <Link
-              href="/book"
-              className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm text-white transition-all hover:border-white/20"
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.07)",
-              }}
-            >
-              <Calendar size={15} className="text-gray-400" />
-              Book a demo
             </Link>
           </div>
 

@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
 
   switch (action) {
     case "morning_routine":
-      // Run daily brief + health check + scrape leads
-      fetch(`${baseUrl}/api/cron/daily-brief`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+      // Run daily briefing + health check + scrape leads
+      fetch(`${baseUrl}/api/cron/daily-briefing`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
       fetch(`${baseUrl}/api/cron/health-check`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
       fetch(`${baseUrl}/api/cron/scrape-leads`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
       results.push("Daily brief generating", "Health check running", "Lead scraping started");
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
 
     case "full_autopilot":
       // Run everything
-      fetch(`${baseUrl}/api/cron/daily-brief`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+      fetch(`${baseUrl}/api/cron/daily-briefing`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
       fetch(`${baseUrl}/api/cron/scrape-leads`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
       fetch(`${baseUrl}/api/cron/outreach`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
       fetch(`${baseUrl}/api/cron/content-autopilot`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});

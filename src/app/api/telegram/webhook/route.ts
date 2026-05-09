@@ -194,8 +194,8 @@ If the user's message contains action words (call, email, scrape, send, outreach
   }
 
   if (combined.includes("briefing") || combined.includes("brief me") || combined.includes("what happened")) {
-    fetch(`${baseUrl}/api/cron/daily-brief`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
-    reply += "\n\nTriggered: Generating your daily briefing. Check Telegram in a moment.";
+    fetch(`${baseUrl}/api/cron/daily-briefing`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    reply += "\n\nTriggered: Generating your daily briefing. Check the dashboard in a moment.";
   }
 
   // Clean TRIGGER tags from reply before sending
@@ -262,7 +262,7 @@ If the user's message contains action words (call, email, scrape, send, outreach
 
   if (text.toLowerCase().startsWith("/autopilot")) {
     // Trigger ALL systems
-    fetch(`${baseUrl}/api/cron/daily-brief`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    fetch(`${baseUrl}/api/cron/daily-briefing`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
     fetch(`${baseUrl}/api/cron/scrape-leads`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
     fetch(`${baseUrl}/api/cron/outreach`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
     fetch(`${baseUrl}/api/cron/content-autopilot`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});

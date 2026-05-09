@@ -2,7 +2,7 @@
 // All GHL-based calling has been removed. Native cold calls now go through
 // ElevenAgents via /api/call (see src/app/api/call/route.ts) and
 // /api/caller/initiate (Retell AI). Functions below are kept as no-op shims
-// so the daily-brief cron and the GHL webhook don't crash during cutover.
+// so the daily-briefing cron and the GHL webhook don't crash during cutover.
 
 export async function triggerGHLCall(_contactId: string): Promise<{
   success: boolean;

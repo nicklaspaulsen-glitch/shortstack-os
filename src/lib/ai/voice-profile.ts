@@ -20,7 +20,7 @@
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createServiceClient } from "@/lib/supabase/server";
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
 import {
   computeStats as computeStatsImpl,
@@ -233,7 +233,9 @@ async function extractQualitative(
 
   let parsed: RawExtraction | null = null;
   try {
-    const result = await callLLM({
+    const result = await callLLMTraced({
+      surface: "voice_profile_qualitative",
+      humanize: false,
       taskType: "simple_classification",
       systemPrompt: QUALITATIVE_SYSTEM_PROMPT,
       userPrompt,

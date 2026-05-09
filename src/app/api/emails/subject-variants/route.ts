@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 
 interface SubjectVariantsInput {
   body: string;
@@ -92,13 +92,15 @@ ${input.body}
 Return exactly ${count} variants. JSON only.`;
 
   try {
-    const response = await callLLM({
+    const response = await callLLMTraced({
       taskType: "subject_line",
       systemPrompt: SYSTEM_PROMPT,
       userPrompt,
       maxTokens: 1500,
       userId: user.id,
       context: "/api/emails/subject-variants",
+      surface: "email-subjects",
+      humanize: true,
     });
 
     const text = response.text;

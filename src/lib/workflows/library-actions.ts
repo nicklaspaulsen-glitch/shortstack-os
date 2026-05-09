@@ -679,7 +679,7 @@ const aiResearchLeadAction: LibraryActionDef = {
     try {
       // Lazy-load the LLM router so test mocks of fetch don't trip on
       // module-load-time provider initialization.
-      const { callLLM } = await import("@/lib/ai/llm-router");
+      const { callLLMTraced } = await import("@/lib/ai/llm-router");
       const company =
         (ctx.payload.company_name as string | undefined) ||
         (ctx.payload.company as string | undefined) ||
@@ -688,12 +688,14 @@ const aiResearchLeadAction: LibraryActionDef = {
         (ctx.payload.lead_name as string | undefined) ||
         (ctx.payload.first_name as string | undefined) ||
         "";
-      const result = await callLLM({
+      const result = await callLLMTraced({
         taskType: "summarization",
         userPrompt: `Research ${company || leadName} (lead ${leadId}). Summarize what they likely care about, recent news, and 2-3 angles for outreach. Keep it under 200 words.`,
         userId: ctx.agencyOwnerId,
         context: "workflow.ai_research_lead",
         maxTokens: 400,
+        surface: "workflow-action",
+        humanize: false,
       });
       // Persist on the lead's metadata jsonb so the email-draft step can
       // read it. We merge into existing metadata to avoid clobbering other
@@ -731,16 +733,18 @@ const aiDraftEmailAction: LibraryActionDef = {
   description: "Draft an email; saves to drafts queue",
   execute: async (params, ctx) => {
     try {
-      const { callLLM } = await import("@/lib/ai/llm-router");
+      const { callLLMTraced } = await import("@/lib/ai/llm-router");
       const owner = await loadOwnerProfile(ctx.supabase, ctx.agencyOwnerId);
       const research =
         (ctx.payload.ai_research_summary as string | undefined) || "";
-      const result = await callLLM({
+      const result = await callLLMTraced({
         taskType: "creative_writing",
         userPrompt: `Draft a personalized first-touch email from ${owner.full_name || "the owner"} to ${ctx.payload.first_name || "the lead"}. Use this research: ${research}. Keep it short, human, ends with a clear ask.`,
         userId: ctx.agencyOwnerId,
         context: "workflow.ai_draft_email",
         maxTokens: 500,
+        surface: "workflow-action",
+        humanize: false,
       });
       const { data, error } = await ctx.supabase
         .from("email_drafts")
@@ -768,17 +772,19 @@ const aiDraftSummaryAction: LibraryActionDef = {
   description: "Generate a summary of a meeting/call",
   execute: async (params, ctx) => {
     try {
-      const { callLLM } = await import("@/lib/ai/llm-router");
+      const { callLLMTraced } = await import("@/lib/ai/llm-router");
       const transcript =
         (ctx.payload.transcript as string | undefined) ||
         (ctx.payload.notes as string | undefined) ||
         "(no transcript)";
-      const result = await callLLM({
+      const result = await callLLMTraced({
         taskType: "summarization",
         userPrompt: `Summarize this meeting in 3 bullet points + 1 next step:\n${transcript}`,
         userId: ctx.agencyOwnerId,
         context: "workflow.ai_draft_summary",
         maxTokens: 400,
+        surface: "workflow-action",
+        humanize: false,
       });
       // Save to bookings.notes / lead_notes if we have a target.
       if (ctx.bookingId) {

@@ -28,6 +28,8 @@ export interface VoicePreset {
     | "narrator"
     | "casual"
     | "british";
+  /** Gender for filtering — derived from the ElevenLabs voice metadata. */
+  gender: "female" | "male";
   /** ElevenLabs canonical voice_id. */
   elevenLabsVoiceId: string;
   /** Default language hint. ElevenLabs auto-detects but we surface it. */
@@ -41,6 +43,7 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
     description:
       "Calm, approachable American female. Ideal for nurture sequences and check-in voicemails.",
     category: "warm",
+    gender: "female",
     elevenLabsVoiceId: "9BWtsMINqrJLrRacOk9x",
     language: "en",
   },
@@ -50,6 +53,7 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
     description:
       "Confident, executive American male. Best for closing calls and decision-maker outreach.",
     category: "authoritative",
+    gender: "male",
     elevenLabsVoiceId: "CwhRBWXzGAHq8TQ4Fs17",
     language: "en",
   },
@@ -59,6 +63,7 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
     description:
       "High-energy American female. Top-of-funnel cold calls and Gen Z DMs.",
     category: "youthful",
+    gender: "female",
     elevenLabsVoiceId: "EXAVITQu4vr4xnSDxMaL",
     language: "en",
   },
@@ -68,6 +73,7 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
     description:
       "Deep, smooth American male — documentary narrator energy. Use for explainer voicemails.",
     category: "narrator",
+    gender: "male",
     elevenLabsVoiceId: "pNInz6obpgDQGcFmaJgB",
     language: "en",
   },
@@ -77,6 +83,7 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
     description:
       "Approachable American male. Sounds like a friend leaving a quick voice note.",
     category: "casual",
+    gender: "male",
     elevenLabsVoiceId: "ErXwobaYiN019PkySvjV",
     language: "en",
   },
@@ -86,6 +93,7 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
     description:
       "Composed British female. Professional, premium feel for high-ticket service offers.",
     category: "british",
+    gender: "female",
     elevenLabsVoiceId: "XB0fDUnXU5powFXDhCwa",
     language: "en",
   },
@@ -95,6 +103,7 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
     description:
       "Authoritative British male — newsreader energy. Use for premium B2B outreach.",
     category: "british",
+    gender: "male",
     elevenLabsVoiceId: "onwK4e9ZLuTAKqWW03F9",
     language: "en",
   },
@@ -104,6 +113,7 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
     description:
       "Calm American male. Solid default for check-ins and friendly follow-ups.",
     category: "warm",
+    gender: "male",
     elevenLabsVoiceId: "TxGEqnHWrfWFTfGW9XjX",
     language: "en",
   },
@@ -113,6 +123,7 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
     description:
       "Lively American female. Great for SMS voice notes and consumer-facing brands.",
     category: "youthful",
+    gender: "female",
     elevenLabsVoiceId: "EXAVITQu4vr4xnSDxMaL",
     language: "en",
   },
@@ -122,6 +133,7 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
     description:
       "Crisp American female. Reads numbers and proper nouns cleanly — best for stat-heavy voicemails.",
     category: "narrator",
+    gender: "female",
     elevenLabsVoiceId: "21m00Tcm4TlvDq8ikWAM",
     language: "en",
   },
@@ -241,6 +253,7 @@ export async function ensurePresetsSeeded(
         source: "elevenlabs_public_voice",
         elevenlabs_voice_id: preset.elevenLabsVoiceId,
         category: preset.category,
+        gender: preset.gender,
         ...(previewUrl ? { preview_url: previewUrl } : {}),
       },
       ready_at: new Date().toISOString(),

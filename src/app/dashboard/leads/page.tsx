@@ -10,6 +10,7 @@ import {
   X, FileSpreadsheet, Check
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import Link from "next/link";
@@ -932,8 +933,27 @@ export default function LeadEnginePage() {
               <span className="text-center">Actions</span>
             </div>
             {loading && (
-              <div className="flex items-center justify-center py-12">
-                <Loader size={20} className="animate-spin text-gold" />
+              <div className="space-y-1 py-1">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="grid grid-cols-12 items-center gap-2 px-3 py-3 rounded-lg bg-white/[0.02]">
+                    <div className="col-span-3 space-y-1.5">
+                      <Skeleton className="h-3 w-4/5" />
+                      <Skeleton className="h-2 w-3/5" />
+                    </div>
+                    <div className="col-span-2 space-y-1.5">
+                      <Skeleton className="h-2 w-4/5" />
+                      <Skeleton className="h-2 w-3/5" />
+                    </div>
+                    <Skeleton className="h-2 w-3/4" />
+                    <Skeleton className="h-5 w-8 rounded-full mx-auto" />
+                    <Skeleton className="h-4 w-14 rounded-full" />
+                    <Skeleton className="h-3 w-6 rounded mx-auto" />
+                    <div className="col-span-2">
+                      <Skeleton className="h-2 w-3/4" />
+                    </div>
+                    <Skeleton className="h-6 w-10 rounded mx-auto" />
+                  </div>
+                ))}
               </div>
             )}
             {!loading && leads.length === 0 && (

@@ -17,6 +17,7 @@ import { MotionPage } from "@/components/motion/motion-page";
 import { StatSkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import Link from "next/link";
+import PageHero from "@/components/ui/page-hero";
 
 const CHART_COLORS = ["#FF2D2D", "#FF6B6B", "#CC2424", "#F26063", "#FF8585", "#8B1A1A"];
 
@@ -83,6 +84,36 @@ function Accordion({
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+// ─── Sparkline ────────────────────────────────────────────────────────────
+function Sparkline({ values, color = "#FF6B6B", width = 56, height = 22, id }: {
+  values: number[]; color?: string; width?: number; height?: number; id: string;
+}) {
+  if (values.length < 2 || values.every(v => v === 0)) return null;
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  const range = max - min || 1;
+  const pts = values.map((v, i) => {
+    const x = (i / (values.length - 1)) * width;
+    const y = height - ((v - min) / range) * (height - 2) - 1;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  const pathD = `M ${pts.join(" L ")}`;
+  const fillD = `${pathD} L ${width},${height} L 0,${height} Z`;
+  const gid = `sg-${id}`;
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ overflow: "visible", flexShrink: 0 }}>
+      <defs>
+        <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity={0.18} />
+          <stop offset="100%" stopColor={color} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <path d={fillD} fill={`url(#${gid})`} />
+      <path d={pathD} stroke={color} strokeWidth={1.3} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
@@ -386,40 +417,34 @@ export default function AnalyticsPage() {
   return (
     <MotionPage className="space-y-4">
 
-      {/* ── Slim editorial header ── */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(255,255,255,0.06)] bg-[#080809] -mx-4 sm:-mx-6 mb-2">
-        <div className="w-7 h-7 rounded-xl bg-[rgba(255,45,45,0.12)] flex items-center justify-center shrink-0">
-          <BarChart3 size={13} className="text-[#FF2D2D]" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Analytics</h1>
-          <p className="text-[9px] text-[#6F6D7A]">Leads · Revenue · Content ROI</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {stats.totalMRR > 0 && (
-            <motion.span
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[#FF6B6B]"
+      <PageHero
+        variant="editorial"
+        title="Analytics"
+        subtitle="Leads · Revenue · Content ROI"
+        eyebrow="Performance Overview"
+        icon={<BarChart3 size={16} />}
+        actions={
+          <>
+            {stats.totalMRR > 0 && (
+              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.10)] text-[#FF6B6B]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
+                {formatCurrency(stats.totalMRR)} MRR
+              </span>
+            )}
+            {!isLoading && replyRate > 0 && (
+              <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
+                {replyRate}% reply rate
+              </span>
+            )}
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-3 py-1.5 text-xs font-semibold text-[#FF2D2D] hover:bg-[rgba(255,255,255,0.08)] transition-colors duration-150"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
-              {formatCurrency(stats.totalMRR)} MRR
-            </motion.span>
-          )}
-          {!isLoading && (
-            <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)]">
-              {replyRate}% reply rate
-            </span>
-          )}
-          <button
-            onClick={handleExport}
-            className="flex items-center gap-1.5 rounded-lg border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.04)] px-3 py-1.5 text-xs font-semibold text-[#FF2D2D] hover:bg-[rgba(255,255,255,0.08)] transition-colors duration-150"
-          >
-            <Download size={13} /> Export
-          </button>
-        </div>
-      </div>
+              <Download size={13} /> Export
+            </button>
+          </>
+        }
+      />
 
       {/* ── Loading ──────────────────────────────────────────────────────── */}
       {isLoading && (
@@ -549,13 +574,29 @@ export default function AnalyticsPage() {
               </div>
             </motion.div>
 
-            {/* Right — 4 prism stat tiles with per-tile color accent bar */}
+            {/* Right — 4 prism stat tiles with sparkline trend */}
             <div className="grid grid-cols-2 lg:grid-cols-1 gap-3">
               {[
-                { label: "Total Leads", value: stats.totalLeads.toLocaleString(), sub: leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "—", subOk: leadGrowth >= 0 },
-                { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate >= 5 },
-                { label: "Calls Booked", value: stats.callsBooked.toLocaleString(), sub: "this period", subOk: true },
-                { label: "Deals Won", value: stats.totalDeals.toLocaleString(), sub: formatCurrency(stats.dealValue) + " closed", subOk: true },
+                {
+                  label: "Total Leads", value: stats.totalLeads.toLocaleString(),
+                  sub: leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "—", subOk: leadGrowth >= 0,
+                  spark: leadsByDay.slice(-14).map(d => d.count), sparkId: "leads",
+                },
+                {
+                  label: "DMs Sent", value: stats.dmsSent.toLocaleString(),
+                  sub: `${replyRate}% reply rate`, subOk: replyRate >= 5,
+                  spark: outreachByDay.slice(-14).map(d => d.sent), sparkId: "dms",
+                },
+                {
+                  label: "Calls Booked", value: stats.callsBooked.toLocaleString(),
+                  sub: "this period", subOk: true,
+                  spark: [] as number[], sparkId: "calls",
+                },
+                {
+                  label: "Deals Won", value: stats.totalDeals.toLocaleString(),
+                  sub: formatCurrency(stats.dealValue) + " closed", subOk: true,
+                  spark: revenueByMonth.map(d => d.deals), sparkId: "deals",
+                },
               ].map((cell, i) => {
                 const tile = PRISM_TILES[i];
                 return (
@@ -577,9 +618,14 @@ export default function AnalyticsPage() {
                     >
                       {cell.value}
                     </p>
-                    <p className="text-[10px] mt-0.5" style={{ color: cell.subOk ? "#6F6D7A" : "#F26063" }}>
-                      {cell.sub}
-                    </p>
+                    <div className="mt-1 flex items-end justify-between gap-2">
+                      <p className="text-[10px]" style={{ color: cell.subOk ? "#6F6D7A" : "#F26063" }}>
+                        {cell.sub}
+                      </p>
+                      {cell.spark.length >= 2 && (
+                        <Sparkline values={cell.spark} color={tile.accent} id={cell.sparkId} />
+                      )}
+                    </div>
                   </motion.div>
                 );
               })}

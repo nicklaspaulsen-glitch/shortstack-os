@@ -194,9 +194,13 @@ export default function StatCard({
           `0 0 24px -8px ${accent}14`,
         ].join(", "),
       }}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 10 }}
-      transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
+      initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+      animate={{
+        opacity: visible ? 1 : 0,
+        y: visible ? 0 : 12,
+        filter: visible ? "blur(0px)" : "blur(4px)",
+      }}
+      transition={{ duration: 0.44, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
       data-premium={premium ? "true" : undefined}
       whileHover={{
         y: -3,
@@ -208,7 +212,8 @@ export default function StatCard({
           "0 20px 48px -12px rgba(0,0,0,0.5)",
           `0 0 32px -8px ${accent}20`,
         ].join(", "),
-        transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] },
+        // Premium expo-out — snappy, confident hover response
+        transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
       }}
     >
       {/* Bottom accent bar — prism color per tile */}

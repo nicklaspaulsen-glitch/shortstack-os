@@ -20,7 +20,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createServiceClient } from "@/lib/supabase/server";
-import { callLLM, callLLMTraced, type LLMRequest } from "@/lib/ai/llm-router";
+import { callLLMTraced, type LLMRequest } from "@/lib/ai/llm-router";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
 
 export type TrinityActionType =
@@ -726,7 +726,9 @@ async function handleContentPlan(
   supabase: SupabaseClient,
   userId: string,
 ): Promise<Record<string, unknown>> {
-  const result = await callLLM({
+  const result = await callLLMTraced({
+    surface: "trinity_content_plan",
+    humanize: false,
     taskType: "generation_long",
     systemPrompt:
       "You are Trinity producing a one-week content plan with 5 topic ideas, each with a hook and a CTA. Output as JSON: { plan: [{ day, topic, hook, cta }] }",

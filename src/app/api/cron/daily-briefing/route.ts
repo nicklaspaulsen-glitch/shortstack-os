@@ -11,9 +11,8 @@ export const maxDuration = 120;
  * `generateDailyBriefing()` (lib/services/daily-briefing.ts). Output lands
  * in the daily_briefings table keyed on (user_id, briefing_date).
  *
- * NOT a duplicate of /api/cron/daily-brief — that one builds + sends a
- * Telegram summary for the agency owner; this one generates per-admin
- * briefings stored in the DB.
+ * Generates per-admin briefings stored in the DB. The old /api/cron/daily-brief
+ * (Telegram summary sender) was deleted May 7 — this is now the sole briefing cron.
  *
  * Schedule: "0 7 * * *" — daily at 07:00 UTC (set in vercel.json Apr 27).
  * Auth: requires `Authorization: Bearer <CRON_SECRET>` header.

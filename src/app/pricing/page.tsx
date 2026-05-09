@@ -123,7 +123,6 @@ export default function PricingPage() {
             </span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/book" className="text-xs text-gray-400 hover:text-white transition-colors">Book a Call</Link>
             <Link href="/login" className="text-xs px-4 py-2 rounded-lg font-medium" style={{ background: "rgba(255,255,255,0.06)", color: "#fff", border: "1px solid rgba(255,255,255,0.08)" }}>
               Login
             </Link>

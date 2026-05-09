@@ -19,7 +19,7 @@ import { z } from "zod";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { UnifiedAdsClient } from "@/lib/ads/unified-client";
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -211,7 +211,7 @@ export async function POST(): Promise<NextResponse> {
 
   let suggestions: AISuggestion[] = [];
   try {
-    const llmResponse = await callLLM({
+    const llmResponse = await callLLMTraced({
       taskType: "complex_analysis",
       systemPrompt: SYSTEM_PROMPT,
       userPrompt: buildUserPrompt({ totals, perPlatform, campaigns: promptCampaigns }),
@@ -219,6 +219,8 @@ export async function POST(): Promise<NextResponse> {
       context: "/api/ads-manager/insights/generate",
       maxTokens: 2000,
       temperature: 0.3,
+      surface: "ad-insights",
+      humanize: false,
     });
 
     const parsed = aiResponseSchema.safeParse(safeParseJson(llmResponse.text));

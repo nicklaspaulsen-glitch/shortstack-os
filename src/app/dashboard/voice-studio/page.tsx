@@ -209,7 +209,7 @@ export default function VoiceStudioPage() {
                   onClick={() => setTab(t)}
                   className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
                     isActive
-                      ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
+                      ? "bg-[rgba(255,45,45,0.12)] text-[#FF6B6B] border border-[rgba(255,45,45,0.3)]"
                       : "text-white/40 hover:text-white/60"
                   }`}
                   aria-current={isActive ? "page" : undefined}
@@ -764,7 +764,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
           <button
             type="button"
             onClick={onRefresh}
-            className="mt-4 flex items-center gap-2 rounded-lg bg-[#FF2D2D] px-4 py-2 text-sm font-medium text-white hover:bg-[#5E5BFF] transition-colors cursor-pointer"
+            className="mt-4 flex items-center gap-2 rounded-lg bg-[#FF2D2D] px-4 py-2 text-sm font-medium text-white hover:bg-[#CC2424] transition-colors cursor-pointer"
           >
             <RefreshCw size={14} />
             Seed preset library
@@ -948,11 +948,13 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   }, [preset.id, onSaved]);
 
   const category = (preset.consent_evidence?.category as string) || "preset";
+  const gender = (preset.consent_evidence?.gender as string) || null;
+  const hasStoredPreview = !!(preset.consent_evidence?.preview_url);
   const lang = preset.language?.toUpperCase() || "EN";
 
   return (
     <div
-      className="group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-colors duration-150"
+      className="group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-colors duration-150 min-h-[220px]"
       style={{ background: "rgba(255,255,255,0.035)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
       onMouseEnter={() => {
         setIsHovering(true);
@@ -964,8 +966,8 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
       }}
     >
-      {/* Rainbow top bar */}
-      <div style={{ height: 2, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899)" }} className="rounded-t-xl" />
+      {/* Brand accent top bar */}
+      <div style={{ height: 2, background: "linear-gradient(90deg, #FF2D2D, #FF6B6B, #CC2424)" }} className="rounded-t-xl" />
       <div className="p-5 flex flex-col flex-1">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
@@ -976,6 +978,11 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
               {lang}
             </span>
+            {gender && (
+              <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/50">
+                {gender === "female" ? "F" : "M"}
+              </span>
+            )}
             <span className="rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.07)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#FF2D2D]/70">
               {category}
             </span>
@@ -986,6 +993,9 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         <h3 className="mt-3 text-sm font-semibold text-white">{preset.label}</h3>
         {preset.description && (
           <p className="mt-1 text-xs text-white/55 leading-relaxed">{preset.description}</p>
+        )}
+        {!hasStoredPreview && !testUrl && (
+          <p className="mt-1 text-[10px] text-white/30 italic">Click Preview to generate audio</p>
         )}
 
         {/* Edit test text */}
@@ -1025,7 +1035,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             <button
               type="button"
               onClick={() => setEditMode(true)}
-              className="flex-shrink-0 text-[10px] text-[rgba(255,255,255,0.55)] hover:text-[#FF2D2D] cursor-pointer"
+              className="flex-shrink-0 rounded border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] text-white/70 hover:border-[#FF2D2D]/40 hover:text-[#FF2D2D] transition-colors duration-150 cursor-pointer"
               aria-label="Edit test phrase"
             >
               Edit

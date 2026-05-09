@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 /**
@@ -73,13 +73,15 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const response = await callLLM({
+    const response = await callLLMTraced({
       // Generic short polish task — Haiku-tier routing.
       taskType: "polish_copy",
       userPrompt: lines.join("\n"),
       maxTokens: maxChars ? Math.min(Math.ceil(maxChars / 3) + 50, 1024) : 600,
       userId: user.id,
       context: "/api/ai/inline-assist",
+      surface: "inline-assist",
+      humanize: true,
     });
 
     let text = response.text.trim();

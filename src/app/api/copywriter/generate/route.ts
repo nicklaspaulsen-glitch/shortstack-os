@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
-import { callLLM, type LLMTaskType } from "@/lib/ai/llm-router";
+import { callLLMTraced, type LLMTaskType } from "@/lib/ai/llm-router";
 
 // Map content type to a router task. Long-form pieces (blog, landing) get
 // Sonnet quality; short snippets stay on Haiku-tier routing.
@@ -120,13 +120,15 @@ Write the content now. Make it compelling, polished, and ready for use.`;
 
     const taskType: LLMTaskType =
       CONTENT_TYPE_TO_TASK[type] ?? "generation_short";
-    const response = await callLLM({
+    const response = await callLLMTraced({
       taskType,
       systemPrompt,
       userPrompt: prompt,
       maxTokens: 4000,
       userId: user.id,
       context: "/api/copywriter/generate",
+      surface: "copywriter",
+      humanize: true,
     });
 
     const text = response.text;

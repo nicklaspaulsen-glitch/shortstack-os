@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 import { ALL_PLATFORMS, FALLBACK_HASHTAGS } from "@/lib/social-studio/constants";
 import type { ContentIdea, SocialPlatform, TrendsResponse } from "@/lib/social-studio/types";
 
@@ -99,13 +99,15 @@ export async function GET(request: NextRequest) {
   let nicheHashtags: Partial<Record<SocialPlatform, string[]>> = {};
 
   try {
-    const response = await callLLM({
+    const response = await callLLMTraced({
       taskType: "generation_short",
       systemPrompt: SYSTEM_PROMPT,
       userPrompt: `Niche: ${niche}`,
       maxTokens: 2200,
       userId: user.id,
       context: "/api/social/trends",
+      surface: "social-trends",
+      humanize: false,
     });
     const parsed = safeJsonParse<ClaudeTrendsResponse>(response.text);
     if (parsed) {

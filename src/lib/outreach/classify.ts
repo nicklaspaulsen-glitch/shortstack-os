@@ -13,7 +13,7 @@
  * first paragraph + last paragraph is plenty of signal.
  */
 
-import { callLLM } from "@/lib/ai/llm-router";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 import { reportError } from "@/lib/observability/error-reporter";
 import type { OutreachChannel, OutreachOutcome } from "./types";
 
@@ -135,7 +135,7 @@ export async function classifyOutcome(input: ClassifyInput): Promise<ClassifyRes
   }
 
   try {
-    const result = await callLLM({
+    const result = await callLLMTraced({
       taskType: "simple_classification",
       systemPrompt:
         "You are a sales-outreach outcome classifier. Read the message and return a strict JSON object with the outcome label and a one-sentence summary. No prose, no markdown.",
@@ -144,6 +144,8 @@ export async function classifyOutcome(input: ClassifyInput): Promise<ClassifyRes
       temperature: 0,
       userId: input.agencyOwnerId,
       context: "/api/outreach/classify",
+      surface: "outreach-classify",
+      humanize: false,
     });
     return safeParse(result.text);
   } catch (err) {

@@ -37,7 +37,6 @@ export default function DemoPage() {
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/pricing" className="text-xs text-gray-400 hover:text-white">Pricing</Link>
-            <Link href="/book" className="text-xs text-gray-400 hover:text-white">Book a Call</Link>
             <Link href="/login" className="text-xs px-4 py-2 rounded-lg font-medium text-black"
               style={{ background: "linear-gradient(135deg, #c8a855, #b89840)" }}>
               Login
