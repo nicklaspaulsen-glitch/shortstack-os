@@ -1182,7 +1182,7 @@ export default function AnalyticsPage() {
             <div className="mt-4 space-y-2">
               {churnRiskClients.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <CheckCircle size={16} className="text-white/20" />
+                  <CheckCircle size={16} className="text-[#A1A1AA]" />
                   <p className="text-[11px] text-[#9F9DAA]">All clients healthy</p>
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px] mx-auto">No churn signals detected. At-risk clients appear here when engagement drops.</p>
                 </div>

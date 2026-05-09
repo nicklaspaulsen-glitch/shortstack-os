@@ -786,7 +786,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
       <div className="space-y-2.5 rounded-xl p-3" style={{ background: "#FAFAFB", border: "1px solid rgba(0,0,0,0.08)" }}>
         {/* Search row */}
         <div className="relative">
-          <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30" />
+          <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#71717A]" />
           <input
             type="search"
             value={searchQuery}
