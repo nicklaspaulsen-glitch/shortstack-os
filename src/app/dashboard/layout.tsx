@@ -353,7 +353,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* `bg-background/85` instead of opaque `bg-background` lets the
           ambient 3D shapes peek through at 15% intensity — atmospheric
           but doesn't fight content readability. */}
-      <div className="flex min-h-screen bg-background/85 relative">
+      <div className="flex min-h-screen bg-background/40 relative">
 
         {/* Desktop sidebar — wrapped in its own LayoutGroup so the
             layoutId="sidebar-active-accent" inside Sidebar doesn't

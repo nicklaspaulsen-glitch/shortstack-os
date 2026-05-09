@@ -266,24 +266,39 @@ export default function PageHero({
   variant = "editorial",
   className = "",
 }: PageHeroProps) {
-  // ── Editorial variant — sharp OLED header with red accent rail ──
+  // ── Editorial variant — premium OLED header with red accent rail ──
   if (variant === "editorial") {
     return (
       <div
         className={`relative overflow-hidden -mx-4 sm:-mx-6 mb-4 ${className}`}
         style={{
-          background: "linear-gradient(135deg, #080809 0%, #0f0f11 60%, #14101000 100%)",
-          borderBottom: "1px solid rgba(255,255,255,0.07)",
+          background: "rgba(var(--bg-base-rgb, 10 10 13) / 0.55)",
+          backdropFilter: "blur(24px) saturate(1.4)",
+          WebkitBackdropFilter: "blur(24px) saturate(1.4)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          boxShadow: "0 1px 0 rgba(255,255,255,0.05) inset, 0 8px 24px -4px rgba(0,0,0,0.40)",
         }}
       >
-        {/* Red accent rail — left edge */}
+        {/* Inner top highlight — glass bevel */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[1px]"
+          style={{ background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.08) 70%, transparent 100%)" }}
+          aria-hidden
+        />
+        {/* Red accent rail — left edge, full height */}
         <div
           className="absolute left-0 top-0 bottom-0 w-[3px]"
-          style={{ background: "linear-gradient(180deg, #FF2D2D 0%, #CC2424 60%, transparent 100%)" }}
+          style={{ background: "linear-gradient(180deg, #FF4040 0%, #FF2D2D 40%, #CC2424 80%, transparent 100%)", boxShadow: "2px 0 12px rgba(255,45,45,0.25)" }}
+          aria-hidden
+        />
+        {/* Subtle red glow behind left edge */}
+        <div
+          className="absolute left-0 top-0 bottom-0 w-16 pointer-events-none"
+          style={{ background: "linear-gradient(90deg, rgba(255,45,45,0.04) 0%, transparent 100%)" }}
           aria-hidden
         />
 
-        <div className="flex items-center gap-4 pl-6 pr-5 py-4">
+        <div className="flex items-center gap-3 pl-6 pr-5 py-4">
           {icon && (
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 [&_svg]:w-4 [&_svg]:h-4"
@@ -291,7 +306,7 @@ export default function PageHero({
                 background: "rgba(255,45,45,0.10)",
                 border: "1px solid rgba(255,45,45,0.22)",
                 color: "#FF2D2D",
-                boxShadow: "0 0 12px rgba(255,45,45,0.15)",
+                boxShadow: "0 0 16px rgba(255,45,45,0.15), 0 1px 0 rgba(255,255,255,0.06) inset",
               }}
             >
               {icon}
@@ -300,15 +315,15 @@ export default function PageHero({
 
           <div className="flex-1 min-w-0">
             {eyebrow && (
-              <p className="font-editorial text-[10px] text-[#FF6B6B] tracking-wide mb-0.5 truncate">
+              <p className="font-editorial text-[10px] text-[#FF6B6B] tracking-wide mb-0.5 truncate" style={{ letterSpacing: "0.08em" }}>
                 {eyebrow}
               </p>
             )}
-            <h1 className="font-display text-[clamp(1.05rem,0.9rem+0.5vw,1.35rem)] font-semibold text-[#F0F0F4] leading-[1.1] tracking-[-0.02em] truncate">
+            <h1 className="font-display text-[clamp(1.1rem,0.95rem+0.5vw,1.4rem)] font-bold text-[#F0F0F4] leading-[1.1] tracking-[-0.025em] truncate">
               {title}
             </h1>
             {subtitle && (
-              <p className="text-[11px] text-[#6F6D7A] mt-0.5 truncate">{subtitle}</p>
+              <p className="text-[11px] text-[#5A5A68] mt-0.5 truncate">{subtitle}</p>
             )}
           </div>
 
@@ -338,12 +353,14 @@ export default function PageHero({
     <div
       className={`relative overflow-hidden border ${className}`}
       style={{
-        background: treatment.bg,
+        background: "rgba(var(--bg-base-rgb, 10 10 13) / 0.55)",
+        backdropFilter: "blur(24px) saturate(1.4)",
+        WebkitBackdropFilter: "blur(24px) saturate(1.4)",
         borderColor: tokens.border.subtle,
         boxShadow: [
-          "0 1px 0 rgba(255,255,255,0.03) inset",
-          "0 4px 12px rgba(0,0,0,0.4)",
-          "0 16px 40px -12px rgba(0,0,0,0.55)",
+          "0 1px 0 rgba(255,255,255,0.05) inset",
+          "0 4px 12px rgba(0,0,0,0.35)",
+          "0 16px 40px -12px rgba(0,0,0,0.50)",
         ].join(", "),
       }}
     >
