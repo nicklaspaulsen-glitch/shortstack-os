@@ -1,6 +1,7 @@
 "use client";
 
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { useRef, type ReactNode } from "react";
 
 interface RevealProps {
   children: ReactNode;
@@ -12,8 +13,8 @@ interface RevealProps {
 }
 
 /**
- * Local fade-up-on-scroll wrapper used throughout the landing page.
- * Honors prefers-reduced-motion.
+ * Fade-up-on-scroll wrapper using Framer Motion useInView.
+ * Honors prefers-reduced-motion via framer-motion's global setting.
  */
 export default function Reveal({
   children,
@@ -22,44 +23,17 @@ export default function Reveal({
   y = 24,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      setVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const isInView = useInView(ref, { once: true, margin: "0px 0px -40px 0px" });
 
   return (
-    <div
+    <motion.div
       ref={ref}
       className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : `translateY(${y}px)`,
-        transition: `opacity 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
-      }}
+      initial={{ opacity: 0, y }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }

@@ -1,26 +1,18 @@
-﻿"use client";
+"use client";
 
 /**
- * HeroProductTour — rotating mock-up of 4 product surfaces, replaces the
- * single static dashboard mock that lived inline in hero.tsx. Auto-cycles
- * every 5 seconds; user can click the dot indicators to jump to a specific
- * surface.
- *
- * Each mock is a stylised representation of the real ShortStack surface
- * (no actual screenshots — drawn with CSS so it stays sharp at any DPI
- * and adjusts to the user's color scheme automatically).
- *
- * Pure CSS animations + a single setInterval. Pauses while the user is
- * hovering the panel.
+ * HeroProductTour — rotating mock-up of 5 product surfaces.
+ * Upgraded: Framer Motion AnimatePresence for smooth surface crossfades,
+ * glass aesthetic wrapper, animated tab indicator.
  */
 
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp,
   Phone,
   Calendar,
   PenTool,
-  CheckCircle2,
   Sparkles,
   ArrowUpRight,
   PlayCircle,
@@ -43,11 +35,10 @@ const SURFACES = [
 
 type SurfaceKey = (typeof SURFACES)[number]["key"];
 
-export default function HeroProductTour({ visible }: { visible: boolean }) {
+export default function HeroProductTour() {
   const [active, setActive] = useState<SurfaceKey>("dashboard");
   const [paused, setPaused] = useState(false);
 
-  // Auto-rotate every 5 seconds
   useEffect(() => {
     if (paused) return;
     const t = setInterval(() => {
@@ -61,118 +52,109 @@ export default function HeroProductTour({ visible }: { visible: boolean }) {
 
   return (
     <div
-      className={`relative mt-16 md:mt-24 mx-auto max-w-4xl ${
-        visible ? "animate-fade-up delay-500" : "opacity-0"
-      }`}
-      style={{ opacity: 0 }}
+      className="relative mt-16 md:mt-24 mx-auto"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
+      {/* Glass wrapper */}
       <div
-        className="relative overflow-hidden"
+        className="relative overflow-hidden rounded-2xl"
         style={{
-          background: "rgba(255,255,255,0.02)",
-          border: "1px solid rgba(255,255,255,0.06)",
-          padding: "1px",
+          background: "rgba(10, 10, 13, 0.55)",
+          backdropFilter: "blur(24px) saturate(1.4)",
+          WebkitBackdropFilter: "blur(24px) saturate(1.4)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          boxShadow:
+            "0 1px 0 rgba(255,255,255,0.06) inset, 0 24px 80px -8px rgba(0,0,0,0.55)",
         }}
       >
+        {/* Inner highlight bevel */}
         <div
-          className="px-6 md:px-8 py-8 md:py-10 min-h-[420px] relative overflow-hidden"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(11,13,18,1) 100%)",
-          }}
-        >
+          className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+          style={{ background: "rgba(255,255,255,0.10)" }}
+        />
+
+        <div className="px-6 md:px-8 py-8 md:py-10 min-h-[420px] relative overflow-hidden">
           {/* Window chrome + tab pills */}
-          <div className="flex items-center gap-2 mb-5 md:mb-6 flex-wrap">
-            <div className="w-3 h-3 rounded-full bg-red-500/50" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-            <div className="w-3 h-3 rounded-full bg-green-500/50" />
+          <div className="flex items-center gap-2 mb-6 flex-wrap">
+            <div className="w-3 h-3 rounded-full" style={{ background: "rgba(239,68,68,0.5)" }} />
+            <div className="w-3 h-3 rounded-full" style={{ background: "rgba(234,179,8,0.5)" }} />
+            <div className="w-3 h-3 rounded-full" style={{ background: "rgba(34,197,94,0.5)" }} />
+
             <div className="hidden sm:flex ml-3 gap-1 flex-wrap">
               {SURFACES.map((s) => (
                 <button
                   key={s.key}
                   type="button"
                   onClick={() => setActive(s.key)}
-                  className="text-[10px] font-semibold px-2.5 py-1 rounded-md transition-all"
+                  className="relative text-[10px] font-semibold px-3 py-1 rounded-md transition-colors duration-150"
                   style={{
-                    background:
-                      active === s.key ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.03)",
-                    border:
-                      active === s.key
-                        ? "1px solid rgba(255,255,255,0.3)"
-                        : "1px solid rgba(255,255,255,0.06)",
-                    color:
-                      active === s.key ? "#FF6B6B" : "rgba(255,255,255,0.5)",
+                    color: active === s.key ? "#FF6B6B" : "rgba(255,255,255,0.4)",
                   }}
                 >
-                  {s.label}
+                  {active === s.key && (
+                    <motion.div
+                      layoutId="tab-bg"
+                      className="absolute inset-0 rounded-md"
+                      style={{
+                        background: "rgba(255,255,255,0.10)",
+                        border: "1px solid rgba(255,255,255,0.16)",
+                      }}
+                      transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                  )}
+                  <span className="relative z-10">{s.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Surface content — only one is mounted at a time, cross-fades */}
-          <div className="relative">
-            {SURFACES.map((s) => (
-              <div
-                key={s.key}
-                className="transition-opacity duration-500"
-                style={{
-                  opacity: active === s.key ? 1 : 0,
-                  position: active === s.key ? "relative" : "absolute",
-                  inset: active === s.key ? "auto" : 0,
-                  pointerEvents: active === s.key ? "auto" : "none",
-                }}
+          {/* Surface content — AnimatePresence crossfade */}
+          <div className="relative min-h-[300px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               >
-                {s.key === "dashboard" && <DashboardMock />}
-                {s.key === "leads" && <LeadsMock />}
-                {s.key === "voice" && <VoiceMock />}
-                {s.key === "content" && <ContentMock />}
-                {s.key === "ads" && <AdsMock />}
-              </div>
-            ))}
+                {active === "dashboard" && <DashboardMock />}
+                {active === "leads" && <LeadsMock />}
+                {active === "voice" && <VoiceMock />}
+                {active === "content" && <ContentMock />}
+                {active === "ads" && <AdsMock />}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
-          {/* Dot indicators (mobile) */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 sm:hidden">
+          {/* Mobile dot indicators */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 sm:hidden">
             {SURFACES.map((s) => (
-              <button
+              <motion.button
                 key={s.key}
                 type="button"
                 onClick={() => setActive(s.key)}
-                className="rounded-full transition-all"
-                style={{
+                className="rounded-full"
+                animate={{
                   width: active === s.key ? 18 : 6,
-                  height: 6,
-                  background:
-                    active === s.key
-                      ? "#FF2D2D"
-                      : "rgba(255,255,255,0.25)",
+                  background: active === s.key ? "#FF2D2D" : "rgba(255,255,255,0.25)",
                 }}
+                transition={{ duration: 0.2 }}
+                style={{ height: 6 }}
                 aria-label={s.label}
               />
             ))}
           </div>
-
-          {/* Shimmer */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent)",
-              animation: "shimmer 3s ease-in-out infinite",
-            }}
-          />
         </div>
       </div>
 
-      {/* Bottom glow */}
+      {/* Bottom ambient glow */}
       <div
         className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(255,255,255,0.07) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(255,45,45,0.12) 0%, transparent 70%)",
           filter: "blur(20px)",
         }}
       />
@@ -191,13 +173,16 @@ function DashboardMock() {
           { label: "Emails Sent", val: "8,432", change: "+28%" },
           { label: "Deals Won", val: "47", change: "+8%" },
           { label: "Revenue", val: "$124K", change: "+18%" },
-        ].map((s) => (
-          <div
+        ].map((s, i) => (
+          <motion.div
             key={s.label}
             className="rounded-lg p-3"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.04)",
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.06)",
             }}
           >
             <p className="text-[9px] text-gray-600 mb-1">{s.label}</p>
@@ -205,19 +190,21 @@ function DashboardMock() {
             <p className="text-[9px] text-emerald-400 flex items-center gap-0.5">
               <ArrowUpRight size={8} /> {s.change}
             </p>
-          </div>
+          </motion.div>
         ))}
       </div>
       <div className="flex items-end gap-1.5 h-24">
         {[40, 55, 35, 65, 80, 60, 75, 90, 70, 85, 95, 78].map((h, i) => (
-          <div
+          <motion.div
             key={i}
-            className="flex-1 rounded-t transition-all"
+            className="flex-1 rounded-t"
+            initial={{ height: 0 }}
+            animate={{ height: `${h}%` }}
+            transition={{ delay: i * 0.03, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              height: `${h}%`,
               background: `linear-gradient(180deg, rgba(255,255,255,${
-                0.3 + (h / 100) * 0.5
-              }) 0%, rgba(255,255,255,0.05) 100%)`,
+                0.25 + (h / 100) * 0.45
+              }) 0%, rgba(255,255,255,0.04) 100%)`,
             }}
           />
         ))}
@@ -244,13 +231,15 @@ function LeadsMock() {
       </div>
       <div className="space-y-1.5">
         {rows.map((r, i) => (
-          <div
+          <motion.div
             key={r.name}
             className="rounded-md p-2.5 grid grid-cols-12 gap-2 items-center"
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             style={{
               background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.04)",
-              animation: `lead-row-in 0.6s ease-out ${i * 0.1}s both`,
+              border: "1px solid rgba(255,255,255,0.05)",
             }}
           >
             <div className="col-span-4 text-xs font-semibold text-white truncate">
@@ -261,15 +250,12 @@ function LeadsMock() {
             </div>
             <div className="col-span-3 flex items-center gap-1.5">
               <div className="flex-1 h-1 rounded-full bg-white/[0.04] overflow-hidden">
-                <div
+                <motion.div
                   className="h-full rounded-full"
-                  style={{
-                    width: `${r.score}%`,
-                    background:
-                      r.score > 80
-                        ? "linear-gradient(90deg, #FF2D2D, #FF6B6B)"
-                        : "linear-gradient(90deg, #FF2D2D, #FF6B6B)",
-                  }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${r.score}%` }}
+                  transition={{ delay: i * 0.08 + 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ background: "linear-gradient(90deg, #FF2D2D, #FF6B6B)" }}
                 />
               </div>
               <span className="text-[9px] text-white font-mono">{r.score}</span>
@@ -279,30 +265,16 @@ function LeadsMock() {
                 className="text-[9px] font-bold px-2 py-0.5 rounded"
                 style={{
                   background:
-                    r.status === "Hot"
-                      ? "rgba(239,68,68,0.14)"
-                      : "rgba(255,255,255,0.12)",
+                    r.status === "Hot" ? "rgba(239,68,68,0.14)" : "rgba(255,255,255,0.08)",
                   color: r.status === "Hot" ? "#fca5a5" : "#FF6B6B",
                 }}
               >
                 {r.status}
               </span>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
-      <style jsx>{`
-        @keyframes lead-row-in {
-          from {
-            opacity: 0;
-            transform: translateY(6px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 }
@@ -329,20 +301,19 @@ function VoiceMock() {
           { caller: "+1 510 555 0144", duration: "3:42", outcome: "Qualified", color: "#FF2D2D" },
           { caller: "+1 650 555 0119", duration: "0:12", outcome: "Spam", color: "#ef4444" },
         ].map((row, i) => (
-          <div
+          <motion.div
             key={i}
             className="rounded-md p-2.5 grid grid-cols-12 gap-2 items-center text-xs"
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             style={{
               background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.05)",
             }}
           >
-            <div className="col-span-4 text-white font-mono text-[10px]">
-              {row.caller}
-            </div>
-            <div className="col-span-2 text-gray-500 text-[10px]">
-              {row.duration}
-            </div>
+            <div className="col-span-4 text-white font-mono text-[10px]">{row.caller}</div>
+            <div className="col-span-2 text-gray-500 text-[10px]">{row.duration}</div>
             <div className="col-span-3 text-gray-500 text-[10px]">
               <PlayCircle size={11} className="inline mr-1" /> Recording
             </div>
@@ -354,19 +325,22 @@ function VoiceMock() {
                 {row.outcome}
               </span>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
-      <div
+      <motion.div
         className="mt-4 rounded-md p-2.5 flex items-center gap-2 text-[10px] text-gray-300"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.35, duration: 0.5 }}
         style={{
-          background: "rgba(255,255,255,0.05)",
-          border: "1px solid rgba(255,255,255,0.12)",
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.10)",
         }}
       >
         <Sparkles size={10} style={{ color: "#FF2D2D" }} />
         AI hand-off triggered for high-intent caller — booked to John Friday 2pm.
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -395,12 +369,15 @@ function ContentMock() {
         {days.map((d, i) => {
           const slot = slots.find((s) => s.day === i);
           return (
-            <div
+            <motion.div
               key={i}
               className="rounded-md aspect-[3/4] p-2 flex flex-col"
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.04, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.05)",
               }}
             >
               <p className="text-[9px] text-gray-600 mb-1 font-bold">{d}</p>
@@ -415,12 +392,12 @@ function ContentMock() {
                   <span style={{ color: slot.color }}>{slot.icon}</span>
                 </div>
               )}
-            </div>
+            </motion.div>
           );
         })}
       </div>
       <div className="flex items-center gap-2 text-[10px] text-gray-400">
-        <PenTool size={10} className="text-gold" />
+        <PenTool size={10} className="text-gray-400" />
         <span>Next post drafted in your voice — review at 2pm.</span>
       </div>
     </div>
@@ -442,12 +419,15 @@ function AdsMock() {
           { Icon: SiGoogleads, name: "Google Ads · Search", spend: "$1.8K", roas: "5.7x", color: "#4285F4" },
           { Icon: SiTiktok, name: "TikTok · Reels", spend: "$0.9K", roas: "3.2x", color: "#FFFFFF" },
         ].map((row, i) => (
-          <div
+          <motion.div
             key={i}
             className="rounded-md p-2.5 flex items-center gap-3"
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.08, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             style={{
               background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.05)",
             }}
           >
             <div
@@ -465,23 +445,26 @@ function AdsMock() {
             <div className="text-[10px] text-gray-500">{row.spend}</div>
             <div
               className="text-[10px] font-bold px-2 py-0.5 rounded"
-              style={{ background: "rgba(255,45,45,0.14)", color: "#FF6B6B" }}
+              style={{ background: "rgba(255,45,45,0.12)", color: "#FF6B6B" }}
             >
               {row.roas}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
-      <div
+      <motion.div
         className="rounded-md p-2.5 flex items-start gap-2 text-[10px] text-gray-300"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.32, duration: 0.5 }}
         style={{
-          background: "rgba(255,255,255,0.05)",
-          border: "1px solid rgba(255,255,255,0.12)",
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.10)",
         }}
       >
         <Sparkles size={10} style={{ color: "#FF2D2D" }} className="shrink-0 mt-0.5" />
         AI rebalanced budget: shifted $400/day from Meta Awareness → Google Search.
-      </div>
+      </motion.div>
     </div>
   );
 }
