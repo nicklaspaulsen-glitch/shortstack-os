@@ -104,7 +104,9 @@ export async function middleware(request: NextRequest) {
     path.startsWith("/style-preview") ||
     path.startsWith("/sound-preview") ||
     path.startsWith("/privacy") ||
-    path.startsWith("/terms")
+    path.startsWith("/terms") ||
+    path.startsWith("/legal") ||
+    path.startsWith("/cookies")
   ) {
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
