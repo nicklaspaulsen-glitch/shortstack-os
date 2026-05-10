@@ -426,7 +426,7 @@ export default function AnalyticsPage() {
         actions={
           <div className="flex items-center gap-2">
             {/* Quick date-range pills — always visible so filter is discoverable */}
-            <div className="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 border border-[rgba(0,0,0,0.08)]" style={{ background: "#F2F2F4" }}>
+            <div className="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.80)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
               {(["7d", "30d", "90d"] as const).map(r => (
                 <button
                   key={r}

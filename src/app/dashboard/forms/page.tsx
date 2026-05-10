@@ -638,7 +638,7 @@ export default function FormsPage() {
           {/* Live Preview */}
           <div className=" border p-4 sticky top-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <h2 className="section-header flex items-center gap-2"><Eye size={12} className="text-indigo-400" /> Live Preview</h2>
-            <div className="rounded-xl p-6" style={{ background: "#ffffff" }}>
+            <div className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset" }}>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 16 }}>{activeForm.name}</h2>
               {(() => {
                 const fieldsById: Record<string, FormField> = {};

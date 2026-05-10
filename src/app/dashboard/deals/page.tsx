@@ -491,7 +491,7 @@ export default function DealsPage() {
               const scoreBg = score >= 70 ? "bg-green-400" : score >= 40 ? "bg-yellow-400" : "bg-red-400";
               return (
                 <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="rounded-xl p-4 flex items-center gap-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border border-[rgba(0,0,0,0.08)]" style={{ background: "#F2F2F4" }}>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.72)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
                     <p className={`text-lg font-bold ${scoreColor}`}>{score}</p>
                   </div>
                   <div className="flex-1 min-w-0">
