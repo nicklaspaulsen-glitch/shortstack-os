@@ -53,9 +53,9 @@ export function BentoTile({
         background: themeTokens.bg.surface1,
         border: `1px solid ${borderColor}`,
         boxShadow: [
-          "0 1px 0 rgba(255,255,255,0.04) inset",
-          "0 2px 4px rgba(0,0,0,0.45)",
-          "0 12px 28px -12px rgba(0,0,0,0.55)",
+          "0 1px 0 rgba(255,255,255,0.8) inset",
+          "0 2px 4px rgba(0,0,0,0.06)",
+          "0 12px 28px -12px rgba(0,0,0,0.10)",
           `0 0 24px -8px ${accentColor}22`,
         ].join(", "),
         transition: "border-color 220ms cubic-bezier(0.32,0.72,0,1), box-shadow 220ms cubic-bezier(0.32,0.72,0,1), transform 220ms cubic-bezier(0.32,0.72,0,1)",
@@ -73,11 +73,11 @@ export function BentoTile({
           : {
               y: -2,
               boxShadow: [
-                "0 1px 0 rgba(255,255,255,0.06) inset",
-                "0 4px 8px rgba(0,0,0,0.5)",
-                "0 18px 40px -12px rgba(0,0,0,0.6)",
+                "0 1px 0 rgba(255,255,255,0.9) inset",
+                "0 4px 8px rgba(0,0,0,0.08)",
+                "0 18px 40px -12px rgba(0,0,0,0.14)",
                 `0 0 0 1px ${accentColor}33`,
-                `0 0 32px -8px ${accentColor}55`,
+                `0 0 32px -8px ${accentColor}44`,
               ].join(", "),
             }
       }

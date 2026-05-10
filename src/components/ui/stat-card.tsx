@@ -34,6 +34,11 @@ interface StatCardProps {
   sparkline?: number[];
   /** Stagger index for entrance animation delay. */
   index?: number;
+  /**
+   * Optional progress value (0–100). When provided, renders a thin horizontal
+   * progress bar at the bottom of the card showing completion toward a goal.
+   */
+  progress?: number;
 }
 
 function useAnimatedNumber(target: number, duration = 1200, enabled = false) {
@@ -117,6 +122,43 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
   );
 }
 
+/**
+ * Thin animated progress bar shown beneath the sparkline when a `progress`
+ * prop is supplied. Animates from 0 → pct on mount via CSS transition.
+ */
+function ProgressBar({ pct, color, visible }: { pct: number; color: string; visible: boolean }) {
+  return (
+    <div className="mt-3">
+      {/* Track */}
+      <div
+        className="relative h-[3px] w-full overflow-hidden rounded-full"
+        style={{ background: `rgba(37, 99, 235, 0.12)` }}
+        role="progressbar"
+        aria-valuenow={Math.round(pct)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
+        {/* Fill */}
+        <div
+          className="absolute inset-y-0 left-0 rounded-full"
+          style={{
+            background: color,
+            width: visible ? `${pct}%` : "0%",
+            transition: "width 0.8s ease-out",
+          }}
+        />
+      </div>
+      {/* Percentage label */}
+      <span
+        className="mt-1 block text-[10px] font-medium tabular-nums"
+        style={{ color: `${color}CC` }}
+      >
+        {Math.round(pct)}%
+      </span>
+    </div>
+  );
+}
+
 export default function StatCard({
   label,
   value,
@@ -128,9 +170,10 @@ export default function StatCard({
   accentColor,
   sparkline,
   index = 0,
+  progress,
 }: StatCardProps) {
-  // May 7 v2: real prism split — red leads, then cycles through spectrum
-  const PRISM_CYCLE = ["#FF2D2D", "#8B5CF6", "#FF2D2D", "#FF5252", "#FF2D2D", "#F59E0B"];
+  // May 10 v3: blue accent system — cycles through blue/teal/indigo variants
+  const PRISM_CYCLE = ["#2563EB", "#0EA5E9", "#6366F1", "#14B8A6", "#3B82F6", "#8B5CF6"];
   const accent = accentColor ?? PRISM_CYCLE[index % PRISM_CYCLE.length];
   const changeColor = {
     positive: tokens.status.success,
@@ -262,6 +305,9 @@ export default function StatCard({
         )}
         {sparkline && sparkline.length > 1 && (
           <Sparkline data={sparkline} color={accent} />
+        )}
+        {progress !== undefined && (
+          <ProgressBar pct={Math.min(100, Math.max(0, progress))} color={accent} visible={visible} />
         )}
       </div>
     </motion.div>

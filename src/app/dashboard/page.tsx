@@ -194,7 +194,7 @@ function BentoFallback() {
       </p>
       <Link
         href="/dashboard/monitor"
-        className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#FF2D2D] text-white"
+        className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[var(--brand-accent)] text-white"
       >
         Check system status
       </Link>

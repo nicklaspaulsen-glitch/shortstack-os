@@ -118,8 +118,8 @@ export const tokenRgb = {
   brandLime: "37 99 235",       // legacy alias (= accent)
   brandLimeSoft: "59 130 246",  // legacy alias (= accentSoft)
   brandLimeDim: "29 78 216",    // legacy alias (= accentDim)
-  brandPlum: "31 31 35",
-  brandPlumHover: "44 44 50",
+  brandPlum: "228 228 231",      // #E4E4E7 — light neutral surface
+  brandPlumHover: "212 212 216", // #D4D4D8
   brandIndigo: "37 99 235",
   statusSuccess: "127 229 184",
   statusWarning: "255 192 98",

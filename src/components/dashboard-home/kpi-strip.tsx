@@ -24,6 +24,14 @@ function fmtMoney(n: number): string {
 }
 
 export default function KpiStrip({ kpis }: Props) {
+  /** Goal thresholds for each KPI — used to compute progress bar percent. */
+  const GOALS = {
+    pipeline: Math.max(kpis.pipelineValue, 10000),
+    leadsPerWeek: 20,
+    dealsPerMonth: 5,
+    mrr: 5000,
+  } as const;
+
   const cards = [
     {
       label: "Pipeline",
@@ -31,6 +39,7 @@ export default function KpiStrip({ kpis }: Props) {
       sparkline: kpis.pipelineSpark,
       icon: <Target size={14} />,
       accent: tokens.brand.lime,
+      progress: Math.round((kpis.pipelineValue / GOALS.pipeline) * 100),
     },
     {
       label: "Leads / week",
@@ -38,6 +47,7 @@ export default function KpiStrip({ kpis }: Props) {
       sparkline: kpis.leadsSpark,
       icon: <TrendingUp size={14} />,
       accent: tokens.brand.lime,
+      progress: Math.round((kpis.leadsThisWeek / GOALS.leadsPerWeek) * 100),
     },
     {
       label: "Deals / month",
@@ -45,6 +55,7 @@ export default function KpiStrip({ kpis }: Props) {
       sparkline: kpis.dealsSpark,
       icon: <Briefcase size={14} />,
       accent: tokens.brand.lime,
+      progress: Math.round((kpis.dealsWonThisMonth / GOALS.dealsPerMonth) * 100),
     },
     {
       label: "MRR",
@@ -52,6 +63,7 @@ export default function KpiStrip({ kpis }: Props) {
       sparkline: kpis.mrrSpark,
       icon: <DollarSign size={14} />,
       accent: tokens.brand.lime,
+      progress: Math.round((kpis.mrr / GOALS.mrr) * 100),
     },
   ];
 
@@ -66,6 +78,7 @@ export default function KpiStrip({ kpis }: Props) {
           size="bento-1x1"
           accentColor={c.accent}
           sparkline={c.sparkline.length > 1 ? c.sparkline : undefined}
+          progress={c.progress}
         />
       ))}
     </div>
