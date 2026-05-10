@@ -154,15 +154,15 @@ a[role="button"]:hover,
  * the 100+ pages still using `text-gold-*` / `bg-amber-*` keep working
  * without a sweeping refactor. */
 :root {
-  /* Surfaces — pure white base */
-  --bg-base: #FFFFFF;
-  --bg-surface-1: #FAFAFB;
-  --bg-surface-2: #F2F2F4;
-  --bg-surface-3: #E4E4E7;
-  --bg-base-rgb: 255 255 255;
-  --bg-surface-1-rgb: 250 250 251;
-  --bg-surface-2-rgb: 242 242 244;
-  --bg-surface-3-rgb: 228 228 231;
+  /* Surfaces — light blue-gray base */
+  --bg-base: #F3F6FA;
+  --bg-surface-1: #FFFFFF;
+  --bg-surface-2: #F1F5F9;
+  --bg-surface-3: #E2E8F0;
+  --bg-base-rgb: 243 246 250;
+  --bg-surface-1-rgb: 255 255 255;
+  --bg-surface-2-rgb: 241 245 249;
+  --bg-surface-3-rgb: 226 232 240;
 
   /* Borders — dark-tinted for light mode */
   --border-subtle: rgba(0, 0, 0, 0.08);
@@ -176,24 +176,24 @@ a[role="button"]:hover,
   --text-secondary-rgb: 82 82 91;
   --text-muted-rgb: 113 113 122;
 
-  /* Brand accent — PRISM RED (May 7). Sharp, distinctive red for the prism split look. */
-  --brand-accent: #CC2424;
-  --brand-accent-soft: #FF2D2D;
-  --brand-accent-dim: #FF6B6B;
-  --brand-accent-glow: rgba(255, 45, 45, 0.3);
-  --brand-accent-rgb: 204 36 36;
-  --brand-accent-soft-rgb: 255 45 45;
-  --brand-accent-dim-rgb: 255 107 107;
+  /* Brand accent — PRISM BLUE. Sharp, distinctive blue for the prism split look. */
+  --brand-accent: #2563EB;
+  --brand-accent-soft: #3B82F6;
+  --brand-accent-dim: #1D4ED8;
+  --brand-accent-glow: rgba(37, 99, 235, 0.2);
+  --brand-accent-rgb: 37 99 235;
+  --brand-accent-soft-rgb: 59 130 246;
+  --brand-accent-dim-rgb: 29 78 216;
 
   /* Legacy lime aliases — kept so existing pages work but redirected to
-     the prism red accent. Do NOT introduce new uses of these vars in new code. */
-  --brand-lime: #CC2424;
-  --brand-lime-soft: #FF2D2D;
-  --brand-lime-dim: #FF6B6B;
-  --brand-lime-glow: rgba(255, 45, 45, 0.3);
-  --brand-lime-rgb: 204 36 36;
-  --brand-lime-soft-rgb: 255 45 45;
-  --brand-lime-dim-rgb: 255 107 107;
+     the prism blue accent. Do NOT introduce new uses of these vars in new code. */
+  --brand-lime: #2563EB;
+  --brand-lime-soft: #3B82F6;
+  --brand-lime-dim: #1D4ED8;
+  --brand-lime-glow: rgba(37, 99, 235, 0.2);
+  --brand-lime-rgb: 37 99 235;
+  --brand-lime-soft-rgb: 59 130 246;
+  --brand-lime-dim-rgb: 29 78 216;
 
   /* Editorial complement — neutral charcoal (replaces deep plum) */
   --brand-plum: #E4E4E7;
@@ -201,9 +201,9 @@ a[role="button"]:hover,
   --brand-plum-rgb: 228 228 231;
   --brand-plum-hover-rgb: 212 212 216;
 
-  /* Indigo alias — redirected to prism red accent. */
-  --brand-indigo: #CC2424;
-  --brand-indigo-rgb: 204 36 36;
+  /* Indigo alias — redirected to prism blue accent. */
+  --brand-indigo: #2563EB;
+  --brand-indigo-rgb: 37 99 235;
 
   /* Functional */
   --status-success: #7FE5B8;
@@ -259,19 +259,19 @@ a[role="button"]:hover,
    * Apr 28: default flipped from dark to light per user feedback.
    * ThemeProvider overrides these at runtime when the user (or their
    * OS) picks dark — see :root[data-theme="dark"] block below. */
-  --color-background: #FFFFFF;
-  --color-surface: #FAFAFB;
-  --color-surface-light: #F2F2F4;
-  --color-border: #E4E4E7;
-  --color-accent: #CC2424;
+  --color-background: #F3F6FA;
+  --color-surface: #FFFFFF;
+  --color-surface-light: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-accent: #2563EB;
   --color-text: #0A0A0B;
   --color-muted: #52525B;
   --color-foreground: #0A0A0B;
-  --color-background-rgb: 255 255 255;
-  --color-surface-rgb: 250 250 251;
-  --color-surface-light-rgb: 242 242 244;
-  --color-border-rgb: 228 228 231;
-  --color-accent-rgb: 204 36 36;
+  --color-background-rgb: 243 246 250;
+  --color-surface-rgb: 255 255 255;
+  --color-surface-light-rgb: 241 245 249;
+  --color-border-rgb: 226 232 240;
+  --color-accent-rgb: 37 99 235;
   --color-text-rgb: 10 10 11;
   --color-muted-rgb: 82 82 91;
 }
@@ -353,33 +353,33 @@ a[role="button"]:hover,
  * ancestor was forced to dark. */
 :root[data-theme="light"],
 .theme-light {
-  --color-background: #FFFFFF;
-  --color-surface: #FAFAFB;
-  --color-surface-light: #F2F2F4;
-  --color-border: #E4E4E7;
-  --color-accent: #CC2424;
+  --color-background: #F3F6FA;
+  --color-surface: #FFFFFF;
+  --color-surface-light: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-accent: #2563EB;
   --color-text: #0A0A0B;
   --color-muted: #52525B;
   --color-foreground: #0A0A0B;
-  --color-background-rgb: 255 255 255;
-  --color-surface-rgb: 250 250 251;
-  --color-surface-light-rgb: 242 242 244;
-  --color-border-rgb: 228 228 231;
-  --color-accent-rgb: 204 36 36;
+  --color-background-rgb: 243 246 250;
+  --color-surface-rgb: 255 255 255;
+  --color-surface-light-rgb: 241 245 249;
+  --color-border-rgb: 226 232 240;
+  --color-accent-rgb: 37 99 235;
   --color-text-rgb: 10 10 11;
   --color-muted-rgb: 82 82 91;
 
-  --bg-base: #FFFFFF;
-  --bg-surface-1: #FAFAFB;
-  --bg-surface-2: #F2F2F4;
-  --bg-surface-3: #E4E4E7;
-  --bg-base-rgb: 255 255 255;
-  --bg-surface-1-rgb: 250 250 251;
-  --bg-surface-2-rgb: 242 242 244;
-  --bg-surface-3-rgb: 228 228 231;
+  --bg-base: #F3F6FA;
+  --bg-surface-1: #FFFFFF;
+  --bg-surface-2: #F1F5F9;
+  --bg-surface-3: #E2E8F0;
+  --bg-base-rgb: 243 246 250;
+  --bg-surface-1-rgb: 255 255 255;
+  --bg-surface-2-rgb: 241 245 249;
+  --bg-surface-3-rgb: 226 232 240;
 
-  --border-subtle: rgba(204, 36, 36, 0.08);
-  --border-strong: rgba(255, 45, 45, 0.20);
+  --border-subtle: rgba(37, 99, 235, 0.08);
+  --border-strong: rgba(37, 99, 235, 0.20);
 
   --text-primary: #0A0A0B;
   --text-secondary: #52525B;
@@ -388,20 +388,20 @@ a[role="button"]:hover,
   --text-secondary-rgb: 82 82 91;
   --text-muted-rgb: 113 113 122;
 
-  --brand-accent: #CC2424;
-  --brand-accent-soft: #FF2D2D;
-  --brand-accent-dim: #A5A4F0;
-  --brand-accent-glow: rgba(255, 45, 45, 0.3);
-  --brand-accent-rgb: 204 36 36;
+  --brand-accent: #2563EB;
+  --brand-accent-soft: #3B82F6;
+  --brand-accent-dim: #1D4ED8;
+  --brand-accent-glow: rgba(37, 99, 235, 0.2);
+  --brand-accent-rgb: 37 99 235;
 
   /* Legacy alias remap for light mode */
-  --brand-lime: #CC2424;
-  --brand-lime-soft: #FF2D2D;
-  --brand-lime-dim: #A5A4F0;
-  --brand-lime-glow: rgba(255, 45, 45, 0.3);
-  --brand-lime-rgb: 204 36 36;
-  --brand-indigo: #CC2424;
-  --brand-indigo-rgb: 204 36 36;
+  --brand-lime: #2563EB;
+  --brand-lime-soft: #3B82F6;
+  --brand-lime-dim: #1D4ED8;
+  --brand-lime-glow: rgba(37, 99, 235, 0.2);
+  --brand-lime-rgb: 37 99 235;
+  --brand-indigo: #2563EB;
+  --brand-indigo-rgb: 37 99 235;
 }
 
 html {

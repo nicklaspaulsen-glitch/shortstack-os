@@ -10,10 +10,10 @@
 
 export const tokens = {
   bg: {
-    base: "#FFFFFF",
-    surface1: "#FAFAFB",
-    surface2: "#F2F2F4",
-    surface3: "#E4E4E7",
+    base: "#F3F6FA",
+    surface1: "#FFFFFF",
+    surface2: "#F1F5F9",
+    surface3: "#E2E8F0",
   },
   border: {
     subtle: "rgba(0, 0, 0, 0.08)",
@@ -25,26 +25,26 @@ export const tokens = {
     muted: "#A1A1AA",
   },
   brand: {
-    /** The brand accent — PRISM RED. Sharp, distinctive.
+    /** The brand accent — PRISM BLUE. Sharp, distinctive.
      *  Three variants:
-     *    accent     — #CC2424 — AA on white surfaces
-     *    accentSoft — #FF4040 — hover / highlight on light
-     *    accentDim  — #991B1B — deep red for emphasis */
-    accent: "#CC2424",
-    accentSoft: "#FF4040",
-    accentDim: "#991B1B",
-    accentGlow: "rgba(204, 36, 36, 0.25)",
+     *    accent     — #2563EB — AA on white surfaces
+     *    accentSoft — #3B82F6 — hover / highlight on light
+     *    accentDim  — #1D4ED8 — deep blue for emphasis */
+    accent: "#2563EB",
+    accentSoft: "#3B82F6",
+    accentDim: "#1D4ED8",
+    accentGlow: "rgba(37, 99, 235, 0.2)",
 
-    lime: "#CC2424",
-    limeSoft: "#FF4040",
-    limeDim: "#991B1B",
-    limeGlow: "rgba(204, 36, 36, 0.25)",
+    lime: "#2563EB",
+    limeSoft: "#3B82F6",
+    limeDim: "#1D4ED8",
+    limeGlow: "rgba(37, 99, 235, 0.2)",
 
     /** Editorial complement — light neutral surface. */
     plum: "#F0F0F4",
     plumHover: "#E4E4E7",
 
-    indigo: "#CC2424",
+    indigo: "#2563EB",
   },
   status: {
     success: "#7FE5B8",
@@ -105,22 +105,22 @@ export const themeTokens = {
 
 /** RGB triplet helpers — Tailwind opacity modifiers need `r g b` strings. */
 export const tokenRgb = {
-  bgBase: "5 5 7",
-  bgSurface1: "16 16 18",
-  bgSurface2: "23 23 26",
-  bgSurface3: "38 38 43",
+  bgBase: "243 246 250",
+  bgSurface1: "255 255 255",
+  bgSurface2: "241 245 249",
+  bgSurface3: "226 232 240",
   textPrimary: "240 240 244",
   textSecondary: "168 168 178",
   textMuted: "74 74 90",
-  brandAccent: "255 45 45",
-  brandAccentSoft: "255 107 107",
-  brandAccentDim: "204 36 36",
-  brandLime: "255 45 45",       // legacy alias (= accent)
-  brandLimeSoft: "255 107 107",  // legacy alias (= accentSoft)
-  brandLimeDim: "204 36 36",     // legacy alias (= accentDim)
+  brandAccent: "37 99 235",
+  brandAccentSoft: "59 130 246",
+  brandAccentDim: "29 78 216",
+  brandLime: "37 99 235",       // legacy alias (= accent)
+  brandLimeSoft: "59 130 246",  // legacy alias (= accentSoft)
+  brandLimeDim: "29 78 216",    // legacy alias (= accentDim)
   brandPlum: "31 31 35",
   brandPlumHover: "44 44 50",
-  brandIndigo: "255 45 45",
+  brandIndigo: "37 99 235",
   statusSuccess: "127 229 184",
   statusWarning: "255 192 98",
   statusError: "242 96 99",

@@ -277,16 +277,16 @@ export default function PageHero({
           boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08)",
         }}
       >
-        {/* Red accent rail — left edge, full height */}
+        {/* Blue accent rail — left edge, full height */}
         <div
           className="absolute left-0 top-0 bottom-0 w-[3px]"
-          style={{ background: "linear-gradient(180deg, #FF4040 0%, #CC2424 60%, #991B1B 100%)" }}
+          style={{ background: "linear-gradient(180deg, #2563EB 0%, #3B82F6 50%, #1D4ED8 100%)" }}
           aria-hidden
         />
-        {/* Subtle red glow behind left edge */}
+        {/* Subtle blue glow behind left edge */}
         <div
           className="absolute left-0 top-0 bottom-0 w-12 pointer-events-none"
-          style={{ background: "linear-gradient(90deg, rgba(204,36,36,0.05) 0%, transparent 100%)" }}
+          style={{ background: "linear-gradient(90deg, rgba(37,99,235,0.05) 0%, transparent 100%)" }}
           aria-hidden
         />
 
@@ -295,10 +295,10 @@ export default function PageHero({
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 [&_svg]:w-4 [&_svg]:h-4"
               style={{
-                background: "rgba(204,36,36,0.08)",
-                border: "1px solid rgba(204,36,36,0.18)",
-                color: "#CC2424",
-                boxShadow: "0 1px 3px rgba(204,36,36,0.10)",
+                background: "rgba(37,99,235,0.07)",
+                border: "1px solid rgba(37,99,235,0.15)",
+                color: "#2563EB",
+                boxShadow: "0 1px 3px rgba(37,99,235,0.08)",
               }}
             >
               {icon}
@@ -307,7 +307,7 @@ export default function PageHero({
 
           <div className="flex-1 min-w-0">
             {eyebrow && (
-              <p className="font-editorial text-[10px] text-[#CC2424] tracking-wide mb-0.5 truncate" style={{ letterSpacing: "0.08em" }}>
+              <p className="font-editorial text-[10px] text-[#2563EB] tracking-wide mb-0.5 truncate" style={{ letterSpacing: "0.08em" }}>
                 {eyebrow}
               </p>
             )}
@@ -331,15 +331,14 @@ export default function PageHero({
 
   const treatment = TREATMENTS[TREATMENT_BY_GRADIENT[gradient]];
   const reduceMotion = useReducedMotion();
-  // Auto-pick theme from pathname when caller didn't pass one. This
-  // means every dashboard page that already uses <PageHero> picks up
-  // a themed 3D moment without any per-page edit. Pages that want
-  // to override (or opt out via "default") just pass `theme3d` explicit.
+  // Only render the 3D scene when the caller explicitly passes `theme3d`.
+  // Previously, auto-detection was used (autoTheme3dFromPath) which caused
+  // every page to mount a Three.js canvas — now opt-in only for performance.
   const pathname = usePathname() || "";
   const effectiveTheme3d: PageHero3DTheme = theme3d ?? autoTheme3dFromPath(pathname);
-  // Auto-show the 3D mark unless the page explicitly opted into
-  // showStack3D (older pattern). Hide on compact variant — too cramped.
-  const renderHero3d = !showStack3D && variant !== "compact";
+  // Render 3D only when explicitly requested via `theme3d` prop and not on
+  // compact variant. `showStack3D` uses the legacy Stack3D mark instead.
+  const renderHero3d = !!theme3d && !showStack3D && variant !== "compact";
 
   return (
     <div
@@ -426,7 +425,7 @@ export default function PageHero({
         animate="visible"
         variants={reduceMotion ? {} : {
           hidden: {},
-          visible: { transition: { staggerChildren: 0.06, delayChildren: 0.04 } },
+          visible: { transition: { staggerChildren: 0.03, delayChildren: 0.02 } },
         }}
       >
         <div className="flex items-start gap-4 min-w-0 flex-1">
@@ -441,7 +440,7 @@ export default function PageHero({
               }}
               variants={reduceMotion ? {} : {
                 hidden: { opacity: 0, y: 10 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.32, 0.72, 0, 1] } },
               }}
             >
               {icon}
@@ -454,7 +453,7 @@ export default function PageHero({
                 style={{ color: treatment.accent, opacity: 0.95 }}
                 variants={reduceMotion ? {} : {
                   hidden: { opacity: 0, y: 10 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.32, 0.72, 0, 1] } },
                 }}
               >
                 {eyebrow}
@@ -467,7 +466,7 @@ export default function PageHero({
               }}
               variants={reduceMotion ? {} : {
                 hidden: { opacity: 0, y: 10 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.32, 0.72, 0, 1] } },
               }}
             >
               {title}
@@ -487,7 +486,7 @@ export default function PageHero({
                 style={{ color: tokens.text.secondary }}
                 variants={reduceMotion ? {} : {
                   hidden: { opacity: 0, y: 10 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.32, 0.72, 0, 1] } },
                 }}
               >
                 {subtitle}
@@ -500,7 +499,7 @@ export default function PageHero({
           className="flex items-start gap-3 shrink-0 max-w-full md:ml-auto"
           variants={reduceMotion ? {} : {
             hidden: { opacity: 0, y: 10 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.32, 0.72, 0, 1] } },
           }}
         >
           {actions && (
