@@ -259,8 +259,11 @@ theme is now light with a blue accent.
 - `prefers-reduced-motion: reduce` → cap to 100ms, disable transforms.
 
 ### Stack 3D mark
-The signature brand mark — three red-edged stacked rectangular blocks
-at slight rotation. Component: `src/components/brand/stack-3d.tsx`.
+The signature brand mark — a 3-tier stacked-shape glyph (MandalaMark)
+with a slow CSS rotateY spin. Component: `src/components/brand/stack-3d.tsx`
+wraps `src/components/brand/mandala-mark.tsx`. The SVG fill uses
+`currentColor`, so the mark inherits the parent's CSS color (off-white on
+dark sidebar, near-black on light pages, blue on active/accent surfaces).
 Use exactly this pattern, do not invent variations:
 ```tsx
 import Stack3D from "@/components/brand/stack-3d";

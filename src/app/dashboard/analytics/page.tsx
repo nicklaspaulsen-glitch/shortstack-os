@@ -420,23 +420,43 @@ export default function AnalyticsPage() {
       <PageHero
         variant="editorial"
         title="Analytics"
-        subtitle="Leads · Revenue · Content ROI"
+        subtitle="Leads ï¿½ Revenue ï¿½ Content ROI"
         eyebrow="Performance Overview"
         icon={<BarChart3 size={16} />}
         actions={
-          <>
+          <div className="flex items-center gap-2">
+            {/* Quick date-range pills â€” always visible so filter is discoverable */}
+            <div className="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 border border-[rgba(0,0,0,0.08)]" style={{ background: "#F2F2F4" }}>
+              {(["7d", "30d", "90d"] as const).map(r => (
+                <button
+                  key={r}
+                  onClick={() => setDateRange(r)}
+                  className={`px-2.5 py-1 text-[10px] rounded-md transition-colors duration-150 ${
+                    dateRange === r
+                      ? "bg-[#1D4ED8] text-white font-semibold"
+                      : "text-[#6F6D7A] hover:text-[#0A0A0B]"
+                  }`}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+            {/* Export icon button */}
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-1 text-[10px] text-[#71717A] hover:text-[#0A0A0B] transition-colors border border-[rgba(0,0,0,0.08)] px-2.5 py-1.5 rounded-md"
+              title="Export report as JSON"
+            >
+              <Download size={11} />
+            </button>
+            {/* Live MRR badge */}
             {stats.totalMRR > 0 && (
-              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.18)] text-[#1D4ED8]">
+              <span className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.18)] text-[#1D4ED8]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
                 {formatCurrency(stats.totalMRR)} MRR
               </span>
             )}
-            {!isLoading && replyRate > 0 && (
-              <span className="hidden md:flex items-center gap-1 text-[10px] text-[#6F6F7A] px-2.5 py-1 rounded-md bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
-                {replyRate}% reply rate
-              </span>
-            )}
-          </>
+          </div>
         }
       />
 
@@ -494,39 +514,16 @@ export default function AnalyticsPage() {
       {!isLoading && fetchError === null && hasData && (
         <>
 
-          {/* -- Date range + export ---------------------------------------- */}
-          <div className="flex items-center justify-end flex-wrap gap-2.5">
-            <div className="flex items-center gap-0.5 rounded-xl p-1 border border-[rgba(0,0,0,0.08)]" style={{ background: "#F2F2F4" }}>
-              {(["7d", "30d", "90d", "custom"] as const).map(r => (
-                <button
-                  key={r}
-                  onClick={() => setDateRange(r)}
-                  className={`px-3 py-1 text-[10px] rounded-md transition-colors duration-150 ${
-                    dateRange === r
-                      ? "bg-[#1D4ED8] text-white font-semibold"
-                      : "text-[#6F6D7A] hover:text-[#0A0A0B]"
-                  }`}
-                >
-                  {r === "custom" ? "Custom" : r}
-                </button>
-              ))}
+          {/* -- Custom date range inputs (only shown when custom is active) -- */}
+          {dateRange === "custom" && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)}
+                className="input text-[10px] px-2 py-1 w-32" aria-label="Start date" />
+              <span className="text-[#4F4D58] text-[10px]">&rarr;</span>
+              <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)}
+                className="input text-[10px] px-2 py-1 w-32" aria-label="End date" />
             </div>
-            {dateRange === "custom" && (
-              <div className="flex items-center gap-1.5">
-                <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)}
-                  className="input text-[10px] px-2 py-1 w-28" aria-label="Start date" />
-                <span className="text-[#4F4D58] text-[10px]">–</span>
-                <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)}
-                  className="input text-[10px] px-2 py-1 w-28" aria-label="End date" />
-              </div>
-            )}
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-1.5 text-[10px] text-[#71717A] hover:text-[#0A0A0B] transition-colors border border-[rgba(0,0,0,0.08)] px-3 py-1.5 rounded-lg"
-            >
-              <Download size={11} /> Export
-            </button>
-          </div>
+          )}
 
           {/* -- Zone 1: Command Strip -------------------------------------- */}
           <motion.div
@@ -564,9 +561,9 @@ export default function AnalyticsPage() {
               {/* Divider */}
               <div className="my-6 h-px bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.08)] to-transparent" />
 
-              {/* Stats — editorial split: hero first stat + 3-stat support strip */}
+              {/* Stats ï¿½ editorial split: hero first stat + 3-stat support strip */}
               <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
-                {/* Hero stat — Total Leads, larger editorial treatment */}
+                {/* Hero stat ï¿½ Total Leads, larger editorial treatment */}
                 <motion.div
                   className="py-1 pr-6 md:pr-8 shrink-0"
                   initial={{ opacity: 0, y: 8 }}
@@ -581,7 +578,7 @@ export default function AnalyticsPage() {
                     {stats.totalLeads.toLocaleString()}
                   </p>
                   <p className="text-[10px] mt-0.5" style={{ color: leadGrowth >= 0 ? "#52525B" : "#F26063" }}>
-                    {leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "—"}
+                    {leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "ï¿½"}
                   </p>
                 </motion.div>
 
@@ -589,7 +586,7 @@ export default function AnalyticsPage() {
                 <div className="hidden md:block w-px self-stretch bg-[rgba(0,0,0,0.08)] mx-0" />
                 <div className="block md:hidden h-px w-full bg-[rgba(0,0,0,0.08)] my-3" />
 
-                {/* Support stats strip — 3 remaining */}
+                {/* Support stats strip ï¿½ 3 remaining */}
                 <div className="flex flex-1 grid-cols-3 md:pl-6">
                   {[
                     { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate >= 5 },
@@ -641,7 +638,7 @@ export default function AnalyticsPage() {
                   <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Acquisition</p>
                   <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5">
                     Lead Velocity
-                    <span className="ml-2 text-[10px] font-normal text-[#4F4D58]">· {dateRange === "custom" ? "Custom" : dateRange}</span>
+                    <span className="ml-2 text-[10px] font-normal text-[#4F4D58]">ï¿½ {dateRange === "custom" ? "Custom" : dateRange}</span>
                   </h2>
                 </div>
               </div>
@@ -871,7 +868,7 @@ export default function AnalyticsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* No pseudo accent div needed — top border handles it */}
+              {/* No pseudo accent div needed ï¿½ top border handles it */}
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Progress</p>
               <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
               <div className="space-y-3.5">
@@ -972,10 +969,14 @@ export default function AnalyticsPage() {
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#1D4ED8]" />
             <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(0,0,0,0.08)]">
               {[
-                { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#2563EB" },
-                { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#2563EB" : "#F26063" },
-                { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#3B82F6" },
-                { label: "Active Clients", value: String(stats.activeClients), sub: `${formatCurrency(stats.totalMRR)} MRR`, color: "#1D4ED8" },
+                { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#2563EB",
+                  sparkData: revenueByMonth.length > 1 ? revenueByMonth.map(r => r.mrr) : undefined },
+                { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#2563EB" : "#F26063",
+                  sparkData: leadsByDay.slice(-10).map(d => d.count) },
+                { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#3B82F6",
+                  sparkData: outreachByDay.slice(-10).map(d => d.replies) },
+                { label: "Active Clients", value: String(stats.activeClients), sub: `${formatCurrency(stats.totalMRR)} MRR`, color: "#1D4ED8",
+                  sparkData: undefined },
               ].map((cell, i) => (
                 <motion.div
                   key={cell.label}
@@ -985,12 +986,17 @@ export default function AnalyticsPage() {
                   transition={{ duration: 0.36, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">{cell.label}</span>
-                  <span
-                    className="font-display text-2xl font-bold tracking-[-0.03em] font-mono"
-                    style={{ color: cell.color, fontVariantNumeric: "tabular-nums" }}
-                  >
-                    {cell.value}
-                  </span>
+                  <div className="flex items-end justify-between gap-3">
+                    <span
+                      className="font-display text-2xl font-bold tracking-[-0.03em] font-mono"
+                      style={{ color: cell.color, fontVariantNumeric: "tabular-nums" }}
+                    >
+                      {cell.value}
+                    </span>
+                    {cell.sparkData && cell.sparkData.length > 1 && (
+                      <Sparkline values={cell.sparkData} color={cell.color} id={`score-${i}`} width={52} height={22} />
+                    )}
+                  </div>
                   <span className="text-[10px] text-[#6F6D7A]">{cell.sub}</span>
                 </motion.div>
               ))}
@@ -1041,7 +1047,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* --------------------------------------------------------------- */}
-          {/* Collapsible sections — advanced / data-dependent analytics     */}
+          {/* Collapsible sections ï¿½ advanced / data-dependent analytics     */}
           {/* --------------------------------------------------------------- */}
 
           {/* Revenue Forecast */}
@@ -1062,7 +1068,7 @@ export default function AnalyticsPage() {
             <div className="mt-4">
               {revenueByMonth.length < 2 ? (
                 <p className="text-[11px] text-[#6F6D7A] py-6 text-center">
-                  Not enough revenue history to forecast — connect billing data.
+                  Not enough revenue history to forecast ï¿½ connect billing data.
                 </p>
               ) : (
                 <>
@@ -1106,7 +1112,7 @@ export default function AnalyticsPage() {
                             {formatCurrency(f.projected)}
                           </p>
                           <p className="text-[9px] text-[#4F4D58] mt-0.5">
-                            {formatCurrency(f.conservative)} — {formatCurrency(f.optimistic)}
+                            {formatCurrency(f.conservative)} ï¿½ {formatCurrency(f.optimistic)}
                           </p>
                         </div>
                       ))}
@@ -1289,7 +1295,7 @@ export default function AnalyticsPage() {
                       <p className="text-xs font-medium text-[#0A0A0B]">{member.name}</p>
                       {i === 0 && <Star size={9} className="text-[#2563EB]" />}
                     </div>
-                    <p className="text-[9px] text-[#6F6D7A]">{member.leads} leads · {member.deals} deals · {member.calls} calls</p>
+                    <p className="text-[9px] text-[#6F6D7A]">{member.leads} leads ï¿½ {member.deals} deals ï¿½ {member.calls} calls</p>
                   </div>
                   <p className="text-xs font-bold text-[#2563EB] shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
                     {formatCurrency(member.revenue)}
