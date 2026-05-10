@@ -99,7 +99,7 @@ export default function PricingPreview() {
                   <div
                     className="self-start text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full mb-4"
                     style={{
-                      background: "#FF6B6B",
+                      background: "#2563EB",
                       color: "#fff",
                     }}
                   >
@@ -131,7 +131,7 @@ export default function PricingPreview() {
                       <Check
                         size={14}
                         className="shrink-0 mt-0.5"
-                        style={{ color: "#FF6B6B" }}
+                        style={{ color: "#60A5FA" }}
                       />
                       <span>{b}</span>
                     </li>
@@ -145,7 +145,7 @@ export default function PricingPreview() {
                     plan.featured
                       ? {
                           background:
-                            "linear-gradient(135deg, #FF2D2D, #CC2424)",
+                            "#2563EB",
                           color: "#fff",
                         }
                       : {

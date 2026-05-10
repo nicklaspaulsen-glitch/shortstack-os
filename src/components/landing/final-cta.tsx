@@ -22,9 +22,9 @@ export default function FinalCTA() {
           <div
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-medium mb-6"
             style={{
-              background: "rgba(255,255,255,0.07)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              color: "#FF6B6B",
+              background: "rgba(37,99,235,0.10)",
+              border: "1px solid rgba(37,99,235,0.25)",
+              color: "#93C5FD",
             }}
           >
             <Shield size={10} />
@@ -36,13 +36,7 @@ export default function FinalCTA() {
             style={{ letterSpacing: "-0.03em" }}
           >
             Run your agency on{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #FF2D2D, #FF6B6B)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
+            <span className="text-blue-500">
               {BRAND.product_name}.
             </span>
           </h2>
@@ -56,12 +50,7 @@ export default function FinalCTA() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/pricing"
-              className="group flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all hover:shadow-lg"
-              style={{
-                background: "linear-gradient(135deg, #FF2D2D, #CC2424)",
-                color: "#fff",
-                boxShadow: "0 0 40px rgba(255,255,255,0.12)",
-              }}
+              className="group flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 text-white bg-blue-600 hover:bg-blue-500 shadow-[0_0_28px_rgba(37,99,235,0.45)] hover:shadow-[0_0_52px_rgba(37,99,235,0.65)]"
             >
               Start your 7-day free trial
               <ArrowRight

@@ -89,7 +89,7 @@ export default function HeroProductTour() {
                   onClick={() => setActive(s.key)}
                   className="relative text-[10px] font-semibold px-3 py-1 rounded-md transition-colors duration-150"
                   style={{
-                    color: active === s.key ? "#FF6B6B" : "rgba(255,255,255,0.4)",
+                    color: active === s.key ? "#60A5FA" : "rgba(255,255,255,0.4)",
                   }}
                 >
                   {active === s.key && (
@@ -138,7 +138,7 @@ export default function HeroProductTour() {
                 className="rounded-full"
                 animate={{
                   width: active === s.key ? 18 : 6,
-                  background: active === s.key ? "#FF2D2D" : "rgba(255,255,255,0.25)",
+                  background: active === s.key ? "#2563EB" : "rgba(255,255,255,0.25)",
                 }}
                 transition={{ duration: 0.2 }}
                 style={{ height: 6 }}
@@ -154,7 +154,7 @@ export default function HeroProductTour() {
         className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(255,45,45,0.12) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(37,99,235,0.12) 0%, transparent 70%)",
           filter: "blur(20px)",
         }}
       />
@@ -255,7 +255,7 @@ function LeadsMock() {
                   initial={{ width: 0 }}
                   animate={{ width: `${r.score}%` }}
                   transition={{ delay: i * 0.08 + 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ background: "linear-gradient(90deg, #FF2D2D, #FF6B6B)" }}
+                  style={{ background: "linear-gradient(90deg, #2563EB, #60A5FA)" }}
                 />
               </div>
               <span className="text-[9px] text-white font-mono">{r.score}</span>
@@ -265,8 +265,8 @@ function LeadsMock() {
                 className="text-[9px] font-bold px-2 py-0.5 rounded"
                 style={{
                   background:
-                    r.status === "Hot" ? "rgba(239,68,68,0.14)" : "rgba(255,255,255,0.08)",
-                  color: r.status === "Hot" ? "#fca5a5" : "#FF6B6B",
+                    r.status === "Hot" ? "rgba(239,68,68,0.14)" : "rgba(37,99,235,0.10)",
+                  color: r.status === "Hot" ? "#fca5a5" : "#93C5FD",
                 }}
               >
                 {r.status}
@@ -296,9 +296,9 @@ function VoiceMock() {
       </div>
       <div className="space-y-1.5">
         {[
-          { caller: "+1 415 555 0102", duration: "2:14", outcome: "Booked", color: "#FF2D2D" },
+          { caller: "+1 415 555 0102", duration: "2:14", outcome: "Booked", color: "#10b981" },
           { caller: "+1 408 555 0173", duration: "0:38", outcome: "Voicemail", color: "#94a3b8" },
-          { caller: "+1 510 555 0144", duration: "3:42", outcome: "Qualified", color: "#FF2D2D" },
+          { caller: "+1 510 555 0144", duration: "3:42", outcome: "Qualified", color: "#10b981" },
           { caller: "+1 650 555 0119", duration: "0:12", outcome: "Spam", color: "#ef4444" },
         ].map((row, i) => (
           <motion.div
@@ -338,7 +338,7 @@ function VoiceMock() {
           border: "1px solid rgba(255,255,255,0.10)",
         }}
       >
-        <Sparkles size={10} style={{ color: "#FF2D2D" }} />
+        <Sparkles size={10} style={{ color: "#3B82F6" }} />
         AI hand-off triggered for high-intent caller — booked to John Friday 2pm.
       </motion.div>
     </div>
@@ -353,7 +353,7 @@ function ContentMock() {
     { day: 2, type: "video", icon: <SiYoutube size={9} />, color: "#FF0000" },
     { day: 3, type: "reel", icon: <SiInstagram size={9} />, color: "#E4405F" },
     { day: 4, type: "post", icon: <SiTiktok size={9} />, color: "#FFFFFF" },
-    { day: 5, type: "ai", icon: <Sparkles size={9} />, color: "#FF2D2D" },
+    { day: 5, type: "ai", icon: <Sparkles size={9} />, color: "#3B82F6" },
   ];
   return (
     <div>
@@ -445,7 +445,7 @@ function AdsMock() {
             <div className="text-[10px] text-gray-500">{row.spend}</div>
             <div
               className="text-[10px] font-bold px-2 py-0.5 rounded"
-              style={{ background: "rgba(255,45,45,0.12)", color: "#FF6B6B" }}
+              style={{ background: "rgba(37,99,235,0.12)", color: "#60A5FA" }}
             >
               {row.roas}
             </div>
@@ -462,7 +462,7 @@ function AdsMock() {
           border: "1px solid rgba(255,255,255,0.10)",
         }}
       >
-        <Sparkles size={10} style={{ color: "#FF2D2D" }} className="shrink-0 mt-0.5" />
+        <Sparkles size={10} style={{ color: "#3B82F6" }} className="shrink-0 mt-0.5" />
         AI rebalanced budget: shifted $400/day from Meta Awareness → Google Search.
       </motion.div>
     </div>

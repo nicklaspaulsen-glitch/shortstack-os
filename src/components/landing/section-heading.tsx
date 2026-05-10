@@ -27,7 +27,7 @@ export default function SectionHeading({
       {eyebrow && (
         <p
           className="text-xs font-semibold uppercase tracking-widest mb-3"
-          style={{ color: "#FF6B6B" }}
+          style={{ color: "#3B82F6" }}
         >
           {eyebrow}
         </p>

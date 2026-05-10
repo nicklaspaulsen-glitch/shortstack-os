@@ -93,7 +93,7 @@ export default function PainPoints() {
                 <span
                   style={{
                     background:
-                      "linear-gradient(135deg, #FF2D2D, #FF6B6B)",
+                      "linear-gradient(135deg, #ef4444, #f87171)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                   }}

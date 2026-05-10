@@ -33,22 +33,20 @@ export default function LandingNav() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      className="fixed top-4 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-[min(900px,calc(100vw-2rem))] z-50 transition-all duration-300 rounded-2xl"
       style={{
-        background:
-          scrolled || menuOpen
-            ? "rgba(10, 10, 13, 0.88)"
-            : "transparent",
-        backdropFilter: scrolled || menuOpen ? "blur(16px) saturate(1.4)" : "none",
-        WebkitBackdropFilter:
-          scrolled || menuOpen ? "blur(16px) saturate(1.4)" : "none",
-        borderBottom:
-          scrolled || menuOpen
-            ? "1px solid rgba(255,255,255,0.06)"
-            : "1px solid transparent",
+        background: scrolled || menuOpen
+          ? "rgba(7,7,8,0.85)"
+          : "rgba(7,7,8,0.60)",
+        backdropFilter: "blur(20px) saturate(1.6)",
+        WebkitBackdropFilter: "blur(20px) saturate(1.6)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: scrolled
+          ? "0 8px 32px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.06) inset"
+          : "0 2px 16px rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.04) inset",
       }}
     >
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="px-4 py-3 flex items-center justify-between">
         <Link
           href="/"
           className="flex items-center gap-2.5"
@@ -96,11 +94,7 @@ export default function LandingNav() {
           </Link>
           <Link
             href="/pricing"
-            className="text-sm font-semibold px-5 py-2 rounded-lg transition-all duration-200 hover:opacity-90 hidden sm:inline-block"
-            style={{
-              background: "linear-gradient(135deg, #FF2D2D, #CC2424)",
-              color: "#fff",
-            }}
+            className="text-sm font-semibold px-5 py-2 rounded-lg transition-all duration-200 hidden sm:inline-block bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_16px_rgba(37,99,235,0.35)] hover:shadow-[0_0_24px_rgba(37,99,235,0.55)]"
           >
             Start free trial
           </Link>
@@ -147,11 +141,9 @@ export default function LandingNav() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="md:hidden overflow-hidden border-t border-white/5"
+            className="md:hidden overflow-hidden border-t border-white/[0.06] rounded-b-2xl"
             style={{
-              background: "rgba(10, 10, 13, 0.92)",
-              backdropFilter: "blur(16px)",
-              WebkitBackdropFilter: "blur(16px)",
+              background: "rgba(7,7,8,0.90)",
             }}
           >
             <motion.div
@@ -206,11 +198,7 @@ export default function LandingNav() {
                 </Link>
                 <Link
                   href="/pricing"
-                  className="text-sm font-semibold px-5 py-2 rounded-lg transition-all hover:opacity-90 text-center"
-                  style={{
-                    background: "linear-gradient(135deg, #FF2D2D, #CC2424)",
-                    color: "#fff",
-                  }}
+                className="text-sm font-semibold px-5 py-2 rounded-lg transition-all text-center bg-blue-600 hover:bg-blue-500 text-white"
                   onClick={() => setMenuOpen(false)}
                 >
                   Start free trial

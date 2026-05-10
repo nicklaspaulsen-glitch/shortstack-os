@@ -2,203 +2,243 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { ArrowRight, Shield, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronRight, Shield, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { BRAND } from "@/lib/brand-config";
 
-const Hero3DScene = dynamic(() => import("./hero-3d-scene"), { ssr: false });
 const HeroProductTour = dynamic(() => import("./hero-product-tour"), { ssr: false });
 
-const CONTENT_VARIANTS = {
+// ---------------------------------------------------------------------------
+// Animation variants
+// ---------------------------------------------------------------------------
+
+const CONTAINER = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.12 } },
 };
 
-const ITEM_VARIANTS = {
-  hidden: { opacity: 0, y: 18 },
+const ITEM = {
+  hidden: { opacity: 0, y: 22 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] as const },
+    transition: { duration: 0.72, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
+// ---------------------------------------------------------------------------
+// Background blob config
+// ---------------------------------------------------------------------------
+
+const BLOBS = [
+  // Large blue glow — bottom-left anchor
+  {
+    style: { left: "-8%", top: "38%", width: 720, height: 720 },
+    color: "rgba(37,99,235,0.22)",
+    animate: { y: [0, -28, 0], x: [0, 14, 0] },
+    duration: 14,
+    delay: 0,
+  },
+  // Indigo glow — top-right
+  {
+    style: { right: "-4%", top: "-8%", width: 560, height: 560 },
+    color: "rgba(99,102,241,0.18)",
+    animate: { y: [0, 20, 0], x: [0, -12, 0] },
+    duration: 11,
+    delay: 1.5,
+  },
+  // Wide diffuse — top-center
+  {
+    style: { left: "20%", top: "-20%", width: 900, height: 420 },
+    color: "rgba(59,130,246,0.10)",
+    animate: { y: [0, 16, 0], x: [0, 8, 0] },
+    duration: 18,
+    delay: 0.5,
+  },
+  // Violet accent — right-center
+  {
+    style: { right: "5%", top: "52%", width: 380, height: 380 },
+    color: "rgba(139,92,246,0.09)",
+    animate: { y: [0, -18, 0], x: [0, -8, 0] },
+    duration: 9,
+    delay: 3,
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Stat cards (inline — no separate TrustBar section needed below hero)
+// ---------------------------------------------------------------------------
+
+const STATS = [
+  { value: "2.4M+", label: "Leads scraped" },
+  { value: "850K+", label: "Messages sent" },
+  { value: "$18M+", label: "Revenue managed" },
+  { value: "50+", label: "Agencies active" },
+];
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
 export default function Hero() {
   return (
-    <section className="relative pt-32 pb-20 md:pt-44 md:pb-32 px-6 overflow-hidden">
-      {/* R3F 3D scene — transparent canvas, sits behind everything */}
-      <Hero3DScene />
+    <section className="relative min-h-[100dvh] flex flex-col justify-center pt-28 pb-24 px-6 overflow-hidden">
 
-      {/* Animated glow orbs */}
-      <motion.div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] pointer-events-none"
-        animate={{ opacity: [0.4, 0.7, 0.4] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(255,255,255,0.07) 0%, transparent 70%)",
-        }}
-      />
-      <motion.div
-        className="absolute top-20 right-0 w-[400px] h-[400px] pointer-events-none"
-        animate={{ y: [0, -20, 0], opacity: [0.6, 1, 0.6] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          background:
-            "radial-gradient(circle, rgba(255,45,45,0.08) 0%, transparent 70%)",
-        }}
-      />
-      <motion.div
-        className="absolute top-40 left-0 w-[300px] h-[300px] pointer-events-none"
-        animate={{ y: [0, 16, 0], opacity: [0.5, 0.8, 0.5] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        style={{
-          background:
-            "radial-gradient(circle, rgba(255,45,45,0.06) 0%, transparent 70%)",
-        }}
-      />
+      {/* ── Animated gradient blobs ── */}
+      {BLOBS.map((b, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            ...b.style,
+            background: `radial-gradient(circle at center, ${b.color} 0%, transparent 70%)`,
+            filter: "blur(80px)",
+          }}
+          animate={b.animate}
+          transition={{
+            duration: b.duration,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: b.delay,
+          }}
+        />
+      ))}
 
-      {/* Floating glass prism decoratives */}
-      <motion.div
-        className="absolute right-[8%] top-[18%] w-16 h-16 rounded-xl hidden lg:block pointer-events-none"
-        animate={{ y: [0, -14, 0], rotate: [8, 16, 8] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      {/* ── Subtle grid texture ── */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: "rgba(255, 45, 45, 0.07)",
-          backdropFilter: "blur(8px)",
-          border: "1px solid rgba(255, 45, 45, 0.18)",
-          boxShadow: "0 0 24px rgba(255, 45, 45, 0.10) inset",
-        }}
-      />
-      <motion.div
-        className="absolute left-[7%] top-[32%] w-10 h-10 rounded-lg hidden lg:block pointer-events-none"
-        animate={{ y: [0, 12, 0], rotate: [-6, 6, -6] }}
-        transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-        style={{
-          background: "rgba(255, 255, 255, 0.03)",
-          backdropFilter: "blur(6px)",
-          border: "1px solid rgba(255, 255, 255, 0.07)",
-        }}
-      />
-      <motion.div
-        className="absolute right-[13%] top-[44%] w-9 h-9 rounded-full hidden lg:block pointer-events-none"
-        animate={{ y: [0, -10, 0], scale: [1, 1.08, 1] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-        style={{
-          background: "rgba(255, 45, 45, 0.10)",
-          backdropFilter: "blur(6px)",
-          border: "1px solid rgba(255, 45, 45, 0.20)",
-        }}
-      />
-      <motion.div
-        className="absolute left-[11%] top-[52%] w-6 h-20 rounded-full hidden xl:block pointer-events-none"
-        animate={{ y: [0, 8, 0], opacity: [0.4, 0.7, 0.4] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        style={{
-          background: "linear-gradient(180deg, rgba(255,45,45,0.14) 0%, transparent 100%)",
-          border: "1px solid rgba(255, 45, 45, 0.12)",
+          backgroundImage: [
+            "linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px)",
+            "linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)",
+          ].join(", "),
+          backgroundSize: "64px 64px",
         }}
       />
 
-      {/* Main content — Framer Motion stagger container */}
+      {/* ── Radial edge vignette — keeps blobs from bleeding to page edges ── */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 120% 80% at 50% 50%, transparent 25%, #070708 78%)",
+        }}
+      />
+
+      {/* ── Main content ── */}
       <motion.div
-        className="max-w-5xl mx-auto text-center relative z-10"
-        variants={CONTENT_VARIANTS}
+        className="relative z-10 max-w-5xl mx-auto text-center"
+        variants={CONTAINER}
         initial="hidden"
         animate="visible"
       >
-        {/* Badge */}
-        <motion.div
-          variants={ITEM_VARIANTS}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-8"
-          style={{
-            background: "rgba(255,255,255,0.07)",
-            border: "1px solid rgba(255,255,255,0.18)",
-            color: "#FF6B6B",
-          }}
-        >
-          <Sparkles size={12} />
-          Built by agency operators, for agency operators
+        {/* Eyebrow badge */}
+        <motion.div variants={ITEM} className="mb-8">
+          <span
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium"
+            style={{
+              background: "rgba(37,99,235,0.12)",
+              border: "1px solid rgba(37,99,235,0.28)",
+              color: "#93C5FD",
+            }}
+          >
+            <Zap size={11} className="fill-blue-300" />
+            The AI operating system for modern agencies
+          </span>
         </motion.div>
 
         {/* Headline */}
         <motion.h1
-          variants={ITEM_VARIANTS}
-          className="text-5xl md:text-7xl font-extrabold mb-6 leading-[1.05] tracking-tight font-display"
-          style={{
-            background:
-              "linear-gradient(135deg, #ffffff 0%, #FF2D2D 40%, #FF6B6B 60%, #ffffff 100%)",
-            backgroundSize: "200% auto",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            letterSpacing: "-0.03em",
-          }}
+          variants={ITEM}
+          className="text-5xl md:text-7xl xl:text-[5.5rem] font-extrabold leading-[1.04] tracking-[-0.03em] font-display text-white mb-6"
         >
-          The operating system
+          Replace 15 SaaS tools
           <br />
-          that replaces 15 agency SaaS tools.
+          <span className="text-blue-500">with one platform.</span>
         </motion.h1>
 
         {/* Sub-headline */}
         <motion.p
-          variants={ITEM_VARIANTS}
-          className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed"
+          variants={ITEM}
+          className="text-base md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          {BRAND.product_name} is the all-in-one command center for digital
-          marketing agencies. Lead scraping, AI outreach and calls, content
-          generation and publishing, CRM, proposals, contracts, billing, and
-          white-label client portals — in one platform your clients will
-          actually brag about.
+          {BRAND.product_name} runs your agency end-to-end — lead scraping, AI outreach and calls,
+          content creation, CRM, proposals, billing, and white-label client portals. One command center.
+          Zero duct tape.
         </motion.p>
 
         {/* CTA row */}
         <motion.div
-          variants={ITEM_VARIANTS}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          variants={ITEM}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8"
         >
           <Link
             href="/pricing"
-            className="group flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:shadow-[0_0_40px_rgba(255,45,45,0.35)]"
-            style={{
-              background: "linear-gradient(135deg, #FF2D2D, #CC2424)",
-              color: "#ffffff",
-              boxShadow: "0 0 24px rgba(255,45,45,0.22)",
-            }}
+            className="group inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 bg-blue-600 hover:bg-blue-500 shadow-[0_0_28px_rgba(37,99,235,0.45)] hover:shadow-[0_0_52px_rgba(37,99,235,0.65)]"
           >
             Start your 7-day free trial
             <ArrowRight
               size={16}
-              className="group-hover:translate-x-0.5 transition-transform"
+              className="group-hover:translate-x-0.5 transition-transform duration-150"
             />
+          </Link>
+
+          <Link
+            href="#features"
+            className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors duration-150"
+          >
+            See all features
+            <ChevronRight size={14} />
           </Link>
         </motion.div>
 
         {/* Trust micro-copy */}
         <motion.div
-          variants={ITEM_VARIANTS}
-          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-8 text-xs text-gray-500"
+          variants={ITEM}
+          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-600 mb-16"
         >
-          <div className="flex items-center gap-1.5">
-            <Shield size={12} style={{ color: "#FF2D2D" }} />
-            No credit card required
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Shield size={12} style={{ color: "#FF2D2D" }} />
-            Cancel anytime
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Shield size={12} style={{ color: "#FF2D2D" }} />
-            You own your data
-          </div>
+          {["No credit card required", "Cancel anytime", "You own your data"].map((text) => (
+            <div key={text} className="flex items-center gap-1.5">
+              <Shield size={11} className="text-blue-600" />
+              {text}
+            </div>
+          ))}
+        </motion.div>
+
+        {/* Glass stat cards */}
+        <motion.div
+          variants={ITEM}
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto"
+        >
+          {STATS.map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-2xl p-5 text-center backdrop-blur-md"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                boxShadow: "0 1px 0 rgba(255,255,255,0.06) inset",
+              }}
+            >
+              <p
+                className="text-2xl md:text-3xl font-extrabold mb-0.5 font-display"
+                style={{ color: "#3B82F6" }}
+              >
+                {stat.value}
+              </p>
+              <p className="text-[11px] text-gray-500 font-medium">{stat.label}</p>
+            </div>
+          ))}
         </motion.div>
       </motion.div>
 
-      {/* Product tour — separate entrance with longer delay */}
+      {/* ── Product tour — delayed entrance, sits below the fold ── */}
       <motion.div
-        className="max-w-5xl mx-auto relative z-10"
-        initial={{ opacity: 0, y: 32 }}
+        className="relative z-10 max-w-5xl mx-auto w-full mt-20"
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.55 }}
+        transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1], delay: 0.75 }}
       >
         <HeroProductTour />
       </motion.div>

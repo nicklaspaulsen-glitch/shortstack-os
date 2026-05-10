@@ -30,7 +30,7 @@ export default function Testimonials() {
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest mb-5"
               style={{
                 background: "rgba(255,255,255,0.07)",
-                color: "#FF6B6B",
+                color: "#60A5FA",
                 border: "1px solid rgba(255,255,255,0.15)",
               }}
             >
@@ -56,7 +56,7 @@ export default function Testimonials() {
               href="/pricing"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:opacity-90"
               style={{
-                background: "linear-gradient(135deg, #FF2D2D, #CC2424)",
+                background: "#2563EB",
                 color: "#fff",
               }}
             >
