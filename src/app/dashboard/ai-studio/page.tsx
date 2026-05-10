@@ -14,7 +14,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 import { MotionPage } from "@/components/motion/motion-page";
-import { PrismPanel } from "@/components/prism";
 import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
@@ -66,7 +65,7 @@ type ToolCategory = "all" | "visual" | "audio" | "utility";
 export default function AIStudioPage() {
   const supabaseMain = useMemo(() => createClient(), []);
   const [activeTool, setActiveTool] = useState<ToolId>("transcribe");
-  // Ref on the active-tool panel — used by the tile grid to scroll the
+  // Ref on the active-tool panel ï¿½ used by the tile grid to scroll the
   // panel into view when the user picks a tile. Without this, clicks on
   // tiles look dead because the tool panel is rendered far below the
   // grid (off-screen by ~600 px) and the active-tile gold border is
@@ -104,7 +103,7 @@ export default function AIStudioPage() {
     } catch { /* localStorage unavailable */ }
   }, [advancedMode]);
 
-  // -- Handoff consumer — ?handoff= opens the image-gen tool in edit mode --
+  // -- Handoff consumer ï¿½ ?handoff= opens the image-gen tool in edit mode --
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -125,7 +124,7 @@ export default function AIStudioPage() {
             size: p.size,
           });
         }
-        toast.success("Image loaded — adjust settings and regenerate");
+        toast.success("Image loaded ï¿½ adjust settings and regenerate");
         const u = new URL(window.location.href);
         u.searchParams.delete("handoff");
         window.history.replaceState(null, "", u.toString());
@@ -143,7 +142,7 @@ export default function AIStudioPage() {
       <PageHero
         variant="editorial"
         title="AI Studio"
-        subtitle="Creative Suite · 9 tools"
+        subtitle="Creative Suite ï¿½ 9 tools"
         eyebrow="Generative Media"
         icon={<Layers size={16} />}
         actions={
@@ -155,7 +154,7 @@ export default function AIStudioPage() {
               </span>
             )}
             <span className="hidden md:flex items-center gap-1 text-[10px] text-[#71717A] px-2.5 py-1 rounded-md bg-[rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.06)]">
-              {TOOLS.find(t => t.id === activeTool)?.name ?? "—"}
+              {TOOLS.find(t => t.id === activeTool)?.name ?? "ï¿½"}
             </span>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
@@ -183,7 +182,7 @@ export default function AIStudioPage() {
             {
               id: "intent",
               title: "What do you want to make?",
-              description: "Pick the thing — we'll hand you the right tool with the right defaults.",
+              description: "Pick the thing ï¿½ we'll hand you the right tool with the right defaults.",
               icon: <Sparkles size={18} />,
               component: (
                 <motion.div
@@ -225,7 +224,7 @@ export default function AIStudioPage() {
                           </>
                         )}
                         {"badge" in t && t.badge && (
-                          <span className="absolute top-2.5 right-2.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(204,36,36,0.1)] text-[#1D4ED8]">
+                          <span className="absolute top-2.5 right-2.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.1)] text-[#1D4ED8]">
                             {t.badge}
                           </span>
                         )}
@@ -276,7 +275,7 @@ export default function AIStudioPage() {
                 <div className="card bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.08)] text-center py-8">
                   <Upload size={28} className="mx-auto mb-2 text-[#2563EB]" />
                   <p className="text-sm font-semibold">
-                    {TOOLS.find(t => t.id === guidedIntent)?.name} uses files — hit Finish to open the tool.
+                    {TOOLS.find(t => t.id === guidedIntent)?.name} uses files ï¿½ hit Finish to open the tool.
                   </p>
                 </div>
               ),
@@ -329,7 +328,7 @@ export default function AIStudioPage() {
               });
             }
             setAdvancedMode(true);
-            toast.success(`Opening ${TOOLS.find(t => t.id === guidedIntent)?.name}…`);
+            toast.success(`Opening ${TOOLS.find(t => t.id === guidedIntent)?.name}ï¿½`);
           }}
           onCancel={() => setAdvancedMode(true)}
           cancelLabel="Advanced mode"
@@ -341,7 +340,7 @@ export default function AIStudioPage() {
       {advancedMode && (
       <div className="px-4 py-4 min-h-[calc(100vh-120px)]">
 
-        {/* Wizard image results — inline strip above the workspace */}
+        {/* Wizard image results ï¿½ inline strip above the workspace */}
         {wizardImages.length > 0 && (
           <motion.div
             className="mb-5 p-4"
@@ -375,7 +374,7 @@ export default function AIStudioPage() {
           </motion.div>
         )}
 
-        {/* Editorial stats strip — shown when there's job history */}
+        {/* Editorial stats strip ï¿½ shown when there's job history */}
         {history.length > 0 && (
           <motion.div
             className="grid grid-cols-[1fr_1fr_1.4fr] gap-2 mb-4"
@@ -386,7 +385,7 @@ export default function AIStudioPage() {
             {[
               { label: "Jobs Run", value: String(history.length), sub: "this session" },
               { label: "Completed", value: String(history.filter(j => j.status === "completed").length), sub: `${Math.round((history.filter(j => j.status === "completed").length / history.length) * 100)}% success` },
-              { label: "Active Tool", value: TOOLS.find(t => t.id === activeTool)?.name ?? "—", sub: TOOLS.find(t => t.id === activeTool)?.tag ?? "" },
+              { label: "Active Tool", value: TOOLS.find(t => t.id === activeTool)?.name ?? "ï¿½", sub: TOOLS.find(t => t.id === activeTool)?.tag ?? "" },
             ].map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -486,7 +485,7 @@ export default function AIStudioPage() {
                       <p className="text-[8px] font-mono text-[#71717A] truncate">{tool.tag}</p>
                     </div>
                     {"newBadge" in tool && tool.newBadge && (
-                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(204,36,36,0.1)] text-[#1D4ED8] shrink-0 uppercase tracking-wide">
+                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.1)] text-[#1D4ED8] shrink-0 uppercase tracking-wide">
                         New
                       </span>
                     )}
@@ -532,11 +531,11 @@ export default function AIStudioPage() {
                   </>
                 );
               })()}
-              {/* Lime tick — one chromatic moment per zone */}
+              {/* Lime tick ï¿½ one chromatic moment per zone */}
               <div className="w-1 h-4 rounded-full bg-[#2563EB]/35 shrink-0" />
             </div>
 
-            {/* Tool content — AnimatePresence fades panel on tool switch */}
+            {/* Tool content ï¿½ AnimatePresence fades panel on tool switch */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTool}
@@ -559,7 +558,7 @@ export default function AIStudioPage() {
             </AnimatePresence>
           </div>
 
-          {/* Right: history panel — only rendered when jobs exist */}
+          {/* Right: history panel ï¿½ only rendered when jobs exist */}
           {history.length > 0 && (
             <motion.div
               className="hidden md:flex flex-col gap-2 overflow-hidden"
@@ -617,7 +616,7 @@ export default function AIStudioPage() {
       </div>
       )}
 
-      {/* Modals — outside the conditional so z-index is always clean */}
+      {/* Modals ï¿½ outside the conditional so z-index is always clean */}
       <ImageCreationWizard
         open={creationWizardOpen}
         onClose={() => setCreationWizardOpen(false)}
@@ -824,7 +823,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
   // with explicit overrides (avoids stale state after setState in same tick).
   const runGenerateRef = useRef<((o?: { prompt?: string; style?: string; size?: string }) => void) | null>(null);
 
-  // Sync incoming initial from wizard — overwrite current values and auto-run
+  // Sync incoming initial from wizard ï¿½ overwrite current values and auto-run
   useEffect(() => {
     if (!initial) return;
     if (initial.prompt !== undefined) setPrompt(initial.prompt);
@@ -1123,7 +1122,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
               <>
                 <ImagePlus size={24} className="mx-auto mb-2 text-muted" />
                 <p className="text-xs text-foreground font-medium">Drop image to upscale</p>
-                <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP — max 20MB</p>
+                <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP ï¿½ max 20MB</p>
               </>
             )}
           </div>
@@ -1245,7 +1244,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
               <>
                 <Scissors size={24} className="mx-auto mb-2 text-muted" />
                 <p className="text-xs text-foreground font-medium">Drop image</p>
-                <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP — max 15MB</p>
+                <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP ï¿½ max 15MB</p>
               </>
             )}
           </div>
@@ -1809,7 +1808,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
             ))}
           </div>
           {trainingStatus && (
-            <div className="mt-4 p-3 rounded-lg bg-[rgba(204,36,36,0.06)] text-xs text-[#1D4ED8]">
+            <div className="mt-4 p-3 rounded-lg bg-[rgba(37,99,235,0.06)] text-xs text-[#1D4ED8]">
               {trainingStatus}
             </div>
           )}
@@ -1984,7 +1983,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
       field: {
         type: "text",
         key: "subject",
-        placeholder: 'e.g. "a confident woman holding a latte in a sunlit café"',
+        placeholder: 'e.g. "a confident woman holding a latte in a sunlit cafï¿½"',
       },
       aiHelper: {
         label: "Help me describe a compelling subject",
@@ -2007,7 +2006,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
             const json = await res.json();
             const suggestion: string = (json.enhanced || "").replace(/^["']|["']$/g, "").trim();
             if (!suggestion) {
-              toast.error("No suggestion — try again");
+              toast.error("No suggestion ï¿½ try again");
               return {};
             }
             toast.success("Subject suggested!");
@@ -2042,7 +2041,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
     {
       id: "ratio",
       title: "Aspect ratio",
-      description: "Pick the dimensions — we'll pass them straight to FLUX.",
+      description: "Pick the dimensions ï¿½ we'll pass them straight to FLUX.",
       icon: <Ratio size={16} />,
       field: {
         type: "chip-select",
@@ -2063,7 +2062,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
       field: {
         type: "textarea",
         key: "prompt",
-        placeholder: "Your final prompt — include details about lighting, mood, composition, etc.",
+        placeholder: "Your final prompt ï¿½ include details about lighting, mood, composition, etc.",
       },
       aiHelper: {
         label: "Enhance my prompt with AI",
@@ -2091,7 +2090,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
               }),
             });
             if (!res.ok) {
-              toast.error("Couldn't enhance prompt — try again");
+              toast.error("Couldn't enhance prompt ï¿½ try again");
               return {};
             }
             const json = await res.json();
@@ -2133,7 +2132,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
     <CreationWizard
       open={open}
       title="Create Image"
-      subtitle="AI-guided 5-step flow — FLUX renders the final image."
+      subtitle="AI-guided 5-step flow ï¿½ FLUX renders the final image."
       icon={<Sparkles size={18} />}
       submitLabel="Generate Image"
       steps={steps}

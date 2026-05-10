@@ -672,7 +672,7 @@ export default function ClientsPage() {
           <>
             {clients.length > 0 && (
               <div className="hidden sm:flex items-center gap-1.5">
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(204,36,36,0.08)] border border-[rgba(204,36,36,0.15)] text-[10px] font-medium text-[#1D4ED8]">
+                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[10px] font-medium text-[#1D4ED8]">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] animate-pulse" />
                   {clients.length}
                 </span>
@@ -722,7 +722,7 @@ export default function ClientsPage() {
             className="relative overflow-hidden rounded-xl px-8 py-7"
             style={{
               background: "#FFFFFF",
-              border: "1px solid rgba(204,36,36,0.16)",
+              border: "1px solid rgba(37,99,235,0.16)",
               boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px -4px rgba(0,0,0,0.08)",
             }}
           >
@@ -803,7 +803,7 @@ export default function ClientsPage() {
 
             {/* Feature 9: Advanced Filters Toggle */}
             <button onClick={() => setShowFilters(!showFilters)}
-              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(204,36,36,0.08)] text-[#1D4ED8] border-[rgba(204,36,36,0.25)]" : ""}`}>
+              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border-[rgba(37,99,235,0.25)]" : ""}`}>
               <Filter size={14} /> Filters
               {(filterIndustry || filterStatus !== "all" || filterTag || filterMrrMin || filterMrrMax) && (
                 <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
@@ -992,7 +992,7 @@ export default function ClientsPage() {
             return (
               <motion.div key={c.id}
                 className={`card card-accent ${accentClass} ${isFeatured ? "md:col-span-2" : ""} p-4 transition-all cursor-pointer group relative overflow-hidden`}
-                style={{ background: isFeatured ? "rgba(204,36,36,0.04)" : "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
+                style={{ background: isFeatured ? "rgba(37,99,235,0.04)" : "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
                 variants={fadeUp}
                 whileHover={{ y: -4, borderColor: "rgba(0,0,0,0.16)", boxShadow: "0 12px 40px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.08)", transition: { duration: 0.22 } }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
@@ -1008,7 +1008,7 @@ export default function ClientsPage() {
                 <div className="absolute top-3 left-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
+                      selectedClients.has(c.id) ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1018,7 +1018,7 @@ export default function ClientsPage() {
                 <div className="absolute top-3 right-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleCompare(c.id)}
                     className={`text-[9px] px-1.5 py-0.5 rounded transition-all ${
-                      compareClients.includes(c.id) ? "bg-[rgba(204,36,36,0.12)] text-[#1D4ED8]" : "text-muted hover:text-foreground"
+                      compareClients.includes(c.id) ? "bg-[rgba(37,99,235,0.12)] text-[#1D4ED8]" : "text-muted hover:text-foreground"
                     }`}>
                     <Columns size={10} />
                   </button>
@@ -1046,7 +1046,7 @@ export default function ClientsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <p className={`font-semibold truncate ${isFeatured ? "text-base" : "text-sm"}`}>{c.business_name}</p>
-                      {isFeatured && <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-[#1D4ED8] bg-[rgba(204,36,36,0.10)] px-2 py-0.5 rounded-full">Top Account</span>}
+                      {isFeatured && <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-[#1D4ED8] bg-[rgba(37,99,235,0.10)] px-2 py-0.5 rounded-full">Top Account</span>}
                       <span className={`inline-flex items-center gap-1 text-[8px] px-1.5 py-0.5 rounded-full font-medium border ${statusStyles.pill}`}>
                         <span className={`w-1 h-1 rounded-full ${statusStyles.dot}`} aria-hidden="true" />
                         {statusStyles.label}
@@ -1219,7 +1219,7 @@ export default function ClientsPage() {
             columns={[
               { key: "select", label: (
                 <button onClick={selectAllClients} className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                  selectedClients.size === filteredClients.length && filteredClients.length > 0 ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
+                  selectedClients.size === filteredClients.length && filteredClients.length > 0 ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
                 }`}>
                   {selectedClients.size === filteredClients.length && filteredClients.length > 0 && <Check size={10} />}
                 </button>
@@ -1227,7 +1227,7 @@ export default function ClientsPage() {
                 <div onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
+                      selectedClients.has(c.id) ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
