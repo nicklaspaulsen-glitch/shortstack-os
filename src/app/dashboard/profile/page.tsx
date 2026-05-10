@@ -147,6 +147,7 @@ export default function ProfilePage() {
     <div className="fade-in space-y-5 max-w-2xl">
       <PageHero
         icon={<User size={22} />}
+        eyebrow="YOUR PROFILE"
         title="Profile"
         subtitle="Manage your account and identity."
         gradient="gold"

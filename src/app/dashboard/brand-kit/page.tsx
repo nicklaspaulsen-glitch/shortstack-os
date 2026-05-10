@@ -147,7 +147,7 @@ export default function BrandKitPage() {
       }
     } catch (err) {
       console.error("Brand scrape failed:", err);
-      toast.error("Network error — check the URL and try again");
+      toast.error("Network error ï¿½ check the URL and try again");
     }
     setLoading(false);
   }
@@ -217,7 +217,7 @@ export default function BrandKitPage() {
 
     lines.push("}");
 
-    const css = `/* Brand Kit — ${brand.siteName || "Extracted Brand"} */\n/* Generated ${new Date().toISOString()} */\n\n${lines.join("\n")}\n`;
+    const css = `/* Brand Kit ï¿½ ${brand.siteName || "Extracted Brand"} */\n/* Generated ${new Date().toISOString()} */\n\n${lines.join("\n")}\n`;
     const blob = new Blob([css], { type: "text/css" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -231,7 +231,7 @@ export default function BrandKitPage() {
   function copyBrandSummary() {
     if (!brand) return;
     const parts: string[] = [];
-    parts.push(`BRAND KIT — ${brand.siteName || "Unknown"}`);
+    parts.push(`BRAND KIT ï¿½ ${brand.siteName || "Unknown"}`);
     parts.push("=".repeat(40));
 
     if (brand.description) {
@@ -284,8 +284,9 @@ export default function BrandKitPage() {
       <AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />
       <PageHero
         icon={<Palette size={28} />}
+        eyebrow="BRAND KIT"
         title="Brand Kit"
-        subtitle="Build your agency's brand identity — extract colors, fonts & logos from any URL, then auto-apply them across all client assets."
+        subtitle="Build your agency's brand identity ï¿½ extract colors, fonts & logos from any URL, then auto-apply them across all client assets."
         gradient="purple"
         actions={
           brand ? (
@@ -888,7 +889,7 @@ export default function BrandKitPage() {
 
       <PageAI
         pageName="brand-kit"
-        context="Brand Kit page — extracts brand identity (colors, fonts, logos, imagery) from any website URL and generates on-brand content using presets."
+        context="Brand Kit page ï¿½ extracts brand identity (colors, fonts, logos, imagery) from any website URL and generates on-brand content using presets."
         suggestions={[
           "What colors work best for social media ads?",
           "Suggest font pairings for this brand",

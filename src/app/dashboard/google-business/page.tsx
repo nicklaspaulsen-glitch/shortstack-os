@@ -81,6 +81,7 @@ export default function GoogleBusinessPage() {
   return (
     <div className="fade-in space-y-5">
       <PageHero
+        eyebrow="GOOGLE BUSINESS"
         icon={<GlobeIcon size={28} />}
         title="Google Business"
         subtitle="Listings, reviews, posts & local SEO."

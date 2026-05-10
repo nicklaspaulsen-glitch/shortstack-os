@@ -138,6 +138,7 @@ export default function SubaccountsPage() {
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto">
       <PageHero
         title="Subaccounts"
+        eyebrow="SUB-ACCOUNTS"
         subtitle="Resell ShortStack to your clients under your own brand. Each subaccount is a separate billable seat."
         icon={<Building2 className="w-6 h-6" />}
         gradient="purple"

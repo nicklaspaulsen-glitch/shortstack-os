@@ -101,6 +101,7 @@ export default function WorkspacesPage() {
     <div className="space-y-6">
       <PageHero
         title="Workspaces"
+        eyebrow="WORKSPACES"
         subtitle="Isolated environments per brand, client, or business line."
         icon={<LayoutGrid size={22} />}
         gradient="gold"

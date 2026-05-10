@@ -88,7 +88,7 @@ export default function DesignStudioPage() {
       if (!res.ok) throw new Error("Save failed");
       markSaved();
     } catch {
-      toast.error("Save failed — try again");
+      toast.error("Save failed ï¿½ try again");
     } finally {
       setIsSaving(false);
     }
@@ -116,13 +116,14 @@ export default function DesignStudioPage() {
     }
   }
 
-  // No design loaded — show picker
+  // No design loaded ï¿½ show picker
   if (!designId && !design) {
     return (
       <div className="min-h-screen flex flex-col bg-[#FAFAFB]">
         <PageHero
+          eyebrow="DESIGN STUDIO"
           title="Design Studio"
-          subtitle="Create on-brand visuals with AI — text, shapes, images, templates."
+          subtitle="Create on-brand visuals with AIï¿½ text, shapes, images, templates."
           icon={<PenTool size={24} />}
           gradient="purple"
         />
@@ -157,7 +158,7 @@ export default function DesignStudioPage() {
                       {preset.label}
                     </p>
                     <p className="text-[10px] text-gray-600">
-                      {preset.width}×{preset.height}
+                      {preset.width}ï¿½{preset.height}
                     </p>
                   </div>
                 </motion.button>
@@ -212,7 +213,7 @@ function RecentDesigns() {
   if (loading) {
     return (
       <div className="flex items-center gap-2 text-gray-500 text-sm py-4">
-        <Loader2 size={16} className="animate-spin" /> Loading…
+        <Loader2 size={16} className="animate-spin" /> Loadingï¿½
       </div>
     );
   }
@@ -254,7 +255,7 @@ function RecentDesigns() {
               {d.title}
             </p>
             <p className="text-[10px] text-gray-600">
-              {d.width}×{d.height}
+              {d.width}ï¿½{d.height}
             </p>
           </div>
         </motion.a>

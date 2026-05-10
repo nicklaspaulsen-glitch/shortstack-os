@@ -143,7 +143,7 @@ export default function AdsPage() {
     } else {
       // Surface a visible toast so the click never silently fails.
       toast.error(
-        `${platform.replace(/_/g, " ")} OAuth isn't wired up yet — coming soon.`,
+        `${platform.replace(/_/g, " ")} OAuth isn't wired up yet ï¿½ coming soon.`,
       );
     }
   }
@@ -361,7 +361,7 @@ export default function AdsPage() {
   const recentActions = actions.filter(a => ["executed", "rejected", "failed"].includes(a.status)).slice(0, 10);
 
   function getClientName(clientId: string) {
-    return clients.find(c => c.id === clientId)?.business_name || "—";
+    return clients.find(c => c.id === clientId)?.business_name || "ï¿½";
   }
 
   if (loading) return <PageLoading />;
@@ -369,6 +369,7 @@ export default function AdsPage() {
   return (
     <div className="fade-in space-y-6 max-w-[1400px] mx-auto">
       <PageHero
+        eyebrow="AD INTELLIGENCE"
         icon={<Megaphone size={28} />}
         title="Ads Center"
         subtitle="Manage Meta, Google & TikTok campaigns with AI."
@@ -753,7 +754,7 @@ export default function AdsPage() {
                         <p className="text-sm font-semibold truncate">{campaign.name}</p>
                         <StatusBadge status={campaign.status} />
                       </div>
-                      <p className="text-[10px] text-muted truncate">{getClientName(campaign.client_id)} · {platform.label}</p>
+                      <p className="text-[10px] text-muted truncate">{getClientName(campaign.client_id)} ï¿½ {platform.label}</p>
                     </div>
 
                     {/* Metrics Strip */}
@@ -1467,7 +1468,7 @@ export default function AdsPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[10px] font-medium truncate">{action.title}</p>
-                        <p className="text-[9px] text-muted">{action.action_type.replace(/_/g, " ")} · {new Date(action.created_at).toLocaleDateString()}</p>
+                        <p className="text-[9px] text-muted">{action.action_type.replace(/_/g, " ")} ï¿½ {new Date(action.created_at).toLocaleDateString()}</p>
                       </div>
                       <span className={`text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full ${
                         action.status === "executed" ? "bg-success/10 text-success" :

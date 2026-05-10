@@ -226,6 +226,7 @@ export default function WhiteLabelPage() {
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-4xl mx-auto">
       <PageHero
         title="White Label"
+        eyebrow="WHITE LABEL"
         subtitle="Brand ShortStack as your own product -- custom domain, logo, colors, Stripe Connect resell."
         icon={<Palette className="w-6 h-6" />}
         gradient="purple"

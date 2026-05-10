@@ -260,8 +260,9 @@ export default function TeamPage() {
     <div className="fade-in space-y-5">
       <PageHero
         icon={<UsersRound size={28} />}
+        eyebrow="TEAM HQ"
         title="Team"
-        subtitle={`${members.length} members · ${onlineCount} online`}
+        subtitle={`${members.length} members ï¿½ ${onlineCount} online`}
         gradient="gold"
         actions={
           <motion.button
@@ -369,7 +370,7 @@ export default function TeamPage() {
                     <td className="py-2.5 px-3 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button
-                          onClick={e => { e.stopPropagation(); toast("Edit panel coming soon — use the 'Active Team Members' section below to manage real members.", { icon: "??" }); }}
+                          onClick={e => { e.stopPropagation(); toast("Edit panel coming soon ï¿½ use the 'Active Team Members' section below to manage real members.", { icon: "??" }); }}
                           className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors"
                           title="Edit"
                         ><Pencil size={11} /></button>
@@ -520,7 +521,7 @@ export default function TeamPage() {
                     <p className="text-[9px] text-muted">{role.memberCount} member{role.memberCount !== 1 ? "s" : ""}</p>
                   </div>
                   <button
-                    onClick={() => toast("Role editing is managed by the permission matrix — tweak per-member permissions in the Active Team Members list.", { icon: "??" })}
+                    onClick={() => toast("Role editing is managed by the permission matrix ï¿½ tweak per-member permissions in the Active Team Members list.", { icon: "??" })}
                     className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors"
                     title="Role permissions are managed per-member"
                   ><Pencil size={11} /></button>
@@ -689,7 +690,7 @@ export default function TeamPage() {
                       m.role === "viewer" ? "bg-gray-400/10 text-gray-400" :
                       "bg-emerald-400/10 text-emerald-400"
                     }`}>{m.role}</span>
-                    {m.job_title && <span className="text-[9px] text-muted">· {m.job_title}</span>}
+                    {m.job_title && <span className="text-[9px] text-muted">ï¿½ {m.job_title}</span>}
                   </div>
                   <p className="text-[10px] text-muted">{m.email}</p>
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -972,7 +973,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
 
         <div>
           <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold flex items-center gap-1">
-            <Key size={9} /> Reset Password <span className="text-muted normal-case">(optional — leave blank to keep)</span>
+            <Key size={9} /> Reset Password <span className="text-muted normal-case">(optional ï¿½ leave blank to keep)</span>
           </label>
           <div className="relative">
             <input

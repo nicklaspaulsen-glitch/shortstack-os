@@ -185,6 +185,7 @@ export default function CompetitorTrackerPage() {
   return (
     <div className="space-y-6">
       <PageHero
+        eyebrow="COMPETITOR INTEL"
         title="Competitor Tracker"
         subtitle="Monitor competitor homepages for changes and track their positioning."
         icon={<Crosshair size={22} />}

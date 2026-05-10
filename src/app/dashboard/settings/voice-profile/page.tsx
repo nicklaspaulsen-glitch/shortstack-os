@@ -12,7 +12,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Sparkles, Wand2, Type, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
+
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
 
 interface VoiceProfile {
   id: string;
@@ -115,6 +119,7 @@ export default function VoiceProfileSettingsPage() {
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
       <PageHero
         title="Voice Profile"
+        eyebrow="VOICE PROFILE"
         subtitle="Teach Trinity how YOU write. Every AI message is rewritten to sound like you - not like a template. Captured automatically from sent emails, SMS, DMs, and meeting transcripts."
         icon={<Sparkles size={22} />}
         gradient="purple"
@@ -243,11 +248,18 @@ function StatsPanel({ profile }: { profile: VoiceProfile }) {
         <Type size={16} className="text-purple-400" />
         <h3 className="font-semibold text-sm">Voice Stats</h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 md:grid-cols-2 gap-3"
+      >
         {gauges.map((g) => (
-          <Gauge key={g.label} {...g} />
+          <motion.div key={g.label} variants={itemVariants}>
+            <Gauge {...g} />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

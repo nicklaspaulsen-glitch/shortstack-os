@@ -267,6 +267,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
       <AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />
       <PageHero
         icon={<BookOpenIcon size={28} />}
+        eyebrow="BRAND VOICE"
         title="Brand Voice Manager"
         subtitle="Define & enforce brand voice for every client."
         gradient="gold"
