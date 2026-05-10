@@ -222,25 +222,26 @@ The visual foundation is locked. Authoritative source:
 mirrors the same hex values via `tailwind.config.ts`; CSS variables in
 `src/app/globals.css` mirror them again at `:root`.
 
-Direction: **Prism Split × OLED Dark × Sharp Corners × Red/White/Black**.
+Direction: **Light × Card × Blue Accent × Blue/White/Gray** (May 10 flip).
+The dark OLED theme still exists under `[data-theme="dark"]` in globals.css
+and retains its red accent for backward compat — but the DEFAULT (`:root`)
+theme is now light with a blue accent.
 
-### Locked color palette
-- **Brand: PRISM RED** `#FF2D2D` — the primary accent on dark surfaces.
-  Three variants: `#FF2D2D` (hero red, default), `#FF6B6B`
-  (soft, hover/highlight), `#CC2424` (dim, AA on light surfaces).
-  Do **not** introduce indigo/gold/amber/lime accents in new pages.
-- **Surfaces:** `--bg-base #050507` (near-black OLED),
-  `--bg-surface-1 #101012`, `--bg-surface-2 #17171A`,
-  `--bg-surface-3 #26262B`.
-- **Borders:** white-tinted (not color-tinted) —
-  `--border-subtle rgba(255,255,255,0.07)` /
-  `--border-strong rgba(255,255,255,0.16)`.
-- **Text:** `--text-primary #F0F0F4` (soft off-white, never pure
-  `#FFFFFF`), `--text-secondary #A8A8B2`, `--text-muted #4A4A5A`.
-- **Editorial charcoal:** `--brand-plum #1F1F23` (used for subtle
-  raised surfaces and badge backgrounds).
+### Locked color palette — light theme (`:root`, the default)
+- **Brand accent: BLUE** `#2563EB` — primary accent on light surfaces.
+  Three variants: `#2563EB` (primary), `#3B82F6` (hover/highlight),
+  `#1D4ED8` (dim/pressed, AA on light backgrounds).
+  Do **not** introduce red/gold/amber/lime accents on new pages.
+- **Surfaces (light):** white cards on `#F3F6FA` base.
+  `--bg-base #F3F6FA`, `--bg-surface-1 #FFFFFF`, `--bg-surface-2 #F8FAFC`.
+- **Borders:** `--border-subtle rgba(0,0,0,0.06)` /
+  `--border-strong rgba(0,0,0,0.14)`.
+- **Text:** `--text-primary #111827`, `--text-secondary #374151`,
+  `--text-muted #6B7280`.
+- **Dark theme accent (legacy override):** `#FF2D2D` under
+  `[data-theme="dark"]`. Never reference this in new light-theme code.
 - **Accent alias:** `--brand-lime` is a back-compat alias that resolves
-  to `#FF2D2D` (same as `--brand-accent`). Do not use it in new code.
+  to `#2563EB` in the light theme. Do not use it in new code.
 
 ### Font stack (locked)
 - **Satoshi** — display only (page titles, hero numbers, big counters).
