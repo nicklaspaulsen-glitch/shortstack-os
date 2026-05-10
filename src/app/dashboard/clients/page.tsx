@@ -151,7 +151,7 @@ export default function ClientsPage() {
       // hydration in auth-context, which caused the list to render empty
       // when the user was actually scoped to rows owned by their profile.
       // The server route reads the session from cookies and scopes by the
-      // effective agency owner — so it works reliably on first mount.
+      // effective agency owner ï¿½ so it works reliably on first mount.
       // For admin/founder, the API returns ALL clients across the
       // platform unless we pass ?scope=mine.
       const clientsUrl = scope === "mine" ? "/api/clients?scope=mine" : "/api/clients";
@@ -170,12 +170,12 @@ export default function ClientsPage() {
         if (json.role) setCallerRole(json.role);
       } else {
         console.error("[Clients] /api/clients failed:", clientsRes.status);
-        toast.error("Couldn't load clients — try refreshing.");
+        toast.error("Couldn't load clients ï¿½ try refreshing.");
       }
 
       if (contractsRes.error || invoicesRes.error) {
         console.error("[Clients] fetchData error:", contractsRes.error || invoicesRes.error);
-        toast.error("Couldn't load some client data — try refreshing.");
+        toast.error("Couldn't load some client data ï¿½ try refreshing.");
       }
       setClients(clientsData);
       setContracts(contractsRes.data || []);
@@ -195,14 +195,14 @@ export default function ClientsPage() {
     } catch (err) {
       if (!cancelled.current) {
         console.error("[Clients] fetchData error:", err);
-        toast.error("Failed to load clients — try refreshing.");
+        toast.error("Failed to load clients ï¿½ try refreshing.");
       }
     } finally {
       if (!cancelled.current) setLoading(false);
     }
   }
 
-  // Memoize — these aggregates ran on every re-render otherwise (every
+  // Memoize ï¿½ these aggregates ran on every re-render otherwise (every
   // keystroke in filter inputs, every hover state change, etc.).
   const { activeClients, totalMRR } = useMemo(() => {
     const active = clients.filter((c) => c.is_active);
@@ -222,7 +222,7 @@ export default function ClientsPage() {
     if (!c.stripe_subscription_id && c.contract_status !== "signed") return "trial";
     return "active";
   }, []);
-  // Status pill styles — colored dot + tinted pill matched to brand status colors.
+  // Status pill styles ï¿½ colored dot + tinted pill matched to brand status colors.
   // Each row in the table gets a vertical accent bar in the same hue so the
   // lifecycle reads at-a-glance without forcing the user to parse text.
   const STATUS_STYLES: Record<LifecycleStatus, { bar: string; pill: string; dot: string; label: string }> = {
@@ -306,7 +306,7 @@ export default function ClientsPage() {
       const updated = exists
         ? current.filter(t => t.label !== tag.label)
         : [...current, tag];
-      // Persist to clients.metadata JSONB (no migration needed — metadata is
+      // Persist to clients.metadata JSONB (no migration needed ï¿½ metadata is
       // already Record<string, unknown>). Fire-and-forget; optimistic UI above.
       const client = clients.find(c => c.id === clientId);
       const existingMeta = ((client?.metadata || {}) as Record<string, unknown>);
@@ -335,7 +335,7 @@ export default function ClientsPage() {
       .then(({ error }: { error: unknown }) => {
         if (error) {
           console.error("[Clients] saveNote DB write failed:", error);
-          toast.error("Note save failed — try again");
+          toast.error("Note save failed ï¿½ try again");
         } else {
           toast.success("Note saved");
         }
@@ -378,7 +378,7 @@ export default function ClientsPage() {
       case "email": {
         const emails = selected.map(c => c.email).filter(Boolean);
         if (emails.length === 0) { toast.error("No emails on selected clients"); return; }
-        // mailto: with a BCC list is the reliable cross-client path here —
+        // mailto: with a BCC list is the reliable cross-client path here ï¿½
         // no extra backend/ESP integration required to get bulk compose.
         window.location.href = `mailto:?bcc=${encodeURIComponent(emails.join(","))}`;
         toast.success(`Opening mail draft for ${emails.length} client${emails.length === 1 ? "" : "s"}`);
@@ -610,7 +610,7 @@ export default function ClientsPage() {
       if (data.checkout_url) {
         toast.success("Checkout link created!");
         navigator.clipboard.writeText(data.checkout_url);
-        toast.success("Checkout URL copied to clipboard — send it to the client");
+        toast.success("Checkout URL copied to clipboard ï¿½ send it to the client");
       } else {
         toast.error(data.error || "Failed to create subscription");
       }
@@ -664,7 +664,7 @@ export default function ClientsPage() {
         subtitle={
           callerRole === "admin" || callerRole === "founder"
             ? scope === "all" ? `${clients.length} clients across the platform` : "Your agency clients"
-            : "Accounts · Contracts · Invoices"
+            : "Accounts ï¿½ Contracts ï¿½ Invoices"
         }
         eyebrow="Client Management"
         icon={<Users size={16} />}
@@ -709,7 +709,7 @@ export default function ClientsPage() {
         }
       />
 
-      {/* Clients command strip — MRR focal left, 3 stats inline right */}
+      {/* Clients command strip ï¿½ MRR focal left, 3 stats inline right */}
       {clients.length > 0 && (
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-3"
@@ -726,14 +726,14 @@ export default function ClientsPage() {
               boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px -4px rgba(0,0,0,0.08)",
             }}
           >
-            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent, #1D4ED8 40%, #FF4040 50%, #1D4ED8 60%, transparent)" }} />
+            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent, #1D4ED8 40%, #3B82F6 50%, #1D4ED8 60%, transparent)" }} />
             <div className="pointer-events-none absolute -right-20 -top-20 w-72 h-72 rounded-full bg-[#1D4ED8] opacity-[0.04] blur-[64px]" />
             <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#52525B] mb-2">Monthly Recurring Revenue</p>
             <p className="font-display font-black leading-[0.88] text-[#1D4ED8]" style={{ fontSize: "clamp(48px,6vw,80px)", letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums" }}>
               {formatCurrency(totalMRR)}
             </p>
             <p className="mt-3 text-[10px] text-[#52525B]">
-              <span className="text-[#71717A] font-medium">{activeClients.length}</span> active · <span className="text-[#71717A] font-medium">{Math.round((activeClients.length / (clients.length || 1)) * 100)}%</span> retention
+              <span className="text-[#71717A] font-medium">{activeClients.length}</span> active ï¿½ <span className="text-[#71717A] font-medium">{Math.round((activeClients.length / (clients.length || 1)) * 100)}%</span> retention
             </p>
           </div>
 
@@ -965,7 +965,7 @@ export default function ClientsPage() {
         </div>
       )}
 
-      {/* Feature 15: Card View — editorial bento: first card spans 2 cols as featured tile */}
+      {/* Feature 15: Card View ï¿½ editorial bento: first card spans 2 cols as featured tile */}
       {tab === "clients" && viewMode === "card" && (
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
@@ -1024,7 +1024,7 @@ export default function ClientsPage() {
                   </button>
                 </div>
 
-                {/* Feature 1: Health indicator + initials badge — wider layout for featured tile */}
+                {/* Feature 1: Health indicator + initials badge ï¿½ wider layout for featured tile */}
                 <div className={`flex items-start gap-3 mb-3 mt-1 ${isFeatured ? "md:flex-row md:items-center" : ""}`}>
                   <div className="shrink-0 flex flex-col items-center gap-1.5">
                     {/* Avatar with health ring overlay on compact cards */}
@@ -1056,7 +1056,7 @@ export default function ClientsPage() {
                     {isFeatured && c.industry && (
                       <p className="text-[10px] text-muted mt-0.5">{c.industry}</p>
                     )}
-                    {/* Revenue badge — compact cards only (featured has dedicated MRR callout) */}
+                    {/* Revenue badge ï¿½ compact cards only (featured has dedicated MRR callout) */}
                     {!isFeatured && c.mrr > 0 && (
                       <span className="inline-block mt-0.5 text-[9px] font-semibold bg-[rgba(0,0,0,0.04)] text-[#52525B] px-2 py-0.5 rounded-full border border-[rgba(0,0,0,0.08)]">
                         {formatCurrency(c.mrr)}/mo
@@ -1082,7 +1082,7 @@ export default function ClientsPage() {
                   </div>
                 )}
 
-                {/* Stats grid — bordered editorial layout */}
+                {/* Stats grid ï¿½ bordered editorial layout */}
                 <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(0,0,0,0.08)] overflow-hidden">
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">MRR</p>
@@ -1152,7 +1152,7 @@ export default function ClientsPage() {
                     <button onClick={() => router.push(`/dashboard/clients/${c.id}`)} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
                       <Eye size={10} /> View
                     </button>
-                    {/* Manage as <client> — switches the global managed-client
+                    {/* Manage as <client> ï¿½ switches the global managed-client
                         context so every page in the OS scopes its data + AI
                         recommendations to this client. The little banner at the
                         top of the screen confirms you're managing them; click
@@ -1381,8 +1381,8 @@ export default function ClientsPage() {
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
                     { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#1D4ED8" },
-                    { label: "Health", value: `${client.health_score ?? "—"}%`, color: client.health_score >= 70 ? "#3B82F6" : client.health_score >= 40 ? "#1D4ED8" : "#F26063" },
-                    { label: "Package", value: client.package_tier ?? "—", color: "#3B82F6" },
+                    { label: "Health", value: `${client.health_score ?? "ï¿½"}%`, color: client.health_score >= 70 ? "#3B82F6" : client.health_score >= 40 ? "#1D4ED8" : "#F26063" },
+                    { label: "Package", value: client.package_tier ?? "ï¿½", color: "#3B82F6" },
                     { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
                   ].map((tile, ti) => {
                     const bars = ["from-[#1D4ED8]","from-[#3B82F6]","from-[#1D4ED8]","from-[#6F6D7A]"];
@@ -1501,7 +1501,7 @@ export default function ClientsPage() {
       {/* Billing Tab */}
       {tab === "billing" && (
         <div className="space-y-4">
-          {/* Billing Stats — prism glass tiles */}
+          {/* Billing Stats ï¿½ prism glass tiles */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
               { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },
@@ -1865,7 +1865,7 @@ export default function ClientsPage() {
             <div>
               <label className="block text-sm text-muted mb-1">Description</label>
               <input name="description" className="input w-full"
-                defaultValue={`${showSubscribeModal.business_name} — ${showSubscribeModal.package_tier || "Growth"} Package`}
+                defaultValue={`${showSubscribeModal.business_name} ï¿½ ${showSubscribeModal.package_tier || "Growth"} Package`}
                 placeholder="Service description shown on invoice" />
             </div>
             <div>

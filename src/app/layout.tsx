@@ -148,6 +148,7 @@ export default function RootLayout({
             </filter>
           </defs>
         </svg>
+        <GrainOverlay />
         <Suspense>
         <PostHogProvider>
         <AuthProvider>

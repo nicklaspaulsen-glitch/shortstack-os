@@ -537,8 +537,8 @@ export default function AnalyticsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Red top rail */}
-            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent 0%, #1D4ED8 30%, #FF4040 50%, #1D4ED8 70%, transparent 100%)" }} />
+            {/* Blue top rail */}
+            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent 0%, #1D4ED8 30%, #3B82F6 50%, #1D4ED8 70%, transparent 100%)" }} />
             {/* Subtle red glow at top */}
             <div className="pointer-events-none absolute top-0 left-0 right-0 h-20" style={{ background: "linear-gradient(180deg, rgba(37,99,235,0.04) 0%, transparent 100%)" }} />
 

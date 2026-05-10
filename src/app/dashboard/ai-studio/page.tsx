@@ -417,7 +417,7 @@ export default function AIStudioPage() {
                     : "text-[#71717A] hover:text-[#52525B]"
                 }`}
                 style={toolCategory === cat ? {
-                  background: "linear-gradient(180deg, #FF4040 0%, #1D4ED8 100%)",
+                  background: "linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)",
                   boxShadow: "0 1px 0 rgba(255,255,255,0.15) inset, 0 2px 8px rgba(37,99,235,0.35)",
                 } : undefined}
               >
