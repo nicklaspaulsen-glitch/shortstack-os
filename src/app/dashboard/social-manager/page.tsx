@@ -401,6 +401,7 @@ export default function SocialManagerPage() {
       {/* Hero Header */}
       <PageHero
         icon={<Share2 size={22} />}
+        eyebrow="SOCIAL COMMAND"
         title="Social Manager"
         subtitle="Post to every platform at once — AI plans the calendar, writes captions, and schedules everything. You just approve."
         gradient="purple"

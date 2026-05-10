@@ -540,6 +540,7 @@ export default function ContentPage() {
     <div className="space-y-4">
       <PageHero
         icon={<Sparkles size={22} />}
+        eyebrow="CONTENT STUDIO"
         title="Content Studio"
         subtitle="Scripts, publishing queue, and your personal brand content."
         gradient="purple"
@@ -552,6 +553,7 @@ export default function ContentPage() {
     <MotionPage className="space-y-6">
       <PageHero
         icon={<Sparkles size={22} />}
+        eyebrow="CONTENT STUDIO"
         title="Content AI Agent"
         subtitle="Scripts, requests, publishing & personal brand."
         gradient="purple"

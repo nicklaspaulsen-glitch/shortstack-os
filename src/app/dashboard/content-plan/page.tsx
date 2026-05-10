@@ -528,6 +528,7 @@ export default function ContentPlanPage() {
     <div className="fade-in space-y-5">
       <PageHero
         icon={<Calendar size={22} />}
+        eyebrow="EDITORIAL CALENDAR"
         title="Content Plan"
         subtitle="All your content across every platform, in one view."
         gradient="purple"

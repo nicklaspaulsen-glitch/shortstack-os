@@ -458,6 +458,7 @@ export default function ContentLibraryPage() {
     <div className="fade-in space-y-6">
       <PageHero
         icon={<FolderOpen size={28} />}
+        eyebrow="ASSET LIBRARY"
         title="Content Library"
         subtitle="Centralized media library for client assets."
         gradient="gold"
@@ -500,7 +501,7 @@ export default function ContentLibraryPage() {
             Every asset, every client, one searchable vault
           </h3>
           <p className="text-xs text-muted max-w-md mx-auto mt-1">
-            Images, videos, audio, docs and brand kits — tagged, versioned
+            Images, videos, audio, docs and brand kits ï¿½ tagged, versioned
             and ready to drop into any campaign.
           </p>
         </div>
@@ -529,7 +530,7 @@ export default function ContentLibraryPage() {
           <>
             <Upload size={24} className={`mx-auto mb-2 ${dragging ? "text-gold" : "text-muted"}`} />
             <p className="text-xs text-muted">Drop files here or click to upload</p>
-            <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV — up to 100 MB</p>
+            <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV ï¿½ up to 100 MB</p>
           </>
         )}
       </div>

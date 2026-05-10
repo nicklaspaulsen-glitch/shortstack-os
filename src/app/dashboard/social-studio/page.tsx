@@ -39,7 +39,7 @@ export default function SocialStudioPage() {
         subtitle="Plan, post, and grow across every platform"
         gradient="gold"
         icon={<Megaphone size={20} />}
-        eyebrow="MVP"
+        eyebrow="POST STUDIO"
       />
 
       <div className="glass rounded-xl p-1 flex flex-wrap gap-1">

@@ -176,7 +176,7 @@ function generateMockSlides(topic: string, count: number, template?: string): Sl
   slides.push({
     slideNumber: 1,
     headline: hookHeadlines[Math.floor(Math.random() * hookHeadlines.length)],
-    body: `Everything you need to know about ${topic.toLowerCase()} — swipe to learn more.`,
+    body: `Everything you need to know about ${topic.toLowerCase()} ï¿½ swipe to learn more.`,
   });
 
   // Middle slides
@@ -186,7 +186,7 @@ function generateMockSlides(topic: string, count: number, template?: string): Sl
       body: `Here is a detailed but concise explanation of step ${i} in mastering ${topic.toLowerCase()}.`,
     }),
     listicle: (i) => ({
-      headline: `#${i} — Key Insight`,
+      headline: `#${i} ï¿½ Key Insight`,
       body: `This is one of the most important aspects of ${topic.toLowerCase()} that most people overlook.`,
     }),
     story: (i) => {
@@ -226,7 +226,7 @@ function generateMockSlides(topic: string, count: number, template?: string): Sl
 }
 
 /* ------------------------------------------------------------------
-   CAROUSEL WIZARD — 5-step guided creation flow
+   CAROUSEL WIZARD ï¿½ 5-step guided creation flow
    ------------------------------------------------------------------ */
 
 interface CarouselWizardProps {
@@ -261,7 +261,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
     {
       id: "topic",
       title: "What's the topic or hook?",
-      description: "Describe what this carousel is about — be specific to get better slides.",
+      description: "Describe what this carousel is about ï¿½ be specific to get better slides.",
       icon: <Lightbulb size={16} />,
       field: {
         type: "text",
@@ -282,13 +282,13 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
               }),
             });
             if (!res.ok) {
-              toast.error("Couldn't suggest a topic — try again");
+              toast.error("Couldn't suggest a topic ï¿½ try again");
               return {};
             }
             const json = await res.json();
             const suggestion: string = (json.enhanced || "").replace(/^["']|["']$/g, "").trim();
             if (!suggestion) {
-              toast.error("No suggestion — give it another try");
+              toast.error("No suggestion ï¿½ give it another try");
               return {};
             }
             toast.success("Topic suggested!");
@@ -317,7 +317,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
     {
       id: "style",
       title: "Pick a visual style",
-      description: "Sets the tone — we'll apply the look in the preview.",
+      description: "Sets the tone ï¿½ we'll apply the look in the preview.",
       icon: <Palette size={16} />,
       field: {
         type: "chip-select",
@@ -358,12 +358,12 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                text: `Outline a content direction for a ${count}-slide ${style} carousel on ${platforms} about: "${topic}". Keep it under 80 words. Describe angle, target audience, and what each slide section should cover. Plain text, no markdown, no numbered list — write it as a brief paragraph.`,
+                text: `Outline a content direction for a ${count}-slide ${style} carousel on ${platforms} about: "${topic}". Keep it under 80 words. Describe angle, target audience, and what each slide section should cover. Plain text, no markdown, no numbered list ï¿½ write it as a brief paragraph.`,
                 type: "content",
               }),
             });
             if (!res.ok) {
-              toast.error("Couldn't draft direction — try again");
+              toast.error("Couldn't draft direction ï¿½ try again");
               return {};
             }
             const json = await res.json();
@@ -424,7 +424,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
     <CreationWizard
       open={open}
       title="Create Carousel"
-      subtitle="AI-guided flow — describe what you want, we'll write the slides."
+      subtitle="AI-guided flow ï¿½ describe what you want, we'll write the slides."
       icon={<Sparkles size={18} />}
       submitLabel="Generate Carousel"
       steps={steps}
@@ -505,7 +505,7 @@ export default function CarouselGeneratorPage() {
             title: opts.topic.slice(0, 120),
             source_tool: "Carousel Generator",
             content_preview: (data.slides as Slide[])
-              .map((s) => `${s.headline} — ${s.body}`)
+              .map((s) => `${s.headline} ï¿½ ${s.body}`)
               .join(" | ")
               .slice(0, 200),
             metadata: {
@@ -522,10 +522,10 @@ export default function CarouselGeneratorPage() {
         }
       }
     } catch (err) {
-      // API failed — let the user know and fall through to mock so they
+      // API failed ï¿½ let the user know and fall through to mock so they
       // can still see sample output instead of a blank screen.
       const msg = err instanceof Error ? err.message : "Network error";
-      toast.error(`AI generation failed (${msg}) — showing sample slides`);
+      toast.error(`AI generation failed (${msg}) ï¿½ showing sample slides`);
     }
 
     // Fallback: mock generation with realistic delay
@@ -537,7 +537,7 @@ export default function CarouselGeneratorPage() {
       title: opts.topic.slice(0, 120),
       source_tool: "Carousel Generator",
       content_preview: mockSlides
-        .map((s) => `${s.headline} — ${s.body}`)
+        .map((s) => `${s.headline} ï¿½ ${s.body}`)
         .join(" | ")
         .slice(0, 200),
       metadata: {
@@ -626,6 +626,7 @@ export default function CarouselGeneratorPage() {
       <PageHero
         className="mb-6"
         icon={<Layers size={28} />}
+        eyebrow="CAROUSEL BUILDER"
         title="Carousel Generator"
         subtitle="Create scroll-stopping Instagram & LinkedIn carousels."
         gradient="gold"
@@ -666,7 +667,7 @@ export default function CarouselGeneratorPage() {
         }
       />
 
-      {/* Guided Mode — "4-year-old friendly" */}
+      {/* Guided Mode ï¿½ "4-year-old friendly" */}
       {!advancedMode && (
         <Wizard
           className="mb-6"
@@ -674,7 +675,7 @@ export default function CarouselGeneratorPage() {
             {
               id: "topic",
               title: "What's your carousel about?",
-              description: "One sentence — what's the post teaching, telling, or selling?",
+              description: "One sentence ï¿½ what's the post teaching, telling, or selling?",
               icon: <Sparkles size={18} />,
               canProceed: topic.trim().length > 0,
               component: (
@@ -696,7 +697,7 @@ export default function CarouselGeneratorPage() {
                           onClick={() => { setTopic(t.example); setTemplate(t.id); }}
                           className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-gold/10 hover:border-gold/30 px-2.5 py-1 rounded-full border border-border/50 transition-all"
                         >
-                          {t.name}: {t.example.slice(0, 30)}…
+                          {t.name}: {t.example.slice(0, 30)}ï¿½
                         </button>
                       ))}
                     </div>
@@ -707,7 +708,7 @@ export default function CarouselGeneratorPage() {
             {
               id: "style",
               title: "Pick a look",
-              description: "The style sets the mood — elegant, bold, fun, premium.",
+              description: "The style sets the mood ï¿½ elegant, bold, fun, premium.",
               icon: <Palette size={18} />,
               component: (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
@@ -791,7 +792,7 @@ export default function CarouselGeneratorPage() {
           ]}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={generating ? "Generating…" : "Generate slides"}
+          finishLabel={generating ? "Generatingï¿½" : "Generate slides"}
           busy={generating}
           onFinish={handleGenerate}
           onCancel={() => setAdvancedMode(true)}
@@ -813,15 +814,24 @@ export default function CarouselGeneratorPage() {
               {copied ? <Check size={11} /> : <Copy size={11} />} {copied ? "Copied!" : "Copy text"}
             </button>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <motion.div
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"
+          >
             {slides.map(s => (
-              <div key={s.slideNumber} className="rounded-xl border border-border bg-surface-light p-3 aspect-square flex flex-col">
+              <motion.div
+                key={s.slideNumber}
+                variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } }}
+                className="rounded-xl border border-border bg-surface-light p-3 aspect-square flex flex-col"
+              >
                 <span className="text-[9px] uppercase tracking-wider text-muted">Slide {s.slideNumber}</span>
                 <p className="text-sm font-bold leading-tight mt-1 line-clamp-3">{s.headline}</p>
                 <p className="text-[10px] text-muted line-clamp-4 mt-2">{s.body}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
           <p className="text-[11px] text-muted text-center pt-2">
             Need to edit slides or change brand colors? Flip to <span className="text-gold font-semibold">Advanced mode</span>.
           </p>
@@ -830,7 +840,7 @@ export default function CarouselGeneratorPage() {
 
       {advancedMode && (
       <>
-      {/* Rolling preview of example carousels — 1:1 Instagram-native aspect */}
+      {/* Rolling preview of example carousels ï¿½ 1:1 Instagram-native aspect */}
       <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6 mb-5">
         <div className="absolute inset-0 pointer-events-none">
           <RollingPreview
@@ -851,7 +861,7 @@ export default function CarouselGeneratorPage() {
             Scroll-stopping carousels in every niche
           </h3>
           <p className="text-xs text-muted max-w-md mx-auto mt-1">
-            How-tos, listicles, myths-vs-facts — pick a template and we
+            How-tos, listicles, myths-vs-facts ï¿½ pick a template and we
             generate all slides, headlines, and body copy in one pass.
           </p>
         </div>
@@ -859,7 +869,7 @@ export default function CarouselGeneratorPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* -------------------------------------------
-            LEFT PANEL — Configuration
+            LEFT PANEL ï¿½ Configuration
             ------------------------------------------- */}
         <div className="lg:col-span-4 space-y-4">
 
@@ -1125,7 +1135,7 @@ export default function CarouselGeneratorPage() {
         </div>
 
         {/* -------------------------------------------
-            RIGHT PANEL — Preview
+            RIGHT PANEL ï¿½ Preview
             ------------------------------------------- */}
         <div className="lg:col-span-8">
           <motion.div
