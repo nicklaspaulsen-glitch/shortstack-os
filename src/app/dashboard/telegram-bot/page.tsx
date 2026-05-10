@@ -484,6 +484,7 @@ export default function TelegramBotPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       <PageHero
+        eyebrow="TELEGRAM BOT"
         icon={<TelegramIcon size={28} />}
         title="Telegram Bot"
         subtitle="Manage what your bot sends you and when."

@@ -154,6 +154,7 @@ export default function LeadSourcesPage() {
   return (
     <div className="space-y-6">
       <PageHero
+        eyebrow="SOURCE TRACKING"
         title="Lead Sources"
         subtitle="Track where every lead comes from and what each source is worth."
         icon={<Filter size={22} />}

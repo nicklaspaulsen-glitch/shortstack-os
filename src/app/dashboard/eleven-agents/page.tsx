@@ -64,6 +64,9 @@ interface ScriptTemplate {
 const TABS = ["Dashboard", "Calls", "Transcripts", "Sentiment", "Voices", "Scripts", "A/B Tests", "Scheduling", "Contacts", "Analytics", "Compliance", "Transfer Rules"] as const;
 type Tab = typeof TABS[number];
 
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
+
 export default function ElevenAgentsPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Dashboard");
   const [agents, setAgents] = useState<VoiceAgent[]>([]);
@@ -252,6 +255,7 @@ export default function ElevenAgentsPage() {
   return (
     <div className="fade-in space-y-5">
       <PageHero
+        eyebrow="VOICE AGENTS"
         icon={<Phone size={28} />}
         title="ElevenAgents"
         subtitle="AI voice agents for cold calls & inbound."
@@ -372,7 +376,7 @@ export default function ElevenAgentsPage() {
 
             {/* ── Live Agent Cards ── */}
             {liveAgents.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {liveAgents.map((agent: Record<string, unknown>) => {
                   const agentId = (agent.agent_id || agent.id || "") as string;
                   const name = (agent.name || "Unnamed Agent") as string;
@@ -382,7 +386,7 @@ export default function ElevenAgentsPage() {
                   const language = (agentConfig?.language || "en") as string;
                   const voiceId = (ttsConfig?.voice_id || "default") as string;
                   return (
-                    <div key={agentId} className="p-3 rounded-lg border border-purple-500/20 bg-purple-500/5 transition-all">
+                    <motion.div key={agentId} variants={itemVariants} className="p-3 rounded-lg border border-purple-500/20 bg-purple-500/5 transition-all">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
@@ -403,10 +407,10 @@ export default function ElevenAgentsPage() {
                         <div><span className="block text-[8px] uppercase">Voice</span><span className="text-foreground font-mono">{voiceId.slice(0, 10)}</span></div>
                         <div><span className="block text-[8px] uppercase">Status</span><span className="text-green-400 font-mono">Live</span></div>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
-              </div>
+              </motion.div>
             ) : !apiLoading ? (
               <div className="p-6 text-center border border-dashed border-border rounded-lg">
                 <Phone size={24} className="text-muted mx-auto mb-2" />

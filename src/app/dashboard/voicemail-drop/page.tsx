@@ -137,6 +137,7 @@ export default function VoicemailDropPage() {
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-4xl mx-auto">
       <PageHero
+        eyebrow="VOICEMAIL DROPS"
         title="Voicemail Drop"
         subtitle="Upload pre-recorded voicemails and drop them straight to a contact's inbox."
         icon={<Voicemail className="w-6 h-6" />}

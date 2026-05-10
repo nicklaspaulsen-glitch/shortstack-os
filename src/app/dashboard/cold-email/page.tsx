@@ -193,6 +193,7 @@ export default function ColdEmailPage() {
   return (
     <div className="fade-in space-y-5">
       <PageHero
+        eyebrow="EMAIL OUTREACH"
         icon={<MailPlus size={28} />}
         title="AI Cold Email"
         subtitle="Personalized opening lines at scale. Research, generate, and send 1000s a day."
@@ -336,7 +337,7 @@ export default function ColdEmailPage() {
                 disabled={creating || !name.trim() || !templateSeed.trim()}
                 className="text-[10px] px-4 py-1.5 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
-                {creating ? "Building…" : "Create Campaign"}
+                {creating ? "Buildingï¿½" : "Create Campaign"}
               </button>
             </motion.div>
           </div>
@@ -345,7 +346,7 @@ export default function ColdEmailPage() {
 
       <PrismPanel rainbow padding="p-0" className="overflow-hidden space-y-0">
         {loading ? (
-          <div className="p-8 text-center text-[11px] text-muted">Loading…</div>
+          <div className="p-8 text-center text-[11px] text-muted">Loadingï¿½</div>
         ) : jobs.length === 0 ? (
           <div className="p-10 text-center">
             <MailPlus size={22} className="mx-auto mb-2 text-muted opacity-40" />
@@ -391,11 +392,11 @@ export default function ColdEmailPage() {
                     </div>
                     <div className="flex items-center gap-3 text-[10px] text-muted">
                       <span>{j.recipients_count.toLocaleString()} recipients</span>
-                      <span>·</span>
+                      <span>ï¿½</span>
                       <span>{DEPTH_COPY[j.research_depth].label} research</span>
-                      <span>·</span>
+                      <span>ï¿½</span>
                       <span>{j.throttle_per_hour}/hr</span>
-                      <span>·</span>
+                      <span>ï¿½</span>
                       <span>${Number(j.cost_usd).toFixed(4)} spent</span>
                     </div>
                   </div>
@@ -441,7 +442,7 @@ export default function ColdEmailPage() {
                       Generated {j.generated_count} / {j.recipients_count}
                     </span>
                     <span>
-                      Sent {j.sent_count} · Failed {j.failed_count}
+                      Sent {j.sent_count} ï¿½ Failed {j.failed_count}
                     </span>
                   </div>
                   <div className="h-1.5 bg-black/40 rounded-full overflow-hidden">
@@ -477,7 +478,7 @@ export default function ColdEmailPage() {
                             </pre>
                             <div className="text-[9px] text-muted flex items-center gap-2">
                               <span>${Number(s.cost_usd).toFixed(5)}</span>
-                              <span>·</span>
+                              <span>ï¿½</span>
                               <CheckCircle size={9} className="text-green-400" />
                               <span>generated</span>
                             </div>

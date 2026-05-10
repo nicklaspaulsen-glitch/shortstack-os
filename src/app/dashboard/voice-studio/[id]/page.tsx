@@ -211,6 +211,7 @@ export default function VoiceCloneDetailPage() {
   return (
     <div className="min-h-screen pb-12">
       <PageHero
+        eyebrow="VOICE PROFILE"
         title={clone?.label || "Voice clone"}
         subtitle={
           clone?.description ||

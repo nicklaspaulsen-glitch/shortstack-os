@@ -891,9 +891,10 @@ export default function CRMPage() {
     <div className="fade-in space-y-3">
       <ErrorBoundary section="CRM">
       <PageHero
+        eyebrow="RELATIONSHIP ENGINE"
         icon={<Users size={22} />}
         title="CRM"
-        subtitle="Your full contact database — track leads, log activity, score prospects, and close deals with AI-powered enrichment and bulk actions."
+        subtitle="Your full contact database ï¿½ track leads, log activity, score prospects, and close deals with AI-powered enrichment and bulk actions."
         gradient="gold"
       />
       {/* -- Stats Dashboard -- */}
@@ -1160,7 +1161,7 @@ export default function CRMPage() {
             {/* Score & Rating ranges */}
             <div className="space-y-2">
               <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Rating ({filters.ratingMin}–{filters.ratingMax})</label>
+                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Rating ({filters.ratingMin}ï¿½{filters.ratingMax})</label>
                 <div className="flex items-center gap-2">
                   <input type="range" min={0} max={5} step={0.5} value={filters.ratingMin}
                     onChange={e => setFilters(prev => ({ ...prev, ratingMin: parseFloat(e.target.value) }))}
@@ -1171,7 +1172,7 @@ export default function CRMPage() {
                 </div>
               </div>
               <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Lead Score ({filters.scoreMin}–{filters.scoreMax})</label>
+                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Lead Score ({filters.scoreMin}ï¿½{filters.scoreMax})</label>
                 <div className="flex items-center gap-2">
                   <input type="range" min={0} max={100} step={5} value={filters.scoreMin}
                     onChange={e => setFilters(prev => ({ ...prev, scoreMin: parseInt(e.target.value) }))}
@@ -1362,12 +1363,12 @@ export default function CRMPage() {
                               );
                               if (col.key === "industry") return (
                                 <td key={col.key} className={`px-2 ${dPy} text-muted`}>
-                                  <span className="truncate max-w-[100px] block">{lead.industry || "—"}</span>
+                                  <span className="truncate max-w-[100px] block">{lead.industry || "ï¿½"}</span>
                                 </td>
                               );
                               if (col.key === "location") return (
                                 <td key={col.key} className={`px-2 ${dPy} text-muted`}>
-                                  <span className="truncate max-w-[100px] block">{lead.city ? `${lead.city}${lead.state ? `, ${lead.state}` : ""}` : "—"}</span>
+                                  <span className="truncate max-w-[100px] block">{lead.city ? `${lead.city}${lead.state ? `, ${lead.state}` : ""}` : "ï¿½"}</span>
                                 </td>
                               );
                               if (col.key === "rating") return (
@@ -1377,7 +1378,7 @@ export default function CRMPage() {
                                       <Star size={9} className="fill-amber-400" /> {lead.google_rating}
                                       {density !== "dense" && <span className="text-muted text-[8px]">({lead.review_count})</span>}
                                     </span>
-                                  ) : <span className="text-muted">—</span>}
+                                  ) : <span className="text-muted">ï¿½</span>}
                                 </td>
                               );
                               if (col.key === "score") return (
@@ -1533,7 +1534,7 @@ export default function CRMPage() {
                           <h3 className={`font-semibold truncate ${density === "dense" ? "text-[10px]" : "text-xs"}`}>{lead.business_name}</h3>
                           <div className="flex items-center gap-1.5 text-[8px] text-muted">
                             {lead.industry && <span>{lead.industry}</span>}
-                            {lead.city && <span>· {lead.city}</span>}
+                            {lead.city && <span>ï¿½ {lead.city}</span>}
                           </div>
                         </div>
                       </div>
@@ -1622,7 +1623,7 @@ export default function CRMPage() {
                             <div className="flex items-start justify-between">
                               <div className="min-w-0">
                                 <h4 className="text-[10px] font-bold truncate">{lead.business_name}</h4>
-                                <p className="text-[8px] text-muted truncate">{lead.industry || "Business"} {lead.city ? `· ${lead.city}` : ""}</p>
+                                <p className="text-[8px] text-muted truncate">{lead.industry || "Business"} {lead.city ? `ï¿½ ${lead.city}` : ""}</p>
                               </div>
                               <span className="text-[7px] px-1.5 py-0.5 rounded font-bold shrink-0" style={{ background: `${scoreInfo.color}15`, color: scoreInfo.color }}>{scoreInfo.label}</span>
                             </div>
@@ -1660,7 +1661,7 @@ export default function CRMPage() {
           {totalPages > 1 && viewMode !== "pipeline" && (
             <div className="flex items-center justify-between px-1 mt-2">
               <span className="text-[9px] text-muted">
-                {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
+                {page * PAGE_SIZE + 1}ï¿½{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
               </span>
               <div className="flex items-center gap-1">
                 <button onClick={() => setPage(0)} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">First</button>

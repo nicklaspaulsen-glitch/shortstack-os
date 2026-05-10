@@ -656,6 +656,9 @@ function LeadDetailPanel({
 }
 
 // ====================== MAIN PAGE ======================
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
+
 export default function LeadEnginePage() {
   const [activeTab, setActiveTab] = useState<MainTab>("leads");
   const [searchQuery, setSearchQuery] = useState("");
@@ -755,7 +758,7 @@ export default function LeadEnginePage() {
     setPage(1);
   }, [searchQuery, statusFilter, industryFilter, sortByScore, highPriorityOnly]);
 
-  // Export handler — fetches ALL leads, builds CSV, triggers download
+  // Export handler ï¿½ fetches ALL leads, builds CSV, triggers download
   async function handleExport() {
     setExporting(true);
     try {
@@ -801,9 +804,10 @@ export default function LeadEnginePage() {
 
       {/* Header */}
       <PageHero
+        eyebrow="CONTACT HQ"
         icon={<Zap size={28} />}
         title="Lead Engine"
-        subtitle="Automated lead scoring, routing, enrichment & nurture — build and convert your pipeline."
+        subtitle="Automated lead scoring, routing, enrichment & nurture ï¿½ build and convert your pipeline."
         gradient="gold"
         actions={
           <>
@@ -823,7 +827,7 @@ export default function LeadEnginePage() {
         }
       />
 
-      {/* Stats — collapsible (state persists) */}
+      {/* Stats ï¿½ collapsible (state persists) */}
       <CollapsibleStats
         storageKey="leads"
         icon={<BarChart3 size={14} className="text-gold" />}
@@ -831,13 +835,13 @@ export default function LeadEnginePage() {
         summary={
           <>
             <span><span className="text-foreground font-semibold">{totalLeads}</span> total</span>
-            <span className="opacity-30">·</span>
+            <span className="opacity-30">ï¿½</span>
             <span><span className="text-red-400 font-semibold">{hotLeads}</span> hot</span>
-            <span className="opacity-30">·</span>
+            <span className="opacity-30">ï¿½</span>
             <span><span className="text-green-400 font-semibold">{qualifiedLeads}</span> qualified</span>
-            <span className="opacity-30">·</span>
+            <span className="opacity-30">ï¿½</span>
             <span><span className="text-purple-400 font-semibold">{convertedLeads}</span> converted</span>
-            <span className="opacity-30">·</span>
+            <span className="opacity-30">ï¿½</span>
             <span>Conv <span className="text-gold font-semibold">{totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%</span></span>
           </>
         }
@@ -968,12 +972,12 @@ export default function LeadEnginePage() {
                 }
               />
             )}
-            {!loading && leads.map((lead, index) => (
+            {!loading && (
+            <motion.div variants={containerVariants} initial="hidden" animate="visible">
+            {leads.map((lead) => (
               <motion.div
                 key={lead.id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.18, delay: index * 0.04 }}
+                variants={itemVariants}
               >
                 <div
                   onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
@@ -1050,7 +1054,7 @@ export default function LeadEnginePage() {
                     ><MessageSquare size={10} /></Link>
                   </div>
                 </div>
-                {/* Expanded drawer — score breakdown + qualification */}
+                {/* Expanded drawer ï¿½ score breakdown + qualification */}
                 {expandedLead === lead.id && (
                   <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border space-y-3">
                     {/* AI Score Breakdown */}
@@ -1077,7 +1081,7 @@ export default function LeadEnginePage() {
                       {lead.score_breakdown ? (
                         <ScoreBreakdownBars breakdown={lead.score_breakdown} />
                       ) : (
-                        <p className="text-[9px] text-muted italic">No AI score yet — click &ldquo;Score now&rdquo; above.</p>
+                        <p className="text-[9px] text-muted italic">No AI score yet ï¿½ click &ldquo;Score now&rdquo; above.</p>
                       )}
                       {lead.score_reasoning && (
                         <p className="text-[9px] text-muted mt-2 italic">{lead.score_reasoning}</p>
@@ -1113,11 +1117,13 @@ export default function LeadEnginePage() {
                 )}
               </motion.div>
             ))}
+            </motion.div>
+            )}
           </div>{/* end min-w-[600px] */}
           </div>{/* end overflow-x-auto */}
           </div>{/* end min-w-0 flex-1 table */}
 
-          {/* Side detail panel — desktop only */}
+          {/* Side detail panel ï¿½ desktop only */}
           {selectedLead && (
             <div className="hidden lg:block w-[280px] xl:w-[300px] flex-shrink-0 sticky top-16 self-start">
               <LeadDetailPanel
@@ -1135,7 +1141,7 @@ export default function LeadEnginePage() {
           {!loading && totalPages > 1 && (
             <div className="flex items-center justify-between pt-3">
               <p className="text-[10px] text-muted">
-                Showing {((page - 1) * LIMIT) + 1}–{Math.min(page * LIMIT, totalCount)} of {totalCount.toLocaleString()} leads
+                Showing {((page - 1) * LIMIT) + 1}ï¿½{Math.min(page * LIMIT, totalCount)} of {totalCount.toLocaleString()} leads
               </p>
               <div className="flex items-center gap-2">
                 <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
@@ -1306,7 +1312,7 @@ export default function LeadEnginePage() {
               <Zap size={14} className="text-gold" /> Lead Enrichment Panel
             </h3>
             <button
-              onClick={() => toast("Bulk enrichment coming soon — needs API")}
+              onClick={() => toast("Bulk enrichment coming soon ï¿½ needs API")}
               className="btn-primary text-xs flex items-center gap-1.5"
             ><RefreshCw size={12} /> Enrich All Missing</button>
           </div>
@@ -1355,7 +1361,7 @@ export default function LeadEnginePage() {
                     <span className={lead.website ? "text-green-400" : "text-red-400"}>{lead.website ? "Website" : "No site"}</span>
                   </div>
                   <button
-                    onClick={() => toast("Per-lead enrichment coming soon — needs API")}
+                    onClick={() => toast("Per-lead enrichment coming soon ï¿½ needs API")}
                     className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20"
                   >Enrich</button>
                 </div>
@@ -1421,7 +1427,7 @@ export default function LeadEnginePage() {
               <div className="flex gap-2">
                 <input value={tagInput} onChange={e => setTagInput(e.target.value)} className="input flex-1 text-xs" placeholder="Create new tag..." />
                 <button
-                  onClick={() => toast("Custom tags coming soon — needs API")}
+                  onClick={() => toast("Custom tags coming soon ï¿½ needs API")}
                   className="btn-primary text-xs px-3"
                 >Add</button>
               </div>

@@ -616,6 +616,7 @@ export default function ScraperPage() {
       <ErrorBoundary section="Lead Finder">
       {/* Hero Header */}
       <PageHero
+        eyebrow="LEAD FINDER"
         icon={<Search size={22} />}
         title="Lead Finder"
         subtitle="Find leads from any platform, any niche, any location."

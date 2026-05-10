@@ -26,6 +26,7 @@ export default function DialerPage() {
   return (
     <div className="min-h-screen pb-12">
       <PageHero
+        eyebrow="AI DIALER"
         title="Dialer"
         subtitle="Power dialer, manual SMS, and direct messaging — closes the GHL Voice gap."
         gradient="sunset"

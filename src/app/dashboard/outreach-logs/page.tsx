@@ -481,7 +481,7 @@ export default function OutreachLogsPage() {
       const data = await res.json();
       if (res.ok) {
         setScraperResult({ leads_found: data.leads_found ?? 0, duplicates_skipped: data.duplicates_skipped ?? 0 });
-        toast.success(`Scraper done — ${data.leads_found ?? 0} leads found`);
+        toast.success(`Scraper done ï¿½ ${data.leads_found ?? 0} leads found`);
       } else {
         toast.error(data.error || "Scraper failed");
       }
@@ -538,9 +538,10 @@ export default function OutreachLogsPage() {
     <div className="fade-in space-y-4">
       {/* Hero Header */}
       <PageHero
+        eyebrow="OUTREACH HISTORY"
         icon={<Send size={22} />}
         title="Outreach Logs"
-        subtitle="Full communication history — calls, emails, SMS, DMs with transcripts & details."
+        subtitle="Full communication history ï¿½ calls, emails, SMS, DMs with transcripts & details."
         gradient="gold"
       />
       <div className="flex items-center justify-end">
@@ -777,14 +778,14 @@ export default function OutreachLogsPage() {
                           <td className="p-2.5 font-medium max-w-[140px] truncate">
                             <span className="flex items-center gap-1.5">
                               <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
-                              {entry.business_name || "—"}
+                              {entry.business_name || "ï¿½"}
                             </span>
                           </td>
-                          <td className="p-2.5 text-muted font-mono text-[10px] max-w-[120px] truncate">{entry.recipient_handle || "—"}</td>
+                          <td className="p-2.5 text-muted font-mono text-[10px] max-w-[120px] truncate">{entry.recipient_handle || "ï¿½"}</td>
                           <td className="p-2.5 text-muted max-w-[220px] truncate">
                             {entry.platform === "call" ? (
-                              <span className="flex items-center gap-1"><PhoneCall size={10} className="text-emerald-400" /> AI Call — click for transcript</span>
-                            ) : entry.message_text?.substring(0, 80) || "—"}
+                              <span className="flex items-center gap-1"><PhoneCall size={10} className="text-emerald-400" /> AI Call ï¿½ click for transcript</span>
+                            ) : entry.message_text?.substring(0, 80) || "ï¿½"}
                           </td>
                           <td className="p-2.5 text-center">
                             <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-white/5 text-muted"}`}>
@@ -795,7 +796,7 @@ export default function OutreachLogsPage() {
                             {hasReply ? (
                               <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400">Yes</span>
                             ) : (
-                              <span className="text-[9px] text-muted">—</span>
+                              <span className="text-[9px] text-muted">ï¿½</span>
                             )}
                           </td>
                           <td className="p-2.5 text-right text-[10px] text-muted whitespace-nowrap">
@@ -841,8 +842,8 @@ export default function OutreachLogsPage() {
                           </div>
                           <p className="text-[10px] text-muted truncate mt-0.5">
                             <span className="font-mono">{entry.recipient_handle}</span>
-                            <span className="mx-1.5 opacity-30">·</span>
-                            {entry.platform === "call" ? "AI Call — click for transcript" : entry.message_text?.substring(0, 100)}
+                            <span className="mx-1.5 opacity-30">ï¿½</span>
+                            {entry.platform === "call" ? "AI Call ï¿½ click for transcript" : entry.message_text?.substring(0, 100)}
                           </p>
                         </div>
 
@@ -866,7 +867,7 @@ export default function OutreachLogsPage() {
             {totalPages > 1 && (
               <div className="flex items-center justify-between pt-2">
                 <p className="text-[10px] text-muted">
-                  Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} of {total}
+                  Showing {(page - 1) * pageSize + 1}ï¿½{Math.min(page * pageSize, total)} of {total}
                 </p>
                 <div className="flex items-center gap-1">
                   <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
@@ -1529,13 +1530,13 @@ export default function OutreachLogsPage() {
               <div className="flex items-center gap-2">
                 {scraperResult && (
                   <span className="text-[10px] px-2 py-1 rounded-lg bg-green-400/10 text-green-400 border border-green-400/20 flex items-center gap-1">
-                    <CheckCircle size={10} /> {scraperResult.leads_found} found · {scraperResult.duplicates_skipped} skipped
+                    <CheckCircle size={10} /> {scraperResult.leads_found} found ï¿½ {scraperResult.duplicates_skipped} skipped
                   </span>
                 )}
                 <button onClick={runScraper} disabled={scraperRunning}
                   className="btn-primary text-xs flex items-center gap-1.5 px-4">
                   {scraperRunning ? <Loader2 size={12} className="animate-spin" /> : <Radar size={12} />}
-                  {scraperRunning ? "Running…" : "Run Scraper Now"}
+                  {scraperRunning ? "Runningï¿½" : "Run Scraper Now"}
                 </button>
               </div>
             </div>
@@ -1579,7 +1580,7 @@ export default function OutreachLogsPage() {
                 </div>
                 <input value={nicheInput} onChange={e => setNicheInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_niches", nicheInput); setNicheInput(""); } }}
-                  placeholder="Type a niche and press Enter…"
+                  placeholder="Type a niche and press Enterï¿½"
                   aria-label="Add scrape niche"
                   className="input w-full text-xs py-1.5" />
                 <div className="flex flex-wrap gap-1 mt-1.5">
@@ -1607,7 +1608,7 @@ export default function OutreachLogsPage() {
                 </div>
                 <input value={locationInput} onChange={e => setLocationInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_locations", locationInput); setLocationInput(""); } }}
-                  placeholder="e.g. Miami, FL — press Enter…"
+                  placeholder="e.g. Miami, FL ï¿½ press Enterï¿½"
                   className="input w-full text-xs py-1.5" />
               </div>
             </div>
@@ -1670,7 +1671,7 @@ export default function OutreachLogsPage() {
               <Shield size={13} className={spamGuardEnabled ? "text-green-400" : "text-orange-400"} />
               <div className="flex-1">
                 <p className="text-[10px] font-medium">Spam Guard is {spamGuardEnabled ? "ON" : "OFF"}</p>
-                <p className="text-[9px] text-muted">{spamGuardEnabled ? "Hard caps are enforced — effective limits shown below" : "Limits will not be capped — enable in Settings for protection"}</p>
+                <p className="text-[9px] text-muted">{spamGuardEnabled ? "Hard caps are enforced ï¿½ effective limits shown below" : "Limits will not be capped ï¿½ enable in Settings for protection"}</p>
               </div>
               <a href="/dashboard/settings" className="text-[9px] text-gold hover:underline flex items-center gap-0.5">
                 <ExternalLink size={9} /> Settings
@@ -1894,7 +1895,7 @@ export default function OutreachLogsPage() {
                     </>
                   ) : (
                     <div className="flex items-center gap-1.5 text-[9px] text-muted py-2">
-                      <Loader2 size={9} className="animate-spin" /> Loading sender stats…
+                      <Loader2 size={9} className="animate-spin" /> Loading sender statsï¿½
                     </div>
                   )}
                 </div>
@@ -1907,7 +1908,7 @@ export default function OutreachLogsPage() {
                 <div className="flex justify-between text-[10px] mb-1">
                   <span className="text-muted">Bounce rate health</span>
                   <span className={(senderStats.bounce_rate ?? 0) > 5 ? "text-orange-400" : "text-green-400"}>
-                    {(senderStats.bounce_rate ?? 0).toFixed(1)}% — {(senderStats.bounce_rate ?? 0) < 2 ? "Excellent" : (senderStats.bounce_rate ?? 0) < 5 ? "Good" : (senderStats.bounce_rate ?? 0) < 10 ? "Warning" : "Critical"}
+                    {(senderStats.bounce_rate ?? 0).toFixed(1)}% ï¿½ {(senderStats.bounce_rate ?? 0) < 2 ? "Excellent" : (senderStats.bounce_rate ?? 0) < 5 ? "Good" : (senderStats.bounce_rate ?? 0) < 10 ? "Warning" : "Critical"}
                   </span>
                 </div>
                 <div className="w-full bg-surface-light rounded-full h-2">
@@ -1918,9 +1919,9 @@ export default function OutreachLogsPage() {
                   }`} style={{ width: `${Math.min((senderStats.bounce_rate ?? 0) * 5, 100)}%` }} />
                 </div>
                 <div className="flex justify-between text-[8px] text-muted mt-0.5">
-                  <span>0% — ideal</span>
-                  <span>5% — warning</span>
-                  <span>10%+ — critical</span>
+                  <span>0% ï¿½ ideal</span>
+                  <span>5% ï¿½ warning</span>
+                  <span>10%+ ï¿½ critical</span>
                 </div>
               </div>
             )}
@@ -2083,7 +2084,7 @@ export default function OutreachLogsPage() {
             <button onClick={saveConfig} disabled={configSaving}
               className="btn-primary text-xs flex items-center gap-1.5 px-5">
               {configSaving ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle size={12} />}
-              {configSaving ? "Saving…" : "Save Configuration"}
+              {configSaving ? "Savingï¿½" : "Save Configuration"}
             </button>
           </div>
         </div>
@@ -2222,7 +2223,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
 
       {/* Intent */}
       <div>
-        <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Intent · {analysis.intent_confidence}% confidence</p>
+        <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Intent ï¿½ {analysis.intent_confidence}% confidence</p>
         <div className="text-[10px] font-medium capitalize text-foreground">{analysis.intent.replace(/_/g, " ")}</div>
       </div>
 

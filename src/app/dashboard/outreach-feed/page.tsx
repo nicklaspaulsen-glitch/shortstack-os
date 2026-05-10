@@ -24,7 +24,7 @@ export default function OutreachFeedPage() {
       <PageHero
         title="Outreach Feed"
         subtitle="Every call, email, SMS, and DM with each prospect — replayed as one chat thread, with AI outcome labels and one-click follow-ups."
-        eyebrow="Unified timeline"
+        eyebrow="LIVE FEED"
         icon={<MessagesSquare size={22} />}
         gradient="purple"
       />

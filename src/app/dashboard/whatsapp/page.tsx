@@ -109,7 +109,7 @@ export default function WhatsAppPage() {
     setCampaigns((camps as WhatsAppCampaign[]) ?? []);
     setClients((cls as Client[]) ?? []);
 
-    // Fire-and-forget — these enhance UX but failure is non-fatal
+    // Fire-and-forget ï¿½ these enhance UX but failure is non-fatal
     fetch("/api/whatsapp/numbers")
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j?.numbers) setNumbers(j.numbers as WhatsAppNumber[]); })
@@ -190,7 +190,7 @@ export default function WhatsAppPage() {
           // server already updated campaign status; surface counts
           const { sent, failed } = json as { sent: number; failed: number };
           if (failed > 0) {
-            toast(`Sent ${sent}/${sent + failed} — ${failed} failed`, { icon: "??" });
+            toast(`Sent ${sent}/${sent + failed} ï¿½ ${failed} failed`, { icon: "??" });
           } else {
             toast.success(`Sent to ${sent} recipient${sent === 1 ? "" : "s"}`);
           }
@@ -223,8 +223,9 @@ export default function WhatsAppPage() {
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-4xl mx-auto">
       <PageHero
+        eyebrow="WHATSAPP CHANNEL"
         title="WhatsApp Campaigns"
-        subtitle="Send templated WhatsApp messages to your clients — schedule or send now."
+        subtitle="Send templated WhatsApp messages to your clientsï¿½ schedule or send now."
         icon={<MessageCircle className="w-6 h-6" />}
         gradient="gold"
         actions={
@@ -278,7 +279,7 @@ export default function WhatsAppPage() {
                 </label>
                 <input
                   type="text"
-                  placeholder="Search clients…"
+                  placeholder="Search clientsï¿½"
                   value={clientSearch}
                   onChange={(e) => setClientSearch(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all"
@@ -329,7 +330,7 @@ export default function WhatsAppPage() {
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value.slice(0, MAX_MSG_LEN))}
-                  placeholder="Hi {{name}}, here's your update from ShortStack…"
+                  placeholder="Hi {{name}}, here's your update from ShortStackï¿½"
                   rows={5}
                   className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all resize-none"
                 />
@@ -381,7 +382,7 @@ export default function WhatsAppPage() {
                 ) : (
                   <Send className="w-4 h-4" />
                 )}
-                {sending ? "Sending…" : scheduleAt ? "Schedule Campaign" : "Send Now"}
+                {sending ? "Sendingï¿½" : scheduleAt ? "Schedule Campaign" : "Send Now"}
               </button>
             </div>
           </div>
@@ -496,7 +497,7 @@ export default function WhatsAppPage() {
                       </span>
                     )}
                     <p className="text-[10px] text-black/30">
-                      {c.last_message_at ? new Date(c.last_message_at).toLocaleDateString() : "—"}
+                      {c.last_message_at ? new Date(c.last_message_at).toLocaleDateString() : "ï¿½"}
                     </p>
                   </div>
                 </motion.div>

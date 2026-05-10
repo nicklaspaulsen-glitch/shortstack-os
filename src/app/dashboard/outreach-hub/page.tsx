@@ -95,7 +95,7 @@ function AIEnhanceButton({ value, onResult, context }: { value: string; onResult
         }),
       });
       if (res.status === 402) {
-        toast.error("You hit your token limit — click to upgrade", { duration: 5000 });
+        toast.error("You hit your token limit ï¿½ click to upgrade", { duration: 5000 });
         setLoading(false);
         return;
       }
@@ -188,13 +188,13 @@ function TemplateCard({ template, onChange, onDelete, context }: {
 const DEFAULT_CALL_TEMPLATES: Template[] = [
   {
     id: "call-intro",
-    name: "Cold Call — Intro Script",
+    name: "Cold Call ï¿½ Intro Script",
     content: `You are Alex, a friendly sales representative from ShortStack, a digital marketing agency.
 
 CONTEXT:
 - Calling {{business_name}}, a {{industry}} business
 - Goal: Book a 10-minute discovery call
-- Be conversational, warm, genuine — NOT robotic
+- Be conversational, warm, genuine ï¿½ NOT robotic
 
 SCRIPT FLOW:
 1. "Hi, this is Alex from ShortStack. Am I speaking with the owner of {{business_name}}?"
@@ -215,7 +215,7 @@ RULES:
     name: "Follow-up Call Script",
     content: `You are Alex from ShortStack following up on a previous conversation.
 
-"Hi, this is Alex from ShortStack again. We spoke {{days_ago}} about helping {{business_name}} with digital marketing. I wanted to check in — did you get a chance to look at the info we sent over?"
+"Hi, this is Alex from ShortStack again. We spoke {{days_ago}} about helping {{business_name}} with digital marketing. I wanted to check in ï¿½ did you get a chance to look at the info we sent over?"
 
 If yes and interested: "Great! Would you like to schedule that discovery call? I have openings this week."
 If no: "No problem! Want me to resend it? I can also include a quick video walkthrough."
@@ -250,7 +250,7 @@ const DEFAULT_SMS_TEMPLATES: Template[] = [
   {
     id: "sms-followup-5d",
     name: "5-Day Follow-up",
-    content: `Hi {{name}}! Last message from me — wanted to share a free strategy idea for {{business_name}}: [specific tip based on their industry]. If you ever want help implementing this, we're here. Best of luck!`,
+    content: `Hi {{name}}! Last message from me ï¿½ wanted to share a free strategy idea for {{business_name}}: [specific tip based on their industry]. If you ever want help implementing this, we're here. Best of luck!`,
     variables: ["name", "business_name"],
     enabled: true,
   },
@@ -280,7 +280,7 @@ Hi {{name}},
 
 I came across {{business_name}} and noticed you're doing great work in the {{industry}} space{{rating_mention}}.
 
-At ShortStack, we help businesses like yours get more clients through digital marketing — social media, ads, SEO, and content.
+At ShortStack, we help businesses like yours get more clients through digital marketing ï¿½ social media, ads, SEO, and content.
 
 Would you be open to a quick 15-minute call to see if we can help? No pressure at all.
 
@@ -328,21 +328,21 @@ The ShortStack Team`,
 const DEFAULT_DM_TEMPLATES: Template[] = [
   {
     id: "dm-ig-intro",
-    name: "Instagram — Initial DM",
+    name: "Instagram ï¿½ Initial DM",
     content: `Hey {{name}}! Love what you're doing with {{business_name}}. We help {{industry}} businesses grow their online presence and get more clients. Would you be open to a quick chat about some ideas we have for you?`,
     variables: ["name", "business_name", "industry"],
     enabled: true,
   },
   {
     id: "dm-fb-intro",
-    name: "Facebook — Initial DM",
-    content: `Hi {{name}}! I came across {{business_name}} and was really impressed. We specialize in helping {{industry}} businesses get more clients through digital marketing. Would love to share some ideas — are you open to a quick chat?`,
+    name: "Facebook ï¿½ Initial DM",
+    content: `Hi {{name}}! I came across {{business_name}} and was really impressed. We specialize in helping {{industry}} businesses get more clients through digital marketing. Would love to share some ideas ï¿½ are you open to a quick chat?`,
     variables: ["name", "business_name", "industry"],
     enabled: true,
   },
   {
     id: "dm-li-intro",
-    name: "LinkedIn — Initial DM",
+    name: "LinkedIn ï¿½ Initial DM",
     content: `Hi {{name}}, I noticed your work with {{business_name}} in {{industry}}. At ShortStack, we've been helping similar businesses increase their client base by 40-60% through targeted digital strategies. Would you be interested in a brief conversation about what we could do for you?`,
     variables: ["name", "business_name", "industry"],
     enabled: true,
@@ -607,7 +607,7 @@ export default function OutreachHubPage() {
         if (config.compliance) setCompliance(prev => ({ ...prev, ...config.compliance }));
         if (config.sequences?.length) setSequences(config.sequences);
       } catch {
-        // Silently fail — use defaults
+        // Silently fail ï¿½ use defaults
       } finally {
         setConfigLoaded(true);
       }
@@ -762,9 +762,10 @@ export default function OutreachHubPage() {
       <ErrorBoundary section="Outreach Hub">
       {/* -- Hero Header -- */}
       <PageHero
+        eyebrow="OUTREACH COMMAND"
         icon={<Send size={22} />}
         title="Outreach Hub"
-        subtitle="Build targeted outreach campaigns across email, SMS, calls & DMs — target B2B or B2C leads by industry, niche, and location."
+        subtitle="Build targeted outreach campaigns across email, SMS, calls & DMs ï¿½ target B2B or B2C leads by industry, niche, and location."
         gradient="gold"
         actions={
           <button onClick={handleSave} disabled={saving}
@@ -788,7 +789,7 @@ export default function OutreachHubPage() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">How Outreach Works</h3>
-              <p className="text-[10px] text-muted">Campaign-first workflow — from creation to replies, in 4 steps.</p>
+              <p className="text-[10px] text-muted">Campaign-first workflow ï¿½ from creation to replies, in 4 steps.</p>
             </div>
           </div>
           {explainerOpen
@@ -802,7 +803,7 @@ export default function OutreachHubPage() {
               {
                 n: 1,
                 title: "Create a Campaign",
-                desc: "Define your goal, audience, channels, and script templates — right here.",
+                desc: "Define your goal, audience, channels, and script templates ï¿½ right here.",
                 icon: <Megaphone size={14} />,
                 href: "#campaigns",
                 cta: "Show me",
@@ -831,7 +832,7 @@ export default function OutreachHubPage() {
               {
                 n: 4,
                 title: "Track in Outreach Logs",
-                desc: "See replies, AI analysis, and follow-ups — all in one place.",
+                desc: "See replies, AI analysis, and follow-ups ï¿½ all in one place.",
                 icon: <BarChart3 size={14} />,
                 href: "/dashboard/outreach-logs",
                 cta: "Open Logs",
@@ -1837,7 +1838,7 @@ export default function OutreachHubPage() {
               <Star size={20} className="text-indigo-400" />
             </div>
             <h3 className="text-sm font-semibold mb-1">Best Performing</h3>
-            <p className="text-[11px] text-muted">No data yet — launch your first campaign to see which channels and sequences perform best.</p>
+            <p className="text-[11px] text-muted">No data yet ï¿½ launch your first campaign to see which channels and sequences perform best.</p>
           </motion.div>
         </div>
       )}
