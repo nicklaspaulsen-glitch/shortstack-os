@@ -126,6 +126,7 @@ export default function ProposalsPage() {
     <div className="min-h-screen bg-background text-foreground">
       <PageHero
         title="Proposals"
+        eyebrow="PROPOSAL STUDIO"
         subtitle="Send branded proposals to prospects — track draft, sent, and signed status in one place."
         icon={<FileCheck size={20} />}
         gradient="purple"

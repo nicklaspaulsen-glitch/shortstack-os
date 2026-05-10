@@ -92,6 +92,9 @@ const RECOMMENDATIONS: Record<string, string[]> = {
 /*  Page Component                                                     */
 /* ------------------------------------------------------------------ */
 
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
+
 export default function ClientHealthPage() {
   const [clients] = useState<ClientHealth[]>(INITIAL_CLIENTS);
   const [filter, setFilter] = useState<"all" | "healthy" | "warning" | "critical">("all");
@@ -156,6 +159,7 @@ export default function ClientHealthPage() {
     <div className="fade-in space-y-5">
       <PageHero
         icon={<HeartIcon size={28} />}
+        eyebrow="CLIENT HEALTH"
         title="Client Health Monitor"
         subtitle="Track satisfaction, task progress & health."
         gradient="gold"
@@ -249,9 +253,9 @@ export default function ClientHealthPage() {
               actionHref="/dashboard/clients"
             />
           )}
-          <div className="space-y-2">
+          <motion.div className="space-y-2" variants={containerVariants} initial="hidden" animate="visible">
             {filtered.map(client => (
-              <div key={client.id} className={`rounded-xl border p-4 transition-all cursor-pointer hover:border-gold/20 ${
+              <motion.div key={client.id} variants={itemVariants} className={`rounded-xl border p-4 transition-all cursor-pointer hover:border-gold/20 ${
                 client.health_score >= 75 ? "border-green-500/15 bg-green-500/[0.02]" :
                 client.health_score >= 50 ? "border-yellow-500/15 bg-yellow-500/[0.02]" :
                 "border-red-500/15 bg-red-500/[0.02]"
@@ -358,7 +362,7 @@ export default function ClientHealthPage() {
                     </div>
                   </div>
                 )}
-              </div>
+              </motion.div>
             ))}
 
             {filtered.length === 0 && (
@@ -367,7 +371,7 @@ export default function ClientHealthPage() {
                 <p className="text-sm text-muted">No clients match this filter</p>
               </div>
             )}
-          </div>
+          </motion.div>
         </>
       )}
 

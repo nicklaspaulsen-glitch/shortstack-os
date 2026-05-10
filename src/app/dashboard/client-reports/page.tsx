@@ -122,6 +122,7 @@ export default function ClientReportsPage() {
       <div className="space-y-6">
         <PageHero
           title="Client Reports"
+          eyebrow="CLIENT REPORTS"
           subtitle="View and resend generated PDF reports for each client."
           icon={<ClipboardList size={22} />}
           gradient="purple"
@@ -147,6 +148,7 @@ export default function ClientReportsPage() {
     <div className="space-y-6">
       <PageHero
         title="Client Reports"
+        eyebrow="CLIENT REPORTS"
         subtitle="View and resend generated PDF reports for each client."
         icon={<ClipboardList size={22} />}
         gradient="purple"

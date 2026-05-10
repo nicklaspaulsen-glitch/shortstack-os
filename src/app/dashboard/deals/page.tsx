@@ -185,6 +185,7 @@ export default function DealsPage() {
     <div className="fade-in space-y-3">
       <PageHero
         icon={<CreditCard size={28} />}
+        eyebrow="DEAL PIPELINE"
         title="Deals Pipeline"
         subtitle="Track deals from prospect to close with AI scoring, drag-drop kanban, revenue forecasting, and commission tracking."
         gradient="gold"
@@ -197,7 +198,7 @@ export default function DealsPage() {
         }
       />
 
-      {/* Stats Row — collapsible (state persists) */}
+      {/* Stats Row ï¿½ collapsible (state persists) */}
       <CollapsibleStats
         storageKey="deals"
         icon={<BarChart3 size={14} className="text-gold" />}
@@ -205,11 +206,11 @@ export default function DealsPage() {
         summary={
           <>
             <span>Pipe <span className="text-gold font-semibold">{formatCurrency(totalPipeline)}</span></span>
-            <span className="opacity-30">·</span>
+            <span className="opacity-30">ï¿½</span>
             <span>Won <span className="text-green-400 font-semibold">{formatCurrency(wonValue)}</span></span>
-            <span className="opacity-30">·</span>
+            <span className="opacity-30">ï¿½</span>
             <span>Win <span className="text-blue-400 font-semibold">{winRate}%</span></span>
-            <span className="opacity-30">·</span>
+            <span className="opacity-30">ï¿½</span>
             <span>Avg <span className="text-gold font-semibold">{formatCurrency(avgDealSize)}</span></span>
           </>
         }
@@ -517,7 +518,7 @@ export default function DealsPage() {
             })}
           </motion.div>
 
-          {/* Stage Automation — starter rule templates */}
+          {/* Stage Automation ï¿½ starter rule templates */}
           <PrismPanel rainbow padding="p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <ArrowRight size={14} className="text-gold" /> Deal Stage Automation
@@ -567,7 +568,7 @@ export default function DealsPage() {
                   <motion.div
                     key={i}
                     whileHover={{ y: -2 }}
-                    onClick={() => toast("Contract templates coming soon — needs API")}
+                    onClick={() => toast("Contract templates coming soon ï¿½ needs API")}
                     className="flex items-center justify-between p-3 rounded-lg hover:border-[rgba(0,0,0,0.12)] transition-all cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB" }}
                   >
                     <div className="flex items-center gap-2">
@@ -602,7 +603,7 @@ export default function DealsPage() {
                   {["Content", "Ads", "SEO", "Web", "Email", "AI"].map(s => (
                     <button
                       key={s}
-                      onClick={() => toast(`${s} service selection coming soon — needs proposal builder`)}
+                      onClick={() => toast(`${s} service selection coming soon ï¿½ needs proposal builder`)}
                       className="text-[9px] px-2 py-1 rounded border border-[rgba(0,0,0,0.10)] hover:border-[#1D4ED8]/30 hover:bg-[#1D4ED8]/5 text-muted hover:text-[#1D4ED8] transition-all"
                     >{s}</button>
                   ))}
@@ -610,7 +611,7 @@ export default function DealsPage() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => toast("Proposal PDF generation coming soon — needs API")}
+                  onClick={() => toast("Proposal PDF generation coming soon ï¿½ needs API")}
                   className="btn-primary w-full text-xs flex items-center justify-center gap-1.5"
                 >
                   <Zap size={12} /> Generate Proposal PDF

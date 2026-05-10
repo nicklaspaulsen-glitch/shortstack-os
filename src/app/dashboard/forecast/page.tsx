@@ -151,6 +151,7 @@ export default function ForecastPage() {
     <div className="space-y-6">
       <PageHero
         title="Revenue Forecast"
+        eyebrow="REVENUE FORECAST"
         subtitle="Weighted pipeline by close date — next 6 months."
         icon={<TrendingUp size={22} />}
         gradient="gold"

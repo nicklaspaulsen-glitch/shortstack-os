@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Client, Contract, Invoice, ClientTask, ContentScript, Campaign, ContentCalendarEntry } from "@/lib/types";
@@ -23,6 +24,9 @@ import ClientBillingPanel from "@/components/clients/client-billing-panel";
 import SmartManageOverlay from "@/components/clients/smart-manage-overlay";
 import ClientVoiceProfile from "@/components/clients/client-voice-profile";
 import AgentMemoryPanel from "@/components/agent-memory/agent-memory-panel";
+
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
 
 export default function ClientDetailPage() {
   const params = useParams();
@@ -189,13 +193,13 @@ export default function ClientDetailPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <StatCard label="MRR" value={formatCurrency(client.mrr)} icon={<CreditCard size={18} />} />
-        <StatCard label="Health Score" value={`${client.health_score}%`} changeType={client.health_score > 75 ? "positive" : "negative"} />
-        <StatCard label="Tasks Done" value={`${completedTasks}/${tasks.length}`} icon={<CheckCircle size={18} />} />
-        <StatCard label="Content Published" value={publishedContent} icon={<Film size={18} />} />
-        <StatCard label="Ad Spend" value={formatCurrency(totalSpend)} icon={<Megaphone size={18} />} />
-      </div>
+      <motion.div className="grid grid-cols-2 md:grid-cols-5 gap-4" variants={containerVariants} initial="hidden" animate="visible">
+        <motion.div variants={itemVariants}><StatCard label="MRR" value={formatCurrency(client.mrr)} icon={<CreditCard size={18} />} /></motion.div>
+        <motion.div variants={itemVariants}><StatCard label="Health Score" value={`${client.health_score}%`} changeType={client.health_score > 75 ? "positive" : "negative"} /></motion.div>
+        <motion.div variants={itemVariants}><StatCard label="Tasks Done" value={`${completedTasks}/${tasks.length}`} icon={<CheckCircle size={18} />} /></motion.div>
+        <motion.div variants={itemVariants}><StatCard label="Content Published" value={publishedContent} icon={<Film size={18} />} /></motion.div>
+        <motion.div variants={itemVariants}><StatCard label="Ad Spend" value={formatCurrency(totalSpend)} icon={<Megaphone size={18} />} /></motion.div>
+      </motion.div>
 
       {/* Services */}
       <div className="card">

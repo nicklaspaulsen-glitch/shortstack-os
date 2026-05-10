@@ -30,10 +30,10 @@ interface SequenceRunListItem {
   exit_reason: string | null;
 }
 
-// Local step type — supports the extra "social" + "condition" UI affordances
+// Local step type ï¿½ supports the extra "social" + "condition" UI affordances
 // that don't map 1:1 to server channels. When we save to the API we collapse
 // social ? dm and skip condition steps (conditions aren't first-class on the
-// backend yet — the cron runner ignores them and the step order is preserved).
+// backend yet ï¿½ the cron runner ignores them and the step order is preserved).
 interface SequenceStep {
   id: string;
   type: "email" | "sms" | "call" | "social" | "wait" | "condition";
@@ -89,6 +89,9 @@ interface ActivityItem {
 }
 
 const RAINBOW_BAR = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
+
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
 
 const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep[]; category: string }[] = [
   { name: "Cold Outreach (5 touches)", description: "Multi-channel cold outreach with email, SMS and social", category: "Outreach",
@@ -226,7 +229,7 @@ export default function SequencesPage() {
       const data = await res.json();
       const raw = (data.sequences || []) as ServerSequence[];
       // Hydrate each sequence with its steps (parallel). For the list screen
-      // we only need counts, but the builder wants full step arrays — so we
+      // we only need counts, but the builder wants full step arrays ï¿½ so we
       // lazy-load steps when a sequence is opened. Here we synthesize from
       // step_count only.
       const hydrated: Sequence[] = raw.map(s => ({
@@ -300,7 +303,7 @@ export default function SequencesPage() {
       const data = await res.json();
       setActivity((data.activity || []) as ActivityItem[]);
     } catch {
-      // soft-fail — activity panel just stays empty
+      // soft-fail ï¿½ activity panel just stays empty
     }
   }
 
@@ -333,7 +336,7 @@ export default function SequencesPage() {
   }
 
   async function persistSequence(seq: Sequence): Promise<Sequence | null> {
-    // Save — either create or sync steps to existing.
+    // Save ï¿½ either create or sync steps to existing.
     const channelSteps = seq.steps
       .map(s => ({ type: s.type, body: s.body, subject: s.subject, delay_days: s.delay_days, channel: typeToChannel(s.type) }))
       .filter(s => s.channel !== null);
@@ -479,7 +482,7 @@ export default function SequencesPage() {
         };
       });
 
-      // Persist immediately — AI-generated sequences are sent to the backend
+      // Persist immediately ï¿½ AI-generated sequences are sent to the backend
       // so the cron runner can pick them up as soon as leads are enrolled.
       const draft: Sequence = {
         id: `tmp_${Date.now()}`,
@@ -593,6 +596,7 @@ export default function SequencesPage() {
     <div className="fade-in space-y-5">
       <PageHero
         icon={<ListOrdered size={28} />}
+        eyebrow="SEQUENCE BUILDER"
         title="Email Sequences"
         subtitle="Multi-channel drip campaigns with AI & A/B testing."
         gradient="purple"
@@ -624,7 +628,7 @@ export default function SequencesPage() {
         }
       />
 
-      {/* Recent activity panel — last 10 step executions from trinity_log */}
+      {/* Recent activity panel ï¿½ last 10 step executions from trinity_log */}
       <PrismPanel padding="p-4" className="overflow-hidden">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-xs font-semibold flex items-center gap-2">
@@ -987,13 +991,11 @@ export default function SequencesPage() {
                 }`}>{c}</button>
             ))}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-3" variants={containerVariants} initial="hidden" animate="visible">
             {filteredTemplates.map((t, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: i * 0.06 }}
+                variants={itemVariants}
                 whileHover={{ y: -2 }}
                 className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
@@ -1020,7 +1022,7 @@ export default function SequencesPage() {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -1180,12 +1182,12 @@ export default function SequencesPage() {
                         {r.status}
                       </span>
                       <span>step {r.current_step + 1}</span>
-                      <span className="text-muted">·</span>
-                      <span className="text-muted">contact {r.contact_id ? r.contact_id.slice(0, 8) : "—"}</span>
+                      <span className="text-muted">ï¿½</span>
+                      <span className="text-muted">contact {r.contact_id ? r.contact_id.slice(0, 8) : "ï¿½"}</span>
                       {r.next_action_at && (
-                        <span className="text-muted">· next {new Date(r.next_action_at).toLocaleString()}</span>
+                        <span className="text-muted">ï¿½ next {new Date(r.next_action_at).toLocaleString()}</span>
                       )}
-                      {r.exit_reason && <span className="text-muted">· {r.exit_reason}</span>}
+                      {r.exit_reason && <span className="text-muted">ï¿½ {r.exit_reason}</span>}
                     </div>
                     <div className="flex gap-1">
                       {r.status === "active" && (
