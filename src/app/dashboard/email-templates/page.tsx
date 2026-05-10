@@ -189,6 +189,7 @@ export default function EmailTemplatesPage() {
       <PageHero
         icon={<MailPlus size={28} />}
         title="Email Templates"
+        eyebrow="EMAIL TEMPLATES"
         subtitle={`${TEMPLATES.length === 0 ? "No templates yet" : `${TEMPLATES.length} templates`} with AI generation.`}
         gradient="gold"
         actions={

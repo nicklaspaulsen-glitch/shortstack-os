@@ -300,6 +300,7 @@ export default function NotificationsPage() {
       <PageHero
         icon={<Bell size={28} />}
         title="Notifications"
+        eyebrow="NOTIFICATIONS"
         subtitle="Stay informed about tasks, leads & events."
         gradient="sunset"
         actions={

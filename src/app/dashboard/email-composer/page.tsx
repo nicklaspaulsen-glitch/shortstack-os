@@ -842,6 +842,7 @@ export default function EmailComposerPage() {
       <PageHero
         icon={<Mail size={28} />}
         title="Email Composer"
+        eyebrow="EMAIL COMPOSER"
         subtitle="Emails that open and convert. AI drafts subject lines, bodies, and send times."
         gradient="gold"
         actions={

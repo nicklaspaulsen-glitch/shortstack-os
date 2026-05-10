@@ -146,6 +146,7 @@ export default function SMSTemplatesPage() {
       <PageHero
         icon={<Smartphone size={28} />}
         title="SMS Templates"
+        eyebrow="SMS TEMPLATES"
         subtitle={`${templates.length} templates with compliance & analytics.`}
         gradient="gold"
         actions={

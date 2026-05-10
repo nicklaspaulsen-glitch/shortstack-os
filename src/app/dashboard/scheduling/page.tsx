@@ -86,7 +86,7 @@ const COLOR_OPTIONS = [
 ];
 
 /* ------------------------------------------------------------------ */
-/*  AI Smart placeholders — empty until real APIs ship.               */
+/*  AI Smart placeholders ï¿½ empty until real APIs ship.               */
 /* ------------------------------------------------------------------ */
 const AI_SUGGESTED_TIMES: { time: string; day: string; score: number; reason: string }[] = [];
 
@@ -265,7 +265,8 @@ export default function SchedulingPage() {
       <PageHero
         icon={<Calendar size={28} />}
         title="AI Smart Scheduler"
-        subtitle="Intelligent booking pages with AI conflict detection, smart availability, and client prep cards — share a link, skip the back-and-forth."
+        eyebrow="SCHEDULING"
+        subtitle="Intelligent booking pages with AI conflict detection, smart availability, and client prep cards ï¿½ share a link, skip the back-and-forth."
         gradient="gold"
         actions={
           <>

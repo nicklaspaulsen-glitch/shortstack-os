@@ -284,7 +284,7 @@ export default function LandingPagesPage() {
       }
 
       const c = defaultContent();
-      c.hero.headline = data.headline || bizInfo.tagline || `${bizInfo.name} — ${bizInfo.industry} Solutions`;
+      c.hero.headline = data.headline || bizInfo.tagline || `${bizInfo.name} ï¿½ ${bizInfo.industry} Solutions`;
       c.hero.subheadline = data.subheadline || bizInfo.description || c.hero.subheadline;
       c.hero.cta_text = data.hero_cta || bizInfo.ctaText || "Get Started";
       c.hero.cta_url = bizInfo.ctaUrl || "#";
@@ -362,7 +362,7 @@ export default function LandingPagesPage() {
       ...prev,
       // Business name/industry defaults derive from the offer so the generate
       // API has enough to chew on. User can refine everything in Advanced.
-      name: prev.name || offer.split(/[-.,–—:]/)[0].trim().slice(0, 60) || "Your Brand",
+      name: prev.name || offer.split(/[-.,ï¿½ï¿½:]/)[0].trim().slice(0, 60) || "Your Brand",
       industry: prev.industry || (tpl?.name || "SaaS"),
       description: prev.description || offer,
       tagline: guidedHeadline.trim() || prev.tagline || offer.slice(0, 80),
@@ -452,7 +452,7 @@ export default function LandingPagesPage() {
     {
       id: "offer",
       title: "What are you selling?",
-      description: "One or two sentences — product, service, membership, even a newsletter signup.",
+      description: "One or two sentences ï¿½ product, service, membership, even a newsletter signup.",
       icon: <Sparkles size={18} />,
       canProceed: guidedOffer.trim().length > 0,
       component: (
@@ -486,7 +486,7 @@ export default function LandingPagesPage() {
     {
       id: "template",
       title: "Pick a template",
-      description: "This sets the structure — sections and overall vibe. You can change colour & copy after.",
+      description: "This sets the structure ï¿½ sections and overall vibe. You can change colour & copy after.",
       icon: <Layout size={18} />,
       component: (
         <ChoiceCards
@@ -554,7 +554,7 @@ export default function LandingPagesPage() {
             <span className="font-semibold">{guidedOffer || <span className="italic text-muted">(none)</span>}</span>
           </p>
           <p className="text-[11px] text-muted">
-            Template: <span className="text-foreground">{TEMPLATES.find(t => t.id === guidedTemplate)?.name || "—"}</span>
+            Template: <span className="text-foreground">{TEMPLATES.find(t => t.id === guidedTemplate)?.name || "ï¿½"}</span>
           </p>
           {guidedAudience && (
             <p className="text-[11px] text-muted">
@@ -1002,6 +1002,7 @@ export default function LandingPagesPage() {
       <PageHero
         icon={<LayoutTemplate size={28} />}
         title="AI Landing Page Generator"
+        eyebrow="LANDING PAGES"
         subtitle="High-converting pages with AI-powered content."
         gradient="gold"
         actions={
@@ -1016,13 +1017,13 @@ export default function LandingPagesPage() {
         }
       />
 
-      {/* Guided Mode — 4-step AI landing page builder */}
+      {/* Guided Mode ï¿½ 4-step AI landing page builder */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={generating ? "Generating…" : "Generate landing page"}
+          finishLabel={generating ? "Generatingï¿½" : "Generate landing page"}
           busy={generating}
           onFinish={handleGuidedGenerate}
           onCancel={() => setAdvancedMode(true)}

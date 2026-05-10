@@ -354,9 +354,9 @@ export default function NewsletterPage() {
         toast.error(data.error || "Send failed");
       }
     } catch (err) {
-      // Don't fake success on network errors — the user needs to know the
+      // Don't fake success on network errors ï¿½ the user needs to know the
       // send never happened. Surface the real error so they can retry.
-      toast.error(err instanceof Error ? err.message : "Network error — newsletter was NOT sent");
+      toast.error(err instanceof Error ? err.message : "Network error ï¿½ newsletter was NOT sent");
     }
     setSending(false);
   };
@@ -486,7 +486,7 @@ export default function NewsletterPage() {
     {
       id: "topic",
       title: "What's the newsletter about?",
-      description: "One sentence is fine — the monthly update, a product launch, a round-up of wins.",
+      description: "One sentence is fine ï¿½ the monthly update, a product launch, a round-up of wins.",
       icon: <FileText size={18} />,
       canProceed: guidedTopic.trim().length > 0,
       component: (
@@ -518,7 +518,7 @@ export default function NewsletterPage() {
               {([
                 { id: "short" as const, label: "Short", desc: "1 section" },
                 { id: "medium" as const, label: "Medium", desc: "2 sections" },
-                { id: "long" as const, label: "Long", desc: "3–4 sections" },
+                { id: "long" as const, label: "Long", desc: "3ï¿½4 sections" },
               ]).map(l => {
                 const sel = guidedLength === l.id;
                 return (
@@ -581,7 +581,7 @@ export default function NewsletterPage() {
             <span className="font-semibold">{guidedTopic || <span className="italic text-muted">(none)</span>}</span>
           </p>
           <p className="text-[11px] text-muted capitalize">
-            {guidedLength} · {guidedTone}
+            {guidedLength} ï¿½ {guidedTone}
           </p>
         </div>
       ),
@@ -594,6 +594,7 @@ export default function NewsletterPage() {
       <PageHero
         icon={<Newspaper size={28} />}
         title="Newsletter Builder"
+        eyebrow="NEWSLETTER"
         subtitle="Design, preview & send newsletters."
         gradient="sunset"
         actions={
@@ -614,13 +615,13 @@ export default function NewsletterPage() {
         }
       />
 
-      {/* Guided Mode — 3-step AI newsletter drafter */}
+      {/* Guided Mode ï¿½ 3-step AI newsletter drafter */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={guidedGenerating ? "Drafting…" : "Draft newsletter"}
+          finishLabel={guidedGenerating ? "Draftingï¿½" : "Draft newsletter"}
           busy={guidedGenerating}
           onFinish={handleGuidedGenerate}
           onCancel={() => setAdvancedMode(true)}
@@ -649,7 +650,7 @@ export default function NewsletterPage() {
           </h3>
           <p className="text-xs text-muted max-w-md mx-auto mt-1">
             Drag-and-drop blocks, AI subject lines, schedule or send
-            immediately — preview desktop & mobile before it leaves your outbox.
+            immediately ï¿½ preview desktop & mobile before it leaves your outbox.
           </p>
         </div>
       </div>

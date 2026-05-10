@@ -370,6 +370,7 @@ export default function FormsPage() {
       <PageHero
         icon={<ClipboardCheck size={28} />}
         title="Form Builder"
+        eyebrow="FORMS"
         subtitle="Build lead capture forms with a drag-drop editor or AI — embed anywhere and see submissions flow directly into CRM."
         gradient="gold"
         actions={

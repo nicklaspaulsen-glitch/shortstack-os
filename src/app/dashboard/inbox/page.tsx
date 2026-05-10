@@ -190,7 +190,7 @@ export default function InboxPage() {
           id: `contract-${c.id}`,
           type: "contracts",
           title: c.title || "Untitled Contract",
-          preview: `${c.status} contract${c.value ? ` — $${Number(c.value).toLocaleString()}` : ""}`,
+          preview: `${c.status} contract${c.value ? ` ï¿½ $${Number(c.value).toLocaleString()}` : ""}`,
           content: `Contract: ${c.title}\nStatus: ${c.status}\nValue: $${Number(c.value || 0).toLocaleString()}\nStart: ${c.start_date || "TBD"}\nEnd: ${c.end_date || "TBD"}`,
           date: c.created_at,
           source: "Contract Generator",
@@ -242,7 +242,7 @@ export default function InboxPage() {
         inboxItems.push({
           id: `briefing-${b.id}`,
           type: "briefings",
-          title: `Daily Briefing — ${new Date(b.generated_at).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}`,
+          title: `Daily Briefing ï¿½ ${new Date(b.generated_at).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}`,
           preview: b.summary || "Morning briefing with stats & updates",
           content: b.summary || JSON.stringify(b.content, null, 2),
           date: b.created_at,
@@ -531,6 +531,7 @@ export default function InboxPage() {
         <PageHero
           icon={<Inbox size={28} />}
           title="Inbox"
+          eyebrow="INBOX"
           subtitle="All your generated content, scripts & exports."
           gradient="gold"
           actions={
@@ -561,7 +562,7 @@ export default function InboxPage() {
           }
         />
 
-        {/* Stats — inbox view only */}
+        {/* Stats ï¿½ inbox view only */}
         {view === "inbox" && (
         <div className="grid grid-cols-4 gap-3">
           {[
@@ -589,7 +590,7 @@ export default function InboxPage() {
         </div>
         )}
 
-        {/* Search & Filters — inbox view only */}
+        {/* Search & Filters ï¿½ inbox view only */}
         {view === "inbox" && (<>
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
@@ -664,7 +665,7 @@ export default function InboxPage() {
         </>)}
       </div>
 
-      {/* Main Content — inbox view */}
+      {/* Main Content ï¿½ inbox view */}
       {view === "inbox" && (
       <div className="flex-1 flex overflow-hidden px-4 md:px-6 pb-4 md:pb-6 gap-4">
         {/* Left: Category Sidebar */}
@@ -1057,7 +1058,7 @@ export default function InboxPage() {
                     <textarea
                       value={replyText}
                       onChange={e => setReplyText(e.target.value)}
-                      placeholder="Type your reply... (saved as a draft — send flows per channel)"
+                      placeholder="Type your reply... (saved as a draft ï¿½ send flows per channel)"
                       className="w-full bg-transparent text-sm text-[rgba(0,0,0,0.75)] placeholder-[rgba(0,0,0,0.25)] px-4 py-3 resize-none focus:outline-none min-h-[120px]"
                       autoFocus
                     />
@@ -1073,9 +1074,9 @@ export default function InboxPage() {
                           if (!replyText.trim()) return;
                           // Copy the draft so the user can paste into the channel's own UI.
                           // Actual send flows differ per channel (email, SMS, outreach) and
-                          // don't have a unified endpoint yet — we don't want to fake a send.
+                          // don't have a unified endpoint yet ï¿½ we don't want to fake a send.
                           navigator.clipboard.writeText(replyText).catch(() => {});
-                          toast.success("Draft copied — paste into your send flow");
+                          toast.success("Draft copied ï¿½ paste into your send flow");
                           setShowReply(false);
                           setReplyText("");
                         }}
@@ -1105,7 +1106,7 @@ export default function InboxPage() {
               <button
                 onClick={() => {
                   copyContent(overlayItem);
-                  toast.success("Content copied — ready to forward");
+                  toast.success("Content copied ï¿½ ready to forward");
                 }}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.65)] hover:text-[#0A0A0B] text-xs font-medium transition-all border border-[rgba(0,0,0,0.08)]"
               >

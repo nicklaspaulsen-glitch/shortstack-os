@@ -149,6 +149,7 @@ export default function MeetingsPage() {
       <PageHero
         icon={<Mic size={22} />}
         title="Meetings"
+        eyebrow="MEETINGS"
         subtitle={`${meetings.length} recorded — transcripts, action items, and decisions on every call.`}
         gradient="gold"
         actions={

@@ -120,6 +120,7 @@ export default function FunnelsPage() {
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       <PageHero
         title="Funnels"
+        eyebrow="FUNNELS"
         subtitle="Build multi-step conversion funnels and track drop-off at every stage."
         icon={<GitBranch size={22} />}
         gradient="purple"

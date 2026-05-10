@@ -183,6 +183,7 @@ export default function SurveysPage() {
     <div className="space-y-6">
       <PageHero
         title="Surveys"
+        eyebrow="SURVEYS"
         subtitle="Build feedback surveys, share links, and track responses."
         icon={<ClipboardCheck size={22} />}
         gradient="sunset"
