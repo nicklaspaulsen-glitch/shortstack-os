@@ -67,9 +67,9 @@ export default function LandingFooter() {
             <ul className="space-y-2">
               {[
 { label: "Login", href: "/login" },
-                { label: "Terms of Service", href: "/terms" },
-                { label: "Privacy Policy", href: "/privacy" },
-                { label: "Cookie Policy", href: "/cookies" },
+                { label: "Terms of Service", href: "/legal/terms" },
+                { label: "Privacy Policy", href: "/legal/privacy" },
+                { label: "Cookie Policy", href: "/legal/cookies" },
               ].map((link) => (
                 <li key={link.label}>
                   <Link

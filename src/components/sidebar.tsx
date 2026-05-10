@@ -1228,6 +1228,16 @@ export default function Sidebar() {
         )}
         {/* Desktop-app indicator — only renders inside the Electron shell */}
         <DesktopIndicator collapsed={collapsed} />
+        {/* Legal footer links — always visible when not collapsed */}
+        {!collapsed && (
+          <div className="flex items-center justify-center gap-3 pt-1.5">
+            <a href="/legal/privacy" className="text-[9px] text-text-muted hover:text-brand-accent transition-colors duration-220">Privacy</a>
+            <span className="text-[9px] text-text-muted/30">&middot;</span>
+            <a href="/legal/terms" className="text-[9px] text-text-muted hover:text-brand-accent transition-colors duration-220">Terms</a>
+            <span className="text-[9px] text-text-muted/30">&middot;</span>
+            <a href="/legal/cookies" className="text-[9px] text-text-muted hover:text-brand-accent transition-colors duration-220">Cookies</a>
+          </div>
+        )}
         {/* White label: Powered by footer */}
         {wl.show_powered_by && !collapsed && (wl.company_name && wl.company_name !== "ShortStack") && (
           <div className="text-center pt-1.5">
