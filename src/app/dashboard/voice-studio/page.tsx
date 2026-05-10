@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { PrismPanel } from "@/components/prism";
 
 // -- Types ----------------------------------------------------------
 interface VoiceClone {
@@ -88,7 +87,7 @@ const SURFACE_FLAGS: Array<{
 ];
 
 const TEST_PROMPT_DEFAULT =
-  "Hi there — this is a quick test of my new voice clone. How does it sound?";
+  "Hi there ï¿½ this is a quick test of my new voice clone. How does it sound?";
 
 export default function VoiceStudioPage() {
   const [tab, setTab] = useState<Tab>("my_voices");
@@ -121,8 +120,8 @@ export default function VoiceStudioPage() {
   }, [refresh]);
 
   // Renders pulled lazily on tab switch.
-  // Previously used a serial `for…await` loop (N+1 fetches). Now fires all
-  // clone-detail requests in parallel with Promise.all — same result, far
+  // Previously used a serial `forï¿½await` loop (N+1 fetches). Now fires all
+  // clone-detail requests in parallel with Promise.all ï¿½ same result, far
   // faster when the user has multiple voice clones.
   const loadRenders = useCallback(async () => {
     try {
@@ -170,7 +169,7 @@ export default function VoiceStudioPage() {
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-sm font-semibold text-[#0A0A0B] leading-tight">Voice Studio</h1>
-          <p className="text-[9px] text-[#71717A]">Clone · Presets · Renders</p>
+          <p className="text-[9px] text-[#71717A]">Clone ï¿½ Presets ï¿½ Renders</p>
         </div>
         {stats.mineCount > 0 && (
           <motion.span
@@ -197,8 +196,8 @@ export default function VoiceStudioPage() {
       </div>
 
       <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
-        {/* -- Tab bar — glass pill container -- */}
-        <PrismPanel padding="p-1" className="rounded-xl">
+        {/* -- Tab bar -- */}
+        <div className="rounded-xl p-1" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}>
           <nav className="flex gap-1 overflow-x-auto" aria-label="Voice Studio tabs">
             {TAB_ORDER.map((t) => {
               const isActive = tab === t;
@@ -209,8 +208,8 @@ export default function VoiceStudioPage() {
                   onClick={() => setTab(t)}
                   className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
                     isActive
-                      ? "bg-[rgba(204,36,36,0.08)] text-[#1D4ED8] border border-[rgba(204,36,36,0.25)]"
-                      : "text-white/40 hover:text-white/60"
+                      ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)]"
+                      : "text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.04)]"
                   }`}
                   aria-current={isActive ? "page" : undefined}
                 >
@@ -219,18 +218,18 @@ export default function VoiceStudioPage() {
               );
             })}
           </nav>
-        </PrismPanel>
+        </div>
 
         {error && (
-          <div className="mt-6 flex items-start gap-3 rounded-lg border border-rose-500/30 bg-rose-950/40 p-4 text-sm text-rose-200">
-            <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
+          <div className="mt-6 flex items-start gap-3 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+            <AlertTriangle size={18} className="mt-0.5 flex-shrink-0 text-rose-500" />
             <div>{error}</div>
           </div>
         )}
 
         <div className="mt-6">
           {loading && (
-            <div className="flex items-center justify-center py-12 text-white/60">
+            <div className="flex items-center justify-center py-12 text-[#71717A]">
               <Loader2 size={20} className="animate-spin" />
             </div>
           )}
@@ -359,8 +358,8 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
       }
       setSubmitMsg(
         data.status === "ready"
-          ? "Clone trained successfully — try it from the row below."
-          : "Clone training started — we'll mark it ready when the worker finishes.",
+          ? "Clone trained successfully ï¿½ try it from the row below."
+          : "Clone training started ï¿½ we'll mark it ready when the worker finishes.",
       );
       setFiles([]);
       setLabel("");
@@ -375,7 +374,9 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
   }, [files, label, description, consentKind, signedBy, onCreated]);
 
   return (
-    <PrismPanel rainbow padding="p-6" className="rounded-xl">
+    <div className="relative rounded-xl overflow-hidden p-6" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+      {/* Blue gradient top accent bar */}
+      <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #2563EB, #3B82F6, #8B5CF6, #3B82F6, #2563EB)" }} />
       <div className="flex items-start gap-4">
         <div className="rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] p-2.5">
           <Upload size={20} className="text-[#2563EB]" />
@@ -408,7 +409,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
             <Upload size={16} />
             {files.length === 0
               ? "Choose audio samples (mp3, wav, m4a, ogg)"
-              : `${files.length} sample${files.length === 1 ? "" : "s"} selected — click to replace`}
+              : `${files.length} sample${files.length === 1 ? "" : "s"} selected ï¿½ click to replace`}
           </button>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -416,7 +417,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
               type="text"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
-              placeholder="Label (e.g. 'My voice — natural')"
+              placeholder="Label (e.g. 'My voice ï¿½ natural')"
               className="rounded-lg border border-[rgba(0,0,0,0.10)] bg-white px-3 py-2 text-sm text-[#0A0A0B] placeholder:text-[#71717A] focus:border-[rgba(0,0,0,0.25)] focus:outline-none"
             />
             <input
@@ -488,7 +489,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
           </div>
         </div>
       </div>
-    </PrismPanel>
+    </div>
   );
 }
 
@@ -690,7 +691,7 @@ function inferGender(preset: VoiceClone): "female" | "male" | "neutral" {
 }
 
 // These must match the `category` field values defined in
-// src/lib/voice/preset-library.ts — the filter reads
+// src/lib/voice/preset-library.ts ï¿½ the filter reads
 // `consent_evidence.category` from each seeded preset row.
 const PRESET_CATEGORIES = ["all", "warm", "authoritative", "youthful", "narrator", "casual", "british"] as const;
 type PresetCategory = (typeof PRESET_CATEGORIES)[number];
@@ -720,7 +721,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
       let changed = false;
       const next = { ...prev };
       for (const p of presets) {
-        if (next[p.id]) continue; // already populated — keep the existing URL
+        if (next[p.id]) continue; // already populated ï¿½ keep the existing URL
         const stored = p.consent_evidence?.preview_url;
         if (typeof stored === "string" && stored) {
           next[p.id] = stored;
@@ -791,7 +792,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search presets…"
+            placeholder="Search presetsï¿½"
             className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-[#0A0A0B] placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50"
             style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
           />
@@ -899,15 +900,15 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
 
 interface PresetCardProps {
   preset: VoiceClone;
-  /** Previously generated audio URL — survives tab switches. */
+  /** Previously generated audio URL ï¿½ survives tab switches. */
   cachedUrl: string | null;
-  /** Previously typed test phrase — survives tab switches. */
+  /** Previously typed test phrase ï¿½ survives tab switches. */
   cachedText: string;
   onUrlCached: (url: string) => void;
   onTextChanged: (text: string) => void;
   /** Called after the preset is saved to My Voices so the parent can refresh. */
   onSaved?: () => void;
-  /** First card in a filtered set — gets a "Featured" badge and shadow uplift. */
+  /** First card in a filtered set ï¿½ gets a "Featured" badge and shadow uplift. */
   featured?: boolean;
 }
 
@@ -927,7 +928,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   const onTest = useCallback(async () => {
     setTesting(true);
     setError(null);
-    // Don't wipe testUrl here — keep the old audio until the new one arrives.
+    // Don't wipe testUrl here ï¿½ keep the old audio until the new one arrives.
     try {
       const res = await fetch(`/api/voice/clones/${preset.id}/test`, {
         method: "POST",
@@ -972,7 +973,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   return (
     <div
       className="group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-all duration-200 min-h-[220px] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-      style={{ background: "#FFFFFF", border: featured ? "1px solid rgba(204,36,36,0.18)" : "1px solid rgba(0,0,0,0.08)" }}
+      style={{ background: "#FFFFFF", border: featured ? "1px solid rgba(37,99,235,0.25)" : "1px solid rgba(0,0,0,0.08)" }}
       onMouseEnter={() => {
         setIsHovering(true);
         if (testUrl || testing) return;
@@ -993,7 +994,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           </div>
           <div className="flex items-center gap-1.5 flex-wrap justify-end">
             {featured && (
-              <span className="text-[10px] font-semibold bg-[rgba(204,36,36,0.1)] text-[#1D4ED8] px-2 py-0.5 rounded-full uppercase tracking-wide">
+              <span className="text-[10px] font-semibold bg-[rgba(37,99,235,0.1)] text-[#1D4ED8] px-2 py-0.5 rounded-full uppercase tracking-wide">
                 Featured
               </span>
             )}
@@ -1017,10 +1018,16 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           <p className="mt-1 text-xs text-[#52525B] leading-relaxed">{preset.description}</p>
         )}
         {!hasStoredPreview && !testUrl && !editMode && (
-          <div className="mt-3 flex items-end justify-center gap-[2px] h-8 group-hover:opacity-60 opacity-20 transition-opacity duration-300" aria-hidden="true">
-            {[6, 10, 7, 14, 8, 12, 5, 15, 9, 11, 6, 13, 8, 10, 5].map((h, i) => (
-              <div key={i} style={{ width: 2.5, height: h, background: "#2563EB", borderRadius: 2 }} />
-            ))}
+          <div className="mt-3 flex flex-col items-center gap-1.5 py-2 rounded-lg border border-dashed border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.015)] group-hover:border-[rgba(37,99,235,0.30)] group-hover:bg-[rgba(37,99,235,0.04)] transition-colors duration-300">
+            {/* waveform bars */}
+            <div className="flex items-end justify-center gap-[2px] h-6 group-hover:opacity-80 opacity-25 transition-opacity duration-300" aria-hidden="true">
+              {[5, 9, 6, 13, 7, 11, 4, 14, 8, 10, 5, 12, 7, 9, 4].map((h, i) => (
+                <div key={i} style={{ width: 2.5, height: h, background: "#2563EB", borderRadius: 2 }} />
+              ))}
+            </div>
+            <span className="text-[10px] text-[#71717A] group-hover:text-[#1D4ED8] transition-colors duration-200">
+              Hover to preview
+            </span>
           </div>
         )}
 
@@ -1032,7 +1039,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               onChange={(e) => { setTestText(e.target.value); onTextChanged(e.target.value); }}
               rows={3}
               maxLength={300}
-              placeholder="Type what you want the voice to say…"
+              placeholder="Type what you want the voice to sayï¿½"
               className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-xs text-[#0A0A0B] placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 resize-none"
             />
             <div className="flex items-center justify-between">
@@ -1089,7 +1096,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             ) : (
               <Play size={12} />
             )}
-            {testing ? "Generating…" : testUrl ? "Re-preview" : "Preview"}
+            {testing ? "Generatingï¿½" : testUrl ? "Re-preview" : "Preview"}
           </button>
 
           {/* Save to My Voices */}
@@ -1110,7 +1117,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           </button>
         </div>
 
-        {/* Audio player — kept visible while re-generating (prevUrlRef) */}
+        {/* Audio player ï¿½ kept visible while re-generating (prevUrlRef) */}
         {(testUrl || (testing && prevUrlRef.current)) && (
           <div className="relative mt-3 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] p-2">
             {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
@@ -1147,7 +1154,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
     );
   }
   return (
-    <PrismPanel rainbow padding="p-0" className="rounded-xl overflow-hidden">
+    <div className="rounded-xl overflow-hidden" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}>
       <div className="divide-y divide-[rgba(0,0,0,0.06)]">
         {renders.map((r, index) => {
           const audioUrl = r.r2_key ? `${R2_BASE}/${r.r2_key}` : null;
@@ -1171,9 +1178,9 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
                       })}
                     </span>
                     {r.duration_seconds !== null && (
-                      <span>· {Math.round(r.duration_seconds)}s</span>
+                      <span>ï¿½ {Math.round(r.duration_seconds)}s</span>
                     )}
-                    <span>· used {r.use_count}×</span>
+                    <span>ï¿½ used {r.use_count}ï¿½</span>
                     {r.context && (
                       <span className="rounded-full border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-2 py-0.5 uppercase tracking-wider text-[#71717A]">
                         {r.context}
@@ -1209,6 +1216,6 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
           );
         })}
       </div>
-    </PrismPanel>
+    </div>
   );
 }
