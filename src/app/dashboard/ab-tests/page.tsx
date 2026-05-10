@@ -151,6 +151,7 @@ export default function AbTestsPage() {
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       <PageHero
         title="A/B Tests"
+        eyebrow="A/B TESTS"
         subtitle="Run head-to-head experiments on landing pages, funnel steps, and emails. Pick the winner with confidence."
         icon={<FlaskConical size={22} />}
         gradient="purple"

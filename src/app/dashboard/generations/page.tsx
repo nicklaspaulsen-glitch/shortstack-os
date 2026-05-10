@@ -124,6 +124,7 @@ export default function GenerationsPage() {
       <PageHero
         icon={<Sparkles size={28} />}
         title="Generations"
+        eyebrow="GENERATIONS"
         subtitle="Everything you've created, organized by category."
         gradient="sunset"
         actions={

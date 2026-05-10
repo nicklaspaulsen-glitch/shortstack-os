@@ -537,6 +537,7 @@ export default function LeadScoringPage() {
       <PageHero
         icon={<Target size={28} />}
         title="AI Lead Scoring"
+        eyebrow="LEAD SCORING"
         subtitle="Claude-powered hybrid scoring (rules + AI). 0-100 hot/warm/cold grades update hourly + on every engagement event."
         gradient="purple"
         actions={

@@ -224,6 +224,7 @@ export default function WebhooksPage() {
       <PageHero
         icon={<Webhook size={28} />}
         title="Webhooks"
+        eyebrow="WEBHOOKS"
         subtitle={`${webhooks.length} endpoints · ${webhooks.filter(w => w.active).length} active`}
         gradient="gold"
         actions={

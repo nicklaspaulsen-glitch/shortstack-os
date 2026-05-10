@@ -126,6 +126,7 @@ export default function MonitorPage() {
     <div className="space-y-6">
       <PageHero
         title="System Monitor"
+        eyebrow="MONITOR"
         subtitle="Live status board — auto-refreshes every 30 seconds."
         icon={<Activity className="w-6 h-6" />}
         gradient="gold"

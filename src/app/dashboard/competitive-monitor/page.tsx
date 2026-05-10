@@ -223,7 +223,7 @@ export default function CompetitiveMonitorPage() {
   }
 
   function formatTime(iso: string, future = false) {
-    if (iso === "Never" || iso === "—" || iso === "Pending..." || iso === "Retrying...") return iso;
+    if (iso === "Never" || iso === "ï¿½" || iso === "Pending..." || iso === "Retrying...") return iso;
     const d = new Date(iso);
     const now = new Date();
     const diff = future ? d.getTime() - now.getTime() : now.getTime() - d.getTime();
@@ -262,6 +262,7 @@ export default function CompetitiveMonitorPage() {
       <PageHero
         icon={<TargetIcon size={28} />}
         title="Competitive Monitor"
+        eyebrow="COMPETITIVE INTEL"
         subtitle="Track competitor changes, pricing & features."
         gradient="sunset"
         actions={
@@ -404,7 +405,7 @@ export default function CompetitiveMonitorPage() {
                 <div className="text-xs font-medium truncate">{c.name}</div>
                 <div className="text-[10px] text-muted">{FREQUENCY_LABELS[c.frequency]}</div>
               </div>
-              <div className="text-[10px] text-gold whitespace-nowrap">{c.nextCheck === "—" || c.nextCheck === "Retrying..." ? c.nextCheck : formatTime(c.nextCheck, true)}</div>
+              <div className="text-[10px] text-gold whitespace-nowrap">{c.nextCheck === "ï¿½" || c.nextCheck === "Retrying..." ? c.nextCheck : formatTime(c.nextCheck, true)}</div>
             </div>
           ))}
         </div>

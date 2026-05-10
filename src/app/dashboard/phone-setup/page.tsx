@@ -290,6 +290,7 @@ export default function PhoneSetupPage() {
     <div className="min-h-screen bg-background text-foreground">
       <PageHero
         title="Phone Setup"
+        eyebrow="PHONE SETUP"
         subtitle="Buy a Twilio phone number for your client. AI receptionist + SMS + voice — all wired in one click."
         icon={<Phone size={20} />}
         actions={

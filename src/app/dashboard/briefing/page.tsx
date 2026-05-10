@@ -169,6 +169,7 @@ Be direct, specific, and action-oriented. No fluff.`;
     <div className="space-y-6">
       <PageHero
         title="Daily Briefing"
+        eyebrow="DAILY BRIEFING"
         subtitle={dateStr}
         icon={<Coffee className="w-6 h-6" />}
         gradient="sunset"

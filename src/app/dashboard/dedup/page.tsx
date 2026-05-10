@@ -147,6 +147,7 @@ export default function DedupPage() {
     <div className="space-y-6">
       <PageHero
         title="Lead Deduplication"
+        eyebrow="DEDUPLICATION"
         subtitle="Finds leads sharing the same phone or business name — preview, then merge."
         icon={<Copy className="w-6 h-6" />}
         gradient="gold"

@@ -489,6 +489,7 @@ export default function PhoneEmailPage() {
       <PageHero
         icon={<Phone size={28} />}
         title="Sender Management"
+        eyebrow="PHONE & EMAIL"
         subtitle="Phone & email sender pool with smart rotation."
         gradient="gold"
       />

@@ -273,6 +273,7 @@ export default function ApiDocsPage() {
       <PageHero
         icon={<FileText size={28} />}
         title="API Documentation"
+        eyebrow="API DOCS"
         subtitle="Complete reference for the Trinity API."
         gradient="gold"
         actions={

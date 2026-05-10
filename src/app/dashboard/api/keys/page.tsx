@@ -144,6 +144,7 @@ export default function ApiKeysPage() {
       <PageHero
         icon={<Key size={28} />}
         title="API Keys"
+        eyebrow="API KEYS"
         subtitle="Programmatic access to your ShortStack OS data. One key per integration; revoke any time."
         gradient="purple"
         actions={

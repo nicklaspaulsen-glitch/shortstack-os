@@ -199,7 +199,8 @@ export default function CustomDashboardPage() {
     <div className="flex flex-col gap-6 p-4 sm:p-6">
       <PageHero
         title="Custom Dashboard"
-        subtitle="Drag widgets onto your personal dashboard — your key metrics, your layout."
+        eyebrow="CUSTOM DASHBOARD"
+        subtitle="Drag widgets onto your personal dashboardï¿½ your key metrics, your layout."
         icon={<LayoutDashboard className="w-6 h-6" />}
         gradient="gold"
         actions={
@@ -248,7 +249,7 @@ export default function CustomDashboardPage() {
             ))}
           </div>
           <p className="text-[10px] text-white/25 text-center mt-1">
-            Click to add · drag to reorder
+            Click to add ï¿½ drag to reorder
           </p>
         </div>
 

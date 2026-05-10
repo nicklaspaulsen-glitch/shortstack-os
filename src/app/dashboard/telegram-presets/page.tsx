@@ -371,6 +371,7 @@ export default function TelegramPresetsPage() {
       <PageHero
         icon={<TelegramIcon size={28} />}
         title="Telegram Presets"
+        eyebrow="TELEGRAM PRESETS"
         subtitle="300 ready-to-send messages across 14 categories. Fork, edit, and send to any chat."
         gradient="gold"
         actions={

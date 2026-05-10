@@ -158,6 +158,7 @@ export default function WebhooksPage() {
       <PageHero
         icon={<Webhook size={28} />}
         title="Webhooks"
+        eyebrow="WEBHOOKS"
         subtitle="Subscribe to events. We sign every payload with HMAC-SHA256 and retry with backoff."
         gradient="gold"
         actions={

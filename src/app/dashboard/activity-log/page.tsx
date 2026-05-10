@@ -177,6 +177,7 @@ export default function ActivityLogPage() {
       <PageHero
         icon={<ClipboardList size={28} />}
         title="Activity Log"
+        eyebrow="ACTIVITY LOG"
         subtitle={`${logs.length} events across your agency.`}
         gradient="purple"
         actions={

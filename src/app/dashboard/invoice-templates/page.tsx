@@ -256,6 +256,7 @@ export default function InvoiceTemplatesPage() {
 
       <PageHero
         title="Invoice Templates"
+        eyebrow="INVOICE TEMPLATES"
         subtitle="Branded, reusable invoice layouts ready for any client or project."
         icon={<ReceiptText size={22} />}
         gradient="gold"

@@ -114,6 +114,7 @@ export default function NotionSyncPage() {
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-3xl mx-auto">
       <PageHero
         title="Notion Sync"
+        eyebrow="NOTION SYNC"
         subtitle="Two-way sync between your CRM, content library, and Notion databases."
         icon={<RefreshCw className="w-6 h-6" />}
         gradient="gold"
@@ -169,7 +170,7 @@ export default function NotionSyncPage() {
                 ) : (
                   <RefreshCw className="w-4 h-4" />
                 )}
-                {syncing ? "Syncing…" : "Sync Now"}
+                {syncing ? "Syncingï¿½" : "Sync Now"}
               </button>
             </motion.div>
 
@@ -242,7 +243,7 @@ export default function NotionSyncPage() {
           <div className="text-center">
             <h2 className="text-xl font-bold text-white">Connect Your Notion Workspace</h2>
             <p className="text-white/50 mt-2 max-w-md text-sm">
-              Link Notion to automatically sync your CRM, content calendar, tasks, and leads — all in one place.
+              Link Notion to automatically sync your CRM, content calendar, tasks, and leads ï¿½ all in one place.
             </p>
           </div>
 
@@ -269,7 +270,7 @@ export default function NotionSyncPage() {
               aria-disabled
               onClick={() =>
                 toast(
-                  "Notion OAuth is coming soon — we'll email you when it goes live.",
+                  "Notion OAuth is coming soon ï¿½ we'll email you when it goes live.",
                   { icon: "???" },
                 )
               }
@@ -281,13 +282,13 @@ export default function NotionSyncPage() {
               <ExternalLink className="w-4 h-4 ml-1 opacity-60" />
             </button>
             <p className="text-xs text-white/30">
-              Coming soon — you&apos;ll be able to sync clients, leads, and content.
+              Coming soon ï¿½ you&apos;ll be able to sync clients, leads, and content.
             </p>
           </div>
 
           <div className="flex items-start gap-2 text-xs text-amber-400/70 bg-amber-400/5 border border-amber-400/15 rounded-lg px-4 py-3 max-w-md">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-            Notion OAuth is coming soon — join the waitlist to be notified when it goes live.
+            Notion OAuth is coming soon ï¿½ join the waitlist to be notified when it goes live.
           </div>
         </div>
       )}

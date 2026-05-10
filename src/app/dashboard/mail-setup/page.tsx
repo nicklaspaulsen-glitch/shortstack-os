@@ -208,6 +208,7 @@ export default function MailSetupPage() {
     <div className="min-h-screen bg-background text-foreground">
       <PageHero
         title="Mail Setup"
+        eyebrow="MAIL SETUP"
         subtitle="Send email from your own branded subdomain (mail.yourdomain.com) so it lands in the inbox, not spam."
         icon={<Mail size={20} />}
       />

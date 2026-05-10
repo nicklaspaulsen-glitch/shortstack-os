@@ -215,6 +215,7 @@ export default function AuditPage() {
       <PageHero
         icon={<Activity size={22} />}
         title="Audit Log"
+        eyebrow="AUDIT LOG"
         subtitle="Comprehensive log of all user actions in the system."
         gradient="gold"
         actions={
