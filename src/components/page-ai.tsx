@@ -186,7 +186,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
         <div className="orb-body w-12 h-12 rounded-full flex items-center justify-center relative overflow-hidden">
           <Sparkles size={18} className="text-white drop-shadow-[0_0_6px_rgba(255,220,130,0.9)] pointer-events-none relative z-10 group-hover:rotate-12 transition-transform" />
           {/* Inner gloss highlight */}
-          <span className="absolute top-1 left-2 w-3 h-2 bg-white/40 rounded-full blur-sm pointer-events-none" />
+          <span className="absolute top-1 left-2 w-3 h-2 bg-black/20 rounded-full blur-sm pointer-events-none" />
         </div>
 
         <style jsx>{`

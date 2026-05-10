@@ -386,7 +386,7 @@ function RecommendationCard({ rec, index }: { rec: Recommendation; index: number
 
   const impactColor = rec.impact === "high" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
     rec.impact === "medium" ? "text-amber-400 bg-amber-500/10 border-amber-500/20" :
-    "text-muted bg-white/5 border-white/10";
+    "text-muted bg-black/5 border-border";
 
   const effortColor = rec.effort === "quick" ? "text-blue-400" : rec.effort === "medium" ? "text-purple-400" : "text-pink-400";
 
@@ -413,7 +413,7 @@ function RecommendationCard({ rec, index }: { rec: Recommendation; index: number
           </div>
           <button
             onClick={() => setShowInfo(!showInfo)}
-            className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+            className="p-1 rounded hover:bg-black/5 text-muted hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
             title="What is this?"
           >
             <Info size={11} />

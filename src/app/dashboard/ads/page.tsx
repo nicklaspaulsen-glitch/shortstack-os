@@ -376,10 +376,10 @@ export default function AdsPage() {
         gradient="sunset"
         actions={
           <>
-            <button onClick={fetchData} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+            <button onClick={fetchData} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
               <RefreshCw size={12} /> Sync
             </button>
-            <button onClick={() => setShowAddCampaign(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+            <button onClick={() => setShowAddCampaign(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
               <Plus size={12} /> New Campaign
             </button>
           </>

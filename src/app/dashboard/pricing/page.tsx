@@ -123,15 +123,15 @@ export default function PricingPage() {
         eyebrow="Plans"
         actions={
           <div className="flex items-center justify-center gap-3">
-            <span className={`text-xs font-medium ${!annual ? "text-white" : "text-white/60"}`}>Monthly</span>
+            <span className={`text-xs font-medium ${!annual ? "text-white" : "text-muted"}`}>Monthly</span>
             <button
               onClick={() => setAnnual(!annual)}
-              className={`relative w-11 h-6 rounded-full transition-colors ${annual ? "bg-white/40" : "bg-white/15"}`}
+              className={`relative w-11 h-6 rounded-full transition-colors ${annual ? "bg-black/20" : "bg-black/10"}`}
             >
               <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${annual ? "left-6" : "left-1"}`} />
             </button>
-            <span className={`text-xs font-medium ${annual ? "text-white" : "text-white/60"}`}>
-              Annual <span className="text-white/90 text-[10px]">Save 20%</span>
+            <span className={`text-xs font-medium ${annual ? "text-white" : "text-muted"}`}>
+              Annual <span className="text-foreground text-[10px]">Save 20%</span>
             </span>
           </div>
         }

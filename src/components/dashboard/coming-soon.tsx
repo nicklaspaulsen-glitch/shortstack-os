@@ -122,7 +122,7 @@ export function ComingSoon({
 
       {/* Hero */}
       <div
-        className="relative overflow-hidden  border border-white/5"
+        className="relative overflow-hidden  border border-border"
         style={{
           background: heroGradient,
           boxShadow:
@@ -155,7 +155,7 @@ export function ComingSoon({
             <Sparkles
               key={i}
               size={p.size}
-              className="absolute text-white/60 coming-soon-twinkle"
+              className="absolute text-muted coming-soon-twinkle"
               style={{
                 top: p.top,
                 left: p.left,
@@ -194,7 +194,7 @@ export function ComingSoon({
           </div>
 
           {/* In-development pill */}
-          <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-[0.14em] border border-white/15 bg-white/[0.08] text-white/85 backdrop-blur-sm">
+          <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-[0.14em] border border-border bg-white/[0.08] text-foreground backdrop-blur-sm">
             <span className="relative flex w-2 h-2">
               <span className="absolute inline-flex w-full h-full rounded-full bg-amber-300 opacity-75 animate-ping" />
               <span className="relative inline-flex w-2 h-2 rounded-full bg-amber-400" />
@@ -202,7 +202,7 @@ export function ComingSoon({
             In Development
             {eta && (
               <>
-                <span className="w-px h-3 bg-white/20 mx-0.5" />
+                <span className="w-px h-3 bg-black/10 mx-0.5" />
                 <Clock size={10} className="opacity-75" />
                 <span className="text-white/75 font-medium normal-case tracking-normal">
                   {eta}

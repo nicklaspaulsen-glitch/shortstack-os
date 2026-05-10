@@ -207,7 +207,7 @@ export default function CustomDashboardPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={resetLayout}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-white/10 hover:bg-white/15 text-white/70 transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-black/5 hover:bg-black/10 text-muted transition-all"
             >
               <RotateCcw className="w-4 h-4" />
               Reset

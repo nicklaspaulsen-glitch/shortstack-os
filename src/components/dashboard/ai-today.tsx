@@ -97,7 +97,7 @@ export default function AiToday() {
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="h-28 rounded-xl bg-white/[0.02] border border-white/[0.04] animate-pulse"
+              className="h-28 rounded-xl bg-black/5 border border-border animate-pulse"
             />
           ))}
         </div>

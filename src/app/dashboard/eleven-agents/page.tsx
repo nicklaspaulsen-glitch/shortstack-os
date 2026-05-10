@@ -262,7 +262,7 @@ export default function ElevenAgentsPage() {
         gradient="gold"
         actions={
           <button onClick={() => { loadAgents(); loadVoices(); }} disabled={apiLoading}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/15 border border-white/20 text-white text-xs font-medium hover:bg-white/25 transition-all disabled:opacity-50">
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/10 border border-border text-foreground text-xs font-medium hover:bg-black/15 transition-all disabled:opacity-50">
             <RefreshCw size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
           </button>
         }

@@ -251,7 +251,7 @@ export default function CoachAnalysisDetail() {
           <button
             type="button"
             onClick={() => window.alert("Email digest not yet wired to send — coming next.")}
-            className="inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/80 hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-black/5 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-black/5"
           >
             <Mail className="h-3.5 w-3.5" />
             Email this analysis

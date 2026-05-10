@@ -164,11 +164,11 @@ export default function UpgradePage() {
         subtitle="Scale your agency with higher limits, white-label, and more AI power."
         gradient="blue"
         actions={
-          <div className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl p-1">
+          <div className="flex items-center gap-2 bg-black/5 border border-border rounded-xl p-1">
             <button
               onClick={() => setBillingCycle("monthly")}
               className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all ${
-                billingCycle === "monthly" ? "bg-white text-black" : "text-white/70 hover:text-white"
+                billingCycle === "monthly" ? "bg-white text-black" : "text-muted hover:text-white"
               }`}
             >
               Monthly
@@ -176,13 +176,13 @@ export default function UpgradePage() {
             <button
               onClick={() => setBillingCycle("yearly")}
               className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all flex items-center gap-1 ${
-                billingCycle === "yearly" ? "bg-white text-black" : "text-white/70 hover:text-white"
+                billingCycle === "yearly" ? "bg-white text-black" : "text-muted hover:text-white"
               }`}
             >
               Yearly
               <span
                 className={`text-[9px] font-bold px-1 py-0.5 rounded ${
-                  billingCycle === "yearly" ? "bg-emerald-500/20 text-emerald-700" : "bg-white/20 text-white"
+                  billingCycle === "yearly" ? "bg-emerald-500/20 text-emerald-700" : "bg-black/10 text-white"
                 }`}
               >
                 -20%

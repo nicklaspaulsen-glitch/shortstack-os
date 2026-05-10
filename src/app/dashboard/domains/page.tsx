@@ -405,7 +405,7 @@ export default function DomainsPage() {
         actions={
           <div className="flex items-center gap-2">
             {usage && (
-              <div className="flex items-center gap-1.5 text-[10px] text-white/85 bg-white/10 border border-white/20 px-2.5 py-1.5 rounded-lg">
+              <div className="flex items-center gap-1.5 text-[10px] text-foreground bg-black/5 border border-border px-2.5 py-1.5 rounded-lg">
                 <Globe size={11} />
                 <span>
                   <span className="font-semibold">{domainsOwned}</span>
@@ -414,7 +414,7 @@ export default function DomainsPage() {
                 </span>
               </div>
             )}
-            <div className="flex items-center gap-1.5 text-[10px] text-white/80 bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
+            <div className="flex items-center gap-1.5 text-[10px] text-foreground bg-black/5 border border-border px-2 py-1 rounded-lg">
               <GoDaddyIcon size={12} /> GoDaddy
               <span className="opacity-40">·</span>
               <VercelIcon size={12} /> Vercel

@@ -127,10 +127,10 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
         <h3 className="section-header">Payment Method</h3>
         {paymentLoading ? (
           <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border animate-pulse">
-            <div className="w-5 h-5 bg-white/10 rounded" />
+            <div className="w-5 h-5 bg-black/5 rounded" />
             <div className="flex-1 space-y-1.5">
-              <div className="h-3 w-32 bg-white/10 rounded" />
-              <div className="h-2 w-20 bg-white/10 rounded" />
+              <div className="h-3 w-32 bg-black/5 rounded" />
+              <div className="h-2 w-20 bg-black/5 rounded" />
             </div>
           </div>
         ) : paymentMethod ? (

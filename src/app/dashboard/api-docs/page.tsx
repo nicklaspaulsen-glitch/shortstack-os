@@ -278,7 +278,7 @@ export default function ApiDocsPage() {
         gradient="gold"
         actions={
           <div className="flex items-center gap-2 text-[10px] text-white">
-            <span className="px-2 py-1 bg-white/10 rounded border border-white/20">v2.4.0</span>
+            <span className="px-2 py-1 bg-black/5 rounded border border-border">v2.4.0</span>
             <span>{totalEndpoints} endpoints</span>
           </div>
         }

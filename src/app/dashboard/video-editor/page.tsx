@@ -4480,7 +4480,7 @@ export default function VideoEditorPage() {
                           <button
                             type="button"
                             onClick={(e) => { e.stopPropagation(); }}
-                            className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-[8px] bg-black/60 text-white px-1.5 py-0.5 rounded border border-white/10"
+                            className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-[8px] bg-black/60 text-white px-1.5 py-0.5 rounded border border-border"
                           >
                             <Eye size={8} className="inline-block mr-0.5" />
                             Preview

@@ -30,7 +30,7 @@ const OUTCOME_META: Record<
   },
   no_answer: {
     label: "No answer",
-    tone: "text-white/60 bg-white/5 border-white/10",
+    tone: "text-muted bg-black/5 border-border",
   },
   voicemail: {
     label: "Voicemail",
@@ -42,7 +42,7 @@ const OUTCOME_META: Record<
   },
   unknown: {
     label: "Pending",
-    tone: "text-white/40 bg-white/5 border-white/10",
+    tone: "text-muted bg-black/5 border-border",
   },
 };
 

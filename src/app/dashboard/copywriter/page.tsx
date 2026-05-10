@@ -1078,26 +1078,26 @@ export default function CopywriterPage() {
                     setKeywords("");
                     toast.success("Blank canvas ready");
                   }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-transparent border border-white/20 text-white hover:bg-white/10 transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-transparent border border-border text-foreground hover:bg-black/5 transition-all"
                 >
                   <Plus size={13} />
                   Blank
                 </button>
                 <button
                   onClick={() => setShowTemplates(!showTemplates)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
                 >
                   <Layers size={13} />
                   Templates
                 </button>
                 <button
                   onClick={() => setShowHistory(!showHistory)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
                 >
                   <Clock size={13} />
                   History
                   {history.length > 0 && (
-                    <span className="ml-1 text-[9px] bg-white/20 text-white px-1.5 py-0.5 rounded-full font-semibold">
+                    <span className="ml-1 text-[9px] bg-black/10 text-foreground px-1.5 py-0.5 rounded-full font-semibold">
                       {history.length}
                     </span>
                   )}

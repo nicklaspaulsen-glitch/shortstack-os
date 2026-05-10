@@ -74,7 +74,7 @@ export default function VoicePicker({
   if (loading) {
     return (
       <div
-        className={`flex items-center gap-2 text-xs text-white/60 ${className || ""}`}
+        className={`flex items-center gap-2 text-xs text-muted ${className || ""}`}
       >
         <Loader2 size={12} className="animate-spin" /> Loading voices...
       </div>
@@ -109,8 +109,8 @@ export default function VoicePicker({
 
   return (
     <div className={`flex items-center gap-2 ${className || ""}`}>
-      <Mic size={12} className="text-white/60" />
-      <span className="text-xs uppercase tracking-wider text-white/50">
+      <Mic size={12} className="text-muted" />
+      <span className="text-xs uppercase tracking-wider text-muted">
         {labelText}
       </span>
       <select
@@ -119,7 +119,7 @@ export default function VoicePicker({
           const next = e.target.value || null;
           onChange(next);
         }}
-        className="rounded-lg border border-white/10 bg-black/30 px-2 py-1 text-xs text-white focus:border-amber-400/60 focus:outline-none"
+        className="rounded-lg border border-border bg-black/30 px-2 py-1 text-xs text-white focus:border-amber-400/60 focus:outline-none"
       >
         <option value="">Use my default</option>
         {mine.length > 0 && (

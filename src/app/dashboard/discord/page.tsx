@@ -203,7 +203,7 @@ export default function DiscordPage() {
         subtitle="Servers, bot commands, moderation & community."
         gradient="purple"
         actions={
-          <span className="text-xs text-white/60">No servers connected</span>
+          <span className="text-xs text-muted">No servers connected</span>
         }
       />
 

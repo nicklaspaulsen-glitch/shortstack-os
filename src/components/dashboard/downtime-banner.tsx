@@ -107,14 +107,14 @@ export default function DowntimeBanner() {
           <button
             onClick={fetchHealth}
             disabled={checking}
-            className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-white/5 transition-colors"
+            className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-black/5 transition-colors"
             title="Re-check"
           >
             <RefreshCw size={12} className={checking ? "animate-spin" : ""} />
           </button>
           <button
             onClick={() => dismiss(primaryService.key)}
-            className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-white/5 transition-colors"
+            className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-black/5 transition-colors"
             title="Dismiss"
           >
             <X size={12} />
@@ -123,7 +123,7 @@ export default function DowntimeBanner() {
       </div>
 
       {expanded && count > 1 && (
-        <div className="border-t border-white/5 divide-y divide-white/5">
+        <div className="border-t border-border divide-y divide-white/5">
           {activeServices.slice(1).map(service => (
             <div key={service.key} className="flex items-center gap-3 px-3 py-2">
               <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${

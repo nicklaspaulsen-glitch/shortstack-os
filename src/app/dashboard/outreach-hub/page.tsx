@@ -769,7 +769,7 @@ export default function OutreachHubPage() {
         gradient="gold"
         actions={
           <button onClick={handleSave} disabled={saving}
-            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all disabled:opacity-40">
+            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all disabled:opacity-40">
             {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
             Save All
           </button>

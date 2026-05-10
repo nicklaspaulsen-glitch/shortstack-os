@@ -200,7 +200,7 @@ export default function SelfTestDashboard() {
             <button
               onClick={runNow}
               disabled={running || refreshing}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/15 border border-white/30 text-white/95 hover:bg-white/25 disabled:opacity-50 font-medium"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/10 border border-border text-foreground hover:bg-black/15 disabled:opacity-50 font-medium"
             >
               <Play size={12} className={running ? "animate-pulse" : ""} />
               {running ? "Running…" : "Run now"}
@@ -208,7 +208,7 @@ export default function SelfTestDashboard() {
             <button
               onClick={load}
               disabled={refreshing || running}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white/90 hover:bg-white/20 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border text-foreground hover:bg-black/10 disabled:opacity-50"
             >
               <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
               {refreshing ? "Loading…" : "Refresh"}

@@ -129,7 +129,7 @@ export default function FootageBadge({
             e.stopPropagation();
             onApplyPack(recommended_creator_pack_id);
           }}
-          className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide hover:bg-white/20"
+          className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide hover:bg-black/10"
         >
           Try {packLabel}
         </button>

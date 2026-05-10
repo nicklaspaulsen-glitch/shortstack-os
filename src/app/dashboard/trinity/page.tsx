@@ -201,7 +201,7 @@ export default function TrinityPage() {
                   msg.role === "user" ? "bg-[#2563EB] text-white rounded-br-sm" : "bg-surface-light text-foreground rounded-bl-sm"
                 }`}>
                   <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                  <p className={`text-[10px] mt-1 ${msg.role === "user" ? "text-white/60" : "text-muted"}`}>
+                  <p className={`text-[10px] mt-1 ${msg.role === "user" ? "text-muted" : "text-muted"}`}>
                     {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </p>
                 </div>

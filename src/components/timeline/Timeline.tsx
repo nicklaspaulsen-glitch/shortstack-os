@@ -905,12 +905,12 @@ function ClipBlock({ clip, top, left, width, color, isSelected, onClick, onMouse
         <>
           <div
             data-role="trim-handle"
-            className="absolute left-0 top-0 h-full w-1.5 bg-white/30 hover:bg-white/70 cursor-ew-resize"
+            className="absolute left-0 top-0 h-full w-1.5 bg-black/15 hover:bg-white/70 cursor-ew-resize"
             onMouseDown={(e) => onMouseDown(e, "trim-left")}
           />
           <div
             data-role="trim-handle"
-            className="absolute right-0 top-0 h-full w-1.5 bg-white/30 hover:bg-white/70 cursor-ew-resize"
+            className="absolute right-0 top-0 h-full w-1.5 bg-black/15 hover:bg-white/70 cursor-ew-resize"
             onMouseDown={(e) => onMouseDown(e, "trim-right")}
           />
         </>
@@ -925,7 +925,7 @@ function ClipBlock({ clip, top, left, width, color, isSelected, onClick, onMouse
         />
       )}
 
-      <span className="relative px-2 py-0.5 text-[9px] text-white/95 drop-shadow font-medium truncate block">
+      <span className="relative px-2 py-0.5 text-[9px] text-foreground drop-shadow font-medium truncate block">
         {clip.label}
       </span>
     </div>
@@ -959,7 +959,7 @@ function ClipMarker({ clip, top, left, color, isSelected, onClick, onMouseDown }
       onMouseDown={onMouseDown}
       onClick={onClick}
     >
-      <span className="absolute top-0 left-2 whitespace-nowrap text-[8px] text-white/70 group-hover:text-white bg-black/40 px-1 rounded pointer-events-none">
+      <span className="absolute top-0 left-2 whitespace-nowrap text-[8px] text-muted group-hover:text-white bg-black/40 px-1 rounded pointer-events-none">
         {clip.label}
       </span>
     </div>

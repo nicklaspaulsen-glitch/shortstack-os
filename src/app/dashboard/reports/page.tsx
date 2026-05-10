@@ -389,7 +389,7 @@ export default function ReportsPage() {
         gradient="purple"
         actions={
           <button onClick={fetchData}
-            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all">
+            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all">
             <RefreshCw size={12} /> Refresh
           </button>
         }

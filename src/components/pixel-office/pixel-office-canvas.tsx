@@ -230,13 +230,13 @@ export default function PixelOfficeCanvas({
     <div className="relative w-full">
       <div
         ref={hostRef}
-        className="relative w-full overflow-hidden  border border-white/5 bg-[#0a0a0f] shadow-[0_18px_60px_-20px_rgba(0,0,0,0.7)]"
+        className="relative w-full overflow-hidden  border border-border bg-[#0a0a0f] shadow-[0_18px_60px_-20px_rgba(0,0,0,0.7)]"
         style={{ aspectRatio: `${24 / 14}` }}
         data-testid="pixel-office-canvas-host"
         data-query-history={String(typeof queryHistory === "function")}
       />
       {!mounted && !error && (
-        <div className="absolute inset-0 flex items-center justify-center text-xs text-white/50">
+        <div className="absolute inset-0 flex items-center justify-center text-xs text-muted">
           Booting up the office…
         </div>
       )}

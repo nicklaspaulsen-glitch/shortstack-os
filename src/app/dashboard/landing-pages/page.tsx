@@ -1009,7 +1009,7 @@ export default function LandingPagesPage() {
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
-              <button onClick={() => { setStep(1); setMainTab("create"); }} className="px-4 py-2 rounded-lg bg-white/15 border border-white/25 text-white text-sm font-semibold hover:bg-white/25 transition-colors flex items-center gap-2">
+              <button onClick={() => { setStep(1); setMainTab("create"); }} className="px-4 py-2 rounded-lg bg-black/10 border border-border text-foreground text-sm font-semibold hover:bg-black/15 transition-colors flex items-center gap-2">
                 <Plus className="w-4 h-4" /> New Page
               </button>
             )}
@@ -1214,22 +1214,22 @@ export default function LandingPagesPage() {
                         style={{ opacity: 0.9 }}
                       >
                         {/* Miniature page mockup */}
-                        <div className="absolute inset-3 bg-white/10 backdrop-blur-sm rounded-lg p-3 flex flex-col">
+                        <div className="absolute inset-3 bg-black/5 backdrop-blur-sm rounded-lg p-3 flex flex-col">
                           <div className="flex gap-1 mb-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                            <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                            <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-black/20" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-black/20" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-black/20" />
                           </div>
                           <div className="flex-1 flex flex-col items-center justify-center gap-1.5">
-                            <Icon className="w-6 h-6 text-white/70" />
-                            <div className="w-16 h-1.5 bg-white/30 rounded-full" />
-                            <div className="w-12 h-1 bg-white/20 rounded-full" />
-                            <div className="w-10 h-3 bg-white/30 rounded-md mt-1" />
+                            <Icon className="w-6 h-6 text-muted" />
+                            <div className="w-16 h-1.5 bg-black/15 rounded-full" />
+                            <div className="w-12 h-1 bg-black/10 rounded-full" />
+                            <div className="w-10 h-3 bg-black/15 rounded-md mt-1" />
                           </div>
                           <div className="flex gap-1 mt-auto">
-                            <div className="flex-1 h-4 bg-white/10 rounded" />
-                            <div className="flex-1 h-4 bg-white/10 rounded" />
-                            <div className="flex-1 h-4 bg-white/10 rounded" />
+                            <div className="flex-1 h-4 bg-black/5 rounded" />
+                            <div className="flex-1 h-4 bg-black/5 rounded" />
+                            <div className="flex-1 h-4 bg-black/5 rounded" />
                           </div>
                         </div>
                       </div>

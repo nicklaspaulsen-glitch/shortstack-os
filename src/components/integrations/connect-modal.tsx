@@ -150,7 +150,7 @@ export default function ConnectModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="relative w-full max-w-md mx-4  border border-white/5 bg-surface text-foreground shadow-2xl shadow-black/50 overflow-hidden"
+        className="relative w-full max-w-md mx-4  border border-border bg-surface text-foreground shadow-2xl shadow-black/50 overflow-hidden"
       >
         {/* Top gold/blue gradient bar — echoes <PageHero> aesthetic without
          *  the full hero block. The same horizontal motion-feel comes from

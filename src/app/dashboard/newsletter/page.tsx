@@ -602,10 +602,10 @@ export default function NewsletterPage() {
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
               <>
-                <button onClick={() => setActiveTab("preview")} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+                <button onClick={() => setActiveTab("preview")} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
                   <Eye size={12} /> Preview
                 </button>
-                <button onClick={handleSend} disabled={sending} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+                <button onClick={handleSend} disabled={sending} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sendMode === "schedule" ? "Schedule" : "Send"}
                 </button>

@@ -763,7 +763,7 @@ export default function CommunityPage() {
         subtitle="Connect with other agency owners — share wins, ask questions, discover resources, and RSVP to live events."
         gradient="purple"
         actions={
-          <button onClick={() => openQuickAction("new-post")} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/20 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+          <button onClick={() => openQuickAction("new-post")} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
             <Plus size={14} /> New Post
           </button>
         }

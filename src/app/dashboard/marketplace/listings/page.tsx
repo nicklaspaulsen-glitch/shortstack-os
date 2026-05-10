@@ -169,7 +169,7 @@ export default function ListingsPage() {
         actions={
           <button
             onClick={() => setShowForm((v) => !v)}
-            className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/20"
+            className="flex items-center gap-2 rounded-lg border border-border bg-black/5 px-4 py-2 text-sm font-medium text-foreground transition hover:bg-black/10"
           >
             <Plus size={14} />
             New listing

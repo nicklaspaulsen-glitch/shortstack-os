@@ -155,13 +155,13 @@ export default function RoomCanvas() {
   return (
     <>
       {/* Legend bar */}
-      <div className="flex items-center gap-3 flex-wrap text-[11px] text-white/70">
+      <div className="flex items-center gap-3 flex-wrap text-[11px] text-muted">
         <LegendDot color="bg-emerald-400" label={`Live (${counts.live})`} />
         <LegendDot color="bg-amber-400" label={`Recent (${counts.recent})`} />
-        <LegendDot color="bg-white/30" label={`Idle (${counts.idle})`} />
+        <LegendDot color="bg-black/15" label={`Idle (${counts.idle})`} />
         <LegendDot color="bg-red-400" label={`Error (${counts.err})`} />
         <LegendDot color="bg-slate-500" label={`Disabled (${counts.disabled})`} />
-        <div className="ml-auto flex items-center gap-2 text-[10px] text-white/50">
+        <div className="ml-auto flex items-center gap-2 text-[10px] text-muted">
           {loading ? (
             <>
               <Loader2 size={11} className="animate-spin" /> Loading…
@@ -180,7 +180,7 @@ export default function RoomCanvas() {
       {/* Room — perspective wrapper holds the tilt; inner room is the floor.
           In flat mode wrappers are passthrough (rotation is 0/0). */}
       <div
-        className="relative w-full  border border-white/10 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-black"
+        className="relative w-full  border border-border overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-black"
         style={{
           aspectRatio: "16 / 9",
           minHeight: 520,
@@ -190,13 +190,13 @@ export default function RoomCanvas() {
       >
         {/* Office mode toggle + reset layout */}
         <div
-          className="absolute top-3 right-3 z-30 flex gap-1 rounded-lg bg-black/40 backdrop-blur-sm border border-white/10 p-1"
+          className="absolute top-3 right-3 z-30 flex gap-1 rounded-lg bg-black/40 backdrop-blur-sm border border-border p-1"
         >
           <button
             type="button"
             onClick={() => setViewMode("office")}
             className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold transition ${
-              isOffice ? "bg-white/12 text-white" : "text-white/50 hover:text-white/80"
+              isOffice ? "bg-white/12 text-white" : "text-muted hover:text-foreground"
             }`}
             title="Isometric office view"
           >
@@ -206,17 +206,17 @@ export default function RoomCanvas() {
             type="button"
             onClick={() => setViewMode("flat")}
             className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold transition ${
-              !isOffice ? "bg-white/12 text-white" : "text-white/50 hover:text-white/80"
+              !isOffice ? "bg-white/12 text-white" : "text-muted hover:text-foreground"
             }`}
             title="Flat top-down view"
           >
             <Square size={10} /> Flat
           </button>
-          <div className="w-px bg-white/10 mx-0.5" />
+          <div className="w-px bg-black/5 mx-0.5" />
           <button
             type="button"
             onClick={resetPositions}
-            className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-white/50 hover:text-white/80 transition"
+            className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-muted hover:text-foreground transition"
             title="Reset agent positions"
           >
             <RotateCcw size={10} /> Reset
@@ -260,7 +260,7 @@ export default function RoomCanvas() {
               height: `${zone.rect.h}%`,
             }}
           >
-            <div className="absolute top-2 left-3 flex items-center gap-1.5 text-[11px] font-semibold text-white/80">
+            <div className="absolute top-2 left-3 flex items-center gap-1.5 text-[11px] font-semibold text-foreground">
               <span aria-hidden>{zone.icon}</span>
               <span>{zone.label}</span>
             </div>

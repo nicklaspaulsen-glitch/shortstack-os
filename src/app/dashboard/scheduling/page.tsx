@@ -270,13 +270,13 @@ export default function SchedulingPage() {
         gradient="blue"
         actions={
           <>
-            <div className="flex items-center gap-1.5 text-[10px] bg-white/10 text-white px-2.5 py-1 rounded-md border border-white/20">
+            <div className="flex items-center gap-1.5 text-[10px] bg-black/5 text-foreground px-2.5 py-1 rounded-md border border-border">
               <Globe size={10} /><span className="font-medium">{detectedTimezone.split(" ")[0].split("/")[1]}</span>
             </div>
-            <button onClick={() => setShowLinkGen(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+            <button onClick={() => setShowLinkGen(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
               <Link2 size={12} /> Get Booking Link
             </button>
-            <button onClick={() => setShowCreateModal(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+            <button onClick={() => setShowCreateModal(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
               <Plus size={12} /> New Meeting Type
             </button>
           </>

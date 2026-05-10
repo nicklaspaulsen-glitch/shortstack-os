@@ -206,7 +206,7 @@ export default function ReviewsAutoReplyPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard/reviews"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-white/70 hover:text-white bg-white/5 hover:bg-white/10 transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-muted hover:text-foreground bg-black/5 hover:bg-black/5 transition-all"
             >
               <ArrowLeft size={14} /> Back
             </Link>

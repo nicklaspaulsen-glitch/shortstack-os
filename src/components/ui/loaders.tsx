@@ -258,7 +258,7 @@ export function ScanLineLoader({ size = 100, color = "var(--gold, #C9A84C)", lab
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <div
-        className="relative overflow-hidden rounded-lg border border-white/5"
+        className="relative overflow-hidden rounded-lg border border-border"
         style={{ width: size, height: size * 0.4, background: "rgba(255,255,255,0.02)" }}
       >
         <span

@@ -388,7 +388,7 @@ export default function OutreachAccounts() {
                     <button
                       onClick={() => toggleEmailActive(sender.id, !(sender.is_active !== false))}
                       className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                        sender.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-white/20"
+                        sender.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-border"
                       }`}
                     >
                       {sender.is_active !== false && <Check size={10} className="text-black" />}
@@ -457,7 +457,7 @@ export default function OutreachAccounts() {
                     <button
                       onClick={() => togglePhoneActive(phone.id, !(phone.is_active !== false))}
                       className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                        phone.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-white/20"
+                        phone.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-border"
                       }`}
                     >
                       {phone.is_active !== false && <Check size={10} className="text-black" />}
@@ -509,7 +509,7 @@ export default function OutreachAccounts() {
                   <button
                     onClick={() => toggleSocialActive(acc.id, !(acc.is_active !== false))}
                     className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                      acc.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-white/20"
+                      acc.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-border"
                     }`}
                   >
                     {acc.is_active !== false && <Check size={10} className="text-black" />}

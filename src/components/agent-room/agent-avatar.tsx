@@ -26,12 +26,12 @@ const STATUS_STYLE: Record<AgentStatus, {
     label: "Recent",
   },
   idle: {
-    // Bumped from ring-white/15 → ring-white/35 because at 15% the ring
+    // Bumped from ring-black/10 → ring-white/35 because at 15% the ring
     // basically dissolved into the dark room canvas — Nicklas reported
     // the avatars looked "missing" entirely on first glance. This is
     // visible without being loud.
     ring: "ring-white/35",
-    badge: "bg-white/10 text-white/70",
+    badge: "bg-black/5 text-muted",
     glow: "",
     dot: "bg-white/45",
     label: "Idle",
@@ -162,10 +162,10 @@ export default function AgentAvatar({
 
         {/* Avatar bubble. Background bumped from slate-900/85 →
             slate-800/95 so the bubble actually pops against the dark
-            room canvas (which is itself bg-slate-900→slate-950→black).
+            room canvas (which is itself bg-surface→slate-950→black).
             Emojis are now legible even on the calmer idle status. */}
         <div
-          className={`relative w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-800/95 border border-white/15 backdrop-blur ring-2 ${
+          className={`relative w-12 h-12 md:w-14 md:h-14 rounded-full bg-surface border border-border backdrop-blur ring-2 ${
             s.ring
           } ${s.glow} flex items-center justify-center text-[22px] md:text-[26px] transition-all duration-200 group-hover:scale-110 ${
             selected ? "ring-4 ring-offset-2 ring-offset-slate-950 ring-[#2563EB]" : ""
@@ -180,7 +180,7 @@ export default function AgentAvatar({
 
         {/* Hover nameplate */}
         <div className="pointer-events-none absolute left-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="bg-slate-900/95 border border-white/10 rounded-md px-2 py-0.5 text-[10px] font-medium text-white shadow-lg">
+          <div className="bg-surface/90 border border-border rounded-md px-2 py-0.5 text-[10px] font-medium text-white shadow-lg">
             {agent.name}
             <span className={`ml-1.5 inline-block align-middle px-1 py-0.5 rounded text-[8px] ${s.badge}`}>
               {s.label}

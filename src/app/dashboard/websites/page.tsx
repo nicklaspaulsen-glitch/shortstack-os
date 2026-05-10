@@ -983,18 +983,18 @@ export default function WebsitesPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
                 {/* Niche chip */}
-                <span className="absolute top-2.5 left-2.5 text-[9px] px-2 py-0.5 rounded-full bg-black/55 backdrop-blur-md text-white border border-white/20 font-medium tracking-wide uppercase">
+                <span className="absolute top-2.5 left-2.5 text-[9px] px-2 py-0.5 rounded-full bg-black/55 backdrop-blur-md text-white border border-border font-medium tracking-wide uppercase">
                   {t.niche}
                 </span>
                 {/* CVR metric */}
-                <span className="absolute top-2.5 right-2.5 text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/90 backdrop-blur-md text-black border border-white/30 font-semibold flex items-center gap-1">
+                <span className="absolute top-2.5 right-2.5 text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/90 backdrop-blur-md text-black border border-border font-semibold flex items-center gap-1">
                   <TrendingUp size={9} /> {t.cvr}
                 </span>
 
                 {/* Bottom overlay content � hidden when wireframe preview is shown */}
                 <div className="absolute bottom-0 left-0 right-0 p-3 transition-opacity duration-200 group-hover:opacity-0">
                   <p className="text-[13px] font-bold text-white drop-shadow-sm">{t.name}</p>
-                  <p className="text-[10px] text-white/80 mt-0.5 line-clamp-2">{t.tagline}</p>
+                  <p className="text-[10px] text-foreground mt-0.5 line-clamp-2">{t.tagline}</p>
                 </div>
 
                 {/* Wireframe mini-preview � slides up from bottom on hover */}
@@ -1002,13 +1002,13 @@ export default function WebsitesPage() {
                   <div className="absolute inset-0 bg-black/88 backdrop-blur-sm" />
                   <div className="relative h-full flex flex-col p-2.5 gap-2">
                     {/* Mini wireframe sketch */}
-                    <div className="flex-1 rounded-lg border border-white/10 overflow-hidden flex flex-col gap-1 p-1.5 bg-white/[0.03]">
+                    <div className="flex-1 rounded-lg border border-border overflow-hidden flex flex-col gap-1 p-1.5 bg-white/[0.03]">
                       {/* Nav bar */}
-                      <div className="flex items-center gap-1 pb-1 border-b border-white/8">
+                      <div className="flex items-center gap-1 pb-1 border-b border-border">
                         <div className="h-1.5 w-6 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.9 }} />
                         <div className="flex-1" />
                         {[...Array(3)].map((_, i) => (
-                          <div key={i} className="h-1 w-3 rounded-full bg-white/20" />
+                          <div key={i} className="h-1 w-3 rounded-full bg-black/10" />
                         ))}
                       </div>
                       {/* Hero block */}
@@ -1018,13 +1018,13 @@ export default function WebsitesPage() {
                       {/* Feature row */}
                       <div className="flex gap-1">
                         {[...Array(3)].map((_, i) => (
-                          <div key={i} className="flex-1 h-3 rounded bg-white/[0.06] border border-white/5" />
+                          <div key={i} className="flex-1 h-3 rounded bg-white/[0.06] border border-border" />
                         ))}
                       </div>
                       {/* CTA strip */}
                       <div className="flex items-center justify-center gap-1">
                         <div className="h-2.5 w-10 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.85 }} />
-                        <div className="h-2.5 w-6 rounded-full bg-white/15" />
+                        <div className="h-2.5 w-6 rounded-full bg-black/10" />
                       </div>
                     </div>
                     {/* Section chips */}
@@ -1032,7 +1032,7 @@ export default function WebsitesPage() {
                       {t.preset.sections.slice(0, 5).map((s) => (
                         <span
                           key={s}
-                          className="text-[8px] px-1.5 py-0.5 rounded-full bg-white/[0.08] text-white/60 border border-white/10 capitalize"
+                          className="text-[8px] px-1.5 py-0.5 rounded-full bg-white/[0.08] text-muted border border-border capitalize"
                         >
                           {s.replace(/_/g, " ")}
                         </span>
@@ -1253,7 +1253,7 @@ export default function WebsitesPage() {
                 >
                   <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
                   {/* Thumbnail */}
-                  <div className="relative h-36 bg-slate-900 border-b border-border overflow-hidden">
+                  <div className="relative h-36 bg-surface border-b border-border overflow-hidden">
                     {html ? (
                       <iframe
                         srcDoc={html}

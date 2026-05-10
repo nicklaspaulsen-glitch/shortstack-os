@@ -87,7 +87,7 @@ export default function GoogleBusinessPage() {
         subtitle="Listings, reviews, posts & local SEO."
         gradient="blue"
         actions={
-          <button className="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white text-xs hover:bg-white/20 transition-all flex items-center gap-1.5">
+          <button className="px-3 py-1.5 rounded-lg border border-border bg-black/5 text-foreground text-xs hover:bg-black/10 transition-all flex items-center gap-1.5">
             <RefreshCw size={12} /> Refresh
           </button>
         }

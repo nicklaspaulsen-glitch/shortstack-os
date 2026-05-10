@@ -164,7 +164,7 @@ export default function DownloadDesktopPage() {
             href={GH_RELEASES}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 hover:bg-white/15 text-white border border-white/15 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 hover:bg-black/10 text-foreground border border-border transition-colors"
           >
             View all releases <ExternalLink size={12} />
           </a>

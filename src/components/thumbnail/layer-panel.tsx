@@ -290,7 +290,7 @@ export function LayerPanel({
                   }}
                   title={sw.name}
                   className={`aspect-video rounded border ${
-                    layers.background?.id === sw.id ? "border-[#2563EB] ring-1 ring-[rgba(37,99,235,0.25)]" : "border-border hover:border-white/30"
+                    layers.background?.id === sw.id ? "border-[#2563EB] ring-1 ring-[rgba(37,99,235,0.25)]" : "border-border hover:border-border"
                   }`}
                   style={{ background: `linear-gradient(135deg, ${sw.colors[0]}, ${sw.colors[1]})` }}
                 >

@@ -21,13 +21,13 @@ interface ConnectedAccount {
 const PLATFORMS = [
   { id: "instagram", name: "Instagram", icon: <Camera size={16} />, color: "text-pink-400", bg: "bg-pink-400/10 border-pink-400/20", urlPrefix: "instagram.com/", placeholder: "@handle" },
   { id: "facebook", name: "Facebook", icon: <MessageCircle size={16} />, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", urlPrefix: "facebook.com/", placeholder: "Page name or URL" },
-  { id: "tiktok", name: "TikTok", icon: <Music size={16} />, color: "text-foreground", bg: "bg-white/10 border-white/20", urlPrefix: "tiktok.com/@", placeholder: "@handle" },
+  { id: "tiktok", name: "TikTok", icon: <Music size={16} />, color: "text-foreground", bg: "bg-black/5 border-border", urlPrefix: "tiktok.com/@", placeholder: "@handle" },
   { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={16} />, color: "text-blue-600", bg: "bg-blue-300/10 border-blue-300/20", urlPrefix: "linkedin.com/company/", placeholder: "Company page URL" },
   { id: "youtube", name: "YouTube", icon: <Play size={16} />, color: "text-red-400", bg: "bg-red-400/10 border-red-400/20", urlPrefix: "youtube.com/@", placeholder: "@channel or URL" },
   { id: "google_ads", name: "Google Ads", icon: <Megaphone size={16} />, color: "text-green-400", bg: "bg-green-400/10 border-green-400/20", urlPrefix: "", placeholder: "Account ID (xxx-xxx-xxxx)" },
   { id: "meta_ads", name: "Meta Ads", icon: <Megaphone size={16} />, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", urlPrefix: "", placeholder: "Ad Account ID" },
   { id: "tiktok_ads", name: "TikTok Ads", icon: <Megaphone size={16} />, color: "text-cyan-400", bg: "bg-cyan-400/10 border-cyan-400/20", urlPrefix: "", placeholder: "Advertiser ID" },
-  { id: "x_twitter", name: "X (Twitter)", icon: <Hash size={16} />, color: "text-foreground", bg: "bg-white/10 border-white/20", urlPrefix: "x.com/", placeholder: "@handle" },
+  { id: "x_twitter", name: "X (Twitter)", icon: <Hash size={16} />, color: "text-foreground", bg: "bg-black/5 border-border", urlPrefix: "x.com/", placeholder: "@handle" },
   { id: "website", name: "Website", icon: <Globe size={16} />, color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)]", urlPrefix: "", placeholder: "https://example.com" },
 ];
 

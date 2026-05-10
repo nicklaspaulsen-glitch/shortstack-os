@@ -324,7 +324,7 @@ export default function AiFirstStarter({
                 <button
                   key={t.id}
                   onClick={() => generate(t.prompt)}
-                  className={`group relative rounded-lg overflow-hidden text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30`}
+                  className={`group relative rounded-lg overflow-hidden text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20`}
                   style={{ border: "1px solid rgba(255,255,255,0.08)" }}
                   title={t.prompt}
                 >
@@ -340,7 +340,7 @@ export default function AiFirstStarter({
                     <p className="text-[8px] text-neutral-500 mt-0.5">{t.aspect}</p>
                   </div>
                   {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
               ))}
             </div>

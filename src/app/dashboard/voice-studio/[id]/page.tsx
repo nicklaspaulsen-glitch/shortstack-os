@@ -222,7 +222,7 @@ export default function VoiceCloneDetailPage() {
         actions={
           <Link
             href="/dashboard/voice-studio"
-            className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10"
+            className="flex items-center gap-2 rounded-lg border border-border bg-black/5 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-black/5"
           >
             <ArrowLeft size={12} /> Back to studio
           </Link>

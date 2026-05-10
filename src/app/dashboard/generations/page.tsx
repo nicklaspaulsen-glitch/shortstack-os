@@ -130,7 +130,7 @@ export default function GenerationsPage() {
         actions={
           <button
             onClick={fetchGenerations}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 border border-white/20 text-white text-xs font-medium hover:bg-white/25 transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-medium hover:bg-black/15 transition-all"
           >
             <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
           </button>

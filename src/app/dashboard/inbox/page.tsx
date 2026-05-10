@@ -536,25 +536,25 @@ export default function InboxPage() {
           gradient="blue"
           actions={
             <>
-              <div className="flex items-center gap-0.5 bg-white/10 rounded-lg p-0.5">
+              <div className="flex items-center gap-0.5 bg-black/5 rounded-lg p-0.5">
                 <button
                   onClick={() => setView("inbox")}
-                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "inbox" ? "bg-white/20 text-white" : "text-white/70 hover:text-white"}`}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "inbox" ? "bg-black/10 text-foreground" : "text-muted hover:text-foreground"}`}
                 >
                   <Inbox size={11} /> Inbox
                 </button>
                 <button
                   onClick={() => setView("auto-runs")}
-                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "auto-runs" ? "bg-white/20 text-white" : "text-white/70 hover:text-white"}`}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "auto-runs" ? "bg-black/10 text-foreground" : "text-muted hover:text-foreground"}`}
                 >
                   <Zap size={11} /> Auto-Runs
                 </button>
               </div>
-              <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all" title="Refresh" aria-label="Refresh">
+              <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground transition-all" title="Refresh" aria-label="Refresh">
                 <RefreshCw size={14} className={loading || autoRunsLoading ? "animate-spin" : ""} aria-hidden="true" />
               </button>
               {view === "inbox" && (
-                <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs text-white transition-all ${showArchived ? "bg-white/25" : "bg-white/10 hover:bg-white/20"}`}>
+                <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs text-foreground transition-all ${showArchived ? "bg-black/15" : "bg-black/5 hover:bg-black/10"}`}>
                   <Archive size={12} className="inline mr-1" /> {showArchived ? "Viewing Archive" : "Archive"}
                 </button>
               )}

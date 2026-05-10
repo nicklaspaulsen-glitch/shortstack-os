@@ -203,7 +203,7 @@ export default function SystemStatusPage() {
             <button
               onClick={runProbes}
               disabled={runningProbes || refreshing}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/15 border border-white/30 text-white/95 hover:bg-white/25 disabled:opacity-50 font-medium"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/10 border border-border text-foreground hover:bg-black/15 disabled:opacity-50 font-medium"
               title="Invoke the cron health-check sweep now instead of waiting 30 minutes"
             >
               <Play size={12} className={runningProbes ? "animate-pulse" : ""} />
@@ -212,7 +212,7 @@ export default function SystemStatusPage() {
             <button
               onClick={load}
               disabled={refreshing || runningProbes}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white/90 hover:bg-white/20 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border text-foreground hover:bg-black/10 disabled:opacity-50"
             >
               <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
               {refreshing ? "Checking…" : "Re-check"}

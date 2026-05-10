@@ -116,25 +116,25 @@ export function Clip({
       title={clip.label}
     >
       <div
-        className="absolute left-0 top-0 bottom-0 w-1.5 cursor-ew-resize bg-white/30 hover:bg-white/60"
+        className="absolute left-0 top-0 bottom-0 w-1.5 cursor-ew-resize bg-black/15 hover:bg-white/60"
         onMouseDown={onMouseDown("trim-left")}
         title="Trim start"
       />
       <div
-        className="absolute right-0 top-0 bottom-0 w-1.5 cursor-ew-resize bg-white/30 hover:bg-white/60"
+        className="absolute right-0 top-0 bottom-0 w-1.5 cursor-ew-resize bg-black/15 hover:bg-white/60"
         onMouseDown={onMouseDown("trim-right")}
         title="Trim end"
       />
       {clip.transitionIn && clip.transitionIn.kind !== "none" && (
         <div
-          className="absolute left-1.5 top-0 bottom-0 bg-white/20 pointer-events-none"
+          className="absolute left-1.5 top-0 bottom-0 bg-black/10 pointer-events-none"
           style={{ width: `${(clip.transitionIn.duration / 1000) * pixelsPerSecond}px` }}
           title={`In: ${clip.transitionIn.kind}`}
         />
       )}
       {clip.transitionOut && clip.transitionOut.kind !== "none" && (
         <div
-          className="absolute right-1.5 top-0 bottom-0 bg-white/20 pointer-events-none"
+          className="absolute right-1.5 top-0 bottom-0 bg-black/10 pointer-events-none"
           style={{ width: `${(clip.transitionOut.duration / 1000) * pixelsPerSecond}px` }}
           title={`Out: ${clip.transitionOut.kind}`}
         />
@@ -144,7 +144,7 @@ export function Clip({
           {renderPeaks(clip, Math.max(1, widthPx - 12), 100)}
         </div>
       )}
-      <div className="absolute left-2 top-0.5 right-2 truncate text-white/90 font-mono drop-shadow-[0_1px_0_rgba(0,0,0,0.6)] pointer-events-none">
+      <div className="absolute left-2 top-0.5 right-2 truncate text-foreground font-mono drop-shadow-[0_1px_0_rgba(0,0,0,0.6)] pointer-events-none">
         {clip.label}
       </div>
     </div>

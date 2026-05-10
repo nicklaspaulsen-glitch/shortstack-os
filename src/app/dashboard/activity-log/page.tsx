@@ -182,8 +182,8 @@ export default function ActivityLogPage() {
         gradient="purple"
         actions={
           <>
-            <button onClick={() => setIsLive(!isLive)} className={`flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg border ${isLive ? "border-white/30 bg-white/15 text-white" : "border-white/20 bg-white/10 text-white/70"}`}>
-              <div className={`w-2 h-2 rounded-full ${isLive ? "bg-emerald-300 animate-pulse" : "bg-white/40"}`} />
+            <button onClick={() => setIsLive(!isLive)} className={`flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg border ${isLive ? "border-border bg-black/10 text-foreground" : "border-border bg-black/5 text-muted"}`}>
+              <div className={`w-2 h-2 rounded-full ${isLive ? "bg-emerald-300 animate-pulse" : "bg-black/20"}`} />
               {isLive ? "Live" : "Paused"}
             </button>
             <button
@@ -198,7 +198,7 @@ export default function ActivityLogPage() {
                 a.click();
                 URL.revokeObjectURL(url);
               }}
-              className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
+              className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
           </>
         }
       />

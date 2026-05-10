@@ -85,7 +85,7 @@ export default function ClientVoiceProfile({ clientId, clientName }: Props) {
     }
   }
 
-  if (loading) return <div className="h-32 rounded-xl bg-white/4 animate-pulse" />;
+  if (loading) return <div className="h-32 rounded-xl bg-black/5 animate-pulse" />;
 
   return (
     <div className="space-y-4">
@@ -109,7 +109,7 @@ export default function ClientVoiceProfile({ clientId, clientName }: Props) {
           <button
             onClick={handleRecompute}
             disabled={busy}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/10 hover:bg-white/15 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black/5 hover:bg-black/10 disabled:opacity-50 transition-colors"
           >
             <RefreshCw size={13} className={busy ? "animate-spin" : ""} />
             Recompute
@@ -182,7 +182,7 @@ function Stats({ profile }: { profile: VoiceProfile }) {
     { label: "Exclamations", value: profile.exclamation_rate ?? 0, max: 6, suffix: "" },
   ];
   return (
-    <div className="rounded-xl border border-white/10 bg-white/2 p-4">
+    <div className="rounded-xl border border-border bg-black/5 p-4">
       <div className="flex items-center gap-2 mb-3">
         <Type size={14} className="text-purple-400" />
         <span className="text-xs font-semibold">Stats</span>
@@ -199,7 +199,7 @@ function Stats({ profile }: { profile: VoiceProfile }) {
                   {g.suffix}
                 </span>
               </div>
-              <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+              <div className="h-1.5 rounded-full bg-black/5 overflow-hidden">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
                   style={{ width: `${pct}%` }}
@@ -223,7 +223,7 @@ function Signature({ profile }: { profile: VoiceProfile }) {
   const hasAny = groups.some((g) => g.items && g.items.length > 0);
   if (!hasAny) return null;
   return (
-    <div className="rounded-xl border border-white/10 bg-white/2 p-4 space-y-3">
+    <div className="rounded-xl border border-border bg-black/5 p-4 space-y-3">
       <div className="flex items-center gap-2">
         <Sparkles size={14} className="text-purple-400" />
         <span className="text-xs font-semibold">Signature</span>
@@ -251,12 +251,12 @@ function Signature({ profile }: { profile: VoiceProfile }) {
 
 function PromptPanel({ snippet }: { snippet: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/2 p-4">
+    <div className="rounded-xl border border-border bg-black/5 p-4">
       <div className="flex items-center gap-2 mb-2">
         <Wand2 size={14} className="text-purple-400" />
         <span className="text-xs font-semibold">Injected prompt</span>
       </div>
-      <pre className="text-[11px] whitespace-pre-wrap font-mono text-zinc-200 rounded-lg bg-black/40 p-3 border border-white/5 max-h-40 overflow-auto">
+      <pre className="text-[11px] whitespace-pre-wrap font-mono text-zinc-200 rounded-lg bg-black/40 p-3 border border-border max-h-40 overflow-auto">
         {snippet}
       </pre>
     </div>
@@ -311,7 +311,7 @@ function GenerateModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-zinc-900 border border-white/10  w-full max-w-2xl max-h-[90vh] overflow-auto p-5 space-y-4">
+      <div className="bg-surface border border-border  w-full max-w-2xl max-h-[90vh] overflow-auto p-5 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">Generate copy in {clientName}&apos;s voice</h3>
           <button
@@ -328,7 +328,7 @@ function GenerateModal({
             onChange={(e) => setPrompt(e.target.value)}
             placeholder={promptHelp}
             rows={4}
-            className="w-full text-xs rounded-lg bg-black/40 border border-white/5 p-3 focus:outline-none focus:border-purple-500/50 resize-y"
+            className="w-full text-xs rounded-lg bg-black/40 border border-border p-3 focus:outline-none focus:border-purple-500/50 resize-y"
           />
         </div>
         <button
@@ -341,7 +341,7 @@ function GenerateModal({
         {output && (
           <div>
             <label className="text-xs text-zinc-400 block mb-1">Output</label>
-            <pre className="text-xs whitespace-pre-wrap rounded-lg bg-black/40 border border-white/5 p-3">
+            <pre className="text-xs whitespace-pre-wrap rounded-lg bg-black/40 border border-border p-3">
               {output}
             </pre>
           </div>

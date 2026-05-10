@@ -367,13 +367,13 @@ export default function WorkflowsPage() {
               </button>
             </motion.div>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
                 <Plus size={13} /> New
               </button>
             </motion.div>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <button onClick={() => setTab("agent")} className={`flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg font-medium transition-all ${
-                tab === "agent" ? "bg-white/25 text-white" : "bg-white/10 text-white/80 hover:text-white border border-white/20"
+                tab === "agent" ? "bg-black/15 text-foreground" : "bg-black/5 text-foreground hover:text-foreground border border-border"
               }`}>
                 <Bot size={13} /> Agent Mode
               </button>

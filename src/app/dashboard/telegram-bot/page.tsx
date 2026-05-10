@@ -496,11 +496,11 @@ export default function TelegramBotPage() {
               {botConnected === null ? "Checking..." : botConnected ? "Connected" : "Disconnected"}
             </span>
             {botUsername && (
-              <span className="text-xs text-white bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">
+              <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
                 @{botUsername}
               </span>
             )}
-            <span className="text-xs text-white bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">
+            <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
               {activeCount} active / {pausedCount} paused
             </span>
           </>

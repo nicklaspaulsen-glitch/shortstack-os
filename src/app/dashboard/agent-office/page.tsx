@@ -229,10 +229,10 @@ export default function AgentOfficePage() {
         actions={
           <div className="flex flex-wrap items-center gap-2">
             {/* 2D / 3D toggle */}
-            <div className="flex items-center rounded-lg border border-white/10 bg-white/5 p-0.5">
+            <div className="flex items-center rounded-lg border border-border bg-black/5 p-0.5">
               <button
                 onClick={() => setViewMode("kumo")}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-[#FF2D2D] text-white shadow" : "text-white/45 hover:text-white/70"}`}
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-[#FF2D2D] text-white shadow" : "text-muted hover:text-muted"}`}
                 title="2D Pixel view"
               >
                 <LayoutGrid size={10} />
@@ -240,7 +240,7 @@ export default function AgentOfficePage() {
               </button>
               <button
                 onClick={() => setViewMode("3d")}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "3d" ? "bg-[#FF2D2D] text-white shadow" : "text-white/45 hover:text-white/70"}`}
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "3d" ? "bg-[#FF2D2D] text-white shadow" : "text-muted hover:text-muted"}`}
                 title="3D Scene view"
               >
                 <Boxes size={10} />
@@ -383,7 +383,7 @@ function StatTile({ icon, label, value, accent }: StatTileProps) {
         {icon}
       </span>
       <div className="leading-tight">
-        <div className="text-[9px] uppercase tracking-wider text-white/50">
+        <div className="text-[9px] uppercase tracking-wider text-muted">
           {label}
         </div>
         <div className="text-sm font-bold text-white">{value}</div>

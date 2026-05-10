@@ -1565,7 +1565,7 @@ export default function SocialManagerPage() {
                 {/* TikTok Preview */}
                 <div className="rounded-xl border border-border overflow-hidden bg-black">
                   <div className="aspect-[9/16] max-h-[320px] flex items-center justify-center relative">
-                    <Video size={32} className="text-white/20" />
+                    <Video size={32} className="text-foreground/20" />
                     <div className="absolute bottom-3 left-3 right-10">
                       <p className="text-[10px] text-white font-semibold">@your_brand</p>
                       <p className="text-[9px] text-[#374151] mt-0.5">Your TikTok caption here... #fyp #viral</p>

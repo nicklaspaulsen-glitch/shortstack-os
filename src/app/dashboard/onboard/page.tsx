@@ -534,7 +534,7 @@ export default function OnboardPage() {
           actions={
             <button
               onClick={() => setUserType(null)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border bg-black/5 text-foreground hover:bg-black/10 transition-all"
             >
               <ArrowLeft size={12} /> Change type
             </button>
@@ -564,16 +564,16 @@ export default function OnboardPage() {
           <>
             <button
               onClick={() => setUserType(null)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border bg-black/5 text-foreground hover:bg-black/10 transition-all"
             >
               <ArrowLeft size={12} /> Change type
             </button>
             <button onClick={() => setShowTemplates(!showTemplates)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all">
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border bg-black/5 text-foreground hover:bg-black/10 transition-all">
               <Layout size={12} /> Templates
             </button>
             {selectedTemplate && (
-              <span className="text-[9px] px-2 py-0.5 bg-white/15 border border-white/25 text-white rounded-full">
+              <span className="text-[9px] px-2 py-0.5 bg-black/10 border border-border text-foreground rounded-full">
                 Using: {ONBOARD_TEMPLATES.find(t => t.id === selectedTemplate)?.name}
               </span>
             )}

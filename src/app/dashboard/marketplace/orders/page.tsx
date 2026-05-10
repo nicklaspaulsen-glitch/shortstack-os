@@ -72,13 +72,13 @@ export default function OrdersPage() {
         subtitle="Track services you've bought and orders you're delivering."
         gradient="gold"
         actions={
-          <div className="flex items-center gap-1 rounded-lg border border-white/20 bg-white/10 p-1">
+          <div className="flex items-center gap-1 rounded-lg border border-border bg-black/5 p-1">
             <button
               onClick={() => setRole("buyer")}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
                 role === "buyer"
-                  ? "bg-white/20 text-white"
-                  : "text-white/70 hover:text-white"
+                  ? "bg-black/10 text-foreground"
+                  : "text-muted hover:text-white"
               }`}
             >
               <ShoppingBag size={12} />
@@ -88,8 +88,8 @@ export default function OrdersPage() {
               onClick={() => setRole("seller")}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
                 role === "seller"
-                  ? "bg-white/20 text-white"
-                  : "text-white/70 hover:text-white"
+                  ? "bg-black/10 text-foreground"
+                  : "text-muted hover:text-white"
               }`}
             >
               <Briefcase size={12} />

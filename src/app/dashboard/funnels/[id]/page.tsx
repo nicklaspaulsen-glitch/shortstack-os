@@ -277,7 +277,7 @@ export default function FunnelCanvasPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => router.push("/dashboard/funnels")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 text-zinc-400 hover:text-white text-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border text-zinc-400 hover:text-white text-sm transition-colors"
             >
               <ArrowLeft size={14} />
               Back

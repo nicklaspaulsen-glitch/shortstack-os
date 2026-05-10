@@ -231,7 +231,7 @@ export default function BillingPage() {
         actions={
           <Link
             href="/dashboard/upgrade"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/20 border border-white/25 text-white text-xs font-medium hover:bg-white/30 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-black/10 border border-border text-foreground text-xs font-medium hover:bg-black/15 transition-colors"
           >
             <ArrowUpRight size={12} />
             Upgrade plan

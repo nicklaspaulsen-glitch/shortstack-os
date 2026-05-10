@@ -311,13 +311,13 @@ export default function MarketplacePage() {
         subtitle="Plugins to supercharge your workflow."
         gradient="gold"
         actions={
-          <div className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 p-1">
+          <div className="flex items-center gap-2 rounded-lg border border-border bg-black/5 p-1">
             <button
               onClick={() => setViewTab("browse")}
               className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
                 viewTab === "browse"
-                  ? "bg-white/20 text-white"
-                  : "text-white/70 hover:text-white"
+                  ? "bg-black/10 text-foreground"
+                  : "text-muted hover:text-white"
               }`}
             >
               Browse
@@ -326,12 +326,12 @@ export default function MarketplacePage() {
               onClick={() => setViewTab("installed")}
               className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
                 viewTab === "installed"
-                  ? "bg-white/20 text-white"
-                  : "text-white/70 hover:text-white"
+                  ? "bg-black/10 text-foreground"
+                  : "text-muted hover:text-white"
               }`}
             >
               My Plugins
-              <span className="ml-1.5 rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] font-bold text-white">
+              <span className="ml-1.5 rounded-full bg-black/10 px-1.5 py-0.5 text-[10px] font-bold text-foreground">
                 {installedIds.size}
               </span>
             </button>

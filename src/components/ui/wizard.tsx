@@ -136,7 +136,7 @@ export function AdvancedToggle({
       className={`relative z-20 shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-[11px] font-semibold border backdrop-blur-sm transition-all whitespace-nowrap ${
         value
           ? "bg-[#2563EB] text-white border-[#2563EB] shadow-sm shadow-[rgba(37,99,235,0.18)] hover:shadow-[rgba(37,99,235,0.4)]"
-          : "bg-black/30 text-white border-white/25 hover:bg-black/40 hover:border-white/40"
+          : "bg-black/30 text-white border-border hover:bg-black/40 hover:border-border"
       } ${className}`}
       title={value ? "Click to return to the guided wizard" : "Click for full control"}
     >
@@ -144,7 +144,7 @@ export function AdvancedToggle({
       <span>{label}</span>
       <span
         className={`relative inline-block w-7 h-3.5 rounded-full transition-colors ${
-          value ? "bg-black/30" : "bg-white/25"
+          value ? "bg-black/30" : "bg-black/15"
         }`}
         aria-hidden
       >
@@ -327,7 +327,7 @@ export function Wizard({
                 <span
                   className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-bold ${
                     active
-                      ? "bg-black/20 text-white"
+                      ? "bg-black/20 text-foreground"
                       : done
                       ? "bg-[#2563EB] text-white"
                       : "bg-border text-muted"

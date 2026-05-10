@@ -132,12 +132,12 @@ export default function ClientRoomCanvas({ clientId, clientName }: Props) {
   return (
     <>
       {/* Legend bar */}
-      <div className="flex items-center gap-3 flex-wrap text-[11px] text-white/70">
+      <div className="flex items-center gap-3 flex-wrap text-[11px] text-muted">
         <LegendDot color="bg-emerald-400" label={`Live (${counts.live})`} />
         <LegendDot color="bg-amber-400" label={`Recent (${counts.recent})`} />
-        <LegendDot color="bg-white/30" label={`Idle (${counts.idle})`} />
+        <LegendDot color="bg-black/15" label={`Idle (${counts.idle})`} />
         <LegendDot color="bg-red-400" label={`Error (${counts.err})`} />
-        <div className="ml-auto flex items-center gap-2 text-[10px] text-white/50">
+        <div className="ml-auto flex items-center gap-2 text-[10px] text-muted">
           {loading ? (
             <>
               <Loader2 size={11} className="animate-spin" /> Loading…
@@ -166,7 +166,7 @@ export default function ClientRoomCanvas({ clientId, clientName }: Props) {
 
       {/* Room */}
       <div
-        className="relative w-full  border border-white/10 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-black"
+        className="relative w-full  border border-border overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-black"
         style={{ aspectRatio: "16 / 9", minHeight: 520 }}
       >
         {/* Floor grid */}
@@ -204,7 +204,7 @@ export default function ClientRoomCanvas({ clientId, clientName }: Props) {
               height: `${zone.rect.h}%`,
             }}
           >
-            <div className="absolute top-2 left-3 flex items-center gap-1.5 text-[11px] font-semibold text-white/80">
+            <div className="absolute top-2 left-3 flex items-center gap-1.5 text-[11px] font-semibold text-foreground">
               <span aria-hidden>{zone.icon}</span>
               <span>{zone.label}</span>
             </div>

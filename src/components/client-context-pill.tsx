@@ -76,7 +76,7 @@ export default function ClientContextPill() {
           {/* Change button */}
           <button
             onClick={() => setOpen(true)}
-            className="flex items-center gap-1 px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 text-[10px] font-medium transition-colors ml-1"
+            className="flex items-center gap-1 px-2 py-1 rounded-full bg-black/5 hover:bg-black/10 text-[10px] font-medium transition-colors ml-1"
             title="Switch client"
           >
             <RefreshCw size={9} />
@@ -86,7 +86,7 @@ export default function ClientContextPill() {
           {/* Clear button */}
           <button
             onClick={() => setManagedClient(null)}
-            className="p-1 rounded-full hover:bg-white/10 text-muted hover:text-red-400 transition-colors"
+            className="p-1 rounded-full hover:bg-black/5 text-muted hover:text-red-400 transition-colors"
             title="Exit client view"
           >
             <X size={11} />

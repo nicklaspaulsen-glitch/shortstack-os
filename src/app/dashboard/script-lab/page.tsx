@@ -1290,9 +1290,9 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 const matchedPreset = Object.keys(TOPIC_PRESETS).find(k => client.industry.toLowerCase().includes(k));
                 if (matchedPreset) setConfig(prev => ({ ...prev, industry_preset: matchedPreset }));
               }
-            }} className="text-xs py-1.5 px-2 min-w-[160px] rounded-lg bg-white/10 border border-white/20 text-white">
-              <option value="" className="bg-slate-800">No client</option>
-              {clients.map(c => <option key={c.id} value={c.id} className="bg-slate-800">{c.business_name}</option>)}
+            }} className="text-xs py-1.5 px-2 min-w-[160px] rounded-lg bg-black/5 border border-border text-foreground">
+              <option value="" className="bg-surface">No client</option>
+              {clients.map(c => <option key={c.id} value={c.id} className="bg-surface">{c.business_name}</option>)}
             </select>
           </>
         }

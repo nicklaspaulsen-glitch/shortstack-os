@@ -179,7 +179,7 @@ Be direct, specific, and action-oriented. No fluff.`;
             whileTap={{ scale: 0.97 }}
             onClick={handleGenerateBriefing}
             disabled={generating || loading}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/15 hover:bg-white/20 disabled:opacity-40 text-white text-sm font-medium transition-colors border border-white/20"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/10 hover:bg-black/10 disabled:opacity-40 text-foreground text-sm font-medium transition-colors border border-border"
           >
             {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {generating ? "Generating…" : "Generate AI briefing"}

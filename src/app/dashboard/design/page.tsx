@@ -862,13 +862,13 @@ export default function DesignStudioPage() {
         actions={
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-            <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="text-xs py-1.5 px-2 min-w-[140px] rounded-lg bg-white/10 border border-white/20 text-white">
-              <option value="" className="bg-slate-800">No client</option>
-              {clients.map(c => <option key={c.id} value={c.id} className="bg-slate-800">{c.business_name} {c.industry ? `(${c.industry})` : ""}</option>)}
+            <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="text-xs py-1.5 px-2 min-w-[140px] rounded-lg bg-black/5 border border-border text-foreground">
+              <option value="" className="bg-surface">No client</option>
+              {clients.map(c => <option key={c.id} value={c.id} className="bg-surface">{c.business_name} {c.industry ? `(${c.industry})` : ""}</option>)}
             </select>
             {advancedMode && (
               <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+                className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
                 <ExternalLink size={12} /> Canva
               </a>
             )}

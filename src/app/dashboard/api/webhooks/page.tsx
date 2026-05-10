@@ -164,7 +164,7 @@ export default function WebhooksPage() {
         actions={
           <button
             onClick={() => setShowCreate((v) => !v)}
-            className="text-[11px] px-3 py-1.5 rounded-lg bg-white/15 text-white border border-white/25 hover:bg-white/25 transition-all flex items-center gap-1.5"
+            className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-foreground border border-border hover:bg-black/15 transition-all flex items-center gap-1.5"
           >
             <Plus size={11} />
             New Webhook

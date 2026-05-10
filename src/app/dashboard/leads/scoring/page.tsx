@@ -544,14 +544,14 @@ export default function LeadScoringPage() {
           <>
             <Link
               href="/dashboard/leads"
-              className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all"
+              className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all"
             >
               Back to Leads
             </Link>
             <button
               onClick={handleRecomputeAllStale}
               disabled={batchRunning}
-              className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5 disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-50"
             >
               {batchRunning ? (
                 <Loader size={12} className="animate-spin" />

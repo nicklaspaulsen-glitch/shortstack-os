@@ -295,7 +295,7 @@ export default function PhoneSetupPage() {
         icon={<Phone size={20} />}
         actions={
           usage ? (
-            <div className="flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-2.5 py-1.5 text-[10px] text-white/85">
+            <div className="flex items-center gap-1.5 rounded-lg border border-border bg-black/5 px-2.5 py-1.5 text-[10px] text-foreground">
               <Phone size={11} />
               <span>
                 <span className="font-semibold">{phoneUsed}</span>

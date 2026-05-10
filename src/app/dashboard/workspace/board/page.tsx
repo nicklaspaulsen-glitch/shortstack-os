@@ -430,7 +430,7 @@ export default function WorkspaceBoardPage() {
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => setFiltersOpen((v) => !v)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 border border-white/15 text-sm text-white transition-colors"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border text-sm text-foreground transition-colors"
             >
               <Filter size={14} /> Filters
             </motion.button>

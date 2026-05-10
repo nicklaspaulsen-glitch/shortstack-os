@@ -200,13 +200,13 @@ export default function CommissionTrackerPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => downloadCSV(filtered)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors border border-white/20"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border"
             >
               <Download size={13} /> Export CSV
             </button>
             <button
               onClick={() => { setForm(EMPTY_FORM); setShowCreate(true); }}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors border border-white/20"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm font-medium transition-colors border border-border"
             >
               <Plus size={13} /> Add
             </button>

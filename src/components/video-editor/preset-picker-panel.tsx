@@ -1133,7 +1133,7 @@ function TransitionTile({
         >
           B
         </div>
-        <span className="relative z-10 rounded bg-black/60 px-1 py-0.5 text-[7px] text-white/80">
+        <span className="relative z-10 rounded bg-black/60 px-1 py-0.5 text-[7px] text-foreground">
           {playing ? "…" : "demo"}
         </span>
       </button>

@@ -702,7 +702,7 @@ function MessageBubble({ m }: { m: Message }) {
         }`}
       >
         <div className="whitespace-pre-wrap break-words">{m.body || <em className="opacity-60">No content</em>}</div>
-        <div className={`text-[10px] mt-1 ${inbound ? "text-[#6B7280]" : "text-white/70"}`}>
+        <div className={`text-[10px] mt-1 ${inbound ? "text-[#6B7280]" : "text-muted"}`}>
           {fmtTime(m.sent_at)}
         </div>
       </div>

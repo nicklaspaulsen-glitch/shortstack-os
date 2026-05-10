@@ -16,8 +16,8 @@ interface FeedProps {
 
 export default function OfficeEventFeed({ events, onSelectAgent }: FeedProps) {
   return (
-    <div className="flex h-full flex-col overflow-hidden  border border-white/8 bg-[#0a0a0f]/85 backdrop-blur-md">
-      <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
+    <div className="flex h-full flex-col overflow-hidden  border border-border bg-[#0a0a0f]/85 backdrop-blur-md">
+      <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/55">
           Live Feed
         </div>
@@ -66,7 +66,7 @@ export default function OfficeEventFeed({ events, onSelectAgent }: FeedProps) {
                       </span>
                       <span className="text-[9px] text-white/30">{relTime(ev.ts)}</span>
                     </div>
-                    <div className="mt-0.5 line-clamp-2 text-xs leading-snug text-white/80">
+                    <div className="mt-0.5 line-clamp-2 text-xs leading-snug text-foreground">
                       {ev.summary}
                     </div>
                   </div>
@@ -103,7 +103,7 @@ interface OnlineNowProps {
 /** Tiny presence indicator — top of the right rail. */
 export function OnlineNow({ rows }: OnlineNowProps) {
   return (
-    <div className="flex items-center gap-2  border border-white/8 bg-[#0a0a0f]/85 px-4 py-3 backdrop-blur-md">
+    <div className="flex items-center gap-2  border border-border bg-[#0a0a0f]/85 px-4 py-3 backdrop-blur-md">
       <span className="relative flex h-2 w-2">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime-400 opacity-70" />
         <span className="relative inline-flex h-2 w-2 rounded-full bg-lime-400" />
@@ -115,7 +115,7 @@ export function OnlineNow({ rows }: OnlineNowProps) {
         {rows.slice(0, 4).map((r, i) => (
           <span
             key={r.presence_ref ?? i}
-            className="h-5 w-5 rounded-full border border-white/20 bg-gradient-to-br from-lime-400 to-emerald-600"
+            className="h-5 w-5 rounded-full border border-border bg-gradient-to-br from-lime-400 to-emerald-600"
             title="Online"
           />
         ))}

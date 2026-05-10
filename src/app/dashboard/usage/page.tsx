@@ -237,14 +237,14 @@ export default function UsagePage() {
         gradient="purple"
         actions={
           <>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/20 bg-white/15 text-white text-xs font-medium">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-black/10 text-foreground text-xs font-medium">
               <Shield size={12} />
               {planConfig.badge_label} Plan
             </div>
             <button
               onClick={fetchData}
               disabled={loading}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/20 bg-white/10 text-white text-xs hover:bg-white/20 transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-black/5 text-foreground text-xs hover:bg-black/10 transition-all"
             >
               <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
               Refresh

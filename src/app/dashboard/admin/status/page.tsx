@@ -270,14 +270,14 @@ export default function AdminStatusPage() {
               href={publicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10"
+              className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-black/5 hover:bg-black/5"
             >
               <ExternalLink size={12} /> View public page
             </a>
             <button
               onClick={load}
               disabled={refreshing}
-              className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-black/5 hover:bg-black/5 disabled:opacity-50"
             >
               <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
               Refresh

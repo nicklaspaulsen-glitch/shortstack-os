@@ -376,13 +376,13 @@ export default function TelegramPresetsPage() {
         gradient="blue"
         actions={
           <>
-            <span className="text-xs text-white bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">
+            <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
               {stats.total} total
             </span>
-            <span className="text-xs text-white bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">
+            <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
               {stats.mine} yours
             </span>
-            <span className="text-xs text-white bg-white/10 border border-white/20 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
+            <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
               <CheckCircle2 size={11} /> {stats.healthy} healthy
             </span>
             <span className="text-xs text-white bg-emerald-500/30 border border-emerald-300/40 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">

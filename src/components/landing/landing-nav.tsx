@@ -103,7 +103,7 @@ export default function LandingNav() {
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+            className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-gray-300 hover:text-foreground hover:bg-black/5 transition-colors"
           >
             <AnimatePresence mode="wait" initial={false}>
               {menuOpen ? (
@@ -188,7 +188,7 @@ export default function LandingNav() {
               >
                 FAQ
               </Link>
-              <div className="pt-2 mt-2 border-t border-white/5 flex flex-col gap-2">
+              <div className="pt-2 mt-2 border-t border-border flex flex-col gap-2">
                 <Link
                   href="/login"
                   className="text-sm text-gray-300 hover:text-white transition-colors"

@@ -860,23 +860,23 @@ export default function EmailComposerPage() {
                 </button>
                 <button
                   onClick={() => { setEmail({ to: "", subject: "", body: "", fromName: email.fromName, fromEmail: email.fromEmail, replyTo: email.replyTo }); setActiveTab("compose"); toast.success("Blank email ready"); }}
-                  className="px-3 py-1.5 rounded-lg bg-transparent border border-white/20 text-white text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-lg bg-transparent border border-border text-foreground text-xs font-medium hover:bg-black/5 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={12} /> Blank
                 </button>
-                <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={aiWriting}>
+                <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={aiWriting}>
                   {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
                 </button>
-                <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={aiImproving}>
+                <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={aiImproving}>
                   {aiImproving ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} AI Improve
                 </button>
-                <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
+                <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
                   {loadingVariants ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />} Subject Variants
                 </button>
                 <button
                   onClick={() => handleSend()}
                   disabled={sending}
-                  className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />} {sending ? "Sending..." : "Send"}
                 </button>
@@ -1194,7 +1194,7 @@ export default function EmailComposerPage() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => handleSend({ testMode: true })}
                   disabled={sendingTest || sending}
-                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg hover:border-white/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)]"
+                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg hover:border-border transition-all disabled:opacity-60 disabled:cursor-not-allowed bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)]"
                 >
                   {sendingTest ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sendingTest ? "Sending..." : "Test Send"}
