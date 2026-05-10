@@ -488,21 +488,29 @@ body {
     position: relative;
     isolation: isolate;
     border-radius: 12px;
-    background: var(--color-surface, #FFFFFF);
-    border: 1px solid var(--color-border, #E4E4E7);
+    /* May 10: glassmorphism — frosted glass floating above the #F3F6FA base.
+     * Requires the ambient base color behind for the frosting to read.
+     * inset highlight = top-edge light source; blue glow = brand warmth. */
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px) saturate(1.5);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5);
+    border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow:
+      0 1px 0 rgba(255,255,255,1) inset,
       0 1px 3px rgba(0,0,0,0.06),
       0 4px 12px -4px rgba(0,0,0,0.08),
-      0 14px 32px -12px rgba(0,0,0,0.10);
+      0 14px 32px -12px rgba(0,0,0,0.10),
+      0 0 32px -8px rgba(37,99,235,0.06);
     transition: box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1),
                 border-color 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+                transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                background 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   }
   :root[data-theme="dark"] .card,
   .theme-dark .card {
     background: rgba(17, 17, 20, 0.85);
-    backdrop-filter: blur(16px) saturate(1.2);
-    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    backdrop-filter: blur(16px) saturate(1.5);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5);
     border-color: rgba(255, 255, 255, 0.07);
     box-shadow:
       0 1px 0 0 rgba(255,255,255,0.08) inset,
@@ -512,11 +520,14 @@ body {
       0 20px 48px -12px rgba(0,0,0,0.50);
   }
   .card:hover {
+    background: rgba(255, 255, 255, 0.94);
+    border-color: rgba(37, 99, 235, 0.18);
     box-shadow:
+      0 1px 0 rgba(255,255,255,1) inset,
       0 2px 8px rgba(0,0,0,0.08),
       0 8px 24px -6px rgba(0,0,0,0.12),
-      0 24px 48px -16px rgba(0,0,0,0.14);
-    border-color: rgba(0,0,0,0.14);
+      0 24px 48px -16px rgba(0,0,0,0.14),
+      0 0 48px -12px rgba(37,99,235,0.12);
     transform: translateY(-2px);
   }
   :root[data-theme="dark"] .card:hover,
@@ -536,11 +547,14 @@ body {
     @apply card cursor-pointer;
   }
   .card-hover:hover {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(37, 99, 235, 0.20);
     box-shadow:
+      0 1px 0 rgba(255,255,255,1) inset,
       0 4px 12px rgba(0,0,0,0.10),
       0 12px 32px -6px rgba(0,0,0,0.14),
-      0 32px 64px -20px rgba(0,0,0,0.16);
-    border-color: rgba(0,0,0,0.16);
+      0 32px 64px -20px rgba(0,0,0,0.16),
+      0 0 48px -12px rgba(37,99,235,0.14);
     transform: translateY(-3px) scale(1.005);
   }
 
@@ -556,25 +570,28 @@ body {
   :root[data-theme="dark"] .card-gradient,
   .theme-dark .card-gradient {
     background: linear-gradient(145deg, rgba(25,25,29,0.92) 0%, rgba(17,17,20,0.88) 100%);
-    backdrop-filter: blur(16px) saturate(1.2);
-    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    backdrop-filter: blur(16px) saturate(1.5);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5);
     border-color: rgba(255, 255, 255, 0.07);
   }
 
   .card-static {
     @apply p-5;
     border-radius: 12px;
-    background: var(--color-surface, #FFFFFF);
-    border: 1px solid var(--color-border, #E4E4E7);
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px) saturate(1.5);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5);
+    border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow:
+      0 1px 0 rgba(255,255,255,1) inset,
       0 1px 3px rgba(0,0,0,0.06),
       0 2px 8px -2px rgba(0,0,0,0.08);
   }
   :root[data-theme="dark"] .card-static,
   .theme-dark .card-static {
     background: rgba(17, 17, 20, 0.80);
-    backdrop-filter: blur(12px) saturate(1.1);
-    -webkit-backdrop-filter: blur(12px) saturate(1.1);
+    backdrop-filter: blur(12px) saturate(1.5);
+    -webkit-backdrop-filter: blur(12px) saturate(1.5);
     border-color: rgba(255, 255, 255, 0.06);
   }
 
@@ -1619,17 +1636,19 @@ body {
 .hover-lift:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 2px 4px rgba(0,0,0,0.3),
-    0 8px 24px rgba(0,0,0,0.25),
-    0 20px 48px -12px rgba(0,0,0,0.45);
+    0 1px 0 rgba(255,255,255,1) inset,
+    0 2px 4px rgba(0,0,0,0.08),
+    0 8px 24px rgba(0,0,0,0.10),
+    0 20px 48px -12px rgba(0,0,0,0.12),
+    0 0 32px -8px rgba(37,99,235,0.10);
 }
 
 .hover-glow {
   transition: box-shadow 220ms cubic-bezier(0.32,0.72,0,1);
 }
 .hover-glow:hover {
-  box-shadow: 0 0 16px -2px rgba(var(--brand-accent-rgb, 255 45 45) / 0.3),
-              0 4px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 0 20px -4px rgba(37,99,235,0.20),
+              0 4px 16px rgba(0,0,0,0.08);
 }
 
 /* Scale-lift for cards — subtle zoom + shadow deepening.
