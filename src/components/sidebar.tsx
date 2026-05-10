@@ -208,7 +208,7 @@ const navItems: NavItem[] = [
   { label: "Triggers", href: "/dashboard/triggers", icon: <NavIcon3D name="Zap" size={16} />, roles: ["admin"], sub: "Workflows", tier: 3 },
   { label: "Automations", href: "/dashboard/automations", icon: <NavIcon3D name="RotateCcw" size={16} />, roles: ["admin"], sub: "Workflows", tier: 3 },
   { label: "WhatsApp", href: "/dashboard/whatsapp", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
-  { label: "API Docs", href: "/dashboard/api-docs", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], sub: "Channels", tier: 3 },
+  { label: "API Docs", href: "/dashboard/api-docs", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
   // Moved to Settings hub — not in sidebar footer, only reachable from /dashboard/settings:
   { label: "Webhooks", href: "/dashboard/webhooks", icon: <NavIcon3D name="Webhook" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
   { label: "API Keys", href: "/dashboard/api/keys", icon: <NavIcon3D name="Key" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
@@ -251,17 +251,20 @@ const navItems: NavItem[] = [
   { label: "Marketplace", href: "/dashboard/marketplace", icon: <NavIcon3D name="Store" size={16} />, roles: ["admin"], sub: "Tools", tier: 3 },
   { label: "Download Desktop", href: "/dashboard/download", icon: <NavIcon3D name="Download" size={16} />, roles: ["admin", "team_member"], sub: "Tools", tier: 3, settingsOnly: true },
 
-  // ── Connect (integrations) — no sub-groups ──
-  { label: "Google Biz", href: "/dashboard/google-business", icon: <NavIcon3D name="Globe" size={16} />, roles: ["admin"], section: "Connect", tier: 3 },
-  { label: "Discord", href: "/dashboard/discord", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], tier: 3 },
-  { label: "Notion", href: "/dashboard/notion-sync", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], tier: 3 },
-  { label: "Integrations Hub", href: "/dashboard/integrations-hub", icon: <NavIcon3D name="Plug" size={16} />, roles: ["admin"], tier: 2 },
-  { label: "Competitors", href: "/dashboard/competitive-monitor", icon: <NavIcon3D name="Target" size={16} />, roles: ["admin"], tier: 3 },
-  { label: "Telegram Bot", href: "/dashboard/telegram-bot", icon: <NavIcon3D name="Bot" size={16} />, roles: ["admin"], tier: 3 },
-  { label: "Telegram Presets", href: "/dashboard/telegram-presets", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], tier: 3 },
+  // ── Connect (integrations) — Integrations Hub is the entry point (tier 2).
+  // Individual platform pages are settingsOnly so they don't clutter the
+  // expanded sidebar — reachable via Integrations Hub or direct URL. ──
+  { label: "Integrations Hub", href: "/dashboard/integrations-hub", icon: <NavIcon3D name="Plug" size={16} />, roles: ["admin"], section: "Connect", tier: 2 },
+  // settingsOnly: only reachable via Integrations Hub or Settings → Integrations
+  { label: "Google Biz", href: "/dashboard/google-business", icon: <NavIcon3D name="Globe" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "Discord", href: "/dashboard/discord", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "Notion", href: "/dashboard/notion-sync", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "Competitors", href: "/dashboard/competitive-monitor", icon: <NavIcon3D name="Target" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "Telegram Bot", href: "/dashboard/telegram-bot", icon: <NavIcon3D name="Bot" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "Telegram Presets", href: "/dashboard/telegram-presets", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "Public Status", href: "/dashboard/admin/status", icon: <NavIcon3D name="Activity" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
   { label: "Notifications", href: "/dashboard/notifications", icon: <NavIcon3D name="Bell" size={16} />, roles: ["admin", "team_member"], tier: 4 },
   { label: "System Status", href: "/dashboard/system-status", icon: <NavIcon3D name="ShieldCheck" size={16} />, roles: ["admin"], tier: 4 },
-  { label: "Public Status", href: "/dashboard/admin/status", icon: <NavIcon3D name="Activity" size={16} />, roles: ["admin"], tier: 3 },
   { label: "Settings", href: "/dashboard/settings", icon: <NavIcon3D name="Settings" size={16} />, roles: ["admin"], tier: 4 },
 
   // ── Client Portal ──
