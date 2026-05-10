@@ -190,27 +190,29 @@ export default function FeedbackButton() {
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 24, opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full max-w-md overflow-hidden"
+              className="relative w-full max-w-md overflow-hidden rounded-2xl"
               style={{
-                background: "linear-gradient(180deg, #131620 0%, #0b0d12 100%)",
-                border: "1px solid rgba(200,168,85,0.15)",
-                boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+                background: "rgba(255,255,255,0.94)",
+                backdropFilter: "blur(24px) saturate(1.5)",
+                WebkitBackdropFilter: "blur(24px) saturate(1.5)",
+                border: "1px solid rgba(0,0,0,0.08)",
+                boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 20px 60px rgba(0,0,0,0.12), 0 0 48px -12px rgba(37,99,235,0.14)",
               }}
             >
               {celebrate && <ConfettiBurst />}
 
               <div className="px-6 pt-6 pb-4 flex items-center justify-between">
                 <div>
-                  <h3 className="text-white font-bold text-lg">Send feedback</h3>
-                  <p className="text-gray-500 text-xs mt-0.5">
+                  <h3 className="text-[#111827] font-bold text-lg">Send feedback</h3>
+                  <p className="text-[#6B7280] text-xs mt-0.5">
                     We read every message. Usually reply within 24 hours.
                   </p>
                 </div>
                 <button
                   onClick={() => setOpen(false)}
                   aria-label="Close"
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:text-white transition-colors"
-                  style={{ background: "rgba(255,255,255,0.04)" }}
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-[#6B7280] hover:text-[#111827] transition-colors"
+                  style={{ background: "rgba(0,0,0,0.04)" }}
                 >
                   <X size={16} />
                 </button>
@@ -218,7 +220,7 @@ export default function FeedbackButton() {
 
               <div className="px-6 pb-6 space-y-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-2">
+                  <label className="block text-xs font-medium text-[#6B7280] mb-2">
                     Type
                   </label>
                   <div className="grid grid-cols-4 gap-1.5">
@@ -232,9 +234,9 @@ export default function FeedbackButton() {
                           type="button"
                           className="flex flex-col items-center gap-1 py-2.5 rounded-lg transition-all"
                           style={{
-                            background: active ? "rgba(200,168,85,0.15)" : "rgba(255,255,255,0.03)",
-                            border: `1px solid ${active ? "rgba(200,168,85,0.4)" : "rgba(255,255,255,0.05)"}`,
-                            color: active ? GOLD : "#888",
+                            background: active ? "rgba(37,99,235,0.10)" : "rgba(0,0,0,0.04)",
+                            border: `1px solid ${active ? "rgba(37,99,235,0.30)" : "rgba(0,0,0,0.08)"}`,
+                            color: active ? GOLD : "#6B7280",
                           }}
                         >
                           <Icon size={14} />
@@ -246,7 +248,7 @@ export default function FeedbackButton() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-2">
+                  <label className="block text-xs font-medium text-[#6B7280] mb-2">
                     Your message
                   </label>
                   <textarea
@@ -254,10 +256,10 @@ export default function FeedbackButton() {
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="What's going on? Be as specific as possible."
                     rows={5}
-                    className="w-full px-3 py-2.5 rounded-lg text-sm text-white placeholder-gray-600 resize-none outline-none focus:ring-2"
+                    className="w-full px-3 py-2.5 rounded-lg text-sm text-[#111827] placeholder-gray-400 resize-none outline-none focus:ring-2 focus:ring-[#2563EB]/30"
                     style={{
-                      background: "rgba(255,255,255,0.03)",
-                      border: "1px solid rgba(255,255,255,0.08)",
+                      background: "rgba(255,255,255,0.70)",
+                      border: "1px solid rgba(0,0,0,0.08)",
                     }}
                   />
                 </div>
@@ -267,9 +269,9 @@ export default function FeedbackButton() {
                     type="checkbox"
                     checked={includeScreenshot}
                     onChange={(e) => setIncludeScreenshot(e.target.checked)}
-                    className="w-4 h-4 rounded accent-yellow-600"
+                    className="w-4 h-4 rounded accent-[#2563EB]"
                   />
-                  <span className="text-xs text-gray-400 group-hover:text-gray-300">
+                  <span className="text-xs text-[#6B7280] group-hover:text-[#374151]">
                     Include a screenshot of the current page
                   </span>
                 </label>
@@ -278,10 +280,10 @@ export default function FeedbackButton() {
                   <button
                     onClick={() => setOpen(false)}
                     type="button"
-                    className="flex-1 py-2.5 rounded-lg text-sm font-medium text-white transition-all hover:bg-white/5"
+                    className="flex-1 py-2.5 rounded-lg text-sm font-medium text-[#374151] transition-all hover:bg-black/5"
                     style={{
-                      background: "rgba(255,255,255,0.03)",
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      background: "rgba(0,0,0,0.04)",
+                      border: "1px solid rgba(0,0,0,0.08)",
                     }}
                   >
                     Cancel
@@ -293,7 +295,7 @@ export default function FeedbackButton() {
                     className="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all disabled:opacity-60"
                     style={{
                       background: `linear-gradient(135deg, ${GOLD}, ${GOLD_LIGHT})`,
-                      color: "#0b0d12",
+                      color: "#FFFFFF",
                     }}
                   >
                     {submitting ? "Sending…" : "Send feedback"}

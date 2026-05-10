@@ -156,7 +156,8 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
 
   return (
     <div
-      className="rounded-xl border border-[rgba(255,255,255,0.12)] bg-[#101012] overflow-hidden"
+      className="rounded-xl border border-[rgba(0,0,0,0.08)] overflow-hidden"
+      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
       role="region"
       aria-label="Getting started checklist"
     >
@@ -164,8 +165,8 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
       <div className="flex items-center justify-between px-4 py-3 gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex-shrink-0">
-            <div className="text-xs font-medium text-[#A8A8B2]">Getting started</div>
-            <div className="text-xs text-[#6F6F7A] mt-0.5">
+            <div className="text-xs font-medium text-[#374151]">Getting started</div>
+            <div className="text-xs text-[#6B7280] mt-0.5">
               {completedCount} of {ITEMS.length} complete
             </div>
           </div>
@@ -173,7 +174,7 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
           {/* Progress bar */}
           <div className="flex-1 min-w-[80px] max-w-[160px]">
             <div
-              className="h-1.5 rounded-full bg-[#26262B] overflow-hidden"
+              className="h-1.5 rounded-full bg-[rgba(0,0,0,0.08)] overflow-hidden"
               role="progressbar"
               aria-valuenow={pct}
               aria-valuemin={0}
@@ -242,19 +243,19 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
                 <div className="flex-1 min-w-0">
                   <Link
                     href={item.href}
-                    className={`block group-hover:text-[#F5F5F7] transition-colors ${
-                      done ? "text-[#6F6F7A] line-through" : "text-[#A8A8B2]"
+                    className={`block group-hover:text-[#111827] transition-colors ${
+                      done ? "text-[#6B7280] line-through" : "text-[#374151]"
                     }`}
                   >
                     <span className="text-sm font-medium">{item.label}</span>
                     {!done && (
-                      <p className="text-xs text-[#6F6F7A] mt-0.5 line-clamp-1">{item.detail}</p>
+                      <p className="text-xs text-[#6B7280] mt-0.5 line-clamp-1">{item.detail}</p>
                     )}
                   </Link>
                 </div>
 
                 {!done && (
-                  <span className="flex-shrink-0 text-[10px] text-[#6F6F7A] font-mono mt-0.5 tabular-nums">
+                  <span className="flex-shrink-0 text-[10px] text-[#6B7280] font-mono mt-0.5 tabular-nums">
                     ~{item.time}
                   </span>
                 )}

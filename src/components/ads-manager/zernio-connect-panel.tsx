@@ -243,8 +243,8 @@ export default function ZernioConnectPanel() {
               key={p.key}
               className="rounded-xl p-4 flex items-start gap-3 transition-all"
               style={{
-                background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.05)",
+                background: "rgba(255,255,255,0.80)",
+                border: "1px solid rgba(0,0,0,0.08)",
               }}
             >
               <div
@@ -280,11 +280,11 @@ export default function ZernioConnectPanel() {
                   style={{
                     background:
                       status === "connected"
-                        ? "rgba(255,255,255,0.04)"
+                        ? "rgba(0,0,0,0.04)"
                         : `${p.color}14`,
                     border:
                       status === "connected"
-                        ? "1px solid rgba(255,255,255,0.06)"
+                        ? "1px solid rgba(0,0,0,0.08)"
                         : `1px solid ${p.color}30`,
                     color:
                       status === "connected" ? "var(--color-foreground)" : p.color,

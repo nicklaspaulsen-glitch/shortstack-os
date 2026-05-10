@@ -1650,21 +1650,22 @@ export default function ScraperPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => setShowOutreachModal(false)}>
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
           <div
-            className="relative w-[95%] max-w-2xl max-h-[85vh] bg-[#141414] border border-white/10  shadow-2xl flex flex-col overflow-hidden"
+            className="relative w-[95%] max-w-2xl max-h-[85vh] border border-[rgba(0,0,0,0.08)] rounded-2xl shadow-xl flex flex-col overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.94)", backdropFilter: "blur(24px) saturate(1.5)", WebkitBackdropFilter: "blur(24px) saturate(1.5)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 20px 60px rgba(0,0,0,0.10), 0 0 48px -12px rgba(37,99,235,0.14)" }}
             onClick={e => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/10 shrink-0">
+            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-[rgba(0,0,0,0.08)] shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center">
-                  <Send size={18} className="text-gold" />
+                <div className="w-9 h-9 bg-[rgba(37,99,235,0.10)] rounded-xl flex items-center justify-center">
+                  <Send size={18} className="text-[#2563EB]" />
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-white">Launch Outreach</h2>
+                  <h2 className="text-base font-bold text-[#111827]">Launch Outreach</h2>
                   <p className="text-[10px] text-muted">Configure outreach settings for your new leads</p>
                 </div>
               </div>
-              <button onClick={() => setShowOutreachModal(false)} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-muted hover:text-white transition-all">
+              <button onClick={() => setShowOutreachModal(false)} className="p-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.08)] text-muted hover:text-[#111827] transition-all">
                 <X size={16} />
               </button>
             </div>
@@ -1673,12 +1674,12 @@ export default function ScraperPage() {
             <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
               {/* Phone Numbers */}
               <div className="space-y-2">
-                <h3 className="text-xs font-semibold flex items-center gap-2 text-white">
-                  <Phone size={13} className="text-gold" /> Phone Numbers
+                <h3 className="text-xs font-semibold flex items-center gap-2 text-[#111827]">
+                  <Phone size={13} className="text-[#2563EB]" /> Phone Numbers
                 </h3>
-                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
+                <div className="p-3 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                   <p className="text-[10px] text-muted">No phone numbers configured.</p>
-                  <a href="/dashboard/settings" className="text-[10px] text-gold hover:underline">
+                  <a href="/dashboard/settings" className="text-[10px] text-[#2563EB] hover:underline">
                     Add numbers in Settings &rarr; Phone &amp; Email
                   </a>
                 </div>
@@ -1686,12 +1687,12 @@ export default function ScraperPage() {
 
               {/* Email Accounts */}
               <div className="space-y-2">
-                <h3 className="text-xs font-semibold flex items-center gap-2 text-white">
-                  <Mail size={13} className="text-gold" /> Email Accounts
+                <h3 className="text-xs font-semibold flex items-center gap-2 text-[#111827]">
+                  <Mail size={13} className="text-[#2563EB]" /> Email Accounts
                 </h3>
-                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
+                <div className="p-3 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                   <p className="text-[10px] text-muted">No email accounts configured.</p>
-                  <a href="/dashboard/settings" className="text-[10px] text-gold hover:underline">
+                  <a href="/dashboard/settings" className="text-[10px] text-[#2563EB] hover:underline">
                     Add SMTP in Settings &rarr; SMTP
                   </a>
                 </div>
@@ -1699,10 +1700,10 @@ export default function ScraperPage() {
 
               {/* Social Media Accounts */}
               <div className="space-y-2">
-                <h3 className="text-xs font-semibold flex items-center gap-2 text-white">
-                  <Users size={13} className="text-gold" /> Social Media Accounts
+                <h3 className="text-xs font-semibold flex items-center gap-2 text-[#111827]">
+                  <Users size={13} className="text-[#2563EB]" /> Social Media Accounts
                 </h3>
-                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
+                <div className="p-3 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                   <p className="text-[10px] text-muted mb-2">Connect accounts to scrape from your feed:</p>
                   <InlineSocialConnect
                     platforms={["instagram", "facebook", "linkedin", "tiktok"]}
@@ -1714,8 +1715,8 @@ export default function ScraperPage() {
 
               {/* Outreach Settings */}
               <div className="space-y-3">
-                <h3 className="text-xs font-semibold flex items-center gap-2 text-white">
-                  <Target size={13} className="text-gold" /> Outreach Settings
+                <h3 className="text-xs font-semibold flex items-center gap-2 text-[#111827]">
+                  <Target size={13} className="text-[#2563EB]" /> Outreach Settings
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -1778,8 +1779,8 @@ export default function ScraperPage() {
                         onClick={() => setOutreachConfig({ ...outreachConfig, start_delay: opt.id })}
                         className={`flex-1 py-2 rounded-lg text-[10px] font-medium border transition-all ${
                           outreachConfig.start_delay === opt.id
-                            ? "border-gold bg-gold/10 text-gold"
-                            : "border-white/10 bg-white/[0.03] text-muted hover:text-white hover:border-white/20"
+                            ? "border-[#2563EB] bg-[rgba(37,99,235,0.10)] text-[#2563EB]"
+                            : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#111827] hover:border-[rgba(0,0,0,0.16)]"
                         }`}
                       >
                         {opt.label}
@@ -1791,10 +1792,10 @@ export default function ScraperPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-white/10 shrink-0">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-[rgba(0,0,0,0.08)] shrink-0">
               <button
                 onClick={() => setShowOutreachModal(false)}
-                className="text-xs text-muted hover:text-white transition-all px-3 py-2"
+                className="text-xs text-muted hover:text-[#111827] transition-all px-3 py-2"
               >
                 Skip Outreach
               </button>

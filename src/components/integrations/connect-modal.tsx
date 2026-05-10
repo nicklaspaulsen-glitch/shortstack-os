@@ -188,7 +188,7 @@ export default function ConnectModal({
               className="w-16 h-16  flex items-center justify-center bg-surface-light border border-border/40 overflow-hidden"
               style={{
                 boxShadow:
-                  "0 1px 0 rgba(255,255,255,0.05) inset, 0 4px 16px -4px rgba(0,0,0,0.45)",
+                  "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px rgba(0,0,0,0.08)",
               }}
             >
               {logoUrl ? (

@@ -98,17 +98,19 @@ export default function TrinityPrompt() {
         style={{ maxWidth: "min(96vw, 560px)" }}
       >
         <div
-          className="border bg-background shadow-2xl overflow-hidden"
+          className="border overflow-hidden"
           style={{
-            borderColor: "rgba(255,255,255,0.15)",
-            boxShadow:
-              "0 0 0 1px rgba(255,255,255,0.1), 0 24px 60px rgba(0,0,0,0.45)",
+            background: "rgba(255,255,255,0.94)",
+            backdropFilter: "blur(24px) saturate(1.5)",
+            WebkitBackdropFilter: "blur(24px) saturate(1.5)",
+            borderColor: "rgba(0,0,0,0.08)",
+            boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 24px 60px rgba(0,0,0,0.10), 0 0 48px -12px rgba(37,99,235,0.14)",
           }}
         >
           {/* Header */}
           <div
             className="flex items-center gap-2 px-4 py-3 border-b"
-            style={{ borderColor: "rgba(255,255,255,0.1)" }}
+            style={{ borderColor: "rgba(0,0,0,0.08)" }}
           >
             <Sparkles
               size={14}
@@ -120,7 +122,7 @@ export default function TrinityPrompt() {
             </span>
             <span
               className="ml-auto text-[10px] text-muted/60 font-mono border rounded px-1.5 py-0.5"
-              style={{ borderColor: "rgba(255,255,255,0.12)" }}
+              style={{ borderColor: "rgba(0,0,0,0.10)" }}
             >
               esc
             </span>
@@ -158,8 +160,8 @@ export default function TrinityPrompt() {
             <div
               className="mx-4 mb-3 rounded-xl px-4 py-3 text-sm"
               style={{
-                background: "rgba(255,255,255,0.07)",
-                border: "1px solid rgba(255,255,255,0.12)",
+                background: "rgba(37,99,235,0.04)",
+                border: "1px solid rgba(37,99,235,0.12)",
               }}
             >
               {sending ? (
@@ -178,7 +180,7 @@ export default function TrinityPrompt() {
           {/* Footer */}
           <div
             className="flex items-center justify-between px-4 py-2.5 border-t"
-            style={{ borderColor: "rgba(255,255,255,0.07)" }}
+            style={{ borderColor: "rgba(0,0,0,0.08)" }}
           >
             <span className="text-[10px] text-muted/60">
               Enter to send · Shift+Enter for new line

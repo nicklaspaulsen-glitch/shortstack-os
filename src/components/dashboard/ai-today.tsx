@@ -179,7 +179,7 @@ function ActionCard({ action }: { action: Action }) {
       href={action.cta_href}
       className="group relative rounded-xl p-4 transition-all hover:-translate-y-0.5 overflow-hidden flex flex-col"
       style={{
-        background: "rgba(255,255,255,0.02)",
+        background: "rgba(255,255,255,0.80)",
         border: `1px solid ${colors.border}`,
       }}
     >

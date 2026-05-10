@@ -202,10 +202,10 @@ export default function TopNavbar() {
       <div
         className="sticky top-0 z-30 border-b"
         style={{
-          background: "rgba(var(--bg-base-rgb, 10 10 13) / 0.82)",
-          backdropFilter: "blur(20px) saturate(1.15)",
-          WebkitBackdropFilter: "blur(20px) saturate(1.15)",
-          borderColor: "rgba(255,255,255,0.06)",
+          background: "rgba(243,246,250,0.88)",
+          backdropFilter: "blur(20px) saturate(1.5)",
+          WebkitBackdropFilter: "blur(20px) saturate(1.5)",
+          borderColor: "rgba(0,0,0,0.08)",
         }}
       >
         {/* Breadcrumb + Trinity row */}
@@ -283,9 +283,9 @@ export default function TopNavbar() {
             <span
               className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.16em] px-2 py-[3px] rounded-full border mr-1"
               style={{
-                color: "rgba(255,255,255,0.35)",
-                borderColor: "rgba(255,255,255,0.10)",
-                background: "rgba(255,255,255,0.04)",
+                color: "#6B7280",
+                borderColor: "rgba(0,0,0,0.08)",
+                background: "rgba(0,0,0,0.04)",
               }}
             >
               {activeSection.label}
