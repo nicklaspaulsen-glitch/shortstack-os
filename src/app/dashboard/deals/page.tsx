@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, type Variants } from "framer-motion";
@@ -317,7 +317,7 @@ export default function DealsPage() {
                         draggable
                         onDragStart={() => onDragStart(deal.id)}
                         onClick={() => setExpandedDeal(expandedDeal === deal.id ? null : deal.id)}
-                        className="rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-[rgba(0,0,0,0.12)] transition-colors border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+                        className="rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-[rgba(0,0,0,0.12)] transition-colors border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
                         <p className="text-[11px] font-semibold truncate">{deal.title}</p>
                         <p className="text-[9px] text-muted">{deal.client_name}</p>
                         <p className="text-sm font-bold mt-1" style={{ color: stage.color }}>{formatCurrency(Number(deal.value))}</p>
@@ -375,7 +375,7 @@ export default function DealsPage() {
                 { stage: "Proposal to Negotiation", avg: "0 days", trend: "faster" },
                 { stage: "Negotiation to Close", avg: "0 days", trend: "faster" },
               ].map((v, i) => (
-                <motion.div key={i} variants={fadeUp} className="rounded-lg p-3 text-center border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+                <motion.div key={i} variants={fadeUp} className="rounded-lg p-3 text-center border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
                   <p className="text-[9px] text-muted mb-1">{v.stage}</p>
                   <p className="text-sm font-bold">{v.avg}</p>
                   <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-green-400" : "text-red-400"}`}>
@@ -490,7 +490,7 @@ export default function DealsPage() {
               const scoreColor = score >= 70 ? "text-green-400" : score >= 40 ? "text-yellow-400" : "text-red-400";
               const scoreBg = score >= 70 ? "bg-green-400" : score >= 40 ? "bg-yellow-400" : "bg-red-400";
               return (
-                <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="rounded-xl p-4 flex items-center gap-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+                <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="rounded-xl p-4 flex items-center gap-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border border-[rgba(0,0,0,0.08)]" style={{ background: "#F2F2F4" }}>
                     <p className={`text-lg font-bold ${scoreColor}`}>{score}</p>
                   </div>
@@ -531,7 +531,7 @@ export default function DealsPage() {
                 { trigger: "Proposal viewed 3+ times", action: "Notify owner + move to Negotiation" },
                 { trigger: "Deal value > $5,000", action: "Require manager approval before close" },
               ].map((rule, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-[rgba(0,0,0,0.08)] opacity-60" style={{ background: "#FAFAFB" }}>
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-[rgba(0,0,0,0.08)] opacity-60" style={{ background: "rgba(255,255,255,0.88)" }}>
                   <div className="flex items-center gap-2">
                     <Zap size={12} className="text-gold" />
                     <div>
@@ -569,7 +569,7 @@ export default function DealsPage() {
                     key={i}
                     whileHover={{ y: -2 }}
                     onClick={() => toast("Contract templates coming soon � needs API")}
-                    className="flex items-center justify-between p-3 rounded-lg hover:border-[rgba(0,0,0,0.12)] transition-all cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB" }}
+                    className="flex items-center justify-between p-3 rounded-lg hover:border-[rgba(0,0,0,0.12)] transition-all cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)" }}
                   >
                     <div className="flex items-center gap-2">
                       <FileText size={14} className="text-muted" />
@@ -672,7 +672,7 @@ export default function DealsPage() {
                     <motion.div
                       key={deal.id}
                       variants={slideX}
-                      className="grid grid-cols-5 text-[10px] py-2 px-2 rounded-lg hover:bg-[rgba(0,0,0,0.02)] items-center transition-colors border border-[rgba(0,0,0,0.06)]" style={{ background: "#FAFAFB" }}
+                      className="grid grid-cols-5 text-[10px] py-2 px-2 rounded-lg hover:bg-[rgba(0,0,0,0.02)] items-center transition-colors border border-[rgba(0,0,0,0.06)]" style={{ background: "rgba(255,255,255,0.88)" }}
                     >
                       <span className="font-medium truncate">{deal.title}</span>
                       <span>{formatCurrency(amt)}</span>

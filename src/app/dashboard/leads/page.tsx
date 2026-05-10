@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useRef, DragEvent, ChangeEvent, FormEvent } from "react";
 import {
@@ -1337,7 +1337,7 @@ export default function LeadEnginePage() {
             {leads.map((lead, index) => (
               <motion.div
                 key={lead.id}
-                className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB" }}
+                className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)" }}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.18, delay: index * 0.04 }}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -404,7 +404,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[rgba(0,0,0,0.12)] px-4 py-6 text-sm text-[#1D4ED8] hover:border-[rgba(0,0,0,0.20)] transition-colors"
-            style={{ background: "#FAFAFB" }}
+            style={{ background: "rgba(255,255,255,0.88)" }}
           >
             <Upload size={16} />
             {files.length === 0
@@ -784,7 +784,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   return (
     <div className="space-y-4">
       {/* Filter bar */}
-      <div className="space-y-2.5 rounded-xl p-3" style={{ background: "#FAFAFB", border: "1px solid rgba(0,0,0,0.08)" }}>
+      <div className="space-y-2.5 rounded-xl p-3" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.08)" }}>
         {/* Search row */}
         <div className="relative">
           <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#71717A]" />

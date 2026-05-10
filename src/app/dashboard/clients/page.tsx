@@ -771,7 +771,7 @@ export default function ClientsPage() {
 
       {/* Tabs (sticky) */}
       <div className="overflow-x-auto max-w-full">
-      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 flex gap-1 rounded-xl p-1 w-fit min-w-max" style={{ background: "#FAFAFB", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 flex gap-1 rounded-xl p-1 w-fit min-w-max" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 1px 3px rgba(0,0,0,0.06)" }}>
         {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}
@@ -1381,7 +1381,7 @@ export default function ClientsPage() {
             const revenue = getClientRevenue(expandedRow);
             const note = clientNotes[expandedRow];
             return (
-              <div className="border border-t-0 border-[rgba(0,0,0,0.08)] rounded-b-xl px-4 pb-4" style={{ background: "#FAFAFB" }}>
+              <div className="border border-t-0 border-[rgba(0,0,0,0.08)] rounded-b-xl px-4 pb-4" style={{ background: "rgba(248,250,252,0.80)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
                     { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#1D4ED8" },

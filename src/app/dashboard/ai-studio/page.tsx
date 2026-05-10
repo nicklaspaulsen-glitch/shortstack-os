@@ -344,7 +344,7 @@ export default function AIStudioPage() {
         {wizardImages.length > 0 && (
           <motion.div
             className="mb-5 p-4"
-            style={{ background: "#FAFAFB", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
+            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 1px 3px rgba(0,0,0,0.06)" }}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
           >
             <div className="flex items-center justify-between mb-3">

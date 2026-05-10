@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 // CRM settings tab now persists to Supabase (automations, tags, notes, follow-ups, segments).
 
 import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
@@ -1292,7 +1292,7 @@ export default function CRMPage() {
 
           {/* -- TABLE VIEW -- */}
           {viewMode === "table" && (
-            <div className=" p-0 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+            <div className=" p-0 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
               <div className="overflow-x-auto">
                 <table className={`w-full ${dText}`}>
                   <thead>
@@ -1519,7 +1519,7 @@ export default function CRMPage() {
                   <motion.div
                     key={lead.id}
                     className={`rounded-xl border border-[rgba(0,0,0,0.08)] ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-gold/30 bg-gold/5" : ""}`}
-                    style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                    style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
@@ -1676,7 +1676,7 @@ export default function CRMPage() {
 
         {/* -- DETAIL SIDEBAR -- */}
         {detailLead && (
-          <div ref={detailPanelRef} className="w-[350px] shrink-0  p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+          <div ref={detailPanelRef} className="w-[350px] shrink-0  p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
             <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
               <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
               <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground" aria-label="Close detail panel"><X size={14} /></button>
