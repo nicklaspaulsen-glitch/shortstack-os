@@ -177,6 +177,7 @@ export default function RoiCalculatorPage() {
   return (
     <div className="space-y-6">
       <PageHero
+        eyebrow="ROI CALCULATOR"
         title="ROI Calculator"
         subtitle="Prove the value of your marketing spend with scenario-based ROI math."
         icon={<Calculator size={22} />}

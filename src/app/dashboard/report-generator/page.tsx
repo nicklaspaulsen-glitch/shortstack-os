@@ -438,6 +438,7 @@ export default function ReportGeneratorPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6 fade-in">
       <PageHero
+        eyebrow="REPORT BUILDER"
         icon={<FileBarChart size={22} />}
         title="Report Generator"
         subtitle="Professional, white-labeled PDF reports for your clients — built from real data in your workspace."

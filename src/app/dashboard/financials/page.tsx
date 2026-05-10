@@ -479,6 +479,7 @@ export default function FinancialsPage() {
     <div className="fade-in space-y-5">
       {/* Hero Header */}
       <PageHero
+        eyebrow="FINANCIALS"
         icon={<PiggyBank size={22} />}
         title="Financials"
         subtitle="Revenue, expenses, invoicing, and financial planning."

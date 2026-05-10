@@ -110,7 +110,7 @@ export default function CalendarPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [draggedEvent, setDraggedEvent] = useState<string | null>(null);
-  // Sync status is TBD — no OAuth wiring for Google/Outlook/Apple calendars yet.
+  // Sync status is TBD ï¿½ no OAuth wiring for Google/Outlook/Apple calendars yet.
   // We surface "Not Connected" for all three until those integrations ship.
   const syncStatus: Record<string, boolean> = { google: false, outlook: false, apple: false };
   const [currentWeek, setCurrentWeek] = useState(() => {
@@ -220,7 +220,7 @@ export default function CalendarPage() {
       lines.push(`DTSTART:${dtstart}`);
       lines.push(`DTEND:${dtend}`);
       lines.push(`SUMMARY:${e.title.replace(/\n/g, " ")}`);
-      if (e.client) lines.push(`DESCRIPTION:Client: ${e.client} · Assigned: ${e.teamMember}`);
+      if (e.client) lines.push(`DESCRIPTION:Client: ${e.client} ï¿½ Assigned: ${e.teamMember}`);
       lines.push("END:VEVENT");
     });
     lines.push("END:VCALENDAR");
@@ -231,7 +231,7 @@ export default function CalendarPage() {
     a.download = `trinity-calendar-${label}.ics`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success(`Exported ${filteredEvents.length} event${filteredEvents.length === 1 ? "" : "s"} — import the .ics into ${label === "google" ? "Google Calendar" : "Outlook"}`);
+    toast.success(`Exported ${filteredEvents.length} event${filteredEvents.length === 1 ? "" : "s"} ï¿½ import the .ics into ${label === "google" ? "Google Calendar" : "Outlook"}`);
   };
 
   const handleDragStart = (eventId: string) => { setDraggedEvent(eventId); };
@@ -307,9 +307,10 @@ export default function CalendarPage() {
     <div className="fade-in space-y-5">
       {/* Hero Header */}
       <PageHero
+        eyebrow="TIME COMMAND"
         icon={<Calendar size={22} />}
         title="Calendar"
-        subtitle="Schedule appointments, calls, and meetings. Sync with Google or Outlook — AI detects conflicts automatically."
+        subtitle="Schedule appointments, calls, and meetings. Sync with Google or Outlook ï¿½ AI detects conflicts automatically."
         gradient="gold"
         actions={
           <>
@@ -437,7 +438,7 @@ export default function CalendarPage() {
             <button onClick={prevWeek} className="btn-ghost p-2" aria-label="Previous week"><ChevronLeft size={16} /></button>
             <div className="flex items-center gap-3">
               <span className="text-sm font-semibold">
-                {weekDays[0].toLocaleDateString("en-US", { month: "short", day: "numeric" })} — {weekDays[6].toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                {weekDays[0].toLocaleDateString("en-US", { month: "short", day: "numeric" })} ï¿½ {weekDays[6].toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
               </span>
               <button onClick={goToday} className="btn-secondary text-[10px] px-2 py-0.5">Today</button>
             </div>
@@ -577,7 +578,7 @@ export default function CalendarPage() {
                   type="no-calendar"
                   size={140}
                   title="No events today"
-                  description="Your schedule is clear — enjoy the quiet."
+                  description="Your schedule is clear ï¿½ enjoy the quiet."
                 />
               ) : (
                 <div className="space-y-2">

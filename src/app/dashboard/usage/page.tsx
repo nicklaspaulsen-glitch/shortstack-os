@@ -230,6 +230,7 @@ export default function UsagePage() {
   return (
     <div className="fade-in p-6 max-w-5xl mx-auto space-y-5">
       <PageHero
+        eyebrow="USAGE & LIMITS"
         icon={<Zap size={28} />}
         title="Token Usage"
         subtitle="Monitor AI consumption & manage balance."

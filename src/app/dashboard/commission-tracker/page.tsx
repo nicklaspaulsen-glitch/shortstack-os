@@ -57,6 +57,9 @@ const STATUS_CONFIG: Record<
 
 const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
+
 function fmtUSD(cents: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency", currency: "USD",
@@ -188,6 +191,7 @@ export default function CommissionTrackerPage() {
   return (
     <div className="space-y-6">
       <PageHero
+        eyebrow="COMMISSIONS"
         title="Commission Tracker"
         subtitle="Track, approve, and pay sales commissions for your team."
         icon={<DollarSign size={22} />}
@@ -300,16 +304,14 @@ export default function CommissionTrackerPage() {
                   <th className="text-right px-4 py-3">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
-                {filtered.map((c, i) => {
+              <motion.tbody className="divide-y divide-white/5" variants={containerVariants} initial="hidden" animate="visible">
+                {filtered.map((c) => {
                   const repName = (c.notes || "").split("|")[0] || "Unknown";
                   const cfg = STATUS_CONFIG[c.status];
                   return (
                     <motion.tr
                       key={c.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.04 }}
+                      variants={itemVariants}
                       className="hover:bg-white/5 transition-colors"
                     >
                       <td className="px-4 py-3 font-medium text-white">{repName}</td>
@@ -355,7 +357,7 @@ export default function CommissionTrackerPage() {
                     </motion.tr>
                   );
                 })}
-              </tbody>
+              </motion.tbody>
               <tfoot className="border-t border-white/10">
                 <tr className="text-sm font-semibold">
                   <td colSpan={2} className="px-4 py-3 text-white/60">

@@ -36,8 +36,8 @@ interface Invoice {
 const INVOICE_TEMPLATES: { id: string; name: string; description: string; sections: string[] }[] = [];
 
 const formatCurrency = (amount: number, currency: string = "USD") => {
-  if (currency === "EUR") return `€${amount.toLocaleString()}`;
-  if (currency === "GBP") return `£${amount.toLocaleString()}`;
+  if (currency === "EUR") return `ï¿½${amount.toLocaleString()}`;
+  if (currency === "GBP") return `ï¿½${amount.toLocaleString()}`;
   return `$${amount.toLocaleString()}`;
 };
 
@@ -45,6 +45,9 @@ const RAINBOW_BAR = {
   height: 3,
   background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)",
 };
+
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
 
 export default function InvoicesPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("all");
@@ -69,7 +72,7 @@ export default function InvoicesPage() {
         if (cancelled) return;
         if (error) {
           console.error("[invoices] fetch error:", error);
-          toast.error("Couldn't load invoices — try refreshing.");
+          toast.error("Couldn't load invoices ï¿½ try refreshing.");
           setInvoicesData([]);
         } else {
           const mapped: Invoice[] = (data || []).map((row: Record<string, unknown>) => {
@@ -97,7 +100,7 @@ export default function InvoicesPage() {
       } catch (err) {
         if (!cancelled) {
           console.error("[invoices] fetch error:", err);
-          toast.error("Couldn't load invoices — try refreshing.");
+          toast.error("Couldn't load invoices ï¿½ try refreshing.");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -141,9 +144,10 @@ export default function InvoicesPage() {
     <div className="fade-in space-y-5">
       {/* Hero Header */}
       <PageHero
+        eyebrow="INVOICING"
         icon={<CreditCard size={22} />}
         title="Invoices"
-        subtitle={`${invoicesData.length} invoices — track payments, reminders, and recurring billing.`}
+        subtitle={`${invoicesData.length} invoices ï¿½ track payments, reminders, and recurring billing.`}
         gradient="gold"
         actions={
           <div className="flex gap-2">
@@ -169,7 +173,7 @@ export default function InvoicesPage() {
 
       {/* Loading note */}
       {loading && (
-        <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices…</p>
+        <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoicesï¿½</p>
       )}
 
       {/* Stats */}
@@ -232,15 +236,13 @@ export default function InvoicesPage() {
                 />
               </div>
             ) : (
-              <div className="divide-y divide-[rgba(0,0,0,0.06)]">
-                {filtered.map((inv, index) => {
+              <motion.div className="divide-y divide-[rgba(0,0,0,0.06)]" variants={containerVariants} initial="hidden" animate="visible">
+                {filtered.map((inv) => {
                   const isOverdue = (inv.status === "sent" && inv.dueDate < today) || inv.status === "overdue";
                   return (
                     <div key={inv.id}>
                       <motion.div
-                        initial={{ opacity: 0, x: -8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.18, delay: index * 0.04 }}
+                        variants={itemVariants}
                         onClick={() => setExpandedInvoice(expandedInvoice === inv.id ? null : inv.id)}
                         className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-indigo-500/5 ${
                           isOverdue ? "bg-red-400/5" : ""
@@ -309,7 +311,7 @@ export default function InvoicesPage() {
                     </div>
                   );
                 })}
-              </div>
+              </motion.div>
             )}
           </PrismPanel>
         </div>
@@ -336,8 +338,8 @@ export default function InvoicesPage() {
                     <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Currency</label>
                     <select value={selectedCurrency} onChange={e => setSelectedCurrency(e.target.value)} className="input w-full text-xs">
                       <option value="USD">USD ($)</option>
-                      <option value="EUR">EUR (€)</option>
-                      <option value="GBP">GBP (£)</option>
+                      <option value="EUR">EUR (ï¿½)</option>
+                      <option value="GBP">GBP (ï¿½)</option>
                       <option value="SEK">SEK (kr)</option>
                     </select>
                   </div>
@@ -492,7 +494,7 @@ export default function InvoicesPage() {
                   </div>
                   <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400">Active</span>
                   <button
-                    onClick={() => toast("Pause recurring from the Stripe customer portal — use Billing ? Manage subscription.", { icon: "??", duration: 6000 })}
+                    onClick={() => toast("Pause recurring from the Stripe customer portal ï¿½ use Billing ? Manage subscription.", { icon: "??", duration: 6000 })}
                     className="text-[9px] text-muted hover:text-red-400">Pause</button>
                 </div>
               </motion.div>

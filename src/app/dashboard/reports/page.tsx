@@ -131,7 +131,7 @@ export default function ReportsPage() {
   function buildReportMarkdown(report: GeneratedReport): string {
     const lines: string[] = [];
     const typeLabel = report.type === "monthly" ? "Monthly" : "Weekly";
-    lines.push(`# ${typeLabel} Report — ${report.client}`);
+    lines.push(`# ${typeLabel} Report ï¿½ ${report.client}`);
     lines.push("");
     if (report.metrics) {
       const m = report.metrics;
@@ -207,7 +207,7 @@ export default function ReportsPage() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${typeLabel} Report — ${report.client}</title>
+  <title>${typeLabel} Report ï¿½ ${report.client}</title>
   <style>
     @media print {
       body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -382,6 +382,7 @@ export default function ReportsPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-6 fade-in">
       {/* Hero Header */}
       <PageHero
+        eyebrow="INTEL REPORTS"
         icon={<FileText size={22} />}
         title="AI Client Reports"
         subtitle="Generate AI-powered performance reports for your clients."
@@ -539,7 +540,7 @@ export default function ReportsPage() {
                 <div className="flex items-center gap-2">
                   <Sparkles size={14} className="text-gold" />
                   <h2 className="text-sm font-semibold text-foreground">
-                    {currentReport.type === "monthly" ? "Monthly" : "Weekly"} Report — {currentReport.client}
+                    {currentReport.type === "monthly" ? "Monthly" : "Weekly"} Report ï¿½ {currentReport.client}
                   </h2>
                 </div>
                 <div className="flex items-center gap-2">
@@ -692,7 +693,7 @@ export default function ReportsPage() {
                         <div className="text-left">
                           <p className="text-xs font-medium text-foreground">{getClientName(report.client_id)}</p>
                           <p className="text-[10px] text-muted">
-                            {report.result?.type === "monthly_report" ? "Monthly" : "Weekly"} Report — {new Date(report.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            {report.result?.type === "monthly_report" ? "Monthly" : "Weekly"} Report ï¿½ {new Date(report.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                           </p>
                         </div>
                       </div>
