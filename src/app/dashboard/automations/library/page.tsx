@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
@@ -52,6 +53,9 @@ const CATEGORY_COLORS: Record<string, string> = {
   support: "bg-amber-500/10 text-amber-300 border-amber-500/20",
   marketing: "bg-cyan-500/10 text-cyan-300 border-cyan-500/20",
 };
+
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
 
 export default function WorkflowLibraryPage() {
   const [templates, setTemplates] = useState<TemplateSummary[]>([]);
@@ -130,6 +134,7 @@ export default function WorkflowLibraryPage() {
         subtitle="Battle-tested automations you can install in one click"
         gradient="purple"
         icon={<Sparkles size={20} />}
+        eyebrow="WORKFLOW LIBRARY"
       />
 
       <div className="mx-auto max-w-6xl px-6 py-8">
@@ -180,10 +185,11 @@ export default function WorkflowLibraryPage() {
             No templates match your filters.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((t) => (
-              <article
+              <motion.article
                 key={t.id}
+                variants={itemVariants}
                 className="group rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 transition hover:border-zinc-700 hover:bg-zinc-900"
               >
                 <div className="mb-3 flex items-center justify-between gap-2">
@@ -250,9 +256,9 @@ export default function WorkflowLibraryPage() {
                     </button>
                   )}
                 </div>
-              </article>
+              </motion.article>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

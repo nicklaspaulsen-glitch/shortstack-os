@@ -216,7 +216,7 @@ const TEMPLATES: Template[] = [
       mkNode("t7_1", "form_submitted", 0, 0, { form_id: "client_signup" }),
       mkNode("t7_2", "send_email", 200, 0, { subject: "Welcome aboard!", body: "We're thrilled to have you as a client." }),
       mkNode("t7_3", "create_task", 400, 0, { title: "Set up client project", assignee: "PM", due_in: "24" }),
-      mkNode("t7_4", "post_slack", 600, 0, { channel: "#onboarding", message: "New client onboarded — team assigned." }),
+      mkNode("t7_4", "post_slack", 600, 0, { channel: "#onboarding", message: "New client onboarded ï¿½ team assigned." }),
       mkNode("t7_5", "send_email", 800, 0, { subject: "Kickoff call scheduled", body: "Your kickoff is booked for this week." }),
     ],
     edges: [mkEdge("t7_1","t7_2"), mkEdge("t7_2","t7_3"), mkEdge("t7_3","t7_4"), mkEdge("t7_4","t7_5")],
@@ -252,7 +252,7 @@ const TEMPLATES: Template[] = [
     nodes: [
       mkNode("t10_1", "new_lead", 300, 0),
       mkNode("t10_2", "lead_score_gt", 300, 140, { threshold: "70" }),
-      mkNode("t10_3", "ai_call", 100, 280, { agent: "Sales Rep", script: "High-value lead — book a demo." }),
+      mkNode("t10_3", "ai_call", 100, 280, { agent: "Sales Rep", script: "High-value lead ï¿½ book a demo." }),
       mkNode("t10_4", "lead_score_gt", 300, 280, { threshold: "40" }),
       mkNode("t10_5", "add_to_sequence", 300, 420, { sequence_id: "Nurture" }),
       mkNode("t10_6", "update_crm", 500, 280, { status: "lost" }),
@@ -260,7 +260,7 @@ const TEMPLATES: Template[] = [
     edges: [mkEdge("t10_1","t10_2"), mkEdge("t10_2","t10_3"), mkEdge("t10_2","t10_4"), mkEdge("t10_4","t10_5"), mkEdge("t10_4","t10_6")],
   },
   {
-    id: "t11", name: "Review Response Bot", description: "Analyze new reviews with AI — thank positive reviewers publicly and alert the team on negatives.",
+    id: "t11", name: "Review Response Bot", description: "Analyze new reviews with AI ï¿½ thank positive reviewers publicly and alert the team on negatives.",
     nodeCount: 5,
     nodes: [
       mkNode("t11_1", "webhook_received", 300, 0, { url: "https://reviews-api/new-review" }),
@@ -290,21 +290,21 @@ const TEMPLATES: Template[] = [
       mkNode("t13_1", "webhook_received", 300, 0, { url: "https://crm/proposal-sent" }),
       mkNode("t13_2", "wait_delay", 300, 140, { duration: "2", unit: "days" }),
       mkNode("t13_3", "if_else", 300, 280, { field: "contact.replied", operator: "equals", value: "false" }),
-      mkNode("t13_4", "send_email", 300, 420, { subject: "Following up on our proposal", body: "Just checking in — any questions on the proposal?" }),
+      mkNode("t13_4", "send_email", 300, 420, { subject: "Following up on our proposal", body: "Just checking in ï¿½ any questions on the proposal?" }),
       mkNode("t13_5", "wait_delay", 300, 560, { duration: "5", unit: "days" }),
       mkNode("t13_6", "ai_call", 300, 700, { agent: "Sales Rep", script: "Follow up on the proposal sent last week." }),
     ],
     edges: [mkEdge("t13_1","t13_2"), mkEdge("t13_2","t13_3"), mkEdge("t13_3","t13_4"), mkEdge("t13_4","t13_5"), mkEdge("t13_5","t13_6")],
   },
   {
-    id: "t14", name: "Ad Campaign Monitor", description: "Daily check on ad performance — pause underperforming ads, notify the team, and suggest optimizations.",
+    id: "t14", name: "Ad Campaign Monitor", description: "Daily check on ad performance ï¿½ pause underperforming ads, notify the team, and suggest optimizations.",
     nodeCount: 5,
     nodes: [
       mkNode("t14_1", "schedule", 300, 0, { cron: "0 9 * * *" }),
       mkNode("t14_2", "send_webhook", 300, 140, { url: "https://ads-api/performance", method: "POST" }),
       mkNode("t14_3", "if_else", 300, 280, { field: "roas", operator: "lt", value: "2.0" }),
       mkNode("t14_4", "send_webhook", 300, 420, { url: "https://ads-api/pause", method: "POST" }),
-      mkNode("t14_5", "send_notification", 300, 560, { title: "Ad paused — low ROAS", body: "ROAS dropped below target. Ad paused. Review campaign." }),
+      mkNode("t14_5", "send_notification", 300, 560, { title: "Ad paused ï¿½ low ROAS", body: "ROAS dropped below target. Ad paused. Review campaign." }),
     ],
     edges: [mkEdge("t14_1","t14_2"), mkEdge("t14_2","t14_3"), mkEdge("t14_3","t14_4"), mkEdge("t14_4","t14_5")],
   },
@@ -313,10 +313,10 @@ const TEMPLATES: Template[] = [
     nodeCount: 7,
     nodes: [
       mkNode("t15_1", "new_lead", 300, 0),
-      mkNode("t15_2", "send_email", 300, 140, { subject: "Quick question about {{company}}", body: "Hi {{first_name}}, saw you're in {{industry}} — can I share 1 idea?" }),
+      mkNode("t15_2", "send_email", 300, 140, { subject: "Quick question about {{company}}", body: "Hi {{first_name}}, saw you're in {{industry}} ï¿½ can I share 1 idea?" }),
       mkNode("t15_3", "wait_delay", 300, 280, { duration: "3", unit: "days" }),
       mkNode("t15_4", "if_else", 300, 420, { field: "email.opened", operator: "equals", value: "false" }),
-      mkNode("t15_5", "send_sms", 300, 560, { message: "Hey {{first_name}}, sent you an email — quick thought for {{company}}. 30-sec read?" }),
+      mkNode("t15_5", "send_sms", 300, 560, { message: "Hey {{first_name}}, sent you an email ï¿½ quick thought for {{company}}. 30-sec read?" }),
       mkNode("t15_6", "wait_delay", 300, 700, { duration: "2", unit: "days" }),
       mkNode("t15_7", "add_to_sequence", 300, 840, { sequence_id: "LinkedIn DM" }),
     ],
@@ -328,10 +328,10 @@ const TEMPLATES: Template[] = [
     nodes: [
       mkNode("t16_1", "webhook_received", 300, 0, { url: "https://shop/cart-abandoned" }),
       mkNode("t16_2", "wait_delay", 300, 140, { duration: "1", unit: "hours" }),
-      mkNode("t16_3", "send_email", 300, 280, { subject: "You left something behind ??", body: "Your cart is still waiting — complete checkout here." }),
+      mkNode("t16_3", "send_email", 300, 280, { subject: "You left something behind ??", body: "Your cart is still waiting ï¿½ complete checkout here." }),
       mkNode("t16_4", "wait_delay", 300, 420, { duration: "24", unit: "hours" }),
       mkNode("t16_5", "send_email", 300, 560, { subject: "Here's 10% off to close the deal", body: "Use code COMEBACK10 in the next 48 hours." }),
-      mkNode("t16_6", "send_sms", 300, 700, { message: "One more nudge — your 10% off expires tonight: {{checkout_url}}" }),
+      mkNode("t16_6", "send_sms", 300, 700, { message: "One more nudge ï¿½ your 10% off expires tonight: {{checkout_url}}" }),
     ],
     edges: [mkEdge("t16_1","t16_2"), mkEdge("t16_2","t16_3"), mkEdge("t16_3","t16_4"), mkEdge("t16_4","t16_5"), mkEdge("t16_5","t16_6")],
   },
@@ -347,7 +347,7 @@ const TEMPLATES: Template[] = [
     edges: [mkEdge("t17_1","t17_2"), mkEdge("t17_2","t17_3"), mkEdge("t17_3","t17_4")],
   },
   {
-    id: "t18", name: "Negative Review Alert", description: "New review comes in — if rating = 3, instantly alert team and log for response.",
+    id: "t18", name: "Negative Review Alert", description: "New review comes in ï¿½ if rating = 3, instantly alert team and log for response.",
     nodeCount: 5,
     nodes: [
       mkNode("t18_1", "webhook_received", 300, 0, { url: "https://reviews/new" }),
@@ -375,10 +375,10 @@ const TEMPLATES: Template[] = [
     nodeCount: 5,
     nodes: [
       mkNode("t20_1", "webhook_received", 300, 0, { url: "https://referral/converted" }),
-      mkNode("t20_2", "send_email", 100, 140, { subject: "Your friend signed up — here's your reward ??", body: "Thank you for the referral — we've added $50 credit to your account." }),
-      mkNode("t20_3", "send_email", 500, 140, { subject: "Welcome! A friend vouched for you", body: "You've been invited by a valued customer — enjoy a 20% welcome discount." }),
+      mkNode("t20_2", "send_email", 100, 140, { subject: "Your friend signed up ï¿½ here's your reward ??", body: "Thank you for the referral ï¿½ we've added $50 credit to your account." }),
+      mkNode("t20_3", "send_email", 500, 140, { subject: "Welcome! A friend vouched for you", body: "You've been invited by a valued customer ï¿½ enjoy a 20% welcome discount." }),
       mkNode("t20_4", "update_crm", 300, 280, { status: "referrer_rewarded" }),
-      mkNode("t20_5", "post_slack", 300, 420, { channel: "#growth", message: "New referral conversion — both parties rewarded." }),
+      mkNode("t20_5", "post_slack", 300, 420, { channel: "#growth", message: "New referral conversion ï¿½ both parties rewarded." }),
     ],
     edges: [mkEdge("t20_1","t20_2"), mkEdge("t20_1","t20_3"), mkEdge("t20_2","t20_4"), mkEdge("t20_4","t20_5")],
   },
@@ -684,7 +684,7 @@ function WorkflowBuilderInner() {
 
   const [saving, setSaving] = useState(false);
 
-  // Save workflow — POSTs to /api/workflows which upserts on (user_id, name).
+  // Save workflow ï¿½ POSTs to /api/workflows which upserts on (user_id, name).
   const saveWorkflow = useCallback(async () => {
     const name = workflowName.trim();
     if (!name) {
@@ -726,7 +726,7 @@ function WorkflowBuilderInner() {
         setNodes(latest.nodes ?? []);
         setEdges(latest.edges ?? []);
       } catch {
-        // Silent — user may be signed out or offline; they can still build new workflows.
+        // Silent ï¿½ user may be signed out or offline; they can still build new workflows.
       }
     })();
     return () => { cancelled = true; };
@@ -801,6 +801,7 @@ function WorkflowBuilderInner() {
         title="Workflow Builder"
         subtitle="Build automations without code. Drag, drop, done."
         gradient="purple"
+        eyebrow="FLOW BUILDER"
       />
     <div className="flex flex-col h-[calc(100vh-14rem)]">
       {/* -- Top Toolbar -- */}

@@ -173,14 +173,13 @@ export default function TrinityPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between">
-        <PageHero
-          icon={<Bot size={22} />}
-          title="Trinity AI"
-          subtitle="Trinity autonomous AI agent — chat, orchestrate, and monitor."
-          gradient="gold"
-        />
-      </div>
+      <PageHero
+        icon={<Bot size={22} />}
+        title="Trinity AI"
+        subtitle="Trinity autonomous AI agent — chat, orchestrate, and monitor."
+        gradient="gold"
+        eyebrow="TRINITY AI"
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto pb-1">

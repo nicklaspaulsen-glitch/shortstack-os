@@ -60,6 +60,9 @@ function fmtDate(d: string): string {
   }).format(new Date(d));
 }
 
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
+
 export default function AutomationsPage() {
   const supabase = createClient();
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
@@ -115,6 +118,7 @@ export default function AutomationsPage() {
         subtitle="View and manage your workflow automations. Enable, pause, and jump to the builder."
         icon={<Zap size={22} />}
         gradient="gold"
+        eyebrow="AUTOMATION ENGINE"
         actions={
           <div className="flex items-center gap-2">
             <Link
@@ -164,7 +168,7 @@ export default function AutomationsPage() {
         <input
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Search automations…"
+          placeholder="Search automationsï¿½"
           className="w-full glass rounded-lg pl-8 pr-3 py-2 text-[#0A0A0B] text-sm focus:outline-none focus:border-indigo-500/50"
         />
       </div>
@@ -182,7 +186,7 @@ export default function AutomationsPage() {
           description={
             search
               ? "Try a different search term."
-              : "Build workflows that run automatically — trigger actions on new leads, replies, form fills, and more."
+              : "Build workflows that run automatically ï¿½ trigger actions on new leads, replies, form fills, and more."
           }
           action={
             !search ? (
@@ -196,18 +200,16 @@ export default function AutomationsPage() {
           }
         />
       ) : (
-        <div className="glass rounded-xl overflow-hidden">
+        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="glass rounded-xl overflow-hidden">
           <div className="divide-y divide-[rgba(0,0,0,0.06)]">
-            {filtered.map((w, index) => {
+            {filtered.map((w) => {
               const triggerType = getTriggerType(w.nodes);
               const stepCount = (w.nodes?.length || 0) + (Array.isArray(w.edges) ? w.edges.length : 0);
               return (
                 <motion.div
                   key={w.id}
                   className="flex items-center gap-4 px-5 py-4 transition-colors"
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.18, delay: index * 0.04 }}
+                  variants={itemVariants}
                   whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                 >
                   {/* Status indicator */}
@@ -275,7 +277,7 @@ export default function AutomationsPage() {
               );
             })}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Footer hint */}

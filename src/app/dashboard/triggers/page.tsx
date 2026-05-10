@@ -202,6 +202,9 @@ interface TriggerRun {
   finished_at: string | null;
 }
 
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
+
 export default function TriggersPage() {
   useAuth();
   const [triggers, setTriggers] = useState<TriggerRow[]>([]);
@@ -327,6 +330,7 @@ export default function TriggersPage() {
         title="Triggers"
         subtitle="Fire workflows automatically when real-world events happen. 12 event types, filter each with JSON config, see every run in history."
         icon={<Zap size={20} />}
+        eyebrow="TRIGGER RULES"
       />
 
       <div className="mx-auto max-w-5xl space-y-5 px-6 pb-10">
@@ -387,13 +391,11 @@ export default function TriggersPage() {
             </button>
           </div>
         ) : (
-          <div className="space-y-2">
-            {triggers.map((t, idx) => (
+          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-2">
+            {triggers.map((t) => (
               <motion.div
                 key={t.id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.04 }}
+                variants={itemVariants}
               >
                 <TriggerRowCard
                   trigger={t}
@@ -404,7 +406,7 @@ export default function TriggersPage() {
                 />
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {/* History panel */}

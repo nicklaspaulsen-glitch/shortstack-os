@@ -30,6 +30,9 @@ function inferType(v: unknown): "boolean" | "number" | "json" | "string" {
   return "string";
 }
 
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
+
 export default function AgentControlsPage() {
   const [rows, setRows] = useState<ConfigRow[]>([]);
   const [edits, setEdits] = useState<Record<string, ConfigVal>>({});
@@ -91,6 +94,7 @@ export default function AgentControlsPage() {
         subtitle="Key/value configuration for agent behaviour — toggle, tune, save."
         icon={<SlidersHorizontal className="w-6 h-6" />}
         gradient="purple"
+        eyebrow="AGENT CONTROLS"
         actions={
           <div className="flex items-center gap-2">
             {changed.length > 0 && (
@@ -151,14 +155,14 @@ export default function AgentControlsPage() {
           <p>No config rows found in system_config.</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {rows.map((row, idx) => {
+        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-3">
+          {rows.map((row) => {
             const type = inferType(parseValue(row.value));
             const cur = edits[row.key];
             const isDirty = JSON.stringify(parseValue(row.value)) !== JSON.stringify(cur);
 
             return (
-              <motion.div key={row.key} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className={`glass rounded-xl p-5 transition-all ${isDirty ? "ring-1 ring-purple-500/40" : ""}`}>
+              <motion.div key={row.key} variants={itemVariants} className={`glass rounded-xl p-5 transition-all ${isDirty ? "ring-1 ring-purple-500/40" : ""}`}>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -215,7 +219,7 @@ export default function AgentControlsPage() {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       )}
     </div>
   );

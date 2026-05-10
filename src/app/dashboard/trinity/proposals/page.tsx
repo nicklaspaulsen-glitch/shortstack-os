@@ -11,6 +11,7 @@
  */
 
 import { useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
 import {
   Brain,
   CheckCircle,
@@ -89,6 +90,9 @@ const STATUS_COLOR: Record<string, string> = {
   expired: "bg-white/10 text-white/60",
   failed: "bg-red-500/10 text-red-400",
 };
+
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
 
 export default function TrinityProposalsPage() {
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -203,6 +207,7 @@ export default function TrinityProposalsPage() {
         title="Trinity Autonomous"
         subtitle="Trinity proposes — and, in autopilot mode, acts on your behalf."
         gradient="purple"
+        eyebrow="AI PROPOSALS"
       />
 
       {/* Mode tiles */}
@@ -378,12 +383,12 @@ export default function TrinityProposalsPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-3">
           {proposals.map((p) => {
             const isPending = p.status === "proposed";
             const acting = actingId === p.id;
             return (
-              <div key={p.id} className="card">
+              <motion.div key={p.id} variants={itemVariants} className="card">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
@@ -442,10 +447,10 @@ export default function TrinityProposalsPage() {
                     {JSON.stringify(p.result, null, 2)}
                   </pre>
                 )}
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       )}
     </div>
   );

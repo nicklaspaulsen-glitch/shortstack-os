@@ -53,6 +53,9 @@ const NODE_TYPES: Record<string, { icon: React.ReactNode; color: string; bg: str
   condition: { icon: <GitBranch size={14} />, color: "text-amber-400", bg: "border-amber-400/20 bg-amber-400/5" },
 };
 
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
+const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
+
 export default function WorkflowsPage() {
   const { profile } = useAuth();
   const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
@@ -355,6 +358,7 @@ export default function WorkflowsPage() {
         title="Workflows"
         subtitle="AI agent automation — describe & run."
         gradient="sunset"
+        eyebrow="WORKFLOWS"
         actions={
           <>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
@@ -580,9 +584,9 @@ export default function WorkflowsPage() {
           <p className="text-[10px] text-muted">{filteredPresets.length} preset{filteredPresets.length !== 1 ? "s" : ""} found</p>
 
           {/* Preset cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
             {filteredPresets.map(preset => (
-              <div key={preset.id} className="card card-hover p-4 flex flex-col">
+              <motion.div key={preset.id} variants={itemVariants} className="card card-hover p-4 flex flex-col">
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center shrink-0">
@@ -630,9 +634,9 @@ export default function WorkflowsPage() {
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {filteredPresets.length === 0 && (
             <div className="card-static text-center py-12">
