@@ -181,7 +181,7 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
               aria-label={`${pct}% of setup complete`}
             >
               <div
-                className="h-full rounded-full bg-[#FF2D2D] transition-all duration-500"
+                className="h-full rounded-full bg-[#2563EB] transition-all duration-500"
                 style={{ width: `${pct}%` }}
               />
             </div>
@@ -191,7 +191,7 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
         <div className="flex items-center gap-1 flex-shrink-0">
           <button
             onClick={() => setCollapsed((c) => !c)}
-            className="p-1.5 rounded-md text-[#6F6F7A] hover:text-[#A8A8B2] hover:bg-[#17171A] transition-colors"
+            className="p-1.5 rounded-md text-[#6F6F7A] hover:text-[#A8A8B2] hover:bg-[rgba(0,0,0,0.04)] transition-colors"
             aria-label={collapsed ? "Expand checklist" : "Collapse checklist"}
             aria-expanded={!collapsed}
           >
@@ -203,7 +203,7 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
           </button>
           <button
             onClick={dismiss}
-            className="p-1.5 rounded-md text-[#6F6F7A] hover:text-[#A8A8B2] hover:bg-[#17171A] transition-colors"
+            className="p-1.5 rounded-md text-[#6F6F7A] hover:text-[#A8A8B2] hover:bg-[rgba(0,0,0,0.04)] transition-colors"
             aria-label="Dismiss getting started checklist"
           >
             <X className="h-3.5 w-3.5" />
@@ -213,7 +213,7 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
 
       {/* Items */}
       {!collapsed && (
-        <div className="border-t border-[rgba(255,255,255,0.07)]">
+        <div className="border-t border-[rgba(0,0,0,0.07)]">
           {ITEMS.map((item, idx) => {
             const done =
               completedFromApi.includes(item.id) || (stored.manualChecked || []).includes(item.id);
@@ -223,17 +223,17 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
               <div
                 key={item.id}
                 className={`flex items-start gap-3 px-4 py-2.5 group ${
-                  !isLast ? "border-b border-[rgba(255,255,255,0.05)]" : ""
-                } ${done ? "opacity-50" : "hover:bg-[#17171A]"} transition-colors`}
+                  !isLast ? "border-b border-[rgba(0,0,0,0.05)]" : ""
+                } ${done ? "opacity-50" : "hover:bg-[rgba(0,0,0,0.04)]"} transition-colors`}
               >
                 {/* Checkbox — toggle manually or confirmed via API */}
                 <button
                   onClick={() => toggleManual(item.id)}
                   aria-label={done ? `Mark "${item.label}" as incomplete` : `Mark "${item.label}" as complete`}
-                  className="mt-0.5 flex-shrink-0 text-[#6F6F7A] hover:text-[#FF2D2D] transition-colors"
+                  className="mt-0.5 flex-shrink-0 text-[#6F6F7A] hover:text-[#2563EB] transition-colors"
                 >
                   {done ? (
-                    <CheckCircle2 className="h-4 w-4 text-[#FF2D2D]" />
+                    <CheckCircle2 className="h-4 w-4 text-[#2563EB]" />
                   ) : (
                     <Circle className="h-4 w-4" />
                   )}

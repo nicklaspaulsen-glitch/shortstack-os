@@ -62,13 +62,13 @@ export interface IntegrationCardProps {
  *  palette so two adjacent cards never look identical. */
 function fallbackHue(id: string): string {
   const palette = [
-    "#FF2D2D", // blue
+    "#2563EB", // blue
     "#8B5CF6", // violet
     "#EC4899", // pink
     "#F59E0B", // amber
-    "#FF2D2D", // emerald
+    "#10B981", // emerald
     "#EF4444", // red
-    "#FF5252", // cyan
+    "#06B6D4", // cyan
     "#F97316", // orange
   ];
   let h = 0;
@@ -78,7 +78,7 @@ function fallbackHue(id: string): string {
 
 function StatusDot({ status }: { status: IntegrationStatus }) {
   const config = {
-    connected: { color: "#FF2D2D", label: "Connected" },
+    connected: { color: "#10B981", label: "Connected" },
     not_connected: { color: "#6B7280", label: "Not connected" },
     coming_soon: { color: "#F59E0B", label: "Coming soon" },
   }[status];
@@ -192,9 +192,9 @@ export default function IntegrationCard({
             onClick={() => onConnect(integration)}
             className="flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-md text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             style={{
-              background: "#FF2D2D",
+              background: "#2563EB",
               boxShadow:
-                "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(255,255,255,0.45)",
+                "0 1px 0 rgba(255,255,255,0.25) inset, 0 4px 10px -3px rgba(37,99,235,0.35)",
             }}
           >
             {busy ? (
