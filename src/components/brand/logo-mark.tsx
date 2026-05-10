@@ -23,8 +23,8 @@ export function LogoMark({ size = "md", className = "" }: LogoMarkProps) {
     >
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FF6B6B" />
-          <stop offset="100%" stopColor="#CC2424" />
+          <stop offset="0%" stopColor="#60A5FA" />
+          <stop offset="100%" stopColor="#2563EB" />
         </linearGradient>
       </defs>
 

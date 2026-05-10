@@ -641,7 +641,7 @@ export default function Sidebar() {
             indented ? "px-3 ml-1" : "px-2.5"
           } ${
             isActive
-              ? "active text-brand-accent font-semibold bg-[rgba(255,45,45,0.10)]"
+              ? "active text-brand-accent font-semibold bg-[rgba(37,99,235,0.10)]"
               : "text-text-secondary hover:text-text-primary hover:bg-white/[0.03]"
           }`}
         >
@@ -783,7 +783,7 @@ export default function Sidebar() {
             onClick={() => setPinned(!pinned)}
             className={`p-1 rounded-md transition-colors duration-220 ease-out-expo-foundation shrink-0 ${
               pinned
-                ? "text-brand-accent bg-[rgba(255,45,45,0.10)]"
+                ? "text-brand-accent bg-[rgba(37,99,235,0.10)]"
                 : "text-text-muted hover:text-brand-accent hover:bg-white/[0.02]"
             }`}
             aria-label={pinned ? "Unpin sidebar (auto-collapse)" : "Pin sidebar open"}
@@ -875,7 +875,7 @@ export default function Sidebar() {
                     aria-label={item.label}
                     className={`flex-1 flex items-center justify-center py-1 rounded-md transition-all duration-150 ${
                       isActive
-                        ? "bg-[rgba(255,45,45,0.15)] text-brand-accent"
+                        ? "bg-[rgba(37,99,235,0.15)] text-brand-accent"
                         : "text-text-muted hover:text-text-primary hover:bg-white/[0.04]"
                     }`}
                   >

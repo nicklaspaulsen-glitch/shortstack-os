@@ -1,5 +1,5 @@
-﻿/**
- * Integrations Hub — Nango-powered tenant OAuth dashboard + API-key integrations.
+/**
+ * Integrations Hub � Nango-powered tenant OAuth dashboard + API-key integrations.
  *
  * NOTE: This page is intentionally separate from `/dashboard/integrations`,
  * which is the legacy Zernio-based social-accounts dashboard. The two pages
@@ -7,17 +7,17 @@
  * collapse them into one.
  *
  * Flow (Nango providers):
- *   1. Page mounts → GET /api/integrations/nango/connections to learn which
+ *   1. Page mounts ? GET /api/integrations/nango/connections to learn which
  *      integrations the current user has already connected.
- *   2. User clicks "Connect" on a card → <ConnectModal /> opens with the
+ *   2. User clicks "Connect" on a card ? <ConnectModal /> opens with the
  *      provider's scope list.
- *   3. On Authorize → call `connectIntegration({ integrationId, connectionId })`
+ *   3. On Authorize ? call `connectIntegration({ integrationId, connectionId })`
  *      from the client SDK. Nango handles the popup, OAuth dance, and
  *      callback registration server-side.
- *   4. On success → POST /api/integrations/nango/finalize to write the row
+ *   4. On success ? POST /api/integrations/nango/finalize to write the row
  *      into `oauth_connections_nango`. Re-fetch connections so the card
  *      flips to "Connected".
- *   5. On disconnect → POST /api/integrations/nango/disconnect/{id}.
+ *   5. On disconnect ? POST /api/integrations/nango/disconnect/{id}.
  *
  * Flow (API-key / Zernio providers):
  *   Status comes from GET /api/integrations/health. "Connect" opens an info
@@ -44,11 +44,11 @@ import {
 } from "@/lib/nango/browser";
 import { NANGO_INTEGRATIONS } from "@/lib/nango/shared";
 
-// ────────────────────────────────────────────────────────────────────────
-// Extended local type — augments the card's IntegrationCardData with
+// ------------------------------------------------------------------------
+// Extended local type � augments the card's IntegrationCardData with
 // routing metadata used by the page only. The card receives the base
 // IntegrationCardData type (supertype), so this is structurally safe.
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 
 type ConnectKind = "nango" | "zernio" | "api-key";
 
@@ -63,12 +63,12 @@ interface ExtendedIntegrationData extends IntegrationCardData {
   configUrl?: string;
 }
 
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 // Integration catalogue
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 
 const INTEGRATIONS: ReadonlyArray<ExtendedIntegrationData> = [
-  // ── Nango OAuth providers ────────────────────────────────────────────
+  // -- Nango OAuth providers --------------------------------------------
   {
     id: NANGO_INTEGRATIONS.GOOGLE_ADS,
     name: "Google",
@@ -97,7 +97,7 @@ const INTEGRATIONS: ReadonlyArray<ExtendedIntegrationData> = [
     connectKind: "nango",
   },
 
-  // ── Zernio social providers ─────────────────────────────────────────
+  // -- Zernio social providers -----------------------------------------
   {
     id: "social_tiktok",
     name: "TikTok",
@@ -141,7 +141,7 @@ const INTEGRATIONS: ReadonlyArray<ExtendedIntegrationData> = [
     configUrl: "https://zernio.com/dashboard",
   },
 
-  // ── API-key providers ────────────────────────────────────────────────
+  // -- API-key providers ------------------------------------------------
   {
     id: "calendly",
     name: "Calendly",
@@ -210,7 +210,7 @@ const INTEGRATIONS: ReadonlyArray<ExtendedIntegrationData> = [
   },
 ];
 
-// Set of integration IDs that are NOT managed by Nango — status comes from
+// Set of integration IDs that are NOT managed by Nango � status comes from
 // the health API instead.
 const NON_NANGO_IDS = new Set<string>(
   INTEGRATIONS.filter((i) => i.connectKind !== "nango").map((i) => i.id),
@@ -222,9 +222,9 @@ const FILTER_CATEGORIES: ReadonlyArray<string> = [
   ...Array.from(new Set(INTEGRATIONS.map((i) => i.category))),
 ];
 
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 // API types
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 
 interface NangoConnectionRow {
   integration_id: string;
@@ -255,9 +255,9 @@ const DISCONNECT_ROUTES: Record<string, string> = {
     "/api/integrations/nango/disconnect/google-ads",
 };
 
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 // API-key setup info panel
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 
 interface ApiKeyPanelProps {
   integration: ExtendedIntegrationData;
@@ -284,9 +284,9 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
             style={{ background: "rgba(0,0,0,0.05)" }}
           >
             {isZernio ? (
-              <ExternalLink size={18} className="text-[#FF2D2D]" />
+              <ExternalLink size={18} className="text-[#2563EB]" />
             ) : (
-              <Key size={18} className="text-[#FF2D2D]" />
+              <Key size={18} className="text-[#2563EB]" />
             )}
           </div>
           <div>
@@ -304,7 +304,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
             <p>
               {integration.name} accounts are managed through{" "}
               <strong className="text-[#0A0A0B]">Zernio</strong>. Connect your
-              account there — ShortStack will automatically detect it.
+              account there � ShortStack will automatically detect it.
             </p>
             <ol className="list-decimal list-inside space-y-1.5 pl-1">
               <li>
@@ -332,7 +332,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               {(integration.requiredEnv ?? []).map((envVar) => (
                 <code
                   key={envVar}
-                  className="block w-full bg-[#FAFAFB] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-[#CC2424] text-[11px] font-mono"
+                  className="block w-full bg-[#FAFAFB] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-[#1D4ED8] text-[11px] font-mono"
                 >
                   {envVar}
                 </code>
@@ -349,7 +349,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold px-3 py-2 rounded-lg text-white transition-all"
               style={{
-                background: "#FF2D2D",
+                background: "#2563EB",
                 boxShadow:
                   "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(204,36,36,0.3)",
               }}
@@ -371,9 +371,9 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
   );
 }
 
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 // Page component
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 
 export default function IntegrationsHubPage() {
   const { user, loading: authLoading } = useAuth();
@@ -427,7 +427,7 @@ export default function IntegrationsHubPage() {
       const res = await fetch("/api/integrations/health", {
         credentials: "include",
       });
-      if (!res.ok) return; // non-blocking — health failures don't block the page
+      if (!res.ok) return; // non-blocking � health failures don't block the page
       const data = (await res.json()) as HealthResponse;
       const map = new Map<string, "connected" | "not_configured" | "error">();
       for (const result of data.results ?? []) {
@@ -473,7 +473,7 @@ export default function IntegrationsHubPage() {
     return INTEGRATIONS.filter((i) => i.category === activeFilter);
   }, [activeFilter]);
 
-  // ── Connect flow ─────────────────────────────────────────────────────
+  // -- Connect flow -----------------------------------------------------
 
   function handleConnectClick(integration: IntegrationCardData) {
     const ext = integration as ExtendedIntegrationData;
@@ -541,7 +541,7 @@ export default function IntegrationsHubPage() {
     }
   }
 
-  // ── Disconnect flow ──────────────────────────────────────────────────
+  // -- Disconnect flow --------------------------------------------------
 
   async function handleDisconnect(integration: IntegrationCardData) {
     const ext = integration as ExtendedIntegrationData;
@@ -556,7 +556,7 @@ export default function IntegrationsHubPage() {
     const route = DISCONNECT_ROUTES[integration.id];
     if (!route) {
       toast.error(
-        `Disconnect for ${integration.name} isn't wired up yet — coming soon.`,
+        `Disconnect for ${integration.name} isn't wired up yet � coming soon.`,
       );
       return;
     }
@@ -583,7 +583,7 @@ export default function IntegrationsHubPage() {
     }
   }
 
-  // ── Stats ────────────────────────────────────────────────────────────
+  // -- Stats ------------------------------------------------------------
 
   const connectedCount = useMemo(() => {
     let count = connections.length;
@@ -612,14 +612,14 @@ export default function IntegrationsHubPage() {
     return relativeTime(latest);
   }, [connections]);
 
-  // ── Render ───────────────────────────────────────────────────────────
+  // -- Render -----------------------------------------------------------
 
   return (
     <div className="fade-in space-y-5">
       <PageHero
         icon={<Plug size={28} />}
         title="Integrations Hub"
-        subtitle="Connect your tools and let AI work across them. OAuth via Nango · Social via Zernio · API keys for the rest."
+        subtitle="Connect your tools and let AI work across them. OAuth via Nango � Social via Zernio � API keys for the rest."
         gradient="purple"
         eyebrow="All your integrations"
         actions={
@@ -763,9 +763,9 @@ export default function IntegrationsHubPage() {
   );
 }
 
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 // Helpers
-// ────────────────────────────────────────────────────────────────────────
+// ------------------------------------------------------------------------
 
 function relativeTime(iso: string): string {
   const then = new Date(iso).getTime();

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useCallback } from "react";
 import Image from "next/image";
@@ -88,7 +88,7 @@ export default function DesignStudioPage() {
       if (!res.ok) throw new Error("Save failed");
       markSaved();
     } catch {
-      toast.error("Save failed — try again");
+      toast.error("Save failed � try again");
     } finally {
       setIsSaving(false);
     }
@@ -116,13 +116,13 @@ export default function DesignStudioPage() {
     }
   }
 
-  // No design loaded — show picker
+  // No design loaded � show picker
   if (!designId && !design) {
     return (
       <div className="min-h-screen flex flex-col bg-[#FAFAFB]">
         <PageHero
           title="Design Studio"
-          subtitle="Create on-brand visuals with AI — text, shapes, images, templates."
+          subtitle="Create on-brand visuals with AI � text, shapes, images, templates."
           icon={<PenTool size={24} />}
           gradient="purple"
         />
@@ -141,12 +141,12 @@ export default function DesignStudioPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06, duration: 0.4 }}
                   whileHover={{ y: -4, scale: 1.02 }}
-                  className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#FF2D2D]/40 transition-colors group"
+                  className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#2563EB]/40 transition-colors group"
                   style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", width: "calc(100% + 32px)", marginLeft: -16, marginRight: -16, marginBottom: 8, flexShrink: 0 }} />
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", width: "calc(100% + 32px)", marginLeft: -16, marginRight: -16, marginBottom: 8, flexShrink: 0 }} />
                   <div
-                    className="border border-black/15 bg-black/5 rounded group-hover:border-[#FF2D2D]/50 transition-colors"
+                    className="border border-black/15 bg-black/5 rounded group-hover:border-[#2563EB]/50 transition-colors"
                     style={{
                       width: 48,
                       height: Math.round(48 * (preset.height / preset.width)),
@@ -157,7 +157,7 @@ export default function DesignStudioPage() {
                       {preset.label}
                     </p>
                     <p className="text-[10px] text-gray-600">
-                      {preset.width}×{preset.height}
+                      {preset.width}�{preset.height}
                     </p>
                   </div>
                 </motion.button>
@@ -177,7 +177,7 @@ export default function DesignStudioPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FAFAFB]">
-        <Loader2 size={32} className="animate-spin text-[#FF2D2D]" />
+        <Loader2 size={32} className="animate-spin text-[#2563EB]" />
       </div>
     );
   }
@@ -195,7 +195,7 @@ export default function DesignStudioPage() {
   );
 }
 
-// ── Recent designs list ───────────────────────────────────────────────────────
+// -- Recent designs list -------------------------------------------------------
 
 function RecentDesigns() {
   const [designs, setDesigns] = React.useState<DesignRow[]>([]);
@@ -212,7 +212,7 @@ function RecentDesigns() {
   if (loading) {
     return (
       <div className="flex items-center gap-2 text-gray-500 text-sm py-4">
-        <Loader2 size={16} className="animate-spin" /> Loading…
+        <Loader2 size={16} className="animate-spin" /> Loading�
       </div>
     );
   }
@@ -231,10 +231,10 @@ function RecentDesigns() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.05, duration: 0.35 }}
           whileHover={{ y: -4, scale: 1.01 }}
-          className="rounded-xl overflow-hidden hover:border-[#FF2D2D]/30 transition-colors group"
+          className="rounded-xl overflow-hidden hover:border-[#2563EB]/30 transition-colors group"
           style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+          <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
           <div className="relative aspect-video bg-[#F2F2F4] flex items-center justify-center">
             {d.thumbnail_url ? (
               <Image
@@ -254,7 +254,7 @@ function RecentDesigns() {
               {d.title}
             </p>
             <p className="text-[10px] text-gray-600">
-              {d.width}×{d.height}
+              {d.width}�{d.height}
             </p>
           </div>
         </motion.a>

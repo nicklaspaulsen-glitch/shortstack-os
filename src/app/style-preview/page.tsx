@@ -201,9 +201,9 @@ function NeoBrutalStyle({ expanded }: { expanded: boolean }) {
           <div className="mx-5 mt-4 p-4" style={{ border: "3px solid #1A1A1A", borderRadius: 8 }}>
             <p style={{ fontSize: 12, fontWeight: 900, marginBottom: 10, textTransform: "uppercase" }}>Pipeline</p>
             {[
-              { label: "New", count: 234, pct: 100, color: "#FF2D2D" },
+              { label: "New", count: 234, pct: 100, color: "#2563EB" },
               { label: "Contacted", count: 89, pct: 38, color: "#F59E0B" },
-              { label: "Replied", count: 23, pct: 10, color: "#FF2D2D" },
+              { label: "Replied", count: 23, pct: 10, color: "#2563EB" },
               { label: "Booked", count: 12, pct: 5, color: "#8B5CF6" },
             ].map((p, i) => (
               <div key={i} className="flex items-center gap-3 mb-2">

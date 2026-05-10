@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -168,23 +168,23 @@ const INDUSTRY_STYLES: Record<string, string> = {
 };
 
 const COLOR_PALETTES = [
-  { name: "Professional", colors: ["#1a1a2e", "#16213e", "#0f3460", "#e94560", "#FF2D2D"] },
+  { name: "Professional", colors: ["#1a1a2e", "#16213e", "#0f3460", "#e94560", "#2563EB"] },
   { name: "Fresh & Clean", colors: ["#ffffff", "#f0f0f0", "#2d3436", "#00cec9", "#6c5ce7"] },
-  { name: "Bold & Vibrant", colors: ["#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3", "#54a0ff"] },
-  { name: "Luxury Gold", colors: ["#0d0d0d", "#1a1a1a", "#FF2D2D", "#e8d5a3", "#ffffff"] },
+  { name: "Bold & Vibrant", colors: ["#3B82F6", "#feca57", "#48dbfb", "#ff9ff3", "#54a0ff"] },
+  { name: "Luxury Gold", colors: ["#0d0d0d", "#1a1a1a", "#2563EB", "#e8d5a3", "#ffffff"] },
   { name: "Nature", colors: ["#2d5016", "#3a7d0a", "#87c159", "#f5f5dc", "#8b4513"] },
   { name: "Ocean", colors: ["#003545", "#006d77", "#83c5be", "#edf6f9", "#ffddd2"] },
   { name: "Sunset", colors: ["#2b1055", "#d63230", "#f5a623", "#f7dc6f", "#fed8b1"] },
-  { name: "Minimal Dark", colors: ["#0a0a0a", "#1a1a1a", "#333333", "#ffffff", "#FF2D2D"] },
+  { name: "Minimal Dark", colors: ["#0a0a0a", "#1a1a1a", "#333333", "#ffffff", "#2563EB"] },
   { name: "Neon Pop", colors: ["#0D0D0D", "#FF00FF", "#00FF87", "#FFE600", "#00D4FF"] },
   { name: "Pastel Dream", colors: ["#FDA4AF", "#FF8080", "#86EFAC", "#FDE68A", "#FBCFE8"] },
   { name: "Earth Tones", colors: ["#78350F", "#92400E", "#B45309", "#D4A574", "#FDF8E1"] },
-  { name: "Coral Reef", colors: ["#FF6B6B", "#EE5A6F", "#F8B595", "#F5E6CC", "#355C7D"] },
+  { name: "Coral Reef", colors: ["#3B82F6", "#EE5A6F", "#F8B595", "#F5E6CC", "#355C7D"] },
   { name: "Cyberpunk", colors: ["#0A0A1A", "#1A0533", "#FF2D95", "#00F0FF", "#FFE600"] },
   { name: "Forest Moss", colors: ["#1B3A2D", "#2D5016", "#5B8C3E", "#A8C686", "#F0F5E8"] },
-  { name: "Royal Purple", colors: ["#1A0533", "#2D1B69", "#6D28D9", "#FF6B6B", "#EDE9FE"] },
+  { name: "Royal Purple", colors: ["#1A0533", "#2D1B69", "#6D28D9", "#3B82F6", "#EDE9FE"] },
   { name: "Warm Autumn", colors: ["#451A03", "#9A3412", "#EA580C", "#F97316", "#FED7AA"] },
-  { name: "Ice Blue", colors: ["#0C1929", "#1E3A5F", "#E02020", "#FF6B6B", "#FFE0E0"] },
+  { name: "Ice Blue", colors: ["#0C1929", "#1E3A5F", "#E02020", "#3B82F6", "#FFE0E0"] },
   { name: "Rose Gold", colors: ["#1A1A1A", "#4A2040", "#B76E79", "#E8C4B8", "#FFF5F5"] },
   { name: "Monochrome Gray", colors: ["#111111", "#333333", "#666666", "#AAAAAA", "#F0F0F0"] },
   { name: "Tropical Punch", colors: ["#FF6347", "#FF8C00", "#FFD700", "#00CED1", "#FF69B4"] },
@@ -361,11 +361,11 @@ export default function DesignStudioPage() {
   // ---------- New Feature State ----------
   const [toolsTab, setToolsTab] = useState<string>("brand-kit");
   const [brandKits, setBrandKits] = useState<BrandKit[]>([
-    { id: "1", name: "Default Brand", colors: ["#FF2D2D", "#1a1a2e", "#16213e", "#ffffff", "#f0f0f0"], fonts: { heading: "Montserrat Bold", body: "Open Sans Regular" }, logoUrl: "" },
+    { id: "1", name: "Default Brand", colors: ["#2563EB", "#1a1a2e", "#16213e", "#ffffff", "#f0f0f0"], fonts: { heading: "Montserrat Bold", body: "Open Sans Regular" }, logoUrl: "" },
   ]);
   const [activeBrandKit, setActiveBrandKit] = useState<string>("1");
   const [newBrandKitName, setNewBrandKitName] = useState("");
-  const [newBrandColor, setNewBrandColor] = useState("#FF2D2D");
+  const [newBrandColor, setNewBrandColor] = useState("#2563EB");
 
   // Smart Resize
   const [resizeSource, setResizeSource] = useState<string>("");
@@ -412,7 +412,7 @@ export default function DesignStudioPage() {
 
   // Pattern Generator
   const [patternType, setPatternType] = useState("geometric");
-  const [patternColor1, setPatternColor1] = useState("#FF2D2D");
+  const [patternColor1, setPatternColor1] = useState("#2563EB");
   const [patternColor2, setPatternColor2] = useState("#1a1a2e");
   const [patternScale, setPatternScale] = useState(50);
 
@@ -472,13 +472,13 @@ export default function DesignStudioPage() {
 
   // Mood Board
   const [moodBoardItems, setMoodBoardItems] = useState<Array<{ id: string; type: "color" | "image" | "note"; value: string }>>([
-    { id: "m1", type: "color", value: "#FF2D2D" },
+    { id: "m1", type: "color", value: "#2563EB" },
     { id: "m2", type: "color", value: "#1a1a2e" },
     { id: "m3", type: "note", value: "Minimalist luxury feel" },
     { id: "m4", type: "note", value: "Gold accents on dark background" },
   ]);
   const [newMoodNote, setNewMoodNote] = useState("");
-  const [newMoodColor, setNewMoodColor] = useState("#FF2D2D");
+  const [newMoodColor, setNewMoodColor] = useState("#2563EB");
 
   // AI Style Transfer
   const [styleTransferSource, setStyleTransferSource] = useState("");
@@ -486,7 +486,7 @@ export default function DesignStudioPage() {
   const [styleTransferring, setStyleTransferring] = useState(false);
   const [styleTransferStrength, setStyleTransferStrength] = useState(75);
 
-  // Guided Mode ↔ Advanced Mode
+  // Guided Mode ? Advanced Mode
   const [advancedMode, setAdvancedMode] = useAdvancedMode("design");
   const [guidedStep, setGuidedStep] = useState(0);
   const [guidedKind, setGuidedKind] = useState<string>("social");
@@ -522,7 +522,7 @@ export default function DesignStudioPage() {
   function handleExtractColors() {
     setExtractingColors(true);
     setTimeout(() => {
-      setExtractedColors(["#2d3436", "#636e72", "#b2bec3", "#dfe6e9", "#FF2D2D", "#e17055"]);
+      setExtractedColors(["#2d3436", "#636e72", "#b2bec3", "#dfe6e9", "#2563EB", "#e17055"]);
       setExtractingColors(false);
       toast.success("Extracted 6 colors from image");
     }, 1500);
@@ -700,7 +700,7 @@ export default function DesignStudioPage() {
     toast.success(`Applied: ${template.label}`);
   }
 
-  /* ─── Guided Mode: pick a design kind + vibe → generate first prompt ─── */
+  /* --- Guided Mode: pick a design kind + vibe ? generate first prompt --- */
   const GUIDED_KINDS: Array<{ id: string; label: string; desc: string; sectionKey: string; templateLabel: string; icon: React.ReactNode }> = [
     { id: "logo", label: "Logo", desc: "Brand mark or wordmark", sectionKey: "logos", templateLabel: "Primary Logo", icon: <Award size={18} /> },
     { id: "banner", label: "Banner", desc: "Website or social header", sectionKey: "banners", templateLabel: "Website Hero", icon: <Monitor size={18} /> },
@@ -816,7 +816,7 @@ export default function DesignStudioPage() {
     {
       id: "vibe",
       title: "Pick a vibe",
-      description: "This picks a style + matching color palette — you can change both in Advanced.",
+      description: "This picks a style + matching color palette � you can change both in Advanced.",
       icon: <Wand2 size={18} />,
       component: (
         <ChoiceCards
@@ -876,13 +876,13 @@ export default function DesignStudioPage() {
         }
       />
 
-      {/* Guided Mode — 3-step AI design prompter */}
+      {/* Guided Mode � 3-step AI design prompter */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={generating ? "Generating…" : "Generate design"}
+          finishLabel={generating ? "Generating�" : "Generate design"}
           busy={!!generating}
           onFinish={handleGuidedGenerate}
           onCancel={() => setAdvancedMode(true)}
@@ -907,7 +907,7 @@ export default function DesignStudioPage() {
             Design library
           </p>
           <h3 className="text-lg font-bold text-foreground mt-1">
-            Banners, posters, ad creatives, decks — one prompt away
+            Banners, posters, ad creatives, decks � one prompt away
           </h3>
           <p className="text-xs text-muted max-w-md mx-auto mt-1">
             Pair a template with a brand palette and we batch out every
@@ -989,10 +989,10 @@ export default function DesignStudioPage() {
                 transition={{ delay: i * 0.06, duration: 0.4 }}
                 whileHover={{ y: -4, scale: 1.01 }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 <div className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 bg-[rgba(204,36,36,0.08)] rounded-xl flex items-center justify-center text-[#CC2424]">
+                  <div className="w-9 h-9 bg-[rgba(204,36,36,0.08)] rounded-xl flex items-center justify-center text-[#1D4ED8]">
                     {section.icon}
                   </div>
                   <div className="flex-1">
@@ -1106,13 +1106,13 @@ export default function DesignStudioPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03, duration: 0.35 }}
                 whileHover={{ y: -3, scale: 1.02 }}
-                className={`rounded-xl overflow-hidden text-left ${selectedTemplate?.label === t.label ? "border-[#FF2D2D]/40" : ""}`}
+                className={`rounded-xl overflow-hidden text-left ${selectedTemplate?.label === t.label ? "border-[#2563EB]/40" : ""}`}
                 style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: selectedTemplate?.label === t.label ? "1px solid rgba(204,36,36,0.5)" : "1px solid rgba(0,0,0,0.08)" }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 <div className="p-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[#FF2D2D]">{t.icon}</span>
+                  <span className="text-[#2563EB]">{t.icon}</span>
                   <span className="text-[8px] text-muted bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded capitalize">{t.category}</span>
                 </div>
                 <p className="text-[11px] font-semibold">{t.label}</p>
@@ -1138,10 +1138,10 @@ export default function DesignStudioPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04, duration: 0.35 }}
                 whileHover={{ y: -3, scale: 1.02 }}
-                className={`rounded-xl overflow-hidden text-left ${selectedPalette?.name === palette.name ? "border-[#FF2D2D]/40" : ""}`}
+                className={`rounded-xl overflow-hidden text-left ${selectedPalette?.name === palette.name ? "border-[#2563EB]/40" : ""}`}
                 style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: selectedPalette?.name === palette.name ? "1px solid rgba(204,36,36,0.5)" : "1px solid rgba(0,0,0,0.08)" }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 <div className="p-4">
                 <p className="text-xs font-semibold mb-2">{palette.name}</p>
                 <div className="flex gap-1 mb-2">

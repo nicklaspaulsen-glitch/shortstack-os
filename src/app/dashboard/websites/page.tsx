@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -91,7 +91,7 @@ const ALL_ADDONS = [
   { key: "white_label", label: "White-label (no watermark)", price: 20, icon: <EyeOff size={11} /> },
 ];
 
-/* ─────────────────────────── Niche template gallery ───────────────────────────
+/* --------------------------- Niche template gallery ---------------------------
    Each template preselects wizard answers so the user skips the generic opener.
    Images are Unsplash CDN with stable photo ids + cropping params (600x400).
 */
@@ -187,7 +187,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "corporate-pro",
       hero_style: "big-headline-image",
       cta_goal: "contact",
-      brand_primary: "#FF2D2D",
+      brand_primary: "#2563EB",
       brand_accent: "#0C4A6E",
       sections: ["services", "testimonials", "faq", "contact"],
     },
@@ -244,7 +244,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "luxury-gold",
       hero_style: "big-headline-image",
       cta_goal: "contact",
-      brand_primary: "#FF2D2D",
+      brand_primary: "#2563EB",
       brand_accent: "#1E293B",
       sections: ["gallery", "about", "testimonials", "contact"],
     },
@@ -282,7 +282,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "dark-cinematic",
       hero_style: "interactive-gradient",
       cta_goal: "join-waitlist",
-      brand_primary: "#FF2D2D",
+      brand_primary: "#2563EB",
       brand_accent: "#991414",
       sections: ["features", "testimonials"],
     },
@@ -354,7 +354,7 @@ export default function WebsitesPage() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  /* ─────────────────────────────── Wizard steps ────────────────────────────── */
+  /* ------------------------------- Wizard steps ------------------------------ */
 
   async function aiSuggestValueProp(data: Record<string, unknown>): Promise<Partial<Record<string, unknown>>> {
     try {
@@ -380,16 +380,16 @@ export default function WebsitesPage() {
     const industry = String(data.industry || data.business_type || "");
     const map: Record<string, { primary: string; accent: string }> = {
       restaurant: { primary: "#B45309", accent: "#78350F" },
-      real_estate: { primary: "#FF2D2D", accent: "#1E293B" },
+      real_estate: { primary: "#2563EB", accent: "#1E293B" },
       coach: { primary: "#7C3AED", accent: "#1E1B4B" },
       saas: { primary: "#E02020", accent: "#0F172A" },
       ecommerce: { primary: "#EC4899", accent: "#111827" },
-      local_service: { primary: "#FF2D2D", accent: "#0C4A6E" },
+      local_service: { primary: "#2563EB", accent: "#0C4A6E" },
       portfolio: { primary: "#F97316", accent: "#18181B" },
       blog: { primary: "#E02020", accent: "#991414" },
       agency: { primary: "#DC2626", accent: "#1F2937" },
     };
-    const palette = map[industry.toLowerCase()] || { primary: "#FF2D2D", accent: "#0F172A" };
+    const palette = map[industry.toLowerCase()] || { primary: "#2563EB", accent: "#0F172A" };
     return { brand_primary: palette.primary, brand_accent: palette.accent };
   }
 
@@ -403,7 +403,7 @@ export default function WebsitesPage() {
         type: "choice-cards",
         key: "business_type",
         options: [
-          { value: "local_service", label: "Local Service", description: "HVAC, plumbing, dental…", icon: <Home size={14} />, preview: "bg-gradient-to-br from-sky-500/40 to-cyan-500/40" },
+          { value: "local_service", label: "Local Service", description: "HVAC, plumbing, dental�", icon: <Home size={14} />, preview: "bg-gradient-to-br from-sky-500/40 to-cyan-500/40" },
           { value: "ecommerce", label: "E-commerce", description: "Online store", icon: <ShoppingBag size={14} />, preview: "bg-gradient-to-br from-pink-500/40 to-rose-500/40" },
           { value: "saas", label: "SaaS", description: "Software product", icon: <MonitorSmartphone size={14} />, preview: "bg-gradient-to-br from-blue-500/40 to-indigo-500/40" },
           { value: "portfolio", label: "Portfolio", description: "Creative showcase", icon: <Camera size={14} />, preview: "bg-gradient-to-br from-orange-500/40 to-amber-500/40" },
@@ -495,12 +495,12 @@ export default function WebsitesPage() {
         type: "choice-cards",
         key: "hero_style",
         options: [
-          { value: "big-headline-image", label: "Big headline + image", description: "Classic high-converting", emoji: "🖼️" },
-          { value: "video-bg", label: "Video background", description: "Looping hero video", emoji: "🎬" },
-          { value: "3d-spline", label: "3D / Spline animation", description: "Interactive 3D scene", emoji: "🧊" },
-          { value: "split-screen", label: "Split screen", description: "Copy left / visual right", emoji: "⬛⬜" },
-          { value: "fullscreen-photo", label: "Fullscreen photo", description: "Immersive full-bleed", emoji: "📸" },
-          { value: "interactive-gradient", label: "Interactive gradient", description: "Animated mesh gradient", emoji: "🌈" },
+          { value: "big-headline-image", label: "Big headline + image", description: "Classic high-converting", emoji: "???" },
+          { value: "video-bg", label: "Video background", description: "Looping hero video", emoji: "??" },
+          { value: "3d-spline", label: "3D / Spline animation", description: "Interactive 3D scene", emoji: "??" },
+          { value: "split-screen", label: "Split screen", description: "Copy left / visual right", emoji: "??" },
+          { value: "fullscreen-photo", label: "Fullscreen photo", description: "Immersive full-bleed", emoji: "??" },
+          { value: "interactive-gradient", label: "Interactive gradient", description: "Animated mesh gradient", emoji: "??" },
         ],
       },
     },
@@ -513,12 +513,12 @@ export default function WebsitesPage() {
         type: "choice-cards",
         key: "cta_goal",
         options: [
-          { value: "book-call", label: "Book a call", description: "Calendly / calendar", emoji: "📅" },
-          { value: "buy-product", label: "Buy product", description: "E-commerce checkout", emoji: "🛒" },
-          { value: "join-waitlist", label: "Join waitlist", description: "Email capture pre-launch", emoji: "⏳" },
-          { value: "download", label: "Download", description: "Lead magnet / app", emoji: "⬇️" },
-          { value: "contact", label: "Contact us", description: "Contact form / email", emoji: "✉️" },
-          { value: "schedule-demo", label: "Schedule demo", description: "SaaS demo request", emoji: "🎯" },
+          { value: "book-call", label: "Book a call", description: "Calendly / calendar", emoji: "??" },
+          { value: "buy-product", label: "Buy product", description: "E-commerce checkout", emoji: "??" },
+          { value: "join-waitlist", label: "Join waitlist", description: "Email capture pre-launch", emoji: "?" },
+          { value: "download", label: "Download", description: "Lead magnet / app", emoji: "??" },
+          { value: "contact", label: "Contact us", description: "Contact form / email", emoji: "??" },
+          { value: "schedule-demo", label: "Schedule demo", description: "SaaS demo request", emoji: "??" },
         ],
       },
     },
@@ -531,16 +531,16 @@ export default function WebsitesPage() {
         type: "chip-select",
         key: "sections",
         options: [
-          { value: "about", label: "About", emoji: "📖" },
-          { value: "features", label: "Features", emoji: "✨" },
-          { value: "services", label: "Services", emoji: "🛠️" },
-          { value: "pricing", label: "Pricing", emoji: "💰" },
-          { value: "testimonials", label: "Testimonials", emoji: "⭐" },
-          { value: "faq", label: "FAQ", emoji: "❓" },
-          { value: "blog-preview", label: "Blog preview", emoji: "📰" },
-          { value: "gallery", label: "Gallery", emoji: "🖼️" },
-          { value: "team", label: "Team", emoji: "👥" },
-          { value: "contact", label: "Contact", emoji: "📬" },
+          { value: "about", label: "About", emoji: "??" },
+          { value: "features", label: "Features", emoji: "?" },
+          { value: "services", label: "Services", emoji: "???" },
+          { value: "pricing", label: "Pricing", emoji: "??" },
+          { value: "testimonials", label: "Testimonials", emoji: "?" },
+          { value: "faq", label: "FAQ", emoji: "?" },
+          { value: "blog-preview", label: "Blog preview", emoji: "??" },
+          { value: "gallery", label: "Gallery", emoji: "???" },
+          { value: "team", label: "Team", emoji: "??" },
+          { value: "contact", label: "Contact", emoji: "??" },
         ],
       },
     },
@@ -571,10 +571,10 @@ export default function WebsitesPage() {
         type: "choice-cards",
         key: "visuals",
         options: [
-          { value: "ai-generated", label: "AI-generated images", description: "We'll call it out in the prompt", emoji: "🤖" },
-          { value: "stock-photos", label: "Stock photos", description: "Unsplash / Pexels references", emoji: "📷" },
-          { value: "upload-own", label: "I'll upload my own", description: "Replace placeholders later", emoji: "📤" },
-          { value: "mixed", label: "Mixed", description: "AI + stock + uploads", emoji: "🎨" },
+          { value: "ai-generated", label: "AI-generated images", description: "We'll call it out in the prompt", emoji: "??" },
+          { value: "stock-photos", label: "Stock photos", description: "Unsplash / Pexels references", emoji: "??" },
+          { value: "upload-own", label: "I'll upload my own", description: "Replace placeholders later", emoji: "??" },
+          { value: "mixed", label: "Mixed", description: "AI + stock + uploads", emoji: "??" },
         ],
       },
     },
@@ -587,15 +587,15 @@ export default function WebsitesPage() {
         type: "choice-cards",
         key: "domain_strategy",
         options: [
-          { value: "subdomain", label: "Use a free subdomain", description: "demo-mysite.shortstack.work", emoji: "🆓" },
-          { value: "buy-new", label: "Buy a new domain", description: "$12-35/yr via GoDaddy", emoji: "🌐" },
-          { value: "connect-existing", label: "Connect existing domain", description: "You already own one", emoji: "🔗" },
+          { value: "subdomain", label: "Use a free subdomain", description: "demo-mysite.shortstack.work", emoji: "??" },
+          { value: "buy-new", label: "Buy a new domain", description: "$12-35/yr via GoDaddy", emoji: "??" },
+          { value: "connect-existing", label: "Connect existing domain", description: "You already own one", emoji: "??" },
         ],
       },
     },
   ];
 
-  /* ─────────────────────────── Template picker helpers ───────────────────────── */
+  /* --------------------------- Template picker helpers ------------------------- */
 
   function pickTemplate(t: NicheTemplate): void {
     setWizardPreset({
@@ -608,7 +608,7 @@ export default function WebsitesPage() {
 
   function startBlank(): void {
     setWizardPreset({
-      brand_primary: "#FF2D2D",
+      brand_primary: "#2563EB",
       brand_accent: "#0F172A",
       sections: ["about", "features", "testimonials", "faq"],
       visuals: "stock-photos",
@@ -617,7 +617,7 @@ export default function WebsitesPage() {
     setWizardOpen(true);
   }
 
-  /* ─────────────────────────── Generate, deploy, demo ───────────────────────── */
+  /* --------------------------- Generate, deploy, demo ------------------------- */
 
   async function deployDemo(projectId: string): Promise<void> {
     try {
@@ -646,7 +646,7 @@ export default function WebsitesPage() {
         return;
       }
 
-      toast.success("Website generated! Deploying demo…");
+      toast.success("Website generated! Deploying demo�");
       // Auto-deploy to free demo subdomain
       await deployDemo(out.project_id);
       await loadData();
@@ -659,9 +659,9 @@ export default function WebsitesPage() {
         const wp = row as WebsiteProject;
         setActive(wp);
         setWizardOpen(false);
-        // Let the user SEE the demo first — they open pricing when ready
+        // Let the user SEE the demo first � they open pricing when ready
         toast.success(
-          "Your demo is live! Try it out — go live when you're ready.",
+          "Your demo is live! Try it out � go live when you're ready.",
           { duration: 6000 },
         );
       }
@@ -687,7 +687,7 @@ export default function WebsitesPage() {
       const out = await res.json();
       toast.dismiss("regen");
       if (out.success) {
-        toast.success("Regenerated — redeploying demo…");
+        toast.success("Regenerated � redeploying demo�");
         await deployDemo(project.id);
         const { data: row } = await supabase.from("website_projects").select("*").eq("id", project.id).single();
         if (row) setActive(row as WebsiteProject);
@@ -704,7 +704,7 @@ export default function WebsitesPage() {
 
   async function deploy(project: WebsiteProject) {
     setDeploying(true);
-    toast.loading("Deploying to Vercel…", { id: "dep" });
+    toast.loading("Deploying to Vercel�", { id: "dep" });
     try {
       const res = await fetch("/api/websites/deploy", {
         method: "POST",
@@ -744,7 +744,7 @@ export default function WebsitesPage() {
     }
     try {
       await navigator.clipboard.writeText(url);
-      toast.success("Demo URL copied — share with your client!");
+      toast.success("Demo URL copied � share with your client!");
     } catch {
       toast.error("Failed to copy");
     }
@@ -752,7 +752,7 @@ export default function WebsitesPage() {
 
   async function extendDemo(p: WebsiteProject) {
     if (!confirm("Extend demo by 7 days for $2?")) return;
-    toast.loading("Extending demo…", { id: "ext" });
+    toast.loading("Extending demo�", { id: "ext" });
     try {
       const res = await fetch(`/api/websites/${p.id}/extend-demo`, { method: "POST" });
       const out = await res.json();
@@ -773,7 +773,7 @@ export default function WebsitesPage() {
     }
   }
 
-  /* ─────────────────────────── Pricing modal ─────────────────────────── */
+  /* --------------------------- Pricing modal --------------------------- */
 
   async function openPricing(p: WebsiteProject) {
     setPricingFor(p);
@@ -840,7 +840,7 @@ export default function WebsitesPage() {
     setSubscribing(false);
   }
 
-  /* ─────────────────────────── Render ─────────────────────────── */
+  /* --------------------------- Render --------------------------- */
 
   const indexHtml = active?.generated_files?.["index.html"] || "";
 
@@ -916,7 +916,7 @@ export default function WebsitesPage() {
         onComplete={handleWizardComplete}
       />
 
-      {/* ──────────────────── Niche template gallery ──────────────────── */}
+      {/* -------------------- Niche template gallery -------------------- */}
       <div className="space-y-3">
         <div className="flex items-end justify-between flex-wrap gap-2">
           <div>
@@ -936,7 +936,7 @@ export default function WebsitesPage() {
           </button>
         </div>
 
-        {/* Niche filter tabs — spring indicator via layoutId */}
+        {/* Niche filter tabs � spring indicator via layoutId */}
         <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter templates by niche">
           {NICHE_FILTERS.map((niche) => {
             const filterKey = niche === "All" ? "all" : niche;
@@ -946,8 +946,8 @@ export default function WebsitesPage() {
                 key={niche}
                 type="button"
                 onClick={() => setNicheFilter(filterKey)}
-                className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF2D2D]/60"
-                style={{ color: isActive ? "#CC2424" : "rgba(0,0,0,0.40)" }}
+                className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/60"
+                style={{ color: isActive ? "#1D4ED8" : "rgba(0,0,0,0.40)" }}
               >
                 {isActive && (
                   <motion.span
@@ -990,13 +990,13 @@ export default function WebsitesPage() {
                   <TrendingUp size={9} /> {t.cvr}
                 </span>
 
-                {/* Bottom overlay content — hidden when wireframe preview is shown */}
+                {/* Bottom overlay content � hidden when wireframe preview is shown */}
                 <div className="absolute bottom-0 left-0 right-0 p-3 transition-opacity duration-200 group-hover:opacity-0">
                   <p className="text-[13px] font-bold text-white drop-shadow-sm">{t.name}</p>
                   <p className="text-[10px] text-white/80 mt-0.5 line-clamp-2">{t.tagline}</p>
                 </div>
 
-                {/* Wireframe mini-preview — slides up from bottom on hover */}
+                {/* Wireframe mini-preview � slides up from bottom on hover */}
                 <div className="absolute inset-x-0 bottom-0 h-[72%] translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out pointer-events-none">
                   <div className="absolute inset-0 bg-black/88 backdrop-blur-sm" />
                   <div className="relative h-full flex flex-col p-2.5 gap-2">
@@ -1055,7 +1055,7 @@ export default function WebsitesPage() {
         </div>
       </div>
 
-      {/* Demo-ready banner — shown while demo is live and not yet subscribed */}
+      {/* Demo-ready banner � shown while demo is live and not yet subscribed */}
       {active && effectiveStatus(active) === "preview" && (
         <div className="card p-4 bg-gradient-to-br from-emerald-500/[0.06] to-transparent border-emerald-500/30 fade-in">
           <div className="flex items-center gap-3 flex-wrap">
@@ -1250,7 +1250,7 @@ export default function WebsitesPage() {
                   whileHover={{ y: -4, scale: 1.01 }}
                   className="glass rounded-xl p-0 overflow-hidden shadow-lg shadow-black/20 relative"
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 inset-x-0" />
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
                   {/* Thumbnail */}
                   <div className="relative h-36 bg-slate-900 border-b border-border overflow-hidden">
                     {html ? (
@@ -1284,7 +1284,7 @@ export default function WebsitesPage() {
                     <div>
                       <p className="text-xs font-semibold truncate">{p.name}</p>
                       <p className="text-[9px] text-muted truncate">
-                        {clientName ? `${clientName} · ` : ""}
+                        {clientName ? `${clientName} � ` : ""}
                         {p.industry || p.template_style || "uncategorized"}
                       </p>
                     </div>
@@ -1373,7 +1373,7 @@ export default function WebsitesPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {[
           { icon: <Layout size={12} />, title: "1. Pick a niche", body: "Nine battle-tested templates, each one prewired for the conversion pattern that niche responds to." },
-          { icon: <Rocket size={12} />, title: "2. Share the demo", body: "Auto-deployed to a live URL in under 3 minutes. Send it to your client — free for 14 days, no card." },
+          { icon: <Rocket size={12} />, title: "2. Share the demo", body: "Auto-deployed to a live URL in under 3 minutes. Send it to your client � free for 14 days, no card." },
           { icon: <DollarSign size={12} />, title: "3. Go live, get paid", body: "Connect a domain and subscribe. Transparent monthly pricing based on what's actually in the site." },
         ].map((item, index) => (
           <motion.div
@@ -1384,7 +1384,7 @@ export default function WebsitesPage() {
             whileHover={{ y: -2 }}
             className="glass rounded-xl p-4 relative overflow-hidden"
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 inset-x-0" />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
             <h3 className="section-header flex items-center gap-2 text-gold">{item.icon} {item.title}</h3>
             <p className="text-[10px] text-muted">{item.body}</p>
           </motion.div>
@@ -1426,7 +1426,7 @@ export default function WebsitesPage() {
   );
 }
 
-/* ────────────────────────── Pricing modal component ────────────────────────── */
+/* -------------------------- Pricing modal component -------------------------- */
 
 function PricingModal({
   project,
@@ -1468,7 +1468,7 @@ function PricingModal({
             <h2 className="text-base font-bold flex items-center gap-2">
               <Rocket size={16} className="text-gold" /> Your Website is Ready!
             </h2>
-            <p className="text-[11px] text-muted">{project.name} — pick a plan to go live.</p>
+            <p className="text-[11px] text-muted">{project.name} � pick a plan to go live.</p>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-black/5"><X size={14} /></button>
         </div>
@@ -1496,14 +1496,14 @@ function PricingModal({
                   <Loader size={20} className="animate-spin" />
                 ) : (
                   <>
-                    <span className="text-3xl font-bold">${display ?? "—"}</span>
+                    <span className="text-3xl font-bold">${display ?? "�"}</span>
                     <span className="text-xs opacity-90">{cyclePer}</span>
                   </>
                 )}
               </div>
               {billingCycle === "yearly" && quote && (
                 <p className="text-[10px] opacity-90 mt-1">
-                  Save 17% — equiv ${(quote.yearly_price / 12).toFixed(2)}/mo
+                  Save 17% � equiv ${(quote.yearly_price / 12).toFixed(2)}/mo
                 </p>
               )}
             </div>
@@ -1535,7 +1535,7 @@ function PricingModal({
                   </div>
                 ))}
                 {!quote?.breakdown?.length && !quoteLoading && (
-                  <p className="text-[11px] text-muted">Calculating…</p>
+                  <p className="text-[11px] text-muted">Calculating�</p>
                 )}
               </div>
             </div>
@@ -1576,7 +1576,7 @@ function PricingModal({
                 className="w-full text-xs px-4 py-3 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
                 {subscribing ? <Loader size={12} className="animate-spin" /> : <Rocket size={12} />}
-                Go Live — ${display}{cyclePer}
+                Go Live � ${display}{cyclePer}
               </button>
               <button
                 onClick={onClose}

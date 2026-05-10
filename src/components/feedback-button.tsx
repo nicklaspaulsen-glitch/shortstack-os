@@ -16,8 +16,8 @@ import toast from "react-hot-toast";
 // Apr 28 v9: was hardcoded gold (#c8a855 / #e4c876) — yellow bubble
 // stuck out hard against the new teal brand. Repointed to the v4 teal
 // accent palette so the floating button blends with the rest of the OS.
-const GOLD = "#FF2D2D";        // teal-600 (matches --brand-accent in light mode)
-const GOLD_LIGHT = "#FF2D2D";  // teal-500 (matches --brand-accent in dark mode)
+const GOLD = "#2563EB";        // blue-600 (matches --brand-accent in light mode)
+const GOLD_LIGHT = "#3B82F6";  // blue-500 (matches --brand-accent in dark mode)
 
 type FeedbackType = "bug" | "feature" | "praise" | "question";
 
@@ -165,7 +165,7 @@ export default function FeedbackButton() {
         style={{
           background: `linear-gradient(135deg, ${GOLD}, ${GOLD_LIGHT})`,
           color: "#FFFFFF",
-          boxShadow: `0 8px 24px rgba(255,45,45,0.40), 0 0 0 1px rgba(255,45,45,0.25)`,
+          boxShadow: `0 8px 24px rgba(37,99,235,0.40), 0 0 0 1px rgba(37,99,235,0.25)`,
         }}
       >
         <MessageCirclePlus size={20} strokeWidth={2.2} />

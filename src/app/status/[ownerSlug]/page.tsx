@@ -219,13 +219,13 @@ export default async function PublicStatusPage({
           <div
             className=" border p-6 flex items-center gap-4"
             style={{
-              borderColor: "rgba(255, 45, 45, 0.4)",
-              background: "rgba(255, 45, 45, 0.08)",
+              borderColor: "rgba(37, 99, 235, 0.4)",
+              background: "rgba(37, 99, 235, 0.08)",
             }}
           >
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
-              style={{ background: "rgba(255, 45, 45, 0.2)" }}
+              style={{ background: "rgba(37, 99, 235, 0.2)" }}
             >
               <span aria-hidden>OK</span>
             </div>
@@ -290,7 +290,7 @@ export default async function PublicStatusPage({
                 style={{
                   background:
                     d.status === "ok"
-                      ? "linear-gradient(180deg, rgba(255, 45, 45, 0.85), rgba(255, 45, 45, 0.55))"
+                      ? "linear-gradient(180deg, rgba(37, 99, 235, 0.85), rgba(37, 99, 235, 0.55))"
                       : "linear-gradient(180deg, rgba(234, 179, 8, 0.85), rgba(234, 179, 8, 0.55))",
                 }}
               />
@@ -344,7 +344,7 @@ export default async function PublicStatusPage({
                         style={{
                           background:
                             d.status === "ok"
-                              ? "rgba(255, 45, 45, 0.7)"
+                              ? "rgba(37, 99, 235, 0.7)"
                               : "rgba(234, 179, 8, 0.8)",
                         }}
                       />

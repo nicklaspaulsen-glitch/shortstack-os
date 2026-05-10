@@ -1,7 +1,7 @@
-﻿"use client";
+"use client";
 
 /**
- * OverviewPanel — top-level Ads Manager dashboard.
+ * OverviewPanel � top-level Ads Manager dashboard.
  *
  * Renders:
  *   - 4 stat tiles: total spend / active campaigns / avg ROAS / best platform
@@ -180,8 +180,8 @@ export default function OverviewPanel() {
             <AreaChart data={dailySeries} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="spendGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#FF2D2D" stopOpacity={0.4} />
-                  <stop offset="100%" stopColor="#FF2D2D" stopOpacity={0} />
+                  <stop offset="0%" stopColor="#2563EB" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="#2563EB" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -209,7 +209,7 @@ export default function OverviewPanel() {
               <Area
                 type="monotone"
                 dataKey="spend"
-                stroke="#FF2D2D"
+                stroke="#2563EB"
                 strokeWidth={2}
                 fill="url(#spendGradient)"
               />

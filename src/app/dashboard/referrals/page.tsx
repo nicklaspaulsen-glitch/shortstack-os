@@ -366,12 +366,12 @@ export default function ReferralsPage() {
       {/* ─── Stat cards ─────────────────────────────────────────────── */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {[
-          { icon: <TrendingUp size={14} />, accent: "#FF2D2D", label: "This month", value: meLoading ? "—" : fmtCents(me?.stats.this_month_cents ?? 0), sublabel: "Current cycle" },
+          { icon: <TrendingUp size={14} />, accent: "#2563EB", label: "This month", value: meLoading ? "—" : fmtCents(me?.stats.this_month_cents ?? 0), sublabel: "Current cycle" },
           { icon: <Wallet size={14} />, accent: "#c8a855", label: "All time earned", value: meLoading ? "—" : fmtCents(me?.stats.total_earned_cents ?? 0), sublabel: `${me?.stats.total_referrals ?? 0} total referral${me?.stats.total_referrals === 1 ? "" : "s"}` },
           { icon: <Clock size={14} />, accent: "#a855f7", label: "Pending payout", value: meLoading ? "—" : fmtCents(me?.stats.pending_payout_cents ?? 0), sublabel: "Paid on the 1st" },
         ].map((tile, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
             <StatCard {...tile} />
           </motion.div>
         ))}

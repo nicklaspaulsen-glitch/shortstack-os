@@ -50,15 +50,15 @@ interface Comment {
 // ── Column config ──────────────────────────────────────────────
 const COLUMNS: { key: Status; label: string; color: string }[] = [
   { key: "backlog",     label: "Backlog",     color: "#6b7280" },
-  { key: "todo",        label: "To Do",       color: "#FF2D2D" },
+  { key: "todo",        label: "To Do",       color: "#2563EB" },
   { key: "in_progress", label: "In Progress", color: "#f59e0b" },
   { key: "review",      label: "Review",      color: "#8b5cf6" },
-  { key: "done",        label: "Done",        color: "#FF2D2D" },
+  { key: "done",        label: "Done",        color: "#2563EB" },
 ];
 
 const PRIORITY_META: Record<Priority, { label: string; color: string; bg: string }> = {
   low:    { label: "Low",    color: "#6b7280", bg: "rgba(107,114,128,0.12)" },
-  medium: { label: "Medium", color: "#FF2D2D", bg: "rgba(255,45,45,0.12)" },
+  medium: { label: "Medium", color: "#2563EB", bg: "rgba(37,99,235,0.12)" },
   high:   { label: "High",   color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
   urgent: { label: "Urgent", color: "#ef4444", bg: "rgba(239,68,68,0.14)" },
 };
@@ -545,7 +545,7 @@ export default function ProjectsPage() {
               >
                 <span
                   className="w-2 h-2 rounded-full"
-                  style={{ background: b.color || "#FF2D2D" }}
+                  style={{ background: b.color || "#2563EB" }}
                 />
                 {b.name}
               </button>

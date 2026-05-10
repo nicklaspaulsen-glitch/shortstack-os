@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 
-const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
+const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
@@ -37,7 +37,7 @@ const NEWSLETTER_PREVIEW_FALLBACK: RollingPreviewItem[] = [
   { id: "n12", src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=500&fit=crop", alt: "Moody newsletter", tag: "Moody" },
 ];
 
-/* ─────────── types ─────────── */
+/* ----------- types ----------- */
 type MainTab = "builder" | "templates" | "preview" | "stats";
 type PreviewMode = "desktop" | "mobile";
 
@@ -68,7 +68,7 @@ interface PastNewsletter {
   clickRate: string;
 }
 
-/* ─────────── helpers ─────────── */
+/* ----------- helpers ----------- */
 let _blockIdCounter = 0;
 function uid(): string {
   _blockIdCounter += 1;
@@ -82,14 +82,14 @@ function defaultBlock(type: ContentBlock["type"]): ContentBlock {
     hero:    { imageUrl: "", headline: "Your Headline Here", subheadline: "Add a short supporting line." },
     text:    { body: "Write your content here. Click 'Write with AI' for instant copy." },
     image:   { url: "", alt: "Image description", caption: "" },
-    button:  { label: "Learn More", url: "#", color: "#FF2D2D" },
+    button:  { label: "Learn More", url: "#", color: "#2563EB" },
     divider: {},
     footer:  { company: "ShortStack", address: "123 Agency St, Miami FL", unsubscribe: "#", twitter: "#", linkedin: "#", instagram: "#" },
   };
   return { id, type, content: defaults[type] };
 }
 
-/* ─────────── mock data ─────────── */
+/* ----------- mock data ----------- */
 const RECIPIENT_LISTS: { id: string; label: string; count: number; color: string }[] = [];
 
 const PAST_NEWSLETTERS: PastNewsletter[] = [];
@@ -107,7 +107,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         header, hero,
         { ...defaultBlock("text"), content: { body: "Hi there,\n\nHere's what we've been up to this month and what's coming next for your brand." } },
         { ...defaultBlock("text"), content: { body: "Share your latest service launch or internal update here." } },
-        { ...defaultBlock("button"), content: { label: "See What's New", url: "#", color: "#FF2D2D" } },
+        { ...defaultBlock("button"), content: { label: "See What's New", url: "#", color: "#2563EB" } },
         footer,
       ];
     case "product_launch":
@@ -118,7 +118,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         { ...defaultBlock("text"), content: { body: "We're thrilled to announce the launch of our newest product. Built from the ground up based on your feedback." } },
         defaultBlock("image"),
         { ...defaultBlock("text"), content: { body: "Key features:\n- Lightning-fast performance\n- AI-powered insights\n- Seamless integrations\n- Beautiful, intuitive design" } },
-        { ...defaultBlock("button"), content: { label: "Get Early Access", url: "#", color: "#FF2D2D" } },
+        { ...defaultBlock("button"), content: { label: "Get Early Access", url: "#", color: "#2563EB" } },
         footer,
       ];
     case "weekly_digest":
@@ -129,7 +129,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         { ...defaultBlock("text"), content: { body: "Top Story: Add your featured story here." } },
         defaultBlock("divider"),
         { ...defaultBlock("text"), content: { body: "Quick Wins This Week:\n- List your top wins and takeaways for the week" } },
-        { ...defaultBlock("button"), content: { label: "View Full Report", url: "#", color: "#FF2D2D" } },
+        { ...defaultBlock("button"), content: { label: "View Full Report", url: "#", color: "#2563EB" } },
         footer,
       ];
     case "event_invite":
@@ -138,7 +138,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
       return [
         header, hero,
         { ...defaultBlock("text"), content: { body: "Join us for an exclusive digital marketing masterclass.\n\nDate: [add date]\nTime: [add time]\nLocation: [add location or Zoom link]\n\nLearn the latest strategies for scaling your business through paid media and organic growth." } },
-        { ...defaultBlock("button"), content: { label: "Reserve Your Spot", url: "#", color: "#FF2D2D" } },
+        { ...defaultBlock("button"), content: { label: "Reserve Your Spot", url: "#", color: "#2563EB" } },
         { ...defaultBlock("text"), content: { body: "Seats are limited. Reserve yours today." } },
         footer,
       ];
@@ -151,7 +151,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         defaultBlock("divider"),
         { ...defaultBlock("text"), content: { body: "The Results:\n- List the measurable outcomes you achieved\n- Add specific metrics here\n- Highlight the key wins" } },
         defaultBlock("image"),
-        { ...defaultBlock("button"), content: { label: "Read Full Case Study", url: "#", color: "#FF2D2D" } },
+        { ...defaultBlock("button"), content: { label: "Read Full Case Study", url: "#", color: "#2563EB" } },
         footer,
       ];
     case "holiday_special":
@@ -178,7 +178,7 @@ const TEMPLATES: NewsletterTemplate[] = [
   { id: "holiday_special",  name: "Holiday Special", icon: <Gift size={16} />,      description: "Seasonal promotions and limited-time offers",             subject: "Holiday Special - [X]% Off This Season", blocks: [] },
 ];
 
-/* ─────────── component ─────────── */
+/* ----------- component ----------- */
 export default function NewsletterPage() {
   /* tabs & preview */
   const [activeTab, setActiveTab] = useState<MainTab>("builder");
@@ -210,7 +210,7 @@ export default function NewsletterPage() {
   /* sending */
   const [sending, setSending] = useState(false);
 
-  /* Guided Mode ↔ Advanced Mode */
+  /* Guided Mode ? Advanced Mode */
   const [advancedMode, setAdvancedMode] = useAdvancedMode("newsletter");
   const [guidedStep, setGuidedStep] = useState(0);
   const [guidedTopic, setGuidedTopic] = useState("");
@@ -218,7 +218,7 @@ export default function NewsletterPage() {
   const [guidedTone, setGuidedTone] = useState<"professional" | "casual" | "witty" | "bold">("professional");
   const [guidedGenerating, setGuidedGenerating] = useState(false);
 
-  /* ─── block operations ─── */
+  /* --- block operations --- */
   const addBlock = (type: ContentBlock["type"]) => {
     const footerIdx = blocks.findIndex(b => b.type === "footer");
     const insertIdx = footerIdx >= 0 ? footerIdx : blocks.length;
@@ -247,7 +247,7 @@ export default function NewsletterPage() {
     setBlocks(next);
   };
 
-  /* ─── drag-to-reorder ─── */
+  /* --- drag-to-reorder --- */
   const handleDragStart = (index: number) => {
     dragItem.current = index;
   };
@@ -266,7 +266,7 @@ export default function NewsletterPage() {
     setBlocks(next);
   };
 
-  /* ─── AI content generation ─── */
+  /* --- AI content generation --- */
   const generateAiContent = async (blockId: string, context: string) => {
     setAiLoading(blockId);
     try {
@@ -323,7 +323,7 @@ export default function NewsletterPage() {
     setAiLoading(null);
   };
 
-  /* ─── send / schedule ─── */
+  /* --- send / schedule --- */
   const handleSend = async () => {
     if (!subject.trim()) { toast.error("Please add a subject line"); return; }
     if (sendMode === "schedule" && !scheduleDate) { toast.error("Please select a schedule date"); return; }
@@ -354,14 +354,14 @@ export default function NewsletterPage() {
         toast.error(data.error || "Send failed");
       }
     } catch (err) {
-      // Don't fake success on network errors — the user needs to know the
+      // Don't fake success on network errors � the user needs to know the
       // send never happened. Surface the real error so they can retry.
-      toast.error(err instanceof Error ? err.message : "Network error — newsletter was NOT sent");
+      toast.error(err instanceof Error ? err.message : "Network error � newsletter was NOT sent");
     }
     setSending(false);
   };
 
-  /* ─── load template ─── */
+  /* --- load template --- */
   const loadTemplate = (templateId: string) => {
     const tpl = TEMPLATES.find(t => t.id === templateId);
     if (!tpl) return;
@@ -371,7 +371,7 @@ export default function NewsletterPage() {
     toast.success(`Loaded "${tpl.name}" template`);
   };
 
-  /* ─── render HTML for preview ─── */
+  /* --- render HTML for preview --- */
   function renderNewsletterHtml(): string {
     const sections = blocks.map(b => {
       switch (b.type) {
@@ -384,7 +384,7 @@ export default function NewsletterPage() {
         case "image":
           return `<tr><td style="padding:12px 32px;text-align:center">${b.content.url ? `<img src="${b.content.url}" alt="${b.content.alt || ""}" style="max-width:100%;border-radius:8px"/>` : `<div style="height:160px;background:#f0eeea;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:13px">Image placeholder</div>`}${b.content.caption ? `<p style="font-size:11px;color:#9ca3af;margin-top:6px">${b.content.caption}</p>` : ""}</td></tr>`;
         case "button":
-          return `<tr><td style="padding:16px 32px;text-align:center"><a href="${b.content.url || "#"}" style="display:inline-block;padding:12px 28px;background:${b.content.color || "#FF2D2D"};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:14px">${b.content.label || "Click Here"}</a></td></tr>`;
+          return `<tr><td style="padding:16px 32px;text-align:center"><a href="${b.content.url || "#"}" style="display:inline-block;padding:12px 28px;background:${b.content.color || "#2563EB"};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:14px">${b.content.label || "Click Here"}</a></td></tr>`;
         case "divider":
           return `<tr><td style="padding:8px 32px"><hr style="border:none;border-top:1px solid #e8e5e0;margin:0"/></td></tr>`;
         case "footer":
@@ -396,7 +396,7 @@ export default function NewsletterPage() {
     return `<table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;font-family:Inter,Arial,sans-serif;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e8e5e0">${sections}</table>`;
   }
 
-  /* ─── tab config ─── */
+  /* --- tab config --- */
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
     { key: "builder",   label: "Builder",   icon: <Layout size={14} /> },
     { key: "templates", label: "Templates", icon: <Copy size={14} /> },
@@ -406,7 +406,7 @@ export default function NewsletterPage() {
 
   const selectedList = RECIPIENT_LISTS.find(l => l.id === recipientList);
 
-  /* ─────────── block type label ─────────── */
+  /* ----------- block type label ----------- */
   function blockLabel(type: ContentBlock["type"]): string {
     const labels: Record<ContentBlock["type"], string> = {
       header: "Header", hero: "Hero", text: "Text", image: "Image",
@@ -415,7 +415,7 @@ export default function NewsletterPage() {
     return labels[type];
   }
 
-  /* ─── Guided Mode: generate a newsletter draft and drop it into the builder ─── */
+  /* --- Guided Mode: generate a newsletter draft and drop it into the builder --- */
   async function handleGuidedGenerate() {
     const topic = guidedTopic.trim();
     if (!topic) {
@@ -466,7 +466,7 @@ export default function NewsletterPage() {
         });
       const ctaBlock = {
         ...defaultBlock("button"),
-        content: { label: result.cta_text || "Read more", url: result.cta_url || "#", color: "#FF2D2D" },
+        content: { label: result.cta_text || "Read more", url: result.cta_url || "#", color: "#2563EB" },
       };
       const footer = defaultBlock("footer");
       setBlocks([header, hero, ...sectionBlocks, ctaBlock, footer]);
@@ -481,12 +481,12 @@ export default function NewsletterPage() {
     }
   }
 
-  /* ─── Guided steps ─── */
+  /* --- Guided steps --- */
   const guidedSteps: WizardStepDef[] = [
     {
       id: "topic",
       title: "What's the newsletter about?",
-      description: "One sentence is fine — the monthly update, a product launch, a round-up of wins.",
+      description: "One sentence is fine � the monthly update, a product launch, a round-up of wins.",
       icon: <FileText size={18} />,
       canProceed: guidedTopic.trim().length > 0,
       component: (
@@ -518,7 +518,7 @@ export default function NewsletterPage() {
               {([
                 { id: "short" as const, label: "Short", desc: "1 section" },
                 { id: "medium" as const, label: "Medium", desc: "2 sections" },
-                { id: "long" as const, label: "Long", desc: "3–4 sections" },
+                { id: "long" as const, label: "Long", desc: "3�4 sections" },
               ]).map(l => {
                 const sel = guidedLength === l.id;
                 return (
@@ -581,14 +581,14 @@ export default function NewsletterPage() {
             <span className="font-semibold">{guidedTopic || <span className="italic text-muted">(none)</span>}</span>
           </p>
           <p className="text-[11px] text-muted capitalize">
-            {guidedLength} · {guidedTone}
+            {guidedLength} � {guidedTone}
           </p>
         </div>
       ),
     },
   ];
 
-  /* ═════════ RENDER ═════════ */
+  /* --------- RENDER --------- */
   return (
     <div className="fade-in space-y-5">
       <PageHero
@@ -614,13 +614,13 @@ export default function NewsletterPage() {
         }
       />
 
-      {/* Guided Mode — 3-step AI newsletter drafter */}
+      {/* Guided Mode � 3-step AI newsletter drafter */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={guidedGenerating ? "Drafting…" : "Draft newsletter"}
+          finishLabel={guidedGenerating ? "Drafting�" : "Draft newsletter"}
           busy={guidedGenerating}
           onFinish={handleGuidedGenerate}
           onCancel={() => setAdvancedMode(true)}
@@ -649,7 +649,7 @@ export default function NewsletterPage() {
           </h3>
           <p className="text-xs text-muted max-w-md mx-auto mt-1">
             Drag-and-drop blocks, AI subject lines, schedule or send
-            immediately — preview desktop & mobile before it leaves your outbox.
+            immediately � preview desktop & mobile before it leaves your outbox.
           </p>
         </div>
       </div>
@@ -666,7 +666,7 @@ export default function NewsletterPage() {
         ))}
       </div>
 
-      {/* ═══════ BUILDER TAB ═══════ */}
+      {/* ------- BUILDER TAB ------- */}
       {activeTab === "builder" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Main editor */}
@@ -827,7 +827,7 @@ export default function NewsletterPage() {
                       <div>
                         <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Color</label>
                         <div className="flex gap-1.5">
-                          {["#FF2D2D", "#FF2D2D", "#FF2D2D", "#EF4444", "#8B5CF6", "#1a1a2e"].map(c => (
+                          {["#2563EB", "#2563EB", "#2563EB", "#EF4444", "#8B5CF6", "#1a1a2e"].map(c => (
                             <button key={c} onClick={() => updateBlockContent(block.id, "color", c)}
                               className={`w-6 h-6 rounded-md border-2 transition-all ${block.content.color === c ? "border-white scale-110" : "border-transparent"}`}
                               style={{ background: c }}
@@ -997,7 +997,7 @@ export default function NewsletterPage() {
         </div>
       )}
 
-      {/* ═══════ TEMPLATES TAB ═══════ */}
+      {/* ------- TEMPLATES TAB ------- */}
       {activeTab === "templates" && (
         <div className="space-y-4">
           <p className="text-xs text-muted">Choose a template to start building your newsletter. You can customize every section after loading.</p>
@@ -1024,7 +1024,7 @@ export default function NewsletterPage() {
         </div>
       )}
 
-      {/* ═══════ PREVIEW TAB ═══════ */}
+      {/* ------- PREVIEW TAB ------- */}
       {activeTab === "preview" && (
         <div className="space-y-4">
           {/* Preview mode toggle */}
@@ -1110,7 +1110,7 @@ export default function NewsletterPage() {
                           <a
                             href={block.content.url || "#"}
                             className="inline-block py-3 px-7 rounded-lg text-white font-semibold text-sm no-underline"
-                            style={{ background: block.content.color || "#FF2D2D" }}
+                            style={{ background: block.content.color || "#2563EB" }}
                           >
                             {block.content.label || "Click Here"}
                           </a>
@@ -1141,7 +1141,7 @@ export default function NewsletterPage() {
         </div>
       )}
 
-      {/* ═══════ STATS TAB ═══════ */}
+      {/* ------- STATS TAB ------- */}
       {activeTab === "stats" && (
         <div className="space-y-4">
           {/* Summary cards */}

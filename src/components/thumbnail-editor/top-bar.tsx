@@ -65,7 +65,7 @@ export default function TopBar(props: TopBarProps) {
     <div className="bg-[#080809] border-b border-[rgba(255,255,255,0.07)] flex items-center px-3 py-2.5 gap-2 text-sm text-neutral-200">
       {/* Higgsfield-style slim header: icon badge + title + subtitle */}
       <div className="w-7 h-7 rounded-xl bg-[rgba(255,255,255,0.1)] flex items-center justify-center shrink-0">
-        <ImageIcon size={13} className="text-[#FF2D2D]" />
+        <ImageIcon size={13} className="text-[#2563EB]" />
       </div>
       <div className="flex flex-col min-w-0 mr-2">
         <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Thumbnail Generator</h1>
@@ -242,7 +242,7 @@ export default function TopBar(props: TopBarProps) {
         <button
           type="button"
           onClick={() => setExportOpen(!exportOpen)}
-          className="inline-flex items-center gap-1 px-3 py-1 rounded text-xs bg-[#FF2D2D] hover:bg-[#CC2424] text-white transition-colors"
+          className="inline-flex items-center gap-1 px-3 py-1 rounded text-xs bg-[#2563EB] hover:bg-[#1D4ED8] text-white transition-colors"
         >
           <Download className="w-4 h-4" /> Export
         </button>
@@ -286,7 +286,7 @@ export default function TopBar(props: TopBarProps) {
                 props.onExport(exportFormat, exportQuality);
                 setExportOpen(false);
               }}
-              className="w-full bg-[#FF2D2D] hover:bg-[#CC2424] text-white rounded py-1.5 text-xs transition-colors"
+              className="w-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded py-1.5 text-xs transition-colors"
             >
               Download
             </button>
@@ -317,7 +317,7 @@ function IconBtn({ icon, title, onClick, disabled, active, label }: IconBtnProps
         disabled
           ? "text-neutral-600 cursor-not-allowed"
           : active
-            ? "bg-[rgba(255,255,255,0.15)] text-[#FF2D2D] border border-[rgba(255,255,255,0.30)]"
+            ? "bg-[rgba(255,255,255,0.15)] text-[#2563EB] border border-[rgba(255,255,255,0.30)]"
             : "text-neutral-300 hover:bg-[rgba(255,255,255,0.07)]"
       }`}
     >

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -12,11 +12,11 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
-// ── Widget definitions ─────────────────────────────────────────────────────────
+// -- Widget definitions ---------------------------------------------------------
 const WIDGET_TYPES = [
-  { id: "leads_today", label: "Leads Today", icon: <Users className="w-5 h-5" />, color: "#FF2D2D", bg: "from-[#FF2D2D]/15 to-[#FF2D2D]/5" },
-  { id: "revenue_month", label: "Revenue This Month", icon: <DollarSign className="w-5 h-5" />, color: "#FF2D2D", bg: "from-emerald-500/15 to-emerald-500/5" },
-  { id: "active_clients", label: "Active Clients", icon: <Activity className="w-5 h-5" />, color: "#FF2D2D", bg: "from-blue-500/15 to-blue-500/5" },
+  { id: "leads_today", label: "Leads Today", icon: <Users className="w-5 h-5" />, color: "#2563EB", bg: "from-[#2563EB]/15 to-[#2563EB]/5" },
+  { id: "revenue_month", label: "Revenue This Month", icon: <DollarSign className="w-5 h-5" />, color: "#2563EB", bg: "from-emerald-500/15 to-emerald-500/5" },
+  { id: "active_clients", label: "Active Clients", icon: <Activity className="w-5 h-5" />, color: "#2563EB", bg: "from-blue-500/15 to-blue-500/5" },
   { id: "pipeline_value", label: "Pipeline Value", icon: <TrendingUp className="w-5 h-5" />, color: "#8B5CF6", bg: "from-violet-500/15 to-violet-500/5" },
   { id: "messages_inbox", label: "Messages Inbox", icon: <MessageSquare className="w-5 h-5" />, color: "#F59E0B", bg: "from-amber-500/15 to-amber-500/5" },
   { id: "reviews_week", label: "Reviews This Week", icon: <Star className="w-5 h-5" />, color: "#EC4899", bg: "from-pink-500/15 to-pink-500/5" },
@@ -66,10 +66,10 @@ function WidgetCard({
       onDragOver={onDragOver}
       onDrop={onDrop}
       className={`glass rounded-xl overflow-hidden cursor-grab active:cursor-grabbing transition-all select-none ${
-        isDragOver ? "border-[#FF2D2D]/60 scale-[1.02]" : ""
+        isDragOver ? "border-[#2563EB]/60 scale-[1.02]" : ""
       }`}
     >
-      <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
       <div className="p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -157,10 +157,10 @@ export default function CustomDashboardPage() {
 
   const resetLayout = () => {
     setWidgets([]);
-    toast("Layout cleared", { icon: "🗑️" });
+    toast("Layout cleared", { icon: "???" });
   };
 
-  // ── Drag & drop ────────────────────────────────────────────────────────────
+  // -- Drag & drop ------------------------------------------------------------
   const handleDragStart = (idx: number) => (e: React.DragEvent) => {
     setDragIdx(idx);
     e.dataTransfer.effectAllowed = "move";
@@ -190,7 +190,7 @@ export default function CustomDashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#FF2D2D]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" />
       </div>
     );
   }
@@ -199,7 +199,7 @@ export default function CustomDashboardPage() {
     <div className="flex flex-col gap-6 p-4 sm:p-6">
       <PageHero
         title="Custom Dashboard"
-        subtitle="Drag widgets onto your personal dashboard — your key metrics, your layout."
+        subtitle="Drag widgets onto your personal dashboard � your key metrics, your layout."
         icon={<LayoutDashboard className="w-6 h-6" />}
         gradient="gold"
         actions={
@@ -214,7 +214,7 @@ export default function CustomDashboardPage() {
             <button
               onClick={() => saveLayout(widgets)}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#FF2D2D] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Layout
@@ -248,7 +248,7 @@ export default function CustomDashboardPage() {
             ))}
           </div>
           <p className="text-[10px] text-white/25 text-center mt-1">
-            Click to add · drag to reorder
+            Click to add � drag to reorder
           </p>
         </div>
 

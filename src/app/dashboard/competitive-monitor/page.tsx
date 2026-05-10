@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -20,7 +20,7 @@ import { PrismPanel } from "@/components/prism";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 
-// ─── Types ───────────────────────────────────────────────────────────
+// --- Types -----------------------------------------------------------
 type Tab = "changes" | "comparison" | "alerts" | "insights";
 type MonitorStatus = "active" | "paused" | "error";
 type ChangeType = "new_page" | "content_update" | "pricing_change" | "new_feature" | "new_blog_post" | "social_post" | "job_posting" | "tech_stack_change";
@@ -65,7 +65,7 @@ interface AlertRule {
   enabled: boolean;
 }
 
-// ─── Change type metadata ────────────────────────────────────────────
+// --- Change type metadata --------------------------------------------
 const CHANGE_TYPE_META: Record<ChangeType, { label: string; icon: typeof Globe; color: string }> = {
   new_page:          { label: "New Page",          icon: Globe,          color: "text-blue-400 bg-blue-500/10" },
   content_update:    { label: "Content Update",    icon: FileText,       color: "text-emerald-400 bg-emerald-500/10" },
@@ -90,7 +90,7 @@ const FREQUENCY_LABELS: Record<Frequency, string> = {
 const CHANNEL_OPTIONS = ["Email", "Telegram", "Slack", "SMS"];
 
 
-// ─── Component ───────────────────────────────────────────────────────
+// --- Component -------------------------------------------------------
 export default function CompetitiveMonitorPage() {
   useAuth();
 
@@ -148,7 +148,7 @@ export default function CompetitiveMonitorPage() {
 
   function addCompetitor() {
     if (!addUrl || !addName) { toast.error("URL and name are required"); return; }
-    const colors = ["#FF2D2D", "#ec4899", "#f59e0b", "#FF2D2D", "#8b5cf6", "#FF2D2D", "#ef4444", "#d946ef"];
+    const colors = ["#2563EB", "#ec4899", "#f59e0b", "#2563EB", "#8b5cf6", "#2563EB", "#ef4444", "#d946ef"];
     const newComp: Competitor = {
       id: `c${Date.now()}`, name: addName, url: addUrl, industry: addIndustry || "Unknown",
       notes: addNotes, status: "active", lastChecked: "Never", changeCount: 0,
@@ -223,7 +223,7 @@ export default function CompetitiveMonitorPage() {
   }
 
   function formatTime(iso: string, future = false) {
-    if (iso === "Never" || iso === "—" || iso === "Pending..." || iso === "Retrying...") return iso;
+    if (iso === "Never" || iso === "�" || iso === "Pending..." || iso === "Retrying...") return iso;
     const d = new Date(iso);
     const now = new Date();
     const diff = future ? d.getTime() - now.getTime() : now.getTime() - d.getTime();
@@ -239,7 +239,7 @@ export default function CompetitiveMonitorPage() {
     error: "text-red-400 bg-red-500/10",
   };
 
-  // ─── Activity heatmap data (competitors x weeks) ──────────────────
+  // --- Activity heatmap data (competitors x weeks) ------------------
   const heatmapData = competitors.slice(0, 7).map(c => ({
     name: c.name,
     weeks: [
@@ -271,7 +271,7 @@ export default function CompetitiveMonitorPage() {
         }
       />
 
-      {/* ─── Stats Row ─── */}
+      {/* --- Stats Row --- */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { icon: <Target className="w-3.5 h-3.5" />, label: "Monitoring", value: activeCompetitors, sub: `${competitors.length} total competitors`, color: "text-indigo-400", bar: "from-indigo-500 to-violet-400" },
@@ -301,7 +301,7 @@ export default function CompetitiveMonitorPage() {
         ))}
       </div>
 
-      {/* ─── Add Competitor Form ─── */}
+      {/* --- Add Competitor Form --- */}
       {showAddForm && (
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -335,7 +335,7 @@ export default function CompetitiveMonitorPage() {
         </motion.div>
       )}
 
-      {/* ─── Competitors Grid ─── */}
+      {/* --- Competitors Grid --- */}
       <div>
         <h2 className="section-header text-sm mb-3 flex items-center gap-2"><Shield className="w-4 h-4 text-gold" /> Monitored Competitors</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
@@ -393,7 +393,7 @@ export default function CompetitiveMonitorPage() {
         </div>
       </div>
 
-      {/* ─── Monitoring Schedule ─── */}
+      {/* --- Monitoring Schedule --- */}
       <PrismPanel padding="p-4">
         <h3 className="section-header text-xs flex items-center gap-2 mb-3"><Calendar className="w-3.5 h-3.5 text-gold" /> Monitoring Schedule</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -404,13 +404,13 @@ export default function CompetitiveMonitorPage() {
                 <div className="text-xs font-medium truncate">{c.name}</div>
                 <div className="text-[10px] text-muted">{FREQUENCY_LABELS[c.frequency]}</div>
               </div>
-              <div className="text-[10px] text-gold whitespace-nowrap">{c.nextCheck === "—" || c.nextCheck === "Retrying..." ? c.nextCheck : formatTime(c.nextCheck, true)}</div>
+              <div className="text-[10px] text-gold whitespace-nowrap">{c.nextCheck === "�" || c.nextCheck === "Retrying..." ? c.nextCheck : formatTime(c.nextCheck, true)}</div>
             </div>
           ))}
         </div>
       </PrismPanel>
 
-      {/* ─── Tabs ─── */}
+      {/* --- Tabs --- */}
       <div className="flex gap-1 border-b border-border overflow-x-auto">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
@@ -420,7 +420,7 @@ export default function CompetitiveMonitorPage() {
         ))}
       </div>
 
-      {/* ─── Changes Feed Tab ─── */}
+      {/* --- Changes Feed Tab --- */}
       {tab === "changes" && (
         <div className="space-y-4">
           {/* Filters */}
@@ -519,7 +519,7 @@ export default function CompetitiveMonitorPage() {
         </div>
       )}
 
-      {/* ─── Comparison Tab ─── */}
+      {/* --- Comparison Tab --- */}
       {tab === "comparison" && (
         <div className="space-y-6">
           {/* Comparison Table */}
@@ -623,7 +623,7 @@ export default function CompetitiveMonitorPage() {
         </div>
       )}
 
-      {/* ─── Alerts Tab ─── */}
+      {/* --- Alerts Tab --- */}
       {tab === "alerts" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -734,7 +734,7 @@ export default function CompetitiveMonitorPage() {
         </div>
       )}
 
-      {/* ─── Insights Tab ─── */}
+      {/* --- Insights Tab --- */}
       {tab === "insights" && (
         <div className="space-y-6">
           {/* AI Market Summary */}
@@ -844,16 +844,16 @@ export default function CompetitiveMonitorPage() {
             <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-gold" /> Estimated Market Share (Agency SaaS Segment)</h3>
             <div className="space-y-3">
               {[
-                { name: "AgencyFlow", share: 22, color: "#FF2D2D" },
+                { name: "AgencyFlow", share: 22, color: "#2563EB" },
                 { name: "MarketMind AI", share: 18, color: "#8b5cf6" },
                 { name: "SocialSpark", share: 15, color: "#f59e0b" },
-                { name: "Trinity (You)", share: 12, color: "#FF2D2D" },
+                { name: "Trinity (You)", share: 12, color: "#2563EB" },
                 { name: "ClientPulse", share: 10, color: "#ec4899" },
-                { name: "ContentEngine", share: 8, color: "#FF2D2D" },
+                { name: "ContentEngine", share: 8, color: "#2563EB" },
                 { name: "Others", share: 15, color: "#64748b" },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className="w-32 text-xs text-right truncate" style={{ color: item.name.includes("You") ? "#FF2D2D" : undefined }}>
+                  <div className="w-32 text-xs text-right truncate" style={{ color: item.name.includes("You") ? "#2563EB" : undefined }}>
                     {item.name.includes("You") ? <strong>{item.name}</strong> : item.name}
                   </div>
                   <div className="flex-1 bg-surface-light rounded-full h-5 overflow-hidden">
@@ -869,7 +869,7 @@ export default function CompetitiveMonitorPage() {
         </div>
       )}
 
-      {/* ─── PageAI ─── */}
+      {/* --- PageAI --- */}
       <PageAI
         pageName="Competitive Monitor"
         context="Competitive intelligence dashboard tracking 8 agency SaaS competitors. Monitors pricing changes, feature launches, content updates, hiring signals, and tech stack changes. Includes AI analysis, alerts, and market insights."

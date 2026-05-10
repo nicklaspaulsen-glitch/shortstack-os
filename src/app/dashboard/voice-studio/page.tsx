@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -24,7 +24,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { PrismPanel } from "@/components/prism";
 
-// ── Types ──────────────────────────────────────────────────────────
+// -- Types ----------------------------------------------------------
 interface VoiceClone {
   id: string;
   agency_owner_id: string;
@@ -88,7 +88,7 @@ const SURFACE_FLAGS: Array<{
 ];
 
 const TEST_PROMPT_DEFAULT =
-  "Hi there — this is a quick test of my new voice clone. How does it sound?";
+  "Hi there � this is a quick test of my new voice clone. How does it sound?";
 
 export default function VoiceStudioPage() {
   const [tab, setTab] = useState<Tab>("my_voices");
@@ -121,8 +121,8 @@ export default function VoiceStudioPage() {
   }, [refresh]);
 
   // Renders pulled lazily on tab switch.
-  // Previously used a serial `for…await` loop (N+1 fetches). Now fires all
-  // clone-detail requests in parallel with Promise.all — same result, far
+  // Previously used a serial `for�await` loop (N+1 fetches). Now fires all
+  // clone-detail requests in parallel with Promise.all � same result, far
   // faster when the user has multiple voice clones.
   const loadRenders = useCallback(async () => {
     try {
@@ -166,19 +166,19 @@ export default function VoiceStudioPage() {
       {/* Higgsfield-style slim header */}
       <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(0,0,0,0.08)] bg-white">
         <div className="w-7 h-7 rounded-xl bg-[rgba(0,0,0,0.07)] flex items-center justify-center shrink-0">
-          <Mic size={13} className="text-[#FF2D2D]" />
+          <Mic size={13} className="text-[#2563EB]" />
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-sm font-semibold text-[#0A0A0B] leading-tight">Voice Studio</h1>
-          <p className="text-[9px] text-[#71717A]">Clone · Presets · Renders</p>
+          <p className="text-[9px] text-[#71717A]">Clone � Presets � Renders</p>
         </div>
         {stats.mineCount > 0 && (
           <motion.span
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] text-[#CC2424]"
+            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] text-[#1D4ED8]"
           >
-            <span className="w-1 h-1 rounded-full bg-[#FF2D2D] animate-pulse" />
+            <span className="w-1 h-1 rounded-full bg-[#2563EB] animate-pulse" />
             {stats.mineCount} voice{stats.mineCount !== 1 ? "s" : ""}
           </motion.span>
         )}
@@ -197,7 +197,7 @@ export default function VoiceStudioPage() {
       </div>
 
       <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
-        {/* ── Tab bar — glass pill container ── */}
+        {/* -- Tab bar � glass pill container -- */}
         <PrismPanel padding="p-1" className="rounded-xl">
           <nav className="flex gap-1 overflow-x-auto" aria-label="Voice Studio tabs">
             {TAB_ORDER.map((t) => {
@@ -209,7 +209,7 @@ export default function VoiceStudioPage() {
                   onClick={() => setTab(t)}
                   className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
                     isActive
-                      ? "bg-[rgba(204,36,36,0.08)] text-[#CC2424] border border-[rgba(204,36,36,0.25)]"
+                      ? "bg-[rgba(204,36,36,0.08)] text-[#1D4ED8] border border-[rgba(204,36,36,0.25)]"
                       : "text-white/40 hover:text-white/60"
                   }`}
                   aria-current={isActive ? "page" : undefined}
@@ -245,7 +245,7 @@ export default function VoiceStudioPage() {
   );
 }
 
-// ── My Voices ─────────────────────────────────────────────────────
+// -- My Voices -----------------------------------------------------
 function MyVoicesTab({
   clones,
   onChange,
@@ -359,8 +359,8 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
       }
       setSubmitMsg(
         data.status === "ready"
-          ? "Clone trained successfully — try it from the row below."
-          : "Clone training started — we'll mark it ready when the worker finishes.",
+          ? "Clone trained successfully � try it from the row below."
+          : "Clone training started � we'll mark it ready when the worker finishes.",
       );
       setFiles([]);
       setLabel("");
@@ -378,7 +378,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
     <PrismPanel rainbow padding="p-6" className="rounded-xl">
       <div className="flex items-start gap-4">
         <div className="rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] p-2.5">
-          <Upload size={20} className="text-[#FF2D2D]" />
+          <Upload size={20} className="text-[#2563EB]" />
         </div>
         <div className="flex-1 space-y-4">
           <div>
@@ -398,17 +398,17 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
             onChange={(e) => handleFiles(e.target.files)}
             className="hidden"
           />
-          {/* ── Upload drop zone ── */}
+          {/* -- Upload drop zone -- */}
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[rgba(0,0,0,0.12)] px-4 py-6 text-sm text-[#CC2424] hover:border-[rgba(0,0,0,0.20)] transition-colors"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[rgba(0,0,0,0.12)] px-4 py-6 text-sm text-[#1D4ED8] hover:border-[rgba(0,0,0,0.20)] transition-colors"
             style={{ background: "#FAFAFB" }}
           >
             <Upload size={16} />
             {files.length === 0
               ? "Choose audio samples (mp3, wav, m4a, ogg)"
-              : `${files.length} sample${files.length === 1 ? "" : "s"} selected — click to replace`}
+              : `${files.length} sample${files.length === 1 ? "" : "s"} selected � click to replace`}
           </button>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -416,7 +416,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
               type="text"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
-              placeholder="Label (e.g. 'My voice — natural')"
+              placeholder="Label (e.g. 'My voice � natural')"
               className="rounded-lg border border-[rgba(0,0,0,0.10)] bg-white px-3 py-2 text-sm text-[#0A0A0B] placeholder:text-[#71717A] focus:border-[rgba(0,0,0,0.25)] focus:outline-none"
             />
             <input
@@ -449,7 +449,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                   onClick={() => setConsentKind(opt.key)}
                   className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
                     consentKind === opt.key
-                      ? "border-[rgba(0,0,0,0.16)] bg-[rgba(0,0,0,0.06)] text-[#CC2424]"
+                      ? "border-[rgba(0,0,0,0.16)] bg-[rgba(0,0,0,0.06)] text-[#1D4ED8]"
                       : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] text-[#52525B] hover:bg-[rgba(0,0,0,0.05)]"
                   }`}
                 >
@@ -470,13 +470,13 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
 
           <div className="flex items-center justify-between gap-4">
             {submitMsg && (
-              <div className="text-sm text-[#FF2D2D]/80">{submitMsg}</div>
+              <div className="text-sm text-[#2563EB]/80">{submitMsg}</div>
             )}
             <button
               type="button"
               onClick={onSubmit}
               disabled={submitting}
-              className="ml-auto flex items-center gap-2 rounded-lg bg-[#FF2D2D] px-4 py-2 text-sm font-medium text-white hover:bg-[#FF2D2D]/90 transition-colors disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
+              className="ml-auto flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-medium text-white hover:bg-[#2563EB]/90 transition-colors disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
             >
               {submitting ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -566,14 +566,14 @@ function CloneRow({
   return (
     <div className="rounded-xl p-5 cursor-pointer tilt-3d" style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.08)" }}>
       <div className="flex flex-wrap items-start gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#CC2424]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#1D4ED8]">
           <Mic size={20} />
         </div>
         <div className="flex-1 min-w-[180px]">
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={`/dashboard/voice-studio/${clone.id}`}
-              className="text-sm font-semibold text-[#0A0A0B] hover:text-[#CC2424] transition-colors"
+              className="text-sm font-semibold text-[#0A0A0B] hover:text-[#1D4ED8] transition-colors"
             >
               {clone.label}
             </Link>
@@ -678,7 +678,7 @@ function StatusChip({ status }: { status: VoiceClone["status"] }) {
   );
 }
 
-// ── Presets ─────────────────────────────────────────────────────
+// -- Presets -----------------------------------------------------
 function inferGender(preset: VoiceClone): "female" | "male" | "neutral" {
   const eg = ((preset.consent_evidence?.gender as string) || "").toLowerCase();
   if (eg === "female" || eg === "f") return "female";
@@ -690,7 +690,7 @@ function inferGender(preset: VoiceClone): "female" | "male" | "neutral" {
 }
 
 // These must match the `category` field values defined in
-// src/lib/voice/preset-library.ts — the filter reads
+// src/lib/voice/preset-library.ts � the filter reads
 // `consent_evidence.category` from each seeded preset row.
 const PRESET_CATEGORIES = ["all", "warm", "authoritative", "youthful", "narrator", "casual", "british"] as const;
 type PresetCategory = (typeof PRESET_CATEGORIES)[number];
@@ -720,7 +720,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
       let changed = false;
       const next = { ...prev };
       for (const p of presets) {
-        if (next[p.id]) continue; // already populated — keep the existing URL
+        if (next[p.id]) continue; // already populated � keep the existing URL
         const stored = p.consent_evidence?.preview_url;
         if (typeof stored === "string" && stored) {
           next[p.id] = stored;
@@ -770,7 +770,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
           <button
             type="button"
             onClick={onRefresh}
-            className="mt-4 flex items-center gap-2 rounded-lg bg-[#FF2D2D] px-4 py-2 text-sm font-medium text-white hover:bg-[#CC2424] transition-colors cursor-pointer"
+            className="mt-4 flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-medium text-white hover:bg-[#1D4ED8] transition-colors cursor-pointer"
           >
             <RefreshCw size={14} />
             Seed preset library
@@ -791,8 +791,8 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search presets…"
-            className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-[#0A0A0B] placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#CC2424]/50"
+            placeholder="Search presets�"
+            className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-[#0A0A0B] placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50"
             style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
           />
         </div>
@@ -807,7 +807,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               className={[
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
                 genderFilter === g
-                  ? "border border-[rgba(0,0,0,0.16)] bg-[rgba(0,0,0,0.06)] text-[#CC2424]"
+                  ? "border border-[rgba(0,0,0,0.16)] bg-[rgba(0,0,0,0.06)] text-[#1D4ED8]"
                   : "border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.05)]",
               ].join(" ")}
             >
@@ -825,8 +825,8 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                   key={c}
                   type="button"
                   onClick={() => setCategoryFilter(c)}
-                  className="relative rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF2D2D]/60"
-                  style={{ color: isActive ? "#CC2424" : "#52525B" }}
+                  className="relative rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/60"
+                  style={{ color: isActive ? "#1D4ED8" : "#52525B" }}
                 >
                   {isActive && (
                     <motion.span
@@ -846,7 +846,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             <select
               value={langFilter}
               onChange={(e) => setLangFilter(e.target.value)}
-              className="ml-auto rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2 py-1 text-xs text-[#52525B] focus:outline-none focus:ring-1 focus:ring-[#CC2424]/50 cursor-pointer"
+              className="ml-auto rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2 py-1 text-xs text-[#52525B] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 cursor-pointer"
             >
               {languages.map((l) => (
                 <option key={l} value={l} className="bg-white">
@@ -865,7 +865,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
           <button
             type="button"
             onClick={resetFilters}
-            className="mt-3 text-xs text-[#CC2424] hover:text-[#CC2424]/80 transition-colors cursor-pointer underline-offset-2 hover:underline"
+            className="mt-3 text-xs text-[#1D4ED8] hover:text-[#1D4ED8]/80 transition-colors cursor-pointer underline-offset-2 hover:underline"
           >
             Clear all filters
           </button>
@@ -899,15 +899,15 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
 
 interface PresetCardProps {
   preset: VoiceClone;
-  /** Previously generated audio URL — survives tab switches. */
+  /** Previously generated audio URL � survives tab switches. */
   cachedUrl: string | null;
-  /** Previously typed test phrase — survives tab switches. */
+  /** Previously typed test phrase � survives tab switches. */
   cachedText: string;
   onUrlCached: (url: string) => void;
   onTextChanged: (text: string) => void;
   /** Called after the preset is saved to My Voices so the parent can refresh. */
   onSaved?: () => void;
-  /** First card in a filtered set — gets a "Featured" badge and shadow uplift. */
+  /** First card in a filtered set � gets a "Featured" badge and shadow uplift. */
   featured?: boolean;
 }
 
@@ -927,7 +927,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   const onTest = useCallback(async () => {
     setTesting(true);
     setError(null);
-    // Don't wipe testUrl here — keep the old audio until the new one arrives.
+    // Don't wipe testUrl here � keep the old audio until the new one arrives.
     try {
       const res = await fetch(`/api/voice/clones/${preset.id}/test`, {
         method: "POST",
@@ -984,16 +984,16 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
       }}
     >
       {/* Brand accent top bar */}
-      <div style={{ height: 2, background: "linear-gradient(90deg, #FF2D2D, #FF6B6B, #CC2424)" }} className="rounded-t-xl" />
+      <div style={{ height: 2, background: "linear-gradient(90deg, #2563EB, #3B82F6, #1D4ED8)" }} className="rounded-t-xl" />
       <div className="p-5 flex flex-col flex-1">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#CC2424]">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#1D4ED8]">
             <Mic size={16} />
           </div>
           <div className="flex items-center gap-1.5 flex-wrap justify-end">
             {featured && (
-              <span className="text-[10px] font-semibold bg-[rgba(204,36,36,0.1)] text-[#CC2424] px-2 py-0.5 rounded-full uppercase tracking-wide">
+              <span className="text-[10px] font-semibold bg-[rgba(204,36,36,0.1)] text-[#1D4ED8] px-2 py-0.5 rounded-full uppercase tracking-wide">
                 Featured
               </span>
             )}
@@ -1005,7 +1005,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 {gender === "female" ? "F" : "M"}
               </span>
             )}
-            <span className="rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#CC2424]">
+            <span className="rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#1D4ED8]">
               {category}
             </span>
           </div>
@@ -1019,7 +1019,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         {!hasStoredPreview && !testUrl && !editMode && (
           <div className="mt-3 flex items-end justify-center gap-[2px] h-8 group-hover:opacity-60 opacity-20 transition-opacity duration-300" aria-hidden="true">
             {[6, 10, 7, 14, 8, 12, 5, 15, 9, 11, 6, 13, 8, 10, 5].map((h, i) => (
-              <div key={i} style={{ width: 2.5, height: h, background: "#FF2D2D", borderRadius: 2 }} />
+              <div key={i} style={{ width: 2.5, height: h, background: "#2563EB", borderRadius: 2 }} />
             ))}
           </div>
         )}
@@ -1032,8 +1032,8 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               onChange={(e) => { setTestText(e.target.value); onTextChanged(e.target.value); }}
               rows={3}
               maxLength={300}
-              placeholder="Type what you want the voice to say…"
-              className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-xs text-[#0A0A0B] placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#CC2424]/50 resize-none"
+              placeholder="Type what you want the voice to say�"
+              className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-xs text-[#0A0A0B] placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 resize-none"
             />
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-[#71717A]">{testText.length}/300</span>
@@ -1041,7 +1041,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 <button
                   type="button"
                   onClick={() => { setEditMode(false); onTest(); }}
-                  className="text-[10px] text-[#52525B] hover:text-[#CC2424] cursor-pointer"
+                  className="text-[10px] text-[#52525B] hover:text-[#1D4ED8] cursor-pointer"
                 >
                   Preview
                 </button>
@@ -1061,7 +1061,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             <button
               type="button"
               onClick={() => setEditMode(true)}
-              className="flex-shrink-0 rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2 py-0.5 text-[11px] text-[#52525B] hover:border-[#CC2424]/40 hover:text-[#CC2424] transition-colors duration-150 cursor-pointer"
+              className="flex-shrink-0 rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2 py-0.5 text-[11px] text-[#52525B] hover:border-[#1D4ED8]/40 hover:text-[#1D4ED8] transition-colors duration-150 cursor-pointer"
               aria-label="Edit test phrase"
             >
               Edit
@@ -1079,7 +1079,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               "flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer",
               // Pulse border when hover detected but audio not yet loading
               isHovering && !testing && !testUrl
-                ? "border-[rgba(0,0,0,0.16)] bg-[rgba(0,0,0,0.04)] text-[#CC2424] animate-pulse"
+                ? "border-[rgba(0,0,0,0.16)] bg-[rgba(0,0,0,0.04)] text-[#1D4ED8] animate-pulse"
                 : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)]",
               "disabled:cursor-not-allowed disabled:opacity-40",
             ].join(" ")}
@@ -1089,7 +1089,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             ) : (
               <Play size={12} />
             )}
-            {testing ? "Generating…" : testUrl ? "Re-preview" : "Preview"}
+            {testing ? "Generating�" : testUrl ? "Re-preview" : "Preview"}
           </button>
 
           {/* Save to My Voices */}
@@ -1101,7 +1101,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             className={[
               "flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed",
               saved
-                ? "border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#CC2424]"
+                ? "border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#1D4ED8]"
                 : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] text-[#52525B] hover:bg-[rgba(0,0,0,0.06)] hover:text-[#0A0A0B]",
             ].join(" ")}
           >
@@ -1110,14 +1110,14 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           </button>
         </div>
 
-        {/* Audio player — kept visible while re-generating (prevUrlRef) */}
+        {/* Audio player � kept visible while re-generating (prevUrlRef) */}
         {(testUrl || (testing && prevUrlRef.current)) && (
           <div className="relative mt-3 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] p-2">
             {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <audio src={testUrl ?? prevUrlRef.current ?? ""} controls className="w-full" style={{ height: 32 }} />
             {testing && (
               <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
-                <Loader2 size={16} className="animate-spin text-[#FF2D2D]" />
+                <Loader2 size={16} className="animate-spin text-[#2563EB]" />
               </div>
             )}
           </div>
@@ -1128,7 +1128,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   );
 }
 
-// ── Renders ─────────────────────────────────────────────────────
+// -- Renders -----------------------------------------------------
 const R2_BASE = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ?? "";
 
 function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
@@ -1171,9 +1171,9 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
                       })}
                     </span>
                     {r.duration_seconds !== null && (
-                      <span>· {Math.round(r.duration_seconds)}s</span>
+                      <span>� {Math.round(r.duration_seconds)}s</span>
                     )}
-                    <span>· used {r.use_count}×</span>
+                    <span>� used {r.use_count}�</span>
                     {r.context && (
                       <span className="rounded-full border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-2 py-0.5 uppercase tracking-wider text-[#71717A]">
                         {r.context}

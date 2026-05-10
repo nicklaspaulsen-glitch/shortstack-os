@@ -135,18 +135,18 @@ export default function TrinityOrbVisual({
           aria-hidden
         >
           <defs>
-            {/* May 2026: migrated from teal (#FF6B6B) to indigo/violet palette
+            {/* May 2026: migrated from teal (#3B82F6) to indigo/violet palette
                 to match the new brand direction. The lit-side facets use a
                 holographic gradient (soft-indigo → violet → deep-indigo) so the
                 head reads as iridescent crystal glass. */}
             <linearGradient id="trinity-facet-light" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#FFE0E0" />
-              <stop offset="40%" stopColor="#FF6B6B" />
-              <stop offset="100%" stopColor="#FF2D2D" />
+              <stop offset="40%" stopColor="#3B82F6" />
+              <stop offset="100%" stopColor="#2563EB" />
             </linearGradient>
             <linearGradient id="trinity-facet-mid" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#FF2D2D" />
-              <stop offset="55%" stopColor="#CC2424" />
+              <stop offset="0%" stopColor="#2563EB" />
+              <stop offset="55%" stopColor="#1D4ED8" />
               <stop offset="100%" stopColor="#991414" />
             </linearGradient>
             <linearGradient id="trinity-facet-dark" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -157,7 +157,7 @@ export default function TrinityOrbVisual({
             <radialGradient id="trinity-eye" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
               <stop offset="40%" stopColor="#FFB3B3" stopOpacity={eyeIntensity} />
-              <stop offset="100%" stopColor="#FF2D2D" stopOpacity="0" />
+              <stop offset="100%" stopColor="#2563EB" stopOpacity="0" />
             </radialGradient>
             <linearGradient id="trinity-scan" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="rgba(199,210,254,0)" />

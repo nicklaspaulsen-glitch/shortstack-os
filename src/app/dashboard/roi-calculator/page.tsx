@@ -72,7 +72,7 @@ function fmtUSD(n: number | null | undefined): string {
 
 const SENSITIVITY_OFFSETS = [-20, -10, 0, 10, 20];
 
-const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
+const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 export default function RoiCalculatorPage() {
   const supabase = createClient();

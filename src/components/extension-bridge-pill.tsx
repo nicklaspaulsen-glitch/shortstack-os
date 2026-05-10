@@ -67,7 +67,7 @@ export default function ExtensionBridgePill() {
           ? "color-mix(in srgb, rgb(16 185 129) 12%, var(--color-surface, #151518) 88%)"
           : "color-mix(in srgb, rgb(239 68 68) 10%, var(--color-surface, #151518) 90%)",
         borderColor: connected
-          ? "rgba(255, 45, 45, 0.4)"
+          ? "rgba(37, 99, 235, 0.4)"
           : "rgba(239, 68, 68, 0.35)",
         color: connected ? "rgb(52 211 153)" : "rgb(248 113 113)",
       }}

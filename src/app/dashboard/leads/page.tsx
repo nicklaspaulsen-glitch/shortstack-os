@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import { useState, useEffect, useCallback, useRef, DragEvent, ChangeEvent, FormEvent } from "react";
 import {
@@ -519,14 +519,14 @@ function LeadDetailPanel({
       <div className="flex items-center justify-between">
         <span className="text-[10px] text-[#71717A] uppercase tracking-wider">AI Score</span>
         {lead.score !== null ? (
-          <span className={`text-sm font-bold ${lead.score >= 70 ? "text-[#CC2424]" : lead.score >= 40 ? "text-yellow-600" : "text-red-500"}`}>
+          <span className={`text-sm font-bold ${lead.score >= 70 ? "text-[#1D4ED8]" : lead.score >= 40 ? "text-yellow-600" : "text-red-500"}`}>
             {lead.score}<span className="text-[#71717A]">/100</span>
           </span>
         ) : (
           <button
             onClick={() => onScore(lead)}
             disabled={scoring}
-            className="flex items-center gap-1 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] px-2.5 py-1 text-[10px] font-medium text-[#CC2424] hover:bg-[rgba(0,0,0,0.08)] disabled:opacity-50 transition-colors cursor-pointer"
+            className="flex items-center gap-1 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] px-2.5 py-1 text-[10px] font-medium text-[#1D4ED8] hover:bg-[rgba(0,0,0,0.08)] disabled:opacity-50 transition-colors cursor-pointer"
           >
             {scoring ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
             Score with AI
@@ -543,13 +543,13 @@ function LeadDetailPanel({
       {/* Contact info */}
       <div className="space-y-1.5 border-t border-[rgba(0,0,0,0.08)] pt-3">
         {lead.phone && (
-          <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-[11px] text-[#52525B] hover:text-[#CC2424] transition-colors">
+          <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-[11px] text-[#52525B] hover:text-[#1D4ED8] transition-colors">
             <Phone size={11} className="text-[#71717A] flex-shrink-0" />
             <span className="truncate">{lead.phone}</span>
           </a>
         )}
         {lead.email && (
-          <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-[#52525B] hover:text-[#CC2424] transition-colors">
+          <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-[#52525B] hover:text-[#1D4ED8] transition-colors">
             <Mail size={11} className="text-[#71717A] flex-shrink-0" />
             <span className="truncate">{lead.email}</span>
           </a>
@@ -565,7 +565,7 @@ function LeadDetailPanel({
             href={lead.website.startsWith("http") ? lead.website : `https://${lead.website}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-[11px] text-[#71717A] hover:text-[#CC2424] transition-colors"
+            className="flex items-center gap-2 text-[11px] text-[#71717A] hover:text-[#1D4ED8] transition-colors"
           >
             <Globe size={11} className="text-[#71717A] flex-shrink-0" />
             <span className="truncate">{lead.website.replace(/^https?:\/\//i, "")}</span>
@@ -573,7 +573,7 @@ function LeadDetailPanel({
         )}
         {lead.google_rating && (
           <div className="flex items-center gap-1 text-[11px] text-[#71717A]">
-            <Star size={11} className="text-[#CC2424] flex-shrink-0" />
+            <Star size={11} className="text-[#1D4ED8] flex-shrink-0" />
             <span>{lead.google_rating} rating</span>
             {lead.review_count ? <span className="text-[#71717A]">({lead.review_count} reviews)</span> : null}
           </div>
@@ -584,13 +584,13 @@ function LeadDetailPanel({
       <div className="border-t border-[rgba(0,0,0,0.08)] pt-3">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[10px] uppercase tracking-wider text-[#71717A]">Qualification</span>
-          <span className="text-[10px] font-semibold text-[#CC2424]">{qualScore}/{qualChecks.length}</span>
+          <span className="text-[10px] font-semibold text-[#1D4ED8]">{qualScore}/{qualChecks.length}</span>
         </div>
         <div className="grid grid-cols-2 gap-1">
           {qualChecks.map((q) => (
             <div key={q.label} className="flex items-center gap-1.5 text-[10px]">
               {q.ok
-                ? <CheckCircle size={9} className="text-[#CC2424] flex-shrink-0" />
+                ? <CheckCircle size={9} className="text-[#1D4ED8] flex-shrink-0" />
                 : <div className="w-2.5 h-2.5 rounded-full border border-[rgba(0,0,0,0.16)] flex-shrink-0" />}
               <span className={q.ok ? "text-[#52525B]" : "text-[#71717A]"}>{q.label}</span>
             </div>
@@ -605,7 +605,7 @@ function LeadDetailPanel({
           onClick={(e) => { if (!lead.phone) e.preventDefault(); }}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-medium transition-colors ${
             lead.phone
-              ? "border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#CC2424] hover:bg-[rgba(0,0,0,0.07)]"
+              ? "border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#1D4ED8] hover:bg-[rgba(0,0,0,0.07)]"
               : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] text-[#71717A] cursor-not-allowed opacity-50"
           }`}
           title={lead.phone || "No phone"}
@@ -755,7 +755,7 @@ export default function LeadEnginePage() {
     setPage(1);
   }, [searchQuery, statusFilter, industryFilter, sortByScore, highPriorityOnly]);
 
-  // Export handler â€” fetches ALL leads, builds CSV, triggers download
+  // Export handler — fetches ALL leads, builds CSV, triggers download
   async function handleExport() {
     setExporting(true);
     try {
@@ -803,7 +803,7 @@ export default function LeadEnginePage() {
       <PageHero
         icon={<Zap size={28} />}
         title="Lead Engine"
-        subtitle="Automated lead scoring, routing, enrichment & nurture â€” build and convert your pipeline."
+        subtitle="Automated lead scoring, routing, enrichment & nurture — build and convert your pipeline."
         gradient="gold"
         actions={
           <>
@@ -823,7 +823,7 @@ export default function LeadEnginePage() {
         }
       />
 
-      {/* Stats â€” collapsible (state persists) */}
+      {/* Stats — collapsible (state persists) */}
       <CollapsibleStats
         storageKey="leads"
         icon={<BarChart3 size={14} className="text-gold" />}
@@ -831,13 +831,13 @@ export default function LeadEnginePage() {
         summary={
           <>
             <span><span className="text-foreground font-semibold">{totalLeads}</span> total</span>
-            <span className="opacity-30">Â·</span>
+            <span className="opacity-30">·</span>
             <span><span className="text-red-400 font-semibold">{hotLeads}</span> hot</span>
-            <span className="opacity-30">Â·</span>
+            <span className="opacity-30">·</span>
             <span><span className="text-green-400 font-semibold">{qualifiedLeads}</span> qualified</span>
-            <span className="opacity-30">Â·</span>
+            <span className="opacity-30">·</span>
             <span><span className="text-purple-400 font-semibold">{convertedLeads}</span> converted</span>
-            <span className="opacity-30">Â·</span>
+            <span className="opacity-30">·</span>
             <span>Conv <span className="text-gold font-semibold">{totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%</span></span>
           </>
         }
@@ -1050,7 +1050,7 @@ export default function LeadEnginePage() {
                     ><MessageSquare size={10} /></Link>
                   </div>
                 </div>
-                {/* Expanded drawer â€” score breakdown + qualification */}
+                {/* Expanded drawer — score breakdown + qualification */}
                 {expandedLead === lead.id && (
                   <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border space-y-3">
                     {/* AI Score Breakdown */}
@@ -1077,7 +1077,7 @@ export default function LeadEnginePage() {
                       {lead.score_breakdown ? (
                         <ScoreBreakdownBars breakdown={lead.score_breakdown} />
                       ) : (
-                        <p className="text-[9px] text-muted italic">No AI score yet â€” click &ldquo;Score now&rdquo; above.</p>
+                        <p className="text-[9px] text-muted italic">No AI score yet — click &ldquo;Score now&rdquo; above.</p>
                       )}
                       {lead.score_reasoning && (
                         <p className="text-[9px] text-muted mt-2 italic">{lead.score_reasoning}</p>
@@ -1117,7 +1117,7 @@ export default function LeadEnginePage() {
           </div>{/* end overflow-x-auto */}
           </div>{/* end min-w-0 flex-1 table */}
 
-          {/* Side detail panel â€” desktop only */}
+          {/* Side detail panel — desktop only */}
           {selectedLead && (
             <div className="hidden lg:block w-[280px] xl:w-[300px] flex-shrink-0 sticky top-16 self-start">
               <LeadDetailPanel
@@ -1135,7 +1135,7 @@ export default function LeadEnginePage() {
           {!loading && totalPages > 1 && (
             <div className="flex items-center justify-between pt-3">
               <p className="text-[10px] text-muted">
-                Showing {((page - 1) * LIMIT) + 1}â€“{Math.min(page * LIMIT, totalCount)} of {totalCount.toLocaleString()} leads
+                Showing {((page - 1) * LIMIT) + 1}–{Math.min(page * LIMIT, totalCount)} of {totalCount.toLocaleString()} leads
               </p>
               <div className="flex items-center gap-2">
                 <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
@@ -1306,7 +1306,7 @@ export default function LeadEnginePage() {
               <Zap size={14} className="text-gold" /> Lead Enrichment Panel
             </h3>
             <button
-              onClick={() => toast("Bulk enrichment coming soon â€” needs API")}
+              onClick={() => toast("Bulk enrichment coming soon — needs API")}
               className="btn-primary text-xs flex items-center gap-1.5"
             ><RefreshCw size={12} /> Enrich All Missing</button>
           </div>
@@ -1355,7 +1355,7 @@ export default function LeadEnginePage() {
                     <span className={lead.website ? "text-green-400" : "text-red-400"}>{lead.website ? "Website" : "No site"}</span>
                   </div>
                   <button
-                    onClick={() => toast("Per-lead enrichment coming soon â€” needs API")}
+                    onClick={() => toast("Per-lead enrichment coming soon — needs API")}
                     className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20"
                   >Enrich</button>
                 </div>
@@ -1421,7 +1421,7 @@ export default function LeadEnginePage() {
               <div className="flex gap-2">
                 <input value={tagInput} onChange={e => setTagInput(e.target.value)} className="input flex-1 text-xs" placeholder="Create new tag..." />
                 <button
-                  onClick={() => toast("Custom tags coming soon â€” needs API")}
+                  onClick={() => toast("Custom tags coming soon — needs API")}
                   className="btn-primary text-xs px-3"
                 >Add</button>
               </div>

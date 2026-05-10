@@ -21,8 +21,8 @@ interface AgentStatus {
 }
 
 const AGENT_CONFIGS = [
-  { id: "lead_gen", name: "Scout", role: "Lead Finder", icon: <Search size={14} />, gradient: "from-emerald-500 to-green-600", glow: "rgba(255,45,45,0.4)" },
-  { id: "outreach", name: "Echo", role: "Outreach", icon: <Send size={14} />, gradient: "from-blue-500 to-cyan-500", glow: "rgba(255,45,45,0.4)" },
+  { id: "lead_gen", name: "Scout", role: "Lead Finder", icon: <Search size={14} />, gradient: "from-emerald-500 to-green-600", glow: "rgba(37,99,235,0.4)" },
+  { id: "outreach", name: "Echo", role: "Outreach", icon: <Send size={14} />, gradient: "from-blue-500 to-cyan-500", glow: "rgba(37,99,235,0.4)" },
   { id: "content", name: "Pixel", role: "Content", icon: <Sparkles size={14} />, gradient: "from-purple-500 to-pink-500", glow: "rgba(168,85,247,0.4)" },
   { id: "ads", name: "Blaze", role: "Ads", icon: <Film size={14} />, gradient: "from-orange-500 to-amber-500", glow: "rgba(249,115,22,0.4)" },
   { id: "reviews", name: "Star", role: "Reviews", icon: <Star size={14} />, gradient: "from-yellow-400 to-amber-500", glow: "rgba(250,204,21,0.4)" },
@@ -35,7 +35,7 @@ const AGENT_CONFIGS = [
   { id: "reputation", name: "Shield", role: "Reputation", icon: <Megaphone size={14} />, gradient: "from-fuchsia-500 to-pink-600", glow: "rgba(217,70,239,0.4)" },
   { id: "retention", name: "Keep", role: "Retention", icon: <Heart size={14} />, gradient: "from-rose-500 to-red-500", glow: "rgba(244,63,94,0.4)" },
   { id: "proposal", name: "Pitch", role: "Proposal", icon: <FileText size={14} />, gradient: "from-violet-500 to-purple-600", glow: "rgba(139,92,246,0.4)" },
-  { id: "scheduler", name: "Clock", role: "Scheduler", icon: <Clock size={14} />, gradient: "from-teal-500 to-cyan-600", glow: "rgba(255,45,45,0.4)" },
+  { id: "scheduler", name: "Clock", role: "Scheduler", icon: <Clock size={14} />, gradient: "from-teal-500 to-cyan-600", glow: "rgba(37,99,235,0.4)" },
 ];
 
 export default function AgentStatusCards() {

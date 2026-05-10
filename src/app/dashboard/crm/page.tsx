@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 // CRM settings tab now persists to Supabase (automations, tags, notes, follow-ups, segments).
 
 import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
@@ -26,9 +26,9 @@ import { InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/compone
 import ErrorBoundary from "@/components/error-boundary";
 import { PrismPanel } from "@/components/prism";
 
-/* ═══════════════════════════════════════════════════════════════════
+/* -------------------------------------------------------------------
    TYPES
-   ═══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------- */
 
 type CRMStatus = "new" | "contacted" | "replied" | "booked" | "converted";
 type SortKey = "newest" | "oldest" | "rating" | "reviews" | "last_contacted" | "score" | "name_az" | "name_za";
@@ -100,9 +100,9 @@ interface FilterState {
 
 interface ColumnConfig { key: string; label: string; visible: boolean; width?: string }
 
-/* ═══════════════════════════════════════════════════════════════════
+/* -------------------------------------------------------------------
    CONSTANTS
-   ═══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------- */
 
 const STATUS_TABS: { key: CRMStatus | "all"; label: string }[] = [
   { key: "all", label: "All" },
@@ -173,9 +173,9 @@ const DEFAULT_COLUMNS: ColumnConfig[] = [
 const LEAD_EXPIRY_DAYS = 14;
 const PAGE_SIZE = 50;
 
-/* ═══════════════════════════════════════════════════════════════════
+/* -------------------------------------------------------------------
    HELPERS
-   ═══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------- */
 
 function mapToCRMStatus(status: string): CRMStatus {
   if (status === "new") return "new";
@@ -222,16 +222,16 @@ function getTagStyle(colorId: string) {
   return TAG_COLORS.find(t => t.id === colorId)?.bg || TAG_COLORS[0].bg;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
+/* -------------------------------------------------------------------
    MAIN COMPONENT
-   ═══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------- */
 
 export default function CRMPage() {
   useAuth();
   const supabase = createClient();
   const { clientId: managedClientId } = useManagedClient();
 
-  // ── Core state ──
+  // -- Core state --
   const [leads, setLeads] = useState<CRMLead[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
@@ -244,7 +244,7 @@ export default function CRMPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [page, setPage] = useState(0);
 
-  // ── UI state ──
+  // -- UI state --
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showBulkStatusMenu, setShowBulkStatusMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -257,7 +257,7 @@ export default function CRMPage() {
   const [statsCollapsed, setStatsCollapsed] = useState(false);
   const [inlineStatusId, setInlineStatusId] = useState<string | null>(null);
 
-  // ── Data state ──
+  // -- Data state --
   // Previously useState-only and lost on reload. Now each persists via
   // /api/crm/<resource> and is rehydrated by fetchCrmSettings() on mount.
   const [emailCredits, setEmailCredits] = useState(0);
@@ -275,7 +275,7 @@ export default function CRMPage() {
 
   const detailPanelRef = useRef<HTMLDivElement>(null);
 
-  // ── Data fetching ──
+  // -- Data fetching --
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const controller = new AbortController();
@@ -397,7 +397,7 @@ export default function CRMPage() {
     }
   }
 
-  // ── Computed data ──
+  // -- Computed data --
   const statusCounts = useMemo(() => {
     const c: Record<string, number> = { all: leads.length, new: 0, contacted: 0, replied: 0, booked: 0, converted: 0 };
     leads.forEach(l => { const s = mapToCRMStatus(l.status); c[s] = (c[s] || 0) + 1; });
@@ -480,7 +480,7 @@ export default function CRMPage() {
   const paginated = useMemo(() => filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE), [filtered, page]);
   const detailLead = leads.find(l => l.id === detailLeadId) || null;
 
-  // ── Stats ──
+  // -- Stats --
   const stats = useMemo(() => {
     const total = leads.length;
     const withEmail = leads.filter(l => l.email).length;
@@ -499,7 +499,7 @@ export default function CRMPage() {
     return { total, withEmail, withPhone, totalOutreach, replied, stale, avgScore, convRate, replyRate, todayFollowUps };
   }, [leads, statusCounts, followUps]);
 
-  // ── Actions ──
+  // -- Actions --
   const toggleSelect = useCallback((id: string) => {
     setSelectedIds(prev => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   }, []);
@@ -627,7 +627,7 @@ export default function CRMPage() {
     try {
       const { error } = await supabase.from("leads").update({ status: newStatus }).eq("id", leadId);
       if (error) { toast.error("Update failed"); return; }
-      toast.success(`Status → ${newStatus}`);
+      toast.success(`Status ? ${newStatus}`);
       setInlineStatusId(null); fetchLeads();
     } catch (err) {
       console.error("[CRM] updateLeadStatus error:", err);
@@ -878,14 +878,14 @@ export default function CRMPage() {
     }
   }
 
-  // ── Density styles ──
+  // -- Density styles --
   const dPy = density === "dense" ? "py-1" : density === "compact" ? "py-1.5" : "py-2.5";
   const dText = density === "dense" ? "text-[9px]" : density === "compact" ? "text-[10px]" : "text-[11px]";
   const dGap = density === "dense" ? "gap-1" : density === "compact" ? "gap-1.5" : "gap-2";
 
-  /* ═══════════════════════════════════════════════════════════════════
+  /* -------------------------------------------------------------------
      RENDER
-     ═══════════════════════════════════════════════════════════════════ */
+     ------------------------------------------------------------------- */
 
   return (
     <div className="fade-in space-y-3">
@@ -893,10 +893,10 @@ export default function CRMPage() {
       <PageHero
         icon={<Users size={22} />}
         title="CRM"
-        subtitle="Your full contact database — track leads, log activity, score prospects, and close deals with AI-powered enrichment and bulk actions."
+        subtitle="Your full contact database � track leads, log activity, score prospects, and close deals with AI-powered enrichment and bulk actions."
         gradient="gold"
       />
-      {/* ── Stats Dashboard ── */}
+      {/* -- Stats Dashboard -- */}
       <div className="card p-0 overflow-hidden">
         <button onClick={() => setStatsCollapsed(!statsCollapsed)}
           className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-surface-light/50 transition-colors">
@@ -934,7 +934,7 @@ export default function CRMPage() {
               {STATUS_TABS.filter(t => t.key !== "all").map((t, i) => {
                 const count = statusCounts[t.key] || 0;
                 const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
-                const colors: Record<string, string> = { new: "#CC2424", contacted: "#f59e0b", replied: "#CC2424", booked: "#a855f7", converted: "#CC2424" };
+                const colors: Record<string, string> = { new: "#1D4ED8", contacted: "#f59e0b", replied: "#1D4ED8", booked: "#a855f7", converted: "#1D4ED8" };
                 return (
                   <div key={t.key} className="flex-1 group cursor-pointer" onClick={() => setActiveTab(t.key as CRMStatus)}>
                     <div className="h-2 rounded-full transition-all group-hover:h-3" style={{ background: colors[t.key], opacity: count > 0 ? 1 : 0.2 }} />
@@ -951,7 +951,7 @@ export default function CRMPage() {
         )}
       </div>
 
-      {/* ── Header Row (sticky toolbar) ── */}
+      {/* -- Header Row (sticky toolbar) -- */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex items-center justify-between flex-wrap gap-2 py-2 -mx-1 px-1">
         <div className="flex items-center gap-2 flex-wrap">
           {hasActiveFilters && (
@@ -1040,7 +1040,7 @@ export default function CRMPage() {
         </div>
       </div>
 
-      {/* ── Saved Segments ── */}
+      {/* -- Saved Segments -- */}
       {savedSegments.length > 0 && (
         <div className="flex items-center gap-1.5 overflow-x-auto">
           <Bookmark size={10} className="text-muted shrink-0" />
@@ -1058,7 +1058,7 @@ export default function CRMPage() {
         </div>
       )}
 
-      {/* ── Column Config Dropdown ── */}
+      {/* -- Column Config Dropdown -- */}
       {showColumnConfig && (
         <div className="card p-3 flex flex-wrap gap-2">
           <span className="text-[9px] text-muted font-medium w-full">Toggle Columns:</span>
@@ -1071,7 +1071,7 @@ export default function CRMPage() {
         </div>
       )}
 
-      {/* ── Advanced Filters Panel ── */}
+      {/* -- Advanced Filters Panel -- */}
       {showFilters && (
         <div className="card p-4 space-y-3">
           <div className="flex items-center justify-between">
@@ -1160,7 +1160,7 @@ export default function CRMPage() {
             {/* Score & Rating ranges */}
             <div className="space-y-2">
               <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Rating ({filters.ratingMin}–{filters.ratingMax})</label>
+                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Rating ({filters.ratingMin}�{filters.ratingMax})</label>
                 <div className="flex items-center gap-2">
                   <input type="range" min={0} max={5} step={0.5} value={filters.ratingMin}
                     onChange={e => setFilters(prev => ({ ...prev, ratingMin: parseFloat(e.target.value) }))}
@@ -1171,7 +1171,7 @@ export default function CRMPage() {
                 </div>
               </div>
               <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Lead Score ({filters.scoreMin}–{filters.scoreMax})</label>
+                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Lead Score ({filters.scoreMin}�{filters.scoreMax})</label>
                 <div className="flex items-center gap-2">
                   <input type="range" min={0} max={100} step={5} value={filters.scoreMin}
                     onChange={e => setFilters(prev => ({ ...prev, scoreMin: parseInt(e.target.value) }))}
@@ -1210,7 +1210,7 @@ export default function CRMPage() {
         </div>
       )}
 
-      {/* ── Search + Sort ── */}
+      {/* -- Search + Sort -- */}
       <div className="flex items-center gap-2 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
@@ -1222,7 +1222,7 @@ export default function CRMPage() {
         </div>
         <div className="relative">
           <button onClick={() => setShowSortMenu(!showSortMenu)} className="btn-ghost text-[9px] flex items-center gap-1 py-1.5">
-            <ArrowUpDown size={11} /> {sortBy === "newest" ? "Newest" : sortBy === "oldest" ? "Oldest" : sortBy === "rating" ? "Rating" : sortBy === "reviews" ? "Reviews" : sortBy === "score" ? "Score" : sortBy === "name_az" ? "A→Z" : sortBy === "name_za" ? "Z→A" : "Last Contacted"}
+            <ArrowUpDown size={11} /> {sortBy === "newest" ? "Newest" : sortBy === "oldest" ? "Oldest" : sortBy === "rating" ? "Rating" : sortBy === "reviews" ? "Reviews" : sortBy === "score" ? "Score" : sortBy === "name_az" ? "A?Z" : sortBy === "name_za" ? "Z?A" : "Last Contacted"}
             <ChevronDown size={9} />
           </button>
           {showSortMenu && (
@@ -1230,7 +1230,7 @@ export default function CRMPage() {
               {(["newest", "oldest", "score", "rating", "reviews", "last_contacted", "name_az", "name_za"] as SortKey[]).map(s => (
                 <button key={s} onClick={() => { setSortBy(s); setShowSortMenu(false); }}
                   className={`block w-full text-left text-[10px] px-3 py-1.5 hover:bg-surface-light transition-colors ${sortBy === s ? "text-gold" : "text-muted"}`}>
-                  {s === "newest" ? "Newest First" : s === "oldest" ? "Oldest First" : s === "score" ? "Highest Score" : s === "rating" ? "Highest Rating" : s === "reviews" ? "Most Reviews" : s === "last_contacted" ? "Last Contacted" : s === "name_az" ? "Name A→Z" : "Name Z→A"}
+                  {s === "newest" ? "Newest First" : s === "oldest" ? "Oldest First" : s === "score" ? "Highest Score" : s === "rating" ? "Highest Rating" : s === "reviews" ? "Most Reviews" : s === "last_contacted" ? "Last Contacted" : s === "name_az" ? "Name A?Z" : "Name Z?A"}
                 </button>
               ))}
             </div>
@@ -1239,7 +1239,7 @@ export default function CRMPage() {
         <span className="text-[9px] text-muted">{filtered.length} results</span>
       </div>
 
-      {/* ── Status Tabs ── */}
+      {/* -- Status Tabs -- */}
       <div className="tab-group w-fit">
         {STATUS_TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
@@ -1252,7 +1252,7 @@ export default function CRMPage() {
         ))}
       </div>
 
-      {/* ── Bulk Actions Bar ── */}
+      {/* -- Bulk Actions Bar -- */}
       <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${selectedIds.size > 0 ? "bg-gold/10 border-gold/15" : "bg-surface-light/20 border-transparent"}`}>
         {selectedIds.size > 0 ? (
           <>
@@ -1285,11 +1285,11 @@ export default function CRMPage() {
         )}
       </div>
 
-      {/* ── Main Content (with optional Detail Sidebar) ── */}
+      {/* -- Main Content (with optional Detail Sidebar) -- */}
       <div className={`flex gap-3 ${detailLeadId ? "" : ""}`}>
         <div className={`flex-1 min-w-0 ${detailLeadId ? "max-w-[calc(100%-360px)]" : ""}`}>
 
-          {/* ══ TABLE VIEW ══ */}
+          {/* -- TABLE VIEW -- */}
           {viewMode === "table" && (
             <div className=" p-0 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
               <div className="overflow-x-auto">
@@ -1362,12 +1362,12 @@ export default function CRMPage() {
                               );
                               if (col.key === "industry") return (
                                 <td key={col.key} className={`px-2 ${dPy} text-muted`}>
-                                  <span className="truncate max-w-[100px] block">{lead.industry || "—"}</span>
+                                  <span className="truncate max-w-[100px] block">{lead.industry || "�"}</span>
                                 </td>
                               );
                               if (col.key === "location") return (
                                 <td key={col.key} className={`px-2 ${dPy} text-muted`}>
-                                  <span className="truncate max-w-[100px] block">{lead.city ? `${lead.city}${lead.state ? `, ${lead.state}` : ""}` : "—"}</span>
+                                  <span className="truncate max-w-[100px] block">{lead.city ? `${lead.city}${lead.state ? `, ${lead.state}` : ""}` : "�"}</span>
                                 </td>
                               );
                               if (col.key === "rating") return (
@@ -1377,7 +1377,7 @@ export default function CRMPage() {
                                       <Star size={9} className="fill-amber-400" /> {lead.google_rating}
                                       {density !== "dense" && <span className="text-muted text-[8px]">({lead.review_count})</span>}
                                     </span>
-                                  ) : <span className="text-muted">—</span>}
+                                  ) : <span className="text-muted">�</span>}
                                 </td>
                               );
                               if (col.key === "score") return (
@@ -1487,7 +1487,7 @@ export default function CRMPage() {
                                           <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-muted"}`}>{e.status}</span>
                                         </div>
                                         <p className="flex-1 text-muted truncate">{e.message_text}</p>
-                                        {e.reply_text && <p className="text-emerald-400 text-[8px] truncate max-w-[200px]">↩ {e.reply_text}</p>}
+                                        {e.reply_text && <p className="text-emerald-400 text-[8px] truncate max-w-[200px]">? {e.reply_text}</p>}
                                         <span className="text-[7px] text-muted shrink-0">{formatShortDate(e.sent_at)}</span>
                                       </div>
                                     ))}
@@ -1505,7 +1505,7 @@ export default function CRMPage() {
             </div>
           )}
 
-          {/* ══ CARD VIEW ══ */}
+          {/* -- CARD VIEW -- */}
           {viewMode === "card" && (
             <div className={`grid gap-2 ${density === "dense" ? "grid-cols-1 md:grid-cols-3 xl:grid-cols-4" : density === "compact" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"}`}>
               {paginated.length === 0 && <div className="col-span-full text-center py-12 text-muted text-xs">No leads found</div>}
@@ -1533,7 +1533,7 @@ export default function CRMPage() {
                           <h3 className={`font-semibold truncate ${density === "dense" ? "text-[10px]" : "text-xs"}`}>{lead.business_name}</h3>
                           <div className="flex items-center gap-1.5 text-[8px] text-muted">
                             {lead.industry && <span>{lead.industry}</span>}
-                            {lead.city && <span>· {lead.city}</span>}
+                            {lead.city && <span>� {lead.city}</span>}
                           </div>
                         </div>
                       </div>
@@ -1584,12 +1584,12 @@ export default function CRMPage() {
             </div>
           )}
 
-          {/* ══ PIPELINE VIEW ══ */}
+          {/* -- PIPELINE VIEW -- */}
           {viewMode === "pipeline" && (
             <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: "500px" }}>
               {STATUS_TABS.filter(t => t.key !== "all").map(stage => {
                 const stageLeads = searchFiltered.filter(l => mapToCRMStatus(l.status) === stage.key);
-                const colors: Record<string, string> = { new: "#CC2424", contacted: "#f59e0b", replied: "#CC2424", booked: "#a855f7", converted: "#CC2424" };
+                const colors: Record<string, string> = { new: "#1D4ED8", contacted: "#f59e0b", replied: "#1D4ED8", booked: "#a855f7", converted: "#1D4ED8" };
                 const color = colors[stage.key] || "#6b7280";
                 return (
                   <div key={stage.key} className="flex-shrink-0 w-[260px]">
@@ -1622,7 +1622,7 @@ export default function CRMPage() {
                             <div className="flex items-start justify-between">
                               <div className="min-w-0">
                                 <h4 className="text-[10px] font-bold truncate">{lead.business_name}</h4>
-                                <p className="text-[8px] text-muted truncate">{lead.industry || "Business"} {lead.city ? `· ${lead.city}` : ""}</p>
+                                <p className="text-[8px] text-muted truncate">{lead.industry || "Business"} {lead.city ? `� ${lead.city}` : ""}</p>
                               </div>
                               <span className="text-[7px] px-1.5 py-0.5 rounded font-bold shrink-0" style={{ background: `${scoreInfo.color}15`, color: scoreInfo.color }}>{scoreInfo.label}</span>
                             </div>
@@ -1656,11 +1656,11 @@ export default function CRMPage() {
             </div>
           )}
 
-          {/* ── Pagination ── */}
+          {/* -- Pagination -- */}
           {totalPages > 1 && viewMode !== "pipeline" && (
             <div className="flex items-center justify-between px-1 mt-2">
               <span className="text-[9px] text-muted">
-                {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
+                {page * PAGE_SIZE + 1}�{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
               </span>
               <div className="flex items-center gap-1">
                 <button onClick={() => setPage(0)} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">First</button>
@@ -1673,7 +1673,7 @@ export default function CRMPage() {
           )}
         </div>
 
-        {/* ══ DETAIL SIDEBAR ══ */}
+        {/* -- DETAIL SIDEBAR -- */}
         {detailLead && (
           <div ref={detailPanelRef} className="w-[350px] shrink-0  p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
             <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
@@ -1801,7 +1801,7 @@ export default function CRMPage() {
                             <span className="text-[7px] text-muted">{formatShortDate(e.sent_at)}</span>
                           </div>
                           <p className="text-muted truncate">{e.message_text}</p>
-                          {e.reply_text && <p className="text-emerald-400 text-[8px] mt-0.5">↩ {e.reply_text}</p>}
+                          {e.reply_text && <p className="text-emerald-400 text-[8px] mt-0.5">? {e.reply_text}</p>}
                         </div>
                       </div>
                     ))}
@@ -1813,7 +1813,7 @@ export default function CRMPage() {
         )}
       </div>
 
-      {/* ══ AUTOMATION MODAL ══ */}
+      {/* -- AUTOMATION MODAL -- */}
       {showAutomation && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowAutomation(false)}>
           <div className="bg-surface border border-border  shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
@@ -1941,7 +1941,7 @@ export default function CRMPage() {
         </div>
       )}
 
-      {/* ══ BUY CREDITS MODAL ══ */}
+      {/* -- BUY CREDITS MODAL -- */}
       {showBuyCredits && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowBuyCredits(false)}>
           <div className="bg-surface border border-border  shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
@@ -1973,7 +1973,7 @@ export default function CRMPage() {
         </div>
       )}
 
-      {/* ══ SAVE SEGMENT MODAL ══ */}
+      {/* -- SAVE SEGMENT MODAL -- */}
       {showSegmentSave && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowSegmentSave(false)}>
           <div className="bg-surface border border-border  shadow-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>

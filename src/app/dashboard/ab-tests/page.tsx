@@ -72,7 +72,7 @@ const PARENT_LABEL: Record<ParentType, string> = {
   email: "Email",
 };
 
-const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
+const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 function conversionRate(v: Variant): number {
   if (v.views <= 0) return 0;

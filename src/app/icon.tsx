@@ -3,7 +3,7 @@
  *
  * Next.js renders this React component at build time and serves it
  * as the site favicon. Uses the current brand mark: three stacked
- * pill shapes rendered in indigo (#FF2D2D) on a near-black background.
+ * pill shapes rendered in indigo (#2563EB) on a near-black background.
  * Matches the MandalaMark / shortstack-logo.svg geometry.
  */
 import { ImageResponse } from "next/og";
@@ -12,7 +12,7 @@ export const runtime = "edge";
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
-const INDIGO = "#FF2D2D";
+const INDIGO = "#2563EB";
 
 export default function Icon() {
   return new ImageResponse(

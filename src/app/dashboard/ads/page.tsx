@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -143,7 +143,7 @@ export default function AdsPage() {
     } else {
       // Surface a visible toast so the click never silently fails.
       toast.error(
-        `${platform.replace(/_/g, " ")} OAuth isn't wired up yet — coming soon.`,
+        `${platform.replace(/_/g, " ")} OAuth isn't wired up yet � coming soon.`,
       );
     }
   }
@@ -361,7 +361,7 @@ export default function AdsPage() {
   const recentActions = actions.filter(a => ["executed", "rejected", "failed"].includes(a.status)).slice(0, 10);
 
   function getClientName(clientId: string) {
-    return clients.find(c => c.id === clientId)?.business_name || "—";
+    return clients.find(c => c.id === clientId)?.business_name || "�";
   }
 
   if (loading) return <PageLoading />;
@@ -437,7 +437,7 @@ export default function AdsPage() {
         )}
       </div>
 
-      {/* ── Overview Tab ── */}
+      {/* -- Overview Tab -- */}
       {tab === "overview" && (
         <div className="space-y-5">
           {/* KPI Cards */}
@@ -458,7 +458,7 @@ export default function AdsPage() {
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
               >
-                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", zIndex: 1 }} />
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", zIndex: 1 }} />
                 <StatCard label={card.label} value={card.value} icon={card.icon} {...card.extra} />
               </motion.div>
             ))}
@@ -701,7 +701,7 @@ export default function AdsPage() {
         </div>
       )}
 
-      {/* ── Campaigns Tab ── */}
+      {/* -- Campaigns Tab -- */}
       {tab === "campaigns" && (
         <div className="space-y-2">
           {filtered.length === 0 ? (
@@ -753,7 +753,7 @@ export default function AdsPage() {
                         <p className="text-sm font-semibold truncate">{campaign.name}</p>
                         <StatusBadge status={campaign.status} />
                       </div>
-                      <p className="text-[10px] text-muted truncate">{getClientName(campaign.client_id)} · {platform.label}</p>
+                      <p className="text-[10px] text-muted truncate">{getClientName(campaign.client_id)} � {platform.label}</p>
                     </div>
 
                     {/* Metrics Strip */}
@@ -884,7 +884,7 @@ export default function AdsPage() {
         </div>
       )}
 
-      {/* ── Creatives Tab ── */}
+      {/* -- Creatives Tab -- */}
       {tab === "creatives" && (
         <div>
           {creatives.length === 0 ? (
@@ -951,7 +951,7 @@ export default function AdsPage() {
         </div>
       )}
 
-      {/* ── Copy Lab Tab ── */}
+      {/* -- Copy Lab Tab -- */}
       {tab === "copy-lab" && (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Config Panel */}
@@ -1160,7 +1160,7 @@ export default function AdsPage() {
         </div>
       )}
 
-      {/* ── AI Copilot Tab ── */}
+      {/* -- AI Copilot Tab -- */}
       {tab === "copilot" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: Controls + Sync */}
@@ -1467,7 +1467,7 @@ export default function AdsPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[10px] font-medium truncate">{action.title}</p>
-                        <p className="text-[9px] text-muted">{action.action_type.replace(/_/g, " ")} · {new Date(action.created_at).toLocaleDateString()}</p>
+                        <p className="text-[9px] text-muted">{action.action_type.replace(/_/g, " ")} � {new Date(action.created_at).toLocaleDateString()}</p>
                       </div>
                       <span className={`text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full ${
                         action.status === "executed" ? "bg-success/10 text-success" :

@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
@@ -131,7 +131,7 @@ export default function ReportsPage() {
   function buildReportMarkdown(report: GeneratedReport): string {
     const lines: string[] = [];
     const typeLabel = report.type === "monthly" ? "Monthly" : "Weekly";
-    lines.push(`# ${typeLabel} Report â€” ${report.client}`);
+    lines.push(`# ${typeLabel} Report — ${report.client}`);
     lines.push("");
     if (report.metrics) {
       const m = report.metrics;
@@ -162,7 +162,7 @@ export default function ReportsPage() {
     const metricsHTML = m ? `
       <table style="width:100%;border-collapse:collapse;margin:24px 0;">
         <thead>
-          <tr style="background:#FBF9F4;border-bottom:2px solid #FF2D2D;">
+          <tr style="background:#FBF9F4;border-bottom:2px solid #2563EB;">
             <th style="text-align:left;padding:10px 14px;font-size:12px;color:#6B7280;font-weight:600;">Metric</th>
             <th style="text-align:right;padding:10px 14px;font-size:12px;color:#6B7280;font-weight:600;">Value</th>
           </tr>
@@ -170,7 +170,7 @@ export default function ReportsPage() {
         <tbody>
           <tr style="border-bottom:1px solid #E8E5E0;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">Leads</td>
-            <td style="padding:10px 14px;font-size:13px;color:#374151;text-align:right;font-weight:600;">${m.leads}${m.leads_trend !== "N/A" ? ` <span style="color:${parseInt(m.leads_trend) >= 0 ? "#FF2D2D" : "#EF4444"};font-size:11px;">(${parseInt(m.leads_trend) >= 0 ? "+" : ""}${m.leads_trend}%)</span>` : ""}</td>
+            <td style="padding:10px 14px;font-size:13px;color:#374151;text-align:right;font-weight:600;">${m.leads}${m.leads_trend !== "N/A" ? ` <span style="color:${parseInt(m.leads_trend) >= 0 ? "#2563EB" : "#EF4444"};font-size:11px;">(${parseInt(m.leads_trend) >= 0 ? "+" : ""}${m.leads_trend}%)</span>` : ""}</td>
           </tr>
           <tr style="border-bottom:1px solid #E8E5E0;background:#FEFDFB;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">Outreach</td>
@@ -186,7 +186,7 @@ export default function ReportsPage() {
           </tr>
           <tr style="border-bottom:1px solid #E8E5E0;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">Health Score</td>
-            <td style="padding:10px 14px;font-size:13px;text-align:right;font-weight:600;color:${m.health_score >= 70 ? "#FF2D2D" : m.health_score >= 40 ? "#F59E0B" : "#EF4444"};">${m.health_score}%</td>
+            <td style="padding:10px 14px;font-size:13px;text-align:right;font-weight:600;color:${m.health_score >= 70 ? "#2563EB" : m.health_score >= 40 ? "#F59E0B" : "#EF4444"};">${m.health_score}%</td>
           </tr>
           <tr style="background:#FEFDFB;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">MRR</td>
@@ -207,7 +207,7 @@ export default function ReportsPage() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${typeLabel} Report â€” ${report.client}</title>
+  <title>${typeLabel} Report — ${report.client}</title>
   <style>
     @media print {
       body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -243,12 +243,12 @@ export default function ReportsPage() {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #FF2D2D;
+      background: #2563EB;
     }
     .brand-name {
       font-size: 13px;
       font-weight: 600;
-      color: #FF2D2D;
+      color: #2563EB;
       letter-spacing: 0.5px;
     }
     .title {
@@ -266,7 +266,7 @@ export default function ReportsPage() {
     .section-title {
       font-size: 11px;
       font-weight: 600;
-      color: #FF2D2D;
+      color: #2563EB;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin: 0 0 16px;
@@ -284,7 +284,7 @@ export default function ReportsPage() {
       display: inline-block;
       margin: 0 auto 32px;
       padding: 10px 24px;
-      background: #FF2D2D;
+      background: #2563EB;
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -410,7 +410,7 @@ export default function ReportsPage() {
             transition={{ duration: 0.22, delay: index * 0.06 }}
             whileHover={{ y: -2 }}
           >
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
             <div className="flex items-center justify-between mb-2">
               <stat.icon size={14} className={stat.color} />
             </div>
@@ -539,7 +539,7 @@ export default function ReportsPage() {
                 <div className="flex items-center gap-2">
                   <Sparkles size={14} className="text-gold" />
                   <h2 className="text-sm font-semibold text-foreground">
-                    {currentReport.type === "monthly" ? "Monthly" : "Weekly"} Report â€” {currentReport.client}
+                    {currentReport.type === "monthly" ? "Monthly" : "Weekly"} Report — {currentReport.client}
                   </h2>
                 </div>
                 <div className="flex items-center gap-2">
@@ -692,7 +692,7 @@ export default function ReportsPage() {
                         <div className="text-left">
                           <p className="text-xs font-medium text-foreground">{getClientName(report.client_id)}</p>
                           <p className="text-[10px] text-muted">
-                            {report.result?.type === "monthly_report" ? "Monthly" : "Weekly"} Report â€” {new Date(report.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            {report.result?.type === "monthly_report" ? "Monthly" : "Weekly"} Report — {new Date(report.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                           </p>
                         </div>
                       </div>

@@ -340,7 +340,7 @@ export default function ReportGeneratorPage() {
 
   const previewBlock = (
     <div className="glass  overflow-hidden text-xs">
-      <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
     <div className="p-5">
       <div className="flex items-center gap-2 mb-2">
         <FileText size={12} className="text-gold" />
@@ -454,7 +454,7 @@ export default function ReportGeneratorPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} className="lg:col-span-2 glass rounded-xl overflow-hidden">
-          <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+          <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
           <div className="p-1">
           <Wizard
             steps={steps}
@@ -493,7 +493,7 @@ export default function ReportGeneratorPage() {
 
           {/* Past reports */}
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.4 }} className="glass  overflow-hidden" whileHover={{ y: -4, scale: 1.01 }}>
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
           <div className="p-5">
             <div className="flex items-center gap-2 mb-3">
               <History size={14} className="text-muted" />

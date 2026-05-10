@@ -147,9 +147,9 @@ export const FALLBACK_HASHTAGS: Record<SocialPlatform, string[]> = {
  */
 export const PLATFORM_META: Record<SocialPlatform, { label: string; color: string; bg: string; border: string }> = {
   instagram:  { label: "Instagram", color: "#EC4899", bg: "rgba(236,72,153,0.10)", border: "rgba(236,72,153,0.30)" },
-  facebook:   { label: "Facebook",  color: "#FF2D2D", bg: "rgba(255,45,45,0.10)", border: "rgba(255,45,45,0.30)" },
+  facebook:   { label: "Facebook",  color: "#1877F2", bg: "rgba(24,119,242,0.10)", border: "rgba(24,119,242,0.30)" },
   tiktok:     { label: "TikTok",    color: "#E4E4E7", bg: "rgba(228,228,231,0.10)", border: "rgba(228,228,231,0.30)" },
-  linkedin:   { label: "LinkedIn",  color: "#FF6B6B", bg: "rgba(255,107,107,0.10)", border: "rgba(255,107,107,0.30)" },
+  linkedin:   { label: "LinkedIn",  color: "#0A66C2", bg: "rgba(10,102,194,0.10)", border: "rgba(10,102,194,0.30)" },
   twitter:    { label: "X",         color: "#A1A1AA", bg: "rgba(161,161,170,0.10)", border: "rgba(161,161,170,0.30)" },
   youtube:    { label: "YouTube",   color: "#F87171", bg: "rgba(248,113,113,0.10)", border: "rgba(248,113,113,0.30)" },
   pinterest:  { label: "Pinterest", color: "#F472B6", bg: "rgba(244,114,182,0.10)", border: "rgba(244,114,182,0.30)" },
@@ -169,7 +169,7 @@ export const ALL_PLATFORMS: SocialPlatform[] = [
 
 export const STATUS_META: Record<string, { label: string; color: string; bg: string }> = {
   draft:       { label: "Draft",       color: "#A1A1AA", bg: "rgba(161,161,170,0.10)" },
-  scheduled:   { label: "Scheduled",   color: "#FF6B6B", bg: "rgba(255,107,107,0.10)" },
+  scheduled:   { label: "Scheduled",   color: "#F59E0B", bg: "rgba(245,158,11,0.10)" },
   publishing:  { label: "Publishing",  color: "#FBBF24", bg: "rgba(251,191,36,0.10)" },
   published:   { label: "Published",   color: "#4ADE80", bg: "rgba(74,222,128,0.10)" },
   failed:      { label: "Failed",      color: "#F87171", bg: "rgba(248,113,113,0.10)" },

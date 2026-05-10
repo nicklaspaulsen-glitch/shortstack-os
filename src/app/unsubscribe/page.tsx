@@ -17,7 +17,7 @@ export default async function UnsubscribePage({ searchParams }: Props) {
 
         {/* Brand wordmark */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <Mail className="w-5 h-5 text-[#FF2D2D]" />
+          <Mail className="w-5 h-5 text-[#2563EB]" />
           <span className="text-sm font-semibold text-white/60 tracking-widest uppercase">
             ShortStack
           </span>
@@ -25,8 +25,8 @@ export default async function UnsubscribePage({ searchParams }: Props) {
 
         {isSuccess && (
           <div className="space-y-4">
-            <div className="w-16 h-16 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center mx-auto">
-              <CheckCircle className="w-8 h-8 text-[#FF2D2D]" />
+            <div className="w-16 h-16 rounded-full bg-[#2563EB]/10 flex items-center justify-center mx-auto">
+              <CheckCircle className="w-8 h-8 text-[#2563EB]" />
             </div>
             <h1 className="text-2xl font-bold text-white">
               You&apos;re unsubscribed
@@ -58,7 +58,7 @@ export default async function UnsubscribePage({ searchParams }: Props) {
               link from your most recent email, or contact us at{" "}
               <a
                 href="mailto:growth@shortstack.work"
-                className="text-[#FF2D2D] hover:underline"
+                className="text-[#2563EB] hover:underline"
               >
                 growth@shortstack.work
               </a>{" "}
@@ -74,7 +74,7 @@ export default async function UnsubscribePage({ searchParams }: Props) {
               Use the link from your email to unsubscribe, or contact{" "}
               <a
                 href="mailto:growth@shortstack.work"
-                className="text-[#FF2D2D] hover:underline"
+                className="text-[#2563EB] hover:underline"
               >
                 growth@shortstack.work
               </a>

@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -150,7 +150,7 @@ export default function AutomationsPage() {
             transition={{ duration: 0.22, delay: index * 0.06 }}
             whileHover={{ y: -2 }}
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }} />
             <p className={`text-2xl font-bold ${s.color} mt-2`}>{s.value}</p>
             <p className="text-xs text-[#71717A] mt-0.5">{s.label}</p>
             <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: 'rgba(0,0,0,0.08)' }} />
@@ -164,7 +164,7 @@ export default function AutomationsPage() {
         <input
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Search automationsâ€¦"
+          placeholder="Search automations…"
           className="w-full glass rounded-lg pl-8 pr-3 py-2 text-[#0A0A0B] text-sm focus:outline-none focus:border-indigo-500/50"
         />
       </div>
@@ -182,7 +182,7 @@ export default function AutomationsPage() {
           description={
             search
               ? "Try a different search term."
-              : "Build workflows that run automatically â€” trigger actions on new leads, replies, form fills, and more."
+              : "Build workflows that run automatically — trigger actions on new leads, replies, form fills, and more."
           }
           action={
             !search ? (

@@ -63,7 +63,7 @@ export default function PublicBookingPage() {
         {step === "select" && (
           <div className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
             <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Calendar size={14} className="text-[#FF2D2D]" /> Select a Date
+              <Calendar size={14} className="text-[#2563EB]" /> Select a Date
             </h2>
             <div className="grid grid-cols-5 gap-2 mb-5">
               {dates.map(d => {
@@ -72,7 +72,7 @@ export default function PublicBookingPage() {
                 return (
                   <button key={dateStr} onClick={() => setSelectedDate(dateStr)}
                     className={`p-2 rounded-lg text-center transition-all ${
-                      isSelected ? "bg-[#FF2D2D]/10 border-[#FF2D2D]/30 text-[#FF2D2D]" : "border-white/[0.05] text-gray-400 hover:text-white"
+                      isSelected ? "bg-[#2563EB]/10 border-[#2563EB]/30 text-[#2563EB]" : "border-white/[0.05] text-gray-400 hover:text-white"
                     }`} style={{ border: `1px solid ${isSelected ? "rgba(200,168,85,0.3)" : "rgba(255,255,255,0.05)"}` }}>
                     <p className="text-[9px] uppercase">{d.toLocaleDateString("en-US", { weekday: "short" })}</p>
                     <p className="text-lg font-bold">{d.getDate()}</p>
@@ -85,13 +85,13 @@ export default function PublicBookingPage() {
             {selectedDate && (
               <>
                 <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                  <Clock size={14} className="text-[#FF2D2D]" /> Select a Time
+                  <Clock size={14} className="text-[#2563EB]" /> Select a Time
                 </h2>
                 <div className="grid grid-cols-4 gap-2 mb-5">
                   {TIME_SLOTS.map(time => (
                     <button key={time} onClick={() => setSelectedTime(time)}
                       className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                        selectedTime === time ? "bg-[#FF2D2D]/10 text-[#FF2D2D] border-[#FF2D2D]/30" : "text-gray-400 hover:text-white border-white/[0.05]"
+                        selectedTime === time ? "bg-[#2563EB]/10 text-[#2563EB] border-[#2563EB]/30" : "text-gray-400 hover:text-white border-white/[0.05]"
                       }`} style={{ border: `1px solid ${selectedTime === time ? "rgba(200,168,85,0.3)" : "rgba(255,255,255,0.05)"}` }}>
                       {time}
                     </button>
@@ -103,7 +103,7 @@ export default function PublicBookingPage() {
             {selectedDate && selectedTime && (
               <button onClick={() => setStep("form")}
                 className="w-full py-3 rounded-lg font-semibold text-sm text-black flex items-center justify-center gap-2"
-                style={{ background: "linear-gradient(135deg, #FF2D2D, #CC2424)" }}>
+                style={{ background: "linear-gradient(135deg, #2563EB, #1D4ED8)" }}>
                 Continue <ArrowRight size={14} />
               </button>
             )}
@@ -113,11 +113,11 @@ export default function PublicBookingPage() {
         {step === "form" && (
           <div className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
             <div className="flex items-center gap-2 mb-4 pb-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-              <Video size={14} className="text-[#FF2D2D]" />
+              <Video size={14} className="text-[#2563EB]" />
               <span className="text-xs text-gray-400">
                 {new Date(selectedDate).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })} at {selectedTime}
               </span>
-              <button onClick={() => setStep("select")} className="text-[10px] text-[#FF2D2D] ml-auto">Change</button>
+              <button onClick={() => setStep("select")} className="text-[10px] text-[#2563EB] ml-auto">Change</button>
             </div>
 
             <div className="space-y-3">
@@ -144,7 +144,7 @@ export default function PublicBookingPage() {
 
               <button onClick={submitBooking} disabled={submitting || !form.name || !form.email}
                 className="w-full py-3 rounded-lg font-semibold text-sm text-black disabled:opacity-50 flex items-center justify-center gap-2"
-                style={{ background: "linear-gradient(135deg, #FF2D2D, #CC2424)" }}>
+                style={{ background: "linear-gradient(135deg, #2563EB, #1D4ED8)" }}>
                 {submitting ? "Booking..." : "Confirm Booking"}
               </button>
             </div>
@@ -153,7 +153,7 @@ export default function PublicBookingPage() {
 
         {step === "done" && (
           <div className="rounded-xl p-8 text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: "rgba(255,45,45,0.1)" }}>
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: "rgba(37,99,235,0.1)" }}>
               <CheckCircle size={32} className="text-emerald-400" />
             </div>
             <h2 className="text-lg font-bold text-white mb-1">You&apos;re Booked!</h2>

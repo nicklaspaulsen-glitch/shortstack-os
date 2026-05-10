@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, type Variants } from "framer-motion";
@@ -34,7 +34,7 @@ interface Deal {
 }
 
 const STAGES = [
-  { key: "prospect", label: "Prospect", color: "#CC2424" },
+  { key: "prospect", label: "Prospect", color: "#1D4ED8" },
   { key: "qualified", label: "Qualified", color: "#7c3aed" },
   { key: "proposal_sent", label: "Proposal Sent", color: "#d97706" },
   { key: "negotiation", label: "Negotiation", color: "#ea580c" },
@@ -81,7 +81,7 @@ export default function DealsPage() {
   const [creating, setCreating] = useState(false);
   const [draggedDealId, setDraggedDealId] = useState<string | null>(null);
 
-  // ── Fetch deals from API (scoped to managed client when selected) ──
+  // -- Fetch deals from API (scoped to managed client when selected) --
   const fetchDeals = useCallback(async () => {
     try {
       const params = new URLSearchParams();
@@ -98,7 +98,7 @@ export default function DealsPage() {
 
   useEffect(() => { fetchDeals(); }, [fetchDeals]);
 
-  // ── Create deal ──
+  // -- Create deal --
   const handleCreate = async () => {
     if (!dealForm.title || !dealForm.company) return;
     setCreating(true);
@@ -125,7 +125,7 @@ export default function DealsPage() {
     }
   };
 
-  // ── Update deal stage (drag-drop) ──
+  // -- Update deal stage (drag-drop) --
   const handleStageChange = async (dealId: string, newStage: string) => {
     // Optimistic update
     setDeals(prev => prev.map(d => d.id === dealId ? { ...d, stage: newStage } : d));
@@ -140,7 +140,7 @@ export default function DealsPage() {
     }
   };
 
-  // ── Delete deal ──
+  // -- Delete deal --
   const handleDelete = async (dealId: string) => {
     setDeals(prev => prev.filter(d => d.id !== dealId));
     const res = await fetch("/api/deals", {
@@ -151,7 +151,7 @@ export default function DealsPage() {
     if (!res.ok) fetchDeals();
   };
 
-  // ── Drag handlers ──
+  // -- Drag handlers --
   const onDragStart = (dealId: string) => setDraggedDealId(dealId);
   const onDragOver = (e: React.DragEvent) => e.preventDefault();
   const onDrop = (stageKey: string) => {
@@ -161,7 +161,7 @@ export default function DealsPage() {
     }
   };
 
-  // ── Computed values ──
+  // -- Computed values --
   const openDeals = deals.filter(d => !["closed_won", "closed_lost"].includes(d.stage));
   const wonDeals = deals.filter(d => d.stage === "closed_won");
   const lostDeals = deals.filter(d => d.stage === "closed_lost");
@@ -197,7 +197,7 @@ export default function DealsPage() {
         }
       />
 
-      {/* Stats Row — collapsible (state persists) */}
+      {/* Stats Row � collapsible (state persists) */}
       <CollapsibleStats
         storageKey="deals"
         icon={<BarChart3 size={14} className="text-gold" />}
@@ -205,11 +205,11 @@ export default function DealsPage() {
         summary={
           <>
             <span>Pipe <span className="text-gold font-semibold">{formatCurrency(totalPipeline)}</span></span>
-            <span className="opacity-30">·</span>
+            <span className="opacity-30">�</span>
             <span>Won <span className="text-green-400 font-semibold">{formatCurrency(wonValue)}</span></span>
-            <span className="opacity-30">·</span>
+            <span className="opacity-30">�</span>
             <span>Win <span className="text-blue-400 font-semibold">{winRate}%</span></span>
-            <span className="opacity-30">·</span>
+            <span className="opacity-30">�</span>
             <span>Avg <span className="text-gold font-semibold">{formatCurrency(avgDealSize)}</span></span>
           </>
         }
@@ -405,7 +405,7 @@ export default function DealsPage() {
               {(["month", "quarter"] as const).map(p => (
                 <button key={p} onClick={() => setForecastPeriod(p)}
                   className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                    forecastPeriod === p ? "bg-[#CC2424]/10 text-[#CC2424] border border-[#CC2424]/20" : "text-muted border border-[rgba(0,0,0,0.08)]"
+                    forecastPeriod === p ? "bg-[#1D4ED8]/10 text-[#1D4ED8] border border-[#1D4ED8]/20" : "text-muted border border-[rgba(0,0,0,0.08)]"
                   }`}>{p}</button>
               ))}
             </div>
@@ -517,7 +517,7 @@ export default function DealsPage() {
             })}
           </motion.div>
 
-          {/* Stage Automation — starter rule templates */}
+          {/* Stage Automation � starter rule templates */}
           <PrismPanel rainbow padding="p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <ArrowRight size={14} className="text-gold" /> Deal Stage Automation
@@ -567,7 +567,7 @@ export default function DealsPage() {
                   <motion.div
                     key={i}
                     whileHover={{ y: -2 }}
-                    onClick={() => toast("Contract templates coming soon — needs API")}
+                    onClick={() => toast("Contract templates coming soon � needs API")}
                     className="flex items-center justify-between p-3 rounded-lg hover:border-[rgba(0,0,0,0.12)] transition-all cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB" }}
                   >
                     <div className="flex items-center gap-2">
@@ -602,15 +602,15 @@ export default function DealsPage() {
                   {["Content", "Ads", "SEO", "Web", "Email", "AI"].map(s => (
                     <button
                       key={s}
-                      onClick={() => toast(`${s} service selection coming soon — needs proposal builder`)}
-                      className="text-[9px] px-2 py-1 rounded border border-[rgba(0,0,0,0.10)] hover:border-[#CC2424]/30 hover:bg-[#CC2424]/5 text-muted hover:text-[#CC2424] transition-all"
+                      onClick={() => toast(`${s} service selection coming soon � needs proposal builder`)}
+                      className="text-[9px] px-2 py-1 rounded border border-[rgba(0,0,0,0.10)] hover:border-[#1D4ED8]/30 hover:bg-[#1D4ED8]/5 text-muted hover:text-[#1D4ED8] transition-all"
                     >{s}</button>
                   ))}
                 </div>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => toast("Proposal PDF generation coming soon — needs API")}
+                  onClick={() => toast("Proposal PDF generation coming soon � needs API")}
                   className="btn-primary w-full text-xs flex items-center justify-center gap-1.5"
                 >
                   <Zap size={12} /> Generate Proposal PDF

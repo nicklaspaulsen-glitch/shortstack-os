@@ -158,7 +158,7 @@ export default function DemoManagementPage() {
                   transition={{ delay: index * 0.06, duration: 0.4 }}
                   className="glass-md rounded-xl p-2.5 relative overflow-hidden"
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 inset-x-0" />
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
                   <p className="text-[9px] text-zinc-500 uppercase tracking-wider">{tile.label}</p>
                   <p className={`text-[10px] ${tile.color} font-medium mt-0.5 ${tile.capitalize ? "capitalize" : ""}`}>{tile.value}</p>
                 </motion.div>

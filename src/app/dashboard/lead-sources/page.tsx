@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Filter, Plus, Pencil, Trash2, Check, X, Loader2 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 
-const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
+const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
@@ -69,7 +69,7 @@ function PieChart({ slices }: { slices: { id: string; label: string; value: numb
 }
 
 const SLICE_COLORS = [
-  "#FF2D2D","#FF2D2D","#f59e0b","#8b5cf6","#ef4444",
+  "#2563EB","#2563EB","#f59e0b","#8b5cf6","#ef4444",
   "#FF5252","#84cc16","#ec4899","#f97316","#6b7280",
 ];
 

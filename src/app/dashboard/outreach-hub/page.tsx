@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -27,7 +27,7 @@ import { PrismPanel } from "@/components/prism";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 import ErrorBoundary from "@/components/error-boundary";
 
-/* ── Types ── */
+/* -- Types -- */
 type MainTab = "campaigns" | "sequences" | "templates" | "analytics" | "settings";
 type TemplateSubTab = "calls" | "sms" | "email" | "dms";
 type TargetMode = "b2b" | "b2c";
@@ -72,7 +72,7 @@ interface OutreachSequence {
   steps: SequenceStep[];
 }
 
-/* ── AI Enhance Button Component ── */
+/* -- AI Enhance Button Component -- */
 function AIEnhanceButton({ value, onResult, context }: { value: string; onResult: (v: string) => void; context: string }) {
   const [loading, setLoading] = useState(false);
   const { fetchWithWall } = useQuotaWall();
@@ -95,7 +95,7 @@ function AIEnhanceButton({ value, onResult, context }: { value: string; onResult
         }),
       });
       if (res.status === 402) {
-        toast.error("You hit your token limit — click to upgrade", { duration: 5000 });
+        toast.error("You hit your token limit � click to upgrade", { duration: 5000 });
         setLoading(false);
         return;
       }
@@ -120,7 +120,7 @@ function AIEnhanceButton({ value, onResult, context }: { value: string; onResult
   );
 }
 
-/* ── Editable Template Card ── */
+/* -- Editable Template Card -- */
 function TemplateCard({ template, onChange, onDelete, context }: {
   template: Template;
   onChange: (t: Template) => void;
@@ -184,17 +184,17 @@ function TemplateCard({ template, onChange, onDelete, context }: {
   );
 }
 
-/* ── Default Templates ── */
+/* -- Default Templates -- */
 const DEFAULT_CALL_TEMPLATES: Template[] = [
   {
     id: "call-intro",
-    name: "Cold Call — Intro Script",
+    name: "Cold Call � Intro Script",
     content: `You are Alex, a friendly sales representative from ShortStack, a digital marketing agency.
 
 CONTEXT:
 - Calling {{business_name}}, a {{industry}} business
 - Goal: Book a 10-minute discovery call
-- Be conversational, warm, genuine — NOT robotic
+- Be conversational, warm, genuine � NOT robotic
 
 SCRIPT FLOW:
 1. "Hi, this is Alex from ShortStack. Am I speaking with the owner of {{business_name}}?"
@@ -215,7 +215,7 @@ RULES:
     name: "Follow-up Call Script",
     content: `You are Alex from ShortStack following up on a previous conversation.
 
-"Hi, this is Alex from ShortStack again. We spoke {{days_ago}} about helping {{business_name}} with digital marketing. I wanted to check in — did you get a chance to look at the info we sent over?"
+"Hi, this is Alex from ShortStack again. We spoke {{days_ago}} about helping {{business_name}} with digital marketing. I wanted to check in � did you get a chance to look at the info we sent over?"
 
 If yes and interested: "Great! Would you like to schedule that discovery call? I have openings this week."
 If no: "No problem! Want me to resend it? I can also include a quick video walkthrough."
@@ -250,7 +250,7 @@ const DEFAULT_SMS_TEMPLATES: Template[] = [
   {
     id: "sms-followup-5d",
     name: "5-Day Follow-up",
-    content: `Hi {{name}}! Last message from me — wanted to share a free strategy idea for {{business_name}}: [specific tip based on their industry]. If you ever want help implementing this, we're here. Best of luck!`,
+    content: `Hi {{name}}! Last message from me � wanted to share a free strategy idea for {{business_name}}: [specific tip based on their industry]. If you ever want help implementing this, we're here. Best of luck!`,
     variables: ["name", "business_name"],
     enabled: true,
   },
@@ -280,7 +280,7 @@ Hi {{name}},
 
 I came across {{business_name}} and noticed you're doing great work in the {{industry}} space{{rating_mention}}.
 
-At ShortStack, we help businesses like yours get more clients through digital marketing — social media, ads, SEO, and content.
+At ShortStack, we help businesses like yours get more clients through digital marketing � social media, ads, SEO, and content.
 
 Would you be open to a quick 15-minute call to see if we can help? No pressure at all.
 
@@ -328,21 +328,21 @@ The ShortStack Team`,
 const DEFAULT_DM_TEMPLATES: Template[] = [
   {
     id: "dm-ig-intro",
-    name: "Instagram — Initial DM",
+    name: "Instagram � Initial DM",
     content: `Hey {{name}}! Love what you're doing with {{business_name}}. We help {{industry}} businesses grow their online presence and get more clients. Would you be open to a quick chat about some ideas we have for you?`,
     variables: ["name", "business_name", "industry"],
     enabled: true,
   },
   {
     id: "dm-fb-intro",
-    name: "Facebook — Initial DM",
-    content: `Hi {{name}}! I came across {{business_name}} and was really impressed. We specialize in helping {{industry}} businesses get more clients through digital marketing. Would love to share some ideas — are you open to a quick chat?`,
+    name: "Facebook � Initial DM",
+    content: `Hi {{name}}! I came across {{business_name}} and was really impressed. We specialize in helping {{industry}} businesses get more clients through digital marketing. Would love to share some ideas � are you open to a quick chat?`,
     variables: ["name", "business_name", "industry"],
     enabled: true,
   },
   {
     id: "dm-li-intro",
-    name: "LinkedIn — Initial DM",
+    name: "LinkedIn � Initial DM",
     content: `Hi {{name}}, I noticed your work with {{business_name}} in {{industry}}. At ShortStack, we've been helping similar businesses increase their client base by 40-60% through targeted digital strategies. Would you be interested in a brief conversation about what we could do for you?`,
     variables: ["name", "business_name", "industry"],
     enabled: true,
@@ -356,7 +356,7 @@ const DEFAULT_DM_TEMPLATES: Template[] = [
   },
 ];
 
-/* ── Industry Definitions ── */
+/* -- Industry Definitions -- */
 const B2B_INDUSTRIES = [
   { id: "restaurants", label: "Restaurants & Food", icon: UtensilsCrossed },
   { id: "dental", label: "Dental & Medical", icon: Heart },
@@ -380,7 +380,7 @@ const B2B_INDUSTRIES = [
   { id: "retail", label: "Retail Stores", icon: Store },
 ];
 
-/* ── Campaign Presets ── */
+/* -- Campaign Presets -- */
 const CAMPAIGN_PRESETS = [
   { name: "Local Restaurant Blitz", description: "High-volume outreach to restaurants needing digital presence", targetMode: "b2b" as TargetMode, industries: ["restaurants"], channels: { email: true, sms: true, calls: true, dms: false }, dailyTargets: { email: 30, sms: 20, calls: 15, dms: 0 } },
   { name: "Dental Practice Outreach", description: "Targeted campaign for dental offices seeking more patients", targetMode: "b2b" as TargetMode, industries: ["dental"], channels: { email: true, sms: true, calls: true, dms: true }, dailyTargets: { email: 20, sms: 15, calls: 10, dms: 5 } },
@@ -392,7 +392,7 @@ const CAMPAIGN_PRESETS = [
   { name: "Home Services Push", description: "Target plumbers, HVAC, roofers and more", targetMode: "b2b" as TargetMode, industries: ["homeservices", "construction"], channels: { email: true, sms: true, calls: true, dms: false }, dailyTargets: { email: 25, sms: 20, calls: 15, dms: 0 } },
 ];
 
-/* ── Pre-built Sequences ── */
+/* -- Pre-built Sequences -- */
 const DEFAULT_SEQUENCES: OutreachSequence[] = [
   {
     id: "seq-gentle", name: "The Gentle Approach", description: "Spaced-out, low-pressure multi-channel sequence ideal for professional services", targetMode: "b2b",
@@ -451,7 +451,7 @@ const DEFAULT_SEQUENCES: OutreachSequence[] = [
   },
 ];
 
-/* ── Channel icon helper ── */
+/* -- Channel icon helper -- */
 function channelIcon(ch: string, size: number = 12) {
   switch (ch) {
     case "email": return <Mail size={size} />;
@@ -482,15 +482,15 @@ function conditionLabel(c: string) {
   }
 }
 
-/* ════════════════════════════════════════════════════════════ */
+/* ------------------------------------------------------------ */
 /*  MAIN COMPONENT                                             */
-/* ════════════════════════════════════════════════════════════ */
+/* ------------------------------------------------------------ */
 export default function OutreachHubPage() {
   const [tab, setTab] = useState<MainTab>("campaigns");
   const [templateSubTab, setTemplateSubTab] = useState<TemplateSubTab>("calls");
   const [saving, setSaving] = useState(false);
 
-  /* ── Explainer collapse (persists per-browser; collapsed by default) ── */
+  /* -- Explainer collapse (persists per-browser; collapsed by default) -- */
   const [explainerOpen, setExplainerOpen] = useState<boolean>(false);
   useEffect(() => {
     try {
@@ -506,7 +506,7 @@ export default function OutreachHubPage() {
     });
   }
 
-  /* ── Campaign State ── */
+  /* -- Campaign State -- */
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [showCampaignBuilder, setShowCampaignBuilder] = useState(false);
   const [newCampaign, setNewCampaign] = useState({
@@ -518,21 +518,21 @@ export default function OutreachHubPage() {
     sequenceId: "seq-gentle",
   });
 
-  /* ── Sequence State ── */
+  /* -- Sequence State -- */
   const [sequences, setSequences] = useState<OutreachSequence[]>(DEFAULT_SEQUENCES);
   const [activeSequence, setActiveSequence] = useState<string>("seq-gentle");
   const [showCustomBuilder, setShowCustomBuilder] = useState(false);
   const [customSteps, setCustomSteps] = useState<SequenceStep[]>([]);
   const [customSeqName, setCustomSeqName] = useState("");
 
-  /* ── Templates State ── */
+  /* -- Templates State -- */
   const [callTemplates, setCallTemplates] = useState<Template[]>(DEFAULT_CALL_TEMPLATES);
   const [smsTemplates, setSmsTemplates] = useState<Template[]>(DEFAULT_SMS_TEMPLATES);
   const [emailTemplates, setEmailTemplates] = useState<Template[]>(DEFAULT_EMAIL_TEMPLATES);
   const [dmTemplates, setDmTemplates] = useState<Template[]>(DEFAULT_DM_TEMPLATES);
   const [templateFilter, setTemplateFilter] = useState<"all" | "b2b" | "b2c">("all");
 
-  /* ── Settings State ── */
+  /* -- Settings State -- */
   const [callSettings, setCallSettings] = useState({
     agentName: "Alex",
     voiceId: "default",
@@ -579,11 +579,11 @@ export default function OutreachHubPage() {
   const [timezone, setTimezone] = useState("America/New_York");
   const [workingHours, setWorkingHours] = useState({ start: "09:00", end: "17:00" });
 
-  /* ── Preview ── */
+  /* -- Preview -- */
   const [previewVars, setPreviewVars] = useState<Record<string, string>>({});
   const [, setConfigLoaded] = useState(false);
 
-  /* ── Load saved config on mount ── */
+  /* -- Load saved config on mount -- */
   useEffect(() => {
     async function loadConfig() {
       try {
@@ -607,7 +607,7 @@ export default function OutreachHubPage() {
         if (config.compliance) setCompliance(prev => ({ ...prev, ...config.compliance }));
         if (config.sequences?.length) setSequences(config.sequences);
       } catch {
-        // Silently fail — use defaults
+        // Silently fail � use defaults
       } finally {
         setConfigLoaded(true);
       }
@@ -615,7 +615,7 @@ export default function OutreachHubPage() {
     loadConfig();
   }, []);
 
-  /* ── Template CRUD ── */
+  /* -- Template CRUD -- */
   function addTemplate(channel: TemplateSubTab) {
     const newTemplate: Template = {
       id: `${channel}-${Date.now()}`,
@@ -649,7 +649,7 @@ export default function OutreachHubPage() {
     return text;
   }
 
-  /* ── Campaign CRUD ── */
+  /* -- Campaign CRUD -- */
   function createCampaign() {
     if (!newCampaign.name.trim()) { toast.error("Campaign name is required"); return; }
     const campaign: Campaign = {
@@ -684,7 +684,7 @@ export default function OutreachHubPage() {
     toast.success("Campaign deleted");
   }
 
-  /* ── Custom Sequence ── */
+  /* -- Custom Sequence -- */
   function addCustomStep() {
     setCustomSteps(prev => [...prev, {
       id: `cs-${Date.now()}`,
@@ -715,12 +715,12 @@ export default function OutreachHubPage() {
     toast.success("Sequence saved");
   }
 
-  /* ── Toggle arrays ── */
+  /* -- Toggle arrays -- */
   function toggleArray(arr: string[], item: string): string[] {
     return arr.includes(item) ? arr.filter(x => x !== item) : [...arr, item];
   }
 
-  /* ── Save All ── */
+  /* -- Save All -- */
   const handleSave = useCallback(async () => {
     setSaving(true);
     try {
@@ -748,7 +748,7 @@ export default function OutreachHubPage() {
     setSaving(false);
   }, [campaigns, callTemplates, smsTemplates, emailTemplates, dmTemplates, callSettings, smsSettings, emailSettings, dmSettings, globalSettings, dailyLimits, compliance, sequences]);
 
-  /* ── Tab definitions ── */
+  /* -- Tab definitions -- */
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
     { key: "campaigns", label: "Campaigns", icon: <Megaphone size={14} /> },
     { key: "sequences", label: "Sequences", icon: <ListChecks size={14} /> },
@@ -760,11 +760,11 @@ export default function OutreachHubPage() {
   return (
     <div className="fade-in space-y-4">
       <ErrorBoundary section="Outreach Hub">
-      {/* ── Hero Header ── */}
+      {/* -- Hero Header -- */}
       <PageHero
         icon={<Send size={22} />}
         title="Outreach Hub"
-        subtitle="Build targeted outreach campaigns across email, SMS, calls & DMs — target B2B or B2C leads by industry, niche, and location."
+        subtitle="Build targeted outreach campaigns across email, SMS, calls & DMs � target B2B or B2C leads by industry, niche, and location."
         gradient="gold"
         actions={
           <button onClick={handleSave} disabled={saving}
@@ -775,7 +775,7 @@ export default function OutreachHubPage() {
         }
       />
 
-      {/* ── How Outreach Works (collapsible explainer) ── */}
+      {/* -- How Outreach Works (collapsible explainer) -- */}
       <div className="card border-blue-400/20 bg-gradient-to-br from-blue-500/5 via-surface to-surface">
         <button
           onClick={toggleExplainer}
@@ -788,7 +788,7 @@ export default function OutreachHubPage() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">How Outreach Works</h3>
-              <p className="text-[10px] text-muted">Campaign-first workflow — from creation to replies, in 4 steps.</p>
+              <p className="text-[10px] text-muted">Campaign-first workflow � from creation to replies, in 4 steps.</p>
             </div>
           </div>
           {explainerOpen
@@ -802,7 +802,7 @@ export default function OutreachHubPage() {
               {
                 n: 1,
                 title: "Create a Campaign",
-                desc: "Define your goal, audience, channels, and script templates — right here.",
+                desc: "Define your goal, audience, channels, and script templates � right here.",
                 icon: <Megaphone size={14} />,
                 href: "#campaigns",
                 cta: "Show me",
@@ -831,7 +831,7 @@ export default function OutreachHubPage() {
               {
                 n: 4,
                 title: "Track in Outreach Logs",
-                desc: "See replies, AI analysis, and follow-ups — all in one place.",
+                desc: "See replies, AI analysis, and follow-ups � all in one place.",
                 icon: <BarChart3 size={14} />,
                 href: "/dashboard/outreach-logs",
                 cta: "Open Logs",
@@ -879,7 +879,7 @@ export default function OutreachHubPage() {
         )}
       </div>
 
-      {/* ── Tabs (sticky) ── */}
+      {/* -- Tabs (sticky) -- */}
       <PrismPanel padding="p-1" className="sticky top-0 z-10 overflow-x-auto flex gap-1">
         {TABS.map((t, index) => (
           <motion.button
@@ -900,9 +900,9 @@ export default function OutreachHubPage() {
         ))}
       </PrismPanel>
 
-      {/* ════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------ */}
       {/*  TAB 1: CAMPAIGNS                                          */}
-      {/* ════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------ */}
       {tab === "campaigns" && (
         <div className="space-y-4">
           {/* Top row: Create button + Presets */}
@@ -918,7 +918,7 @@ export default function OutreachHubPage() {
             </button>
           </div>
 
-          {/* ── Campaign Builder ── */}
+          {/* -- Campaign Builder -- */}
           {showCampaignBuilder && (
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -1057,7 +1057,7 @@ export default function OutreachHubPage() {
             </motion.div>
           )}
 
-          {/* ── Campaign List ── */}
+          {/* -- Campaign List -- */}
           {campaigns.length === 0 && !showCampaignBuilder && (
             <div className="card">
               <EmptyState
@@ -1162,9 +1162,9 @@ export default function OutreachHubPage() {
         </div>
       )}
 
-      {/* ════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------ */}
       {/*  TAB 2: SEQUENCES                                          */}
-      {/* ════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------ */}
       {tab === "sequences" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -1320,9 +1320,9 @@ export default function OutreachHubPage() {
         </div>
       )}
 
-      {/* ════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------ */}
       {/*  TAB 3: TEMPLATES                                          */}
-      {/* ════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------ */}
       {tab === "templates" && (
         <div className="space-y-4">
           {/* Template sub-tabs */}
@@ -1362,7 +1362,7 @@ export default function OutreachHubPage() {
             </div>
           </div>
 
-          {/* ── Calls Templates ── */}
+          {/* -- Calls Templates -- */}
           {templateSubTab === "calls" && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2 space-y-3">
@@ -1445,7 +1445,7 @@ export default function OutreachHubPage() {
             </div>
           )}
 
-          {/* ── SMS Templates ── */}
+          {/* -- SMS Templates -- */}
           {templateSubTab === "sms" && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2 space-y-3">
@@ -1529,7 +1529,7 @@ export default function OutreachHubPage() {
             </div>
           )}
 
-          {/* ── Email Templates ── */}
+          {/* -- Email Templates -- */}
           {templateSubTab === "email" && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2 space-y-3">
@@ -1601,7 +1601,7 @@ export default function OutreachHubPage() {
             </div>
           )}
 
-          {/* ── DM Templates ── */}
+          {/* -- DM Templates -- */}
           {templateSubTab === "dms" && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2 space-y-3">
@@ -1699,9 +1699,9 @@ export default function OutreachHubPage() {
         </div>
       )}
 
-      {/* ════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------ */}
       {/*  TAB 4: ANALYTICS                                          */}
-      {/* ════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------ */}
       {tab === "analytics" && (
         <div className="space-y-4">
           {/* Stats cards row */}
@@ -1722,7 +1722,7 @@ export default function OutreachHubPage() {
                 className="rounded-xl overflow-hidden relative"
                 style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 <div className="p-4">
                   <p className="text-[10px] text-muted mb-1">{stat.label}</p>
                   <p className="text-xl font-bold">{stat.value}</p>
@@ -1743,7 +1743,7 @@ export default function OutreachHubPage() {
             className="rounded-xl overflow-hidden"
             style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
             <div className="p-4 space-y-4">
             <h3 className="text-xs font-semibold flex items-center gap-2">
               <BarChart3 size={12} className="text-indigo-400" /> Channel Performance
@@ -1837,14 +1837,14 @@ export default function OutreachHubPage() {
               <Star size={20} className="text-indigo-400" />
             </div>
             <h3 className="text-sm font-semibold mb-1">Best Performing</h3>
-            <p className="text-[11px] text-muted">No data yet — launch your first campaign to see which channels and sequences perform best.</p>
+            <p className="text-[11px] text-muted">No data yet � launch your first campaign to see which channels and sequences perform best.</p>
           </motion.div>
         </div>
       )}
 
-      {/* ════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------ */}
       {/*  TAB 5: SETTINGS                                           */}
-      {/* ════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------ */}
       {tab === "settings" && (
         <div className="max-w-2xl space-y-4">
           {/* Global AI Settings */}

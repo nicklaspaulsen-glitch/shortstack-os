@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -38,7 +38,7 @@ const DEFAULT: WhiteLabelConfig = {
   company_name: "",
   brand_name: "",
   logo_url: "",
-  primary_color: "#FF2D2D",
+  primary_color: "#2563EB",
   custom_domain: "",
   custom_domain_verified: false,
   custom_domain_ssl_status: "pending",
@@ -72,7 +72,7 @@ function Input({ value, onChange, placeholder, type = "text" }: { value: string;
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#FF2D2D]/50 focus:bg-white/8 transition-all"
+      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#2563EB]/50 focus:bg-white/8 transition-all"
     />
   );
 }
@@ -217,7 +217,7 @@ export default function WhiteLabelPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#FF2D2D]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" />
       </div>
     );
   }
@@ -241,7 +241,7 @@ export default function WhiteLabelPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#FF2D2D] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Settings
@@ -287,7 +287,7 @@ export default function WhiteLabelPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0, duration: 0.4 }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+          <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
           <div className="p-5 flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Branding</p>
           <Field label="Brand Name" hint="Replaces ShortStack across the platform">
@@ -321,13 +321,13 @@ export default function WhiteLabelPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.06, duration: 0.4 }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+          <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
           <div className="p-5 flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Colors</p>
           <Field label="Primary Color" hint="Main accent color -- buttons, highlights">
             <div className="flex gap-3 items-center">
               <input type="color" value={config.primary_color} onChange={(e) => set("primary_color", e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border border-white/10 bg-transparent" />
-              <Input value={config.primary_color} onChange={(v) => set("primary_color", v)} placeholder="#FF2D2D" />
+              <Input value={config.primary_color} onChange={(v) => set("primary_color", v)} placeholder="#2563EB" />
             </div>
           </Field>
           <Field label="Background / Dark Color" hint="Used in hero gradients and dark surfaces">
@@ -343,7 +343,7 @@ export default function WhiteLabelPage() {
               <p className="text-xs text-white/40">Display attribution in the footer</p>
             </div>
             <button onClick={() => set("show_powered_by", !config.show_powered_by)} className="shrink-0">
-              {config.show_powered_by ? <ToggleRight className="w-8 h-8 text-[#FF2D2D]" /> : <ToggleLeft className="w-8 h-8 text-white/30" />}
+              {config.show_powered_by ? <ToggleRight className="w-8 h-8 text-[#2563EB]" /> : <ToggleLeft className="w-8 h-8 text-white/30" />}
             </button>
           </div>
           </div>
@@ -355,7 +355,7 @@ export default function WhiteLabelPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12, duration: 0.4 }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+          <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
           <div className="p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Custom Domain</p>
@@ -376,13 +376,13 @@ export default function WhiteLabelPage() {
                     value={domainInput}
                     onChange={(e) => setDomainInput(e.target.value)}
                     placeholder="app.youragency.com"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#FF2D2D]/50 transition-all"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#2563EB]/50 transition-all"
                   />
                 </div>
                 <button
                   onClick={handleAddDomain}
                   disabled={domainBusy || !domainInput.trim()}
-                  className="px-4 py-2.5 rounded-lg bg-[#FF2D2D] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
+                  className="px-4 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
                 >
                   {domainBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : "Attach"}
                 </button>
@@ -452,7 +452,7 @@ export default function WhiteLabelPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.18, duration: 0.4 }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+          <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
           <div className="p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Resell Billing</p>
@@ -476,7 +476,7 @@ export default function WhiteLabelPage() {
               className="shrink-0 disabled:opacity-40"
               title={stripeStatus?.fully_onboarded ? "Toggle reselling" : "Connect Stripe first"}
             >
-              {config.resell_enabled ? <ToggleRight className="w-8 h-8 text-[#FF2D2D]" /> : <ToggleLeft className="w-8 h-8 text-white/30" />}
+              {config.resell_enabled ? <ToggleRight className="w-8 h-8 text-[#2563EB]" /> : <ToggleLeft className="w-8 h-8 text-white/30" />}
             </button>
           </div>
 
@@ -490,14 +490,14 @@ export default function WhiteLabelPage() {
                 step={5}
                 value={config.markup_percent}
                 onChange={(e) => set("markup_percent", Number(e.target.value) || 0)}
-                className="w-32 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[#FF2D2D]/50"
+                className="w-32 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[#2563EB]/50"
               />
               <span className="text-white/60 text-sm">%</span>
             </div>
           </Field>
 
           {!stripeStatus?.connected && (
-            <a href="/api/integrations/stripe-connect/onboard" className="text-xs text-[#FF2D2D] hover:underline flex items-center gap-1">
+            <a href="/api/integrations/stripe-connect/onboard" className="text-xs text-[#2563EB] hover:underline flex items-center gap-1">
               <ExternalLink className="w-3 h-3" />
               Connect your Stripe account to enable resell billing
             </a>
@@ -511,7 +511,7 @@ export default function WhiteLabelPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.24, duration: 0.4 }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+          <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
           <div className="p-5 flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Email and Portal Copy</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -523,7 +523,7 @@ export default function WhiteLabelPage() {
                   value={config.email_from_name}
                   onChange={(e) => set("email_from_name", e.target.value)}
                   placeholder="Acme Agency Team"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#FF2D2D]/50 transition-all"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#2563EB]/50 transition-all"
                 />
               </div>
             </Field>
@@ -545,7 +545,7 @@ export default function WhiteLabelPage() {
                 onChange={(e) => set("login_text", e.target.value)}
                 placeholder="Welcome back! Sign in to manage your growth."
                 rows={3}
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#FF2D2D]/50 transition-all resize-none"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#2563EB]/50 transition-all resize-none"
               />
             </div>
           </Field>
@@ -557,7 +557,7 @@ export default function WhiteLabelPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-[#FF2D2D] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
         >
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save White Label Settings

@@ -612,7 +612,7 @@ function TabBtn({
       onClick={() => onSelect(id)}
       className={`relative flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors ${
         active
-          ? highlight ? "text-gold" : "text-[#FF2D2D]"
+          ? highlight ? "text-gold" : "text-[#2563EB]"
           : highlight
             ? "text-gold/70 hover:bg-surface-light hover:text-gold"
             : "text-muted hover:bg-surface-light hover:text-foreground"

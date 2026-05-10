@@ -57,14 +57,14 @@ const KIND_STYLES: Record<WhiteboardItemKind, { bg: string; border: string; text
     icon: Film,
   },
   scheduled_publish: {
-    bg: "rgba(255,45,45,0.10)",
-    border: "rgba(255,45,45,0.35)",
+    bg: "rgba(37,99,235,0.10)",
+    border: "rgba(37,99,235,0.35)",
     text: "rgb(147,197,253)",
     label: "Publish",
     icon: Send,
   },
   deal: {
-    bg: "rgba(255,45,45,0.10)",
+    bg: "rgba(37,99,235,0.10)",
     border: "rgba(110,231,183,0.35)",
     text: "rgb(110,231,183)",
     label: "Deal",

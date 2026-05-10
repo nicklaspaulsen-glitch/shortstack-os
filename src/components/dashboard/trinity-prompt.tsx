@@ -113,7 +113,7 @@ export default function TrinityPrompt() {
             <Sparkles
               size={14}
               className="shrink-0"
-              style={{ color: "#FF2D2D" }}
+              style={{ color: "#2563EB" }}
             />
             <span className="text-xs font-semibold tracking-wide text-muted uppercase">
               Ask Trinity
@@ -164,7 +164,7 @@ export default function TrinityPrompt() {
             >
               {sending ? (
                 <span className="flex items-center gap-2 text-muted text-xs">
-                  <Loader size={12} className="animate-spin" style={{ color: "#FF2D2D" }} />
+                  <Loader size={12} className="animate-spin" style={{ color: "#2563EB" }} />
                   Trinity is thinking…
                 </span>
               ) : (
@@ -188,7 +188,7 @@ export default function TrinityPrompt() {
               disabled={sending || !input.trim()}
               className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               style={{
-                background: "#FF2D2D",
+                background: "#2563EB",
                 color: "#fff",
               }}
             >

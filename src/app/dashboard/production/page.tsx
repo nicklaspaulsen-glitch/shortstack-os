@@ -129,7 +129,7 @@ export default function ProductionPage() {
             transition={{ delay: index * 0.06, duration: 0.4 }}
             className="glass rounded-xl p-3 text-center relative overflow-hidden"
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 inset-x-0" />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
             <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
             <p className="text-[10px] text-muted">{stat.label}</p>
           </motion.div>
@@ -303,7 +303,7 @@ export default function ProductionPage() {
                         <div className="h-full rounded-full bg-blue-400/50" style={{ width: `${pctEst * 3}%` }} />
                       </div>
                       <div className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${pctAct * 3}%`, background: overBudget ? "#ef4444" : "#FF2D2D" }} />
+                        <div className="h-full rounded-full" style={{ width: `${pctAct * 3}%`, background: overBudget ? "#ef4444" : "#2563EB" }} />
                       </div>
                     </div>
                   </div>

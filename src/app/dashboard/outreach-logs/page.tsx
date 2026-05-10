@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import {
@@ -22,7 +22,7 @@ import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { motion } from "framer-motion";
 import { PrismPanel } from "@/components/prism";
 
-/* ── Types ── */
+/* -- Types -- */
 interface OutreachEntry {
   id: string;
   lead_id: string | null;
@@ -78,7 +78,7 @@ interface Stats {
 type Tab = "outreach" | "analytics" | "config" | "provisioning";
 type ViewMode = "compact" | "detailed";
 
-/* ── Platform icon map ── */
+/* -- Platform icon map -- */
 const PLATFORM_ICON: Record<string, React.ReactNode> = {
   email: <Mail size={13} className="text-gold" />,
   sms: <Phone size={13} className="text-green-400" />,
@@ -119,11 +119,11 @@ function getSentimentColor(status: string): string {
 
 // Outcome tag config
 const OUTCOME_TAGS = [
-  { status: "booked",         emoji: "🟢", label: "Booked"         },
-  { status: "interested",     emoji: "🔵", label: "Interested"     },
-  { status: "maybe_later",    emoji: "🟡", label: "Maybe Later"    },
-  { status: "not_interested", emoji: "🔴", label: "Not Interested" },
-  { status: "no_answer",      emoji: "⚫", label: "No Response"    },
+  { status: "booked",         emoji: "??", label: "Booked"         },
+  { status: "interested",     emoji: "??", label: "Interested"     },
+  { status: "maybe_later",    emoji: "??", label: "Maybe Later"    },
+  { status: "not_interested", emoji: "??", label: "Not Interested" },
+  { status: "no_answer",      emoji: "?", label: "No Response"    },
 ];
 
 const DM_PLATFORMS = [
@@ -147,7 +147,7 @@ function formatTimestamp(secs: number): string {
 }
 
 export default function OutreachLogsPage() {
-  /* ── State ── */
+  /* -- State -- */
   const [tab, setTab] = useState<Tab>("outreach");
   const [entries, setEntries] = useState<OutreachEntry[]>([]);
   const [stats, setStats] = useState<Stats>({ total: 0, sent: 0, replied: 0, failed: 0, byPlatform: {} });
@@ -227,7 +227,7 @@ export default function OutreachLogsPage() {
   const [nicheInput, setNicheInput] = useState("");
   const [locationInput, setLocationInput] = useState("");
 
-  /* ── Data fetching ── */
+  /* -- Data fetching -- */
   const fetchEntries = useCallback(async () => {
     setLoading(true);
     try {
@@ -287,7 +287,7 @@ export default function OutreachLogsPage() {
     }
   }, [tab]);
 
-  /* ── Conversation detail fetching ── */
+  /* -- Conversation detail fetching -- */
   async function openDetail(entry: OutreachEntry) {
     setDetailEntry(entry);
     setConversationDetail(null);
@@ -329,7 +329,7 @@ export default function OutreachLogsPage() {
     }
   }
 
-  /* ── Outcome tagging ── */
+  /* -- Outcome tagging -- */
   async function updateEntryStatus(entryId: string, newStatus: string) {
     try {
       await fetch("/api/outreach/entries", {
@@ -345,7 +345,7 @@ export default function OutreachLogsPage() {
     }
   }
 
-  /* ── Provisioning ── */
+  /* -- Provisioning -- */
   async function fetchProvisionedNumbers() {
     setProvLoading(true);
     try {
@@ -394,7 +394,7 @@ export default function OutreachLogsPage() {
     setBuyingNumber(null);
   }
 
-  /* ── Selection helpers ── */
+  /* -- Selection helpers -- */
   const allSelected = entries.length > 0 && entries.every(e => selectedIds.has(e.id));
   function toggleAll() {
     if (allSelected) setSelectedIds(new Set());
@@ -408,7 +408,7 @@ export default function OutreachLogsPage() {
     });
   }
 
-  /* ── Bulk actions ── */
+  /* -- Bulk actions -- */
   async function handleBulkDelete() {
     if (!confirm(`Delete ${selectedIds.size} outreach entries?`)) return;
     setBulkLoading(true);
@@ -481,7 +481,7 @@ export default function OutreachLogsPage() {
       const data = await res.json();
       if (res.ok) {
         setScraperResult({ leads_found: data.leads_found ?? 0, duplicates_skipped: data.duplicates_skipped ?? 0 });
-        toast.success(`Scraper done — ${data.leads_found ?? 0} leads found`);
+        toast.success(`Scraper done � ${data.leads_found ?? 0} leads found`);
       } else {
         toast.error(data.error || "Scraper failed");
       }
@@ -528,7 +528,7 @@ export default function OutreachLogsPage() {
     toast.success("Copied");
   }
 
-  /* ── Render ── */
+  /* -- Render -- */
   const replyRate = stats.total > 0 ? ((stats.replied / stats.total) * 100).toFixed(1) : "0";
   const bookedCount = entries.filter(e => e.status === "booked").length;
   // Use a broader booked estimate from stats when possible
@@ -540,7 +540,7 @@ export default function OutreachLogsPage() {
       <PageHero
         icon={<Send size={22} />}
         title="Outreach Logs"
-        subtitle="Full communication history — calls, emails, SMS, DMs with transcripts & details."
+        subtitle="Full communication history � calls, emails, SMS, DMs with transcripts & details."
         gradient="gold"
       />
       <div className="flex items-center justify-end">
@@ -568,7 +568,7 @@ export default function OutreachLogsPage() {
           { label: "Calls", value: stats.byPlatform?.call || 0, color: "text-blue-400", icon: <PhoneCall size={12} /> },
         ].map((s, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(0,0,0,0.10)" }}>
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
             <div className="p-2">
               <div className={`w-5 h-5 rounded-md mx-auto mb-1 flex items-center justify-center bg-black/[0.04] ${s.color}`}>{s.icon}</div>
               <p className="text-sm font-bold">{s.value}</p>
@@ -593,7 +593,7 @@ export default function OutreachLogsPage() {
         ))}
       </div>
 
-      {/* ══════════ OUTREACH TAB ══════════ */}
+      {/* ---------- OUTREACH TAB ---------- */}
       {tab === "outreach" && (
         <div className={`flex flex-col lg:flex-row gap-4 ${detailEntry ? "" : ""}`}>
           {/* Main content */}
@@ -663,7 +663,7 @@ export default function OutreachLogsPage() {
                 className="input text-xs py-1.5 w-auto"
                 placeholder="From"
               />
-              <span className="text-[10px] text-muted">→</span>
+              <span className="text-[10px] text-muted">?</span>
               <input
                 type="date"
                 value={dateTo}
@@ -736,7 +736,7 @@ export default function OutreachLogsPage() {
                 description="Send emails, SMS, or calls from the CRM to see them here."
               />
             ) : viewMode === "compact" ? (
-              /* ── Compact table view ── */
+              /* -- Compact table view -- */
               <div className="card overflow-hidden p-0">
                 <table className="w-full">
                   <thead>
@@ -777,14 +777,14 @@ export default function OutreachLogsPage() {
                           <td className="p-2.5 font-medium max-w-[140px] truncate">
                             <span className="flex items-center gap-1.5">
                               <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
-                              {entry.business_name || "—"}
+                              {entry.business_name || "�"}
                             </span>
                           </td>
-                          <td className="p-2.5 text-muted font-mono text-[10px] max-w-[120px] truncate">{entry.recipient_handle || "—"}</td>
+                          <td className="p-2.5 text-muted font-mono text-[10px] max-w-[120px] truncate">{entry.recipient_handle || "�"}</td>
                           <td className="p-2.5 text-muted max-w-[220px] truncate">
                             {entry.platform === "call" ? (
-                              <span className="flex items-center gap-1"><PhoneCall size={10} className="text-emerald-400" /> AI Call — click for transcript</span>
-                            ) : entry.message_text?.substring(0, 80) || "—"}
+                              <span className="flex items-center gap-1"><PhoneCall size={10} className="text-emerald-400" /> AI Call � click for transcript</span>
+                            ) : entry.message_text?.substring(0, 80) || "�"}
                           </td>
                           <td className="p-2.5 text-center">
                             <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-white/5 text-muted"}`}>
@@ -795,7 +795,7 @@ export default function OutreachLogsPage() {
                             {hasReply ? (
                               <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400">Yes</span>
                             ) : (
-                              <span className="text-[9px] text-muted">—</span>
+                              <span className="text-[9px] text-muted">�</span>
                             )}
                           </td>
                           <td className="p-2.5 text-right text-[10px] text-muted whitespace-nowrap">
@@ -809,7 +809,7 @@ export default function OutreachLogsPage() {
                 </table>
               </div>
             ) : (
-              /* ── Detailed card view ── */
+              /* -- Detailed card view -- */
               <div className="space-y-2">
                 {entries.map(entry => {
                   const isSelected = selectedIds.has(entry.id);
@@ -841,8 +841,8 @@ export default function OutreachLogsPage() {
                           </div>
                           <p className="text-[10px] text-muted truncate mt-0.5">
                             <span className="font-mono">{entry.recipient_handle}</span>
-                            <span className="mx-1.5 opacity-30">·</span>
-                            {entry.platform === "call" ? "AI Call — click for transcript" : entry.message_text?.substring(0, 100)}
+                            <span className="mx-1.5 opacity-30">�</span>
+                            {entry.platform === "call" ? "AI Call � click for transcript" : entry.message_text?.substring(0, 100)}
                           </p>
                         </div>
 
@@ -866,7 +866,7 @@ export default function OutreachLogsPage() {
             {totalPages > 1 && (
               <div className="flex items-center justify-between pt-2">
                 <p className="text-[10px] text-muted">
-                  Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} of {total}
+                  Showing {(page - 1) * pageSize + 1}�{Math.min(page * pageSize, total)} of {total}
                 </p>
                 <div className="flex items-center gap-1">
                   <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
@@ -895,11 +895,11 @@ export default function OutreachLogsPage() {
             )}
           </div>
 
-          {/* ── DETAIL SIDE PANEL ── */}
+          {/* -- DETAIL SIDE PANEL -- */}
           {detailEntry && (
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full lg:w-[380px] flex-shrink-0 lg:sticky lg:top-4 lg:self-start">
               <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
               <div className="p-5 space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto">
                 {/* Header */}
                 <div className="flex items-start justify-between">
@@ -962,10 +962,10 @@ export default function OutreachLogsPage() {
                   )}
                 </div>
 
-                {/* ── AI ANALYSIS ── */}
+                {/* -- AI ANALYSIS -- */}
                 <AiAnalysisPanel entry={detailEntry} />
 
-                {/* ── CALL TRANSCRIPT ── */}
+                {/* -- CALL TRANSCRIPT -- */}
                 {detailEntry.platform === "call" && (
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
@@ -1081,7 +1081,7 @@ export default function OutreachLogsPage() {
                   </div>
                 )}
 
-                {/* ── EMAIL CONTENT ── */}
+                {/* -- EMAIL CONTENT -- */}
                 {detailEntry.platform === "email" && (
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
@@ -1163,7 +1163,7 @@ export default function OutreachLogsPage() {
                   </div>
                 )}
 
-                {/* ── SMS / DM CONTENT ── */}
+                {/* -- SMS / DM CONTENT -- */}
                 {(detailEntry.platform === "sms" || detailEntry.platform.includes("dm") || detailEntry.platform === "instagram" || detailEntry.platform === "facebook" || detailEntry.platform === "linkedin" || detailEntry.platform === "tiktok") && (
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
@@ -1228,12 +1228,12 @@ export default function OutreachLogsPage() {
         </div>
       )}
 
-      {/* ══════════ ANALYTICS TAB ══════════ */}
+      {/* ---------- ANALYTICS TAB ---------- */}
       {tab === "analytics" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
-              <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
               <div className="p-5">
               <h3 className="text-sm font-semibold mb-3">Volume by Platform</h3>
               <div className="space-y-3">
@@ -1258,7 +1258,7 @@ export default function OutreachLogsPage() {
               </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
-              <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
               <div className="p-5">
               <h3 className="text-sm font-semibold mb-3">Status Breakdown</h3>
               <div className="space-y-3">
@@ -1289,7 +1289,7 @@ export default function OutreachLogsPage() {
               { icon: <Calendar size={20} className="mx-auto mb-2 text-blue-400" />, value: stats.total, label: "All Time Total", color: "text-blue-400" },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 + i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 <div className="p-4">
                   {tile.icon}
                   <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
@@ -1301,7 +1301,7 @@ export default function OutreachLogsPage() {
         </div>
       )}
 
-      {/* ══════════ PROVISIONING TAB ══════════ */}
+      {/* ---------- PROVISIONING TAB ---------- */}
       {tab === "provisioning" && (
         <div className="space-y-6">
           {/* Active Phone Numbers */}
@@ -1516,11 +1516,11 @@ export default function OutreachLogsPage() {
         </div>
       )}
 
-      {/* ══════════ CONFIG TAB ══════════ */}
+      {/* ---------- CONFIG TAB ---------- */}
       {tab === "config" && (
         <div className="space-y-5">
 
-          {/* ── Section 1: Lead Scraping ── */}
+          {/* -- Section 1: Lead Scraping -- */}
           <div className="card space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold flex items-center gap-2">
@@ -1529,13 +1529,13 @@ export default function OutreachLogsPage() {
               <div className="flex items-center gap-2">
                 {scraperResult && (
                   <span className="text-[10px] px-2 py-1 rounded-lg bg-green-400/10 text-green-400 border border-green-400/20 flex items-center gap-1">
-                    <CheckCircle size={10} /> {scraperResult.leads_found} found · {scraperResult.duplicates_skipped} skipped
+                    <CheckCircle size={10} /> {scraperResult.leads_found} found � {scraperResult.duplicates_skipped} skipped
                   </span>
                 )}
                 <button onClick={runScraper} disabled={scraperRunning}
                   className="btn-primary text-xs flex items-center gap-1.5 px-4">
                   {scraperRunning ? <Loader2 size={12} className="animate-spin" /> : <Radar size={12} />}
-                  {scraperRunning ? "Running…" : "Run Scraper Now"}
+                  {scraperRunning ? "Running�" : "Run Scraper Now"}
                 </button>
               </div>
             </div>
@@ -1579,7 +1579,7 @@ export default function OutreachLogsPage() {
                 </div>
                 <input value={nicheInput} onChange={e => setNicheInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_niches", nicheInput); setNicheInput(""); } }}
-                  placeholder="Type a niche and press Enter…"
+                  placeholder="Type a niche and press Enter�"
                   aria-label="Add scrape niche"
                   className="input w-full text-xs py-1.5" />
                 <div className="flex flex-wrap gap-1 mt-1.5">
@@ -1607,7 +1607,7 @@ export default function OutreachLogsPage() {
                 </div>
                 <input value={locationInput} onChange={e => setLocationInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_locations", locationInput); setLocationInput(""); } }}
-                  placeholder="e.g. Miami, FL — press Enter…"
+                  placeholder="e.g. Miami, FL � press Enter�"
                   className="input w-full text-xs py-1.5" />
               </div>
             </div>
@@ -1659,7 +1659,7 @@ export default function OutreachLogsPage() {
             </div>
           </div>
 
-          {/* ── Section 2: Daily Outreach Targets ── */}
+          {/* -- Section 2: Daily Outreach Targets -- */}
           <div className="card space-y-4">
             <h3 className="text-sm font-semibold flex items-center gap-2">
               <Sliders size={14} className="text-gold" /> Daily Outreach Targets
@@ -1670,7 +1670,7 @@ export default function OutreachLogsPage() {
               <Shield size={13} className={spamGuardEnabled ? "text-green-400" : "text-orange-400"} />
               <div className="flex-1">
                 <p className="text-[10px] font-medium">Spam Guard is {spamGuardEnabled ? "ON" : "OFF"}</p>
-                <p className="text-[9px] text-muted">{spamGuardEnabled ? "Hard caps are enforced — effective limits shown below" : "Limits will not be capped — enable in Settings for protection"}</p>
+                <p className="text-[9px] text-muted">{spamGuardEnabled ? "Hard caps are enforced � effective limits shown below" : "Limits will not be capped � enable in Settings for protection"}</p>
               </div>
               <a href="/dashboard/settings" className="text-[9px] text-gold hover:underline flex items-center gap-0.5">
                 <ExternalLink size={9} /> Settings
@@ -1744,7 +1744,7 @@ export default function OutreachLogsPage() {
             </div>
           </div>
 
-          {/* ── Section 3: Schedule & Automation ── */}
+          {/* -- Section 3: Schedule & Automation -- */}
           <div className="card space-y-4">
             <h3 className="text-sm font-semibold flex items-center gap-2">
               <Calendar size={14} className="text-gold" /> Schedule & Automation
@@ -1823,7 +1823,7 @@ export default function OutreachLogsPage() {
             </div>
           </div>
 
-          {/* ── Section 4: Compliance & Safety ── */}
+          {/* -- Section 4: Compliance & Safety -- */}
           <div className="card space-y-4">
             <h3 className="text-sm font-semibold flex items-center gap-2">
               <Shield size={14} className="text-gold" /> Compliance & Safety
@@ -1894,7 +1894,7 @@ export default function OutreachLogsPage() {
                     </>
                   ) : (
                     <div className="flex items-center gap-1.5 text-[9px] text-muted py-2">
-                      <Loader2 size={9} className="animate-spin" /> Loading sender stats…
+                      <Loader2 size={9} className="animate-spin" /> Loading sender stats�
                     </div>
                   )}
                 </div>
@@ -1907,7 +1907,7 @@ export default function OutreachLogsPage() {
                 <div className="flex justify-between text-[10px] mb-1">
                   <span className="text-muted">Bounce rate health</span>
                   <span className={(senderStats.bounce_rate ?? 0) > 5 ? "text-orange-400" : "text-green-400"}>
-                    {(senderStats.bounce_rate ?? 0).toFixed(1)}% — {(senderStats.bounce_rate ?? 0) < 2 ? "Excellent" : (senderStats.bounce_rate ?? 0) < 5 ? "Good" : (senderStats.bounce_rate ?? 0) < 10 ? "Warning" : "Critical"}
+                    {(senderStats.bounce_rate ?? 0).toFixed(1)}% � {(senderStats.bounce_rate ?? 0) < 2 ? "Excellent" : (senderStats.bounce_rate ?? 0) < 5 ? "Good" : (senderStats.bounce_rate ?? 0) < 10 ? "Warning" : "Critical"}
                   </span>
                 </div>
                 <div className="w-full bg-surface-light rounded-full h-2">
@@ -1918,9 +1918,9 @@ export default function OutreachLogsPage() {
                   }`} style={{ width: `${Math.min((senderStats.bounce_rate ?? 0) * 5, 100)}%` }} />
                 </div>
                 <div className="flex justify-between text-[8px] text-muted mt-0.5">
-                  <span>0% — ideal</span>
-                  <span>5% — warning</span>
-                  <span>10%+ — critical</span>
+                  <span>0% � ideal</span>
+                  <span>5% � warning</span>
+                  <span>10%+ � critical</span>
                 </div>
               </div>
             )}
@@ -2083,7 +2083,7 @@ export default function OutreachLogsPage() {
             <button onClick={saveConfig} disabled={configSaving}
               className="btn-primary text-xs flex items-center gap-1.5 px-5">
               {configSaving ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle size={12} />}
-              {configSaving ? "Saving…" : "Save Configuration"}
+              {configSaving ? "Saving�" : "Save Configuration"}
             </button>
           </div>
         </div>
@@ -2092,7 +2092,7 @@ export default function OutreachLogsPage() {
   );
 }
 
-/* ────────── AI Analysis Panel (Outreach Detail) ────────── */
+/* ---------- AI Analysis Panel (Outreach Detail) ---------- */
 
 interface AiAnalysis {
   sentiment: "positive" | "neutral" | "negative" | "no_reply";
@@ -2222,7 +2222,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
 
       {/* Intent */}
       <div>
-        <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Intent · {analysis.intent_confidence}% confidence</p>
+        <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Intent � {analysis.intent_confidence}% confidence</p>
         <div className="text-[10px] font-medium capitalize text-foreground">{analysis.intent.replace(/_/g, " ")}</div>
       </div>
 

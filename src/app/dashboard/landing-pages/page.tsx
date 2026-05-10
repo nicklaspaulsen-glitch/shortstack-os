@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
@@ -21,9 +21,9 @@ import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/c
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 
-/* ══════════════════════════════════════════════════════════════════
+/* ------------------------------------------------------------------
    TYPES
-   ══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------ */
 
 interface Feature { icon: string; title: string; description: string }
 interface Testimonial { name: string; company: string; quote: string; role: string; avatar?: string }
@@ -86,26 +86,26 @@ interface BusinessInfo {
   colorScheme: string;
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* ------------------------------------------------------------------
    CONSTANTS
-   ══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------ */
 
 const COLOR_SCHEMES = [
-  { id: "modern-dark", name: "Modern Dark", bg: "#0f172a", primary: "#FF2D2D", accent: "#FF6B6B", text: "#f1f5f9" },
-  { id: "clean-light", name: "Clean Light", bg: "#ffffff", primary: "#E02020", accent: "#FF2D2D", text: "#1e293b" },
-  { id: "bold-gradient", name: "Bold Gradient", bg: "linear-gradient(135deg,#FF2D2D,#ec4899)", primary: "#8b5cf6", accent: "#f472b6", text: "#ffffff" },
+  { id: "modern-dark", name: "Modern Dark", bg: "#0f172a", primary: "#2563EB", accent: "#3B82F6", text: "#f1f5f9" },
+  { id: "clean-light", name: "Clean Light", bg: "#ffffff", primary: "#E02020", accent: "#2563EB", text: "#1e293b" },
+  { id: "bold-gradient", name: "Bold Gradient", bg: "linear-gradient(135deg,#2563EB,#ec4899)", primary: "#8b5cf6", accent: "#f472b6", text: "#ffffff" },
   { id: "minimal", name: "Minimal", bg: "#fafafa", primary: "#18181b", accent: "#71717a", text: "#18181b" },
-  { id: "luxury-gold", name: "Luxury Gold", bg: "#0a0a0a", primary: "#FF2D2D", accent: "#d4af37", text: "#f5f5f5" },
+  { id: "luxury-gold", name: "Luxury Gold", bg: "#0a0a0a", primary: "#2563EB", accent: "#d4af37", text: "#f5f5f5" },
 ];
 
 const TEMPLATES = [
-  { id: "saas", name: "SaaS Landing", desc: "Hero + features + pricing + testimonials", icon: Monitor, color: "#FF2D2D", gradient: "from-blue-600 to-cyan-500" },
+  { id: "saas", name: "SaaS Landing", desc: "Hero + features + pricing + testimonials", icon: Monitor, color: "#2563EB", gradient: "from-blue-600 to-cyan-500" },
   { id: "agency", name: "Agency Portfolio", desc: "Hero + services + case studies + contact", icon: Building2, color: "#8b5cf6", gradient: "from-purple-600 to-pink-500" },
   { id: "restaurant", name: "Restaurant", desc: "Hero + menu highlights + location + reservations", icon: UtensilsCrossed, color: "#f59e0b", gradient: "from-amber-500 to-orange-500" },
-  { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: Home, color: "#FF2D2D", gradient: "from-emerald-500 to-teal-500" },
+  { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: Home, color: "#2563EB", gradient: "from-emerald-500 to-teal-500" },
   { id: "fitness", name: "Fitness Studio", desc: "Classes + trainers + pricing + schedule", icon: Dumbbell, color: "#ef4444", gradient: "from-red-500 to-rose-500" },
   { id: "ecommerce", name: "E-commerce", desc: "Product hero + features + reviews + CTA", icon: ShoppingBag, color: "#f97316", gradient: "from-orange-500 to-yellow-500" },
-  { id: "consultant", name: "Consultant", desc: "About + services + testimonials + booking", icon: Briefcase, color: "#FF2D2D", gradient: "from-indigo-500 to-purple-500" },
+  { id: "consultant", name: "Consultant", desc: "About + services + testimonials + booking", icon: Briefcase, color: "#2563EB", gradient: "from-indigo-500 to-purple-500" },
   { id: "event", name: "Event", desc: "Countdown + speakers + schedule + tickets", icon: CalendarDays, color: "#ec4899", gradient: "from-pink-500 to-rose-500" },
 ];
 
@@ -167,19 +167,19 @@ function defaultContent(): LandingPageContent {
   };
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* ------------------------------------------------------------------
    MAIN COMPONENT
-   ══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------ */
 
 type MainTab = "create" | "pages" | "deploy" | "analytics";
 
 export default function LandingPagesPage() {
   useAuth();
 
-  /* ── navigation ── */
+  /* -- navigation -- */
   const [mainTab, setMainTab] = useState<MainTab>("create");
 
-  /* ── step 1: business info ── */
+  /* -- step 1: business info -- */
   const [bizInfo, setBizInfo] = useState<BusinessInfo>({
     name: "", industry: "", tagline: "", description: "",
     targetAudience: "", benefits: [], ctaText: "Get Started", ctaUrl: "#",
@@ -187,11 +187,11 @@ export default function LandingPagesPage() {
   });
   const [benefitInput, setBenefitInput] = useState("");
 
-  /* ── step tracking ── */
+  /* -- step tracking -- */
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
-  /* ── step 3: editor ── */
+  /* -- step 3: editor -- */
   const [content, setContent] = useState<LandingPageContent>(defaultContent());
   const [sections, setSections] = useState<SectionState[]>([
     { key: "hero", label: "Hero", visible: true, editing: false },
@@ -204,22 +204,22 @@ export default function LandingPagesPage() {
   ]);
   const [generating, setGenerating] = useState(false);
 
-  /* ── pages tab ── */
+  /* -- pages tab -- */
   const [pages, setPages] = useState<GeneratedPage[]>([]);
   const [pageSearch, setPageSearch] = useState("");
 
-  /* ── deploy tab ── */
+  /* -- deploy tab -- */
   const [customDomain, setCustomDomain] = useState("");
   const [deploying, setDeploying] = useState(false);
   const [sslStatus] = useState<"active" | "pending" | "none">("active");
 
-  /* ── analytics tab ── */
+  /* -- analytics tab -- */
   const [analyticsPage, setAnalyticsPage] = useState<string>("p1");
 
-  /* ── faq accordion ── */
+  /* -- faq accordion -- */
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  /* ── Guided Mode ↔ Advanced Mode ── */
+  /* -- Guided Mode ? Advanced Mode -- */
   const [advancedMode, setAdvancedMode] = useAdvancedMode("landing-pages");
   const [guidedStep, setGuidedStep] = useState(0);
   const [guidedOffer, setGuidedOffer] = useState("");
@@ -230,7 +230,7 @@ export default function LandingPagesPage() {
 
   const previewRef = useRef<HTMLDivElement>(null);
 
-  /* ── helpers ── */
+  /* -- helpers -- */
   const addBenefit = useCallback(() => {
     const v = benefitInput.trim();
     if (!v) return;
@@ -284,7 +284,7 @@ export default function LandingPagesPage() {
       }
 
       const c = defaultContent();
-      c.hero.headline = data.headline || bizInfo.tagline || `${bizInfo.name} — ${bizInfo.industry} Solutions`;
+      c.hero.headline = data.headline || bizInfo.tagline || `${bizInfo.name} � ${bizInfo.industry} Solutions`;
       c.hero.subheadline = data.subheadline || bizInfo.description || c.hero.subheadline;
       c.hero.cta_text = data.hero_cta || bizInfo.ctaText || "Get Started";
       c.hero.cta_url = bizInfo.ctaUrl || "#";
@@ -350,7 +350,7 @@ export default function LandingPagesPage() {
     setStep(3);
   };
 
-  /* ─── Guided Mode: feed wizard state into bizInfo + call the same generate route ─── */
+  /* --- Guided Mode: feed wizard state into bizInfo + call the same generate route --- */
   async function handleGuidedGenerate() {
     const offer = guidedOffer.trim();
     if (!offer) {
@@ -362,7 +362,7 @@ export default function LandingPagesPage() {
       ...prev,
       // Business name/industry defaults derive from the offer so the generate
       // API has enough to chew on. User can refine everything in Advanced.
-      name: prev.name || offer.split(/[-.,–—:]/)[0].trim().slice(0, 60) || "Your Brand",
+      name: prev.name || offer.split(/[-.,��:]/)[0].trim().slice(0, 60) || "Your Brand",
       industry: prev.industry || (tpl?.name || "SaaS"),
       description: prev.description || offer,
       tagline: guidedHeadline.trim() || prev.tagline || offer.slice(0, 80),
@@ -447,12 +447,12 @@ export default function LandingPagesPage() {
     }
   }
 
-  /* ─── Guided steps ─── */
+  /* --- Guided steps --- */
   const guidedSteps: WizardStepDef[] = [
     {
       id: "offer",
       title: "What are you selling?",
-      description: "One or two sentences — product, service, membership, even a newsletter signup.",
+      description: "One or two sentences � product, service, membership, even a newsletter signup.",
       icon: <Sparkles size={18} />,
       canProceed: guidedOffer.trim().length > 0,
       component: (
@@ -486,7 +486,7 @@ export default function LandingPagesPage() {
     {
       id: "template",
       title: "Pick a template",
-      description: "This sets the structure — sections and overall vibe. You can change colour & copy after.",
+      description: "This sets the structure � sections and overall vibe. You can change colour & copy after.",
       icon: <Layout size={18} />,
       component: (
         <ChoiceCards
@@ -554,7 +554,7 @@ export default function LandingPagesPage() {
             <span className="font-semibold">{guidedOffer || <span className="italic text-muted">(none)</span>}</span>
           </p>
           <p className="text-[11px] text-muted">
-            Template: <span className="text-foreground">{TEMPLATES.find(t => t.id === guidedTemplate)?.name || "—"}</span>
+            Template: <span className="text-foreground">{TEMPLATES.find(t => t.id === guidedTemplate)?.name || "�"}</span>
           </p>
           {guidedAudience && (
             <p className="text-[11px] text-muted">
@@ -652,11 +652,11 @@ export default function LandingPagesPage() {
     p.template.toLowerCase().includes(pageSearch.toLowerCase())
   );
 
-  /* ══════════════════════════════════════════════════════════════════
+  /* ------------------------------------------------------------------
      RENDER HELPERS
-     ══════════════════════════════════════════════════════════════════ */
+     ------------------------------------------------------------------ */
 
-  /* ── Live Preview ── */
+  /* -- Live Preview -- */
   const renderPreview = () => {
     const scheme = getScheme();
     const bgStyle = scheme.bg.startsWith("linear")
@@ -819,7 +819,7 @@ export default function LandingPagesPage() {
     );
   };
 
-  /* ── Section Editor Panel ── */
+  /* -- Section Editor Panel -- */
   const renderSectionEditor = (sec: SectionState, idx: number) => {
     const isEditing = sec.editing;
     return (
@@ -993,9 +993,9 @@ export default function LandingPagesPage() {
     );
   };
 
-  /* ══════════════════════════════════════════════════════════════════
+  /* ------------------------------------------------------------------
      MAIN RENDER
-     ══════════════════════════════════════════════════════════════════ */
+     ------------------------------------------------------------------ */
 
   return (
     <div className="fade-in min-h-screen p-6 max-w-[1400px] mx-auto space-y-6">
@@ -1016,13 +1016,13 @@ export default function LandingPagesPage() {
         }
       />
 
-      {/* Guided Mode — 4-step AI landing page builder */}
+      {/* Guided Mode � 4-step AI landing page builder */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={generating ? "Generating…" : "Generate landing page"}
+          finishLabel={generating ? "Generating�" : "Generate landing page"}
           busy={generating}
           onFinish={handleGuidedGenerate}
           onCancel={() => setAdvancedMode(true)}
@@ -1050,7 +1050,7 @@ export default function LandingPagesPage() {
         ))}
       </div>
 
-      {/* ═══ CREATE TAB ═══ */}
+      {/* --- CREATE TAB --- */}
       {mainTab === "create" && (
         <>
           {/* Step indicators */}
@@ -1074,7 +1074,7 @@ export default function LandingPagesPage() {
             ))}
           </div>
 
-          {/* ── Step 1: Business Info ── */}
+          {/* -- Step 1: Business Info -- */}
           {step === 1 && (
             <div className="card p-6 space-y-6">
               <h2 className="section-header text-lg font-bold text-[#0A0A0B] flex items-center gap-2">
@@ -1188,7 +1188,7 @@ export default function LandingPagesPage() {
             </div>
           )}
 
-          {/* ── Step 2: Template Selection ── */}
+          {/* -- Step 2: Template Selection -- */}
           {step === 2 && (
             <div className="space-y-4">
               <h2 className="section-header text-lg font-bold text-[#0A0A0B] flex items-center gap-2">
@@ -1250,7 +1250,7 @@ export default function LandingPagesPage() {
             </div>
           )}
 
-          {/* ── Step 3: Live Editor ── */}
+          {/* -- Step 3: Live Editor -- */}
           {step === 3 && (
             <div className="grid grid-cols-5 gap-6">
               {/* Left: Section Editor */}
@@ -1292,7 +1292,7 @@ export default function LandingPagesPage() {
         </>
       )}
 
-      {/* ═══ GENERATED PAGES TAB ═══ */}
+      {/* --- GENERATED PAGES TAB --- */}
       {mainTab === "pages" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -1380,7 +1380,7 @@ export default function LandingPagesPage() {
         </div>
       )}
 
-      {/* ═══ DEPLOYMENT TAB ═══ */}
+      {/* --- DEPLOYMENT TAB --- */}
       {mainTab === "deploy" && (
         <div className="space-y-6">
           <div className="grid grid-cols-3 gap-4">
@@ -1425,7 +1425,7 @@ export default function LandingPagesPage() {
         </div>
       )}
 
-      {/* ═══ ANALYTICS TAB ═══ */}
+      {/* --- ANALYTICS TAB --- */}
       {mainTab === "analytics" && (
         <div className="space-y-6">
           {/* Page selector */}
@@ -1460,7 +1460,7 @@ export default function LandingPagesPage() {
                 whileHover={{ y: -2 }}
                 className="glass rounded-xl p-4 relative overflow-hidden"
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 inset-x-0" />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
                 <div className="flex items-center justify-between mb-2 mt-1">
                   <stat.icon className={`w-4 h-4 ${stat.color}`} />
                 </div>
@@ -1487,7 +1487,7 @@ export default function LandingPagesPage() {
                   return (
                     <div key={i} className="flex-1 flex flex-col items-center gap-1">
                       <span className="text-[10px] text-muted">{v.toLocaleString()}</span>
-                      <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #FF2D2D 0%, #FF2D2D40 100%)` }}>
+                      <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #2563EB 0%, #2563EB40 100%)` }}>
                         <div className="absolute inset-0 bg-gold/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md" />
                       </div>
                       <span className="text-[10px] text-muted">{days[i]}</span>
@@ -1501,7 +1501,7 @@ export default function LandingPagesPage() {
                 <svg viewBox="0 0 700 100" className="absolute -top-40 left-0 w-full h-40 pointer-events-none" preserveAspectRatio="none">
                   <polyline
                     fill="none"
-                    stroke="#FF2D2D"
+                    stroke="#2563EB"
                     strokeWidth="2"
                     strokeLinejoin="round"
                     points={EMPTY_ANALYTICS.dailyViews.map((v, i) => {
@@ -1515,7 +1515,7 @@ export default function LandingPagesPage() {
                     const max = Math.max(...EMPTY_ANALYTICS.dailyViews, 1);
                     const x = (i / (EMPTY_ANALYTICS.dailyViews.length - 1 || 1)) * 680 + 10;
                     const y = 95 - (v / max) * 90;
-                    return <circle key={i} cx={x} cy={y} r="3" fill="#FF2D2D" />;
+                    return <circle key={i} cx={x} cy={y} r="3" fill="#2563EB" />;
                   })}
                 </svg>
               </div>
@@ -1536,7 +1536,7 @@ export default function LandingPagesPage() {
                       <span className="text-xs text-gold font-semibold">{src.pct}%</span>
                     </div>
                     <div className="w-full h-2 bg-surface-light rounded-full overflow-hidden">
-                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${src.pct}%`, background: "linear-gradient(90deg, #FF2D2D, #FF2D2D80)" }} />
+                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${src.pct}%`, background: "linear-gradient(90deg, #2563EB, #2563EB80)" }} />
                     </div>
                   </div>
                 ))}
@@ -1553,7 +1553,7 @@ export default function LandingPagesPage() {
       )}
       </>)}
 
-      {/* ═══ PAGE AI ASSISTANT ═══ */}
+      {/* --- PAGE AI ASSISTANT --- */}
       <PageAI
         pageName="Landing Pages"
         context="AI landing page generator with template selection, live editor, deployment, and analytics. User can create landing pages from business info or templates."

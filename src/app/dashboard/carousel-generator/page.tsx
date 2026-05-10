@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -37,9 +37,9 @@ const CAROUSEL_PREVIEW_FALLBACK: RollingPreviewItem[] = [
   { id: "cg12", src: YT("RgKAFK5djSk"), alt: "Fitness carousel", tag: "Fitness" },
 ];
 
-/* ══════════════════════════════════════════════════════════════════
+/* ------------------------------------------------------------------
    TYPES
-   ══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------ */
 
 interface Slide {
   slideNumber: number;
@@ -54,15 +54,15 @@ interface BrandColors {
   secondary: string;
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* ------------------------------------------------------------------
    DATA
-   ══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------ */
 
 const STYLES: { id: CarouselStyle; name: string; desc: string; preview: string; text: string }[] = [
   { id: "minimalist", name: "Minimalist", desc: "Clean & elegant", preview: "linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%)", text: "#1a1a1a" },
   { id: "bold", name: "Bold", desc: "High impact", preview: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", text: "#ffffff" },
   { id: "corporate", name: "Corporate", desc: "Professional", preview: "linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%)", text: "#ffffff" },
-  { id: "playful", name: "Playful", desc: "Fun & vibrant", preview: "linear-gradient(135deg, #ff6b6b 0%, #ffa06b 100%)", text: "#ffffff" },
+  { id: "playful", name: "Playful", desc: "Fun & vibrant", preview: "linear-gradient(135deg, #3B82F6 0%, #ffa06b 100%)", text: "#ffffff" },
   { id: "dark", name: "Dark", desc: "Premium feel", preview: "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)", text: "#ffffff" },
   { id: "gradient", name: "Gradient", desc: "Modern vibes", preview: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", text: "#ffffff" },
 ];
@@ -76,17 +76,17 @@ const TEMPLATES = [
 ];
 
 const PRESET_COLORS: { name: string; primary: string; secondary: string }[] = [
-  { name: "Ocean Blue", primary: "#E02020", secondary: "#FF6B6B" },
+  { name: "Ocean Blue", primary: "#E02020", secondary: "#3B82F6" },
   { name: "Coral Sunset", primary: "#f43f5e", secondary: "#fb923c" },
-  { name: "Forest Green", primary: "#E02020", secondary: "#FF6B6B" },
-  { name: "Royal Purple", primary: "#7c3aed", secondary: "#FF6B6B" },
-  { name: "Midnight Gold", primary: "#1a1a2e", secondary: "#FF2D2D" },
+  { name: "Forest Green", primary: "#E02020", secondary: "#3B82F6" },
+  { name: "Royal Purple", primary: "#7c3aed", secondary: "#3B82F6" },
+  { name: "Midnight Gold", primary: "#1a1a2e", secondary: "#2563EB" },
   { name: "Slate Rose", primary: "#475569", secondary: "#f472b6" },
 ];
 
-/* ══════════════════════════════════════════════════════════════════
+/* ------------------------------------------------------------------
    SLIDE STYLE HELPERS
-   ══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------ */
 
 function getSlideBackground(
   style: CarouselStyle,
@@ -149,9 +149,9 @@ function getSlideTextColor(style: CarouselStyle, slideIndex: number): { headline
   }
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* ------------------------------------------------------------------
    MOCK AI (fallback when API is unavailable)
-   ══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------ */
 
 function generateMockSlides(topic: string, count: number, template?: string): Slide[] {
   const slides: Slide[] = [];
@@ -176,7 +176,7 @@ function generateMockSlides(topic: string, count: number, template?: string): Sl
   slides.push({
     slideNumber: 1,
     headline: hookHeadlines[Math.floor(Math.random() * hookHeadlines.length)],
-    body: `Everything you need to know about ${topic.toLowerCase()} — swipe to learn more.`,
+    body: `Everything you need to know about ${topic.toLowerCase()} � swipe to learn more.`,
   });
 
   // Middle slides
@@ -186,7 +186,7 @@ function generateMockSlides(topic: string, count: number, template?: string): Sl
       body: `Here is a detailed but concise explanation of step ${i} in mastering ${topic.toLowerCase()}.`,
     }),
     listicle: (i) => ({
-      headline: `#${i} — Key Insight`,
+      headline: `#${i} � Key Insight`,
       body: `This is one of the most important aspects of ${topic.toLowerCase()} that most people overlook.`,
     }),
     story: (i) => {
@@ -225,9 +225,9 @@ function generateMockSlides(topic: string, count: number, template?: string): Sl
   return slides;
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   CAROUSEL WIZARD — 5-step guided creation flow
-   ══════════════════════════════════════════════════════════════════ */
+/* ------------------------------------------------------------------
+   CAROUSEL WIZARD � 5-step guided creation flow
+   ------------------------------------------------------------------ */
 
 interface CarouselWizardProps {
   open: boolean;
@@ -251,17 +251,17 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
         type: "chip-select",
         key: "platform",
         options: [
-          { value: "instagram", label: "Instagram", emoji: "📸" },
-          { value: "linkedin", label: "LinkedIn", emoji: "💼" },
-          { value: "facebook", label: "Facebook", emoji: "👥" },
-          { value: "twitter", label: "Twitter (X)", emoji: "𝕏" },
+          { value: "instagram", label: "Instagram", emoji: "??" },
+          { value: "linkedin", label: "LinkedIn", emoji: "??" },
+          { value: "facebook", label: "Facebook", emoji: "??" },
+          { value: "twitter", label: "Twitter (X)", emoji: "??" },
         ],
       },
     },
     {
       id: "topic",
       title: "What's the topic or hook?",
-      description: "Describe what this carousel is about — be specific to get better slides.",
+      description: "Describe what this carousel is about � be specific to get better slides.",
       icon: <Lightbulb size={16} />,
       field: {
         type: "text",
@@ -282,13 +282,13 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
               }),
             });
             if (!res.ok) {
-              toast.error("Couldn't suggest a topic — try again");
+              toast.error("Couldn't suggest a topic � try again");
               return {};
             }
             const json = await res.json();
             const suggestion: string = (json.enhanced || "").replace(/^["']|["']$/g, "").trim();
             if (!suggestion) {
-              toast.error("No suggestion — give it another try");
+              toast.error("No suggestion � give it another try");
               return {};
             }
             toast.success("Topic suggested!");
@@ -317,17 +317,17 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
     {
       id: "style",
       title: "Pick a visual style",
-      description: "Sets the tone — we'll apply the look in the preview.",
+      description: "Sets the tone � we'll apply the look in the preview.",
       icon: <Palette size={16} />,
       field: {
         type: "chip-select",
         key: "style",
         options: [
-          { value: "minimal", label: "Minimal", emoji: "⚪" },
-          { value: "bold", label: "Bold", emoji: "💥" },
-          { value: "corporate", label: "Corporate", emoji: "💼" },
-          { value: "playful", label: "Playful", emoji: "🎈" },
-          { value: "educational", label: "Educational", emoji: "📚" },
+          { value: "minimal", label: "Minimal", emoji: "?" },
+          { value: "bold", label: "Bold", emoji: "??" },
+          { value: "corporate", label: "Corporate", emoji: "??" },
+          { value: "playful", label: "Playful", emoji: "??" },
+          { value: "educational", label: "Educational", emoji: "??" },
         ],
       },
     },
@@ -358,12 +358,12 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                text: `Outline a content direction for a ${count}-slide ${style} carousel on ${platforms} about: "${topic}". Keep it under 80 words. Describe angle, target audience, and what each slide section should cover. Plain text, no markdown, no numbered list — write it as a brief paragraph.`,
+                text: `Outline a content direction for a ${count}-slide ${style} carousel on ${platforms} about: "${topic}". Keep it under 80 words. Describe angle, target audience, and what each slide section should cover. Plain text, no markdown, no numbered list � write it as a brief paragraph.`,
                 type: "content",
               }),
             });
             if (!res.ok) {
-              toast.error("Couldn't draft direction — try again");
+              toast.error("Couldn't draft direction � try again");
               return {};
             }
             const json = await res.json();
@@ -424,7 +424,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
     <CreationWizard
       open={open}
       title="Create Carousel"
-      subtitle="AI-guided flow — describe what you want, we'll write the slides."
+      subtitle="AI-guided flow � describe what you want, we'll write the slides."
       icon={<Sparkles size={18} />}
       submitLabel="Generate Carousel"
       steps={steps}
@@ -435,9 +435,9 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* ------------------------------------------------------------------
    MAIN PAGE COMPONENT
-   ══════════════════════════════════════════════════════════════════ */
+   ------------------------------------------------------------------ */
 
 export default function CarouselGeneratorPage() {
   // Input state
@@ -445,7 +445,7 @@ export default function CarouselGeneratorPage() {
   const [slideCount, setSlideCount] = useState(6);
   const [style, setStyle] = useState<CarouselStyle>("bold");
   const [template, setTemplate] = useState<string | null>(null);
-  const [brandColors, setBrandColors] = useState<BrandColors>({ primary: "#1a1a2e", secondary: "#FF2D2D" });
+  const [brandColors, setBrandColors] = useState<BrandColors>({ primary: "#1a1a2e", secondary: "#2563EB" });
 
   // Generation state
   const [slides, setSlides] = useState<Slide[]>([]);
@@ -456,14 +456,14 @@ export default function CarouselGeneratorPage() {
   // Wizard state
   const [wizardOpen, setWizardOpen] = useState(false);
 
-  // Guided Mode ↔ Advanced Mode (full form + slide editor)
+  // Guided Mode ? Advanced Mode (full form + slide editor)
   const [advancedMode, setAdvancedMode] = useAdvancedMode("carousel-generator");
   const [guidedStep, setGuidedStep] = useState(0);
 
   // Preview scroll ref
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  /* ── Generate carousel (runs with explicit args, not state) ── */
+  /* -- Generate carousel (runs with explicit args, not state) -- */
   const runGenerate = useCallback(async (opts: {
     topic: string;
     slideCount: number;
@@ -505,7 +505,7 @@ export default function CarouselGeneratorPage() {
             title: opts.topic.slice(0, 120),
             source_tool: "Carousel Generator",
             content_preview: (data.slides as Slide[])
-              .map((s) => `${s.headline} — ${s.body}`)
+              .map((s) => `${s.headline} � ${s.body}`)
               .join(" | ")
               .slice(0, 200),
             metadata: {
@@ -522,10 +522,10 @@ export default function CarouselGeneratorPage() {
         }
       }
     } catch (err) {
-      // API failed — let the user know and fall through to mock so they
+      // API failed � let the user know and fall through to mock so they
       // can still see sample output instead of a blank screen.
       const msg = err instanceof Error ? err.message : "Network error";
-      toast.error(`AI generation failed (${msg}) — showing sample slides`);
+      toast.error(`AI generation failed (${msg}) � showing sample slides`);
     }
 
     // Fallback: mock generation with realistic delay
@@ -537,7 +537,7 @@ export default function CarouselGeneratorPage() {
       title: opts.topic.slice(0, 120),
       source_tool: "Carousel Generator",
       content_preview: mockSlides
-        .map((s) => `${s.headline} — ${s.body}`)
+        .map((s) => `${s.headline} � ${s.body}`)
         .join(" | ")
         .slice(0, 200),
       metadata: {
@@ -553,17 +553,17 @@ export default function CarouselGeneratorPage() {
     setGenerating(false);
   }, []);
 
-  /* ── Generate using current form state (existing button) ── */
+  /* -- Generate using current form state (existing button) -- */
   const handleGenerate = useCallback(async () => {
     await runGenerate({ topic, slideCount, style, template, brandColors });
   }, [topic, slideCount, style, template, brandColors, runGenerate]);
 
-  /* ── Inline edit ── */
+  /* -- Inline edit -- */
   const updateSlide = useCallback((index: number, field: "headline" | "body", value: string) => {
     setSlides((prev) => prev.map((s, i) => (i === index ? { ...s, [field]: value } : s)));
   }, []);
 
-  /* ── Copy all text ── */
+  /* -- Copy all text -- */
   const handleCopyAll = useCallback(() => {
     if (slides.length === 0) return;
     const text = slides
@@ -575,7 +575,7 @@ export default function CarouselGeneratorPage() {
     setTimeout(() => setCopied(false), 2000);
   }, [slides]);
 
-  /* ── Download as JSON (content export) ── */
+  /* -- Download as JSON (content export) -- */
   const handleDownload = useCallback(() => {
     if (slides.length === 0) return;
     const payload = {
@@ -596,7 +596,7 @@ export default function CarouselGeneratorPage() {
     toast.success("Carousel downloaded!");
   }, [slides, topic, style, template, brandColors]);
 
-  /* ── Scroll preview ── */
+  /* -- Scroll preview -- */
   const scrollPreview = useCallback((dir: "left" | "right") => {
     if (!scrollRef.current) return;
     const amount = 320;
@@ -666,7 +666,7 @@ export default function CarouselGeneratorPage() {
         }
       />
 
-      {/* Guided Mode — "4-year-old friendly" */}
+      {/* Guided Mode � "4-year-old friendly" */}
       {!advancedMode && (
         <Wizard
           className="mb-6"
@@ -674,7 +674,7 @@ export default function CarouselGeneratorPage() {
             {
               id: "topic",
               title: "What's your carousel about?",
-              description: "One sentence — what's the post teaching, telling, or selling?",
+              description: "One sentence � what's the post teaching, telling, or selling?",
               icon: <Sparkles size={18} />,
               canProceed: topic.trim().length > 0,
               component: (
@@ -696,7 +696,7 @@ export default function CarouselGeneratorPage() {
                           onClick={() => { setTopic(t.example); setTemplate(t.id); }}
                           className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-gold/10 hover:border-gold/30 px-2.5 py-1 rounded-full border border-border/50 transition-all"
                         >
-                          {t.name}: {t.example.slice(0, 30)}…
+                          {t.name}: {t.example.slice(0, 30)}�
                         </button>
                       ))}
                     </div>
@@ -707,7 +707,7 @@ export default function CarouselGeneratorPage() {
             {
               id: "style",
               title: "Pick a look",
-              description: "The style sets the mood — elegant, bold, fun, premium.",
+              description: "The style sets the mood � elegant, bold, fun, premium.",
               icon: <Palette size={18} />,
               component: (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
@@ -791,7 +791,7 @@ export default function CarouselGeneratorPage() {
           ]}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={generating ? "Generating…" : "Generate slides"}
+          finishLabel={generating ? "Generating�" : "Generate slides"}
           busy={generating}
           onFinish={handleGenerate}
           onCancel={() => setAdvancedMode(true)}
@@ -830,7 +830,7 @@ export default function CarouselGeneratorPage() {
 
       {advancedMode && (
       <>
-      {/* Rolling preview of example carousels — 1:1 Instagram-native aspect */}
+      {/* Rolling preview of example carousels � 1:1 Instagram-native aspect */}
       <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6 mb-5">
         <div className="absolute inset-0 pointer-events-none">
           <RollingPreview
@@ -851,16 +851,16 @@ export default function CarouselGeneratorPage() {
             Scroll-stopping carousels in every niche
           </h3>
           <p className="text-xs text-muted max-w-md mx-auto mt-1">
-            How-tos, listicles, myths-vs-facts — pick a template and we
+            How-tos, listicles, myths-vs-facts � pick a template and we
             generate all slides, headlines, and body copy in one pass.
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* ═══════════════════════════════════════════
-            LEFT PANEL — Configuration
-            ═══════════════════════════════════════════ */}
+        {/* -------------------------------------------
+            LEFT PANEL � Configuration
+            ------------------------------------------- */}
         <div className="lg:col-span-4 space-y-4">
 
           {/* Topic Input */}
@@ -1124,9 +1124,9 @@ export default function CarouselGeneratorPage() {
           </motion.div>
         </div>
 
-        {/* ═══════════════════════════════════════════
-            RIGHT PANEL — Preview
-            ═══════════════════════════════════════════ */}
+        {/* -------------------------------------------
+            RIGHT PANEL � Preview
+            ------------------------------------------- */}
         <div className="lg:col-span-8">
           <motion.div
             className="glass rounded-xl p-5 min-h-[500px]"

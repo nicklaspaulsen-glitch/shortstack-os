@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import {
@@ -14,7 +14,7 @@ import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
 import { createClient as createClientSupabase } from "@/lib/supabase/client";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 interface FormField {
   id: string;
@@ -51,10 +51,10 @@ interface Submission {
   created_at: string;
 }
 
-// ─── Score badge ──────────────────────────────────────────────────────────────
+// --- Score badge --------------------------------------------------------------
 
 function ScoreBadge({ score }: { score: number | null }) {
-  if (score === null) return <span className="text-[rgba(0,0,0,0.3)] text-xs">—</span>;
+  if (score === null) return <span className="text-[rgba(0,0,0,0.3)] text-xs">�</span>;
   const color =
     score >= 80 ? "#22c55e" :
     score >= 50 ? "#f59e0b" :
@@ -71,11 +71,11 @@ function ScoreBadge({ score }: { score: number | null }) {
 }
 
 const STATUS_META = {
-  new:          { label: "New",          color: "#FF2D2D", icon: <Clock size={10} /> },
+  new:          { label: "New",          color: "#2563EB", icon: <Clock size={10} /> },
   contacted:    { label: "Contacted",    color: "#f59e0b", icon: <Mail size={10} /> },
   qualified:    { label: "Qualified",    color: "#22c55e", icon: <CheckCircle2 size={10} /> },
   disqualified: { label: "Disqualified", color: "#ef4444", icon: <XCircle size={10} /> },
-  converted:    { label: "Converted",    color: "#FF6B6B", icon: <Star size={10} /> },
+  converted:    { label: "Converted",    color: "#3B82F6", icon: <Star size={10} /> },
 };
 
 const FIELD_TYPES: { value: FormField["type"]; label: string; icon: React.ReactNode }[] = [
@@ -87,7 +87,7 @@ const FIELD_TYPES: { value: FormField["type"]; label: string; icon: React.ReactN
   { value: "radio",    label: "Multiple choice", icon: <Star size={14} /> },
 ];
 
-// ─── Main page ────────────────────────────────────────────────────────────────
+// --- Main page ----------------------------------------------------------------
 
 export default function IntakePage() {
   const supabase = createClientSupabase();
@@ -104,7 +104,7 @@ export default function IntakePage() {
   // Builder state
   const [bName, setBName] = useState("New Intake Form");
   const [bWelcome, setBWelcome] = useState("Tell us about your business and goals.");
-  const [bColor, setBColor] = useState("#FF2D2D");
+  const [bColor, setBColor] = useState("#2563EB");
   const [bAI, setBAI] = useState(true);
   const [bPrompt, setBPrompt] = useState("");
   const [bFields, setBFields] = useState<FormField[]>([]);
@@ -152,7 +152,7 @@ export default function IntakePage() {
       setEditingForm(null);
       setBName("New Intake Form");
       setBWelcome("Tell us about your business and goals.");
-      setBColor("#FF2D2D");
+      setBColor("#2563EB");
       setBAI(true);
       setBPrompt("");
       setBFields([]);
@@ -239,12 +239,12 @@ export default function IntakePage() {
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.shortstack.work";
 
-  // ─── Render ─────────────────────────────────────────────────────────────────
+  // --- Render -----------------------------------------------------------------
 
   return (
     <div className="flex flex-col h-full min-h-screen bg-[#FAFAFB]">
       <PageHero
-        icon={<Zap size={18} className="text-[#FF2D2D]" />}
+        icon={<Zap size={18} className="text-[#2563EB]" />}
         title="Intake Forms"
         subtitle="AI-powered lead qualification forms you can embed anywhere"
         gradient="blue"
@@ -259,7 +259,7 @@ export default function IntakePage() {
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 activeTab === tab
-                  ? "bg-[rgba(0,0,0,0.08)] text-[#FF2D2D]"
+                  ? "bg-[rgba(0,0,0,0.08)] text-[#2563EB]"
                   : "text-[rgba(0,0,0,0.4)] hover:text-[rgba(0,0,0,0.7)]"
               }`}
             >
@@ -270,7 +270,7 @@ export default function IntakePage() {
             {activeTab === "forms" && (
               <button
                 onClick={() => openBuilder()}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FF2D2D] hover:bg-[#CC2424] text-white text-sm font-medium rounded-lg transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors"
               >
                 <Plus size={14} />
                 New Form
@@ -291,7 +291,7 @@ export default function IntakePage() {
           </div>
         </div>
 
-        {/* ── Forms list ── */}
+        {/* -- Forms list -- */}
         {activeTab === "forms" && (
           <div>
             {loading ? (
@@ -301,7 +301,7 @@ export default function IntakePage() {
             ) : forms.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
                 <div className="w-14 h-14  bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] flex items-center justify-center">
-                  <Zap size={22} className="text-[#FF2D2D]/60" />
+                  <Zap size={22} className="text-[#2563EB]/60" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1">No intake forms yet</p>
@@ -311,7 +311,7 @@ export default function IntakePage() {
                 </div>
                 <button
                   onClick={() => openBuilder()}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-[#FF2D2D] hover:bg-[#CC2424] text-white text-sm font-medium rounded-lg transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors"
                 >
                   <Plus size={14} />
                   Create your first form
@@ -330,7 +330,7 @@ export default function IntakePage() {
                       whileHover={{ y: -4, scale: 1.01 }}
                       className="glass rounded-xl overflow-hidden p-4 flex flex-col gap-3"
                     >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0", marginTop: -16, marginLeft: -16, marginRight: -16, marginBottom: 4, width: "calc(100% + 32px)" }} />
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0", marginTop: -16, marginLeft: -16, marginRight: -16, marginBottom: 4, width: "calc(100% + 32px)" }} />
                       <div className="flex items-start gap-3">
                         <div
                           className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center"
@@ -341,7 +341,7 @@ export default function IntakePage() {
                         <div className="flex-1 min-w-0">
                           <h3 className="text-sm font-semibold text-[rgba(0,0,0,0.85)] truncate">{form.name}</h3>
                           <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
-                            {form.fields.length} fields · {form.ai_qualification ? "AI scoring on" : "No AI"}
+                            {form.fields.length} fields � {form.ai_qualification ? "AI scoring on" : "No AI"}
                           </p>
                         </div>
                         <button
@@ -426,7 +426,7 @@ export default function IntakePage() {
           </div>
         )}
 
-        {/* ── Submissions ── */}
+        {/* -- Submissions -- */}
         {activeTab === "submissions" && (
           <div>
             {submissions.length === 0 ? (
@@ -463,7 +463,7 @@ export default function IntakePage() {
                         </div>
                         <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
                           {new Date(sub.created_at).toLocaleDateString()}
-                          {sub.ai_summary && ` · ${sub.ai_summary.slice(0, 80)}…`}
+                          {sub.ai_summary && ` � ${sub.ai_summary.slice(0, 80)}�`}
                         </p>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
@@ -485,7 +485,7 @@ export default function IntakePage() {
         )}
       </div>
 
-      {/* ── Form Builder Modal ── */}
+      {/* -- Form Builder Modal -- */}
       <Modal isOpen={builderOpen} onClose={() => setBuilderOpen(false)} title={editingForm ? "Edit Form" : "New Intake Form"} size="lg">
         <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-1">
           {/* Basic settings */}
@@ -497,7 +497,7 @@ export default function IntakePage() {
               <input
                 value={bName}
                 onChange={(e) => setBName(e.target.value)}
-                className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-[#FF2D2D]/50"
+                className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-[#2563EB]/50"
               />
             </div>
 
@@ -507,7 +507,7 @@ export default function IntakePage() {
                 value={bWelcome}
                 onChange={(e) => setBWelcome(e.target.value)}
                 rows={2}
-                className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-[#FF2D2D]/50 resize-none"
+                className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-[#2563EB]/50 resize-none"
               />
             </div>
 
@@ -533,7 +533,7 @@ export default function IntakePage() {
                 <label className="text-xs text-[rgba(0,0,0,0.5)]">AI scoring</label>
                 <button
                   onClick={() => setBAI((p) => !p)}
-                  className={`relative w-11 h-6 rounded-full transition-colors ${bAI ? "bg-[#FF2D2D]" : "bg-[rgba(0,0,0,0.10)]"}`}
+                  className={`relative w-11 h-6 rounded-full transition-colors ${bAI ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.10)]"}`}
                 >
                   <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${bAI ? "left-6" : "left-1"}`} />
                 </button>
@@ -542,13 +542,13 @@ export default function IntakePage() {
 
             {bAI && (
               <div className="space-y-1.5">
-                <label className="text-xs text-[rgba(0,0,0,0.5)]">Custom AI prompt (optional — leave blank to use default)</label>
+                <label className="text-xs text-[rgba(0,0,0,0.5)]">Custom AI prompt (optional � leave blank to use default)</label>
                 <textarea
                   value={bPrompt}
                   onChange={(e) => setBPrompt(e.target.value)}
                   rows={3}
-                  placeholder="You are an expert lead qualifier for [your business]…"
-                  className="w-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-xs text-[rgba(0,0,0,0.65)] placeholder:text-[rgba(0,0,0,0.25)] outline-none focus:border-[#FF2D2D]/50 resize-none font-mono"
+                  placeholder="You are an expert lead qualifier for [your business]�"
+                  className="w-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-xs text-[rgba(0,0,0,0.65)] placeholder:text-[rgba(0,0,0,0.25)] outline-none focus:border-[#2563EB]/50 resize-none font-mono"
                 />
               </div>
             )}
@@ -594,7 +594,7 @@ export default function IntakePage() {
           <button
             onClick={saveForm}
             disabled={saving || !bName.trim()}
-            className="flex items-center gap-2 px-4 py-2 bg-[#FF2D2D] hover:bg-[#CC2424] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
           >
             {saving && <Loader2 size={14} className="animate-spin" />}
             {editingForm ? "Save changes" : "Create form"}
@@ -602,7 +602,7 @@ export default function IntakePage() {
         </div>
       </Modal>
 
-      {/* ── Submission detail modal ── */}
+      {/* -- Submission detail modal -- */}
       {subDetail && (
         <Modal isOpen onClose={() => setSubDetail(null)} title="Submission detail" size="md">
           <div className="space-y-4 max-h-[65vh] overflow-y-auto pr-1">
@@ -621,7 +621,7 @@ export default function IntakePage() {
 
             {subDetail.ai_summary && (
               <div className="bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] rounded-xl p-3">
-                <p className="text-[10px] font-medium text-[#FF2D2D] mb-1.5 flex items-center gap-1">
+                <p className="text-[10px] font-medium text-[#2563EB] mb-1.5 flex items-center gap-1">
                   <Sparkles size={10} /> AI Summary
                 </p>
                 <p className="text-xs text-[rgba(0,0,0,0.65)] leading-relaxed">{subDetail.ai_summary}</p>
@@ -633,7 +633,7 @@ export default function IntakePage() {
                 <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Follow-up questions</p>
                 {subDetail.ai_questions.map((q, i) => (
                   <div key={i} className="flex items-start gap-2">
-                    <span className="text-[10px] font-bold text-[#FF2D2D]/60 mt-0.5">{i + 1}.</span>
+                    <span className="text-[10px] font-bold text-[#2563EB]/60 mt-0.5">{i + 1}.</span>
                     <p className="text-xs text-[rgba(0,0,0,0.5)] leading-relaxed">{q}</p>
                   </div>
                 ))}
@@ -683,7 +683,7 @@ export default function IntakePage() {
   );
 }
 
-// ─── Field editor ─────────────────────────────────────────────────────────────
+// --- Field editor -------------------------------------------------------------
 
 function FieldEditor({
   field,
@@ -747,7 +747,7 @@ function FieldEditor({
               type="checkbox"
               checked={field.required ?? false}
               onChange={(e) => onChange({ required: e.target.checked })}
-              className="w-3.5 h-3.5 accent-[#FF2D2D]"
+              className="w-3.5 h-3.5 accent-[#2563EB]"
             />
             <span className="text-xs text-[rgba(0,0,0,0.5)]">Required</span>
           </label>

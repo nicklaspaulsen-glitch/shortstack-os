@@ -2,7 +2,7 @@
  * Prism Split Design System — shared constants
  *
  * The approved prism split look: sharp corners (zero border-radius),
- * red (#FF2D2D) as hero accent, pure white (#FFFFFF) for emphasis,
+ * red (#2563EB) as hero accent, pure white (#FFFFFF) for emphasis,
  * near-black (#050507) background, white-tinted glass surfaces,
  * JetBrains Mono for data, 3D perspective tilt on hover.
  *
@@ -10,15 +10,15 @@
  */
 
 /** Primary prism accent — RED is the hero color */
-export const PRISM_RED = "#FF2D2D";
+export const PRISM_RED = "#2563EB";
 
 /** Full prism accent palette — red leads, then cycles through spectrum */
 export const PRISM_ACCENTS = [
-  "#FF2D2D", // red (hero)
+  "#2563EB", // red (hero)
   "#8B5CF6", // violet
-  "#FF2D2D", // blue
+  "#2563EB", // blue
   "#FF5252", // cyan
-  "#FF2D2D", // green
+  "#2563EB", // green
   "#F59E0B", // amber
 ] as const;
 
@@ -66,7 +66,7 @@ export const PRISM_BORDERS = {
 
 /** Prismatic gradient for the signature top bars (red leads) */
 export const PRISM_RAINBOW_GRADIENT =
-  "linear-gradient(90deg, #FF2D2D, #8B5CF6, #FF2D2D, #FF5252, #FF2D2D, #F59E0B)";
+  "linear-gradient(90deg, #2563EB, #8B5CF6, #2563EB, #FF5252, #2563EB, #F59E0B)";
 
 /** Text color tokens — pure white for emphasis, not off-white */
 export const PRISM_TEXT = {
@@ -74,7 +74,7 @@ export const PRISM_TEXT = {
   secondary: "#7A7A8E",
   muted: "#4A4A5A",
   accent: "#FFFFFF",
-  red: "#FF2D2D",
+  red: "#2563EB",
 } as const;
 
 /** Surface colors */
@@ -88,7 +88,7 @@ export const PRISM_SURFACES = {
 /** Card shadows — red glow on hover */
 export const PRISM_SHADOWS = {
   card: "0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04)",
-  cardHover: "0 12px 48px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(255,45,45,0.06)",
+  cardHover: "0 12px 48px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(37,99,235,0.06)",
   panel: "0 8px 32px rgba(0,0,0,0.35)",
 } as const;
 

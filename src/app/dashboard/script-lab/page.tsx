@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -26,32 +26,32 @@ import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 
 // Example "phone mockup" script cards used in the landing state marquee.
-// Each card shows 2-3 lines of a sample script opener — just enough to
+// Each card shows 2-3 lines of a sample script opener � just enough to
 // hint at the range of frameworks (Hook-Story-Offer, PAS, AIDA, etc.).
 const SCRIPT_LAB_PREVIEW_FALLBACK: RollingPreviewItem[] = [
-  { id: "s1", tag: "Reel 30s", title: "Hook-Story-Offer", text: "\"I made $10k last month doing nothing. Here's the system…\"  Pattern-interrupt + story + CTA." },
-  { id: "s2", tag: "TikTok 45s", title: "Contrarian Hook", text: "\"Everyone tells you to post daily. That's wrong. Here's what actually works…\"" },
-  { id: "s3", tag: "Ad 15s", title: "PAS Framework", text: "\"Still using spreadsheets? You're losing 4 hours a week. Meet the fix…\"" },
+  { id: "s1", tag: "Reel 30s", title: "Hook-Story-Offer", text: "\"I made $10k last month doing nothing. Here's the system�\"  Pattern-interrupt + story + CTA." },
+  { id: "s2", tag: "TikTok 45s", title: "Contrarian Hook", text: "\"Everyone tells you to post daily. That's wrong. Here's what actually works�\"" },
+  { id: "s3", tag: "Ad 15s", title: "PAS Framework", text: "\"Still using spreadsheets? You're losing 4 hours a week. Meet the fix�\"" },
   { id: "s4", tag: "YouTube 8min", title: "Storytelling", text: "\"3 years ago I was broke. Today I run a 7-figure agency. Here's the turning point.\"" },
   { id: "s5", tag: "Thread 9 tweets", title: "Listicle", text: "\"7 mistakes that quietly killed my first business. #3 still haunts me.\"" },
   { id: "s6", tag: "Reel 60s", title: "Before/After", text: "\"I used to send 200 cold emails a day and get 2 replies. Now I send 30 and get 18.\"" },
-  { id: "s7", tag: "Podcast Intro", title: "Authority", text: "\"Today's guest has built 4 companies from zero to eight figures. Here's what nobody asks him…\"" },
+  { id: "s7", tag: "Podcast Intro", title: "Authority", text: "\"Today's guest has built 4 companies from zero to eight figures. Here's what nobody asks him�\"" },
   { id: "s8", tag: "Email 1/5", title: "Curiosity", text: "\"I almost quit last Tuesday. Then one email changed everything. This is that email.\"" },
-  { id: "s9", tag: "TikTok 22s", title: "Myth Buster", text: "\"You don't need a funnel. You don't need ads. You need ONE thing and everyone ignores it…\"" },
+  { id: "s9", tag: "TikTok 22s", title: "Myth Buster", text: "\"You don't need a funnel. You don't need ads. You need ONE thing and everyone ignores it�\"" },
   { id: "s10", tag: "Carousel 8 slides", title: "How-To", text: "\"How I wrote 100 cold emails in 30 minutes (step-by-step, no AI fluff).\"" },
   { id: "s11", tag: "Short 35s", title: "Question Hook", text: "\"What if I told you the #1 rule of marketing is a lie? Let me prove it in 35 seconds.\"" },
   { id: "s12", tag: "Ad 30s", title: "Direct Offer", text: "\"Attention e-com founders: we'll 2x your AOV in 30 days or you pay nothing. No catch.\"" },
 ];
 
 const FRAMEWORKS = [
-  { id: "hook_story_offer", name: "Hook-Story-Offer", desc: "Stop scroll → tell story → make offer", color: "text-gold" },
-  { id: "pas", name: "PAS", desc: "Problem → Agitate → Solution", color: "text-danger" },
-  { id: "aida", name: "AIDA", desc: "Attention → Interest → Desire → Action", color: "text-gold" },
-  { id: "before_after", name: "Before/After", desc: "Pain state → transformation → results", color: "text-success" },
-  { id: "contrarian", name: "Contrarian", desc: "Challenge beliefs → new perspective", color: "text-warning" },
+  { id: "hook_story_offer", name: "Hook-Story-Offer", desc: "Stop scroll ? tell story ? make offer", color: "text-gold" },
+  { id: "pas", name: "PAS", desc: "Problem ? Agitate ? Solution", color: "text-danger" },
+  { id: "aida", name: "AIDA", desc: "Attention ? Interest ? Desire ? Action", color: "text-gold" },
+  { id: "before_after", name: "Before/After", desc: "Pain state ? transformation ? results", color: "text-success" },
+  { id: "contrarian", name: "Contrarian", desc: "Challenge beliefs ? new perspective", color: "text-warning" },
   { id: "listicle", name: "Listicle", desc: "X things/mistakes/secrets that...", color: "text-purple-400" },
-  { id: "storytelling", name: "Storytelling", desc: "Personal story → lesson → takeaway", color: "text-info" },
-  { id: "myth_buster", name: "Myth Buster", desc: "Common belief → why it's wrong → truth", color: "text-danger" },
+  { id: "storytelling", name: "Storytelling", desc: "Personal story ? lesson ? takeaway", color: "text-info" },
+  { id: "myth_buster", name: "Myth Buster", desc: "Common belief ? why it's wrong ? truth", color: "text-danger" },
   { id: "faq", name: "FAQ Style", desc: "Answer common questions your audience has", color: "text-success" },
   { id: "how_to", name: "How-To", desc: "Step-by-step guide solving a problem", color: "text-info" },
 ];
@@ -114,7 +114,7 @@ interface SavedScript {
   metadata: Record<string, unknown>;
 }
 
-// ── Trending / Viral Remix types ──────────────────────────────────
+// -- Trending / Viral Remix types ----------------------------------
 interface TrendingVideo {
   id: string;
   title: string;
@@ -174,7 +174,7 @@ function daysAgoLabel(n: number): string {
   return `${Math.round(n / 7)}w ago`;
 }
 
-// ── Storyboard types ──────────────────────────────────────────────
+// -- Storyboard types ----------------------------------------------
 type StoryboardFormat =
   | "ugc"
   | "ad"
@@ -260,7 +260,7 @@ export default function ScriptLabPage() {
   const [selectedClient, setSelectedClient] = useState("");
   const [tab, setTab] = useState<"generate" | "research" | "trending" | "results" | "history" | "templates" | "tools" | "voiceover" | "approval">("generate");
 
-  // Guided Mode ↔ Advanced Mode (full tabbed workspace)
+  // Guided Mode ? Advanced Mode (full tabbed workspace)
   const [advancedMode, setAdvancedMode] = useAdvancedMode("script-lab");
   const [guidedStep, setGuidedStep] = useState(0);
   const supabase = createClient();
@@ -300,7 +300,7 @@ export default function ScriptLabPage() {
   const [storyboard, setStoryboard] = useState<Storyboard | null>(null);
   const [generatingStoryboard, setGeneratingStoryboard] = useState(false);
 
-  // ── Trending (viral research) state ─────────────────────────────
+  // -- Trending (viral research) state -----------------------------
   const [trendingNiche, setTrendingNiche] = useState("");
   const [trendingKeywords, setTrendingKeywords] = useState("");
   const [trendingPlatforms, setTrendingPlatforms] = useState<string[]>(["youtube", "tiktok", "instagram"]);
@@ -314,7 +314,7 @@ export default function ScriptLabPage() {
   const [remixTwistAngle, setRemixTwistAngle] = useState("");
   const [remixResult, setRemixResult] = useState<RemixResult | null>(null);
 
-  // ── Watchlists state ────────────────────────────────────────────
+  // -- Watchlists state --------------------------------------------
   interface Watchlist {
     id: string;
     name: string;
@@ -546,11 +546,11 @@ export default function ScriptLabPage() {
       const data = await res.json();
       if (data.success && data.storyboard) {
         setStoryboard(data.storyboard);
-        toast.success(`Storyboard ready — ${data.storyboard.total_shots} shots`, { id: toastId });
+        toast.success(`Storyboard ready � ${data.storyboard.total_shots} shots`, { id: toastId });
         // Fire-and-forget Generations tracking
         trackGeneration({
           category: "storyboard",
-          title: `${activeScript.title} — ${storyboardFormat.replace(/_/g, " ")}`,
+          title: `${activeScript.title} � ${storyboardFormat.replace(/_/g, " ")}`,
           source_tool: "Script Lab",
           content_preview: data.storyboard.style_notes?.slice(0, 200) || "",
           metadata: {
@@ -589,7 +589,7 @@ export default function ScriptLabPage() {
   function copyStoryboardAsMarkdown() {
     if (!storyboard) return;
     const lines: string[] = [];
-    lines.push(`# Storyboard — ${storyboardFormat.replace(/_/g, " ")}`);
+    lines.push(`# Storyboard � ${storyboardFormat.replace(/_/g, " ")}`);
     lines.push("");
     lines.push(`**Total duration:** ${storyboard.total_duration_sec}s | **Total shots:** ${storyboard.total_shots}`);
     if (storyboard.style_notes) {
@@ -598,7 +598,7 @@ export default function ScriptLabPage() {
     }
     lines.push("");
     storyboard.shots.forEach(shot => {
-      lines.push(`## Shot ${shot.shot_number} — ${shot.duration_sec}s`);
+      lines.push(`## Shot ${shot.shot_number} � ${shot.duration_sec}s`);
       lines.push("");
       lines.push(`- **Visual:** ${shot.visual_description}`);
       lines.push(`- **Camera:** ${shot.camera}`);
@@ -638,7 +638,7 @@ export default function ScriptLabPage() {
     ].join(","));
     const csv = [header.join(","), ...rows].join("\n");
     navigator.clipboard.writeText(csv);
-    toast.success("CSV copied — paste into Premiere/Resolve spreadsheet!");
+    toast.success("CSV copied � paste into Premiere/Resolve spreadsheet!");
   }
 
   async function doResearch() {
@@ -666,7 +666,7 @@ export default function ScriptLabPage() {
     }
   }
 
-  // ── Trending / Viral Remix handlers ────────────────────────────
+  // -- Trending / Viral Remix handlers ----------------------------
   async function findTrending(forceRefresh = false) {
     const niche = trendingNiche.trim();
     if (!niche) { toast.error("Pick a niche first"); return; }
@@ -706,7 +706,7 @@ export default function ScriptLabPage() {
     }
   }
 
-  // ── Watchlist handlers ─────────────────────────────────────────
+  // -- Watchlist handlers -----------------------------------------
   async function loadWatchlists() {
     setLoadingWatchlists(true);
     try {
@@ -716,7 +716,7 @@ export default function ScriptLabPage() {
         setWatchlists(data.watchlists);
       }
     } catch {
-      // silent — watchlist UI stays empty
+      // silent � watchlist UI stays empty
     } finally {
       setLoadingWatchlists(false);
     }
@@ -756,7 +756,7 @@ export default function ScriptLabPage() {
 
   async function loadWatchlistTrending(w: Watchlist) {
     // Hydrate the search form from the watchlist, then fire the normal
-    // trending fetch — the 24h cache means this is usually instant.
+    // trending fetch � the 24h cache means this is usually instant.
     setTrendingNiche(w.niche);
     setTrendingKeywords(w.keywords.join(", "));
     setTrendingPlatforms(w.platforms);
@@ -957,7 +957,7 @@ export default function ScriptLabPage() {
         // Track generation
         await trackGeneration({
           category: "script",
-          source_tool: "Script Lab — Viral Remix",
+          source_tool: "Script Lab � Viral Remix",
           title: data.remix.suggested_title || remixModal.video.title,
           content_preview: (data.remix.remixed_script || "").slice(0, 200),
           metadata: {
@@ -994,7 +994,7 @@ export default function ScriptLabPage() {
     }));
     setRemixModal(null);
     setTab("generate");
-    toast.success("Loaded into Generator — tweak then click Generate!");
+    toast.success("Loaded into Generator � tweak then click Generate!");
   }
 
   function copyToClipboard(text: string) {
@@ -1017,10 +1017,10 @@ export default function ScriptLabPage() {
   function downloadAsText() {
     if (!script) return;
     const text = [
-      "═══════════════════════════════════════",
+      "---------------------------------------",
       "              TRINITY",
       "           Script Document",
-      "═══════════════════════════════════════",
+      "---------------------------------------",
       "",
       `Title: ${script.title}`,
       `Generated: ${new Date().toLocaleDateString()}`,
@@ -1028,46 +1028,46 @@ export default function ScriptLabPage() {
       `Platform: ${config.platform.toUpperCase()}`,
       `Words: ${getWordCount()} | Est. Duration: ${getEstimatedDuration()}`,
       "",
-      "─────────────────────────────────────",
+      "-------------------------------------",
       "THE HOOK",
-      "─────────────────────────────────────",
+      "-------------------------------------",
       `"${script.hook.text}"`,
       `Type: ${script.hook.type}`,
       `Why it works: ${script.hook.why_it_works}`,
       "",
-      "─────────────────────────────────────",
+      "-------------------------------------",
       "FULL SCRIPT",
-      "─────────────────────────────────────",
+      "-------------------------------------",
       ...script.script.sections.map(s => [
-        "", `[${s.name}] (${s.duration}) — ${s.emotion}`,
+        "", `[${s.name}] (${s.duration}) � ${s.emotion}`,
         s.dialogue,
         s.visual_direction ? `  Visual: ${s.visual_direction}` : "",
         s.text_overlay ? `  Text overlay: ${s.text_overlay}` : "",
       ].filter(Boolean)).flat(),
       "",
-      "─────────────────────────────────────",
+      "-------------------------------------",
       "CTA",
-      "─────────────────────────────────────",
-      `"${script.cta.text}" (${script.cta.type} — ${script.cta.placement})`,
+      "-------------------------------------",
+      `"${script.cta.text}" (${script.cta.type} � ${script.cta.placement})`,
       "",
       "POSTING: " + script.posting_strategy.best_time + " on " + script.posting_strategy.best_day,
       "TIP: " + script.posting_strategy.boost_tip,
       "",
-      "─────────────────────────────────────",
+      "-------------------------------------",
       "CAPTION",
-      "─────────────────────────────────────",
+      "-------------------------------------",
       script.caption,
       "",
       "HASHTAGS: " + (script.hashtags?.join(" ") || ""),
       "",
-      "─────────────────────────────────────",
+      "-------------------------------------",
       "A/B HOOK VARIATIONS",
-      "─────────────────────────────────────",
-      ...(script.ab_variations?.map((v, i) => `${i+1}. "${v.hook_alt}" — ${v.why}`) || []),
+      "-------------------------------------",
+      ...(script.ab_variations?.map((v, i) => `${i+1}. "${v.hook_alt}" � ${v.why}`) || []),
       "",
-      "═══════════════════════════════════════",
+      "---------------------------------------",
       "  Generated by Trinity",
-      "═══════════════════════════════════════",
+      "---------------------------------------",
     ].join("\n");
 
     const blob = new Blob([text], { type: "text/plain" });
@@ -1081,27 +1081,27 @@ export default function ScriptLabPage() {
   function downloadAsHTML() {
     if (!script) return;
     const html = `<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>${script.title} — Trinity Script</title>
+<html><head><meta charset="utf-8"><title>${script.title} � Trinity Script</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Inter', system-ui, sans-serif; background: #fff; color: #1a1a1a; padding: 40px; max-width: 800px; margin: 0 auto; }
-  .logo-bar { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #FF2D2D; padding-bottom: 16px; margin-bottom: 32px; }
-  .logo-bar h1 { font-size: 20px; font-weight: 800; color: #FF2D2D; letter-spacing: -0.5px; }
+  .logo-bar { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #2563EB; padding-bottom: 16px; margin-bottom: 32px; }
+  .logo-bar h1 { font-size: 20px; font-weight: 800; color: #2563EB; letter-spacing: -0.5px; }
   .logo-bar .sub { font-size: 11px; color: #666; }
   .meta { font-size: 12px; color: #888; margin-bottom: 24px; }
-  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #FF2D2D; margin: 24px 0 12px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
-  .hook-box { background: linear-gradient(135deg, #fdf8ed, #fff9e0); border: 1px solid #FF2D2D40; border-radius: 12px; padding: 16px; margin: 12px 0; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #2563EB; margin: 24px 0 12px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
+  .hook-box { background: linear-gradient(135deg, #fdf8ed, #fff9e0); border: 1px solid #2563EB40; border-radius: 12px; padding: 16px; margin: 12px 0; }
   .hook-text { font-size: 16px; font-style: italic; font-weight: 600; color: #1a1a1a; }
-  .section { background: #f9f9f9; border-radius: 8px; padding: 16px; margin: 8px 0; border-left: 3px solid #FF2D2D; }
-  .section-name { font-weight: 700; font-size: 12px; color: #FF2D2D; text-transform: uppercase; }
+  .section { background: #f9f9f9; border-radius: 8px; padding: 16px; margin: 8px 0; border-left: 3px solid #2563EB; }
+  .section-name { font-weight: 700; font-size: 12px; color: #2563EB; text-transform: uppercase; }
   .section-meta { font-size: 11px; color: #888; }
   .dialogue { font-size: 14px; line-height: 1.6; margin-top: 8px; }
-  .visual { font-size: 11px; color: #FF2D2D; margin-top: 6px; }
+  .visual { font-size: 11px; color: #2563EB; margin-top: 6px; }
   .cta-box { background: #1a1a1a; color: white; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0; }
-  .cta-text { font-size: 18px; font-weight: 700; color: #FF2D2D; }
+  .cta-text { font-size: 18px; font-weight: 700; color: #2563EB; }
   .caption { background: #f5f5f5; border-radius: 8px; padding: 16px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
   .hashtags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .hashtag { background: #e8f4fd; color: #FF2D2D; font-size: 11px; padding: 3px 8px; border-radius: 20px; }
+  .hashtag { background: #e8f4fd; color: #2563EB; font-size: 11px; padding: 3px 8px; border-radius: 20px; }
   .footer { margin-top: 40px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee; padding-top: 16px; }
   @media print { body { padding: 20px; } }
 </style></head><body>
@@ -1113,11 +1113,11 @@ export default function ScriptLabPage() {
 <h2>The Hook</h2>
 <div class="hook-box">
   <div class="hook-text">"${script.hook.text}"</div>
-  <div style="font-size:11px;color:#888;margin-top:8px">${script.hook.type} — ${script.hook.why_it_works}</div>
+  <div style="font-size:11px;color:#888;margin-top:8px">${script.hook.type} � ${script.hook.why_it_works}</div>
 </div>
 <h2>Full Script</h2>
 ${script.script.sections.map(s => `<div class="section">
-  <div class="section-name">${s.name} <span class="section-meta">(${s.duration}) — ${s.emotion}</span></div>
+  <div class="section-name">${s.name} <span class="section-meta">(${s.duration}) � ${s.emotion}</span></div>
   <div class="dialogue">${s.dialogue}</div>
   ${s.visual_direction ? `<div class="visual">Visual: ${s.visual_direction}</div>` : ""}
   ${s.text_overlay ? `<div class="visual">Text overlay: ${s.text_overlay}</div>` : ""}
@@ -1125,14 +1125,14 @@ ${script.script.sections.map(s => `<div class="section">
 <h2>Call to Action</h2>
 <div class="cta-box">
   <div class="cta-text">"${script.cta.text}"</div>
-  <div style="font-size:11px;margin-top:6px;color:#999">${script.cta.type} — ${script.cta.placement}</div>
+  <div style="font-size:11px;margin-top:6px;color:#999">${script.cta.type} � ${script.cta.placement}</div>
 </div>
 <h2>Posting Strategy</h2>
 <p style="font-size:13px">Best time: ${script.posting_strategy.best_time} | Day: ${script.posting_strategy.best_day}<br>Tip: ${script.posting_strategy.boost_tip}</p>
 <h2>Caption</h2>
 <div class="caption">${script.caption}</div>
 <div class="hashtags">${(script.hashtags || []).map(h => `<span class="hashtag">${h}</span>`).join("")}</div>
-${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map((v,i) => `<p style="font-size:13px;margin:6px 0"><strong>${i+1}.</strong> "${v.hook_alt}" — <em>${v.why}</em></p>`).join("")}` : ""}
+${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map((v,i) => `<p style="font-size:13px;margin:6px 0"><strong>${i+1}.</strong> "${v.hook_alt}" � <em>${v.why}</em></p>`).join("")}` : ""}
 <div class="footer">Generated by Trinity</div>
 </body></html>`;
 
@@ -1147,7 +1147,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
   const activeScript = batchScripts.length > 0 ? batchScripts[activeBatchIndex] : script;
   const topicPresets = TOPIC_PRESETS[config.industry_preset] || TOPIC_PRESETS.general;
 
-  // ── Guided steps (Guided Mode) ───────────────────────────────────
+  // -- Guided steps (Guided Mode) -----------------------------------
   const guidedSteps: WizardStepDef[] = [
     {
       id: "topic",
@@ -1181,7 +1181,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   onClick={() => setConfig(prev => ({ ...prev, topic: p }))}
                   className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-gold/10 hover:border-gold/30 px-2.5 py-1 rounded-full border border-border/50 transition-all"
                 >
-                  {p.slice(0, 40)}…
+                  {p.slice(0, 40)}�
                 </button>
               ))}
             </div>
@@ -1192,7 +1192,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
     {
       id: "type",
       title: "What kind of script?",
-      description: "This sets the length and pacing — short-form hooks hard, long-form unfolds slower.",
+      description: "This sets the length and pacing � short-form hooks hard, long-form unfolds slower.",
       icon: <Film size={18} />,
       component: (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
@@ -1220,7 +1220,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
     {
       id: "framework",
       title: "Pick a framework",
-      description: "Proven structures that keep viewers watching. Pick one — we'll apply it automatically.",
+      description: "Proven structures that keep viewers watching. Pick one � we'll apply it automatically.",
       icon: <Target size={18} />,
       component: (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -1297,14 +1297,14 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         }
       />
 
-      {/* Guided Mode — "4-year-old friendly" flow */}
+      {/* Guided Mode � "4-year-old friendly" flow */}
       {!advancedMode && (
         <>
           <Wizard
             steps={guidedSteps}
             activeIdx={guidedStep}
             onStepChange={setGuidedStep}
-            finishLabel={generating ? "Writing…" : "Generate script"}
+            finishLabel={generating ? "Writing�" : "Generate script"}
             busy={generating}
             onFinish={async () => {
               await generateScript();
@@ -1341,7 +1341,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 {activeScript.script.sections.map((section, i) => (
                   <div key={i}>
                     <p className="text-[10px] uppercase tracking-wider text-gold font-semibold mb-1">
-                      {section.name} <span className="text-muted">· {section.duration}</span>
+                      {section.name} <span className="text-muted">� {section.duration}</span>
                     </p>
                     <p className="whitespace-pre-wrap leading-relaxed">{section.dialogue}</p>
                   </div>
@@ -1356,7 +1356,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         </>
       )}
 
-      {/* Rolling preview of example scripts — phone-mockup style text cards */}
+      {/* Rolling preview of example scripts � phone-mockup style text cards */}
       {advancedMode && (
       <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6">
         <div className="absolute inset-0 pointer-events-none">
@@ -1377,7 +1377,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             Hooks that stop the scroll. Frameworks that convert.
           </h3>
           <p className="text-xs text-muted max-w-md mx-auto mt-1">
-            Reels, TikToks, ads, email sequences — built on proven frameworks
+            Reels, TikToks, ads, email sequences � built on proven frameworks
             and validated against live viral research.
           </p>
         </div>
@@ -1390,7 +1390,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         {([
           { id: "generate" as const, label: "Generator", icon: Sparkles },
           { id: "templates" as const, label: `Templates (${scriptTemplates.length})`, icon: BookOpen },
-          { id: "trending" as const, label: "🔥 Trending", icon: Flame },
+          { id: "trending" as const, label: "?? Trending", icon: Flame },
           { id: "research" as const, label: "Viral Research", icon: Search },
           { id: "results" as const, label: `Results ${batchScripts.length > 1 ? `(${batchScripts.length})` : script ? "(1)" : ""}`, icon: FileText },
           { id: "tools" as const, label: "Tools", icon: Wand2 },
@@ -1677,10 +1677,10 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         </div>
       )}
 
-      {/* 🔥 Trending Tab — live viral research across platforms */}
+      {/* ?? Trending Tab � live viral research across platforms */}
       {tab === "trending" && (
         <div className="space-y-4">
-          {/* My Watchlists — scheduled daily scans */}
+          {/* My Watchlists � scheduled daily scans */}
           <div className="card border-gold/10 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -1693,7 +1693,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
 
             {!loadingWatchlists && watchlists.length === 0 && (
               <p className="text-[10px] text-muted py-1">
-                Save a niche + keyword search as a watchlist to get fresh trends every morning — one click, no Claude call needed.
+                Save a niche + keyword search as a watchlist to get fresh trends every morning � one click, no Claude call needed.
               </p>
             )}
 
@@ -1718,7 +1718,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                         </div>
                         <p className="text-[9px] text-muted mb-1">
                           <span className="text-gold/80">#{w.niche}</span>
-                          {w.platforms.length > 0 && <span> · {w.platforms.join(", ")}</span>}
+                          {w.platforms.length > 0 && <span> � {w.platforms.join(", ")}</span>}
                         </p>
                         <p className="text-[8px] text-muted">
                           {w.last_scanned_at
@@ -1760,7 +1760,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                           className="text-[9px] py-1 px-1.5 rounded border border-border text-muted hover:text-danger transition-all"
                           title="Delete"
                         >
-                          ×
+                          �
                         </button>
                       </div>
                     </div>
@@ -1795,7 +1795,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 ))}
               </div>
               <input value={trendingNiche} onChange={e => setTrendingNiche(e.target.value)}
-                className="input w-full text-xs" placeholder="Or type your own niche…" />
+                className="input w-full text-xs" placeholder="Or type your own niche�" />
             </div>
 
             {/* Keywords */}
@@ -1832,7 +1832,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               <button onClick={() => findTrending(false)} disabled={loadingTrending || !trendingNiche}
                 className="btn-primary text-xs py-2 flex items-center gap-2 disabled:opacity-50">
                 {loadingTrending ? <Loader size={12} className="animate-spin" /> : <Flame size={12} />}
-                {loadingTrending ? "Searching…" : "Find today's trending"}
+                {loadingTrending ? "Searching�" : "Find today's trending"}
               </button>
               {trendingVideos.length > 0 && (
                 <button onClick={() => findTrending(true)} disabled={loadingTrending}
@@ -1895,10 +1895,10 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   const isRemixing = remixingId === v.id;
                   return (
                     <div key={v.id} className="card hover:border-gold/20 transition-all group overflow-hidden">
-                      {/* Thumbnail placeholder — gold gradient with emoji + hint */}
+                      {/* Thumbnail placeholder � gold gradient with emoji + hint */}
                       <div className="relative h-28 rounded-lg bg-gradient-to-br from-gold/15 via-gold/5 to-surface-light border border-gold/10 mb-2 flex items-center justify-center overflow-hidden">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(218,165,32,0.15),transparent_60%)]" />
-                        <div className="relative text-4xl">{v.thumbnail_emoji || "🔥"}</div>
+                        <div className="relative text-4xl">{v.thumbnail_emoji || "??"}</div>
                         <div className={`absolute top-1.5 left-1.5 text-[8px] px-1.5 py-0.5 rounded border ${platformColor(v.platform)}`}>
                           {v.platform}
                         </div>
@@ -1987,7 +1987,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         </div>
       )}
 
-      {/* Remix modal — shown when user clicks ✨ Remix on any trending card */}
+      {/* Remix modal � shown when user clicks ? Remix on any trending card */}
       {remixModal && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" onClick={() => setRemixModal(null)}>
           <div className="bg-surface border border-border  max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
@@ -2003,7 +2003,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               <div className="card bg-surface-light/50">
                 <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Original</p>
                 <p className="text-[11px] font-semibold mb-1">{remixModal.video.title}</p>
-                <p className="text-[9px] text-muted">{remixModal.video.creator_handle} · {remixModal.video.view_count_label} views · {remixModal.video.platform}</p>
+                <p className="text-[9px] text-muted">{remixModal.video.creator_handle} � {remixModal.video.view_count_label} views � {remixModal.video.platform}</p>
               </div>
 
               {/* Transcript preview */}
@@ -2024,7 +2024,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <button onClick={runRemix} disabled={remixingId !== null}
                   className="btn-primary text-xs py-2 w-full flex items-center justify-center gap-2 disabled:opacity-50">
                   {remixingId ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                  {remixingId ? "Remixing…" : "Generate remixed script"}
+                  {remixingId ? "Remixing�" : "Generate remixed script"}
                 </button>
               )}
 
@@ -2427,7 +2427,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             </div>
           </div>
 
-          {/* ── Storyboard render ───────────────────────────────────── */}
+          {/* -- Storyboard render ------------------------------------- */}
           {storyboard && (
             <div className="space-y-3 fade-in">
               <div className="card border-gold/20 relative overflow-hidden">
@@ -2440,8 +2440,8 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     <div>
                       <h2 className="text-sm font-bold">Storyboard</h2>
                       <p className="text-[10px] text-muted">
-                        {STORYBOARD_FORMATS.find(f => f.id === storyboard.format)?.name || storyboard.format} ·{" "}
-                        {storyboard.total_shots} shots · ~{storyboard.total_duration_sec}s
+                        {STORYBOARD_FORMATS.find(f => f.id === storyboard.format)?.name || storyboard.format} �{" "}
+                        {storyboard.total_shots} shots � ~{storyboard.total_duration_sec}s
                       </p>
                     </div>
                   </div>
@@ -2452,7 +2452,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     <button onClick={copyStoryboardAsCSV} className="btn-secondary text-[9px] py-1 px-2.5 flex items-center gap-1">
                       <Download size={10} /> Copy as CSV
                     </button>
-                    <button onClick={() => toast("PDF export coming soon", { icon: "📄" })}
+                    <button onClick={() => toast("PDF export coming soon", { icon: "??" })}
                       className="btn-ghost text-[9px] py-1 px-2.5 flex items-center gap-1">
                       <Download size={10} /> Export PDF
                     </button>
@@ -2868,14 +2868,14 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   value={newWatchlistName}
                   onChange={e => setNewWatchlistName(e.target.value)}
                   className="input w-full text-xs"
-                  placeholder="e.g. Dental — Invisalign"
+                  placeholder="e.g. Dental � Invisalign"
                   autoFocus
                 />
               </div>
               <div className="text-[10px] text-muted bg-surface-light/50 rounded p-2 space-y-0.5">
-                <p><span className="text-gold">Niche:</span> {trendingNiche || "—"}</p>
-                <p><span className="text-gold">Keywords:</span> {trendingKeywords || "—"}</p>
-                <p><span className="text-gold">Platforms:</span> {trendingPlatforms.join(", ") || "—"}</p>
+                <p><span className="text-gold">Niche:</span> {trendingNiche || "�"}</p>
+                <p><span className="text-gold">Keywords:</span> {trendingKeywords || "�"}</p>
+                <p><span className="text-gold">Platforms:</span> {trendingPlatforms.join(", ") || "�"}</p>
               </div>
               <div className="flex gap-2 pt-1">
                 <button
@@ -2884,7 +2884,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   className="btn-primary text-xs py-2 flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {savingWatchlist ? <Loader size={12} className="animate-spin" /> : <CheckCircle size={12} />}
-                  {savingWatchlist ? "Saving…" : "Save watchlist"}
+                  {savingWatchlist ? "Saving�" : "Save watchlist"}
                 </button>
                 <button
                   onClick={() => setSaveWatchlistModal(false)}

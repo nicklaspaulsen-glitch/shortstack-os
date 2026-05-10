@@ -19,11 +19,11 @@ interface AgentAvatarProps {
 }
 
 const STATUS_COLORS: Record<AgentStatus, { glow: string; accent: string }> = {
-  idle:     { glow: "rgba(255, 45, 45, 0.4)",  accent: "#FF6B6B" },
-  working:  { glow: "rgba(255, 45, 45, 0.5)",   accent: "#FF2D2D" },
+  idle:     { glow: "rgba(37, 99, 235, 0.3)",   accent: "#60A5FA" },
+  working:  { glow: "rgba(37, 99, 235, 0.45)",  accent: "#2563EB" },
   thinking: { glow: "rgba(168, 85, 247, 0.5)",  accent: "#A855F7" },
   error:    { glow: "rgba(239, 68, 68, 0.5)",   accent: "#EF4444" },
-  success:  { glow: "rgba(255, 45, 45, 0.5)",  accent: "#FF2D2D" },
+  success:  { glow: "rgba(34, 197, 94, 0.45)",  accent: "#22c55e" },
   offline:  { glow: "rgba(120, 120, 120, 0.2)", accent: "#6B7280" },
 };
 
@@ -254,7 +254,7 @@ function renderFace(face: AgentFace, accent: string, status: AgentStatus) {
           <line x1="50" y1="16" x2="50" y2="88" stroke="#222" strokeWidth="1" />
           {/* Human eye */}
           <circle cx="38" cy="48" r="4" fill="#fff" />
-          <circle cx="38" cy="48" r="2" fill={eyesActive ? "#FF2D2D" : "#888"} />
+          <circle cx="38" cy="48" r="2" fill={eyesActive ? "#2563EB" : "#888"} />
           {/* Robot eye */}
           <rect x="58" y="44" width="10" height="8" rx="1" fill="#111" />
           <circle cx="63" cy="48" r="2.5" fill={eyesActive ? "#EF4444" : "#555"}>
@@ -345,7 +345,7 @@ function renderFace(face: AgentFace, accent: string, status: AgentStatus) {
       return (
         <>
           {/* Hat */}
-          <path d="M 30 36 L 50 8 L 70 36 Z" fill="#FF2D2D" />
+          <path d="M 30 36 L 50 8 L 70 36 Z" fill="#2563EB" />
           <path d="M 30 36 L 50 8 L 70 36 Z" fill="url(#hatGrad)" opacity="0.4" />
           <defs>
             <linearGradient id="hatGrad"><stop offset="0" stopColor="#fff" /><stop offset="1" stopColor="#000" /></linearGradient>
@@ -355,7 +355,7 @@ function renderFace(face: AgentFace, accent: string, status: AgentStatus) {
           <circle cx="55" cy="18" r="1" fill={accent} />
           <circle cx="50" cy="28" r="1.2" fill={accent} />
           {/* Hat brim */}
-          <ellipse cx="50" cy="36" rx="22" ry="4" fill="#CC2424" />
+          <ellipse cx="50" cy="36" rx="22" ry="4" fill="#1D4ED8" />
           {/* Face */}
           <ellipse cx="50" cy="56" rx="24" ry="26" fill="#FED7AA" />
           {/* Beard */}

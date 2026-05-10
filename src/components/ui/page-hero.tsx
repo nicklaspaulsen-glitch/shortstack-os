@@ -217,22 +217,22 @@ const TREATMENTS: Record<Treatment, TreatmentStyle> = {
     bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.bg.surface1} 60%, ${tokens.brand.plum} 130%)`,
     accent: tokens.brand.accent,
     underline: `linear-gradient(90deg, ${tokens.brand.accent} 0%, transparent 70%)`,
-    iconBg: "rgba(255, 45, 45, 0.1)",
+    iconBg: "rgba(37, 99, 235, 0.1)",
     iconBorder: tokens.border.strong,
   },
   plum: {
     bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.brand.plum} 70%, ${tokens.brand.plumHover} 130%)`,
     accent: tokens.brand.accent,
     underline: `linear-gradient(90deg, ${tokens.brand.accent} 0%, transparent 70%)`,
-    iconBg: "rgba(255, 45, 45, 0.08)",
+    iconBg: "rgba(37, 99, 235, 0.08)",
     iconBorder: tokens.border.strong,
   },
   indigo: {
     bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.bg.surface2} 50%, ${tokens.brand.accent}30 130%)`,
     accent: tokens.brand.accent,
     underline: `linear-gradient(90deg, ${tokens.brand.accent} 0%, transparent 70%)`,
-    iconBg: "rgba(255, 45, 45, 0.12)",
-    iconBorder: "rgba(255, 45, 45, 0.35)",
+    iconBg: "rgba(37, 99, 235, 0.12)",
+    iconBorder: "rgba(37, 99, 235, 0.35)",
   },
 };
 

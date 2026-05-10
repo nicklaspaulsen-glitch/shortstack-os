@@ -41,7 +41,7 @@ export default function TextLayer({ layer, isSelected, scale, onSelect, onDouble
     userSelect: "none",
     boxSizing: "border-box",
     outline: isSelected
-      ? `${Math.max(1, 2 / scale)}px solid #FF2D2D`
+      ? `${Math.max(1, 2 / scale)}px solid #2563EB`
       : "none",
     outlineOffset: -1,
   };

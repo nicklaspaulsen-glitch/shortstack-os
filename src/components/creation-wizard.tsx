@@ -174,7 +174,7 @@ export default function CreationWizard({
             </div>
             <div className="h-1 rounded-full bg-surface-light overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-[#FF2D2D] to-[#FF6B6B]"
+                className="h-full bg-gradient-to-r from-[#2563EB] to-[#3B82F6]"
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
               />

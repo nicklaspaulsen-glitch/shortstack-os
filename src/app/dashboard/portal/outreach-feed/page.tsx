@@ -67,7 +67,7 @@ export default function ClientOutreachFeedPage() {
           <div
             className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"
             style={{
-              background: "rgba(255, 45, 45, 0.2)",
+              background: "rgba(37, 99, 235, 0.2)",
               border: "1px solid rgba(94, 234, 212, 0.35)",
               color: "#FF8080",
             }}

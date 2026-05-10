@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -144,7 +144,7 @@ export default function SubaccountsPage() {
         actions={
           <button
             onClick={() => setShowInvite(true)}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#FF2D2D] hover:bg-[#d4b55d] text-black transition-all"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all"
           >
             <Plus className="w-4 h-4" />
             Invite Subaccount
@@ -165,7 +165,7 @@ export default function SubaccountsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06, duration: 0.4 }}
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
             <StatCard label={tile.label} value={tile.value} icon={tile.icon} premium={tile.premium} />
           </motion.div>
         ))}
@@ -173,7 +173,7 @@ export default function SubaccountsPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-[#FF2D2D]" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#2563EB]" />
         </div>
       ) : subs.length === 0 ? (
         <div className="rounded-xl border border-dashed border-black/10 p-10 text-center">
@@ -184,7 +184,7 @@ export default function SubaccountsPage() {
           </p>
           <button
             onClick={() => setShowInvite(true)}
-            className="mt-5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#FF2D2D] hover:bg-[#d4b55d] text-black transition-all"
+            className="mt-5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all"
           >
             <Plus className="w-4 h-4" />
             Invite First Subaccount
@@ -258,7 +258,7 @@ export default function SubaccountsPage() {
               <X className="w-4 h-4" />
             </button>
             <div className="flex items-center gap-2 mb-1">
-              <Building2 className="w-5 h-5 text-[#FF2D2D]" />
+              <Building2 className="w-5 h-5 text-[#2563EB]" />
               <h2 className="text-lg font-bold text-[#0A0A0B]">Invite Subaccount</h2>
             </div>
             <p className="text-xs text-black/50 mb-5">
@@ -271,7 +271,7 @@ export default function SubaccountsPage() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   placeholder="Client Name"
-                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#CC2424]/50"
+                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
                 />
               </div>
               <div>
@@ -281,7 +281,7 @@ export default function SubaccountsPage() {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="client@theircompany.com"
-                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#CC2424]/50"
+                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
                 />
               </div>
               <div>
@@ -289,7 +289,7 @@ export default function SubaccountsPage() {
                 <select
                   value={form.plan_tier}
                   onChange={(e) => setForm({ ...form, plan_tier: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#CC2424]/50"
+                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
                 >
                   {PLAN_TIERS.map((t) => (
                     <option key={t.value} value={t.value} className="bg-white">
@@ -305,7 +305,7 @@ export default function SubaccountsPage() {
                   min={0}
                   value={form.monthly_amount_cents}
                   onChange={(e) => setForm({ ...form, monthly_amount_cents: Number(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#CC2424]/50"
+                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
                 />
                 <p className="text-xs text-black/40 mt-1">
                   e.g. 9900 = $99.00. This is what you charge the client. ShortStack base fee is deducted via Stripe Connect.
@@ -316,7 +316,7 @@ export default function SubaccountsPage() {
               <button onClick={() => setShowInvite(false)} className="flex-1 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/8 text-[#0A0A0B] text-sm font-medium">
                 Cancel
               </button>
-              <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#FF2D2D] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60">
+              <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#2563EB] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60">
                 {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
                 Send Invite
               </button>

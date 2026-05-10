@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 /**
  * Admin/founder LLM cost dashboard.
@@ -8,7 +8,7 @@
  *   - Daily spend sparkline (recharts)
  *   - Top tasks by cost
  *   - Top models by cost
- *   - Optimisation hints (e.g. "20% of code_review still on Sonnet â€” try qwen3-coder")
+ *   - Optimisation hints (e.g. "20% of code_review still on Sonnet — try qwen3-coder")
  *
  * All numbers are USD. The dashboard is gated to role === "admin" or "founder".
  */
@@ -75,7 +75,7 @@ function formatUsd(n: number): string {
 }
 
 function formatDelta(pct: number): { label: string; type: "positive" | "negative" | "neutral" } {
-  if (Number.isNaN(pct) || !Number.isFinite(pct)) return { label: "â€”", type: "neutral" };
+  if (Number.isNaN(pct) || !Number.isFinite(pct)) return { label: "—", type: "neutral" };
   const arrow = pct >= 0 ? "+" : "";
   // For costs, negative delta is GOOD (saving money). Flip the colours.
   return {
@@ -143,7 +143,7 @@ export default function LlmCostsDashboard() {
   if (authLoading || state === "loading") {
     return (
       <div className="flex items-center justify-center min-h-[60vh] text-muted text-sm">
-        Loading LLM cost dashboardâ€¦
+        Loading LLM cost dashboard…
       </div>
     );
   }
@@ -186,7 +186,7 @@ export default function LlmCostsDashboard() {
     <div className="space-y-6 pb-12">
       <PageHero
         title="LLM Cost Dashboard"
-        subtitle="Smart routing has saved you real money â€” see exactly where."
+        subtitle="Smart routing has saved you real money — see exactly where."
         eyebrow="Admin"
         gradient="purple"
         icon={<Sparkles size={28} />}
@@ -236,7 +236,7 @@ export default function LlmCostsDashboard() {
         </header>
         {data.daily_series.length === 0 ? (
           <p className="text-xs text-muted py-8 text-center">
-            No usage events yet this month â€” once the smart router takes over, daily spend will appear here.
+            No usage events yet this month — once the smart router takes over, daily spend will appear here.
           </p>
         ) : (
           <div className="h-56">
@@ -282,7 +282,7 @@ export default function LlmCostsDashboard() {
         )}
       </section>
 
-      {/* Top tasks + Top models â€” side by side */}
+      {/* Top tasks + Top models — side by side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <section className=" border border-border bg-surface p-5">
           <header className="mb-4">
@@ -318,7 +318,7 @@ export default function LlmCostsDashboard() {
                     }}
                     formatter={(value) => formatUsd(Number(value))}
                   />
-                  <Bar dataKey="cost_usd" fill="#FF2D2D" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="cost_usd" fill="#2563EB" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -372,7 +372,7 @@ export default function LlmCostsDashboard() {
               Heuristic suggestions for cutting spend further
               {totalEstimatedSavings > 0 ? (
                 <>
-                  {" "}â€” estimated potential savings: <strong className="text-success">{formatUsd(totalEstimatedSavings)}</strong>
+                  {" "}— estimated potential savings: <strong className="text-success">{formatUsd(totalEstimatedSavings)}</strong>
                 </>
               ) : null}
             </p>

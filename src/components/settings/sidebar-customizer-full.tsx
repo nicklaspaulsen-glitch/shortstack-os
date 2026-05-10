@@ -245,7 +245,7 @@ interface Props {
   businessType?: string | null;
 }
 
-const GROUP_COLOR_PALETTE = ["#C9A84C", "#FF2D2D", "#FF2D2D", "#EF4444", "#A855F7", "#F59E0B", "#EC4899"];
+const GROUP_COLOR_PALETTE = ["#C9A84C", "#2563EB", "#2563EB", "#EF4444", "#A855F7", "#F59E0B", "#EC4899"];
 
 export default function SidebarCustomizerFull({ businessType }: Props) {
   /* ── Loaded prefs (saved baseline, used for dirty comparison) ──── */

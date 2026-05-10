@@ -1,16 +1,16 @@
-﻿"use client";
+"use client";
 
 /**
- * AI Sales Coach — overview page.
+ * AI Sales Coach � overview page.
  *
  * Three tabs share the same data source (`GET /api/coach/analyses`):
  *   - Recent Calls: list with score badges, click-through to detail.
  *   - By Rep: groups analyses by rep_id, shows trend strip per rep.
  *   - Leaderboard: top reps by avg score this period.
  *
- * The hero uses the gold gradient with the Award icon — coaching is a
+ * The hero uses the gold gradient with the Award icon � coaching is a
  * premium-feel surface, kept consistent with the meetings + voice-receptionist
- * pages on the agency side. No PageHero overrides — this page reads as a
+ * pages on the agency side. No PageHero overrides � this page reads as a
  * sibling of the rest of the dashboard family.
  */
 
@@ -82,7 +82,7 @@ const SOURCE_ICONS = {
   email_thread: Mail,
 } as const;
 
-const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
+const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 const containerVariants = {
   hidden: {},
@@ -191,7 +191,7 @@ export default function CoachPage() {
     <div className="space-y-6">
       <PageHero
         title="AI Sales Coach"
-        subtitle="Personalized feedback on every call and email — talk-time, objections, next-best-action."
+        subtitle="Personalized feedback on every call and email � talk-time, objections, next-best-action."
         gradient="gold"
         icon={<Award className="h-6 w-6" />}
         eyebrow="Coaching"
@@ -251,7 +251,7 @@ export default function CoachPage() {
 
       {loading && (
         <div className="flex items-center gap-2 text-black/60 text-sm">
-          <Loader2 className="h-4 w-4 animate-spin" /> Loading analyses…
+          <Loader2 className="h-4 w-4 animate-spin" /> Loading analyses�
         </div>
       )}
 
@@ -261,7 +261,7 @@ export default function CoachPage() {
         </div>
       )}
 
-      {/* ── RECENT CALLS ── */}
+      {/* -- RECENT CALLS -- */}
       {!loading && tab === "recent" && data && (
         <motion.div
           variants={containerVariants}
@@ -326,7 +326,7 @@ export default function CoachPage() {
         </motion.div>
       )}
 
-      {/* ── BY REP ── */}
+      {/* -- BY REP -- */}
       {!loading && tab === "by-rep" && data && (
         <motion.div
           variants={containerVariants}
@@ -352,7 +352,7 @@ export default function CoachPage() {
                       {bucket.repId === "__owner" ? "Unassigned" : bucket.repId.slice(0, 8)}
                     </div>
                     <div className="text-xs text-black/50">
-                      {bucket.rows.length} analyses • avg {bucket.avg}
+                      {bucket.rows.length} analyses � avg {bucket.avg}
                     </div>
                   </div>
                   <ScoreBadge score={bucket.avg} />
@@ -364,7 +364,7 @@ export default function CoachPage() {
                     return (
                       <span
                         key={row.id}
-                        title={`${value} • ${formatRelativeTime(row.created_at)}`}
+                        title={`${value} � ${formatRelativeTime(row.created_at)}`}
                         className={`h-6 w-1.5 rounded-sm ${color}`}
                         style={{ opacity: 0.4 + (value / 100) * 0.6 }}
                       />
@@ -377,7 +377,7 @@ export default function CoachPage() {
         </motion.div>
       )}
 
-      {/* ── LEADERBOARD ── */}
+      {/* -- LEADERBOARD -- */}
       {!loading && tab === "leaderboard" && (
         <motion.div
           variants={containerVariants}

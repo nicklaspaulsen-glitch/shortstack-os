@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 
-/* ── Types ── */
+/* -- Types -- */
 type NotifType = "all" | "lead" | "outreach" | "autopilot" | "system" | "alert";
 
 interface Notification {
@@ -30,7 +30,7 @@ interface Notification {
   created_at: string;
 }
 
-/* ── Tab configuration ── */
+/* -- Tab configuration -- */
 const TABS: { key: NotifType; label: string; icon: React.ReactNode }[] = [
   { key: "all",       label: "All",        icon: <Bell size={13} /> },
   { key: "lead",      label: "Leads",      icon: <Zap size={13} /> },
@@ -40,7 +40,7 @@ const TABS: { key: NotifType; label: string; icon: React.ReactNode }[] = [
   { key: "alert",     label: "Alerts",     icon: <AlertTriangle size={13} /> },
 ];
 
-/* ── Notification type styling ── */
+/* -- Notification type styling -- */
 const TYPE_CONFIG: Record<string, {
   icon: React.ReactNode;
   color: string;
@@ -123,7 +123,7 @@ function typeToTab(type: string): NotifType {
   return "system";
 }
 
-/* ── Action button labels by type ── */
+/* -- Action button labels by type -- */
 function getActionLabel(type: string): string | null {
   switch (type) {
     case "lead": return "View Leads";
@@ -135,7 +135,7 @@ function getActionLabel(type: string): string | null {
   }
 }
 
-/* ── Date grouping ── */
+/* -- Date grouping -- */
 function getDateGroup(dateStr: string): string {
   const date = new Date(dateStr);
   const now = new Date();
@@ -149,7 +149,7 @@ function getDateGroup(dateStr: string): string {
   return "Earlier";
 }
 
-/* ── Loading skeleton ── */
+/* -- Loading skeleton -- */
 function NotificationSkeleton() {
   return (
     <div className="space-y-3">
@@ -169,14 +169,14 @@ function NotificationSkeleton() {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* --------------------------------------------------------------
    Notifications Page
-   ══════════════════════════════════════════════════════════════ */
+   -------------------------------------------------------------- */
 export default function NotificationsPage() {
   const { user } = useAuth();
   const supabase = createClient();
 
-  /* ── State ── */
+  /* -- State -- */
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -184,7 +184,7 @@ export default function NotificationsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [markingAll, setMarkingAll] = useState(false);
 
-  /* ── Fetch notifications ── */
+  /* -- Fetch notifications -- */
   const fetchNotifications = useCallback(async () => {
     if (!user) return;
     try {
@@ -206,7 +206,7 @@ export default function NotificationsPage() {
     }
   }, [user, supabase]);
 
-  /* ── Initial fetch + polling ── */
+  /* -- Initial fetch + polling -- */
   useEffect(() => {
     if (user) {
       fetchNotifications();
@@ -215,7 +215,7 @@ export default function NotificationsPage() {
     }
   }, [user, fetchNotifications]);
 
-  /* ── Realtime subscription ── */
+  /* -- Realtime subscription -- */
   useEffect(() => {
     if (!user) return;
     const channel = supabase
@@ -238,7 +238,7 @@ export default function NotificationsPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  /* ── Mark single as read ── */
+  /* -- Mark single as read -- */
   async function markRead(id: string) {
     await supabase.from("notifications").update({ read: true }).eq("id", id);
     setNotifications((prev) =>
@@ -246,7 +246,7 @@ export default function NotificationsPage() {
     );
   }
 
-  /* ── Mark all as read ── */
+  /* -- Mark all as read -- */
   async function markAllRead() {
     if (!user) return;
     setMarkingAll(true);
@@ -260,7 +260,7 @@ export default function NotificationsPage() {
     toast.success("All notifications marked as read");
   }
 
-  /* ── Filtered & grouped ── */
+  /* -- Filtered & grouped -- */
   const filtered = notifications
     .filter((n) => activeTab === "all" || typeToTab(n.type) === activeTab)
     .filter((n) =>
@@ -279,7 +279,7 @@ export default function NotificationsPage() {
     alert: notifications.filter((n) => typeToTab(n.type) === "alert").length,
   };
 
-  /* ── Group by date ── */
+  /* -- Group by date -- */
   const grouped: { label: string; items: Notification[] }[] = [];
   const groupOrder = ["Today", "Yesterday", "This Week", "Earlier"];
   const groupMap: Record<string, Notification[]> = {};
@@ -294,7 +294,7 @@ export default function NotificationsPage() {
     }
   });
 
-  /* ── Render ── */
+  /* -- Render -- */
   return (
     <div className="fade-in space-y-6">
       <PageHero
@@ -332,7 +332,7 @@ export default function NotificationsPage() {
         }
       />
 
-      {/* ─── Search + Filter Tabs ─── */}
+      {/* --- Search + Filter Tabs --- */}
       <div className="space-y-3">
         {/* Search */}
         <div className="relative">
@@ -373,7 +373,7 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      {/* ─── Content ─── */}
+      {/* --- Content --- */}
       {loading ? (
         <NotificationSkeleton />
       ) : error ? (
@@ -513,7 +513,7 @@ export default function NotificationsPage() {
         </div>
       )}
 
-      {/* ─── Stats bar ─── */}
+      {/* --- Stats bar --- */}
       {!loading && notifications.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {TABS.filter((t) => t.key !== "all").map((tab, index) => {
@@ -535,7 +535,7 @@ export default function NotificationsPage() {
               >
                 <div
                   className="absolute top-0 left-0 right-0"
-                  style={{ height: 3, background: "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)" }}
+                  style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }}
                 />
                 <div className="flex items-center justify-center gap-1.5 mb-1 mt-1">
                   <span className="text-muted">{tab.icon}</span>
@@ -553,7 +553,7 @@ export default function NotificationsPage() {
         </div>
       )}
 
-      {/* ─── PageAI ─── */}
+      {/* --- PageAI --- */}
       <PageAI
         pageName="Notifications"
         context="This is the notifications center showing alerts from lead scraping, outreach campaigns, auto-pilot actions, and system events. The user can filter by type, mark as read, and navigate to relevant pages."

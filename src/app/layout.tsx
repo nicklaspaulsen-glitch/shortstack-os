@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     shortcut: "/icons/shortstack-logo.ico?v=3",
   },
   manifest: "/manifest.json",
-  themeColor: "#FF2D2D",
+  themeColor: "#2563EB",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

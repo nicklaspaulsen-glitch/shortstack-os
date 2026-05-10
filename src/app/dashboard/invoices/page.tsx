@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -36,14 +36,14 @@ interface Invoice {
 const INVOICE_TEMPLATES: { id: string; name: string; description: string; sections: string[] }[] = [];
 
 const formatCurrency = (amount: number, currency: string = "USD") => {
-  if (currency === "EUR") return `€${amount.toLocaleString()}`;
-  if (currency === "GBP") return `£${amount.toLocaleString()}`;
+  if (currency === "EUR") return `�${amount.toLocaleString()}`;
+  if (currency === "GBP") return `�${amount.toLocaleString()}`;
   return `$${amount.toLocaleString()}`;
 };
 
 const RAINBOW_BAR = {
   height: 3,
-  background: "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)",
+  background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)",
 };
 
 export default function InvoicesPage() {
@@ -69,7 +69,7 @@ export default function InvoicesPage() {
         if (cancelled) return;
         if (error) {
           console.error("[invoices] fetch error:", error);
-          toast.error("Couldn't load invoices — try refreshing.");
+          toast.error("Couldn't load invoices � try refreshing.");
           setInvoicesData([]);
         } else {
           const mapped: Invoice[] = (data || []).map((row: Record<string, unknown>) => {
@@ -97,7 +97,7 @@ export default function InvoicesPage() {
       } catch (err) {
         if (!cancelled) {
           console.error("[invoices] fetch error:", err);
-          toast.error("Couldn't load invoices — try refreshing.");
+          toast.error("Couldn't load invoices � try refreshing.");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -143,7 +143,7 @@ export default function InvoicesPage() {
       <PageHero
         icon={<CreditCard size={22} />}
         title="Invoices"
-        subtitle={`${invoicesData.length} invoices — track payments, reminders, and recurring billing.`}
+        subtitle={`${invoicesData.length} invoices � track payments, reminders, and recurring billing.`}
         gradient="gold"
         actions={
           <div className="flex gap-2">
@@ -169,7 +169,7 @@ export default function InvoicesPage() {
 
       {/* Loading note */}
       {loading && (
-        <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices…</p>
+        <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices�</p>
       )}
 
       {/* Stats */}
@@ -336,8 +336,8 @@ export default function InvoicesPage() {
                     <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Currency</label>
                     <select value={selectedCurrency} onChange={e => setSelectedCurrency(e.target.value)} className="input w-full text-xs">
                       <option value="USD">USD ($)</option>
-                      <option value="EUR">EUR (€)</option>
-                      <option value="GBP">GBP (£)</option>
+                      <option value="EUR">EUR (�)</option>
+                      <option value="GBP">GBP (�)</option>
                       <option value="SEK">SEK (kr)</option>
                     </select>
                   </div>
@@ -368,12 +368,12 @@ export default function InvoicesPage() {
                         <span className="col-span-2 text-center">{formatCurrency(item.rate, selectedCurrency)}</span>
                         <span className="col-span-2 text-right font-bold">{formatCurrency(item.qty * item.rate, selectedCurrency)}</span>
                         <button
-                          onClick={() => toast("The in-app invoice builder is being replaced with Stripe's hosted invoices. Use /dashboard/billing → Stripe portal to create real invoices today.", { icon: "💡", duration: 6000 })}
+                          onClick={() => toast("The in-app invoice builder is being replaced with Stripe's hosted invoices. Use /dashboard/billing ? Stripe portal to create real invoices today.", { icon: "??", duration: 6000 })}
                           className="col-span-1 text-right text-muted hover:text-red-400"><X size={10} /></button>
                       </div>
                     ))}
                     <button
-                      onClick={() => toast("In-app line items aren't wired. Create invoices via Stripe's hosted portal at /dashboard/billing.", { icon: "💡", duration: 6000 })}
+                      onClick={() => toast("In-app line items aren't wired. Create invoices via Stripe's hosted portal at /dashboard/billing.", { icon: "??", duration: 6000 })}
                       className="text-[9px] text-gold flex items-center gap-1 px-2"><Plus size={9} /> Add Line Item</button>
                   </div>
                 </div>
@@ -412,7 +412,7 @@ export default function InvoicesPage() {
                   <Send size={12} /> Create in Stripe portal
                 </Link>
                 <button
-                  onClick={() => toast("Draft invoices save to Stripe. Open /dashboard/billing → Manage subscription to draft there.", { icon: "💡", duration: 6000 })}
+                  onClick={() => toast("Draft invoices save to Stripe. Open /dashboard/billing ? Manage subscription to draft there.", { icon: "??", duration: 6000 })}
                   className="btn-secondary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
                   <FileText size={12} /> Save as Draft
                 </button>
@@ -428,7 +428,7 @@ export default function InvoicesPage() {
                   <option value="">Select proposal...</option>
                 </select>
                 <button
-                  onClick={() => toast("Proposals → invoice pipeline ships with the proposals module. Track progress on the roadmap.", { icon: "💡", duration: 6000 })}
+                  onClick={() => toast("Proposals ? invoice pipeline ships with the proposals module. Track progress on the roadmap.", { icon: "??", duration: 6000 })}
                   className="btn-gold w-full text-xs flex items-center justify-center gap-1.5 bg-gold/10 text-gold border border-gold/20 rounded-lg py-1.5 hover:bg-gold/20 transition-all">
                   <ArrowRight size={12} /> Create from Proposal
                 </button>
@@ -441,7 +441,7 @@ export default function InvoicesPage() {
                 </h4>
                 <p className="text-[9px] text-muted mb-2">Stripe-powered payment links for quick collection</p>
                 <Link href="/dashboard/clients" className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
-                  <CreditCard size={12} /> Open client → Subscribe
+                  <CreditCard size={12} /> Open client ? Subscribe
                 </Link>
               </PrismPanel>
             </div>
@@ -492,7 +492,7 @@ export default function InvoicesPage() {
                   </div>
                   <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400">Active</span>
                   <button
-                    onClick={() => toast("Pause recurring from the Stripe customer portal — use Billing → Manage subscription.", { icon: "💡", duration: 6000 })}
+                    onClick={() => toast("Pause recurring from the Stripe customer portal � use Billing ? Manage subscription.", { icon: "??", duration: 6000 })}
                     className="text-[9px] text-muted hover:text-red-400">Pause</button>
                 </div>
               </motion.div>
@@ -558,7 +558,7 @@ export default function InvoicesPage() {
                   <div className="flex items-center gap-3">
                     <p className="font-bold text-red-400">{formatCurrency(inv.amount)}</p>
                     <button
-                      onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "💡", duration: 6000 })}
+                      onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "??", duration: 6000 })}
                       className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20">Send Reminder</button>
                   </div>
                 </div>
@@ -603,7 +603,7 @@ export default function InvoicesPage() {
                   ))}
                 </div>
                 <button
-                  onClick={() => toast("Invoice templates aren't yet persisted. Create invoices via Stripe at /dashboard/billing for now.", { icon: "💡", duration: 6000 })}
+                  onClick={() => toast("Invoice templates aren't yet persisted. Create invoices via Stripe at /dashboard/billing for now.", { icon: "??", duration: 6000 })}
                   className="btn-secondary text-[9px] mt-3 w-full">Use Template</button>
               </motion.div>
             ))}

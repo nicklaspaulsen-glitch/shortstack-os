@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -25,7 +25,7 @@ import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
 import PageHero from "@/components/ui/page-hero";
 
 
-// ── Types ────────────────────────────────────────────────────────
+// -- Types --------------------------------------------------------
 interface JobResult {
   id: string;
   type: string;
@@ -35,17 +35,17 @@ interface JobResult {
   meta?: Record<string, unknown>;
 }
 
-// ── Tool configs ─────────────────────────────────────────────────
+// -- Tool configs -------------------------------------------------
 const TOOLS = [
-  { id: "transcribe", name: "Transcribe", desc: "Audio/video to text with timestamps", icon: Mic, color: "#FF6B6B", tag: "Whisper V3" },
-  { id: "image-gen", name: "Image Gen", desc: "Generate images from text prompts", icon: Palette, color: "#FF6B6B", tag: "FLUX/DALL-E" },
-  { id: "upscale", name: "Upscale", desc: "4x AI image upscaling", icon: ArrowUpRight, color: "#FF6B6B", tag: "Real-ESRGAN" },
-  { id: "remove-bg", name: "Remove BG", desc: "One-click background removal", icon: Scissors, color: "#FF6B6B", tag: "REMBG/SAM" },
-  { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video", icon: Film, color: "#FF6B6B", tag: "SVD" },
-  { id: "music-gen", name: "Music Gen", desc: "AI background music for videos", icon: Music, color: "#CC2424", tag: "MusicGen", newBadge: true },
-  { id: "voice-clone", name: "Voice Clone", desc: "Clone voice from 6 sec audio", icon: Volume2, color: "#FF6B6B", tag: "XTTS v2" },
-  { id: "train-lora", name: "Brand LoRA", desc: "Train custom image style models", icon: Brain, color: "#CC2424", tag: "LoRA", badge: "Business+" },
-  { id: "batch-gen", name: "Batch Generate", desc: "50+ images in one go", icon: Layers, color: "#FF6B6B", tag: "FLUX/SDXL" },
+  { id: "transcribe", name: "Transcribe", desc: "Audio/video to text with timestamps", icon: Mic, color: "#3B82F6", tag: "Whisper V3" },
+  { id: "image-gen", name: "Image Gen", desc: "Generate images from text prompts", icon: Palette, color: "#3B82F6", tag: "FLUX/DALL-E" },
+  { id: "upscale", name: "Upscale", desc: "4x AI image upscaling", icon: ArrowUpRight, color: "#3B82F6", tag: "Real-ESRGAN" },
+  { id: "remove-bg", name: "Remove BG", desc: "One-click background removal", icon: Scissors, color: "#3B82F6", tag: "REMBG/SAM" },
+  { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video", icon: Film, color: "#3B82F6", tag: "SVD" },
+  { id: "music-gen", name: "Music Gen", desc: "AI background music for videos", icon: Music, color: "#1D4ED8", tag: "MusicGen", newBadge: true },
+  { id: "voice-clone", name: "Voice Clone", desc: "Clone voice from 6 sec audio", icon: Volume2, color: "#3B82F6", tag: "XTTS v2" },
+  { id: "train-lora", name: "Brand LoRA", desc: "Train custom image style models", icon: Brain, color: "#1D4ED8", tag: "LoRA", badge: "Business+" },
+  { id: "batch-gen", name: "Batch Generate", desc: "50+ images in one go", icon: Layers, color: "#3B82F6", tag: "FLUX/SDXL" },
 ] as const;
 
 type ToolId = typeof TOOLS[number]["id"];
@@ -66,7 +66,7 @@ type ToolCategory = "all" | "visual" | "audio" | "utility";
 export default function AIStudioPage() {
   const supabaseMain = useMemo(() => createClient(), []);
   const [activeTool, setActiveTool] = useState<ToolId>("transcribe");
-  // Ref on the active-tool panel — used by the tile grid to scroll the
+  // Ref on the active-tool panel � used by the tile grid to scroll the
   // panel into view when the user picks a tile. Without this, clicks on
   // tiles look dead because the tool panel is rendered far below the
   // grid (off-screen by ~600 px) and the active-tile gold border is
@@ -86,7 +86,7 @@ export default function AIStudioPage() {
     autoGenerateToken?: number;
   }>({});
 
-  // Guided Mode ↔ Advanced Mode (full tool grid)
+  // Guided Mode ? Advanced Mode (full tool grid)
   const [advancedMode, setAdvancedMode] = useAdvancedMode("ai-studio");
   const [guidedStep, setGuidedStep] = useState(0);
   const [guidedIntent, setGuidedIntent] = useState<ToolId>("image-gen");
@@ -104,7 +104,7 @@ export default function AIStudioPage() {
     } catch { /* localStorage unavailable */ }
   }, [advancedMode]);
 
-  // ── Handoff consumer — ?handoff= opens the image-gen tool in edit mode ──
+  // -- Handoff consumer � ?handoff= opens the image-gen tool in edit mode --
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -125,7 +125,7 @@ export default function AIStudioPage() {
             size: p.size,
           });
         }
-        toast.success("Image loaded — adjust settings and regenerate");
+        toast.success("Image loaded � adjust settings and regenerate");
         const u = new URL(window.location.href);
         u.searchParams.delete("handoff");
         window.history.replaceState(null, "", u.toString());
@@ -143,19 +143,19 @@ export default function AIStudioPage() {
       <PageHero
         variant="editorial"
         title="AI Studio"
-        subtitle="Creative Suite · 9 tools"
+        subtitle="Creative Suite � 9 tools"
         eyebrow="Generative Media"
         icon={<Layers size={16} />}
         actions={
           <>
             {history.length > 0 && (
-              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#CC2424]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
+              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#1D4ED8]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
                 {history.filter(j => j.status === "completed").length} done
               </span>
             )}
             <span className="hidden md:flex items-center gap-1 text-[10px] text-[#71717A] px-2.5 py-1 rounded-md bg-[rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.06)]">
-              {TOOLS.find(t => t.id === activeTool)?.name ?? "—"}
+              {TOOLS.find(t => t.id === activeTool)?.name ?? "�"}
             </span>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
@@ -164,7 +164,7 @@ export default function AIStudioPage() {
                   setActiveTool("image-gen");
                   setCreationWizardOpen(true);
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D2D] text-white text-xs font-bold hover:bg-[#CC2424] transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-bold hover:bg-[#1D4ED8] transition-all"
               >
                 <Sparkles size={13} />
                 New with AI
@@ -174,7 +174,7 @@ export default function AIStudioPage() {
         }
       />
 
-      {/* ── GUIDED MODE ─────────────────────────────────────────── */}
+      {/* -- GUIDED MODE ------------------------------------------- */}
       {!advancedMode && (
         <div className="px-6 py-6 max-w-4xl mx-auto">
         <Wizard
@@ -183,7 +183,7 @@ export default function AIStudioPage() {
             {
               id: "intent",
               title: "What do you want to make?",
-              description: "Pick the thing — we'll hand you the right tool with the right defaults.",
+              description: "Pick the thing � we'll hand you the right tool with the right defaults.",
               icon: <Sparkles size={18} />,
               component: (
                 <motion.div
@@ -207,34 +207,34 @@ export default function AIStudioPage() {
                           isFeatured ? "md:col-span-2 p-5" : "p-4"
                         } ${
                           selected
-                            ? "border-[#FF2D2D]/50 bg-[rgba(255,45,45,0.07)] shadow-lg shadow-[rgba(255,45,45,0.12)]"
+                            ? "border-[#2563EB]/50 bg-[rgba(37,99,235,0.07)] shadow-lg shadow-[rgba(37,99,235,0.12)]"
                             : isFeatured
-                              ? "border-[rgba(255,45,45,0.18)] bg-[rgba(255,45,45,0.03)] hover:border-[#FF2D2D]/40"
-                              : "border-border hover:border-[#FF2D2D]/35 bg-surface-light"
+                              ? "border-[rgba(37,99,235,0.18)] bg-[rgba(37,99,235,0.03)] hover:border-[#2563EB]/40"
+                              : "border-border hover:border-[#2563EB]/35 bg-surface-light"
                         }`}
                       >
                         {/* always-visible top accent on featured tiles */}
                         {isFeatured && !selected && (
-                          <div className="absolute top-0 left-0 right-0 h-[1px] rounded-t-xl bg-gradient-to-r from-transparent via-[#FF2D2D]/40 to-transparent" />
+                          <div className="absolute top-0 left-0 right-0 h-[1px] rounded-t-xl bg-gradient-to-r from-transparent via-[#2563EB]/40 to-transparent" />
                         )}
                         {/* ambient glow on featured tiles */}
                         {isFeatured && (
                           <>
-                            <div className="pointer-events-none absolute -right-10 -bottom-10 w-36 h-36 rounded-full bg-[#FF2D2D] opacity-[0.05] blur-3xl" />
-                            <div className="pointer-events-none absolute -left-4 -top-4 w-20 h-20 rounded-full bg-[#FF6B6B] opacity-[0.03] blur-2xl" />
+                            <div className="pointer-events-none absolute -right-10 -bottom-10 w-36 h-36 rounded-full bg-[#2563EB] opacity-[0.05] blur-3xl" />
+                            <div className="pointer-events-none absolute -left-4 -top-4 w-20 h-20 rounded-full bg-[#3B82F6] opacity-[0.03] blur-2xl" />
                           </>
                         )}
                         {"badge" in t && t.badge && (
-                          <span className="absolute top-2.5 right-2.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(204,36,36,0.1)] text-[#CC2424]">
+                          <span className="absolute top-2.5 right-2.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(204,36,36,0.1)] text-[#1D4ED8]">
                             {t.badge}
                           </span>
                         )}
                         {selected && (
-                          <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-xl bg-[#FF2D2D]" />
+                          <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-xl bg-[#2563EB]" />
                         )}
                         <div className={`rounded-lg flex items-center justify-center mb-2.5 ${isFeatured ? "w-12 h-12" : "w-10 h-10"}`}
                           style={{ background: `${t.color}22` }}>
-                          <Icon size={isFeatured ? 22 : 18} style={{ color: selected ? "#FF2D2D" : t.color }} />
+                          <Icon size={isFeatured ? 22 : 18} style={{ color: selected ? "#2563EB" : t.color }} />
                         </div>
                         <div className="flex items-baseline gap-1.5 mb-0.5">
                           <p className={`font-bold ${isFeatured ? "text-[15px]" : "text-sm"}`}>{t.name}</p>
@@ -274,9 +274,9 @@ export default function AIStudioPage() {
                 />
               ) : (
                 <div className="card bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.08)] text-center py-8">
-                  <Upload size={28} className="mx-auto mb-2 text-[#FF2D2D]" />
+                  <Upload size={28} className="mx-auto mb-2 text-[#2563EB]" />
                   <p className="text-sm font-semibold">
-                    {TOOLS.find(t => t.id === guidedIntent)?.name} uses files — hit Finish to open the tool.
+                    {TOOLS.find(t => t.id === guidedIntent)?.name} uses files � hit Finish to open the tool.
                   </p>
                 </div>
               ),
@@ -308,7 +308,7 @@ export default function AIStudioPage() {
                   </div>
                   {guidedPrompt && (
                     <p className="text-[11px] text-muted pt-2 border-t border-border/50 line-clamp-3">
-                      <span className="text-[#FF6B6B] font-semibold">Prompt:</span> {guidedPrompt}
+                      <span className="text-[#3B82F6] font-semibold">Prompt:</span> {guidedPrompt}
                     </p>
                   )}
                 </div>
@@ -329,7 +329,7 @@ export default function AIStudioPage() {
               });
             }
             setAdvancedMode(true);
-            toast.success(`Opening ${TOOLS.find(t => t.id === guidedIntent)?.name}…`);
+            toast.success(`Opening ${TOOLS.find(t => t.id === guidedIntent)?.name}�`);
           }}
           onCancel={() => setAdvancedMode(true)}
           cancelLabel="Advanced mode"
@@ -337,11 +337,11 @@ export default function AIStudioPage() {
         </div>
       )}
 
-      {/* ── ADVANCED MODE ─────────────────────────────────────────── */}
+      {/* -- ADVANCED MODE ------------------------------------------- */}
       {advancedMode && (
       <div className="px-4 py-4 min-h-[calc(100vh-120px)]">
 
-        {/* Wizard image results — inline strip above the workspace */}
+        {/* Wizard image results � inline strip above the workspace */}
         {wizardImages.length > 0 && (
           <motion.div
             className="mb-5 p-4"
@@ -350,7 +350,7 @@ export default function AIStudioPage() {
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Sparkles size={13} className="text-[#FF6B6B]" />
+                <Sparkles size={13} className="text-[#3B82F6]" />
                 <span className="text-sm font-semibold text-[#0A0A0B]">Latest generation</span>
                 <span className="text-[10px] text-[#52525B]">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
               </div>
@@ -361,7 +361,7 @@ export default function AIStudioPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {wizardImages.map((img, i) => (
                 <a key={i} href={img.url} target="_blank" rel="noopener noreferrer"
-                  className="block bg-black rounded-xl overflow-hidden hover:ring-1 hover:ring-[#FF2D2D]/40 transition-all">
+                  className="block bg-black rounded-xl overflow-hidden hover:ring-1 hover:ring-[#2563EB]/40 transition-all">
                   <SafeThumb
                     src={img.url}
                     alt={`Wizard output ${i + 1}`}
@@ -375,7 +375,7 @@ export default function AIStudioPage() {
           </motion.div>
         )}
 
-        {/* Editorial stats strip — shown when there's job history */}
+        {/* Editorial stats strip � shown when there's job history */}
         {history.length > 0 && (
           <motion.div
             className="grid grid-cols-[1fr_1fr_1.4fr] gap-2 mb-4"
@@ -386,7 +386,7 @@ export default function AIStudioPage() {
             {[
               { label: "Jobs Run", value: String(history.length), sub: "this session" },
               { label: "Completed", value: String(history.filter(j => j.status === "completed").length), sub: `${Math.round((history.filter(j => j.status === "completed").length / history.length) * 100)}% success` },
-              { label: "Active Tool", value: TOOLS.find(t => t.id === activeTool)?.name ?? "—", sub: TOOLS.find(t => t.id === activeTool)?.tag ?? "" },
+              { label: "Active Tool", value: TOOLS.find(t => t.id === activeTool)?.name ?? "�", sub: TOOLS.find(t => t.id === activeTool)?.tag ?? "" },
             ].map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -396,9 +396,9 @@ export default function AIStudioPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.24, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
               >
-                {i === 0 && <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] to-transparent" />}
+                {i === 0 && <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2563EB] to-transparent" />}
                 <p className="text-[8px] uppercase tracking-[0.18em] text-[#71717A] mb-1">{stat.label}</p>
-                <p className="font-display text-lg font-bold text-[#CC2424] tracking-tight tabular-nums truncate">{stat.value}</p>
+                <p className="font-display text-lg font-bold text-[#1D4ED8] tracking-tight tabular-nums truncate">{stat.value}</p>
                 <p className="text-[9px] text-[#5A5A68] truncate">{stat.sub}</p>
               </motion.div>
             ))}
@@ -418,8 +418,8 @@ export default function AIStudioPage() {
                     : "text-[#71717A] hover:text-[#52525B]"
                 }`}
                 style={toolCategory === cat ? {
-                  background: "linear-gradient(180deg, #FF4040 0%, #CC2424 100%)",
-                  boxShadow: "0 1px 0 rgba(255,255,255,0.15) inset, 0 2px 8px rgba(255,45,45,0.35)",
+                  background: "linear-gradient(180deg, #FF4040 0%, #1D4ED8 100%)",
+                  boxShadow: "0 1px 0 rgba(255,255,255,0.15) inset, 0 2px 8px rgba(37,99,235,0.35)",
                 } : undefined}
               >
                 {cat === "all" ? "All" : cat}
@@ -468,7 +468,7 @@ export default function AIStudioPage() {
                         />
                         <motion.div
                           layoutId="tool-active-accent"
-                          className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-[#FF2D2D]"
+                          className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-[#2563EB]"
                           transition={{ type: "spring", stiffness: 380, damping: 32 }}
                         />
                       </>
@@ -477,21 +477,21 @@ export default function AIStudioPage() {
                       className="relative z-10 w-6 h-6 rounded-md flex items-center justify-center shrink-0"
                       style={{ background: `${tool.color}${active ? "28" : "18"}` }}
                     >
-                      <Icon size={12} style={{ color: active ? "#FF2D2D" : tool.color }} />
+                      <Icon size={12} style={{ color: active ? "#2563EB" : tool.color }} />
                     </div>
                     <div className="relative z-10 min-w-0 flex-1">
-                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#CC2424]" : "text-[#0A0A0B]"}`}>
+                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#1D4ED8]" : "text-[#0A0A0B]"}`}>
                         {tool.name}
                       </p>
                       <p className="text-[8px] font-mono text-[#71717A] truncate">{tool.tag}</p>
                     </div>
                     {"newBadge" in tool && tool.newBadge && (
-                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(204,36,36,0.1)] text-[#CC2424] shrink-0 uppercase tracking-wide">
+                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(204,36,36,0.1)] text-[#1D4ED8] shrink-0 uppercase tracking-wide">
                         New
                       </span>
                     )}
                     {"badge" in tool && tool.badge && (
-                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(0,0,0,0.05)] text-[#FF2D2D] shrink-0">
+                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(0,0,0,0.05)] text-[#2563EB] shrink-0">
                         Biz+
                       </span>
                     )}
@@ -508,7 +508,7 @@ export default function AIStudioPage() {
             style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
           >
             {/* Prism accent top bar */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF6B6B] to-[#CC2424]" />
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#1D4ED8]" />
             {/* Tool header */}
             <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[rgba(0,0,0,0.06)]">
               {(() => {
@@ -525,18 +525,18 @@ export default function AIStudioPage() {
                       <p className="text-[9px] font-mono text-[#71717A]">{t.tag}</p>
                     </div>
                     {"badge" in t && t.badge && (
-                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.05)] text-[#CC2424] border border-[rgba(0,0,0,0.10)]">
+                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.05)] text-[#1D4ED8] border border-[rgba(0,0,0,0.10)]">
                         {t.badge}
                       </span>
                     )}
                   </>
                 );
               })()}
-              {/* Lime tick — one chromatic moment per zone */}
-              <div className="w-1 h-4 rounded-full bg-[#FF2D2D]/35 shrink-0" />
+              {/* Lime tick � one chromatic moment per zone */}
+              <div className="w-1 h-4 rounded-full bg-[#2563EB]/35 shrink-0" />
             </div>
 
-            {/* Tool content — AnimatePresence fades panel on tool switch */}
+            {/* Tool content � AnimatePresence fades panel on tool switch */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTool}
@@ -559,7 +559,7 @@ export default function AIStudioPage() {
             </AnimatePresence>
           </div>
 
-          {/* Right: history panel — only rendered when jobs exist */}
+          {/* Right: history panel � only rendered when jobs exist */}
           {history.length > 0 && (
             <motion.div
               className="hidden md:flex flex-col gap-2 overflow-hidden"
@@ -595,7 +595,7 @@ export default function AIStudioPage() {
                     ) : (
                       <div className="flex flex-col gap-1 p-2.5">
                         <div className="flex items-center gap-1.5">
-                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${job.status === "completed" ? "bg-emerald-500" : job.status === "failed" ? "bg-red-500" : "bg-[#CC2424] animate-pulse"}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${job.status === "completed" ? "bg-emerald-500" : job.status === "failed" ? "bg-red-500" : "bg-[#1D4ED8] animate-pulse"}`} />
                           <span className="text-[9px] font-semibold text-[#52525B] truncate">{job.type}</span>
                         </div>
                         <p className="text-[8px] text-[#71717A] font-mono truncate">{job.status}</p>
@@ -617,7 +617,7 @@ export default function AIStudioPage() {
       </div>
       )}
 
-      {/* Modals — outside the conditional so z-index is always clean */}
+      {/* Modals � outside the conditional so z-index is always clean */}
       <ImageCreationWizard
         open={creationWizardOpen}
         onClose={() => setCreationWizardOpen(false)}
@@ -646,7 +646,7 @@ export default function AIStudioPage() {
   );
 }
 
-// ── Shared types for tool props ──────────────────────────────────
+// -- Shared types for tool props ----------------------------------
 interface ToolProps {
   processing: boolean;
   setProcessing: (v: boolean) => void;
@@ -654,7 +654,7 @@ interface ToolProps {
   setHistory?: (v: JobResult[]) => void;
 }
 
-// ── TRANSCRIBE TOOL ──────────────────────────────────────────────
+// -- TRANSCRIBE TOOL ----------------------------------------------
 function TranscribeTool({ processing, setProcessing }: ToolProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -695,7 +695,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
               </a>
             </span>
           ),
-          { icon: "🔧", duration: 8000 }
+          { icon: "??", duration: 8000 }
         );
       } else {
         toast.error(data.error || "Failed");
@@ -714,9 +714,9 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Mic size={16} className="text-[#FF2D2D]" />
+        <Mic size={16} className="text-[#2563EB]" />
         <h2 className="text-sm font-bold text-foreground">Speech to Text</h2>
-        <span className="text-[9px] bg-[#FF2D2D]/10 text-[#FF2D2D] px-2 py-0.5 rounded-full">Whisper Large V3</span>
+        <span className="text-[9px] bg-[#2563EB]/10 text-[#2563EB] px-2 py-0.5 rounded-full">Whisper Large V3</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -724,7 +724,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         <div>
           <div
             onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[#FF2D2D]/30 hover:bg-[#FF2D2D]/[0.02] transition-all"
+            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[#2563EB]/30 hover:bg-[#2563EB]/[0.02] transition-all"
           >
             <input ref={fileRef} type="file" accept="audio/*,video/*" className="hidden" onChange={e => setFile(e.target.files?.[0] || null)} />
             <Upload size={24} className="mx-auto mb-2 text-muted" />
@@ -750,7 +750,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
             </select>
             <motion.button onClick={handleTranscribe} disabled={processing || !file}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-              className="px-4 py-2 bg-[#FF2D2D] text-white text-xs font-semibold rounded-lg hover:bg-[#CC2424] disabled:opacity-40 flex items-center gap-1.5">
+              className="px-4 py-2 bg-[#2563EB] text-white text-xs font-semibold rounded-lg hover:bg-[#1D4ED8] disabled:opacity-40 flex items-center gap-1.5">
               {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
               Transcribe
             </motion.button>
@@ -800,7 +800,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
   );
 }
 
-// ── IMAGE GEN TOOL ──────────────────────────────────────────────
+// -- IMAGE GEN TOOL ----------------------------------------------
 interface ImageGenInit {
   prompt?: string;
   style?: string;
@@ -824,7 +824,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
   // with explicit overrides (avoids stale state after setState in same tick).
   const runGenerateRef = useRef<((o?: { prompt?: string; style?: string; size?: string }) => void) | null>(null);
 
-  // Sync incoming initial from wizard — overwrite current values and auto-run
+  // Sync incoming initial from wizard � overwrite current values and auto-run
   useEffect(() => {
     if (!initial) return;
     if (initial.prompt !== undefined) setPrompt(initial.prompt);
@@ -916,9 +916,9 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Palette size={16} className="text-[#FF2D2D]" />
+        <Palette size={16} className="text-[#2563EB]" />
         <h2 className="text-sm font-bold text-foreground">Image Generator</h2>
-        <span className="text-[9px] bg-[#FF2D2D]/10 text-[#FF2D2D] px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
+        <span className="text-[9px] bg-[#2563EB]/10 text-[#2563EB] px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
       </motion.div>
 
       {setupRequired && (
@@ -951,7 +951,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 <button key={s.value} onClick={() => setStyle(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     style === s.value
-                      ? "bg-[#FF2D2D] text-white font-semibold"
+                      ? "bg-[#2563EB] text-white font-semibold"
                       : "bg-surface-light text-muted"
                   }`}>{s.label}</button>
               ))}
@@ -965,7 +965,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 <button key={s.value} onClick={() => setSize(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     size === s.value
-                      ? "bg-[#FF2D2D] text-white font-semibold"
+                      ? "bg-[#2563EB] text-white font-semibold"
                       : "bg-surface-light text-muted"
                   }`}>{s.label}</button>
               ))}
@@ -974,7 +974,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
           <motion.button onClick={handleGenerate} disabled={processing || !prompt.trim()}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2.5 bg-[#FF2D2D] text-white text-xs font-semibold rounded-lg hover:bg-[#5E5BFF] disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full px-4 py-2.5 bg-[#2563EB] text-white text-xs font-semibold rounded-lg hover:bg-[#5E5BFF] disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
             Generate Image
           </motion.button>
@@ -997,7 +997,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                   />
                   <div className="flex items-center justify-center gap-3 mt-1">
                     <a href={img} target="_blank" rel="noopener noreferrer" download={`generated-${i + 1}.png`}
-                      className="inline-flex items-center gap-1 text-[10px] text-[#FF2D2D] hover:underline">
+                      className="inline-flex items-center gap-1 text-[10px] text-[#2563EB] hover:underline">
                       <Download size={10} /> Download
                     </a>
                     <button
@@ -1018,7 +1018,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                           setHandoffingIdx(null);
                         }
                       }}
-                      className="inline-flex items-center gap-1 text-[10px] text-[#FF2D2D] hover:underline disabled:opacity-40"
+                      className="inline-flex items-center gap-1 text-[10px] text-[#2563EB] hover:underline disabled:opacity-40"
                     >
                       {handoffingIdx === i
                         ? <Loader2 size={10} className="animate-spin" />
@@ -1041,7 +1041,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
   );
 }
 
-// ── UPSCALE TOOL ─────────────────────────────────────────────────
+// -- UPSCALE TOOL -------------------------------------------------
 function UpscaleTool({ processing, setProcessing }: ToolProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -1087,7 +1087,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
               </a>
             </span>
           ),
-          { icon: "🔧", duration: 8000 }
+          { icon: "??", duration: 8000 }
         );
       } else {
         toast.error(data.error || "Failed");
@@ -1123,7 +1123,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
               <>
                 <ImagePlus size={24} className="mx-auto mb-2 text-muted" />
                 <p className="text-xs text-foreground font-medium">Drop image to upscale</p>
-                <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP — max 20MB</p>
+                <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP � max 20MB</p>
               </>
             )}
           </div>
@@ -1174,7 +1174,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
   );
 }
 
-// ── REMOVE BG TOOL ───────────────────────────────────────────────
+// -- REMOVE BG TOOL -----------------------------------------------
 function RemoveBgTool({ processing, setProcessing }: ToolProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -1209,7 +1209,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
               </a>
             </span>
           ),
-          { icon: "🔧", duration: 8000 }
+          { icon: "??", duration: 8000 }
         );
       } else {
         toast.error(data.error || "Failed");
@@ -1245,7 +1245,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
               <>
                 <Scissors size={24} className="mx-auto mb-2 text-muted" />
                 <p className="text-xs text-foreground font-medium">Drop image</p>
-                <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP — max 15MB</p>
+                <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP � max 15MB</p>
               </>
             )}
           </div>
@@ -1291,7 +1291,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
   );
 }
 
-// ── IMAGE TO VIDEO TOOL ──────────────────────────────────────────
+// -- IMAGE TO VIDEO TOOL ------------------------------------------
 function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -1332,9 +1332,9 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Film size={16} className="text-[#FF6B6B]" />
+        <Film size={16} className="text-[#3B82F6]" />
         <h2 className="text-sm font-bold text-foreground">Image to Video</h2>
-        <span className="text-[9px] bg-[rgba(0,0,0,0.05)] text-[#CC2424] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
+        <span className="text-[9px] bg-[rgba(0,0,0,0.05)] text-[#1D4ED8] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1357,20 +1357,20 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
             <div className="flex items-center gap-3">
               <span className="text-[10px] text-muted w-16">Motion:</span>
               <input type="range" min={1} max={255} value={motionBucket} onChange={e => setMotionBucket(Number(e.target.value))}
-                className="flex-1 h-1 accent-[#FF2D2D]" />
+                className="flex-1 h-1 accent-[#2563EB]" />
               <span className="text-[10px] text-muted w-8">{motionBucket}</span>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-[10px] text-muted w-16">FPS:</span>
               {[6, 12, 24].map(f => (
                 <button key={f} onClick={() => setFps(f)}
-                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-[#FF2D2D] text-white" : "bg-surface-light text-muted"}`}>{f}</button>
+                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-[#2563EB] text-white" : "bg-surface-light text-muted"}`}>{f}</button>
               ))}
             </div>
           </div>
           <motion.button onClick={handleGenerate} disabled={processing || !file}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full mt-3 px-4 py-2.5 bg-[#FF2D2D] text-white text-xs font-semibold rounded-lg hover:bg-[#CC2424] disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full mt-3 px-4 py-2.5 bg-[#2563EB] text-white text-xs font-semibold rounded-lg hover:bg-[#1D4ED8] disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
             Animate Image
           </motion.button>
@@ -1391,7 +1391,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
   );
 }
 
-// ── MUSIC GEN TOOL ───────────────────────────────────────────────
+// -- MUSIC GEN TOOL -----------------------------------------------
 function MusicGenTool({ processing, setProcessing }: ToolProps) {
   const [prompt, setPrompt] = useState("");
   const [mood, setMood] = useState("upbeat");
@@ -1435,9 +1435,9 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Music size={16} className="text-[#FF6B6B]" />
+        <Music size={16} className="text-[#3B82F6]" />
         <h2 className="text-sm font-bold text-foreground">AI Music Generator</h2>
-        <span className="text-[9px] bg-[rgba(255,45,45,0.1)] text-[#FF6B6B] px-2 py-0.5 rounded-full">MusicGen</span>
+        <span className="text-[9px] bg-[rgba(37,99,235,0.1)] text-[#3B82F6] px-2 py-0.5 rounded-full">MusicGen</span>
         <span className="text-[9px] text-muted ml-auto">Royalty-free output</span>
       </motion.div>
 
@@ -1451,7 +1451,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
             <div className="flex flex-wrap gap-1.5">
               {moods.map(m => (
                 <button key={m} onClick={() => setMood(m)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${mood === m ? "bg-[#FF2D2D] text-white font-semibold" : "bg-surface-light text-muted"}`}>{m}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${mood === m ? "bg-[#2563EB] text-white font-semibold" : "bg-surface-light text-muted"}`}>{m}</button>
               ))}
             </div>
           </div>
@@ -1461,7 +1461,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
             <div className="flex flex-wrap gap-1.5">
               {genres.map(g => (
                 <button key={g} onClick={() => setGenre(g)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${genre === g ? "bg-[#FF2D2D] text-white font-semibold" : "bg-surface-light text-muted"}`}>{g}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${genre === g ? "bg-[#2563EB] text-white font-semibold" : "bg-surface-light text-muted"}`}>{g}</button>
               ))}
             </div>
           </div>
@@ -1469,13 +1469,13 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-muted">Duration:</span>
             <input type="range" min={5} max={30} value={duration} onChange={e => setDuration(Number(e.target.value))}
-              className="flex-1 h-1 accent-[#FF2D2D]" />
+              className="flex-1 h-1 accent-[#2563EB]" />
             <span className="text-xs text-foreground font-mono">{duration}s</span>
           </div>
 
           <motion.button onClick={handleGenerate} disabled={processing || !prompt}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2.5 bg-[#FF2D2D] text-white text-xs font-semibold rounded-lg hover:bg-[#CC2424] disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full px-4 py-2.5 bg-[#2563EB] text-white text-xs font-semibold rounded-lg hover:bg-[#1D4ED8] disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Music size={12} />}
             Generate Music
           </motion.button>
@@ -1488,12 +1488,12 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
         >
           {result ? (
             <div className="w-full text-center space-y-3">
-              <div className="w-16 h-16 mx-auto rounded-full bg-[rgba(255,45,45,0.1)] flex items-center justify-center">
-                <Music size={24} className="text-[#FF6B6B]" />
+              <div className="w-16 h-16 mx-auto rounded-full bg-[rgba(37,99,235,0.1)] flex items-center justify-center">
+                <Music size={24} className="text-[#3B82F6]" />
               </div>
               <audio src={result} controls className="w-full" />
               <a href={result} download="ai-music.wav"
-                className="inline-flex items-center gap-1 text-[10px] text-[#FF6B6B] hover:underline">
+                className="inline-flex items-center gap-1 text-[10px] text-[#3B82F6] hover:underline">
                 <Download size={10} /> Download WAV
               </a>
             </div>
@@ -1506,7 +1506,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
   );
 }
 
-// ── VOICE CLONE TOOL ─────────────────────────────────────────────
+// -- VOICE CLONE TOOL ---------------------------------------------
 function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [mode, setMode] = useState<"clone" | "speak">("clone");
@@ -1675,7 +1675,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
   );
 }
 
-// ── TRAIN LORA TOOL ──────────────────────────────────────────────
+// -- TRAIN LORA TOOL ----------------------------------------------
 function TrainLoraTool({ processing, setProcessing }: ToolProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [images, setImages] = useState<File[]>([]);
@@ -1730,9 +1730,9 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Brain size={16} className="text-[#FF6B6B]" />
+        <Brain size={16} className="text-[#3B82F6]" />
         <h2 className="text-sm font-bold text-foreground">Brand LoRA Training</h2>
-        <span className="text-[9px] bg-[rgba(0,0,0,0.05)] text-[#CC2424] px-2 py-0.5 rounded-full">Business+ Only</span>
+        <span className="text-[9px] bg-[rgba(0,0,0,0.05)] text-[#1D4ED8] px-2 py-0.5 rounded-full">Business+ Only</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1775,13 +1775,13 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-muted">Steps:</span>
             <input type="range" min={500} max={5000} step={100} value={steps} onChange={e => setSteps(Number(e.target.value))}
-              className="flex-1 h-1 accent-[#FF2D2D]" />
+              className="flex-1 h-1 accent-[#2563EB]" />
             <span className="text-xs text-foreground font-mono">{steps}</span>
           </div>
 
           <motion.button onClick={handleTrain} disabled={processing || images.length < 5}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2.5 bg-[#FF2D2D] text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="w-full px-4 py-2.5 bg-[#2563EB] text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} />}
             Start Training (~{Math.ceil(steps / 100)} min)
           </motion.button>
@@ -1802,14 +1802,14 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
             ].map(({ step, text }) => (
               <div key={step} className="flex items-start gap-2">
                 <div className="w-5 h-5 rounded-full bg-[rgba(0,0,0,0.05)] flex items-center justify-center shrink-0">
-                  <span className="text-[9px] font-bold text-[#FF6B6B]">{step}</span>
+                  <span className="text-[9px] font-bold text-[#3B82F6]">{step}</span>
                 </div>
                 <p className="text-[10px] text-muted leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
           {trainingStatus && (
-            <div className="mt-4 p-3 rounded-lg bg-[rgba(204,36,36,0.06)] text-xs text-[#CC2424]">
+            <div className="mt-4 p-3 rounded-lg bg-[rgba(204,36,36,0.06)] text-xs text-[#1D4ED8]">
               {trainingStatus}
             </div>
           )}
@@ -1819,7 +1819,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
   );
 }
 
-// ── BATCH GENERATE TOOL ──────────────────────────────────────────
+// -- BATCH GENERATE TOOL ------------------------------------------
 function BatchGenTool({ processing, setProcessing }: ToolProps) {
   const [prompts, setPrompts] = useState<string[]>([""]);
   const [style, setStyle] = useState("modern");
@@ -1948,7 +1948,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
   );
 }
 
-// ── IMAGE CREATION WIZARD (5-step lean flow) ─────────────────────
+// -- IMAGE CREATION WIZARD (5-step lean flow) ---------------------
 interface ImageCreationWizardProps {
   open: boolean;
   onClose: () => void;
@@ -1966,13 +1966,13 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
         type: "chip-select",
         key: "useCase",
         options: [
-          { value: "profile", label: "Profile picture", emoji: "🪪" },
-          { value: "ad", label: "Ad creative", emoji: "📣" },
-          { value: "hero", label: "Hero image", emoji: "🖼️" },
-          { value: "carousel", label: "Carousel slide", emoji: "🗂️" },
-          { value: "thumbnail", label: "Thumbnail", emoji: "▶️" },
-          { value: "product", label: "Product shot", emoji: "📦" },
-          { value: "illustration", label: "Illustration", emoji: "🎨" },
+          { value: "profile", label: "Profile picture", emoji: "??" },
+          { value: "ad", label: "Ad creative", emoji: "??" },
+          { value: "hero", label: "Hero image", emoji: "???" },
+          { value: "carousel", label: "Carousel slide", emoji: "???" },
+          { value: "thumbnail", label: "Thumbnail", emoji: "??" },
+          { value: "product", label: "Product shot", emoji: "??" },
+          { value: "illustration", label: "Illustration", emoji: "??" },
         ],
       },
     },
@@ -1984,7 +1984,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
       field: {
         type: "text",
         key: "subject",
-        placeholder: 'e.g. "a confident woman holding a latte in a sunlit café"',
+        placeholder: 'e.g. "a confident woman holding a latte in a sunlit caf�"',
       },
       aiHelper: {
         label: "Help me describe a compelling subject",
@@ -2007,7 +2007,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
             const json = await res.json();
             const suggestion: string = (json.enhanced || "").replace(/^["']|["']$/g, "").trim();
             if (!suggestion) {
-              toast.error("No suggestion — try again");
+              toast.error("No suggestion � try again");
               return {};
             }
             toast.success("Subject suggested!");
@@ -2029,29 +2029,29 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
         type: "chip-select",
         key: "style",
         options: [
-          { value: "photorealistic", label: "Photorealistic", emoji: "📷" },
-          { value: "3d_render", label: "3D render", emoji: "🧊" },
-          { value: "illustration", label: "Illustration", emoji: "🖌️" },
-          { value: "cinematic", label: "Cinematic", emoji: "🎬" },
-          { value: "minimalist", label: "Minimalist", emoji: "⚪" },
-          { value: "artistic", label: "Artistic", emoji: "🎨" },
-          { value: "vaporwave", label: "Vaporwave", emoji: "🌴" },
+          { value: "photorealistic", label: "Photorealistic", emoji: "??" },
+          { value: "3d_render", label: "3D render", emoji: "??" },
+          { value: "illustration", label: "Illustration", emoji: "???" },
+          { value: "cinematic", label: "Cinematic", emoji: "??" },
+          { value: "minimalist", label: "Minimalist", emoji: "?" },
+          { value: "artistic", label: "Artistic", emoji: "??" },
+          { value: "vaporwave", label: "Vaporwave", emoji: "??" },
         ],
       },
     },
     {
       id: "ratio",
       title: "Aspect ratio",
-      description: "Pick the dimensions — we'll pass them straight to FLUX.",
+      description: "Pick the dimensions � we'll pass them straight to FLUX.",
       icon: <Ratio size={16} />,
       field: {
         type: "chip-select",
         key: "ratio",
         options: [
-          { value: "1024x1024", label: "1:1 square", emoji: "⬛" },
-          { value: "1024x1792", label: "9:16 portrait / story", emoji: "📱" },
-          { value: "1792x1024", label: "16:9 landscape / thumbnail", emoji: "📺" },
-          { value: "896x1120", label: "4:5 post", emoji: "📐" },
+          { value: "1024x1024", label: "1:1 square", emoji: "?" },
+          { value: "1024x1792", label: "9:16 portrait / story", emoji: "??" },
+          { value: "1792x1024", label: "16:9 landscape / thumbnail", emoji: "??" },
+          { value: "896x1120", label: "4:5 post", emoji: "??" },
         ],
       },
     },
@@ -2063,7 +2063,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
       field: {
         type: "textarea",
         key: "prompt",
-        placeholder: "Your final prompt — include details about lighting, mood, composition, etc.",
+        placeholder: "Your final prompt � include details about lighting, mood, composition, etc.",
       },
       aiHelper: {
         label: "Enhance my prompt with AI",
@@ -2091,7 +2091,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
               }),
             });
             if (!res.ok) {
-              toast.error("Couldn't enhance prompt — try again");
+              toast.error("Couldn't enhance prompt � try again");
               return {};
             }
             const json = await res.json();
@@ -2133,7 +2133,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
     <CreationWizard
       open={open}
       title="Create Image"
-      subtitle="AI-guided 5-step flow — FLUX renders the final image."
+      subtitle="AI-guided 5-step flow � FLUX renders the final image."
       icon={<Sparkles size={18} />}
       submitLabel="Generate Image"
       steps={steps}
@@ -2143,7 +2143,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
   );
 }
 
-// ── Helper ───────────────────────────────────────────────────────
+// -- Helper -------------------------------------------------------
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);

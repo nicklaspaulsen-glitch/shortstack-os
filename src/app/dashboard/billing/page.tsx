@@ -1,14 +1,14 @@
-﻿"use client";
+"use client";
 
 /**
  * Agency-owner billing hub. Shows:
- *   1. Current plan hero — tier, price, next renewal, "Manage subscription"
+ *   1. Current plan hero � tier, price, next renewal, "Manage subscription"
  *      (opens Stripe Customer Portal via /api/billing/portal)
- *   2. Usage this month — 5 resources (emails, tokens, clients, sms,
+ *   2. Usage this month � 5 resources (emails, tokens, clients, sms,
  *      call_minutes) from /api/billing/usage (agency owner view).
- *   3. Token top-up — 3 one-time packs → /api/billing/buy-tokens → Stripe
+ *   3. Token top-up � 3 one-time packs ? /api/billing/buy-tokens ? Stripe
  *      Checkout.
- *   4. Recent invoices — from /api/billing/invoices.
+ *   4. Recent invoices � from /api/billing/invoices.
  */
 
 import { useCallback, useEffect, useState } from "react";
@@ -35,7 +35,7 @@ import { PLAN_TIERS, getPlanConfig, type PlanTier } from "@/lib/plan-config";
 import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 
-// ── Types ────────────────────────────────────────────────────────────────────
+// -- Types --------------------------------------------------------------------
 type UsageMap = Record<string, number>;
 type LimitMap = Record<string, number | "unlimited">;
 
@@ -60,7 +60,7 @@ interface InvoiceRow {
   invoice_pdf: string | null;
 }
 
-// ── Resource UI metadata ─────────────────────────────────────────────────────
+// -- Resource UI metadata -----------------------------------------------------
 const RESOURCE_META: Array<{
   key: string;
   label: string;
@@ -68,21 +68,21 @@ const RESOURCE_META: Array<{
   accent: string;
   suffix?: string;
 }> = [
-  { key: "emails", label: "Emails", icon: <Mail size={14} />, accent: "#FF2D2D" },
+  { key: "emails", label: "Emails", icon: <Mail size={14} />, accent: "#2563EB" },
   { key: "tokens", label: "AI Tokens", icon: <Bot size={14} />, accent: "#a855f7" },
-  { key: "clients", label: "Active Clients", icon: <Users size={14} />, accent: "#FF2D2D" },
+  { key: "clients", label: "Active Clients", icon: <Users size={14} />, accent: "#2563EB" },
   { key: "sms", label: "SMS Sent", icon: <Smartphone size={14} />, accent: "#f59e0b" },
   { key: "call_minutes", label: "Call Minutes", icon: <Phone size={14} />, accent: "#ef4444", suffix: "min" },
 ];
 
-// ── Token packs (ids match /api/billing/buy-tokens) ──────────────────────────
+// -- Token packs (ids match /api/billing/buy-tokens) --------------------------
 const TOKEN_PACKS = [
   { id: "1m", tokens: 1_000_000, price: 149, label: "1M Tokens", popular: false },
   { id: "5m", tokens: 5_000_000, price: 599, label: "5M Tokens", popular: true },
   { id: "500k", tokens: 500_000, price: 79, label: "500K Tokens", popular: false },
 ];
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// -- Helpers ------------------------------------------------------------------
 function formatAmount(amount: number, currency: string): string {
   try {
     return new Intl.NumberFormat("en-US", {
@@ -102,11 +102,11 @@ function formatDate(unixSeconds: number): string {
       day: "numeric",
     });
   } catch {
-    return "—";
+    return "�";
   }
 }
 
-// ── Component ────────────────────────────────────────────────────────────────
+// -- Component ----------------------------------------------------------------
 export default function BillingPage() {
   const { profile } = useAuth();
   const [usage, setUsage] = useState<UsageResponse | null>(null);
@@ -239,7 +239,7 @@ export default function BillingPage() {
         }
       />
 
-      {/* ─── Current plan hero ─────────────────────────────────────── */}
+      {/* --- Current plan hero --------------------------------------- */}
       <motion.div
         className=" border p-5 flex items-center justify-between gap-4 flex-wrap relative overflow-hidden"
         initial={{ opacity: 0, y: 12 }}
@@ -252,7 +252,7 @@ export default function BillingPage() {
           borderColor: `${planConfig.color}30`,
         }}
       >
-        <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", position: "absolute", top: 0, left: 0, right: 0 }} />
+        <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", position: "absolute", top: 0, left: 0, right: 0 }} />
         <div className="flex items-center gap-4 min-w-0">
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
@@ -281,7 +281,7 @@ export default function BillingPage() {
                 <>
                   <span className="text-foreground font-semibold">${monthlyPrice.toLocaleString()}</span>
                   <span>/mo</span>
-                  <span className="mx-1.5 text-muted/40">·</span>
+                  <span className="mx-1.5 text-muted/40">�</span>
                   <span>Renews {nextRenewal.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                 </>
               ) : (
@@ -313,7 +313,7 @@ export default function BillingPage() {
         </div>
       </motion.div>
 
-      {/* ─── Usage this month ──────────────────────────────────────── */}
+      {/* --- Usage this month ---------------------------------------- */}
       <section>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-bold text-foreground">Usage this month</h2>
@@ -350,7 +350,7 @@ export default function BillingPage() {
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 <div className="p-4">
                 <div className="flex items-center justify-between mb-2.5">
                   <div className="flex items-center gap-2">
@@ -406,7 +406,7 @@ export default function BillingPage() {
         </div>
       </section>
 
-      {/* ─── Token top-up ──────────────────────────────────────────── */}
+      {/* --- Token top-up -------------------------------------------- */}
       <section>
         <div className="flex items-center justify-between mb-3">
           <div>
@@ -415,14 +415,14 @@ export default function BillingPage() {
               Token top-up
             </h2>
             <p className="text-[11px] text-muted mt-0.5">
-              Ran out of tokens this month? One-time purchase — no subscription change.
+              Ran out of tokens this month? One-time purchase � no subscription change.
             </p>
           </div>
           <Link
             href="/dashboard/usage"
             className="text-[11px] text-muted hover:text-gold transition-colors"
           >
-            View usage detail →
+            View usage detail ?
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -441,7 +441,7 @@ export default function BillingPage() {
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 {pack.popular && (
                   <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-gold text-white text-[9px] font-bold uppercase tracking-wider">
                     Best value
@@ -477,7 +477,7 @@ export default function BillingPage() {
         </div>
       </section>
 
-      {/* ─── Invoices ──────────────────────────────────────────────── */}
+      {/* --- Invoices ------------------------------------------------ */}
       <section>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-bold text-foreground">Recent invoices</h2>
@@ -486,7 +486,7 @@ export default function BillingPage() {
             disabled={portalLoading}
             className="text-[11px] text-muted hover:text-gold transition-colors disabled:opacity-60"
           >
-            View all in Stripe portal →
+            View all in Stripe portal ?
           </button>
         </div>
 
@@ -494,7 +494,7 @@ export default function BillingPage() {
           {invoicesLoading ? (
             <div className="p-8 text-center">
               <Loader2 size={16} className="animate-spin text-gold mx-auto" />
-              <p className="text-[11px] text-muted mt-2">Loading invoices…</p>
+              <p className="text-[11px] text-muted mt-2">Loading invoices�</p>
             </div>
           ) : invoices.length === 0 ? (
             <div className="p-8 text-center">

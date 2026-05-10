@@ -378,7 +378,7 @@ export default function AccountSettings({
             { id: "nordic", name: "Nordic", bg: "#FAFAF7", surface: "#FFFFFF", accent: "#C9A84C", text: "#374151", desc: "Default" },
             { id: "midnight", name: "Midnight", bg: "#08090e", surface: "#10121a", accent: "#C9A84C", text: "#e8eaed", desc: "Dark" },
             { id: "light", name: "Light", bg: "#f8fafc", surface: "#ffffff", accent: "#C9A84C", text: "#0f172a", desc: "Clean" },
-            { id: "ocean", name: "Ocean", bg: "#0a1628", surface: "#0f1d32", accent: "#FF6B6B", text: "#e2e8f0", desc: "Blue" },
+            { id: "ocean", name: "Ocean", bg: "#0a1628", surface: "#0f1d32", accent: "#3B82F6", text: "#e2e8f0", desc: "Blue" },
             { id: "ember", name: "Ember", bg: "#120a08", surface: "#1a100c", accent: "#f97316", text: "#e2e8f0", desc: "Warm" },
             { id: "forest", name: "Forest", bg: "#071008", surface: "#0d1a10", accent: "#22c55e", text: "#e2e8f0", desc: "Green" },
             { id: "purple", name: "Purple", bg: "#0e0812", surface: "#16101e", accent: "#a855f7", text: "#e8e0f0", desc: "Violet" },

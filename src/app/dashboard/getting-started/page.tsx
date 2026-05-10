@@ -150,13 +150,13 @@ export default function GettingStartedPage() {
         transition={{ duration: 0.4 }}
         className="glass rounded-xl p-4 relative overflow-hidden"
       >
-        <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} className="absolute top-0 inset-x-0" />
+        <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-bold">{completed.size}/{STEPS.length} completed</span>
           <span className="text-xs text-gold font-mono">{progress}%</span>
         </div>
         <div className="w-full h-2 rounded-full bg-surface-light">
-          <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #c8a855, #FF2D2D)" }} />
+          <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #c8a855, #2563EB)" }} />
         </div>
         {progress === 100 && (
           <p className="text-xs text-success mt-2 flex items-center gap-1"><CheckCircle size={12} /> All done! Your agency is fully set up.</p>

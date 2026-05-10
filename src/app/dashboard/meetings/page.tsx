@@ -32,7 +32,7 @@ interface MeetingRow {
   created_at: string;
 }
 
-const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
+const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 function formatDuration(seconds: number | null): string {
   if (!seconds) return "—";

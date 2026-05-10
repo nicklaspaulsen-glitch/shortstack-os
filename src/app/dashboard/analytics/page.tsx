@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -19,15 +19,15 @@ import { EmptyState } from "@/components/ui/empty-state-illustration";
 import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
 
-const CHART_COLORS = ["#FF2D2D", "#FF6B6B", "#CC2424", "#F26063", "#FF8585", "#8B1A1A"];
+const CHART_COLORS = ["#2563EB", "#3B82F6", "#1D4ED8", "#F26063", "#FF8585", "#8B1A1A"];
 
-// ─── Types ─────────────────────────────────────────────────────────────────
+// --- Types -----------------------------------------------------------------
 interface ChurnClient { name: string; risk: "high" | "medium" | "low"; score: number; reason: string; mrr: number }
 interface GoalEntry { label: string; current: number; target: number; unit: string }
 interface TeamMember { name: string; leads: number; deals: number; revenue: number; calls: number; score: number }
 interface ActivityItem { id: string; type: "lead" | "payment" | "post" | "deal" | "call"; message: string; time: string }
 
-// ─── Tooltip style (shared) ────────────────────────────────────────────────
+// --- Tooltip style (shared) ------------------------------------------------
 const TT = {
   contentStyle: {
     background: "#FFFFFF",
@@ -42,7 +42,7 @@ const TT = {
   itemStyle: { color: "#0A0A0B", fontSize: "11px" },
 };
 
-// ─── Accordion item ───────────────────────────────────────────────────────
+// --- Accordion item -------------------------------------------------------
 function Accordion({
   id, label, icon, badge, expanded, onToggle, children,
 }: {
@@ -87,8 +87,8 @@ function Accordion({
   );
 }
 
-// ─── Sparkline ────────────────────────────────────────────────────────────
-function Sparkline({ values, color = "#FF6B6B", width = 56, height = 22, id }: {
+// --- Sparkline ------------------------------------------------------------
+function Sparkline({ values, color = "#3B82F6", width = 56, height = 22, id }: {
   values: number[]; color?: string; width?: number; height?: number; id: string;
 }) {
   if (values.length < 2 || values.every(v => v === 0)) return null;
@@ -117,7 +117,7 @@ function Sparkline({ values, color = "#FF6B6B", width = 56, height = 22, id }: {
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────
+// --- Page -----------------------------------------------------------------
 export default function AnalyticsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -294,7 +294,7 @@ export default function AnalyticsPage() {
     : 0;
   const replyRate = stats.dmsSent > 0 ? Math.round((stats.replies / stats.dmsSent) * 100) : 0;
 
-  // ── Computed features ───────────────────────────────────────────────────
+  // -- Computed features ---------------------------------------------------
   const revenueForecast = useMemo(() => {
     if (revenueByMonth.length < 2) return [];
     const mrrValues = revenueByMonth.map(r => r.mrr);
@@ -335,11 +335,11 @@ export default function AnalyticsPage() {
   }, [contentHeatmap]);
 
   const funnelData = useMemo(() => [
-    { name: "Leads", value: stats.totalLeads || 0, fill: "#FF2D2D" },
-    { name: "Contacted", value: stats.dmsSent || 0, fill: "#FF6B6B" },
-    { name: "Calls Booked", value: stats.callsBooked || 0, fill: "#CC2424" },
-    { name: "Proposals", value: 0, fill: "#CC2424" },
-    { name: "Closed Won", value: stats.totalDeals || 0, fill: "#FF6B6B" },
+    { name: "Leads", value: stats.totalLeads || 0, fill: "#2563EB" },
+    { name: "Contacted", value: stats.dmsSent || 0, fill: "#3B82F6" },
+    { name: "Calls Booked", value: stats.callsBooked || 0, fill: "#1D4ED8" },
+    { name: "Proposals", value: 0, fill: "#1D4ED8" },
+    { name: "Closed Won", value: stats.totalDeals || 0, fill: "#3B82F6" },
   ], [stats]);
 
   const goals = useMemo<GoalEntry[]>(() => [
@@ -392,11 +392,11 @@ export default function AnalyticsPage() {
 
   const activityIcon = (type: string) => {
     switch (type) {
-      case "lead": return <Zap size={10} style={{ color: "#FF2D2D" }} />;
-      case "payment": return <DollarSign size={10} style={{ color: "#FF6B6B" }} />;
-      case "post": return <Film size={10} style={{ color: "#FF6B6B" }} />;
-      case "deal": return <Trophy size={10} style={{ color: "#FF2D2D" }} />;
-      case "call": return <Phone size={10} style={{ color: "#FF6B6B" }} />;
+      case "lead": return <Zap size={10} style={{ color: "#2563EB" }} />;
+      case "payment": return <DollarSign size={10} style={{ color: "#3B82F6" }} />;
+      case "post": return <Film size={10} style={{ color: "#3B82F6" }} />;
+      case "deal": return <Trophy size={10} style={{ color: "#2563EB" }} />;
+      case "call": return <Phone size={10} style={{ color: "#3B82F6" }} />;
       default: return <Activity size={10} style={{ color: "#6F6D7A" }} />;
     }
   };
@@ -405,29 +405,29 @@ export default function AnalyticsPage() {
     stats.totalClients > 0 || stats.totalDeals > 0 || stats.replies > 0 ||
     stats.callsBooked > 0 || stats.contentPublished > 0;
 
-  // ─── Prism color map for stat tiles ─────────────────────────────────────
+  // --- Prism color map for stat tiles -------------------------------------
   const PRISM_TILES = [
-    { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },   // MRR → emerald
-    { accent: "#FF2D2D", bar: "from-[#FF2D2D] to-transparent" },   // Leads → blue
-    { accent: "#FF6B6B", bar: "from-[#FF6B6B] to-transparent" },   // DMs
-    { accent: "#CC2424", bar: "from-[#CC2424] to-transparent" },   // Deals
+    { accent: "#2563EB", bar: "from-[#2563EB] to-transparent" },   // MRR ? emerald
+    { accent: "#2563EB", bar: "from-[#2563EB] to-transparent" },   // Leads ? blue
+    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },   // DMs
+    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },   // Deals
   ] as const;
 
-  // ─── Render ───────────────────────────────────────────────────────────────
+  // --- Render ---------------------------------------------------------------
   return (
     <MotionPage className="space-y-4">
 
       <PageHero
         variant="editorial"
         title="Analytics"
-        subtitle="Leads · Revenue · Content ROI"
+        subtitle="Leads � Revenue � Content ROI"
         eyebrow="Performance Overview"
         icon={<BarChart3 size={16} />}
         actions={
           <>
             {stats.totalMRR > 0 && (
-              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(204,36,36,0.08)] border border-[rgba(204,36,36,0.18)] text-[#CC2424]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
+              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(204,36,36,0.08)] border border-[rgba(204,36,36,0.18)] text-[#1D4ED8]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
                 {formatCurrency(stats.totalMRR)} MRR
               </span>
             )}
@@ -440,7 +440,7 @@ export default function AnalyticsPage() {
         }
       />
 
-      {/* ── Loading ──────────────────────────────────────────────────────── */}
+      {/* -- Loading -------------------------------------------------------- */}
       {isLoading && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
@@ -453,7 +453,7 @@ export default function AnalyticsPage() {
         </div>
       )}
 
-      {/* ── Error ────────────────────────────────────────────────────────── */}
+      {/* -- Error ---------------------------------------------------------- */}
       {!isLoading && fetchError !== null && (
         <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
           <p className="text-sm text-danger font-medium">Could not load analytics</p>
@@ -473,7 +473,7 @@ export default function AnalyticsPage() {
         </div>
       )}
 
-      {/* ── Empty ────────────────────────────────────────────────────────── */}
+      {/* -- Empty ---------------------------------------------------------- */}
       {!isLoading && fetchError === null && !hasData && (
         <EmptyState
           type="no-analytics"
@@ -488,13 +488,13 @@ export default function AnalyticsPage() {
         />
       )}
 
-      {/* ══════════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------------ */}
       {/* Main dashboard                                                     */}
-      {/* ══════════════════════════════════════════════════════════════════ */}
+      {/* ------------------------------------------------------------------ */}
       {!isLoading && fetchError === null && hasData && (
         <>
 
-          {/* ── Date range + export ──────────────────────────────────────── */}
+          {/* -- Date range + export ---------------------------------------- */}
           <div className="flex items-center justify-end flex-wrap gap-2.5">
             <div className="flex items-center gap-0.5 rounded-xl p-1 border border-[rgba(0,0,0,0.08)]" style={{ background: "#F2F2F4" }}>
               {(["7d", "30d", "90d", "custom"] as const).map(r => (
@@ -503,7 +503,7 @@ export default function AnalyticsPage() {
                   onClick={() => setDateRange(r)}
                   className={`px-3 py-1 text-[10px] rounded-md transition-colors duration-150 ${
                     dateRange === r
-                      ? "bg-[#CC2424] text-white font-semibold"
+                      ? "bg-[#1D4ED8] text-white font-semibold"
                       : "text-[#6F6D7A] hover:text-[#0A0A0B]"
                   }`}
                 >
@@ -515,7 +515,7 @@ export default function AnalyticsPage() {
               <div className="flex items-center gap-1.5">
                 <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)}
                   className="input text-[10px] px-2 py-1 w-28" aria-label="Start date" />
-                <span className="text-[#4F4D58] text-[10px]">–</span>
+                <span className="text-[#4F4D58] text-[10px]">�</span>
                 <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)}
                   className="input text-[10px] px-2 py-1 w-28" aria-label="End date" />
               </div>
@@ -528,7 +528,7 @@ export default function AnalyticsPage() {
             </button>
           </div>
 
-          {/* ── Zone 1: Command Strip ────────────────────────────────────── */}
+          {/* -- Zone 1: Command Strip -------------------------------------- */}
           <motion.div
             className="relative overflow-hidden rounded-xl"
             style={{
@@ -541,7 +541,7 @@ export default function AnalyticsPage() {
             transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Red top rail */}
-            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent 0%, #CC2424 30%, #FF4040 50%, #CC2424 70%, transparent 100%)" }} />
+            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent 0%, #1D4ED8 30%, #FF4040 50%, #1D4ED8 70%, transparent 100%)" }} />
             {/* Subtle red glow at top */}
             <div className="pointer-events-none absolute top-0 left-0 right-0 h-20" style={{ background: "linear-gradient(180deg, rgba(204,36,36,0.04) 0%, transparent 100%)" }} />
 
@@ -552,7 +552,7 @@ export default function AnalyticsPage() {
               </p>
               {/* Giant MRR */}
               <motion.p
-                className="font-display font-black leading-[0.88] text-[#CC2424]"
+                className="font-display font-black leading-[0.88] text-[#1D4ED8]"
                 style={{ fontSize: "clamp(60px,9vw,104px)", letterSpacing: "-0.045em", fontVariantNumeric: "tabular-nums" }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -564,9 +564,9 @@ export default function AnalyticsPage() {
               {/* Divider */}
               <div className="my-6 h-px bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.08)] to-transparent" />
 
-              {/* Stats — editorial split: hero first stat + 3-stat support strip */}
+              {/* Stats � editorial split: hero first stat + 3-stat support strip */}
               <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
-                {/* Hero stat — Total Leads, larger editorial treatment */}
+                {/* Hero stat � Total Leads, larger editorial treatment */}
                 <motion.div
                   className="py-1 pr-6 md:pr-8 shrink-0"
                   initial={{ opacity: 0, y: 8 }}
@@ -581,7 +581,7 @@ export default function AnalyticsPage() {
                     {stats.totalLeads.toLocaleString()}
                   </p>
                   <p className="text-[10px] mt-0.5" style={{ color: leadGrowth >= 0 ? "#52525B" : "#F26063" }}>
-                    {leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "—"}
+                    {leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "�"}
                   </p>
                 </motion.div>
 
@@ -589,7 +589,7 @@ export default function AnalyticsPage() {
                 <div className="hidden md:block w-px self-stretch bg-[rgba(0,0,0,0.08)] mx-0" />
                 <div className="block md:hidden h-px w-full bg-[rgba(0,0,0,0.08)] my-3" />
 
-                {/* Support stats strip — 3 remaining */}
+                {/* Support stats strip � 3 remaining */}
                 <div className="flex flex-1 grid-cols-3 md:pl-6">
                   {[
                     { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate >= 5 },
@@ -631,7 +631,7 @@ export default function AnalyticsPage() {
             </div>
           </motion.div>
 
-          {/* ── Zone 2: Lead velocity + Lead sources ─────────────────────── */}
+          {/* -- Zone 2: Lead velocity + Lead sources ----------------------- */}
           <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-4">
 
             {/* Lead velocity area chart */}
@@ -641,7 +641,7 @@ export default function AnalyticsPage() {
                   <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Acquisition</p>
                   <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5">
                     Lead Velocity
-                    <span className="ml-2 text-[10px] font-normal text-[#4F4D58]">· {dateRange === "custom" ? "Custom" : dateRange}</span>
+                    <span className="ml-2 text-[10px] font-normal text-[#4F4D58]">� {dateRange === "custom" ? "Custom" : dateRange}</span>
                   </h2>
                 </div>
               </div>
@@ -655,8 +655,8 @@ export default function AnalyticsPage() {
                     <AreaChart data={leadsByDay} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
                       <defs>
                         <linearGradient id="limeAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#FF2D2D" stopOpacity={0.15} />
-                          <stop offset="85%" stopColor="#FF2D2D" stopOpacity={0} />
+                          <stop offset="0%" stopColor="#2563EB" stopOpacity={0.15} />
+                          <stop offset="85%" stopColor="#2563EB" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="2 6" stroke="rgba(0,0,0,0.08)" vertical={false} />
@@ -665,7 +665,7 @@ export default function AnalyticsPage() {
                       <Tooltip {...TT} cursor={{ stroke: "rgba(0,0,0,0.12)", strokeDasharray: "2 4" }} />
                       <Area
                         type="monotone" dataKey="count" name="Leads"
-                        stroke="#FF2D2D" strokeWidth={1.5}
+                        stroke="#2563EB" strokeWidth={1.5}
                         fill="url(#limeAreaGrad)"
                       />
                     </AreaChart>
@@ -715,7 +715,7 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          {/* ── Zone 3: Funnel + Outreach ─────────────────────────────────── */}
+          {/* -- Zone 3: Funnel + Outreach ----------------------------------- */}
           <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-4">
 
             {/* Conversion funnel */}
@@ -789,26 +789,26 @@ export default function AnalyticsPage() {
                       <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
                       <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={28} />
                       <Tooltip {...TT} />
-                      <Line type="monotone" dataKey="sent" stroke="#FF2D2D" strokeWidth={1.5} dot={false} name="Sent" />
-                      <Line type="monotone" dataKey="replies" stroke="#CC2424" strokeWidth={1.5} dot={false} name="Replies" />
+                      <Line type="monotone" dataKey="sent" stroke="#2563EB" strokeWidth={1.5} dot={false} name="Sent" />
+                      <Line type="monotone" dataKey="replies" stroke="#1D4ED8" strokeWidth={1.5} dot={false} name="Replies" />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
               )}
               <div className="flex items-center gap-5 mt-3">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-4 h-px bg-[#FF2D2D]" />
+                  <div className="w-4 h-px bg-[#2563EB]" />
                   <span className="text-[9px] text-[#6F6D7A]">Sent</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-4 h-px bg-[#CC2424]" />
+                  <div className="w-4 h-px bg-[#1D4ED8]" />
                   <span className="text-[9px] text-[#6F6D7A]">Replies</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ── Zone 4: Industries + Goals + Benchmarks (bento asymmetric) ── */}
+          {/* -- Zone 4: Industries + Goals + Benchmarks (bento asymmetric) -- */}
           <div className="grid grid-cols-1 lg:grid-cols-[4fr_5fr_7fr] gap-4 items-start">
 
             {/* Top industries */}
@@ -841,7 +841,7 @@ export default function AnalyticsPage() {
                         </span>
                         <div className="flex-1 h-1 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
                           <motion.div
-                            className="h-full rounded-full bg-[#FF6B6B]"
+                            className="h-full rounded-full bg-[#3B82F6]"
                             initial={{ width: 0 }}
                             animate={{ width: `${pct}%` }}
                             transition={{ duration: 0.6, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
@@ -871,20 +871,20 @@ export default function AnalyticsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* No pseudo accent div needed — top border handles it */}
+              {/* No pseudo accent div needed � top border handles it */}
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Progress</p>
               <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
               <div className="space-y-3.5">
                 {goals.map(goal => {
                   const pct = goal.target > 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
-                  const barColor = pct >= 100 ? "#CC2424" : pct >= 70 ? "#CC2424" : pct >= 40 ? "#CC2424" : "#4F4D58";
+                  const barColor = pct >= 100 ? "#1D4ED8" : pct >= 70 ? "#1D4ED8" : pct >= 40 ? "#1D4ED8" : "#4F4D58";
                   return (
                     <div key={goal.label}>
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="text-[10px] text-[#9F9DAA]">{goal.label}</span>
                         <span
                           className="text-[10px] font-mono"
-                          style={{ color: pct >= 70 ? "#FF6B6B" : "#4F4D58", fontVariantNumeric: "tabular-nums" }}
+                          style={{ color: pct >= 70 ? "#3B82F6" : "#4F4D58", fontVariantNumeric: "tabular-nums" }}
                         >
                           {Math.round(pct)}%
                         </span>
@@ -931,7 +931,7 @@ export default function AnalyticsPage() {
                         {/* Your score */}
                         <motion.div
                           className="absolute h-full rounded-full"
-                          style={{ background: isAbove ? "#FF2D2D" : "#F26063" }}
+                          style={{ background: isAbove ? "#2563EB" : "#F26063" }}
                           initial={{ width: 0 }}
                           animate={{ width: `${yourPct}%` }}
                           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -939,7 +939,7 @@ export default function AnalyticsPage() {
                       </div>
                       <span
                         className="text-[9px] font-mono w-7 text-right shrink-0"
-                        style={{ color: isAbove ? "#FF2D2D" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+                        style={{ color: isAbove ? "#2563EB" : "#F26063", fontVariantNumeric: "tabular-nums" }}
                       >
                         {b.yours}%
                       </span>
@@ -953,14 +953,14 @@ export default function AnalyticsPage() {
                   <span className="text-[9px] text-[#4F4D58]">Industry avg</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-1.5 rounded-full bg-[#FF2D2D]" />
+                  <div className="w-3 h-1.5 rounded-full bg-[#2563EB]" />
                   <span className="text-[9px] text-[#4F4D58]">Yours</span>
                 </div>
               </div>
             </motion.div>
           </div>
 
-          {/* ── Zone 5: Scorecard strip (prism glass, staggered entrance) ── */}
+          {/* -- Zone 5: Scorecard strip (prism glass, staggered entrance) -- */}
           <motion.div
             className="relative rounded-xl border border-[rgba(0,0,0,0.08)] overflow-hidden"
             style={{ background: "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08)" }}
@@ -969,13 +969,13 @@ export default function AnalyticsPage() {
             transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Prism top bar */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#FF2D2D] via-[#FF6B6B] to-[#CC2424]" />
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#1D4ED8]" />
             <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(0,0,0,0.08)]">
               {[
-                { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#FF2D2D" },
-                { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#FF2D2D" : "#F26063" },
-                { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#FF6B6B" },
-                { label: "Active Clients", value: String(stats.activeClients), sub: `${formatCurrency(stats.totalMRR)} MRR`, color: "#CC2424" },
+                { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#2563EB" },
+                { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#2563EB" : "#F26063" },
+                { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#3B82F6" },
+                { label: "Active Clients", value: String(stats.activeClients), sub: `${formatCurrency(stats.totalMRR)} MRR`, color: "#1D4ED8" },
               ].map((cell, i) => (
                 <motion.div
                   key={cell.label}
@@ -997,7 +997,7 @@ export default function AnalyticsPage() {
             </div>
           </motion.div>
 
-          {/* ── Zone 6: Real-time activity feed ──────────────────────────── */}
+          {/* -- Zone 6: Real-time activity feed ---------------------------- */}
           <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5" style={{ background: "#FFFFFF" }}>
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -1007,8 +1007,8 @@ export default function AnalyticsPage() {
                 </h2>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D] animate-pulse" />
-                <span className="text-[9px] text-[#FF2D2D] font-semibold tracking-[0.1em]">LIVE</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
+                <span className="text-[9px] text-[#2563EB] font-semibold tracking-[0.1em]">LIVE</span>
               </div>
             </div>
             <div ref={activityRef} className="max-h-44 overflow-y-auto space-y-0.5">
@@ -1040,9 +1040,9 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          {/* ─────────────────────────────────────────────────────────────── */}
-          {/* Collapsible sections — advanced / data-dependent analytics     */}
-          {/* ─────────────────────────────────────────────────────────────── */}
+          {/* --------------------------------------------------------------- */}
+          {/* Collapsible sections � advanced / data-dependent analytics     */}
+          {/* --------------------------------------------------------------- */}
 
           {/* Revenue Forecast */}
           <Accordion
@@ -1051,7 +1051,7 @@ export default function AnalyticsPage() {
             icon={<TrendingUp size={13} />}
             badge={
               revenueForecast.length > 0 ? (
-                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(204,36,36,0.10)] text-[#FF2D2D]">
+                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(204,36,36,0.10)] text-[#2563EB]">
                   {formatCurrency(revenueForecast[0]?.projected || 0)} next mo.
                 </span>
               ) : undefined
@@ -1062,7 +1062,7 @@ export default function AnalyticsPage() {
             <div className="mt-4">
               {revenueByMonth.length < 2 ? (
                 <p className="text-[11px] text-[#6F6D7A] py-6 text-center">
-                  Not enough revenue history to forecast — connect billing data.
+                  Not enough revenue history to forecast � connect billing data.
                 </p>
               ) : (
                 <>
@@ -1077,17 +1077,17 @@ export default function AnalyticsPage() {
                       >
                         <defs>
                           <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#FF2D2D" stopOpacity={0.15} />
-                            <stop offset="85%" stopColor="#FF2D2D" stopOpacity={0} />
+                            <stop offset="0%" stopColor="#2563EB" stopOpacity={0.15} />
+                            <stop offset="85%" stopColor="#2563EB" stopOpacity={0} />
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="2 6" stroke="rgba(0,0,0,0.08)" vertical={false} />
                         <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
                         <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={32} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
                         <Tooltip {...TT} formatter={(v) => formatCurrency(Number(v) || 0)} />
-                        <Area type="monotone" dataKey="optimistic" stroke="#CC2424" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Optimistic" />
-                        <Area type="monotone" dataKey="projected" stroke="#FF2D2D" fill="url(#forecastGrad)" strokeWidth={1.5} name="Projected" />
-                        <Area type="monotone" dataKey="conservative" stroke="#FF2D2D" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Conservative" />
+                        <Area type="monotone" dataKey="optimistic" stroke="#1D4ED8" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Optimistic" />
+                        <Area type="monotone" dataKey="projected" stroke="#2563EB" fill="url(#forecastGrad)" strokeWidth={1.5} name="Projected" />
+                        <Area type="monotone" dataKey="conservative" stroke="#2563EB" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Conservative" />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
@@ -1106,7 +1106,7 @@ export default function AnalyticsPage() {
                             {formatCurrency(f.projected)}
                           </p>
                           <p className="text-[9px] text-[#4F4D58] mt-0.5">
-                            {formatCurrency(f.conservative)} — {formatCurrency(f.optimistic)}
+                            {formatCurrency(f.conservative)} � {formatCurrency(f.optimistic)}
                           </p>
                         </div>
                       ))}
@@ -1144,7 +1144,7 @@ export default function AnalyticsPage() {
                     <tr>
                       <td colSpan={5} className="py-8 text-center" style={{ background: "none" }}>
                         <p className="text-[11px] text-[#6F6D7A]">No ad platform data yet</p>
-                        <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-[#FF2D2D] hover:opacity-80 transition-opacity">
+                        <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-[#2563EB] hover:opacity-80 transition-opacity">
                           Connect platforms <ArrowUp size={9} className="rotate-45" />
                         </Link>
                       </td>
@@ -1154,11 +1154,11 @@ export default function AnalyticsPage() {
 
                       <td className="py-3 font-medium text-[#0A0A0B]">{p.platform}</td>
                       <td className="py-3 text-right text-[#9F9DAA]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.spend)}</td>
-                      <td className="py-3 text-right text-[#FF6B6B] font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.revenue)}</td>
+                      <td className="py-3 text-right text-[#3B82F6] font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.revenue)}</td>
                       <td className="py-3 text-right">
                         <span
                           className="text-[10px] font-bold"
-                          style={{ color: p.roi > 200 ? "#FF6B6B" : p.roi > 100 ? "#FF2D2D" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+                          style={{ color: p.roi > 200 ? "#3B82F6" : p.roi > 100 ? "#2563EB" : "#F26063", fontVariantNumeric: "tabular-nums" }}
                         >
                           {p.roi}%
                         </span>
@@ -1188,14 +1188,14 @@ export default function AnalyticsPage() {
                 </div>
               ) : churnRiskClients.map(client => (
                 <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
-                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F26063]" : client.risk === "medium" ? "bg-[#FF6B6B]" : "bg-[rgba(0,0,0,0.2)]"}`} />
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F26063]" : client.risk === "medium" ? "bg-[#3B82F6]" : "bg-[rgba(0,0,0,0.2)]"}`} />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-[#0A0A0B] truncate">{client.name}</p>
                     <p className="text-[9px] text-[#6F6D7A]">{client.reason}</p>
                   </div>
                   <span
                     className="text-[10px] font-bold shrink-0"
-                    style={{ color: client.risk === "high" ? "#F26063" : client.risk === "medium" ? "#FF6B6B" : "rgba(0,0,0,0.35)", fontVariantNumeric: "tabular-nums" }}
+                    style={{ color: client.risk === "high" ? "#F26063" : client.risk === "medium" ? "#3B82F6" : "rgba(0,0,0,0.35)", fontVariantNumeric: "tabular-nums" }}
                   >
                     {client.score}%
                   </span>
@@ -1249,7 +1249,7 @@ export default function AnalyticsPage() {
                         <td className="py-3 text-right">
                           <span
                             className="text-[10px] font-mono font-bold"
-                            style={{ color: growth >= 0 ? "#FF6B6B" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+                            style={{ color: growth >= 0 ? "#3B82F6" : "#F26063", fontVariantNumeric: "tabular-nums" }}
                           >
                             {growth >= 0 ? "+" : ""}{growth}%
                           </span>
@@ -1275,7 +1275,7 @@ export default function AnalyticsPage() {
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <Trophy size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-[#9F9DAA]">No team activity yet</p>
-                  <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#FF2D2D] hover:opacity-80 transition-opacity">
+                  <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#2563EB] hover:opacity-80 transition-opacity">
                     Invite team <ArrowUp size={9} className="rotate-45" />
                   </Link>
                 </div>
@@ -1287,11 +1287,11 @@ export default function AnalyticsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <p className="text-xs font-medium text-[#0A0A0B]">{member.name}</p>
-                      {i === 0 && <Star size={9} className="text-[#FF2D2D]" />}
+                      {i === 0 && <Star size={9} className="text-[#2563EB]" />}
                     </div>
-                    <p className="text-[9px] text-[#6F6D7A]">{member.leads} leads · {member.deals} deals · {member.calls} calls</p>
+                    <p className="text-[9px] text-[#6F6D7A]">{member.leads} leads � {member.deals} deals � {member.calls} calls</p>
                   </div>
-                  <p className="text-xs font-bold text-[#FF2D2D] shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <p className="text-xs font-bold text-[#2563EB] shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
                     {formatCurrency(member.revenue)}
                   </p>
                 </div>
@@ -1330,7 +1330,7 @@ export default function AnalyticsPage() {
                               <div
                                 className="h-7 rounded-md flex items-center justify-center text-[9px] font-bold transition-all hover:scale-105"
                                 style={{
-                                  background: `rgba(255, 45, 45, ${intensity * 0.6 + 0.04})`,
+                                  background: `rgba(37, 99, 235, ${intensity * 0.6 + 0.04})`,
                                   color: intensity > 0.5 ? "#fff" : "#6F6D7A",
                                 }}
                               >
@@ -1375,7 +1375,7 @@ export default function AnalyticsPage() {
                     <p className="text-[9px] text-[#6F6D7A]">{c.conversions} conversions</p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-[11px] font-bold text-[#FF6B6B]" style={{ fontVariantNumeric: "tabular-nums" }}>{c.roas.toFixed(1)}x</p>
+                    <p className="text-[11px] font-bold text-[#3B82F6]" style={{ fontVariantNumeric: "tabular-nums" }}>{c.roas.toFixed(1)}x</p>
                     <p className="text-[9px] text-[#6F6D7A]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(c.revenue)}</p>
                   </div>
                 </div>
@@ -1397,7 +1397,7 @@ export default function AnalyticsPage() {
                   <DollarSign size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-[#9F9DAA]">No CLV data yet</p>
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
-                  <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#FF2D2D] hover:opacity-80 transition-opacity">
+                  <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#2563EB] hover:opacity-80 transition-opacity">
                     Add clients <ArrowUp size={9} className="rotate-45" />
                   </Link>
                 </div>
@@ -1412,7 +1412,7 @@ export default function AnalyticsPage() {
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <p className="text-[9px] text-[#6F6D7A] uppercase">Avg CLV</p>
-                          <p className="text-sm font-bold text-[#FF2D2D]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(tier.avgCLV)}</p>
+                          <p className="text-sm font-bold text-[#2563EB]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(tier.avgCLV)}</p>
                         </div>
                         <div>
                           <p className="text-[9px] text-[#6F6D7A] uppercase">Avg Lifetime</p>

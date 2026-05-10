@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
@@ -19,18 +19,18 @@ import OnboardingChecklist from "@/components/dashboard-home/onboarding-checklis
 import type { BentoData } from "@/components/dashboard-home/types";
 
 /**
- * Dashboard home â€” the editorial-bento redesign (Phase 2B).
+ * Dashboard home — the editorial-bento redesign (Phase 2B).
  *
  * Above the bento grid:
  *   - UsageNudgeBanner (Starter only, >70% usage)
- *   - DashboardHeroStrip â€” slim editorial header with greeting + clock + micro-stats
- *   - DowntimeBanner â€” alerts when an integration is down
+ *   - DashboardHeroStrip — slim editorial header with greeting + clock + micro-stats
+ *   - DowntimeBanner — alerts when an integration is down
  *
  * The bento grid (8 tiles) is the centerpiece. Trinity orb + the
  * AI recommender sit below it for users who want to take action.
  *
  * Data wiring: client-side fetch from `/api/dashboard-bento` (RLS-gated
- * server route). The original `/api/dashboard-data` is left intact â€” it
+ * server route). The original `/api/dashboard-data` is left intact — it
  * powers the deeper stats/pipeline/agent panels we removed from the home
  * (those still exist on `/dashboard/leads`, `/dashboard/agent-supervisor`,
  * etc.) so no wiring is broken downstream.
@@ -64,7 +64,7 @@ export default function DashboardPage() {
       window.history.replaceState({}, "", "/dashboard");
       return () => clearTimeout(t);
     }
-  // refreshProfile is stable per-context â€” no need to re-run on identity change.
+  // refreshProfile is stable per-context — no need to re-run on identity change.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -95,7 +95,7 @@ export default function DashboardPage() {
   }, []);
 
   // Client portal users get a different shell. Keep the existing client view
-  // intact â€” only the agency owner home is redesigned in this phase.
+  // intact — only the agency owner home is redesigned in this phase.
   if (profile?.role === "client") {
     return <ClientDashboard />;
   }
@@ -112,7 +112,7 @@ export default function DashboardPage() {
     <div className="fade-in space-y-4 max-w-[1400px] mx-auto">
       <UsageNudgeBanner planTier={profile?.plan_tier} />
 
-      {/* Getting-started checklist â€” shown to new users until all 5 items
+      {/* Getting-started checklist — shown to new users until all 5 items
           are complete OR the user dismisses it. Hides itself via localStorage
           (14-day auto-expire). completedFromApi can be wired to real data
           once the dashboard-bento API surface exposes setup flags. */}
@@ -122,19 +122,19 @@ export default function DashboardPage() {
 
       <DowntimeBanner />
 
-      {/* Trinity 3D speaking hero â€” replaces the orb for the new
+      {/* Trinity 3D speaking hero — replaces the orb for the new
           monochrome direction. R3F crystal lazy-loads + lip-syncs
           to AI suggestions piped from /api/ai/suggest-topics. */}
       <TrinityHero3D greeting={firstName} suggestionSurface="script_lab" />
 
-      {/* Agent Office preview â€” smooth premium tile (replaces the
+      {/* Agent Office preview — smooth premium tile (replaces the
           pixelated PixiJS preview that used to live here). Each agent
           gets a circular disc + name + role. Live pulse rings when
           the agent has recent activity. Links into the full office
           page for the live PixiJS experience. */}
       <AgentOfficeTile />
 
-      {/* Legacy ask-anything orb stays available below the hero â€” keeps
+      {/* Legacy ask-anything orb stays available below the hero — keeps
           the chat-prompt entry point that some users rely on. */}
       <TrinityOrb firstName={firstName} />
 
@@ -145,7 +145,7 @@ export default function DashboardPage() {
         <BentoFallback />
       )}
 
-      {/* Below-the-fold AI helpers â€” kept from the previous dashboard */}
+      {/* Below-the-fold AI helpers — kept from the previous dashboard */}
       <AiRecommender />
       <RecentGenerations />
 
@@ -156,8 +156,8 @@ export default function DashboardPage() {
 }
 
 /**
- * Pre-warm the route cache for likely navigation targets â€” keeps the bento
- * "View â†’" links instant. Wrapped as a no-render component so the prefetch
+ * Pre-warm the route cache for likely navigation targets — keeps the bento
+ * "View ?" links instant. Wrapped as a no-render component so the prefetch
  * effect runs after the bento mounts.
  */
 function RouterPrefetch({ router }: { router: ReturnType<typeof useRouter> }) {
@@ -183,7 +183,7 @@ function RouterPrefetch({ router }: { router: ReturnType<typeof useRouter> }) {
 
 /**
  * Render a friendly fallback when the bento API failed entirely. Surfaces
- * the brand mark, a one-line editorial copy, and a primary CTA â€” matches
+ * the brand mark, a one-line editorial copy, and a primary CTA — matches
  * the per-tile empty-state design language so the page never feels broken.
  */
 function BentoFallback() {
@@ -203,7 +203,7 @@ function BentoFallback() {
 }
 
 /**
- * ClientDashboard â€” unchanged from the previous home. Client portal users
+ * ClientDashboard — unchanged from the previous home. Client portal users
  * see a simpler "your services" surface. The agency-owner redesign doesn't
  * touch this view; portal pages have their own design language.
  */
@@ -219,7 +219,7 @@ function ClientDashboard() {
         {/* Acid Lime underline accent */}
         <div
           className="h-[2px] mt-1 rounded-full"
-          style={{ background: "linear-gradient(90deg, var(--brand-accent, #CC2424) 0%, transparent 70%)" }}
+          style={{ background: "linear-gradient(90deg, var(--brand-accent, #1D4ED8) 0%, transparent 70%)" }}
           aria-hidden
         />
         <p className="text-sm text-muted mt-1.5">Your client portal</p>

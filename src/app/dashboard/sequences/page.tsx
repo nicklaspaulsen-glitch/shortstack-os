@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -30,10 +30,10 @@ interface SequenceRunListItem {
   exit_reason: string | null;
 }
 
-// Local step type â€” supports the extra "social" + "condition" UI affordances
+// Local step type — supports the extra "social" + "condition" UI affordances
 // that don't map 1:1 to server channels. When we save to the API we collapse
-// social â†’ dm and skip condition steps (conditions aren't first-class on the
-// backend yet â€” the cron runner ignores them and the step order is preserved).
+// social ? dm and skip condition steps (conditions aren't first-class on the
+// backend yet — the cron runner ignores them and the step order is preserved).
 interface SequenceStep {
   id: string;
   type: "email" | "sms" | "call" | "social" | "wait" | "condition";
@@ -88,7 +88,7 @@ interface ActivityItem {
   status?: string;
 }
 
-const RAINBOW_BAR = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
+const RAINBOW_BAR = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep[]; category: string }[] = [
   { name: "Cold Outreach (5 touches)", description: "Multi-channel cold outreach with email, SMS and social", category: "Outreach",
@@ -168,7 +168,7 @@ const STEP_ICONS: Record<string, React.ReactNode> = {
   condition: <GitBranch size={12} />,
 };
 
-// Map UI step type â†’ server channel. "social" collapses to "dm"; "condition"
+// Map UI step type ? server channel. "social" collapses to "dm"; "condition"
 // is a UI-only affordance (dropped on save for now).
 function typeToChannel(type: SequenceStep["type"]): string | null {
   if (type === "social") return "dm";
@@ -226,7 +226,7 @@ export default function SequencesPage() {
       const data = await res.json();
       const raw = (data.sequences || []) as ServerSequence[];
       // Hydrate each sequence with its steps (parallel). For the list screen
-      // we only need counts, but the builder wants full step arrays â€” so we
+      // we only need counts, but the builder wants full step arrays — so we
       // lazy-load steps when a sequence is opened. Here we synthesize from
       // step_count only.
       const hydrated: Sequence[] = raw.map(s => ({
@@ -300,7 +300,7 @@ export default function SequencesPage() {
       const data = await res.json();
       setActivity((data.activity || []) as ActivityItem[]);
     } catch {
-      // soft-fail â€” activity panel just stays empty
+      // soft-fail — activity panel just stays empty
     }
   }
 
@@ -333,7 +333,7 @@ export default function SequencesPage() {
   }
 
   async function persistSequence(seq: Sequence): Promise<Sequence | null> {
-    // Save â€” either create or sync steps to existing.
+    // Save — either create or sync steps to existing.
     const channelSteps = seq.steps
       .map(s => ({ type: s.type, body: s.body, subject: s.subject, delay_days: s.delay_days, channel: typeToChannel(s.type) }))
       .filter(s => s.channel !== null);
@@ -479,7 +479,7 @@ export default function SequencesPage() {
         };
       });
 
-      // Persist immediately â€” AI-generated sequences are sent to the backend
+      // Persist immediately — AI-generated sequences are sent to the backend
       // so the cron runner can pick them up as soon as leads are enrolled.
       const draft: Sequence = {
         id: `tmp_${Date.now()}`,
@@ -624,7 +624,7 @@ export default function SequencesPage() {
         }
       />
 
-      {/* Recent activity panel â€” last 10 step executions from trinity_log */}
+      {/* Recent activity panel — last 10 step executions from trinity_log */}
       <PrismPanel padding="p-4" className="overflow-hidden">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-xs font-semibold flex items-center gap-2">
@@ -642,7 +642,7 @@ export default function SequencesPage() {
                   <span className={`px-1.5 py-0.5 rounded text-[9px] ${a.status === "completed" ? "bg-green-500/10 text-green-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-gray-500/10 text-gray-400"}`}>
                     {a.status || "run"}
                   </span>
-                  <span>{a.description || `${a.sequence_name} â†’ step ${(a.step_order ?? 0) + 1}`}</span>
+                  <span>{a.description || `${a.sequence_name} ? step ${(a.step_order ?? 0) + 1}`}</span>
                 </span>
                 <span className="text-muted">{a.executed_at ? new Date(a.executed_at).toLocaleString() : ""}</span>
               </li>
@@ -1180,12 +1180,12 @@ export default function SequencesPage() {
                         {r.status}
                       </span>
                       <span>step {r.current_step + 1}</span>
-                      <span className="text-muted">Â·</span>
-                      <span className="text-muted">contact {r.contact_id ? r.contact_id.slice(0, 8) : "â€”"}</span>
+                      <span className="text-muted">·</span>
+                      <span className="text-muted">contact {r.contact_id ? r.contact_id.slice(0, 8) : "—"}</span>
                       {r.next_action_at && (
-                        <span className="text-muted">Â· next {new Date(r.next_action_at).toLocaleString()}</span>
+                        <span className="text-muted">· next {new Date(r.next_action_at).toLocaleString()}</span>
                       )}
-                      {r.exit_reason && <span className="text-muted">Â· {r.exit_reason}</span>}
+                      {r.exit_reason && <span className="text-muted">· {r.exit_reason}</span>}
                     </div>
                     <div className="flex gap-1">
                       {r.status === "active" && (

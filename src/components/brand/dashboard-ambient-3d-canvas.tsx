@@ -23,7 +23,7 @@ import { Float, MeshDistortMaterial, Environment } from "@react-three/drei";
 import { Suspense, useRef } from "react";
 import type { Mesh } from "three";
 
-const TEAL = "#FF2D2D";
+const TEAL = "#2563EB";
 const TEAL_LIGHT = "#FF8080";
 const TEAL_DARK = "#CC1A1A";
 

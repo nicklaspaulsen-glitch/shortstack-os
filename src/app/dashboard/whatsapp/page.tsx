@@ -1,4 +1,4 @@
-Ôªø"use client";
+"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -109,7 +109,7 @@ export default function WhatsAppPage() {
     setCampaigns((camps as WhatsAppCampaign[]) ?? []);
     setClients((cls as Client[]) ?? []);
 
-    // Fire-and-forget ‚Äî these enhance UX but failure is non-fatal
+    // Fire-and-forget ó these enhance UX but failure is non-fatal
     fetch("/api/whatsapp/numbers")
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (j?.numbers) setNumbers(j.numbers as WhatsAppNumber[]); })
@@ -190,7 +190,7 @@ export default function WhatsAppPage() {
           // server already updated campaign status; surface counts
           const { sent, failed } = json as { sent: number; failed: number };
           if (failed > 0) {
-            toast(`Sent ${sent}/${sent + failed} ‚Äî ${failed} failed`, { icon: "‚ö†Ô∏è" });
+            toast(`Sent ${sent}/${sent + failed} ó ${failed} failed`, { icon: "??" });
           } else {
             toast.success(`Sent to ${sent} recipient${sent === 1 ? "" : "s"}`);
           }
@@ -215,7 +215,7 @@ export default function WhatsAppPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#FF2D2D]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" />
       </div>
     );
   }
@@ -224,7 +224,7 @@ export default function WhatsAppPage() {
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-4xl mx-auto">
       <PageHero
         title="WhatsApp Campaigns"
-        subtitle="Send templated WhatsApp messages to your clients ‚Äî schedule or send now."
+        subtitle="Send templated WhatsApp messages to your clients ó schedule or send now."
         icon={<MessageCircle className="w-6 h-6" />}
         gradient="gold"
         actions={
@@ -278,7 +278,7 @@ export default function WhatsAppPage() {
                 </label>
                 <input
                   type="text"
-                  placeholder="Search clients‚Ä¶"
+                  placeholder="Search clientsÖ"
                   value={clientSearch}
                   onChange={(e) => setClientSearch(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all"
@@ -329,7 +329,7 @@ export default function WhatsAppPage() {
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value.slice(0, MAX_MSG_LEN))}
-                  placeholder="Hi {{name}}, here's your update from ShortStack‚Ä¶"
+                  placeholder="Hi {{name}}, here's your update from ShortStackÖ"
                   rows={5}
                   className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all resize-none"
                 />
@@ -381,7 +381,7 @@ export default function WhatsAppPage() {
                 ) : (
                   <Send className="w-4 h-4" />
                 )}
-                {sending ? "Sending‚Ä¶" : scheduleAt ? "Schedule Campaign" : "Send Now"}
+                {sending ? "SendingÖ" : scheduleAt ? "Schedule Campaign" : "Send Now"}
               </button>
             </div>
           </div>
@@ -496,7 +496,7 @@ export default function WhatsAppPage() {
                       </span>
                     )}
                     <p className="text-[10px] text-black/30">
-                      {c.last_message_at ? new Date(c.last_message_at).toLocaleDateString() : "‚Äî"}
+                      {c.last_message_at ? new Date(c.last_message_at).toLocaleDateString() : "ó"}
                     </p>
                   </div>
                 </motion.div>
@@ -523,7 +523,7 @@ export default function WhatsAppPage() {
             transition={{ delay: i * 0.06, duration: 0.4 }}
             className="glass rounded-xl overflow-hidden"
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-4 text-center">
               <p className="text-2xl font-bold text-[#0A0A0B]">{s.value}</p>
               <p className="text-xs text-black/40 mt-1">{s.label}</p>

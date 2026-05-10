@@ -1,17 +1,17 @@
-﻿"use client";
+"use client";
 
 /**
  * Unified Conversations Inbox
  *
  * Three-pane Gmail/Front-style inbox aggregating every messaging channel:
- *   email · sms · whatsapp · telegram · instagram · slack · discord · web_chat
+ *   email � sms � whatsapp � telegram � instagram � slack � discord � web_chat
  *
  * Left  (320px): filter tabs + searchable conversation list
  * Middle(flex):  selected thread + composer
  * Right (280px): contact details + quick actions
  *
  * Realtime: subscribes to INSERTs on conversations and
- * conversation_messages — no polling.
+ * conversation_messages � no polling.
  *
  * Keyboard shortcuts (focus NOT in a textbox):
  *   j/k  prev/next conversation
@@ -54,7 +54,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 
-// ── Types ────────────────────────────────────────────────────────────
+// -- Types ------------------------------------------------------------
 type Channel =
   | "email"
   | "sms"
@@ -99,7 +99,7 @@ interface Message {
   external_message_id: string | null;
 }
 
-// ── Channel chrome ───────────────────────────────────────────────────
+// -- Channel chrome ---------------------------------------------------
 const CHANNEL_META: Record<Channel, { label: string; icon: React.ReactNode; tone: string }> = {
   email: { label: "Email", icon: <Mail size={14} />, tone: "text-sky-300 bg-sky-500/10 border-sky-500/30" },
   sms: { label: "SMS", icon: <MessageSquare size={14} />, tone: "text-emerald-300 bg-emerald-500/10 border-emerald-500/30" },
@@ -135,7 +135,7 @@ function fmtTime(iso: string): string {
   return d.toLocaleDateString([], { month: "short", day: "numeric" });
 }
 
-// ── Main component ───────────────────────────────────────────────────
+// -- Main component ---------------------------------------------------
 export default function ConversationsPage() {
   const { user } = useAuth();
   const supabase = useMemo(() => createClient(), []);
@@ -161,7 +161,7 @@ export default function ConversationsPage() {
   const composerRef = useRef<HTMLTextAreaElement>(null);
   const threadScrollRef = useRef<HTMLDivElement>(null);
 
-  // ── Fetch conversation list ────────────────────────────────────────
+  // -- Fetch conversation list ----------------------------------------
   const fetchList = useCallback(async (signal?: AbortSignal) => {
     try {
       const params = new URLSearchParams();
@@ -199,7 +199,7 @@ export default function ConversationsPage() {
     return () => ctrl.abort();
   }, [user, fetchList]);
 
-  // ── Fetch messages when selection changes ──────────────────────────
+  // -- Fetch messages when selection changes --------------------------
   const fetchMessages = useCallback(
     async (conversationId: string) => {
       setLoadingThread(true);
@@ -239,7 +239,7 @@ export default function ConversationsPage() {
     }
   }, [messages.length]);
 
-  // ── Realtime subscriptions ─────────────────────────────────────────
+  // -- Realtime subscriptions -----------------------------------------
   useEffect(() => {
     if (!user) return;
     const channel = supabase
@@ -253,7 +253,7 @@ export default function ConversationsPage() {
           filter: `user_id=eq.${user.id}`,
         },
         () => {
-          // Simpler than per-row merging — refetch the whole list.
+          // Simpler than per-row merging � refetch the whole list.
           fetchList();
         },
       )
@@ -281,7 +281,7 @@ export default function ConversationsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, selectedId]);
 
-  // ── Send outbound reply ────────────────────────────────────────────
+  // -- Send outbound reply --------------------------------------------
   async function handleSend() {
     if (!selectedId || !composerText.trim()) return;
     setSending(true);
@@ -316,7 +316,7 @@ export default function ConversationsPage() {
     }
   }
 
-  // ── Status / assignment helpers ────────────────────────────────────
+  // -- Status / assignment helpers ------------------------------------
   async function setStatus(id: string, status: Status) {
     try {
       const res = await fetch(`/api/conversations/${id}/status`, {
@@ -333,13 +333,13 @@ export default function ConversationsPage() {
     }
   }
 
-  // ── Keyboard shortcuts ─────────────────────────────────────────────
+  // -- Keyboard shortcuts ---------------------------------------------
   useEffect(() => {
     function handler(e: KeyboardEvent) {
       const target = e.target as HTMLElement;
       const isTyping = target.tagName === "INPUT" || target.tagName === "TEXTAREA";
 
-      // Number keys always jump filters (even while typing in search? no — only if not typing).
+      // Number keys always jump filters (even while typing in search? no � only if not typing).
       if (!isTyping && /^[1-9]$/.test(e.key)) {
         const idx = Number(e.key) - 1;
         if (FILTERS[idx]) {
@@ -380,12 +380,12 @@ export default function ConversationsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversations, selectedId]);
 
-  // ── Render ─────────────────────────────────────────────────────────
+  // -- Render ---------------------------------------------------------
   const selected = conversations.find((c) => c.id === selectedId) || null;
 
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-[#FAFAFB] text-[#0A0A0B]">
-      {/* ── LEFT: conversation list — hidden on mobile when viewing a thread ── */}
+      {/* -- LEFT: conversation list � hidden on mobile when viewing a thread -- */}
       <aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.08)] flex-col`}>
         <div className="p-4 border-b border-[rgba(0,0,0,0.08)]">
           <h1 className="text-lg font-semibold mb-3 flex items-center gap-2">
@@ -401,8 +401,8 @@ export default function ConversationsPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search…"
-              className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg pl-9 pr-3 py-2 text-sm placeholder-[#71717A] focus:outline-none focus:border-[#CC2424]/40"
+              placeholder="Search�"
+              className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg pl-9 pr-3 py-2 text-sm placeholder-[#71717A] focus:outline-none focus:border-[#1D4ED8]/40"
             />
           </div>
         </div>
@@ -417,7 +417,7 @@ export default function ConversationsPage() {
               onClick={() => setFilter(f.key)}
               className={`text-xs px-2.5 py-1 rounded-md transition ${
                 filter === f.key
-                  ? "bg-[#CC2424]/10 text-[#CC2424] border border-[#CC2424]/20"
+                  ? "bg-[#1D4ED8]/10 text-[#1D4ED8] border border-[#1D4ED8]/20"
                   : "text-[#52525B] hover:text-white hover:bg-[rgba(0,0,0,0.04)] border border-transparent"
               }`}
               title={`Shortcut: ${i + 1}`}
@@ -448,7 +448,7 @@ export default function ConversationsPage() {
           ) : conversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
               <div className="w-12 h-12 bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.08)] flex items-center justify-center">
-                <Inbox size={20} className="text-[#CC2424]/60" />
+                <Inbox size={20} className="text-[#1D4ED8]/60" />
               </div>
               <div>
                 <p className="text-sm font-medium text-[#71717A] mb-1">No conversations yet</p>
@@ -474,7 +474,7 @@ export default function ConversationsPage() {
         </div>
       </aside>
 
-      {/* ── MIDDLE: thread — hidden on mobile when showing the list ── */}
+      {/* -- MIDDLE: thread � hidden on mobile when showing the list -- */}
       <main className={`${mobileView === "list" ? "hidden" : "flex"} md:flex flex-1 flex-col min-w-0`}>
         {!selected ? (
           <div className="flex-1 flex items-center justify-center text-[#71717A] text-sm">
@@ -486,7 +486,7 @@ export default function ConversationsPage() {
             <header className="px-5 py-3 border-b border-[rgba(0,0,0,0.08)] flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  {/* Back button — mobile only */}
+                  {/* Back button � mobile only */}
                   <button
                     className="flex md:hidden items-center gap-1 text-[#52525B] hover:text-white mr-1"
                     onClick={() => setMobileView("list")}
@@ -552,7 +552,7 @@ export default function ConversationsPage() {
               ) : messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full gap-2 py-16 text-center">
                   <MessageCircle size={28} className="text-white/10" />
-                  <p className="text-xs text-[#71717A]">No messages yet — say hello</p>
+                  <p className="text-xs text-[#71717A]">No messages yet � say hello</p>
                 </div>
               ) : (
                 messages.map((m) => <MessageBubble key={m.id} m={m} />)
@@ -586,7 +586,7 @@ export default function ConversationsPage() {
                       handleSend();
                     }
                   }}
-                  placeholder={`Reply via ${CHANNEL_META[selected.channel].label}… (Cmd/Ctrl+Enter to send)`}
+                  placeholder={`Reply via ${CHANNEL_META[selected.channel].label}� (Cmd/Ctrl+Enter to send)`}
                   rows={2}
                   className="flex-1 bg-transparent outline-none resize-none text-sm placeholder-white/30"
                 />
@@ -595,7 +595,7 @@ export default function ConversationsPage() {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleSend}
                   disabled={sending || !composerText.trim()}
-                  className="px-3 py-1.5 rounded bg-[#CC2424] text-white text-sm font-medium disabled:opacity-40 hover:bg-[#b01e1e] flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded bg-[#1D4ED8] text-white text-sm font-medium disabled:opacity-40 hover:bg-[#b01e1e] flex items-center gap-1.5"
                 >
                   {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                   Send
@@ -609,7 +609,7 @@ export default function ConversationsPage() {
         )}
       </main>
 
-      {/* ── RIGHT: contact + actions — desktop only ── */}
+      {/* -- RIGHT: contact + actions � desktop only -- */}
       {selected && (
         <aside className="hidden md:block w-[280px] flex-shrink-0 border-l border-[rgba(0,0,0,0.08)] overflow-y-auto glass-md">
           <ContactPanel conversation={selected} contact={contact} onStatus={(s) => setStatus(selected.id, s)} />
@@ -619,7 +619,7 @@ export default function ConversationsPage() {
   );
 }
 
-// ── Conversation row ─────────────────────────────────────────────────
+// -- Conversation row -------------------------------------------------
 function ConversationRow({
   c,
   active,
@@ -642,7 +642,7 @@ function ConversationRow({
       whileHover={{ backgroundColor: active ? undefined : "rgba(0,0,0,0.03)" }}
       onClick={onClick}
       className={`w-full text-left px-4 py-3 border-b border-[rgba(0,0,0,0.08)] transition-colors ${
-        active ? "bg-[#CC2424]/5 border-l-2 border-l-[#CC2424]/40" : ""
+        active ? "bg-[#1D4ED8]/5 border-l-2 border-l-[#1D4ED8]/40" : ""
       }`}
     >
       <div className="flex items-start justify-between gap-2 mb-1">
@@ -656,7 +656,7 @@ function ConversationRow({
         </div>
         <div className="flex items-center gap-1 flex-shrink-0">
           {c.unread_count > 0 && (
-            <span className="w-2 h-2 rounded-full bg-[#CC2424]" />
+            <span className="w-2 h-2 rounded-full bg-[#1D4ED8]" />
           )}
           <span className="text-[11px] text-[#71717A]">{fmtTime(c.last_message_at)}</span>
         </div>
@@ -673,7 +673,7 @@ function ConversationRow({
   );
 }
 
-// ── Channel pill ─────────────────────────────────────────────────────
+// -- Channel pill -----------------------------------------------------
 function ChannelPill({ channel }: { channel: Channel }) {
   const meta = CHANNEL_META[channel];
   return (
@@ -684,7 +684,7 @@ function ChannelPill({ channel }: { channel: Channel }) {
   );
 }
 
-// ── Message bubble ───────────────────────────────────────────────────
+// -- Message bubble ---------------------------------------------------
 function MessageBubble({ m }: { m: Message }) {
   const inbound = m.direction === "inbound";
   return (
@@ -698,7 +698,7 @@ function MessageBubble({ m }: { m: Message }) {
         className={`max-w-[70%]  px-4 py-2.5 text-sm leading-relaxed ${
           inbound
             ? "bg-[#F2F2F4] text-[#0A0A0B] border border-[rgba(0,0,0,0.08)]"
-            : "bg-[#CC2424] text-white"
+            : "bg-[#1D4ED8] text-white"
         }`}
       >
         <div className="whitespace-pre-wrap break-words">{m.body || <em className="opacity-60">No content</em>}</div>
@@ -710,7 +710,7 @@ function MessageBubble({ m }: { m: Message }) {
   );
 }
 
-// ── Contact panel ────────────────────────────────────────────────────
+// -- Contact panel ----------------------------------------------------
 function ContactPanel({
   conversation,
   contact,
@@ -816,13 +816,13 @@ function ContactPanel({
               href={`/dashboard/clients`}
               className="block text-xs px-2.5 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-[#52525B]"
             >
-              Client record →
+              Client record ?
             </Link>
             <Link
               href={`/dashboard/deals`}
               className="block text-xs px-2.5 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-[#52525B]"
             >
-              Create deal →
+              Create deal ?
             </Link>
           </div>
         </section>
@@ -838,7 +838,7 @@ function ContactPanel({
           <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">e</kbd> archive</div>
           <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">s</kbd> snooze</div>
           <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">c</kbd> close</div>
-          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">1</kbd>–<kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">9</kbd> jump filter</div>
+          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">1</kbd>�<kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">9</kbd> jump filter</div>
         </div>
       </section>
     </div>

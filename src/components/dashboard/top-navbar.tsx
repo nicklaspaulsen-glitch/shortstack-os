@@ -265,7 +265,7 @@ export default function TopNavbar() {
             <span className="hidden sm:inline">Ask Trinity</span>
             <span
               className="text-[9px] font-mono opacity-60 border rounded px-1 hidden md:inline"
-              style={{ borderColor: "rgba(255,45,45,0.25)" }}
+              style={{ borderColor: "rgba(37,99,235,0.25)" }}
             >
               {shortcutHint}
             </span>

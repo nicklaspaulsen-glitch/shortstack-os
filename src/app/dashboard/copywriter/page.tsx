@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -24,15 +24,15 @@ import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 // produces, rendered on a gradient background (no image required).
 const COPYWRITER_PREVIEW_FALLBACK: RollingPreviewItem[] = [
   { id: "c1", tag: "Email Subject", title: "Your cart misses you", text: "A 3-line reminder that lifts recovery revenue by 18-24% vs. generic 'You forgot something'." },
-  { id: "c2", tag: "Ad Headline", title: "Stop losing leads to slow replies", text: "Facebook ad copy for a CRM — 3 hooks, 2 proof points, one CTA. 1.8x CTR." },
+  { id: "c2", tag: "Ad Headline", title: "Stop losing leads to slow replies", text: "Facebook ad copy for a CRM � 3 hooks, 2 proof points, one CTA. 1.8x CTR." },
   { id: "c3", tag: "Landing Hero", title: "Ship 10x faster. Without the burnout.", text: "Above-the-fold headline + subhead + social proof line for a dev-tools SaaS." },
   { id: "c4", tag: "Cold Email", title: "Quick question about {Company}", text: "12-line outbound email that warms cold prospects using the PAS framework." },
   { id: "c5", tag: "Blog Intro", title: "Why nobody reads your blog (and the 4-line fix)", text: "Hook-first intro that drops bounce rate by 30% on the first scroll fold." },
-  { id: "c6", tag: "Product Desc", title: "Engineered for the long haul", text: "80-word Shopify product description in a premium, confident tone. Feature → benefit → proof." },
-  { id: "c7", tag: "Social Post", title: "I stopped doing this. Revenue went up.", text: "LinkedIn storytelling post — hook + 3 beats + CTA. Avg. 40k impressions." },
+  { id: "c6", tag: "Product Desc", title: "Engineered for the long haul", text: "80-word Shopify product description in a premium, confident tone. Feature ? benefit ? proof." },
+  { id: "c7", tag: "Social Post", title: "I stopped doing this. Revenue went up.", text: "LinkedIn storytelling post � hook + 3 beats + CTA. Avg. 40k impressions." },
   { id: "c8", tag: "Ad Headline", title: "Your competitors are already doing this", text: "Urgency-driven Meta ad angle for B2B SaaS. Short. Punchy. Converts." },
   { id: "c9", tag: "Email Subject", title: "Open this before Friday", text: "6-word subject line that beat the control by 41% in an A/B test." },
-  { id: "c10", tag: "Landing CTA", title: "Start free — keep it forever", text: "Zero-friction CTA copy + reassurance line for self-serve SaaS checkout." },
+  { id: "c10", tag: "Landing CTA", title: "Start free � keep it forever", text: "Zero-friction CTA copy + reassurance line for self-serve SaaS checkout." },
   { id: "c11", tag: "Sales Page", title: "The last tool you'll need for X", text: "Long-form sales page skeleton: problem, agitate, solve, proof, offer, close." },
   { id: "c12", tag: "Push Notif", title: "You're 1 step away from $500", text: "80-char push notification copy proven to reopen dormant users within 24h." },
 ];
@@ -50,7 +50,7 @@ function copyTypeToCategory(t: ContentType): string {
   }
 }
 
-// ── Types ──────────────────────────────────────────────────────────
+// -- Types ----------------------------------------------------------
 type ContentType = "blog" | "landing" | "email" | "social" | "product" | "ad";
 type Tone = "professional" | "casual" | "witty" | "bold";
 
@@ -78,7 +78,7 @@ interface Template {
   color: string;
 }
 
-// ── Content type config ────────────────────────────────────────────
+// -- Content type config --------------------------------------------
 const CONTENT_TYPES: {
   id: ContentType;
   label: string;
@@ -86,9 +86,9 @@ const CONTENT_TYPES: {
   icon: typeof FileText;
   color: string;
 }[] = [
-  { id: "blog", label: "Blog Post", description: "SEO-optimized articles", icon: FileText, color: "#FF6B6B" },
+  { id: "blog", label: "Blog Post", description: "SEO-optimized articles", icon: FileText, color: "#3B82F6" },
   { id: "landing", label: "Landing Page", description: "High-converting page copy", icon: Globe, color: "#FF5252" },
-  { id: "email", label: "Email Campaign", description: "Drip sequences & blasts", icon: Mail, color: "#FF6B6B" },
+  { id: "email", label: "Email Campaign", description: "Drip sequences & blasts", icon: Mail, color: "#3B82F6" },
   { id: "social", label: "Social Media", description: "Captions & post copy", icon: MessageSquare, color: "#f472b6" },
   { id: "product", label: "Product Description", description: "E-commerce copy", icon: ShoppingBag, color: "#fbbf24" },
   { id: "ad", label: "Ad Headlines", description: "Meta, Google & TikTok ads", icon: Megaphone, color: "#fb923c" },
@@ -101,13 +101,13 @@ const TONES: { id: Tone; label: string; emoji: string }[] = [
   { id: "bold", label: "Bold", emoji: "" },
 ];
 
-// ── Template gallery ───────────────────────────────────────────────
+// -- Template gallery -----------------------------------------------
 const TEMPLATES: Template[] = [
   {
     id: "t1", name: "SaaS Launch Blog", description: "Product launch announcement blog post",
     type: "blog", topic: "Announcing [Product] - The all-in-one platform for [Industry]",
     tone: "professional", audience: "SaaS founders and CTOs", keywords: "launch, platform, productivity, automation",
-    wordCount: 800, icon: Zap, color: "#FF6B6B",
+    wordCount: 800, icon: Zap, color: "#3B82F6",
   },
   {
     id: "t2", name: "Lead Gen Landing Page", description: "Free trial / demo signup page",
@@ -119,7 +119,7 @@ const TEMPLATES: Template[] = [
     id: "t3", name: "Welcome Email Sequence", description: "Onboarding drip campaign (3 emails)",
     type: "email", topic: "Welcome to [Product] - Here's how to get started and see results in 7 days",
     tone: "casual", audience: "New signups who just created an account", keywords: "welcome, getting started, first steps, success",
-    wordCount: 500, icon: Mail, color: "#FF6B6B",
+    wordCount: 500, icon: Mail, color: "#3B82F6",
   },
   {
     id: "t4", name: "Agency Case Study Social", description: "Client success story for social",
@@ -143,7 +143,7 @@ const TEMPLATES: Template[] = [
     id: "t7", name: "Thought Leadership Article", description: "Industry trends deep-dive",
     type: "blog", topic: "The future of [Industry]: 5 trends reshaping [Topic] in 2026",
     tone: "professional", audience: "Industry professionals and decision-makers", keywords: "trends, innovation, future, strategy",
-    wordCount: 1200, icon: BookOpen, color: "#FF6B6B",
+    wordCount: 1200, icon: BookOpen, color: "#3B82F6",
   },
   {
     id: "t8", name: "Re-engagement Email", description: "Win-back campaign for churned users",
@@ -153,7 +153,7 @@ const TEMPLATES: Template[] = [
   },
 ];
 
-// ── Mock AI content generator ──────────────────────────────────────
+// -- Mock AI content generator --------------------------------------
 function generateMockContent(type: ContentType, topic: string, tone: Tone, audience: string, keywords: string, wordCount: number): string {
   const toneDescriptor = tone === "professional" ? "authoritative and polished"
     : tone === "casual" ? "friendly and conversational"
@@ -460,7 +460,7 @@ ${topic} - Premium quality ${kw.length > 0 ? kw[0] : "product"} designed for ${a
   return templates[type] || templates.blog;
 }
 
-// ── Main Component ─────────────────────────────────────────────────
+// -- Main Component -------------------------------------------------
 export default function CopywriterPage() {
   // Form state
   const [contentType, setContentType] = useState<ContentType>("blog");
@@ -480,14 +480,14 @@ export default function CopywriterPage() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [savedItems, setSavedItems] = useState<Set<string>>(new Set());
 
-  // Creation wizard state (legacy modal — kept for power users)
+  // Creation wizard state (legacy modal � kept for power users)
   const [wizardOpen, setWizardOpen] = useState(false);
 
-  // Guided Mode (in-page wizard) ↔ Advanced Mode (original controls)
+  // Guided Mode (in-page wizard) ? Advanced Mode (original controls)
   const [advancedMode, setAdvancedMode] = useAdvancedMode("copywriter");
   const [guidedStep, setGuidedStep] = useState(0);
 
-  // ── Generate content ─────────────────────────────────────────────
+  // -- Generate content ---------------------------------------------
   const handleGenerate = useCallback(async () => {
     if (!topic.trim()) {
       toast.error("Please enter a topic or brief");
@@ -558,7 +558,7 @@ export default function CopywriterPage() {
       // can keep working. Previously this was fully silent which made
       // outages look like success.
       const msg = err instanceof Error ? err.message : "Network error";
-      toast.error(`AI request failed (${msg}) — showing sample content`);
+      toast.error(`AI request failed (${msg}) � showing sample content`);
       await new Promise(r => setTimeout(r, 2000));
       const mockContent = generateMockContent(contentType, topic, tone, audience, keywords, wordCount);
       setOutput(mockContent);
@@ -586,20 +586,20 @@ export default function CopywriterPage() {
     setGenerating(false);
   }, [contentType, topic, tone, audience, keywords, wordCount]);
 
-  // ── Copy to clipboard ────────────────────────────────────────────
+  // -- Copy to clipboard --------------------------------------------
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(output);
     toast.success("Copied to clipboard");
   }, [output]);
 
-  // ── Save to library ──────────────────────────────────────────────
+  // -- Save to library ----------------------------------------------
   const saveToLibrary = useCallback(() => {
     const id = String(Date.now());
     setSavedItems(prev => new Set(prev).add(id));
     toast.success("Saved to content library");
   }, []);
 
-  // ── Apply template ───────────────────────────────────────────────
+  // -- Apply template -----------------------------------------------
   const applyTemplate = useCallback((template: Template) => {
     setContentType(template.type);
     setTopic(template.topic);
@@ -611,7 +611,7 @@ export default function CopywriterPage() {
     toast.success(`Loaded "${template.name}" template`);
   }, []);
 
-  // ── Load from history ────────────────────────────────────────────
+  // -- Load from history --------------------------------------------
   const loadFromHistory = useCallback((item: HistoryItem) => {
     setContentType(item.type);
     setTopic(item.topic);
@@ -623,12 +623,12 @@ export default function CopywriterPage() {
 
   const activeType = CONTENT_TYPES.find(t => t.id === contentType)!;
 
-  // ── In-page guided steps (new Wizard) ────────────────────────────
+  // -- In-page guided steps (new Wizard) ----------------------------
   const guidedSteps: WizardStepDef[] = [
     {
       id: "type",
       title: "What are you writing?",
-      description: "Pick the format — we'll tailor the writing style.",
+      description: "Pick the format � we'll tailor the writing style.",
       icon: <FileText size={18} />,
       component: (
         <ChoiceCards
@@ -652,7 +652,7 @@ export default function CopywriterPage() {
     {
       id: "topic",
       title: "What's it about?",
-      description: "A single sentence is fine. Be specific — \"morning skincare routine for oily skin\" beats \"skincare\".",
+      description: "A single sentence is fine. Be specific � \"morning skincare routine for oily skin\" beats \"skincare\".",
       icon: <Sparkles size={18} />,
       canProceed: topic.trim().length > 0,
       component: (
@@ -699,7 +699,7 @@ export default function CopywriterPage() {
     {
       id: "tone",
       title: "Pick a voice",
-      description: "This controls the vibe — formal vs. playful, calm vs. punchy.",
+      description: "This controls the vibe � formal vs. playful, calm vs. punchy.",
       icon: <Type size={18} />,
       component: (
         <ChoiceCards
@@ -735,7 +735,7 @@ export default function CopywriterPage() {
             <div className="flex items-center gap-2">
               <activeType.icon size={16} style={{ color: activeType.color }} />
               <p className="text-sm font-semibold">{activeType.label}</p>
-              <span className="text-[10px] text-muted">· {tone} tone</span>
+              <span className="text-[10px] text-muted">� {tone} tone</span>
             </div>
             <p className="text-sm leading-relaxed">{topic || <span className="text-muted italic">(no topic yet)</span>}</p>
             {audience && (
@@ -750,7 +750,7 @@ export default function CopywriterPage() {
     },
   ];
 
-  // ── Wizard steps ─────────────────────────────────────────────────
+  // -- Wizard steps -------------------------------------------------
   const wizardSteps: WizardStep[] = [
     {
       id: "contentType",
@@ -773,7 +773,7 @@ export default function CopywriterPage() {
     {
       id: "topic",
       title: "What's your topic or product?",
-      description: "One or two sentences is plenty — the more specific, the better.",
+      description: "One or two sentences is plenty � the more specific, the better.",
       icon: <Sparkles size={16} />,
       field: {
         type: "text",
@@ -808,7 +808,7 @@ export default function CopywriterPage() {
               body: JSON.stringify({ text: seed, type: "content" }),
             });
             if (!res.ok) {
-              toast.error("Couldn't generate a topic — try again");
+              toast.error("Couldn't generate a topic � try again");
               return {};
             }
             const data = await res.json();
@@ -820,7 +820,7 @@ export default function CopywriterPage() {
             toast.success("Topic suggested");
             return { topic: enhanced };
           } catch {
-            toast.error("Network error — topic unchanged");
+            toast.error("Network error � topic unchanged");
             return {};
           }
         },
@@ -898,7 +898,7 @@ export default function CopywriterPage() {
             toast.success("Keywords generated");
             return { keywords: enhanced };
           } catch {
-            toast.error("Network error — keywords unchanged");
+            toast.error("Network error � keywords unchanged");
             return {};
           }
         },
@@ -921,7 +921,7 @@ export default function CopywriterPage() {
     },
   ];
 
-  // ── Wizard complete → generate and populate canvas ───────────────
+  // -- Wizard complete ? generate and populate canvas ---------------
   const handleWizardComplete = useCallback(async (data: Record<string, unknown>) => {
     const contentTypes = Array.isArray(data.contentTypes) ? (data.contentTypes as string[]) : [];
     const chosenType = (contentTypes[0] || "blog") as ContentType;
@@ -1022,7 +1022,7 @@ export default function CopywriterPage() {
       // Surface the error so outages don't look like silent success; still
       // fall back to sample content so the user can continue.
       const msg = err instanceof Error ? err.message : "Network error";
-      toast.error(`AI request failed (${msg}) — showing sample content`);
+      toast.error(`AI request failed (${msg}) � showing sample content`);
       await new Promise(r => setTimeout(r, 1200));
       const mockContent = generateMockContent(chosenType, chosenTopic, chosenTone, audience, chosenKeywords, wc);
       setOutput(mockContent);
@@ -1055,7 +1055,7 @@ export default function CopywriterPage() {
         className="mb-6"
         icon={<Pen size={28} />}
         title="AI Copywriter"
-        subtitle="Blog posts, emails, social — copy that converts, in seconds."
+        subtitle="Blog posts, emails, social � copy that converts, in seconds."
         gradient="purple"
         actions={
           <>
@@ -1107,14 +1107,14 @@ export default function CopywriterPage() {
         }
       />
 
-      {/* Guided Mode — the "4-year-old friendly" path */}
+      {/* Guided Mode � the "4-year-old friendly" path */}
       {!advancedMode && (
         <Wizard
           className="mb-6"
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={generating ? "Writing…" : "Generate copy"}
+          finishLabel={generating ? "Writing�" : "Generate copy"}
           busy={generating}
           onFinish={async () => {
             await handleGenerate();
@@ -1172,7 +1172,7 @@ export default function CopywriterPage() {
               Every angle, every tone, every funnel stage
             </h3>
             <p className="text-xs text-muted max-w-md mx-auto mt-1">
-              Subject lines, ad headlines, landing heros — pick a template or
+              Subject lines, ad headlines, landing heros � pick a template or
               start blank. ShortStack writes in your brand voice automatically.
             </p>
           </div>
@@ -1183,7 +1183,7 @@ export default function CopywriterPage() {
       <CreationWizard
         open={wizardOpen}
         title="Create with AI"
-        subtitle="5 quick steps — we handle the rest"
+        subtitle="5 quick steps � we handle the rest"
         icon={<Wand2 size={18} />}
         submitLabel="Generate Content"
         steps={wizardSteps}
@@ -1757,7 +1757,7 @@ export default function CopywriterPage() {
   );
 }
 
-// ── Inline markdown formatting helper ──────────────────────────────
+// -- Inline markdown formatting helper ------------------------------
 function renderInlineFormatting(text: string): (string | JSX.Element)[] {
   const parts: (string | JSX.Element)[] = [];
   // Process bold (**text**) and links ([text](#))

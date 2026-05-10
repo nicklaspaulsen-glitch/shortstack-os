@@ -91,7 +91,7 @@ export default function PrismPanel({
         <>
           <div
             className="pointer-events-none absolute -right-20 -top-20 w-56 h-56 blur-3xl"
-            style={{ background: "#FF2D2D", opacity: 0.04, borderRadius: "50%" }}
+            style={{ background: "#2563EB", opacity: 0.04, borderRadius: "50%" }}
           />
           <div
             className="pointer-events-none absolute -left-10 -bottom-10 w-40 h-40 blur-2xl"

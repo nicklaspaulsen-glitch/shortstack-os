@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -78,7 +78,7 @@ const categoryColors: Record<string, string> = {
   Retention: "bg-amber-500/10 text-amber-400",
 };
 
-const RAINBOW = "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)";
+const RAINBOW = "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)";
 
 export default function EmailTemplatesPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("gallery");
@@ -91,7 +91,7 @@ export default function EmailTemplatesPage() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "opens" | "replies">("name");
 
-  /* ── AI state ── */
+  /* -- AI state -- */
   const [aiTemplateType, setAiTemplateType] = useState<AiTemplateType>("welcome");
   const [aiAudience, setAiAudience] = useState("");
   const [aiBrandVoice, setAiBrandVoice] = useState("");

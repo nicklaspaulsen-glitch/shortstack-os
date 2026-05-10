@@ -854,7 +854,7 @@ export default function CommunityPage() {
             transition={{ delay: i * 0.06, duration: 0.4 }}
             className="glass rounded-xl overflow-hidden"
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
             <div className="p-3 text-center">
               <p className={`text-lg font-bold font-mono ${tile.color}`}>{tile.value}</p>
               <p className="text-[10px] text-muted">{tile.label}</p>

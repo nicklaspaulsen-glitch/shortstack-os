@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -56,14 +56,14 @@ interface PermissionRow {
 
 const RAINBOW_BAR = {
   height: 3,
-  background: "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)",
+  background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)",
 };
 
 const ROLE_DEFINITIONS: RoleDefinition[] = [
-  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#CC2424", memberCount: 0 },
-  { id: "admin", label: "Admin", description: "Everything except billing management and workspace deletion", color: "#CC2424", memberCount: 0 },
+  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#1D4ED8", memberCount: 0 },
+  { id: "admin", label: "Admin", description: "Everything except billing management and workspace deletion", color: "#1D4ED8", memberCount: 0 },
   { id: "manager", label: "Manager", description: "Client management, reports, content creation and approval", color: "#8b5cf6", memberCount: 0 },
-  { id: "creator", label: "Creator", description: "Content creation only - no client or financial access", color: "#CC2424", memberCount: 0 },
+  { id: "creator", label: "Creator", description: "Content creation only - no client or financial access", color: "#1D4ED8", memberCount: 0 },
   { id: "viewer", label: "Viewer", description: "Read-only access to dashboards and reports", color: "#6b7280", memberCount: 0 },
 ];
 
@@ -261,7 +261,7 @@ export default function TeamPage() {
       <PageHero
         icon={<UsersRound size={28} />}
         title="Team"
-        subtitle={`${members.length} members · ${onlineCount} online`}
+        subtitle={`${members.length} members � ${onlineCount} online`}
         gradient="gold"
         actions={
           <motion.button
@@ -298,14 +298,14 @@ export default function TeamPage() {
         ))}
       </div>
 
-      {/* ═══ MEMBERS TAB ═══ */}
+      {/* --- MEMBERS TAB --- */}
       {tab === "members" && (
         <div className="space-y-4">
           <div className="flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 min-w-[200px]">
               <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
               <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-white border border-[rgba(0,0,0,0.08)] focus:outline-none focus:ring-1 focus:ring-[#CC2424]/40 placeholder:text-[#71717A]"
+                className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-white border border-[rgba(0,0,0,0.08)] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/40 placeholder:text-[#71717A]"
                 placeholder="Search members..." aria-label="Search team members" />
             </div>
             <div className="flex gap-1 bg-surface rounded-lg p-0.5">
@@ -369,7 +369,7 @@ export default function TeamPage() {
                     <td className="py-2.5 px-3 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button
-                          onClick={e => { e.stopPropagation(); toast("Edit panel coming soon — use the 'Active Team Members' section below to manage real members.", { icon: "💡" }); }}
+                          onClick={e => { e.stopPropagation(); toast("Edit panel coming soon � use the 'Active Team Members' section below to manage real members.", { icon: "??" }); }}
                           className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors"
                           title="Edit"
                         ><Pencil size={11} /></button>
@@ -444,7 +444,7 @@ export default function TeamPage() {
         </div>
       )}
 
-      {/* ═══ PERMISSIONS TAB ═══ */}
+      {/* --- PERMISSIONS TAB --- */}
       {tab === "permissions" && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -497,7 +497,7 @@ export default function TeamPage() {
         </motion.div>
       )}
 
-      {/* ═══ ROLES TAB ═══ */}
+      {/* --- ROLES TAB --- */}
       {tab === "roles" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -520,7 +520,7 @@ export default function TeamPage() {
                     <p className="text-[9px] text-muted">{role.memberCount} member{role.memberCount !== 1 ? "s" : ""}</p>
                   </div>
                   <button
-                    onClick={() => toast("Role editing is managed by the permission matrix — tweak per-member permissions in the Active Team Members list.", { icon: "💡" })}
+                    onClick={() => toast("Role editing is managed by the permission matrix � tweak per-member permissions in the Active Team Members list.", { icon: "??" })}
                     className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors"
                     title="Role permissions are managed per-member"
                   ><Pencil size={11} /></button>
@@ -552,7 +552,7 @@ export default function TeamPage() {
         </div>
       )}
 
-      {/* ═══ ACCESS LOG TAB ═══ */}
+      {/* --- ACCESS LOG TAB --- */}
       {tab === "activity" && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -592,7 +592,7 @@ export default function TeamPage() {
         </motion.div>
       )}
 
-      {/* ═══ CAPACITY TAB ═══ */}
+      {/* --- CAPACITY TAB --- */}
       {tab === "capacity" && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -609,7 +609,7 @@ export default function TeamPage() {
               const combinedLoad = Math.min(Math.round((taskLoad + hourLoad) / 2), 100);
               const loadLevel = combinedLoad > 80 ? "Overloaded" : combinedLoad > 50 ? "Balanced" : "Available";
               const loadColor = combinedLoad > 80 ? "text-red-400" : combinedLoad > 50 ? "text-gold" : "text-emerald-400";
-              const barColor = combinedLoad > 80 ? "#ef4444" : combinedLoad > 50 ? "#CC2424" : "#16a34a";
+              const barColor = combinedLoad > 80 ? "#ef4444" : combinedLoad > 50 ? "#1D4ED8" : "#16a34a";
               return (
                 <motion.div
                   key={m.id}
@@ -648,7 +648,7 @@ export default function TeamPage() {
         </motion.div>
       )}
 
-      {/* ═══ REAL TEAM MEMBERS SECTION ═══ */}
+      {/* --- REAL TEAM MEMBERS SECTION --- */}
       {tab === "members" && membersLoading && <TableSkeleton rows={4} />}
 
       {tab === "members" && !membersLoading && realMembers.length > 0 && (
@@ -689,7 +689,7 @@ export default function TeamPage() {
                       m.role === "viewer" ? "bg-gray-400/10 text-gray-400" :
                       "bg-emerald-400/10 text-emerald-400"
                     }`}>{m.role}</span>
-                    {m.job_title && <span className="text-[9px] text-muted">· {m.job_title}</span>}
+                    {m.job_title && <span className="text-[9px] text-muted">� {m.job_title}</span>}
                   </div>
                   <p className="text-[10px] text-muted">{m.email}</p>
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -731,7 +731,7 @@ export default function TeamPage() {
         </motion.div>
       )}
 
-      {/* ═══ INVITE MODAL ═══ */}
+      {/* --- INVITE MODAL --- */}
       {showInvite && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowInvite(false)}>
           <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
@@ -821,7 +821,7 @@ export default function TeamPage() {
         </div>
       )}
 
-      {/* ═══ EDIT MEMBER MODAL ═══ */}
+      {/* --- EDIT MEMBER MODAL --- */}
       {editingMember && (
         <EditMemberModal
           member={editingMember}
@@ -833,7 +833,7 @@ export default function TeamPage() {
         />
       )}
 
-      {/* ═══ CUSTOM ROLE BUILDER MODAL ═══ */}
+      {/* --- CUSTOM ROLE BUILDER MODAL --- */}
       {showCustomRole && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCustomRole(false)}>
           <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
@@ -881,7 +881,7 @@ export default function TeamPage() {
                     toast.error("Toggle at least one permission for this role");
                     return;
                   }
-                  toast("Custom roles aren't saved yet. Use per-member permissions in Active Team Members for now.", { icon: "💡", duration: 6000 });
+                  toast("Custom roles aren't saved yet. Use per-member permissions in Active Team Members for now.", { icon: "??", duration: 6000 });
                   setShowCustomRole(false);
                   setCustomRoleName("");
                   setCustomPermissions({});
@@ -897,7 +897,7 @@ export default function TeamPage() {
   );
 }
 
-/* ── Edit Team Member Modal ── */
+/* -- Edit Team Member Modal -- */
 interface EditMemberProps {
   member: {
     id: string;
@@ -972,7 +972,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
 
         <div>
           <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold flex items-center gap-1">
-            <Key size={9} /> Reset Password <span className="text-muted normal-case">(optional — leave blank to keep)</span>
+            <Key size={9} /> Reset Password <span className="text-muted normal-case">(optional � leave blank to keep)</span>
           </label>
           <div className="relative">
             <input

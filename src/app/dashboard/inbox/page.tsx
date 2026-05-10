@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -20,7 +20,7 @@ import PageAI from "@/components/page-ai";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import PageHero from "@/components/ui/page-hero";
 
-/* ── Types ── */
+/* -- Types -- */
 type InboxCategory = "all" | "scripts" | "emails" | "outreach" | "contracts" | "ideas" | "reports" | "briefings" | "exports";
 type InboxView = "inbox" | "auto-runs";
 type SortField = "date" | "title" | "type";
@@ -53,7 +53,7 @@ interface InboxItem {
   tags: string[];
 }
 
-/* ── Category Config ── */
+/* -- Category Config -- */
 const CATEGORIES: { key: InboxCategory; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
   { key: "all", label: "All Items", icon: <Inbox size={14} />, color: "text-gold", bg: "bg-gold/10" },
   { key: "scripts", label: "Scripts", icon: <Film size={14} />, color: "text-blue-400", bg: "bg-blue-500/10" },
@@ -86,7 +86,7 @@ function truncate(str: string, len: number) {
   return str.length > len ? str.slice(0, len) + "..." : str;
 }
 
-/* ── Component ── */
+/* -- Component -- */
 export default function InboxPage() {
   const { user } = useAuth();
   const supabase = createClient();
@@ -115,7 +115,7 @@ export default function InboxPage() {
   const [autoRuns, setAutoRuns] = useState<AutoRunEntry[]>([]);
   const [autoRunsLoading, setAutoRunsLoading] = useState(false);
 
-  /* ── Persist read state to localStorage ── */
+  /* -- Persist read state to localStorage -- */
   function getReadIds(): Set<string> {
     if (typeof window === "undefined") return new Set();
     try {
@@ -140,7 +140,7 @@ export default function InboxPage() {
     } catch {}
   }
 
-  /* ── Fetch all content from various tables ──
+  /* -- Fetch all content from various tables --
      Supabase rows are untyped here (each table has ~15 fields we read without
      pulling in the full generated types). Rather than wrap every access in a
      runtime guard, we locally relax the `any` lint just for this iterator. */
@@ -190,7 +190,7 @@ export default function InboxPage() {
           id: `contract-${c.id}`,
           type: "contracts",
           title: c.title || "Untitled Contract",
-          preview: `${c.status} contract${c.value ? ` — $${Number(c.value).toLocaleString()}` : ""}`,
+          preview: `${c.status} contract${c.value ? ` � $${Number(c.value).toLocaleString()}` : ""}`,
           content: `Contract: ${c.title}\nStatus: ${c.status}\nValue: $${Number(c.value || 0).toLocaleString()}\nStart: ${c.start_date || "TBD"}\nEnd: ${c.end_date || "TBD"}`,
           date: c.created_at,
           source: "Contract Generator",
@@ -242,7 +242,7 @@ export default function InboxPage() {
         inboxItems.push({
           id: `briefing-${b.id}`,
           type: "briefings",
-          title: `Daily Briefing — ${new Date(b.generated_at).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}`,
+          title: `Daily Briefing � ${new Date(b.generated_at).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}`,
           preview: b.summary || "Morning briefing with stats & updates",
           content: b.summary || JSON.stringify(b.content, null, 2),
           date: b.created_at,
@@ -323,7 +323,7 @@ export default function InboxPage() {
 
   useEffect(() => { fetchInbox(); }, [fetchInbox]);
 
-  /* ── Fetch auto-run entries from trinity_log ── */
+  /* -- Fetch auto-run entries from trinity_log -- */
   const fetchAutoRuns = useCallback(async () => {
     setAutoRunsLoading(true);
     try {
@@ -359,7 +359,7 @@ export default function InboxPage() {
 
   useEffect(() => { if (view === "auto-runs") fetchAutoRuns(); }, [view, fetchAutoRuns]);
 
-  /* ── Escape key to close overlay ── */
+  /* -- Escape key to close overlay -- */
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && overlayItem) {
@@ -372,7 +372,7 @@ export default function InboxPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [overlayItem]);
 
-  /* ── Derived ── */
+  /* -- Derived -- */
   const filtered = useMemo(() => {
     let result = items.filter(i => showArchived ? i.archived : !i.archived);
     if (category !== "all") result = result.filter(i => i.type === category);
@@ -413,7 +413,7 @@ export default function InboxPage() {
     return counts;
   }, [items]);
 
-  /* ── Actions ── */
+  /* -- Actions -- */
   const toggleStar = (id: string) => setItems(prev => prev.map(i => i.id === id ? { ...i, starred: !i.starred } : i));
   const togglePin = (id: string) => setItems(prev => prev.map(i => i.id === id ? { ...i, pinned: !i.pinned } : i));
   const markRead = (id: string) => {
@@ -496,7 +496,7 @@ export default function InboxPage() {
     else { setSortField(field); setSortDir("desc"); }
   };
 
-  /* ── Status badge ── */
+  /* -- Status badge -- */
   const StatusPill = ({ status }: { status: string }) => {
     const colors: Record<string, string> = {
       draft: "bg-[rgba(0,0,0,0.06)] text-muted",
@@ -523,7 +523,7 @@ export default function InboxPage() {
     );
   };
 
-  /* ── Render ── */
+  /* -- Render -- */
   return (
     <div className="fade-in h-[calc(100vh-4rem)] flex flex-col max-w-[1400px] w-full mx-auto overflow-x-hidden">
       {/* Header */}
@@ -561,7 +561,7 @@ export default function InboxPage() {
           }
         />
 
-        {/* Stats — inbox view only */}
+        {/* Stats � inbox view only */}
         {view === "inbox" && (
         <div className="grid grid-cols-4 gap-3">
           {[
@@ -578,7 +578,7 @@ export default function InboxPage() {
               whileHover={{ y: -2 }}
               className="glass rounded-xl overflow-hidden relative !py-2.5 !px-3 flex items-center gap-3"
             >
-              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
               <div className={`${s.color}`}>{s.icon}</div>
               <div>
                 <p className="text-lg font-bold leading-none">{s.value}</p>
@@ -589,7 +589,7 @@ export default function InboxPage() {
         </div>
         )}
 
-        {/* Search & Filters — inbox view only */}
+        {/* Search & Filters � inbox view only */}
         {view === "inbox" && (<>
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
@@ -664,7 +664,7 @@ export default function InboxPage() {
         </>)}
       </div>
 
-      {/* Main Content — inbox view */}
+      {/* Main Content � inbox view */}
       {view === "inbox" && (
       <div className="flex-1 flex overflow-hidden px-4 md:px-6 pb-4 md:pb-6 gap-4">
         {/* Left: Category Sidebar */}
@@ -905,7 +905,7 @@ export default function InboxPage() {
       </div>
       )}
 
-      {/* ── Auto-Runs View ── */}
+      {/* -- Auto-Runs View -- */}
       {view === "auto-runs" && (
         <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-4 md:pb-6">
           {autoRunsLoading ? (
@@ -982,7 +982,7 @@ export default function InboxPage() {
         </div>
       )}
 
-      {/* ── Full-screen Overlay Modal ── */}
+      {/* -- Full-screen Overlay Modal -- */}
       {overlayItem && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center"
@@ -1057,7 +1057,7 @@ export default function InboxPage() {
                     <textarea
                       value={replyText}
                       onChange={e => setReplyText(e.target.value)}
-                      placeholder="Type your reply... (saved as a draft — send flows per channel)"
+                      placeholder="Type your reply... (saved as a draft � send flows per channel)"
                       className="w-full bg-transparent text-sm text-[rgba(0,0,0,0.75)] placeholder-[rgba(0,0,0,0.25)] px-4 py-3 resize-none focus:outline-none min-h-[120px]"
                       autoFocus
                     />
@@ -1073,9 +1073,9 @@ export default function InboxPage() {
                           if (!replyText.trim()) return;
                           // Copy the draft so the user can paste into the channel's own UI.
                           // Actual send flows differ per channel (email, SMS, outreach) and
-                          // don't have a unified endpoint yet — we don't want to fake a send.
+                          // don't have a unified endpoint yet � we don't want to fake a send.
                           navigator.clipboard.writeText(replyText).catch(() => {});
-                          toast.success("Draft copied — paste into your send flow");
+                          toast.success("Draft copied � paste into your send flow");
                           setShowReply(false);
                           setReplyText("");
                         }}
@@ -1105,7 +1105,7 @@ export default function InboxPage() {
               <button
                 onClick={() => {
                   copyContent(overlayItem);
-                  toast.success("Content copied — ready to forward");
+                  toast.success("Content copied � ready to forward");
                 }}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.65)] hover:text-[#0A0A0B] text-xs font-medium transition-all border border-[rgba(0,0,0,0.08)]"
               >

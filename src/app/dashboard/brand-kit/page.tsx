@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -46,7 +46,7 @@ const GENERATE_PRESETS = [
   { id: "landing-page", label: "Landing Page", icon: <Globe size={16} />, desc: "Wireframe mockup with extracted brand elements" },
 ];
 
-const RAINBOW = "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)";
+const RAINBOW = "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)";
 
 const containerVariants = {
   hidden: {},
@@ -147,7 +147,7 @@ export default function BrandKitPage() {
       }
     } catch (err) {
       console.error("Brand scrape failed:", err);
-      toast.error("Network error — check the URL and try again");
+      toast.error("Network error � check the URL and try again");
     }
     setLoading(false);
   }
@@ -217,7 +217,7 @@ export default function BrandKitPage() {
 
     lines.push("}");
 
-    const css = `/* Brand Kit — ${brand.siteName || "Extracted Brand"} */\n/* Generated ${new Date().toISOString()} */\n\n${lines.join("\n")}\n`;
+    const css = `/* Brand Kit � ${brand.siteName || "Extracted Brand"} */\n/* Generated ${new Date().toISOString()} */\n\n${lines.join("\n")}\n`;
     const blob = new Blob([css], { type: "text/css" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -231,7 +231,7 @@ export default function BrandKitPage() {
   function copyBrandSummary() {
     if (!brand) return;
     const parts: string[] = [];
-    parts.push(`BRAND KIT — ${brand.siteName || "Unknown"}`);
+    parts.push(`BRAND KIT � ${brand.siteName || "Unknown"}`);
     parts.push("=".repeat(40));
 
     if (brand.description) {
@@ -285,7 +285,7 @@ export default function BrandKitPage() {
       <PageHero
         icon={<Palette size={28} />}
         title="Brand Kit"
-        subtitle="Build your agency's brand identity — extract colors, fonts & logos from any URL, then auto-apply them across all client assets."
+        subtitle="Build your agency's brand identity � extract colors, fonts & logos from any URL, then auto-apply them across all client assets."
         gradient="purple"
         actions={
           brand ? (
@@ -398,7 +398,7 @@ export default function BrandKitPage() {
         ))}
       </div>
 
-      {/* ── EXTRACT TAB ── */}
+      {/* -- EXTRACT TAB -- */}
       {tab === "extract" && (
         <motion.div
           variants={containerVariants}
@@ -535,7 +535,7 @@ export default function BrandKitPage() {
         </motion.div>
       )}
 
-      {/* ── COLORS TAB ── */}
+      {/* -- COLORS TAB -- */}
       {tab === "colors" && brand && (
         <motion.div
           variants={containerVariants}
@@ -667,7 +667,7 @@ export default function BrandKitPage() {
         </motion.div>
       )}
 
-      {/* ── TYPOGRAPHY TAB ── */}
+      {/* -- TYPOGRAPHY TAB -- */}
       {tab === "typography" && brand && (
         <motion.div
           variants={containerVariants}
@@ -752,7 +752,7 @@ export default function BrandKitPage() {
         </motion.div>
       )}
 
-      {/* ── MEDIA TAB ── */}
+      {/* -- MEDIA TAB -- */}
       {tab === "media" && brand && (
         <motion.div
           variants={containerVariants}
@@ -817,7 +817,7 @@ export default function BrandKitPage() {
         </motion.div>
       )}
 
-      {/* ── GENERATE TAB ── */}
+      {/* -- GENERATE TAB -- */}
       {tab === "generate" && brand && (
         <motion.div
           variants={containerVariants}
@@ -888,7 +888,7 @@ export default function BrandKitPage() {
 
       <PageAI
         pageName="brand-kit"
-        context="Brand Kit page — extracts brand identity (colors, fonts, logos, imagery) from any website URL and generates on-brand content using presets."
+        context="Brand Kit page � extracts brand identity (colors, fonts, logos, imagery) from any website URL and generates on-brand content using presets."
         suggestions={[
           "What colors work best for social media ads?",
           "Suggest font pairings for this brand",

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
@@ -38,7 +38,7 @@ const CONTENT_LIBRARY_PREVIEW_FALLBACK: RollingPreviewItem[] = [
   { id: "cl12", src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=640&h=360&fit=crop", alt: "Creator asset", tag: "Creator" },
 ];
 
-// ── DB-aligned types ──
+// -- DB-aligned types --
 
 interface DbAsset {
   id: string;
@@ -65,7 +65,7 @@ interface DbCollection {
   created_at: string;
 }
 
-// ── View-layer types for the existing UI ──
+// -- View-layer types for the existing UI --
 
 interface Asset {
   id: string;
@@ -91,7 +91,7 @@ interface Collection {
   description: string;
 }
 
-// ── Helpers ──
+// -- Helpers --
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -133,7 +133,7 @@ function dbCollectionToView(c: DbCollection): Collection {
   };
 }
 
-// ── Constants ──
+// -- Constants --
 
 const CATEGORIES = [
   { key: "all", label: "All Assets", icon: <FolderOpen size={14} /> },
@@ -163,7 +163,7 @@ const TYPE_BG: Record<string, string> = {
   brand: "bg-gold/10",
 };
 
-// ── Component ──
+// -- Component --
 
 export default function ContentLibraryPage() {
   useAuth();
@@ -189,7 +189,7 @@ export default function ContentLibraryPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // ── Data fetching ──
+  // -- Data fetching --
 
   const fetchAssets = useCallback(async () => {
     try {
@@ -219,7 +219,7 @@ export default function ContentLibraryPage() {
     Promise.all([fetchAssets(), fetchCollections()]).finally(() => setLoading(false));
   }, [fetchAssets, fetchCollections]);
 
-  // ── Upload logic ──
+  // -- Upload logic --
 
   const CONTENT_LIB_MAX_BYTES = 100 * 1024 * 1024; // 100 MB
 
@@ -273,7 +273,7 @@ export default function ContentLibraryPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // ── Asset operations ──
+  // -- Asset operations --
 
   const deleteAsset = async (id: string) => {
     try {
@@ -328,7 +328,7 @@ export default function ContentLibraryPage() {
     }
   };
 
-  // ── Collection operations ──
+  // -- Collection operations --
 
   const createCollection = async () => {
     if (!newCollectionName.trim()) return;
@@ -364,7 +364,7 @@ export default function ContentLibraryPage() {
     }
   };
 
-  // ── Filtering & sorting ──
+  // -- Filtering & sorting --
 
   const filteredAssets = assets
     .filter(a => category === "all" || a.type === category)
@@ -380,7 +380,7 @@ export default function ContentLibraryPage() {
       return new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime();
     });
 
-  // ── Selection helpers ──
+  // -- Selection helpers --
 
   const toggleSelect = (id: string) => {
     setSelectedAssets(prev => {
@@ -404,7 +404,7 @@ export default function ContentLibraryPage() {
     setAssets(prev => prev.map(a => a.id === id ? { ...a, starred: !a.starred } : a));
   };
 
-  // ── Bulk actions ──
+  // -- Bulk actions --
 
   const bulkDelete = async () => {
     if (selectedAssets.size === 0) return;
@@ -441,7 +441,7 @@ export default function ContentLibraryPage() {
     setBulkTagInput("");
   };
 
-  // ── Loading state ──
+  // -- Loading state --
 
   if (loading) {
     return (
@@ -500,7 +500,7 @@ export default function ContentLibraryPage() {
             Every asset, every client, one searchable vault
           </h3>
           <p className="text-xs text-muted max-w-md mx-auto mt-1">
-            Images, videos, audio, docs and brand kits — tagged, versioned
+            Images, videos, audio, docs and brand kits � tagged, versioned
             and ready to drop into any campaign.
           </p>
         </div>
@@ -529,7 +529,7 @@ export default function ContentLibraryPage() {
           <>
             <Upload size={24} className={`mx-auto mb-2 ${dragging ? "text-gold" : "text-muted"}`} />
             <p className="text-xs text-muted">Drop files here or click to upload</p>
-            <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV — up to 100 MB</p>
+            <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV � up to 100 MB</p>
           </>
         )}
       </div>
@@ -831,7 +831,7 @@ export default function ContentLibraryPage() {
             className="rounded-xl overflow-hidden"
             style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-4">
               <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
               <p className={`text-xl font-bold ${tile.color || ""}`}>{tile.value}</p>

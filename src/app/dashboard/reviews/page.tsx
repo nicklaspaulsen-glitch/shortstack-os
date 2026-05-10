@@ -223,7 +223,7 @@ function ReviewManager() {
           { label: "1–2 star", value: stats.critical, color: "text-rose-300" },
         ].map((stat, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)", borderRadius: "4px 4px 0 0" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-3">
               <p className="text-[10px] uppercase tracking-wider text-muted">{stat.label}</p>
               <div className="mt-1 flex items-center gap-1.5">

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
-const RAINBOW = "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)";
+const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 // Notion icon (inline)
 const NotionIcon = () => (
@@ -105,7 +105,7 @@ export default function NotionSyncPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#FF2D2D]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" />
       </div>
     );
   }
@@ -153,7 +153,7 @@ export default function NotionSyncPage() {
             {/* Sync now */}
             <motion.div className="glass rounded-xl p-5 flex flex-col gap-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <div className="flex items-center gap-2">
-                <RefreshCw className="w-4 h-4 text-[#FF2D2D]" />
+                <RefreshCw className="w-4 h-4 text-[#2563EB]" />
                 <p className="text-sm font-semibold text-white">Sync Now</p>
               </div>
               <p className="text-xs text-white/50">
@@ -162,21 +162,21 @@ export default function NotionSyncPage() {
               <button
                 onClick={handleSyncNow}
                 disabled={syncing}
-                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#FF2D2D] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
               >
                 {syncing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <RefreshCw className="w-4 h-4" />
                 )}
-                {syncing ? "Syncing…" : "Sync Now"}
+                {syncing ? "Syncing�" : "Sync Now"}
               </button>
             </motion.div>
 
             {/* Auto-sync toggle */}
             <motion.div className="glass rounded-xl p-5 flex flex-col gap-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#FF2D2D]" />
+                <Clock className="w-4 h-4 text-[#2563EB]" />
                 <p className="text-sm font-semibold text-white">Auto-Sync</p>
               </div>
               <p className="text-xs text-white/50">
@@ -185,7 +185,7 @@ export default function NotionSyncPage() {
               <div className="flex items-center gap-3 mt-1">
                 <button onClick={handleToggleAutoSync} className="shrink-0">
                   {autoSync ? (
-                    <ToggleRight className="w-9 h-9 text-[#FF2D2D]" />
+                    <ToggleRight className="w-9 h-9 text-[#2563EB]" />
                   ) : (
                     <ToggleLeft className="w-9 h-9 text-white/30" />
                   )}
@@ -204,10 +204,10 @@ export default function NotionSyncPage() {
             </p>
             <div className="flex flex-col gap-2">
               {[
-                "CRM Clients → Notion database",
-                "Leads pipeline → Notion board",
-                "Content calendar → Notion calendar",
-                "Tasks & projects → Notion tasks",
+                "CRM Clients ? Notion database",
+                "Leads pipeline ? Notion board",
+                "Content calendar ? Notion calendar",
+                "Tasks & projects ? Notion tasks",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2 text-sm text-white/60">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -242,7 +242,7 @@ export default function NotionSyncPage() {
           <div className="text-center">
             <h2 className="text-xl font-bold text-white">Connect Your Notion Workspace</h2>
             <p className="text-white/50 mt-2 max-w-md text-sm">
-              Link Notion to automatically sync your CRM, content calendar, tasks, and leads — all in one place.
+              Link Notion to automatically sync your CRM, content calendar, tasks, and leads � all in one place.
             </p>
           </div>
 
@@ -255,7 +255,7 @@ export default function NotionSyncPage() {
               <motion.div key={f.label} className="glass-md rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: fi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
                 <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
                 <div className="p-4 flex flex-col gap-2">
-                  <div className="text-[#FF2D2D]">{f.icon}</div>
+                  <div className="text-[#2563EB]">{f.icon}</div>
                   <p className="text-sm font-semibold text-white">{f.label}</p>
                   <p className="text-xs text-white/50">{f.desc}</p>
                 </div>
@@ -269,8 +269,8 @@ export default function NotionSyncPage() {
               aria-disabled
               onClick={() =>
                 toast(
-                  "Notion OAuth is coming soon — we'll email you when it goes live.",
-                  { icon: "🛠️" },
+                  "Notion OAuth is coming soon � we'll email you when it goes live.",
+                  { icon: "???" },
                 )
               }
               title="Notion OAuth is coming soon"
@@ -281,13 +281,13 @@ export default function NotionSyncPage() {
               <ExternalLink className="w-4 h-4 ml-1 opacity-60" />
             </button>
             <p className="text-xs text-white/30">
-              Coming soon — you&apos;ll be able to sync clients, leads, and content.
+              Coming soon � you&apos;ll be able to sync clients, leads, and content.
             </p>
           </div>
 
           <div className="flex items-start gap-2 text-xs text-amber-400/70 bg-amber-400/5 border border-amber-400/15 rounded-lg px-4 py-3 max-w-md">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-            Notion OAuth is coming soon — join the waitlist to be notified when it goes live.
+            Notion OAuth is coming soon � join the waitlist to be notified when it goes live.
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -233,7 +233,7 @@ export default function DiscordPage() {
         ))}
       </div>
 
-      {/* Install Tab â€” public Trinity bot */}
+      {/* Install Tab — public Trinity bot */}
       {activeTab === "Install" && (
         <div className="space-y-5">
           {/* Hero / pitch */}
@@ -246,7 +246,7 @@ export default function DiscordPage() {
                 <h2 className="text-lg font-semibold mb-1">Install Trinity in your own Discord</h2>
                 <p className="text-xs text-muted leading-relaxed mb-4">
                   Trinity is a public Discord bot. Your agency, your clients, or any partner team can install
-                  Trinity in their own server in one click â€” then get real-time pings, slash commands, and AI
+                  Trinity in their own server in one click — then get real-time pings, slash commands, and AI
                   digests right where your team already talks.
                 </p>
                 <button
@@ -267,15 +267,15 @@ export default function DiscordPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
                 { icon: Bell, color: "text-[#5865F2]", title: "Real-time agency status in your team's Discord",
-                  desc: "Never miss a client signup, booked call, outreach reply, or paid invoice â€” it pings the channel you pick, the second it happens." },
+                  desc: "Never miss a client signup, booked call, outreach reply, or paid invoice — it pings the channel you pick, the second it happens." },
                 { icon: Terminal, color: "text-gold", title: "Slash commands anywhere",
                   desc: "Run /trinity-status, /trinity-check <client>, /trinity-lead add <business> from any channel. No dashboard switch." },
                 { icon: Sparkles, color: "text-purple-400", title: "AI-written weekly digest",
                   desc: "Every Monday at 9am, Trinity posts a plain-English summary of the past week's revenue, leads, and wins." },
                 { icon: MessageSquare, color: "text-green-400", title: "Tag @Trinity to ask questions",
-                  desc: "Team members can @-mention Trinity with a question â€” Claude answers with real data pulled from your workspace." },
+                  desc: "Team members can @-mention Trinity with a question — Claude answers with real data pulled from your workspace." },
                 { icon: Users, color: "text-cyan-400", title: "Everyone stays aligned",
-                  desc: "Account managers, cold-call team, designers, clients â€” one Discord, one source of truth." },
+                  desc: "Account managers, cold-call team, designers, clients — one Discord, one source of truth." },
                 { icon: Shield, color: "text-muted", title: "Minimal permissions",
                   desc: "Trinity asks for Send Messages, Embed Links, Read History, and Slash Commands. Nothing else." },
               ].map((f, i) => (
@@ -341,7 +341,7 @@ export default function DiscordPage() {
                         <div>
                           <p className="text-sm font-semibold">{int.guild_name || "Unknown server"}</p>
                           <p className="text-[10px] text-muted">
-                            Installed {new Date(int.installed_at).toLocaleDateString()} Â· guild ID <code className="font-mono">{int.guild_id}</code>
+                            Installed {new Date(int.installed_at).toLocaleDateString()} · guild ID <code className="font-mono">{int.guild_id}</code>
                           </p>
                         </div>
                       </div>
@@ -372,14 +372,14 @@ export default function DiscordPage() {
                           onChange={e => updateIntegration(int.id, { notify_channel_id: e.target.value || null })}
                           className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface"
                         >
-                          <option value="">â€” Pick a channel â€”</option>
+                          <option value="">— Pick a channel —</option>
                           {channels.map(c => (
                             <option key={c.id} value={c.id}>#{c.name}</option>
                           ))}
                         </select>
                         {channels.length === 0 && (
                           <p className="text-[9px] text-muted mt-1">
-                            No channels visible â€” make sure Trinity has View Channel permission in your server.
+                            No channels visible — make sure Trinity has View Channel permission in your server.
                           </p>
                         )}
                       </div>
@@ -419,25 +419,25 @@ export default function DiscordPage() {
             </h3>
             <ol className="space-y-2 text-[11px] text-muted leading-relaxed list-decimal list-inside">
               <li><strong className="text-foreground">Morning standup at 9:30am:</strong> team opens #trinity-ops in Discord, sees the overnight AI digest (leads, replies, revenue), and plans the day.</li>
-              <li><strong className="text-foreground">Account manager gets a ping</strong> the moment a client pays an invoice â€” acknowledges with a reaction; Trinity logs it to the CRM.</li>
-              <li><strong className="text-foreground">Cold-call rep runs</strong> <code className="font-mono">/trinity-lead add business:&quot;Acme Plumbing&quot; city:Dallas</code> straight from Discord â€” no tab switching.</li>
-              <li><strong className="text-foreground">Designer asks</strong> <code className="font-mono">@Trinity what did we post for Acme this week?</code> â€” gets a list back with links.</li>
+              <li><strong className="text-foreground">Account manager gets a ping</strong> the moment a client pays an invoice — acknowledges with a reaction; Trinity logs it to the CRM.</li>
+              <li><strong className="text-foreground">Cold-call rep runs</strong> <code className="font-mono">/trinity-lead add business:&quot;Acme Plumbing&quot; city:Dallas</code> straight from Discord — no tab switching.</li>
+              <li><strong className="text-foreground">Designer asks</strong> <code className="font-mono">@Trinity what did we post for Acme this week?</code> — gets a list back with links.</li>
               <li><strong className="text-foreground">Founder checks</strong> <code className="font-mono">/trinity-status</code> on their phone in bed on a Sunday. MRR went up. They smile.</li>
             </ol>
           </PrismPanel>
 
-          {/* Env vars â€” Trinity-internal admin/founder only. Clients should not see this. */}
+          {/* Env vars — Trinity-internal admin/founder only. Clients should not see this. */}
           {isPlatformAdmin && (
             <div className="card p-4 border-warning/30 bg-warning/5">
               <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
                 <AlertTriangle size={14} className="text-warning" /> Required env vars (set in Vercel)
               </h3>
               <ul className="space-y-1 text-[11px] font-mono">
-                <li><code className="text-foreground">DISCORD_CLIENT_ID</code> <span className="text-muted">â€” app ID from the Discord Developer Portal</span></li>
-                <li><code className="text-foreground">DISCORD_CLIENT_SECRET</code> <span className="text-muted">â€” app secret (server-side only)</span></li>
-                <li><code className="text-foreground">DISCORD_BOT_TOKEN</code> <span className="text-muted">â€” bot token, used for bot-level API calls</span></li>
-                <li><code className="text-foreground">DISCORD_PUBLIC_KEY</code> <span className="text-muted">â€” for verifying interaction webhook signatures</span></li>
-                <li><code className="text-foreground">NEXT_PUBLIC_APP_URL</code> <span className="text-muted">â€” your app&apos;s public URL, used for the OAuth redirect</span></li>
+                <li><code className="text-foreground">DISCORD_CLIENT_ID</code> <span className="text-muted">— app ID from the Discord Developer Portal</span></li>
+                <li><code className="text-foreground">DISCORD_CLIENT_SECRET</code> <span className="text-muted">— app secret (server-side only)</span></li>
+                <li><code className="text-foreground">DISCORD_BOT_TOKEN</code> <span className="text-muted">— bot token, used for bot-level API calls</span></li>
+                <li><code className="text-foreground">DISCORD_PUBLIC_KEY</code> <span className="text-muted">— for verifying interaction webhook signatures</span></li>
+                <li><code className="text-foreground">NEXT_PUBLIC_APP_URL</code> <span className="text-muted">— your app&apos;s public URL, used for the OAuth redirect</span></li>
               </ul>
               <a
                 href="https://discord.com/developers/applications"
@@ -678,10 +678,10 @@ export default function DiscordPage() {
           <PreviewBanner />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Messages Today", value: "â€”", icon: MessageSquare, color: "text-[#5865F2]" },
-              { label: "Active Members", value: "â€”", icon: Users, color: "text-green-400" },
-              { label: "New Members (7d)", value: "â€”", icon: UserCheck, color: "text-gold" },
-              { label: "Voice Hours (7d)", value: "â€”", icon: Volume2, color: "text-purple-400" },
+              { label: "Messages Today", value: "—", icon: MessageSquare, color: "text-[#5865F2]" },
+              { label: "Active Members", value: "—", icon: Users, color: "text-green-400" },
+              { label: "New Members (7d)", value: "—", icon: UserCheck, color: "text-gold" },
+              { label: "Voice Hours (7d)", value: "—", icon: Volume2, color: "text-purple-400" },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -690,7 +690,7 @@ export default function DiscordPage() {
                 transition={{ delay: i * 0.06, duration: 0.4 }}
                 className="rounded-xl overflow-hidden" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.08)" }}
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #FF2D2D, #8b5cf6, #ec4899, #f97316, #FF2D2D)" }} />
+                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 <div className="p-3 text-center">
                   <stat.icon size={16} className={`mx-auto mb-1 ${stat.color}`} />
                   <p className="text-lg font-bold font-mono">{stat.value}</p>
@@ -741,7 +741,7 @@ export default function DiscordPage() {
                 <div>
                   <label className="text-[10px] text-muted font-semibold uppercase">Channel</label>
                   <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
-                    <option value="">No channels â€” connect a server first</option>
+                    <option value="">No channels — connect a server first</option>
                   </select>
                 </div>
                 <div>
@@ -856,7 +856,7 @@ export default function DiscordPage() {
               <div>
                 <label className="text-[10px] text-muted font-semibold uppercase">Target Channel</label>
                 <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
-                  <option value="">No channels â€” connect a server first</option>
+                  <option value="">No channels — connect a server first</option>
                 </select>
               </div>
             </div>

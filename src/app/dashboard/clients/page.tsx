@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -34,11 +34,11 @@ type SortDir = "asc" | "desc";
 type ViewMode = "table" | "card";
 
 const TAG_PRESETS: ClientTag[] = [
-  { label: "VIP", color: "#CC2424" },
+  { label: "VIP", color: "#1D4ED8" },
   { label: "At Risk", color: "#F26063" },
-  { label: "New", color: "#FF6B6B" },
-  { label: "Enterprise", color: "#FF6B6B" },
-  { label: "Growing", color: "#CC2424" },
+  { label: "New", color: "#3B82F6" },
+  { label: "Enterprise", color: "#3B82F6" },
+  { label: "Growing", color: "#1D4ED8" },
   { label: "Needs Attention", color: "#F26063" },
 ];
 
@@ -46,7 +46,7 @@ function HealthArc({ score }: { score: number }) {
   const pct = Math.min(100, Math.max(0, score ?? 0));
   const r = 16, circ = 2 * Math.PI * r;
   const dash = (pct / 100) * circ;
-  const color = pct >= 70 ? "#FF6B6B" : pct >= 40 ? "#CC2424" : "#F26063";
+  const color = pct >= 70 ? "#3B82F6" : pct >= 40 ? "#1D4ED8" : "#F26063";
   return (
     <svg width="42" height="42" viewBox="0 0 42 42" className="-rotate-90">
       <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(0,0,0,0.08)" strokeWidth="3" />
@@ -73,11 +73,11 @@ function ClientInitialsBadge({ name }: { name: string }) {
   return (
     <div style={{
       width: 36, height: 36, borderRadius: 8, flexShrink: 0,
-      background: `rgba(255,45,45,${alpha})`,
-      border: `1.5px solid rgba(255,45,45,${alpha * 2.2})`,
+      background: `rgba(37,99,235,${alpha})`,
+      border: `1.5px solid rgba(37,99,235,${alpha * 2.2})`,
       display: "flex", alignItems: "center", justifyContent: "center",
     }}>
-      <span style={{ fontSize: 12, fontWeight: 700, color: "#CC2424", letterSpacing: "0.05em" }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color: "#1D4ED8", letterSpacing: "0.05em" }}>
         {initials}
       </span>
     </div>
@@ -151,7 +151,7 @@ export default function ClientsPage() {
       // hydration in auth-context, which caused the list to render empty
       // when the user was actually scoped to rows owned by their profile.
       // The server route reads the session from cookies and scopes by the
-      // effective agency owner — so it works reliably on first mount.
+      // effective agency owner � so it works reliably on first mount.
       // For admin/founder, the API returns ALL clients across the
       // platform unless we pass ?scope=mine.
       const clientsUrl = scope === "mine" ? "/api/clients?scope=mine" : "/api/clients";
@@ -170,12 +170,12 @@ export default function ClientsPage() {
         if (json.role) setCallerRole(json.role);
       } else {
         console.error("[Clients] /api/clients failed:", clientsRes.status);
-        toast.error("Couldn't load clients — try refreshing.");
+        toast.error("Couldn't load clients � try refreshing.");
       }
 
       if (contractsRes.error || invoicesRes.error) {
         console.error("[Clients] fetchData error:", contractsRes.error || invoicesRes.error);
-        toast.error("Couldn't load some client data — try refreshing.");
+        toast.error("Couldn't load some client data � try refreshing.");
       }
       setClients(clientsData);
       setContracts(contractsRes.data || []);
@@ -195,14 +195,14 @@ export default function ClientsPage() {
     } catch (err) {
       if (!cancelled.current) {
         console.error("[Clients] fetchData error:", err);
-        toast.error("Failed to load clients — try refreshing.");
+        toast.error("Failed to load clients � try refreshing.");
       }
     } finally {
       if (!cancelled.current) setLoading(false);
     }
   }
 
-  // Memoize — these aggregates ran on every re-render otherwise (every
+  // Memoize � these aggregates ran on every re-render otherwise (every
   // keystroke in filter inputs, every hover state change, etc.).
   const { activeClients, totalMRR } = useMemo(() => {
     const active = clients.filter((c) => c.is_active);
@@ -222,7 +222,7 @@ export default function ClientsPage() {
     if (!c.stripe_subscription_id && c.contract_status !== "signed") return "trial";
     return "active";
   }, []);
-  // Status pill styles — colored dot + tinted pill matched to brand status colors.
+  // Status pill styles � colored dot + tinted pill matched to brand status colors.
   // Each row in the table gets a vertical accent bar in the same hue so the
   // lifecycle reads at-a-glance without forcing the user to parse text.
   const STATUS_STYLES: Record<LifecycleStatus, { bar: string; pill: string; dot: string; label: string }> = {
@@ -306,7 +306,7 @@ export default function ClientsPage() {
       const updated = exists
         ? current.filter(t => t.label !== tag.label)
         : [...current, tag];
-      // Persist to clients.metadata JSONB (no migration needed — metadata is
+      // Persist to clients.metadata JSONB (no migration needed � metadata is
       // already Record<string, unknown>). Fire-and-forget; optimistic UI above.
       const client = clients.find(c => c.id === clientId);
       const existingMeta = ((client?.metadata || {}) as Record<string, unknown>);
@@ -335,7 +335,7 @@ export default function ClientsPage() {
       .then(({ error }: { error: unknown }) => {
         if (error) {
           console.error("[Clients] saveNote DB write failed:", error);
-          toast.error("Note save failed — try again");
+          toast.error("Note save failed � try again");
         } else {
           toast.success("Note saved");
         }
@@ -373,12 +373,12 @@ export default function ClientsPage() {
         setSelectedClients(new Set());
         break;
       case "tag":
-        toast(`Open a client's tag menu to tag them (${count} selected).`, { icon: "💡" });
+        toast(`Open a client's tag menu to tag them (${count} selected).`, { icon: "??" });
         break;
       case "email": {
         const emails = selected.map(c => c.email).filter(Boolean);
         if (emails.length === 0) { toast.error("No emails on selected clients"); return; }
-        // mailto: with a BCC list is the reliable cross-client path here —
+        // mailto: with a BCC list is the reliable cross-client path here �
         // no extra backend/ESP integration required to get bulk compose.
         window.location.href = `mailto:?bcc=${encodeURIComponent(emails.join(","))}`;
         toast.success(`Opening mail draft for ${emails.length} client${emails.length === 1 ? "" : "s"}`);
@@ -610,7 +610,7 @@ export default function ClientsPage() {
       if (data.checkout_url) {
         toast.success("Checkout link created!");
         navigator.clipboard.writeText(data.checkout_url);
-        toast.success("Checkout URL copied to clipboard — send it to the client");
+        toast.success("Checkout URL copied to clipboard � send it to the client");
       } else {
         toast.error(data.error || "Failed to create subscription");
       }
@@ -641,11 +641,11 @@ export default function ClientsPage() {
   const paidInvoices = invoices.filter(i => i.status === "paid");
   const overdueInvoices = invoices.filter(i => i.status === "overdue");
 
-  // ─── Prism color map for stat tiles ─────────────────────────────────────
+  // --- Prism color map for stat tiles -------------------------------------
   const CLIENT_PRISM = [
-    { accent: "#CC2424", bar: "from-[#CC2424] to-transparent" },  // Total
-    { accent: "#CC2424", bar: "from-[#CC2424] to-transparent" },  // Active
-    { accent: "#FF6B6B", bar: "from-[#FF6B6B] to-transparent" },  // MRR
+    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },  // Total
+    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },  // Active
+    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },  // MRR
     { accent: "#F26063", bar: "from-[#F26063] to-transparent" },  // At Risk
   ] as const;
 
@@ -664,7 +664,7 @@ export default function ClientsPage() {
         subtitle={
           callerRole === "admin" || callerRole === "founder"
             ? scope === "all" ? `${clients.length} clients across the platform` : "Your agency clients"
-            : "Accounts · Contracts · Invoices"
+            : "Accounts � Contracts � Invoices"
         }
         eyebrow="Client Management"
         icon={<Users size={16} />}
@@ -672,8 +672,8 @@ export default function ClientsPage() {
           <>
             {clients.length > 0 && (
               <div className="hidden sm:flex items-center gap-1.5">
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(204,36,36,0.08)] border border-[rgba(204,36,36,0.15)] text-[10px] font-medium text-[#CC2424]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#CC2424] animate-pulse" />
+                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(204,36,36,0.08)] border border-[rgba(204,36,36,0.15)] text-[10px] font-medium text-[#1D4ED8]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] animate-pulse" />
                   {clients.length}
                 </span>
                 {totalMRR > 0 && (
@@ -688,20 +688,20 @@ export default function ClientsPage() {
                 <button
                   onClick={() => setScope("all")}
                   className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                    scope === "all" ? "bg-[#CC2424] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
+                    scope === "all" ? "bg-[#1D4ED8] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
                   }`}
                 >All</button>
                 <button
                   onClick={() => setScope("mine")}
                   className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                    scope === "mine" ? "bg-[#CC2424] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
+                    scope === "mine" ? "bg-[#1D4ED8] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
                   }`}
                 >Mine</button>
               </div>
             )}
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#CC2424] text-white text-xs font-semibold hover:bg-[#CC2424] transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all"
             >
               <Plus size={13} /> Add Client
             </button>
@@ -709,7 +709,7 @@ export default function ClientsPage() {
         }
       />
 
-      {/* Clients command strip — MRR focal left, 3 stats inline right */}
+      {/* Clients command strip � MRR focal left, 3 stats inline right */}
       {clients.length > 0 && (
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-3"
@@ -726,14 +726,14 @@ export default function ClientsPage() {
               boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px -4px rgba(0,0,0,0.08)",
             }}
           >
-            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent, #CC2424 40%, #FF4040 50%, #CC2424 60%, transparent)" }} />
-            <div className="pointer-events-none absolute -right-20 -top-20 w-72 h-72 rounded-full bg-[#CC2424] opacity-[0.04] blur-[64px]" />
+            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent, #1D4ED8 40%, #FF4040 50%, #1D4ED8 60%, transparent)" }} />
+            <div className="pointer-events-none absolute -right-20 -top-20 w-72 h-72 rounded-full bg-[#1D4ED8] opacity-[0.04] blur-[64px]" />
             <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#52525B] mb-2">Monthly Recurring Revenue</p>
-            <p className="font-display font-black leading-[0.88] text-[#CC2424]" style={{ fontSize: "clamp(48px,6vw,80px)", letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums" }}>
+            <p className="font-display font-black leading-[0.88] text-[#1D4ED8]" style={{ fontSize: "clamp(48px,6vw,80px)", letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums" }}>
               {formatCurrency(totalMRR)}
             </p>
             <p className="mt-3 text-[10px] text-[#52525B]">
-              <span className="text-[#71717A] font-medium">{activeClients.length}</span> active · <span className="text-[#71717A] font-medium">{Math.round((activeClients.length / (clients.length || 1)) * 100)}%</span> retention
+              <span className="text-[#71717A] font-medium">{activeClients.length}</span> active � <span className="text-[#71717A] font-medium">{Math.round((activeClients.length / (clients.length || 1)) * 100)}%</span> retention
             </p>
           </div>
 
@@ -757,7 +757,7 @@ export default function ClientsPage() {
                 transition={{ duration: 0.34, delay: 0.1 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
               >
                 <span className="text-[8px] font-semibold uppercase tracking-[0.18em] text-[#71717A]">{cell.label}</span>
-                <span className="block font-display text-2xl font-bold tracking-[-0.03em] mt-0.5" style={{ color: cell.danger ? "#CC2424" : "#0A0A0B", fontVariantNumeric: "tabular-nums" }}>{cell.value}</span>
+                <span className="block font-display text-2xl font-bold tracking-[-0.03em] mt-0.5" style={{ color: cell.danger ? "#1D4ED8" : "#0A0A0B", fontVariantNumeric: "tabular-nums" }}>{cell.value}</span>
                 <span className="text-[10px] text-[#71717A]">{cell.sub}</span>
               </motion.div>
             ))}
@@ -775,7 +775,7 @@ export default function ClientsPage() {
             aria-selected={tab === t}
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
-              tab === t ? "bg-[#CC2424] text-white font-medium" : "text-muted hover:text-foreground"
+              tab === t ? "bg-[#1D4ED8] text-white font-medium" : "text-muted hover:text-foreground"
             }`}
           >
             {t === "billing" && <CreditCard size={14} />}
@@ -803,10 +803,10 @@ export default function ClientsPage() {
 
             {/* Feature 9: Advanced Filters Toggle */}
             <button onClick={() => setShowFilters(!showFilters)}
-              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(204,36,36,0.08)] text-[#CC2424] border-[rgba(204,36,36,0.25)]" : ""}`}>
+              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(204,36,36,0.08)] text-[#1D4ED8] border-[rgba(204,36,36,0.25)]" : ""}`}>
               <Filter size={14} /> Filters
               {(filterIndustry || filterStatus !== "all" || filterTag || filterMrrMin || filterMrrMax) && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF2D2D]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
               )}
             </button>
 
@@ -822,7 +822,7 @@ export default function ClientsPage() {
               ]).map(s => (
                 <button key={s.field} onClick={() => handleSort(s.field)}
                   className={`px-2 py-1 text-[10px] rounded-md transition-all flex items-center gap-0.5 ${
-                    sortField === s.field ? "bg-[#CC2424] text-white font-medium" : "text-muted hover:text-foreground"
+                    sortField === s.field ? "bg-[#1D4ED8] text-white font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {s.label}
                   {sortField === s.field && (
@@ -835,11 +835,11 @@ export default function ClientsPage() {
             {/* Feature 15: View Mode Toggle */}
             <div className="flex items-center gap-0.5 bg-surface rounded-lg p-0.5">
               <button onClick={() => setViewMode("table")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#CC2424] text-white" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#1D4ED8] text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutList size={14} />
               </button>
               <button onClick={() => setViewMode("card")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#CC2424] text-white" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#1D4ED8] text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutGrid size={14} />
               </button>
             </div>
@@ -873,7 +873,7 @@ export default function ClientsPage() {
                 className={`text-[10px] px-2 py-1 rounded-full border transition-all ${
                   activityFilter === chip.key
                     ? chip.color + " border"
-                    : "bg-surface text-muted border-border hover:border-[rgba(255,45,45,0.30)]"
+                    : "bg-surface text-muted border-border hover:border-[rgba(37,99,235,0.30)]"
                 }`}
               >
                 {chip.label}
@@ -928,14 +928,14 @@ export default function ClientsPage() {
               <div className="flex items-center justify-between mt-3 pt-2 border-t border-border">
                 <span className="text-[10px] text-muted">{filteredClients.length} clients matched</span>
                 <button onClick={() => { setFilterIndustry(""); setFilterStatus("all"); setFilterTag(""); setFilterMrrMin(""); setFilterMrrMax(""); }}
-                  className="text-[10px] text-[#CC2424] hover:underline">Clear all filters</button>
+                  className="text-[10px] text-[#1D4ED8] hover:underline">Clear all filters</button>
               </div>
             </div>
           )}
 
           {/* Feature 4: Bulk Actions Bar */}
           {selectedClients.size > 0 && (
-            <div className="card p-2.5 flex items-center gap-3 bg-[rgba(255,45,45,0.05)] border-[rgba(255,45,45,0.20)] flex-wrap">
+            <div className="card p-2.5 flex items-center gap-3 bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.20)] flex-wrap">
               <span className="text-xs font-medium">{selectedClients.size} selected</span>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <button onClick={() => handleBulkAction("email")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
@@ -965,7 +965,7 @@ export default function ClientsPage() {
         </div>
       )}
 
-      {/* Feature 15: Card View — editorial bento: first card spans 2 cols as featured tile */}
+      {/* Feature 15: Card View � editorial bento: first card spans 2 cols as featured tile */}
       {tab === "clients" && viewMode === "card" && (
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
@@ -1001,14 +1001,14 @@ export default function ClientsPage() {
 
                 {/* Featured tile: subtle prism glow */}
                 {isFeatured && (
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#CC2424] via-[#FF6B6B] to-transparent" />
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#1D4ED8] via-[#3B82F6] to-transparent" />
                 )}
 
                 {/* Feature 4: Selection checkbox */}
                 <div className="absolute top-3 left-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-[#FF2D2D] border-[#CC2424] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
+                      selectedClients.has(c.id) ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1018,13 +1018,13 @@ export default function ClientsPage() {
                 <div className="absolute top-3 right-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleCompare(c.id)}
                     className={`text-[9px] px-1.5 py-0.5 rounded transition-all ${
-                      compareClients.includes(c.id) ? "bg-[rgba(204,36,36,0.12)] text-[#CC2424]" : "text-muted hover:text-foreground"
+                      compareClients.includes(c.id) ? "bg-[rgba(204,36,36,0.12)] text-[#1D4ED8]" : "text-muted hover:text-foreground"
                     }`}>
                     <Columns size={10} />
                   </button>
                 </div>
 
-                {/* Feature 1: Health indicator + initials badge — wider layout for featured tile */}
+                {/* Feature 1: Health indicator + initials badge � wider layout for featured tile */}
                 <div className={`flex items-start gap-3 mb-3 mt-1 ${isFeatured ? "md:flex-row md:items-center" : ""}`}>
                   <div className="shrink-0 flex flex-col items-center gap-1.5">
                     {/* Avatar with health ring overlay on compact cards */}
@@ -1046,7 +1046,7 @@ export default function ClientsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <p className={`font-semibold truncate ${isFeatured ? "text-base" : "text-sm"}`}>{c.business_name}</p>
-                      {isFeatured && <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-[#CC2424] bg-[rgba(204,36,36,0.10)] px-2 py-0.5 rounded-full">Top Account</span>}
+                      {isFeatured && <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-[#1D4ED8] bg-[rgba(204,36,36,0.10)] px-2 py-0.5 rounded-full">Top Account</span>}
                       <span className={`inline-flex items-center gap-1 text-[8px] px-1.5 py-0.5 rounded-full font-medium border ${statusStyles.pill}`}>
                         <span className={`w-1 h-1 rounded-full ${statusStyles.dot}`} aria-hidden="true" />
                         {statusStyles.label}
@@ -1056,7 +1056,7 @@ export default function ClientsPage() {
                     {isFeatured && c.industry && (
                       <p className="text-[10px] text-muted mt-0.5">{c.industry}</p>
                     )}
-                    {/* Revenue badge — compact cards only (featured has dedicated MRR callout) */}
+                    {/* Revenue badge � compact cards only (featured has dedicated MRR callout) */}
                     {!isFeatured && c.mrr > 0 && (
                       <span className="inline-block mt-0.5 text-[9px] font-semibold bg-[rgba(0,0,0,0.04)] text-[#52525B] px-2 py-0.5 rounded-full border border-[rgba(0,0,0,0.08)]">
                         {formatCurrency(c.mrr)}/mo
@@ -1067,7 +1067,7 @@ export default function ClientsPage() {
                   {isFeatured && (
                     <div className="hidden md:flex flex-col items-end shrink-0 ml-auto">
                       <span className="text-[9px] uppercase tracking-[0.15em] text-[#71717A]">MRR</span>
-                      <span className="font-display text-2xl font-bold text-[#CC2424] tracking-tight tabular-nums">{formatCurrency(c.mrr)}</span>
+                      <span className="font-display text-2xl font-bold text-[#1D4ED8] tracking-tight tabular-nums">{formatCurrency(c.mrr)}</span>
                     </div>
                   )}
                 </div>
@@ -1082,11 +1082,11 @@ export default function ClientsPage() {
                   </div>
                 )}
 
-                {/* Stats grid — bordered editorial layout */}
+                {/* Stats grid � bordered editorial layout */}
                 <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(0,0,0,0.08)] overflow-hidden">
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">MRR</p>
-                    <p className="text-xs font-bold text-[#CC2424]">{formatCurrency(c.mrr)}</p>
+                    <p className="text-xs font-bold text-[#1D4ED8]">{formatCurrency(c.mrr)}</p>
                   </div>
                   <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-[rgba(0,0,0,0.08)]">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Paid</p>
@@ -1107,7 +1107,7 @@ export default function ClientsPage() {
                     <span className="text-[9px] font-mono font-medium">{onboarding}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-[#FF2D2D]" : onboarding >= 60 ? "bg-[#FF2D2D]" : "bg-[#CC2424]"}`}
+                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-[#2563EB]" : onboarding >= 60 ? "bg-[#2563EB]" : "bg-[#1D4ED8]"}`}
                       style={{ width: `${onboarding}%` }} />
                   </div>
                 </div>
@@ -1152,7 +1152,7 @@ export default function ClientsPage() {
                     <button onClick={() => router.push(`/dashboard/clients/${c.id}`)} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
                       <Eye size={10} /> View
                     </button>
-                    {/* Manage as <client> — switches the global managed-client
+                    {/* Manage as <client> � switches the global managed-client
                         context so every page in the OS scopes its data + AI
                         recommendations to this client. The little banner at the
                         top of the screen confirms you're managing them; click
@@ -1214,12 +1214,12 @@ export default function ClientsPage() {
         </div>
       )}
       {tab === "clients" && viewMode === "table" && filteredClients.length > 0 && (
-        <div className="space-y-0 [&_tbody_tr:hover]:border-l-2 [&_tbody_tr:hover]:border-l-[#FF2D2D]/40">
+        <div className="space-y-0 [&_tbody_tr:hover]:border-l-2 [&_tbody_tr:hover]:border-l-[#2563EB]/40">
           <DataTable
             columns={[
               { key: "select", label: (
                 <button onClick={selectAllClients} className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                  selectedClients.size === filteredClients.length && filteredClients.length > 0 ? "bg-[#FF2D2D] border-[#CC2424] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
+                  selectedClients.size === filteredClients.length && filteredClients.length > 0 ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
                 }`}>
                   {selectedClients.size === filteredClients.length && filteredClients.length > 0 && <Check size={10} />}
                 </button>
@@ -1227,7 +1227,7 @@ export default function ClientsPage() {
                 <div onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-[#FF2D2D] border-[#CC2424] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
+                      selectedClients.has(c.id) ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(204,36,36,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1380,12 +1380,12 @@ export default function ClientsPage() {
               <div className="border border-t-0 border-[rgba(0,0,0,0.08)] rounded-b-xl px-4 pb-4" style={{ background: "#FAFAFB" }}>
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
-                    { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#CC2424" },
-                    { label: "Health", value: `${client.health_score ?? "—"}%`, color: client.health_score >= 70 ? "#FF6B6B" : client.health_score >= 40 ? "#CC2424" : "#F26063" },
-                    { label: "Package", value: client.package_tier ?? "—", color: "#FF6B6B" },
+                    { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#1D4ED8" },
+                    { label: "Health", value: `${client.health_score ?? "�"}%`, color: client.health_score >= 70 ? "#3B82F6" : client.health_score >= 40 ? "#1D4ED8" : "#F26063" },
+                    { label: "Package", value: client.package_tier ?? "�", color: "#3B82F6" },
                     { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
                   ].map((tile, ti) => {
-                    const bars = ["from-[#CC2424]","from-[#FF6B6B]","from-[#CC2424]","from-[#6F6D7A]"];
+                    const bars = ["from-[#1D4ED8]","from-[#3B82F6]","from-[#1D4ED8]","from-[#6F6D7A]"];
                     return (
                       <div key={tile.label} className="relative rounded-xl border border-[rgba(0,0,0,0.08)] p-3 overflow-hidden" style={{ background: "#FFFFFF" }}>
                         <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${bars[ti]} to-transparent opacity-60`} />
@@ -1405,7 +1405,7 @@ export default function ClientsPage() {
                       {[
                         { action: "Invoice sent", time: "2 hours ago", icon: <FileText size={10} className="text-info" /> },
                         { action: "Content published", time: "1 day ago", icon: <CheckCircle size={10} className="text-success" /> },
-                        { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-[#CC2424]" /> },
+                        { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-[#1D4ED8]" /> },
                         { action: "Contract signed", time: "1 week ago", icon: <FileText size={10} className="text-gold" /> },
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-2 text-[10px]">
@@ -1501,12 +1501,12 @@ export default function ClientsPage() {
       {/* Billing Tab */}
       {tab === "billing" && (
         <div className="space-y-4">
-          {/* Billing Stats — prism glass tiles */}
+          {/* Billing Stats � prism glass tiles */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#CC2424", bar: "from-[#CC2424] to-transparent" },
-              { label: "Active Subs", value: String(clientsWithSubs.length), color: "#CC2424", bar: "from-[#CC2424] to-transparent" },
-              { label: "Paid Invoices", value: String(paidInvoices.length), color: "#FF6B6B", bar: "from-[#FF6B6B] to-transparent" },
+              { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },
+              { label: "Active Subs", value: String(clientsWithSubs.length), color: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },
+              { label: "Paid Invoices", value: String(paidInvoices.length), color: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },
               { label: "Overdue", value: String(overdueInvoices.length), color: overdueInvoices.length > 0 ? "#F26063" : "#6F6D7A", bar: overdueInvoices.length > 0 ? "from-[#F26063] to-transparent" : "from-[#6F6D7A] to-transparent" },
             ].map((tile, i) => (
               <motion.div
@@ -1865,7 +1865,7 @@ export default function ClientsPage() {
             <div>
               <label className="block text-sm text-muted mb-1">Description</label>
               <input name="description" className="input w-full"
-                defaultValue={`${showSubscribeModal.business_name} — ${showSubscribeModal.package_tier || "Growth"} Package`}
+                defaultValue={`${showSubscribeModal.business_name} � ${showSubscribeModal.package_tier || "Growth"} Package`}
                 placeholder="Service description shown on invoice" />
             </div>
             <div>

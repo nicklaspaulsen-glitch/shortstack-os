@@ -73,7 +73,7 @@ const PLATFORMS: PlatformCard[] = [
     subtitle: "Windows 10 & 11 (x64)",
     icon: <Monitor size={26} />,
     fileNote: ".exe NSIS installer",
-    accent: "#FF6B6B",
+    accent: "#3B82F6",
   },
   {
     id: "mac",

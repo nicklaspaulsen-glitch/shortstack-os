@@ -48,11 +48,11 @@ const TYPE_LABEL: Record<TaskType, string> = {
 const TYPE_COLORS: Record<TaskType, { bg: string; text: string }> = {
   video: { bg: "rgba(168, 85, 247, 0.18)", text: "#D8B4FE" },
   thumbnail: { bg: "rgba(236, 72, 153, 0.18)", text: "#F9A8D4" },
-  post: { bg: "rgba(255, 45, 45, 0.18)", text: "#FF8080" },
-  copy: { bg: "rgba(255, 45, 45, 0.18)", text: "#FF8080" },
+  post: { bg: "rgba(37, 99, 235, 0.18)", text: "#FF8080" },
+  copy: { bg: "rgba(37, 99, 235, 0.18)", text: "#FF8080" },
   ad: { bg: "rgba(249, 115, 22, 0.18)", text: "#FDBA74" },
   brief: { bg: "rgba(139, 92, 246, 0.18)", text: "#C4B5FD" },
-  call: { bg: "rgba(255, 45, 45, 0.18)", text: "#FF8080" },
+  call: { bg: "rgba(37, 99, 235, 0.18)", text: "#FF8080" },
   generic: { bg: "rgba(148, 163, 184, 0.18)", text: "#CBD5E1" },
 };
 

@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -52,11 +52,11 @@ const TIMEZONES = [
 
 function categoryToColor(category: EventCategory): string {
   switch (category) {
-    case "meeting": return "#CC2424";
+    case "meeting": return "#1D4ED8";
     case "deadline": return "#dc2626";
     case "content": return "#7c3aed";
-    case "call": return "#CC2424";
-    default: return "#CC2424";
+    case "call": return "#1D4ED8";
+    default: return "#1D4ED8";
   }
 }
 
@@ -110,7 +110,7 @@ export default function CalendarPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [draggedEvent, setDraggedEvent] = useState<string | null>(null);
-  // Sync status is TBD â€” no OAuth wiring for Google/Outlook/Apple calendars yet.
+  // Sync status is TBD — no OAuth wiring for Google/Outlook/Apple calendars yet.
   // We surface "Not Connected" for all three until those integrations ship.
   const syncStatus: Record<string, boolean> = { google: false, outlook: false, apple: false };
   const [currentWeek, setCurrentWeek] = useState(() => {
@@ -220,7 +220,7 @@ export default function CalendarPage() {
       lines.push(`DTSTART:${dtstart}`);
       lines.push(`DTEND:${dtend}`);
       lines.push(`SUMMARY:${e.title.replace(/\n/g, " ")}`);
-      if (e.client) lines.push(`DESCRIPTION:Client: ${e.client} Â· Assigned: ${e.teamMember}`);
+      if (e.client) lines.push(`DESCRIPTION:Client: ${e.client} · Assigned: ${e.teamMember}`);
       lines.push("END:VEVENT");
     });
     lines.push("END:VCALENDAR");
@@ -231,7 +231,7 @@ export default function CalendarPage() {
     a.download = `trinity-calendar-${label}.ics`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success(`Exported ${filteredEvents.length} event${filteredEvents.length === 1 ? "" : "s"} â€” import the .ics into ${label === "google" ? "Google Calendar" : "Outlook"}`);
+    toast.success(`Exported ${filteredEvents.length} event${filteredEvents.length === 1 ? "" : "s"} — import the .ics into ${label === "google" ? "Google Calendar" : "Outlook"}`);
   };
 
   const handleDragStart = (eventId: string) => { setDraggedEvent(eventId); };
@@ -309,7 +309,7 @@ export default function CalendarPage() {
       <PageHero
         icon={<Calendar size={22} />}
         title="Calendar"
-        subtitle="Schedule appointments, calls, and meetings. Sync with Google or Outlook â€” AI detects conflicts automatically."
+        subtitle="Schedule appointments, calls, and meetings. Sync with Google or Outlook — AI detects conflicts automatically."
         gradient="gold"
         actions={
           <>
@@ -395,7 +395,7 @@ export default function CalendarPage() {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border transition-all ${
                     selectedCategories.includes(cat) ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border text-muted"
                   }`}>
-                  <div className="w-2 h-2 rounded-full" style={{ background: cat === "meeting" ? "#CC2424" : cat === "deadline" ? "#dc2626" : cat === "content" ? "#7c3aed" : "#CC2424" }} />
+                  <div className="w-2 h-2 rounded-full" style={{ background: cat === "meeting" ? "#1D4ED8" : cat === "deadline" ? "#dc2626" : cat === "content" ? "#7c3aed" : "#1D4ED8" }} />
                   {CATEGORY_CONFIG[cat].label}
                 </button>
               ))}
@@ -437,7 +437,7 @@ export default function CalendarPage() {
             <button onClick={prevWeek} className="btn-ghost p-2" aria-label="Previous week"><ChevronLeft size={16} /></button>
             <div className="flex items-center gap-3">
               <span className="text-sm font-semibold">
-                {weekDays[0].toLocaleDateString("en-US", { month: "short", day: "numeric" })} â€” {weekDays[6].toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                {weekDays[0].toLocaleDateString("en-US", { month: "short", day: "numeric" })} — {weekDays[6].toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
               </span>
               <button onClick={goToday} className="btn-secondary text-[10px] px-2 py-0.5">Today</button>
             </div>
@@ -577,7 +577,7 @@ export default function CalendarPage() {
                   type="no-calendar"
                   size={140}
                   title="No events today"
-                  description="Your schedule is clear â€” enjoy the quiet."
+                  description="Your schedule is clear — enjoy the quiet."
                 />
               ) : (
                 <div className="space-y-2">
@@ -635,7 +635,7 @@ export default function CalendarPage() {
                       className="rounded-xl overflow-hidden relative"
                       style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.08)" }}
                     >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #CC2424, #8b5cf6, #ec4899, #f97316, #CC2424)" }} className="absolute top-0 left-0 right-0" />
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }} className="absolute top-0 left-0 right-0" />
                       <div className="flex justify-between text-xs p-2 pt-3">
                         <span className="text-muted">{stat.label}</span>
                         <span className={`font-bold ${stat.color}`}>{stat.value}</span>
