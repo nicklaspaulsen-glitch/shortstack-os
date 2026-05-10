@@ -261,7 +261,7 @@ function isPrivateOrInternal(hostname: string): boolean {
     if (a === 198 && b === 51 && c === 100) return true;          // 198.51.100.0/24 TEST-NET-2 (RFC 5737)
     if (a === 203 && b === 0 && c === 113) return true;           // 203.0.113.0/24 TEST-NET-3 (RFC 5737)
     if (a === 100 && b >= 64 && b <= 127) return true;            // CGNAT 100.64.0.0/10
-    if (a >= 240) return true;                                    // 240.0.0.0/4 reserved (class E) + 255.255.255.255 broadcast
+    if (a >= 224) return true;                                    // 224.0.0.0/4 multicast + 240.0.0.0/4 class E + 255.255.255.255 broadcast
   }
   // IPv6 — strip optional brackets so both literals and DNS results match.
   const bare = host.startsWith("[") && host.endsWith("]") ? host.slice(1, -1) : host;
