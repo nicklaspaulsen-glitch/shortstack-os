@@ -721,9 +721,11 @@ export default function ClientsPage() {
           <div
             className="relative overflow-hidden rounded-xl px-8 py-7"
             style={{
-              background: "#FFFFFF",
+              background: "rgba(255,255,255,0.90)",
+              backdropFilter: "blur(16px) saturate(1.5)",
+              WebkitBackdropFilter: "blur(16px) saturate(1.5)",
               border: "1px solid rgba(37,99,235,0.16)",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px -4px rgba(0,0,0,0.08)",
+              boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 8px 24px -4px rgba(0,0,0,0.08), 0 0 48px -12px rgba(37,99,235,0.14)",
             }}
           >
             <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent, #1D4ED8 40%, #3B82F6 50%, #1D4ED8 60%, transparent)" }} />
@@ -748,9 +750,11 @@ export default function ClientsPage() {
                 key={cell.label}
                 className="flex-1 relative rounded-xl px-5 py-4 overflow-hidden"
                 style={{
-                  background: "#FFFFFF",
+                  background: "rgba(255,255,255,0.88)",
+                  backdropFilter: "blur(16px) saturate(1.5)",
+                  WebkitBackdropFilter: "blur(16px) saturate(1.5)",
                   border: `1px solid ${cell.danger ? "rgba(204,36,36,0.22)" : "rgba(0,0,0,0.08)"}`,
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+                  boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px -4px rgba(0,0,0,0.06)",
                 }}
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -992,7 +996,7 @@ export default function ClientsPage() {
             return (
               <motion.div key={c.id}
                 className={`card card-accent ${accentClass} ${isFeatured ? "md:col-span-2" : ""} p-4 transition-all cursor-pointer group relative overflow-hidden`}
-                style={{ background: isFeatured ? "rgba(37,99,235,0.04)" : "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
+                style={{ background: isFeatured ? "rgba(37,99,235,0.06)" : "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", boxShadow: "0 1px 0 rgba(255,255,255,0.9) inset, 0 4px 12px -4px rgba(0,0,0,0.06)" }}
                 variants={fadeUp}
                 whileHover={{ y: -4, borderColor: "rgba(0,0,0,0.16)", boxShadow: "0 12px 40px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.08)", transition: { duration: 0.22 } }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
@@ -1387,7 +1391,7 @@ export default function ClientsPage() {
                   ].map((tile, ti) => {
                     const bars = ["from-[#1D4ED8]","from-[#3B82F6]","from-[#1D4ED8]","from-[#6F6D7A]"];
                     return (
-                      <div key={tile.label} className="relative rounded-xl border border-[rgba(0,0,0,0.08)] p-3 overflow-hidden" style={{ background: "#FFFFFF" }}>
+                      <div key={tile.label} className="relative rounded-xl border border-[rgba(0,0,0,0.08)] p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
                         <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${bars[ti]} to-transparent opacity-60`} />
                         <div className="text-[10px] uppercase tracking-wider text-[#71717A]">{tile.label}</div>
                         <div className="mt-1 text-lg font-bold font-mono" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</div>
@@ -1512,7 +1516,7 @@ export default function ClientsPage() {
               <motion.div
                 key={tile.label}
                 className="relative rounded-xl border border-[rgba(0,0,0,0.08)] px-4 py-3 overflow-hidden"
-                style={{ background: "#FFFFFF", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
+                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px -4px rgba(0,0,0,0.06)" }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.36, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}

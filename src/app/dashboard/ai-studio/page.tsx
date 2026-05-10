@@ -390,7 +390,7 @@ export default function AIStudioPage() {
               <motion.div
                 key={stat.label}
                 className="relative rounded-xl border border-[rgba(0,0,0,0.08)] px-4 py-3 overflow-hidden"
-                style={{ background: "#FFFFFF" }}
+                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.24, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
@@ -434,7 +434,7 @@ export default function AIStudioPage() {
         <div className={`grid grid-cols-1 gap-3 items-start ${history.length > 0 ? "md:grid-cols-[200px_1fr_188px]" : "md:grid-cols-[200px_1fr]"}`}>
 
           {/* Left: vertical tool list */}
-          <div className="overflow-hidden" style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+          <div className="overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}>
             <div className="px-3 pt-3 pb-1">
               <p className="text-[8px] uppercase tracking-[0.2em] text-[#71717A] font-semibold px-1 mb-2">Tools</p>
             </div>
@@ -504,7 +504,7 @@ export default function AIStudioPage() {
           <div
             ref={toolPanelRef}
             className="relative overflow-hidden"
-            style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
+            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}
           >
             {/* Prism accent top bar */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#1D4ED8]" />
@@ -562,7 +562,7 @@ export default function AIStudioPage() {
           {history.length > 0 && (
             <motion.div
               className="hidden md:flex flex-col gap-2 overflow-hidden"
-              style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}
               initial={{ opacity: 0, x: 12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
@@ -759,7 +759,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         {/* Output */}
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
+          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22, delay: 0.08 }}
@@ -981,7 +981,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
+          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {images.length > 0 ? (
@@ -1152,7 +1152,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
+          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1376,7 +1376,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
         </div>
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
+          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1482,7 +1482,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex flex-col items-center justify-center"
-          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
+          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1654,7 +1654,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
           </div>
           <motion.div
             className="rounded-xl p-4 flex items-center justify-center"
-            style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
+            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
           >
             {result ? (
@@ -1788,7 +1788,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
+          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           <h3 className="text-xs font-semibold text-foreground mb-3">How it works</h3>
@@ -1922,7 +1922,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
+          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           <h3 className="text-xs font-semibold text-foreground mb-3">Queue ({results.length})</h3>

@@ -277,16 +277,10 @@ export default function PageHero({
           boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08)",
         }}
       >
-        {/* Blue accent rail — left edge, full height */}
+        {/* Top-edge blue accent line — 1px horizontal gradient, no side-stripe */}
         <div
-          className="absolute left-0 top-0 bottom-0 w-[3px]"
-          style={{ background: "linear-gradient(180deg, #2563EB 0%, #3B82F6 50%, #1D4ED8 100%)" }}
-          aria-hidden
-        />
-        {/* Subtle blue glow behind left edge */}
-        <div
-          className="absolute left-0 top-0 bottom-0 w-12 pointer-events-none"
-          style={{ background: "linear-gradient(90deg, rgba(37,99,235,0.05) 0%, transparent 100%)" }}
+          className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+          style={{ background: "linear-gradient(90deg, transparent 0%, rgba(37,99,235,0.7) 25%, rgba(59,130,246,0.5) 75%, transparent 100%)" }}
           aria-hidden
         />
 
@@ -397,12 +391,11 @@ export default function PageHero({
         />
       )}
 
-      {/* Left-edge lime accent — 4px line, deliberate brand cue. */}
+      {/* Top-edge blue accent line — 1px horizontal gradient, no side-stripe */}
       <div
-        className="pointer-events-none absolute left-0 top-[10%] bottom-[10%] w-1 rounded-r-sm"
+        className="pointer-events-none absolute top-0 left-0 right-0 h-px"
         style={{
-          background: treatment.accent,
-          boxShadow: `0 0 16px ${treatment.accent}`,
+          background: `linear-gradient(90deg, transparent 0%, ${treatment.accent}bb 20%, ${treatment.accent}77 75%, transparent 100%)`,
         }}
         aria-hidden
       />
