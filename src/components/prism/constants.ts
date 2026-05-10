@@ -1,10 +1,9 @@
 /**
- * Prism Split Design System — shared constants
+ * Prism Split Design System — shared constants (light-theme edition)
  *
- * The approved prism split look: sharp corners (zero border-radius),
- * red (#2563EB) as hero accent, pure white (#FFFFFF) for emphasis,
- * near-black (#050507) background, white-tinted glass surfaces,
- * JetBrains Mono for data, 3D perspective tilt on hover.
+ * Updated May 10 for the light × glass × blue brand direction.
+ * PRISM_GLASS and PRISM_BORDERS now use light-theme values — frosted white
+ * over the #F3F6FA base with blue accent glows. Dark OLED values removed.
  *
  * Reference: _design-previews/93-prism-dashboard.html
  */
@@ -42,55 +41,55 @@ export const PRISM_DURATION = {
 /** Stagger delay between sibling tiles (seconds) */
 export const PRISM_STAGGER = 0.06;
 
-/** Inline glass surface styles — white-tinted, NOT indigo */
+/** Inline glass surface styles — frosted white for light theme */
 export const PRISM_GLASS = {
-  background: "rgba(255,255,255,0.035)",
-  backdropFilter: "blur(16px)",
-  WebkitBackdropFilter: "blur(16px)",
+  background: "rgba(255,255,255,0.88)",
+  backdropFilter: "blur(16px) saturate(1.5)",
+  WebkitBackdropFilter: "blur(16px) saturate(1.5)",
 } as const;
 
 /** Stronger glass for hero/prominent panels */
 export const PRISM_GLASS_STRONG = {
-  background: "rgba(255,255,255,0.07)",
-  backdropFilter: "blur(24px)",
-  WebkitBackdropFilter: "blur(24px)",
+  background: "rgba(255,255,255,0.94)",
+  backdropFilter: "blur(24px) saturate(1.5)",
+  WebkitBackdropFilter: "blur(24px) saturate(1.5)",
 } as const;
 
-/** White-tinted borders — NOT indigo. The prism split uses pure white tints */
+/** Light-theme borders — dark tints for visibility on white surfaces */
 export const PRISM_BORDERS = {
-  subtle: "rgba(255,255,255,0.05)",
-  default: "rgba(255,255,255,0.07)",
-  strong: "rgba(255,255,255,0.12)",
-  hover: "rgba(255,255,255,0.18)",
+  subtle: "rgba(0,0,0,0.06)",
+  default: "rgba(0,0,0,0.08)",
+  strong: "rgba(0,0,0,0.14)",
+  hover: "rgba(37,99,235,0.18)",
 } as const;
 
 /** Prismatic gradient for the signature top bars (red leads) */
 export const PRISM_RAINBOW_GRADIENT =
   "linear-gradient(90deg, #2563EB, #8B5CF6, #2563EB, #FF5252, #2563EB, #F59E0B)";
 
-/** Text color tokens — pure white for emphasis, not off-white */
+/** Text color tokens — light-theme values */
 export const PRISM_TEXT = {
-  primary: "#F0F0F4",
-  secondary: "#7A7A8E",
-  muted: "#4A4A5A",
-  accent: "#FFFFFF",
+  primary: "#111827",
+  secondary: "#374151",
+  muted: "#6B7280",
+  accent: "#2563EB",
   red: "#2563EB",
 } as const;
 
-/** Surface colors */
+/** Surface colors — light-theme */
 export const PRISM_SURFACES = {
-  bg: "#050507",
-  surface1: "rgba(255,255,255,0.025)",
-  surface2: "rgba(255,255,255,0.05)",
-  surface3: "rgba(255,255,255,0.075)",
+  bg: "#F3F6FA",
+  surface1: "rgba(255,255,255,0.70)",
+  surface2: "rgba(255,255,255,0.88)",
+  surface3: "rgba(255,255,255,0.95)",
 } as const;
 
-/** Card shadows — red glow on hover */
+/** Card shadows — light-theme depth + blue glow on hover */
 export const PRISM_SHADOWS = {
-  card: "0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04)",
-  cardHover: "0 12px 48px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(37,99,235,0.06)",
-  panel: "0 8px 32px rgba(0,0,0,0.35)",
+  card: "0 1px 0 rgba(255,255,255,1) inset, 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.06)",
+  cardHover: "0 1px 0 rgba(255,255,255,1) inset, 0 2px 8px rgba(0,0,0,0.08), 0 8px 24px -6px rgba(0,0,0,0.12), 0 0 48px -12px rgba(37,99,235,0.14)",
+  panel: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 16px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)",
 } as const;
 
-/** Deep surface color for inset containers */
-export const PRISM_SURFACE_DEEP = "#050507";
+/** Inset container surface — light-theme */
+export const PRISM_SURFACE_DEEP = "#F8FAFC";

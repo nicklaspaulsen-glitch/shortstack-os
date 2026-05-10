@@ -19,18 +19,18 @@ import OnboardingChecklist from "@/components/dashboard-home/onboarding-checklis
 import type { BentoData } from "@/components/dashboard-home/types";
 
 /**
- * Dashboard home — the editorial-bento redesign (Phase 2B).
+ * Dashboard home ï¿½ the editorial-bento redesign (Phase 2B).
  *
  * Above the bento grid:
  *   - UsageNudgeBanner (Starter only, >70% usage)
- *   - DashboardHeroStrip — slim editorial header with greeting + clock + micro-stats
- *   - DowntimeBanner — alerts when an integration is down
+ *   - DashboardHeroStrip ï¿½ slim editorial header with greeting + clock + micro-stats
+ *   - DowntimeBanner ï¿½ alerts when an integration is down
  *
  * The bento grid (8 tiles) is the centerpiece. Trinity orb + the
  * AI recommender sit below it for users who want to take action.
  *
  * Data wiring: client-side fetch from `/api/dashboard-bento` (RLS-gated
- * server route). The original `/api/dashboard-data` is left intact — it
+ * server route). The original `/api/dashboard-data` is left intact ï¿½ it
  * powers the deeper stats/pipeline/agent panels we removed from the home
  * (those still exist on `/dashboard/leads`, `/dashboard/agent-supervisor`,
  * etc.) so no wiring is broken downstream.
@@ -64,7 +64,7 @@ export default function DashboardPage() {
       window.history.replaceState({}, "", "/dashboard");
       return () => clearTimeout(t);
     }
-  // refreshProfile is stable per-context — no need to re-run on identity change.
+  // refreshProfile is stable per-context ï¿½ no need to re-run on identity change.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -95,7 +95,7 @@ export default function DashboardPage() {
   }, []);
 
   // Client portal users get a different shell. Keep the existing client view
-  // intact — only the agency owner home is redesigned in this phase.
+  // intact ï¿½ only the agency owner home is redesigned in this phase.
   if (profile?.role === "client") {
     return <ClientDashboard />;
   }
@@ -112,7 +112,7 @@ export default function DashboardPage() {
     <div className="fade-in space-y-4 max-w-[1400px] mx-auto">
       <UsageNudgeBanner planTier={profile?.plan_tier} />
 
-      {/* Getting-started checklist — shown to new users until all 5 items
+      {/* Getting-started checklist ï¿½ shown to new users until all 5 items
           are complete OR the user dismisses it. Hides itself via localStorage
           (14-day auto-expire). completedFromApi can be wired to real data
           once the dashboard-bento API surface exposes setup flags. */}
@@ -122,19 +122,19 @@ export default function DashboardPage() {
 
       <DowntimeBanner />
 
-      {/* Trinity 3D speaking hero — replaces the orb for the new
+      {/* Trinity 3D speaking hero ï¿½ replaces the orb for the new
           monochrome direction. R3F crystal lazy-loads + lip-syncs
           to AI suggestions piped from /api/ai/suggest-topics. */}
       <TrinityHero3D greeting={firstName} suggestionSurface="script_lab" />
 
-      {/* Agent Office preview — smooth premium tile (replaces the
+      {/* Agent Office preview ï¿½ smooth premium tile (replaces the
           pixelated PixiJS preview that used to live here). Each agent
           gets a circular disc + name + role. Live pulse rings when
           the agent has recent activity. Links into the full office
           page for the live PixiJS experience. */}
       <AgentOfficeTile />
 
-      {/* Legacy ask-anything orb stays available below the hero — keeps
+      {/* Legacy ask-anything orb stays available below the hero ï¿½ keeps
           the chat-prompt entry point that some users rely on. */}
       <TrinityOrb firstName={firstName} />
 
@@ -145,7 +145,7 @@ export default function DashboardPage() {
         <BentoFallback />
       )}
 
-      {/* Below-the-fold AI helpers — kept from the previous dashboard */}
+      {/* Below-the-fold AI helpers ï¿½ kept from the previous dashboard */}
       <AiRecommender />
       <RecentGenerations />
 
@@ -156,7 +156,7 @@ export default function DashboardPage() {
 }
 
 /**
- * Pre-warm the route cache for likely navigation targets — keeps the bento
+ * Pre-warm the route cache for likely navigation targets ï¿½ keeps the bento
  * "View ?" links instant. Wrapped as a no-render component so the prefetch
  * effect runs after the bento mounts.
  */
@@ -183,12 +183,12 @@ function RouterPrefetch({ router }: { router: ReturnType<typeof useRouter> }) {
 
 /**
  * Render a friendly fallback when the bento API failed entirely. Surfaces
- * the brand mark, a one-line editorial copy, and a primary CTA — matches
+ * the brand mark, a one-line editorial copy, and a primary CTA ï¿½ matches
  * the per-tile empty-state design language so the page never feels broken.
  */
 function BentoFallback() {
   return (
-    <div className=" border border-[rgba(0,0,0,0.08)] bg-[#FAFAFB] p-12 flex flex-col items-center justify-center text-center gap-4">
+    <div className="rounded-xl border border-[rgba(0,0,0,0.08)] p-12 flex flex-col items-center justify-center text-center gap-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
       <p className="font-editorial text-base text-[#52525B] max-w-md">
         Couldn&apos;t reach the dashboard service. Refresh the page or check the system status if this keeps happening.
       </p>
@@ -203,7 +203,7 @@ function BentoFallback() {
 }
 
 /**
- * ClientDashboard — unchanged from the previous home. Client portal users
+ * ClientDashboard ï¿½ unchanged from the previous home. Client portal users
  * see a simpler "your services" surface. The agency-owner redesign doesn't
  * touch this view; portal pages have their own design language.
  */
@@ -216,10 +216,10 @@ function ClientDashboard() {
     <div className="fade-in space-y-6 max-w-[1000px] mx-auto">
       <div className="relative inline-block">
         <h1 className="font-display text-3xl font-bold tracking-tight">Welcome, {profile?.full_name}</h1>
-        {/* Acid Lime underline accent */}
+        {/* Blue underline accent */}
         <div
           className="h-[2px] mt-1 rounded-full"
-          style={{ background: "linear-gradient(90deg, var(--brand-accent, #1D4ED8) 0%, transparent 70%)" }}
+          style={{ background: "linear-gradient(90deg, var(--brand-accent, #2563EB) 0%, transparent 70%)" }}
           aria-hidden
         />
         <p className="text-sm text-muted mt-1.5">Your client portal</p>
