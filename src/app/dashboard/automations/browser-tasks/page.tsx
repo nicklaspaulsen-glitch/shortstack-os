@@ -43,8 +43,8 @@ interface BrowserTaskTemplate {
 }
 
 const STATUS_STYLES: Record<BrowserTask["status"], { label: string; bg: string; fg: string; icon: React.ReactNode }> = {
-  queued: { label: "Queued", bg: "bg-amber-500/15", fg: "text-amber-300", icon: <Clock size={12} /> },
-  running: { label: "Running", bg: "bg-sky-500/15", fg: "text-sky-300", icon: <Loader2 size={12} className="animate-spin" /> },
+  queued: { label: "Queued", bg: "bg-amber-50", fg: "text-amber-700", icon: <Clock size={12} /> },
+  running: { label: "Running", bg: "bg-[rgba(37,99,235,0.08)]", fg: "text-[#2563EB]", icon: <Loader2 size={12} className="animate-spin" /> },
   completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-300", icon: <CheckCircle2 size={12} /> },
   failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-300", icon: <XCircle size={12} /> },
   cancelled: { label: "Cancelled", bg: "bg-zinc-500/15", fg: "text-zinc-300", icon: <XCircle size={12} /> },
@@ -151,15 +151,15 @@ export default function BrowserTasksPage() {
         gradient="purple"
         icon={<Bot size={28} />}
         eyebrow={
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white/80 backdrop-blur">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(0,0,0,0.06)] px-2.5 py-1 text-[11px] font-medium text-[#374151] backdrop-blur">
             <Sparkles size={11} /> Beta — Playwright + Claude
           </span>
         }
       />
 
       {/* New task card */}
-      <div className="rounded-xl border border-white/10 bg-zinc-900/60 p-5 backdrop-blur">
-        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white/90">
+      <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 backdrop-blur">
+        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
           <Plus size={15} /> New task
         </div>
 
@@ -167,9 +167,9 @@ export default function BrowserTasksPage() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-medium text-white/90">{selectedTemplate.name}</div>
+                <div className="text-sm font-medium text-[#374151]">{selectedTemplate.name}</div>
                 {selectedTemplate.description && (
-                  <div className="text-xs text-white/60">{selectedTemplate.description}</div>
+                  <div className="text-xs text-[#6B7280]">{selectedTemplate.description}</div>
                 )}
               </div>
               <button
@@ -177,17 +177,17 @@ export default function BrowserTasksPage() {
                   setSelectedTemplateId(null);
                   setTemplateValues({});
                 }}
-                className="text-xs text-white/60 hover:text-white"
+                className="text-xs text-[#6B7280] hover:text-[#111827]"
               >
                 Clear
               </button>
             </div>
             {selectedTemplate.variables.map((v) => (
               <label key={v.name} className="block">
-                <span className="block text-xs font-medium text-white/70">
+                <span className="block text-xs font-medium text-[#6B7280]">
                   {v.name}
-                  {v.required && <span className="text-rose-400"> *</span>}
-                  <span className="ml-1 text-[10px] uppercase tracking-wide text-white/40">{v.kind}</span>
+                  {v.required && <span className="text-rose-500"> *</span>}
+                  <span className="ml-1 text-[10px] uppercase tracking-wide text-[#9CA3AF]">{v.kind}</span>
                 </span>
                 <input
                   type={v.kind === "number" ? "number" : v.kind === "url" ? "url" : "text"}
@@ -195,7 +195,7 @@ export default function BrowserTasksPage() {
                   onChange={(e) =>
                     setTemplateValues((prev) => ({ ...prev, [v.name]: e.target.value }))
                   }
-                  className="mt-1 w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-purple-400/50 focus:outline-none"
+                  className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
                   placeholder={`{{${v.name}}}`}
                 />
               </label>
@@ -204,23 +204,23 @@ export default function BrowserTasksPage() {
         ) : (
           <div className="space-y-3">
             <label className="block">
-              <span className="block text-xs font-medium text-white/70">Goal</span>
+              <span className="block text-xs font-medium text-[#6B7280]">Goal</span>
               <textarea
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
                 rows={3}
                 placeholder="Visit example.com/pricing and extract every tier as JSON…"
-                className="mt-1 w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-purple-400/50 focus:outline-none"
+                className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
               />
             </label>
             <label className="block">
-              <span className="block text-xs font-medium text-white/70">Start URL (optional)</span>
+              <span className="block text-xs font-medium text-[#6B7280]">Start URL (optional)</span>
               <input
                 type="url"
                 value={startUrl}
                 onChange={(e) => setStartUrl(e.target.value)}
                 placeholder="https://example.com"
-                className="mt-1 w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-purple-400/50 focus:outline-none"
+                className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
               />
             </label>
           </div>
@@ -230,7 +230,7 @@ export default function BrowserTasksPage() {
           <button
             onClick={submit}
             disabled={submitting}
-            className="inline-flex items-center gap-1.5 rounded-md bg-gradient-to-br from-purple-500 to-fuchsia-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-purple-500/30 transition hover:from-purple-400 hover:to-fuchsia-400 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-md bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[rgba(37,99,235,0.30)] transition hover:bg-[#3B82F6] disabled:opacity-50"
           >
             {submitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
             Queue task
@@ -240,8 +240,8 @@ export default function BrowserTasksPage() {
 
       {/* Templates */}
       {templates.length > 0 && (
-        <div className="rounded-xl border border-white/10 bg-zinc-900/40 p-5 backdrop-blur">
-          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white/90">
+        <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 backdrop-blur">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
             <Sparkles size={15} /> Try a template
           </div>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -254,20 +254,20 @@ export default function BrowserTasksPage() {
                 }}
                 className={`group rounded-lg border p-3 text-left transition ${
                   selectedTemplateId === t.id
-                    ? "border-purple-400/60 bg-purple-500/10"
-                    : "border-white/10 bg-black/30 hover:border-white/20 hover:bg-black/40"
+                    ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
+                    : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] hover:border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.06)]"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <div className="text-sm font-medium text-white/90">{t.name}</div>
+                  <div className="text-sm font-medium text-[#374151]">{t.name}</div>
                   {t.category && (
-                    <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-white/60">
+                    <span className="rounded-full bg-[rgba(0,0,0,0.06)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[#6B7280]">
                       {t.category.replace("_", " ")}
                     </span>
                   )}
                 </div>
                 {t.description && (
-                  <div className="mt-1 text-xs text-white/60 line-clamp-2">{t.description}</div>
+                  <div className="mt-1 text-xs text-[#6B7280] line-clamp-2">{t.description}</div>
                 )}
               </button>
             ))}
@@ -276,43 +276,43 @@ export default function BrowserTasksPage() {
       )}
 
       {/* Task list */}
-      <div className="rounded-xl border border-white/10 bg-zinc-900/40 backdrop-blur">
-        <div className="flex items-center gap-2 border-b border-white/10 px-5 py-3 text-sm font-semibold text-white/90">
+      <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white backdrop-blur">
+        <div className="flex items-center gap-2 border-b border-[rgba(0,0,0,0.08)] px-5 py-3 text-sm font-semibold text-[#374151]">
           <Globe size={15} /> Tasks
-          <span className="ml-2 rounded-full bg-white/10 px-2 py-0.5 text-[10px] text-white/60">
+          <span className="ml-2 rounded-full bg-[rgba(0,0,0,0.06)] px-2 py-0.5 text-[10px] text-[#6B7280]">
             {tasks.length}
           </span>
         </div>
         {loading ? (
-          <div className="flex items-center justify-center px-5 py-10 text-sm text-white/50">
+          <div className="flex items-center justify-center px-5 py-10 text-sm text-[#9CA3AF]">
             <Loader2 size={16} className="mr-2 animate-spin" /> Loading…
           </div>
         ) : tasks.length === 0 ? (
-          <div className="px-5 py-10 text-center text-sm text-white/50">
+          <div className="px-5 py-10 text-center text-sm text-[#9CA3AF]">
             No tasks yet. Queue your first one above.
           </div>
         ) : (
-          <ul className="divide-y divide-white/5">
+          <ul className="divide-y divide-[rgba(0,0,0,0.06)]">
             {tasks.map((t) => {
               const status = STATUS_STYLES[t.status];
               return (
                 <li key={t.id}>
                   <Link
                     href={`/dashboard/automations/browser-tasks/${t.id}`}
-                    className="flex items-center gap-3 px-5 py-3 hover:bg-white/5"
+                    className="flex items-center gap-3 px-5 py-3 hover:bg-[rgba(0,0,0,0.03)]"
                   >
                     <span
                       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${status.bg} ${status.fg}`}
                     >
                       {status.icon} {status.label}
                     </span>
-                    <span className="flex-1 truncate text-sm text-white/90">{t.goal}</span>
-                    <span className="hidden text-xs text-white/50 md:inline">
+                    <span className="flex-1 truncate text-sm text-[#374151]">{t.goal}</span>
+                    <span className="hidden text-xs text-[#9CA3AF] md:inline">
                       {t.steps_taken}/{t.max_steps} steps
                     </span>
-                    <span className="hidden text-xs text-white/50 md:inline">{fmtCost(t.total_cost_usd)}</span>
-                    <span className="hidden text-xs text-white/50 lg:inline">{fmtDate(t.created_at)}</span>
-                    <ChevronRight size={14} className="text-white/40" />
+                    <span className="hidden text-xs text-[#9CA3AF] md:inline">{fmtCost(t.total_cost_usd)}</span>
+                    <span className="hidden text-xs text-[#9CA3AF] lg:inline">{fmtDate(t.created_at)}</span>
+                    <ChevronRight size={14} className="text-[#9CA3AF]" />
                   </Link>
                 </li>
               );

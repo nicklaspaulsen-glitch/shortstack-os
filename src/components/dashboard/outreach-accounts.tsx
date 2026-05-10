@@ -260,9 +260,9 @@ export default function OutreachAccounts() {
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Shield size={14} className="text-gold" />
+          <Shield size={14} className="text-[#2563EB]" />
           <h3 className="text-sm font-semibold">Outreach Accounts</h3>
-          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20">
+          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]">
             {activeEmails + activePhones + activeSocials} active
           </span>
           {lastCheck && (
@@ -388,7 +388,7 @@ export default function OutreachAccounts() {
                     <button
                       onClick={() => toggleEmailActive(sender.id, !(sender.is_active !== false))}
                       className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                        sender.is_active !== false ? "bg-gold border-gold" : "border-white/20"
+                        sender.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-white/20"
                       }`}
                     >
                       {sender.is_active !== false && <Check size={10} className="text-black" />}
@@ -399,7 +399,7 @@ export default function OutreachAccounts() {
                         <StatusDot status={deriveLiveStatus(sender)} />
                         <p className="text-[11px] font-medium truncate">{sender.email}</p>
                         {sender.is_primary && (
-                          <span className="text-[8px] px-1 py-0.5 rounded bg-gold/15 text-gold">Primary</span>
+                          <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">Primary</span>
                         )}
                       </div>
                       <div className="flex items-center gap-2 mt-0.5">
@@ -433,7 +433,7 @@ export default function OutreachAccounts() {
                     {!sender.is_primary && sender.is_active !== false && (
                       <button
                         onClick={() => setEmailPrimary(sender.id)}
-                        className="opacity-0 group-hover:opacity-100 text-[9px] text-muted hover:text-gold transition-opacity"
+                        className="opacity-0 group-hover:opacity-100 text-[9px] text-muted hover:text-[#2563EB] transition-opacity"
                       >
                         Set primary
                       </button>
@@ -457,7 +457,7 @@ export default function OutreachAccounts() {
                     <button
                       onClick={() => togglePhoneActive(phone.id, !(phone.is_active !== false))}
                       className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                        phone.is_active !== false ? "bg-gold border-gold" : "border-white/20"
+                        phone.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-white/20"
                       }`}
                     >
                       {phone.is_active !== false && <Check size={10} className="text-black" />}
@@ -509,7 +509,7 @@ export default function OutreachAccounts() {
                   <button
                     onClick={() => toggleSocialActive(acc.id, !(acc.is_active !== false))}
                     className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                      acc.is_active !== false ? "bg-gold border-gold" : "border-white/20"
+                      acc.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-white/20"
                     }`}
                   >
                     {acc.is_active !== false && <Check size={10} className="text-black" />}
@@ -553,7 +553,7 @@ export default function OutreachAccounts() {
         ) : (
           <Link
             href="/dashboard/phone-email"
-            className="flex items-center gap-1 text-gold hover:text-amber-400 transition-colors"
+            className="flex items-center gap-1 text-[#2563EB] hover:text-[#3B82F6] transition-colors"
           >
             <Plus size={10} /> Add new
           </Link>
@@ -570,7 +570,7 @@ function EmptyState({ icon, label, linkText, link }: { icon: React.ReactNode; la
         {icon}
       </div>
       <p className="text-[11px] text-muted mb-2">{label}</p>
-      <Link href={link} className="inline-flex items-center gap-1 text-[10px] text-gold hover:underline">
+      <Link href={link} className="inline-flex items-center gap-1 text-[10px] text-[#2563EB] hover:underline">
         <Plus size={10} /> {linkText}
       </Link>
     </div>

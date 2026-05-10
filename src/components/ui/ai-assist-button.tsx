@@ -175,7 +175,7 @@ export function AiAssistButton({
               onChange={(e) => setBriefHint(e.target.value)}
               placeholder={`Optional hint — e.g. "make it shorter", "more casual"…`}
               rows={2}
-              className="w-full bg-card border border-border rounded-md px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-gold/40 mb-2 resize-none"
+              className="w-full bg-card border border-border rounded-md px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[rgba(37,99,235,0.4)] mb-2 resize-none"
               autoFocus
             />
             <div className="flex items-center gap-1.5">

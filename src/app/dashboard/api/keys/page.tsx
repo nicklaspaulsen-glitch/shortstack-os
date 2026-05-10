@@ -28,9 +28,9 @@ interface ApiKeyRow {
 }
 
 const SCOPE_PILLS: Record<Scope, string> = {
-  read: "bg-blue-500/10 text-blue-300 border-blue-500/30",
-  write: "bg-yellow-500/10 text-yellow-300 border-yellow-500/30",
-  admin: "bg-red-500/10 text-red-300 border-red-500/30",
+  read: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
+  write: "bg-yellow-500/10 text-yellow-700 border-yellow-500/30",
+  admin: "bg-red-500/10 text-red-600 border-red-500/30",
 };
 
 function timeAgo(iso: string | null): string {
@@ -176,11 +176,11 @@ export default function ApiKeysPage() {
               <p className="text-[10px] text-muted mb-2">
                 We hash and forget. You will not see this string again.
               </p>
-              <div className="flex items-center gap-2 bg-black/40 rounded-lg px-3 py-2 font-mono text-[11px]">
+              <div className="flex items-center gap-2 bg-[rgba(0,0,0,0.04)] rounded-lg px-3 py-2 font-mono text-[11px]">
                 <span className="truncate flex-1">{justCreatedKey}</span>
                 <button
                   onClick={copyKey}
-                  className="text-muted hover:text-gold transition-colors flex-shrink-0"
+                  className="text-muted hover:text-[#2563EB] transition-colors flex-shrink-0"
                 >
                   {copied ? (
                     <CheckCircle size={12} className="text-green-400" />
@@ -201,10 +201,10 @@ export default function ApiKeysPage() {
       )}
 
       {showCreate && (
-        <div className="card p-4 space-y-3 border-gold/20 bg-gold/[0.03]">
+        <div className="card p-4 space-y-3 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.02)]">
           <div className="flex items-center gap-2">
-            <Key size={13} className="text-gold" />
-            <h2 className="text-xs font-semibold text-gold">New API Key</h2>
+            <Key size={13} className="text-[#2563EB]" />
+            <h2 className="text-xs font-semibold text-[#2563EB]">New API Key</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
@@ -262,7 +262,7 @@ export default function ApiKeysPage() {
             <button
               onClick={handleCreate}
               disabled={creating || !newName.trim() || newScopes.length === 0}
-              className="text-[10px] px-4 py-1.5 rounded-lg bg-gold text-black font-medium hover:bg-gold/80 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#1D4ED8] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {creating ? "Creating…" : "Create Key"}
             </button>
@@ -273,10 +273,10 @@ export default function ApiKeysPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="card p-3">
           <div className="flex items-center gap-2 mb-1">
-            <Key size={12} className="text-gold" />
+            <Key size={12} className="text-[#2563EB]" />
             <p className="text-[9px] text-muted uppercase tracking-wider">Total</p>
           </div>
-          <p className="text-lg font-bold text-gold">{keys.length}</p>
+          <p className="text-lg font-bold text-[#2563EB]">{keys.length}</p>
         </div>
         <div className="card p-3">
           <div className="flex items-center gap-2 mb-1">
@@ -364,15 +364,15 @@ export default function ApiKeysPage() {
 
       <div className="card p-4">
         <div className="flex items-center gap-2 mb-2">
-          <Shield size={12} className="text-gold" />
+          <Shield size={12} className="text-[#2563EB]" />
           <h3 className="text-xs font-semibold">Using your key</h3>
         </div>
-        <pre className="bg-black/40 rounded-lg p-3 text-[10px] font-mono text-green-300 overflow-x-auto">
+        <pre className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] rounded-lg p-3 text-[10px] font-mono text-[#1D4ED8] overflow-x-auto">
 {`curl https://app.shortstack.work/api/v1/leads \\
   -H "Authorization: Bearer ss_live_your_key_here"`}
         </pre>
         <p className="text-[10px] text-muted mt-2">
-          Full reference at <code className="text-gold">/docs/PUBLIC_API.md</code>.
+          Full reference at <code className="text-[#2563EB]">/docs/PUBLIC_API.md</code>.
         </p>
       </div>
     </div>

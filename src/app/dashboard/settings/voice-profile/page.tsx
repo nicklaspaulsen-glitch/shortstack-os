@@ -136,7 +136,7 @@ export default function VoiceProfileSettingsPage() {
       />
 
       {loading ? (
-        <div className="h-48 rounded-xl bg-white/4 animate-pulse" />
+        <div className="h-48 rounded-xl bg-black/4 animate-pulse" />
       ) : (
         <>
           <StatusBanner data={data} />
@@ -165,9 +165,9 @@ function StatusBanner({ data }: { data: ProfileResponse | null }) {
 
   if (!profile) {
     return (
-      <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm">
-        <p className="font-semibold text-amber-300 mb-1">Not yet learned</p>
-        <p className="text-amber-200/80">
+      <div className="rounded-xl border border-amber-500/30 bg-amber-50 p-4 text-sm">
+        <p className="font-semibold text-amber-700 mb-1">Not yet learned</p>
+        <p className="text-amber-700/80">
           We need at least {min} words from your sent messages before we can
           inject your voice into AI output. You can paste 5-10 samples below
           to seed it instantly, or just keep using the platform — capture is
@@ -180,9 +180,9 @@ function StatusBanner({ data }: { data: ProfileResponse | null }) {
   if (profile.corpus_size_words < min) {
     const remaining = min - profile.corpus_size_words;
     return (
-      <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm">
-        <p className="font-semibold text-amber-300 mb-1">Building...</p>
-        <p className="text-amber-200/80">
+      <div className="rounded-xl border border-amber-500/30 bg-amber-50 p-4 text-sm">
+        <p className="font-semibold text-amber-700 mb-1">Building...</p>
+        <p className="text-amber-700/80">
           {profile.corpus_size_words} words captured. Need ~{remaining} more
           before voice matching activates. Paste samples below to speed it up.
         </p>
@@ -191,9 +191,9 @@ function StatusBanner({ data }: { data: ProfileResponse | null }) {
   }
 
   return (
-    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 text-sm">
-      <p className="font-semibold text-emerald-300 mb-1">Active</p>
-      <p className="text-emerald-200/80">
+    <div className="rounded-xl border border-emerald-500/30 bg-emerald-50 p-4 text-sm">
+      <p className="font-semibold text-emerald-700 mb-1">Active</p>
+      <p className="text-emerald-700/80">
         {profile.corpus_size_words.toLocaleString()} words captured. Trinity
         is rewriting AI output to match your voice. Last refreshed{" "}
         {new Date(profile.computed_at).toLocaleString()}.
@@ -243,9 +243,9 @@ function StatsPanel({ profile }: { profile: VoiceProfile }) {
   ];
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/2 p-5">
+    <div className="rounded-xl border border-black/6 bg-white p-5">
       <div className="flex items-center gap-2 mb-4">
-        <Type size={16} className="text-purple-400" />
+        <Type size={16} className="text-blue-600" />
         <h3 className="font-semibold text-sm">Voice Stats</h3>
       </div>
       <motion.div
@@ -279,15 +279,15 @@ function Gauge({
   return (
     <div>
       <div className="flex justify-between text-xs mb-1">
-        <span className="text-zinc-400">{label}</span>
-        <span className="text-zinc-200 font-mono">
+        <span className="text-gray-500">{label}</span>
+        <span className="text-gray-800 font-mono">
           {Number.isFinite(value) ? value.toFixed(2) : "0"}
           {suffix}
         </span>
       </div>
-      <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+      <div className="h-2 rounded-full bg-black/6 overflow-hidden">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
+          className="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-400 transition-all"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -307,20 +307,20 @@ function SignatureSection({ profile }: { profile: VoiceProfile }) {
   if (!hasAny) return null;
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/2 p-5 space-y-4">
+    <div className="rounded-xl border border-black/6 bg-white p-5 space-y-4">
       <div className="flex items-center gap-2">
-        <Sparkles size={16} className="text-purple-400" />
+        <Sparkles size={16} className="text-blue-600" />
         <h3 className="font-semibold text-sm">Signature</h3>
       </div>
       {groups.map((g) =>
         g.items && g.items.length > 0 ? (
           <div key={g.label}>
-            <p className="text-xs text-zinc-400 mb-2">{g.label}</p>
+            <p className="text-xs text-gray-500 mb-2">{g.label}</p>
             <div className="flex flex-wrap gap-2">
               {g.items.map((item, i) => (
                 <span
                   key={`${g.label}-${i}`}
-                  className="text-xs px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-200"
+                  className="text-xs px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700"
                 >
                   {item}
                 </span>
@@ -335,16 +335,16 @@ function SignatureSection({ profile }: { profile: VoiceProfile }) {
 
 function PromptSnippetPanel({ snippet }: { snippet: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/2 p-5">
+    <div className="rounded-xl border border-black/6 bg-white p-5">
       <div className="flex items-center gap-2 mb-3">
-        <Wand2 size={16} className="text-purple-400" />
+        <Wand2 size={16} className="text-blue-600" />
         <h3 className="font-semibold text-sm">Prompt Injection</h3>
       </div>
-      <p className="text-xs text-zinc-400 mb-3">
+      <p className="text-xs text-gray-500 mb-3">
         This text is appended to AI prompts so generated copy matches your
         voice. Read-only.
       </p>
-      <pre className="text-xs whitespace-pre-wrap font-mono text-zinc-200 rounded-lg bg-black/40 p-3 border border-white/5">
+      <pre className="text-xs whitespace-pre-wrap font-mono text-gray-800 rounded-lg bg-gray-50 p-3 border border-black/6">
         {snippet}
       </pre>
     </div>
@@ -365,12 +365,12 @@ function BootstrapPanel({
   busy: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/2 p-5">
+    <div className="rounded-xl border border-black/6 bg-white p-5">
       <div className="flex items-center gap-2 mb-3">
-        <Wand2 size={16} className="text-purple-400" />
+        <Wand2 size={16} className="text-blue-600" />
         <h3 className="font-semibold text-sm">Bootstrap</h3>
       </div>
-      <p className="text-xs text-zinc-400 mb-3">
+      <p className="text-xs text-gray-500 mb-3">
         Paste 5-10 samples of your real writing. Separate samples with a
         blank line or a {"\"---\""} separator. We capture each sample,
         recompute the profile, and switch voice matching on immediately.
@@ -380,16 +380,16 @@ function BootstrapPanel({
         onChange={(e) => onChange(e.target.value)}
         rows={10}
         placeholder={`Hey,\nThanks for getting back so quick. Quick one — can you send the contract over by EOD?\n\n---\n\nMorning team,\nWanted to flag the budget overrun on the campaign...`}
-        className="w-full text-xs font-mono rounded-lg bg-black/40 border border-white/5 p-3 focus:outline-none focus:border-purple-500/50 resize-y"
+        className="w-full text-xs font-mono rounded-lg bg-gray-50 border border-black/6 p-3 focus:outline-none focus:border-blue-400 text-gray-800 resize-y"
       />
       <div className="flex items-center justify-between mt-3">
-        <p className="text-xs text-zinc-400">
+        <p className="text-xs text-gray-500">
           {sampleCount} sample{sampleCount === 1 ? "" : "s"} detected
         </p>
         <button
           onClick={onSubmit}
           disabled={busy || sampleCount === 0}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-purple-500 hover:bg-purple-400 disabled:opacity-50 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white disabled:opacity-50 transition-colors"
         >
           <Sparkles size={13} />
           Capture & recompute

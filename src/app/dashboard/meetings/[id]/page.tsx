@@ -230,7 +230,7 @@ export default function MeetingDetailPage() {
         ) : (
           <div className="text-[11px] text-muted">
             No audio uploaded yet.{" "}
-            <Link href="/dashboard/meetings/new" className="text-gold underline">
+            <Link href="/dashboard/meetings/new" className="text-[#2563EB] underline">
               Upload a recording
             </Link>{" "}
             to enable transcription.
@@ -326,8 +326,8 @@ export default function MeetingDetailPage() {
 
           {/* Decisions */}
           {meeting.decisions && meeting.decisions.length > 0 && (
-            <div className="card border-gold/30 bg-gold/5 p-4 space-y-2">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-gold flex items-center gap-1.5">
+            <div className="card border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4 space-y-2">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-[#2563EB] flex items-center gap-1.5">
                 <Lightbulb size={11} /> Decisions
               </h3>
               <ul className="space-y-2">
@@ -352,7 +352,7 @@ export default function MeetingDetailPage() {
                   <button
                     key={i}
                     onClick={() => seekTo(k.ts)}
-                    className="text-[10px] px-2 py-1 rounded-md bg-white/[0.05] hover:bg-gold/10 hover:text-gold transition-all flex items-center gap-1"
+                    className="text-[10px] px-2 py-1 rounded-md bg-black/[0.04] hover:bg-[rgba(37,99,235,0.08)] hover:text-[#2563EB] transition-all flex items-center gap-1"
                   >
                     <Play size={8} /> {formatTs(k.ts)} · {k.label}
                   </button>

@@ -104,8 +104,8 @@ export default function DemoManagementPage() {
           transition={{ duration: 0.4 }}
           className="glass rounded-xl p-6 text-center"
         >
-          <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
-          <p className="text-xs text-zinc-400">Admin access required</p>
+          <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-2" />
+          <p className="text-xs text-[#6B7280]">Admin access required</p>
         </motion.div>
       </div>
     );
@@ -116,11 +116,11 @@ export default function DemoManagementPage() {
       {/* Header */}
       <div className="page-header flex items-center justify-between">
         <div>
-          <h1 className="text-xs font-bold text-white flex items-center gap-2">
-            <Database className="w-4 h-4 text-purple-400" />
+          <h1 className="text-xs font-bold text-[#111827] flex items-center gap-2">
+            <Database className="w-4 h-4 text-[#2563EB]" />
             Demo Management
           </h1>
-          <p className="text-[10px] text-zinc-500 mt-0.5">Seed, reset, and share demo data</p>
+          <p className="text-[10px] text-[#6B7280] mt-0.5">Seed, reset, and share demo data</p>
         </div>
       </div>
 
@@ -132,24 +132,24 @@ export default function DemoManagementPage() {
         className="glass rounded-xl p-4"
       >
         <div className="section-header flex items-center gap-2 mb-3">
-          <ClipboardList className="w-3.5 h-3.5 text-purple-400" />
-          <h2 className="text-xs font-semibold text-white">Demo Client Status</h2>
+          <ClipboardList className="w-3.5 h-3.5 text-[#2563EB]" />
+          <h2 className="text-xs font-semibold text-[#111827]">Demo Client Status</h2>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-8">
-            <RefreshCw className="w-4 h-4 text-purple-400 animate-spin" />
+            <RefreshCw className="w-4 h-4 text-[#2563EB] animate-spin" />
           </div>
         ) : demoClient ? (
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2">
               {[
-                { label: "Business", value: demoClient.business_name, color: "text-white" },
-                { label: "Industry", value: demoClient.industry, color: "text-white", capitalize: true },
-                { label: "MRR", value: `$${demoClient.mrr.toLocaleString()}`, color: "text-emerald-400" },
-                { label: "Health", value: `${demoClient.health_score}/100`, color: "text-white" },
-                { label: "Package", value: demoClient.package_tier, color: "text-purple-400" },
-                { label: "Contract", value: demoClient.contract_status, color: "text-white", capitalize: true },
+                { label: "Business", value: demoClient.business_name, color: "text-[#111827]" },
+                { label: "Industry", value: demoClient.industry, color: "text-[#111827]", capitalize: true },
+                { label: "MRR", value: `$${demoClient.mrr.toLocaleString()}`, color: "text-emerald-600" },
+                { label: "Health", value: `${demoClient.health_score}/100`, color: "text-[#111827]" },
+                { label: "Package", value: demoClient.package_tier, color: "text-[#2563EB]" },
+                { label: "Contract", value: demoClient.contract_status, color: "text-[#111827]", capitalize: true },
               ].map((tile, index) => (
                 <motion.div
                   key={tile.label}
@@ -159,32 +159,32 @@ export default function DemoManagementPage() {
                   className="glass-md rounded-xl p-2.5 relative overflow-hidden"
                 >
                   <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
-                  <p className="text-[9px] text-zinc-500 uppercase tracking-wider">{tile.label}</p>
+                  <p className="text-[9px] text-[#6B7280] uppercase tracking-wider">{tile.label}</p>
                   <p className={`text-[10px] ${tile.color} font-medium mt-0.5 ${tile.capitalize ? "capitalize" : ""}`}>{tile.value}</p>
                 </motion.div>
               ))}
             </div>
             <div className="glass-md rounded-xl p-2.5">
-              <p className="text-[9px] text-zinc-500 uppercase tracking-wider mb-1">Services</p>
+              <p className="text-[9px] text-[#6B7280] uppercase tracking-wider mb-1">Services</p>
               <div className="flex flex-wrap gap-1">
                 {demoClient.services?.map((s) => (
-                  <span key={s} className="text-[9px] bg-purple-500/10 text-purple-600 px-1.5 py-0.5 rounded-lg">
+                  <span key={s} className="text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded-lg">
                     {s}
                   </span>
                 ))}
               </div>
             </div>
             <div className="flex items-center gap-1.5 pt-1">
-              <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-              <span className="text-[10px] text-emerald-400">Demo client active</span>
-              <span className="text-[9px] text-zinc-600 ml-auto">ID: {demoClient.id.slice(0, 8)}...</span>
+              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+              <span className="text-[10px] text-emerald-600">Demo client active</span>
+              <span className="text-[9px] text-[#9CA3AF] ml-auto">ID: {demoClient.id.slice(0, 8)}...</span>
             </div>
           </div>
         ) : (
           <div className="text-center py-6">
-            <Database className="w-6 h-6 text-zinc-600 mx-auto mb-2" />
-            <p className="text-[10px] text-zinc-500">No demo client found</p>
-            <p className="text-[9px] text-zinc-600 mt-0.5">Click &quot;Seed Demo Data&quot; to create one</p>
+            <Database className="w-6 h-6 text-[#9CA3AF] mx-auto mb-2" />
+            <p className="text-[10px] text-[#6B7280]">No demo client found</p>
+            <p className="text-[9px] text-[#9CA3AF] mt-0.5">Click &quot;Seed Demo Data&quot; to create one</p>
           </div>
         )}
       </motion.div>
@@ -198,18 +198,18 @@ export default function DemoManagementPage() {
           className="glass rounded-xl p-4 text-left group"
         >
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
-              <Play className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
+              <Play className="w-3.5 h-3.5 text-emerald-600" />
             </div>
-            <span className="text-xs font-semibold text-white">Seed Demo Data</span>
+            <span className="text-xs font-semibold text-[#111827]">Seed Demo Data</span>
           </div>
-          <p className="text-[9px] text-zinc-500 leading-relaxed">
+          <p className="text-[9px] text-[#6B7280] leading-relaxed">
             Create &quot;Bright Smile Dental&quot; with tasks, invoices, content, and outreach data.
           </p>
           {seeding && (
             <div className="flex items-center gap-1.5 mt-2">
-              <RefreshCw className="w-3 h-3 text-purple-400 animate-spin" />
-              <span className="text-[9px] text-purple-400">Seeding...</span>
+              <RefreshCw className="w-3 h-3 text-[#2563EB] animate-spin" />
+              <span className="text-[9px] text-[#2563EB]">Seeding...</span>
             </div>
           )}
         </motion.button>
@@ -221,12 +221,12 @@ export default function DemoManagementPage() {
           className="glass rounded-xl p-4 text-left group"
         >
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
-              <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
+            <div className="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center group-hover:bg-amber-100 transition-colors">
+              <RefreshCw className="w-3.5 h-3.5 text-amber-600" />
             </div>
-            <span className="text-xs font-semibold text-white">Reset Demo</span>
+            <span className="text-xs font-semibold text-[#111827]">Reset Demo</span>
           </div>
-          <p className="text-[9px] text-zinc-500 leading-relaxed">
+          <p className="text-[9px] text-[#6B7280] leading-relaxed">
             Clear all existing demo data and re-seed with fresh entries.
           </p>
         </motion.button>
@@ -240,11 +240,11 @@ export default function DemoManagementPage() {
         className="glass rounded-xl p-4"
       >
         <div className="section-header flex items-center gap-2 mb-3">
-          <Link2 className="w-3.5 h-3.5 text-purple-400" />
-          <h2 className="text-xs font-semibold text-white">Share Demo Link</h2>
+          <Link2 className="w-3.5 h-3.5 text-[#2563EB]" />
+          <h2 className="text-xs font-semibold text-[#111827]">Share Demo Link</h2>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex-1 bg-zinc-800/50 rounded-lg px-3 py-2 text-[10px] text-zinc-400 font-mono truncate">
+          <div className="flex-1 bg-[rgba(0,0,0,0.04)] rounded-lg px-3 py-2 text-[10px] text-[#374151] font-mono truncate">
             {typeof window !== "undefined" ? `${window.location.origin}/dashboard?demo=true` : "/dashboard?demo=true"}
           </div>
           <button
@@ -255,7 +255,7 @@ export default function DemoManagementPage() {
             {copied ? "Copied" : "Copy"}
           </button>
         </div>
-        <p className="text-[9px] text-zinc-600 mt-2">Share this link with prospects to preview the platform with sample data.</p>
+        <p className="text-[9px] text-[#9CA3AF] mt-2">Share this link with prospects to preview the platform with sample data.</p>
       </motion.div>
 
       {/* Instructions */}
@@ -266,8 +266,8 @@ export default function DemoManagementPage() {
         className="glass rounded-xl p-4"
       >
         <div className="section-header flex items-center gap-2 mb-3">
-          <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-          <h2 className="text-xs font-semibold text-white">How to Use Demo Mode</h2>
+          <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" />
+          <h2 className="text-xs font-semibold text-[#111827]">How to Use Demo Mode</h2>
         </div>
         <div className="space-y-2">
           {[
@@ -284,8 +284,8 @@ export default function DemoManagementPage() {
               transition={{ delay: i * 0.04 }}
               className="flex items-start gap-2"
             >
-              <span className="text-[9px] text-purple-400 font-bold mt-px">{i + 1}.</span>
-              <p className="text-[10px] text-zinc-400 leading-relaxed">{instruction}</p>
+              <span className="text-[9px] text-[#2563EB] font-bold mt-px">{i + 1}.</span>
+              <p className="text-[10px] text-[#374151] leading-relaxed">{instruction}</p>
             </motion.div>
           ))}
         </div>

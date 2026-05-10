@@ -148,11 +148,11 @@ export default function LogoPickerPage() {
             <h1 className="mb-2 text-3xl font-bold">Logo Picker</h1>
             <p className="max-w-2xl text-sm text-muted">
               20 SVG concepts — all riffs on the stacked-rectangles ShortStack mark.
-              <span className="text-gold"> Preview in app</span> flips the live mark temporarily.
+              <span className="text-[#2563EB]"> Preview in app</span> flips the live mark temporarily.
               {isAdmin && (
                 <>
                   {" "}
-                  <span className="text-gold">Apply permanently</span> overwrites the brand file and rebuilds every raster size.
+                  <span className="text-[#2563EB]">Apply permanently</span> overwrites the brand file and rebuilds every raster size.
                 </>
               )}
             </p>
@@ -168,7 +168,7 @@ export default function LogoPickerPage() {
             <button
               onClick={() => applyPermanently(revertTarget)}
               disabled={applying != null}
-              className="inline-flex items-center gap-2 rounded-md border border-gold/40 bg-gold/10 px-3 py-2 text-xs font-medium text-gold transition hover:bg-gold/20 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-md border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-3 py-2 text-xs font-medium text-[#2563EB] transition hover:bg-[rgba(37,99,235,0.14)] disabled:opacity-50"
             >
               <RotateCcw size={14} /> Revert to concept #{String(revertTarget).padStart(2, "0")}
             </button>
@@ -180,9 +180,9 @@ export default function LogoPickerPage() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="mb-6 flex items-center gap-3 glass rounded-xl border border-gold/40 px-4 py-3 text-sm"
+            className="mb-6 flex items-center gap-3 glass rounded-xl border border-[rgba(37,99,235,0.25)] px-4 py-3 text-sm"
           >
-            <Eye size={16} className="text-gold" />
+            <Eye size={16} className="text-[#2563EB]" />
             <span className="font-medium">Previewing #{previewConcept.id} — {previewConcept.name}</span>
             <span className="text-xs text-muted">(temporary — CSS var override only)</span>
             <button
@@ -209,15 +209,15 @@ export default function LogoPickerPage() {
                 whileHover={{ y: -4, scale: 1.01 }}
                 className={`group relative overflow-hidden glass rounded-xl transition ${
                   isSelected
-                    ? "border border-gold ring-2 ring-gold/40"
+                    ? "border border-[#2563EB] ring-2 ring-[rgba(37,99,235,0.25)]"
                     : ""
                 }`}
               >
-                <div className="absolute left-2 top-2 rounded bg-black/60 px-1.5 py-0.5 font-mono text-[10px] text-gold backdrop-blur">
+                <div className="absolute left-2 top-2 rounded bg-black/[0.08] px-1.5 py-0.5 font-mono text-[10px] text-[#2563EB] backdrop-blur">
                   #{c.id}
                 </div>
                 {isPreviewing && (
-                  <div className="absolute right-2 top-2 rounded bg-gold px-1.5 py-0.5 text-[10px] font-semibold text-black">
+                  <div className="absolute right-2 top-2 rounded bg-[#2563EB] px-1.5 py-0.5 text-[10px] font-semibold text-white">
                     LIVE
                   </div>
                 )}
@@ -253,8 +253,8 @@ export default function LogoPickerPage() {
                       }}
                       className={`w-full rounded-md px-2 py-1.5 text-xs font-medium transition ${
                         isPreviewing
-                          ? "bg-gold text-black"
-                          : "bg-surface-light text-foreground hover:bg-gold/15 hover:text-gold"
+                          ? "bg-[#2563EB] text-white"
+                          : "bg-[rgba(0,0,0,0.04)] text-foreground hover:bg-[rgba(37,99,235,0.14)] hover:text-[#2563EB]"
                       }`}
                     >
                       {isPreviewing ? (
@@ -272,7 +272,7 @@ export default function LogoPickerPage() {
                       <button
                         onClick={() => applyPermanently(c.number)}
                         disabled={applying != null}
-                        className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-gold/40 bg-gold/10 px-2 py-1.5 text-xs font-medium text-gold transition hover:bg-gold/20 disabled:opacity-50"
+                        className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-2 py-1.5 text-xs font-medium text-[#2563EB] transition hover:bg-[rgba(37,99,235,0.14)] disabled:opacity-50"
                       >
                         <Upload size={12} />
                         {isApplying ? "Applying…" : "Apply permanently"}
@@ -294,7 +294,7 @@ export default function LogoPickerPage() {
           >
             <p className="mb-1 font-semibold text-foreground">Admin access required to apply permanently.</p>
             <p>
-              Use <span className="font-mono text-gold">Preview in app</span> to test any concept live — it sets a CSS
+              Use <span className="font-mono text-[#2563EB]">Preview in app</span> to test any concept live — it sets a CSS
               variable override that affects any component using <code>var(--ss-logo-url)</code>.
             </p>
           </motion.div>

@@ -116,7 +116,7 @@ export function BoardCard({
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       onClick={onClick}
-      className={`relative p-3 rounded-lg bg-surface-light border border-border hover:border-gold/30 transition-colors cursor-grab active:cursor-grabbing ${
+      className={`relative p-3 rounded-lg bg-surface-light border border-border hover:border-[rgba(37,99,235,0.3)] transition-colors cursor-grab active:cursor-grabbing ${
         isDragging ? "opacity-40" : ""
       }`}
       whileHover={{ y: -1 }}
@@ -177,7 +177,7 @@ export function BoardCard({
         </div>
         {assignee && (
           <div
-            className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gold/20 text-gold border border-gold/30"
+            className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.3)]"
             title={assignee.full_name}
           >
             {assignee.avatar_url ? (

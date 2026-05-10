@@ -468,7 +468,7 @@ export default function WorkspaceBoardPage() {
               onClick={() => setView(opt.v)}
               className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
                 view === opt.v
-                  ? "bg-gold/20 text-gold"
+                  ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]"
                   : "text-muted hover:text-fg"
               }`}
             >
@@ -482,7 +482,7 @@ export default function WorkspaceBoardPage() {
             <select
               value={filterClient}
               onChange={(e) => setFilterClient(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-gold/50 focus:outline-none"
+              className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-[#2563EB] focus:outline-none"
             >
               <option value="">All clients</option>
               {clientsList.map((c) => (
@@ -494,7 +494,7 @@ export default function WorkspaceBoardPage() {
             <select
               value={filterAssignee}
               onChange={(e) => setFilterAssignee(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-gold/50 focus:outline-none"
+              className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-[#2563EB] focus:outline-none"
             >
               <option value="">All assignees</option>
               {membersList.map((m) => (
@@ -581,7 +581,7 @@ export default function WorkspaceBoardPage() {
                       setModalDefaultStatus(status);
                       setModalOpen(true);
                     }}
-                    className="p-1 rounded text-muted hover:text-fg hover:bg-white/5 transition-colors"
+                    className="p-1 rounded text-muted hover:text-fg hover:bg-[rgba(0,0,0,0.03)] transition-colors"
                     aria-label={`Add task to ${meta.label}`}
                   >
                     <Plus size={14} />
@@ -592,8 +592,8 @@ export default function WorkspaceBoardPage() {
                 <div
                   className={`flex-1 min-h-[200px] rounded-xl border border-dashed transition-colors p-2 space-y-2 ${
                     isHover
-                      ? "border-indigo-400/40 bg-indigo-500/5"
-                      : "glass border-white/10"
+                      ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
+                      : "glass border-[rgba(0,0,0,0.08)]"
                   }`}
                 >
                   {columnTasks.length === 0 ? (

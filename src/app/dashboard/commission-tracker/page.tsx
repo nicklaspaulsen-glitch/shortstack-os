@@ -217,7 +217,7 @@ export default function CommissionTrackerPage() {
       {/* Stat tiles */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: "Total", value: fmtUSD(totals.total), color: "text-white" },
+          { label: "Total", value: fmtUSD(totals.total), color: "text-[#374151]" },
           { label: "Paid", value: fmtUSD(totals.paid), color: "text-emerald-400" },
           { label: "Pending", value: fmtUSD(totals.pending), color: "text-yellow-400" },
         ].map((tile, i) => (
@@ -230,7 +230,7 @@ export default function CommissionTrackerPage() {
           >
             <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
             <div className="p-4">
-              <p className="text-xs text-white/40 uppercase tracking-wider mb-1">{tile.label}</p>
+              <p className="text-xs text-[#9CA3AF] uppercase tracking-wider mb-1">{tile.label}</p>
               <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
             </div>
           </motion.div>
@@ -245,12 +245,12 @@ export default function CommissionTrackerPage() {
         className="flex flex-wrap items-center gap-3"
       >
         <div className="relative flex-1 min-w-[180px]">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search rep or deal…"
-            className="glass w-full rounded-lg pl-8 pr-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
+            className="glass w-full rounded-lg pl-8 pr-3 py-2 text-[#374151] text-sm focus:outline-none focus:border-[#2563EB]"
           />
         </div>
         <div className="flex gap-1">
@@ -260,8 +260,8 @@ export default function CommissionTrackerPage() {
               onClick={() => setFilterStatus(s)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
                 filterStatus === s
-                  ? "bg-indigo-500/20 text-indigo-300 border border-indigo-400/30"
-                  : "bg-white/5 text-white/50 hover:text-white border border-white/10"
+                  ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
+                  : "bg-[rgba(0,0,0,0.04)] text-[#9CA3AF] hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
               }`}
             >
               {s}
@@ -273,7 +273,7 @@ export default function CommissionTrackerPage() {
       {loading ? (
         <div className="space-y-2">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-14 rounded-xl bg-white/5 animate-pulse" />
+            <div key={i} className="h-14 rounded-xl bg-[rgba(0,0,0,0.04)] animate-pulse" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
@@ -282,8 +282,8 @@ export default function CommissionTrackerPage() {
           animate={{ opacity: 1 }}
           className="glass rounded-xl p-12 text-center"
         >
-          <DollarSign size={36} className="mx-auto mb-3 text-white/20" />
-          <p className="text-white/40 text-sm">No commissions found.</p>
+          <DollarSign size={36} className="mx-auto mb-3 text-[#9CA3AF]" />
+          <p className="text-[#9CA3AF] text-sm">No commissions found.</p>
         </motion.div>
       ) : (
         <motion.div
@@ -294,7 +294,7 @@ export default function CommissionTrackerPage() {
         >
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-white/10 text-xs text-white/40">
+              <thead className="border-b border-[rgba(0,0,0,0.08)] text-xs text-[#9CA3AF]">
                 <tr>
                   <th className="text-left px-4 py-3">Rep</th>
                   <th className="text-left px-4 py-3">Deal Ref</th>
@@ -304,7 +304,7 @@ export default function CommissionTrackerPage() {
                   <th className="text-right px-4 py-3">Actions</th>
                 </tr>
               </thead>
-              <motion.tbody className="divide-y divide-white/5" variants={containerVariants} initial="hidden" animate="visible">
+              <motion.tbody className="divide-y divide-[rgba(0,0,0,0.04)]" variants={containerVariants} initial="hidden" animate="visible">
                 {filtered.map((c) => {
                   const repName = (c.notes || "").split("|")[0] || "Unknown";
                   const cfg = STATUS_CONFIG[c.status];
@@ -312,14 +312,14 @@ export default function CommissionTrackerPage() {
                     <motion.tr
                       key={c.id}
                       variants={itemVariants}
-                      className="hover:bg-white/5 transition-colors"
+                      className="hover:bg-[rgba(0,0,0,0.03)] transition-colors"
                     >
-                      <td className="px-4 py-3 font-medium text-white">{repName}</td>
-                      <td className="px-4 py-3 text-white/50">{c.deal_id || "—"}</td>
-                      <td className="px-4 py-3 text-right font-medium text-white">
+                      <td className="px-4 py-3 font-medium text-[#374151]">{repName}</td>
+                      <td className="px-4 py-3 text-[#9CA3AF]">{c.deal_id || "—"}</td>
+                      <td className="px-4 py-3 text-right font-medium text-[#374151]">
                         {fmtUSD(c.amount_cents)}
                       </td>
-                      <td className="px-4 py-3 text-right text-white/60">
+                      <td className="px-4 py-3 text-right text-[#6B7280]">
                         {c.percentage}%
                       </td>
                       <td className="px-4 py-3">
@@ -348,7 +348,7 @@ export default function CommissionTrackerPage() {
                           )}
                           <button
                             onClick={() => deleteCommission(c.id)}
-                            className="p-1.5 rounded-lg hover:bg-red-500/20 text-white/30 hover:text-red-400 transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400 transition-colors"
                           >
                             <Trash2 size={13} />
                           </button>
@@ -358,12 +358,12 @@ export default function CommissionTrackerPage() {
                   );
                 })}
               </motion.tbody>
-              <tfoot className="border-t border-white/10">
+              <tfoot className="border-t border-[rgba(0,0,0,0.08)]">
                 <tr className="text-sm font-semibold">
-                  <td colSpan={2} className="px-4 py-3 text-white/60">
+                  <td colSpan={2} className="px-4 py-3 text-[#6B7280]">
                     Totals ({filtered.length})
                   </td>
-                  <td className="px-4 py-3 text-right text-white">
+                  <td className="px-4 py-3 text-right text-[#374151]">
                     {fmtUSD(totals.total)}
                   </td>
                   <td />
@@ -399,20 +399,20 @@ export default function CommissionTrackerPage() {
             ]
           ).map(({ key, label, placeholder, type }) => (
             <div key={key}>
-              <label className="block text-xs text-white/50 mb-1">{label}</label>
+              <label className="block text-xs text-[#9CA3AF] mb-1">{label}</label>
               <input
                 type={type || "text"}
                 value={form[key]}
                 onChange={e => setF(key, e.target.value)}
                 placeholder={placeholder}
-                className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
+                className="w-full glass rounded-lg px-3 py-2 text-[#374151] text-sm focus:outline-none focus:border-[#2563EB]"
               />
             </div>
           ))}
           <div className="flex justify-end gap-2 pt-2">
             <button
               onClick={() => setShowCreate(false)}
-              className="px-4 py-2 rounded-lg border border-white/10 text-white/60 hover:text-white text-sm"
+              className="px-4 py-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] text-sm"
             >
               Cancel
             </button>

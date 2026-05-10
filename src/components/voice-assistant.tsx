@@ -279,7 +279,7 @@ export default function VoiceAssistant() {
         storageKey="voice_pill_v2"
       >
         <button onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-r from-gold-dark to-gold px-4 py-2.5 rounded-full shadow-lg shadow-gold/20 flex items-center gap-2 hover:scale-105 transition-all active:scale-95 group">
+          className="bg-gradient-to-r from-[#1D4ED8] to-[#2563EB] px-4 py-2.5 rounded-full shadow-lg shadow-[rgba(37,99,235,0.2)] flex items-center gap-2 hover:scale-105 transition-all active:scale-95 group">
           <div className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center">
             <Mic size={14} className="text-black" />
           </div>
@@ -294,15 +294,15 @@ export default function VoiceAssistant() {
     <Draggable defaultX={288} defaultY={typeof window !== "undefined" ? window.innerHeight - 580 : 200} storageKey="voice_panel">
     <div className="w-[420px] bg-surface border border-border  shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in" style={{ height: "560px" }}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-gold-dark/20 to-gold/10 px-4 py-3 flex items-center justify-between border-b border-border">
+      <div className="bg-gradient-to-r from-[rgba(29,78,216,0.2)] to-[rgba(37,99,235,0.1)] px-4 py-3 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 bg-gold/20 rounded-full flex items-center justify-center relative">
+          <div className="w-9 h-9 bg-[rgba(37,99,235,0.12)] rounded-full flex items-center justify-center relative">
             <Image src="/icons/shortstack-logo.svg" alt="Assistant" width={20} height={20} />
-            {isSpeaking && <div className="absolute inset-0 rounded-full border-2 border-gold animate-ping" />}
+            {isSpeaking && <div className="absolute inset-0 rounded-full border-2 border-[#2563EB] animate-ping" />}
           </div>
           <div>
             <p className="text-sm font-medium text-foreground">Trinity AI</p>
-            <p className="text-[10px] text-gold">{isListening ? "Listening..." : isSpeaking ? "Speaking..." : processing ? "Thinking..." : "Ready"}</p>
+            <p className="text-[10px] text-[#2563EB]">{isListening ? "Listening..." : isSpeaking ? "Speaking..." : processing ? "Thinking..." : "Ready"}</p>
           </div>
         </div>
         <div className="flex gap-1">
@@ -322,11 +322,11 @@ export default function VoiceAssistant() {
             <span className="text-xs text-muted">Input Mode</span>
             <div className="flex gap-1">
               <button onClick={() => setInputMode("voice")}
-                className={`text-xs px-2 py-1 rounded ${inputMode === "voice" ? "bg-gold text-black" : "bg-surface text-muted"}`}>
+                className={`text-xs px-2 py-1 rounded ${inputMode === "voice" ? "bg-[#2563EB] text-white" : "bg-surface text-muted"}`}>
                 Voice
               </button>
               <button onClick={() => setInputMode("text")}
-                className={`text-xs px-2 py-1 rounded ${inputMode === "text" ? "bg-gold text-black" : "bg-surface text-muted"}`}>
+                className={`text-xs px-2 py-1 rounded ${inputMode === "text" ? "bg-[#2563EB] text-white" : "bg-surface text-muted"}`}>
                 Text
               </button>
             </div>
@@ -343,12 +343,12 @@ export default function VoiceAssistant() {
             <span className="text-xs text-muted">Speed: {voiceSpeed}x</span>
             <input type="range" min="0.5" max="2" step="0.1" value={voiceSpeed}
               onChange={(e) => setVoiceSpeed(parseFloat(e.target.value))}
-              className="w-24 accent-gold" />
+              className="w-24 accent-[#2563EB]" />
           </div>
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted">Auto-briefing on open</span>
             <button onClick={() => setAutoPlayBriefing(!autoPlayBriefing)}
-              className={`text-xs px-2 py-1 rounded ${autoPlayBriefing ? "bg-gold text-black" : "bg-surface text-muted"}`}>
+              className={`text-xs px-2 py-1 rounded ${autoPlayBriefing ? "bg-[#2563EB] text-white" : "bg-surface text-muted"}`}>
               {autoPlayBriefing ? "On" : "Off"}
             </button>
           </div>
@@ -361,7 +361,7 @@ export default function VoiceAssistant() {
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div className={`max-w-[85%]  px-3.5 py-2.5 ${
               msg.role === "user"
-                ? "bg-gold text-black rounded-br-sm"
+                ? "bg-[#2563EB] text-white rounded-br-sm"
                 : "bg-surface-light text-foreground rounded-bl-sm"
             }`}>
               <p className="text-sm leading-relaxed">{msg.content}</p>
@@ -375,9 +375,9 @@ export default function VoiceAssistant() {
           <div className="flex justify-start">
             <div className="bg-surface-light  rounded-bl-sm px-4 py-3">
               <div className="flex gap-1">
-                <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                <div className="w-2 h-2 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                <div className="w-2 h-2 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                <div className="w-2 h-2 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
               </div>
             </div>
           </div>
@@ -403,12 +403,12 @@ export default function VoiceAssistant() {
               </button>
             ) : isSpeaking ? (
               <button onClick={stopSpeaking}
-                className="w-16 h-16 rounded-full bg-gold flex items-center justify-center shadow-lg shadow-gold/30 animate-pulse">
+                className="w-16 h-16 rounded-full bg-[#2563EB] flex items-center justify-center shadow-lg shadow-[rgba(37,99,235,0.3)] animate-pulse">
                 <StopCircle size={28} className="text-black" />
               </button>
             ) : (
               <button onClick={startListening} disabled={processing}
-                className="w-16 h-16 rounded-full bg-gold flex items-center justify-center shadow-lg shadow-gold/30 hover:scale-105 transition-all active:scale-95 disabled:opacity-50">
+                className="w-16 h-16 rounded-full bg-[#2563EB] flex items-center justify-center shadow-lg shadow-[rgba(37,99,235,0.3)] hover:scale-105 transition-all active:scale-95 disabled:opacity-50">
                 <Mic size={28} className="text-black" />
               </button>
             )}
@@ -430,19 +430,19 @@ export default function VoiceAssistant() {
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
               placeholder="Type a message..."
-              className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-gold/50"
+              className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
               disabled={processing}
               autoFocus
             />
             <button type="submit" disabled={!textInput.trim() || processing}
-              className="w-9 h-9 bg-gold rounded-full flex items-center justify-center disabled:opacity-30 shrink-0">
+              className="w-9 h-9 bg-[#2563EB] rounded-full flex items-center justify-center disabled:opacity-30 shrink-0">
               <MessageSquare size={14} className="text-black" />
             </button>
           </form>
         )}
 
         <p className="text-center text-[9px] text-muted mt-2">
-          {isListening ? "Listening... speak now" : isSpeaking ? "Tap gold button to stop" : inputMode === "voice" ? "Tap mic to speak" : "Type or switch to voice"}
+          {isListening ? "Listening... speak now" : isSpeaking ? "Tap blue button to stop" : inputMode === "voice" ? "Tap mic to speak" : "Type or switch to voice"}
         </p>
       </div>
     </div>

@@ -141,14 +141,14 @@ function HubSetupInner() {
         icon={<Sparkles size={28} />}
         title="Launch your brand"
         subtitle="One click provisions email, phone, website, portal, and chat — all on your new domain."
-        gradient="gold"
+        gradient="blue"
       />
 
       {/* Domain input card — hidden if prefilled */}
       {!prefillDomain && (
         <div className="card">
           <h2 className="section-header flex items-center gap-2">
-            <Globe size={13} className="text-gold" /> Which domain?
+            <Globe size={13} className="text-[#2563EB]" /> Which domain?
           </h2>
           <input
             value={domain}
@@ -162,8 +162,8 @@ function HubSetupInner() {
         </div>
       )}
       {prefillDomain && (
-        <div className="card flex items-center gap-3 bg-gold/5 border-gold/20">
-          <ShieldCheck size={18} className="text-gold" />
+        <div className="card flex items-center gap-3 bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)]">
+          <ShieldCheck size={18} className="text-[#2563EB]" />
           <div>
             <p className="text-xs font-semibold">{prefillDomain}</p>
             <p className="text-[10px] text-muted">Purchase confirmed — now picking services.</p>
@@ -175,7 +175,7 @@ function HubSetupInner() {
       <div className="card">
         <div className="flex items-center justify-between mb-3">
           <h2 className="section-header flex items-center gap-2 mb-0">
-            <Sparkles size={13} className="text-gold" /> What should we set up?
+            <Sparkles size={13} className="text-[#2563EB]" /> What should we set up?
           </h2>
           <span className="text-[10px] text-muted">
             {enabledCount} / 5 selected
@@ -189,20 +189,20 @@ function HubSetupInner() {
               onClick={() => toggle(t.key)}
               className={`w-full text-left p-3 rounded-xl border transition flex items-start gap-3 ${
                 enabled[t.key]
-                  ? "border-gold/40 bg-gold/5 hover:bg-gold/10"
+                  ? "border-[rgba(37,99,235,0.35)] bg-[rgba(37,99,235,0.05)] hover:bg-[rgba(37,99,235,0.08)]"
                   : "border-border bg-surface-light hover:border-border/60"
               }`}
             >
               <div
                 className={`w-5 h-5 shrink-0 rounded-md flex items-center justify-center mt-0.5 border ${
-                  enabled[t.key] ? "bg-gold border-gold text-black" : "border-border"
+                  enabled[t.key] ? "bg-[#2563EB] border-[#2563EB] text-white" : "border-border"
                 }`}
               >
                 {enabled[t.key] && <span className="text-[10px] leading-none font-black">✓</span>}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className={`${enabled[t.key] ? "text-gold" : "text-muted"}`}>
+                  <span className={`${enabled[t.key] ? "text-[#2563EB]" : "text-muted"}`}>
                     {t.icon}
                   </span>
                   <span className="text-xs font-semibold">{t.label}</span>
@@ -236,11 +236,11 @@ function HubSetupInner() {
         )}
       </div>
 
-      <div className="card bg-blue-500/5 border-blue-500/20 flex items-start gap-2">
-        <Info size={14} className="text-blue-300 mt-0.5 shrink-0" />
-        <div className="text-[11px] text-blue-100">
+      <div className="card bg-blue-500/5 border-blue-500/25 flex items-start gap-2">
+        <Info size={14} className="text-blue-600 mt-0.5 shrink-0" />
+        <div className="text-[11px] text-blue-700">
           <p className="font-semibold mb-1">What happens next</p>
-          <p className="text-blue-200/80 leading-relaxed">
+          <p className="text-blue-600 leading-relaxed">
             Clicking Launch starts all {enabledCount} services in parallel. You&apos;ll land on a
             live progress page showing colored dots — gray → yellow → green. Any failure surfaces
             a retry button without blocking the rest.

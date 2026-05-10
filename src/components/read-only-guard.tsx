@@ -21,7 +21,7 @@ export default function ActionGuard({ children, fallback }: { children: ReactNod
       <div className="opacity-50 pointer-events-none">{children}</div>
       <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
         <div className="text-center px-3">
-          <Download size={16} className="text-gold mx-auto mb-1" />
+          <Download size={16} className="text-[#2563EB] mx-auto mb-1" />
           <p className="text-xs text-foreground">Install the app to edit</p>
         </div>
       </div>
@@ -40,11 +40,11 @@ export function BrowserModeBanner() {
   if (profile.role === "admin") return null;
 
   return (
-    <div className="bg-gold/10 border border-gold/20 rounded-lg px-4 py-3 mb-4 flex items-center justify-between">
+    <div className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded-lg px-4 py-3 mb-4 flex items-center justify-between">
       <div className="flex items-center gap-2">
-        <Download size={16} className="text-gold" />
+        <Download size={16} className="text-[#2563EB]" />
         <p className="text-sm">
-          <span className="text-gold font-medium">View-only mode.</span>
+          <span className="text-[#2563EB] font-medium">View-only mode.</span>
           <span className="text-muted"> Install Trinity as an app to make changes.</span>
         </p>
       </div>

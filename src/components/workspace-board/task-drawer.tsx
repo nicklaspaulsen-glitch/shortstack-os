@@ -192,7 +192,7 @@ export function TaskDrawer({
                       setEditingTitle(false);
                     }
                   }}
-                  className="w-full px-2 py-1 -mx-2 -my-1 rounded bg-surface-light border border-gold/40 text-xl font-semibold focus:outline-none"
+                  className="w-full px-2 py-1 -mx-2 -my-1 rounded bg-surface-light border border-[rgba(37,99,235,0.4)] text-xl font-semibold focus:outline-none"
                 />
               ) : (
                 <h2
@@ -209,7 +209,7 @@ export function TaskDrawer({
                   <select
                     value={task.status}
                     onChange={(e) => onPatch({ status: e.target.value as TaskStatus })}
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
                   >
                     <option value="backlog">Backlog</option>
                     <option value="in_progress">In Progress</option>
@@ -223,7 +223,7 @@ export function TaskDrawer({
                     onChange={(e) =>
                       onPatch({ priority: e.target.value as TaskPriority })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
                   >
                     {TASK_PRIORITIES.map((p) => (
                       <option key={p} value={p}>
@@ -236,7 +236,7 @@ export function TaskDrawer({
                   <select
                     value={task.type}
                     onChange={(e) => onPatch({ type: e.target.value as TaskType })}
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
                   >
                     {TASK_TYPES.map((t) => (
                       <option key={t} value={t}>
@@ -256,7 +256,7 @@ export function TaskDrawer({
                           : null,
                       })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
                   />
                 </Field>
                 <Field label="Client">
@@ -265,7 +265,7 @@ export function TaskDrawer({
                     onChange={(e) =>
                       onPatch({ client_id: e.target.value || null })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
                   >
                     <option value="">No client</option>
                     {Object.values(clients).map((c) => (
@@ -281,7 +281,7 @@ export function TaskDrawer({
                     onChange={(e) =>
                       onPatch({ assignee_id: e.target.value || null })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
                   >
                     <option value="">Unassigned</option>
                     {Object.values(members).map((m) => (
@@ -305,7 +305,7 @@ export function TaskDrawer({
                     value={descDraft}
                     onChange={(e) => setDescDraft(e.target.value)}
                     onBlur={saveDesc}
-                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-gold/40 text-sm resize-none focus:outline-none"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-[rgba(37,99,235,0.4)] text-sm resize-none focus:outline-none"
                     placeholder="Add details, links, or references..."
                   />
                 ) : task.description ? (
@@ -367,12 +367,12 @@ export function TaskDrawer({
                   }}
                   rows={2}
                   placeholder="Write a comment… (⌘+Enter to send)"
-                  className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm resize-none"
+                  className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm resize-none"
                 />
                 <button
                   type="submit"
                   disabled={!draft.trim() || submittingComment}
-                  className="p-2 rounded-lg bg-gold text-black hover:bg-gold/90 transition-colors disabled:opacity-40"
+                  className="p-2 rounded-lg bg-[#2563EB] text-white hover:bg-[#1D4ED8] transition-colors disabled:opacity-40"
                   aria-label="Send"
                 >
                   <Send size={16} />
@@ -415,7 +415,7 @@ function CommentRow({
     : "?";
   return (
     <div className="flex gap-2.5">
-      <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold bg-gold/20 text-gold border border-gold/30">
+      <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]">
         {author?.avatar_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

@@ -198,7 +198,7 @@ export default function SMSTemplatesPage() {
             <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs" placeholder="e.g. Existing dental patients" />
           </div>
           <div className="flex items-center gap-2">
-            <input type="checkbox" id="ai-sms-link" checked={aiIncludeLink} onChange={e => setAiIncludeLink(e.target.checked)} className="accent-gold" />
+            <input type="checkbox" id="ai-sms-link" checked={aiIncludeLink} onChange={e => setAiIncludeLink(e.target.checked)} className="accent-blue-600" />
             <label htmlFor="ai-sms-link" className="text-xs text-muted">Include {"{link}"} placeholder</label>
           </div>
           <div className="flex items-center justify-end gap-2 pt-1">
@@ -210,7 +210,7 @@ export default function SMSTemplatesPage() {
 
           {aiVariants.length > 0 && (
             <div className="space-y-2 pt-2 border-t border-border">
-              <p className="text-[10px] font-semibold text-gold uppercase tracking-wider">Variants</p>
+              <p className="text-[10px] font-semibold text-[#2563EB] uppercase tracking-wider">Variants</p>
               {aiVariants.map((v, i) => (
                 <div key={i} className="p-3 rounded-lg bg-surface-light border border-border">
                   <p className="text-xs leading-relaxed">{v.text}</p>
@@ -223,10 +223,10 @@ export default function SMSTemplatesPage() {
                       <span className="text-muted capitalize">{v.tone}</span>
                     </div>
                     <div className="flex gap-1">
-                      <button onClick={() => { navigator.clipboard.writeText(v.text); toast.success("Copied"); }} className="text-[9px] px-2 py-1 rounded bg-white/5 text-muted hover:text-gold">
+                      <button onClick={() => { navigator.clipboard.writeText(v.text); toast.success("Copied"); }} className="text-[9px] px-2 py-1 rounded bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#2563EB]">
                         <Copy size={9} />
                       </button>
-                      <button onClick={() => saveAiVariant(v)} className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1">
+                      <button onClick={() => saveAiVariant(v)} className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
                         <Plus size={9} /> Save
                       </button>
                     </div>
@@ -234,7 +234,7 @@ export default function SMSTemplatesPage() {
                   {v.compliance_notes.length > 0 && (
                     <div className="mt-2 pt-2 border-t border-border flex gap-1 flex-wrap">
                       {v.compliance_notes.map((note, ni) => (
-                        <span key={ni} className="text-[8px] px-1.5 py-0.5 rounded bg-blue-400/10 text-blue-300 flex items-center gap-0.5">
+                        <span key={ni} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] flex items-center gap-0.5">
                           <Shield size={8} /> {note}
                         </span>
                       ))}
@@ -252,7 +252,7 @@ export default function SMSTemplatesPage() {
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+              activeTab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
             }`}>{t.icon} {t.label}</button>
         ))}
       </div>
@@ -270,7 +270,7 @@ export default function SMSTemplatesPage() {
               {categories.map(c => (
                 <button key={c} onClick={() => setFilter(c)}
                   className={`text-[10px] px-2.5 py-1.5 rounded-lg capitalize ${
-                    filter === c ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+                    filter === c ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-[rgba(0,0,0,0.06)]"
                   }`}>{c}</button>
               ))}
             </div>
@@ -299,7 +299,7 @@ export default function SMSTemplatesPage() {
               </div>
               <div className="relative">
                 <textarea value={newTemplate.body} onChange={e => setNewTemplate({ ...newTemplate, body: e.target.value })} className="input w-full h-20 text-xs" placeholder="SMS body..." />
-                <button onClick={() => setShowEmoji(!showEmoji)} className="absolute right-2 bottom-2 text-muted hover:text-gold"><Smile size={14} /></button>
+                <button onClick={() => setShowEmoji(!showEmoji)} className="absolute right-2 bottom-2 text-muted hover:text-[#2563EB]"><Smile size={14} /></button>
               </div>
               {showEmoji && (
                 <div className="p-2 rounded-lg bg-surface-light border border-border">
@@ -309,7 +309,7 @@ export default function SMSTemplatesPage() {
                       <div className="flex gap-1 flex-wrap">
                         {cat.emojis.map(e => (
                           <button key={e} onClick={() => setNewTemplate(prev => ({ ...prev, body: prev.body + e }))}
-                            className="text-sm hover:bg-white/10 rounded p-0.5">{e}</button>
+                            className="text-sm hover:bg-[rgba(0,0,0,0.06)] rounded p-0.5">{e}</button>
                         ))}
                       </div>
                     </div>
@@ -320,7 +320,7 @@ export default function SMSTemplatesPage() {
               <div className="flex flex-wrap gap-1">
                 {MERGE_TAGS.map(tag => (
                   <button key={tag} onClick={() => setNewTemplate(prev => ({ ...prev, body: prev.body + " " + tag }))}
-                    className="text-[8px] px-1.5 py-0.5 rounded bg-gold/10 text-gold hover:bg-gold/20">{tag}</button>
+                    className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]">{tag}</button>
                 ))}
               </div>
               {/* Character counter */}
@@ -354,7 +354,7 @@ export default function SMSTemplatesPage() {
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <p className="text-xs font-semibold">{template.name}</p>
-                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold">{template.category}</span>
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{template.category}</span>
                   </div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => { navigator.clipboard.writeText(template.body); }} className="p-1 rounded hover:bg-black/[0.04] text-muted hover:text-foreground"><Copy size={10} /></button>
@@ -389,7 +389,7 @@ export default function SMSTemplatesPage() {
                     )}
                   </div>
                   <button onClick={() => { navigator.clipboard.writeText(template.body); }}
-                    className="text-[9px] text-gold hover:text-gold flex items-center gap-0.5">
+                    className="text-[9px] text-[#2563EB] hover:text-[#3B82F6] flex items-center gap-0.5">
                     <Copy size={8} /> Copy
                   </button>
                 </div>
@@ -406,8 +406,8 @@ export default function SMSTemplatesPage() {
             <div className="w-[320px] bg-gray-900 rounded-[2rem] p-3 shadow-2xl">
               <div className="bg-gray-800 rounded-[1.5rem] overflow-hidden">
                 <div className="bg-gray-700 p-3 flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
-                    <MessageSquare size={12} className="text-gold" />
+                  <div className="w-8 h-8 rounded-full bg-[rgba(37,99,235,0.12)] flex items-center justify-center">
+                    <MessageSquare size={12} className="text-[#2563EB]" />
                   </div>
                   <div>
                     <p className="text-[10px] font-semibold text-white">ShortStack</p>
@@ -453,7 +453,7 @@ export default function SMSTemplatesPage() {
               {templates.slice(0, 8).map(t => (
                 <button key={t.id} onClick={() => setPreviewTemplate(t)}
                   className={`text-left p-2 rounded-lg text-[9px] border transition-all ${
-                    previewTemplate?.id === t.id ? "border-gold/30 bg-gold/5" : "border-border hover:border-gold/10"
+                    previewTemplate?.id === t.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.1)]"
                   }`}>
                   <p className="font-semibold truncate">{t.name}</p>
                   <p className="text-muted">{t.body.length} chars</p>
@@ -471,7 +471,7 @@ export default function SMSTemplatesPage() {
             {/* Compliance Checker */}
             <PrismPanel padding="p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Shield size={14} className="text-gold" /> TCPA Compliance Checker
+                <Shield size={14} className="text-[#2563EB]" /> TCPA Compliance Checker
               </h3>
               <div className="space-y-2">
                 {[
@@ -502,7 +502,7 @@ export default function SMSTemplatesPage() {
             {/* Opt-out Footer Manager */}
             <PrismPanel padding="p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Settings size={14} className="text-gold" /> Opt-out Footer Manager
+                <Settings size={14} className="text-[#2563EB]" /> Opt-out Footer Manager
               </h3>
               <p className="text-[10px] text-muted mb-3">This footer is automatically appended to all outgoing SMS.</p>
               <div className="space-y-2">
@@ -514,7 +514,7 @@ export default function SMSTemplatesPage() {
                 ].map((footer, i) => (
                   <button key={i} onClick={() => setOptOutFooter(footer)}
                     className={`w-full text-left p-2.5 rounded-lg text-[10px] border transition-all ${
-                      optOutFooter === footer ? "border-gold/30 bg-gold/5 text-gold" : "border-border text-muted hover:border-gold/10"
+                      optOutFooter === footer ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted hover:border-[rgba(37,99,235,0.1)]"
                     }`}>{footer}</button>
                 ))}
                 <div className="flex gap-2 mt-2">
@@ -533,11 +533,11 @@ export default function SMSTemplatesPage() {
           {/* Overview Stats */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {[
-              { label: "Total Sent", value: totalSends.toLocaleString(), icon: <Send size={12} />, color: "text-gold" },
+              { label: "Total Sent", value: totalSends.toLocaleString(), icon: <Send size={12} />, color: "text-[#2563EB]" },
               { label: "Delivered", value: totalDelivered.toLocaleString(), icon: <CheckCircle size={12} />, color: "text-green-400" },
               { label: "Delivery Rate", value: `${deliveryRate}%`, icon: <TrendingUp size={12} />, color: "text-blue-400" },
-              { label: "Total Replies", value: totalReplies.toLocaleString(), icon: <MessageSquare size={12} />, color: "text-purple-400" },
-              { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-gold" },
+              { label: "Total Replies", value: totalReplies.toLocaleString(), icon: <MessageSquare size={12} />, color: "text-[#2563EB]" },
+              { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-[#2563EB]" },
             ].map((stat, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
@@ -587,7 +587,7 @@ export default function SMSTemplatesPage() {
         <div className="space-y-4">
           <PrismPanel padding="p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <Link2 size={14} className="text-gold" /> Short Link Generator
+              <Link2 size={14} className="text-[#2563EB]" /> Short Link Generator
             </h3>
             <p className="text-[10px] text-muted mb-3">Create short, trackable links for your SMS messages</p>
             <div className="flex gap-2 mb-4">
@@ -612,7 +612,7 @@ export default function SMSTemplatesPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <PrismPanel padding="p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Calendar size={14} className="text-gold" /> Schedule SMS
+                <Calendar size={14} className="text-[#2563EB]" /> Schedule SMS
               </h3>
               <div className="space-y-3">
                 <select className="input w-full text-xs">

@@ -175,8 +175,8 @@ export default function SelfTestDashboard() {
   const { latest_run, trend, note } = data;
   const total = latest_run ? latest_run.passed + latest_run.failed : 0;
   const allGreen = latest_run ? latest_run.failed === 0 : false;
-  const bannerGradient: "purple" | "sunset" | "gold" = !latest_run
-    ? "gold"
+  const bannerGradient: "purple" | "sunset" | "blue" = !latest_run
+    ? "blue"
     : allGreen
       ? "purple"
       : "sunset";
@@ -219,8 +219,8 @@ export default function SelfTestDashboard() {
 
       {/* Verdict banner */}
       {!latest_run ? (
-        <div className=" border border-gold/30 bg-gold/5 p-4 flex items-start gap-3">
-          <AlertTriangle size={20} className="text-gold shrink-0 mt-0.5" />
+        <div className=" border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4 flex items-start gap-3">
+          <AlertTriangle size={20} className="text-[#2563EB] shrink-0 mt-0.5" />
           <div>
             <div className="text-sm font-bold text-foreground">No runs yet</div>
             <div className="text-[11px] text-muted mt-0.5">

@@ -18,10 +18,10 @@ interface AgentLog {
 }
 
 const AGENT_MAP: Record<string, { name: string; icon: React.ReactNode; color: string }> = {
-  lead_gen: { name: "Scout", icon: <Search size={10} />, color: "text-gold" },
+  lead_gen: { name: "Scout", icon: <Search size={10} />, color: "text-[#2563EB]" },
   automation: { name: "Nexus", icon: <Zap size={10} />, color: "text-purple-400" },
   website: { name: "Pixel", icon: <Globe size={10} />, color: "text-cyan-400" },
-  custom: { name: "Trinity", icon: <Bot size={10} />, color: "text-gold" },
+  custom: { name: "Trinity", icon: <Bot size={10} />, color: "text-[#2563EB]" },
   ai_receptionist: { name: "Ring", icon: <Phone size={10} />, color: "text-green-400" },
   content: { name: "Pixel", icon: <Film size={10} />, color: "text-pink-400" },
   outreach: { name: "Echo", icon: <Send size={10} />, color: "text-blue-400" },

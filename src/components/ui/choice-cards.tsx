@@ -164,12 +164,12 @@ export default function ChoiceCards({
               item.disabled
                 ? "opacity-50 cursor-not-allowed border-border bg-surface-light"
                 : selected
-                  ? "border-gold bg-gold/10 ring-2 ring-gold/30"
-                  : "border-border bg-surface-light hover:border-gold/30 focus-visible:border-gold/50 focus-visible:ring-2 focus-visible:ring-gold/20"
+                  ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] ring-2 ring-[rgba(37,99,235,0.25)]"
+                  : "border-border bg-surface-light hover:border-[rgba(37,99,235,0.25)] focus-visible:border-[rgba(37,99,235,0.5)] focus-visible:ring-2 focus-visible:ring-[rgba(37,99,235,0.12)]"
             }`}
           >
             {item.badge && (
-              <span className="absolute top-2 right-2 text-[8px] px-1.5 py-0.5 bg-gold/10 text-gold rounded-full font-semibold uppercase tracking-wider">
+              <span className="absolute top-2 right-2 text-[8px] px-1.5 py-0.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-full font-semibold uppercase tracking-wider">
                 {item.badge}
               </span>
             )}
@@ -177,14 +177,14 @@ export default function ChoiceCards({
               <div className="flex items-center gap-2 mb-2">
                 <div
                   className={`${SIZE_ICON[size]} flex items-center justify-center shrink-0 ${
-                    selected ? "bg-gold/20 text-gold" : "bg-surface-light text-muted"
+                    selected ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"
                   }`}
                 >
                   {item.icon}
                 </div>
                 {selected && !item.badge && (
-                  <span className="ml-auto w-5 h-5 rounded-full bg-gold flex items-center justify-center">
-                    <Check size={11} className="text-black" />
+                  <span className="ml-auto w-5 h-5 rounded-full bg-[#2563EB] flex items-center justify-center">
+                    <Check size={11} className="text-white" />
                   </span>
                 )}
               </div>

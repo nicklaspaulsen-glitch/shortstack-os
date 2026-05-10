@@ -67,12 +67,12 @@ const DEPTH_COPY: Record<Depth, { label: string; desc: string; cost: string }> =
 };
 
 const STATUS_PILLS: Record<JobRow["status"], string> = {
-  pending: "bg-slate-500/15 text-slate-300 border-slate-500/30",
-  researching: "bg-blue-500/15 text-blue-300 border-blue-500/30",
-  generating: "bg-purple-500/15 text-purple-300 border-purple-500/30",
-  sending: "bg-yellow-500/15 text-yellow-300 border-yellow-500/30",
-  completed: "bg-green-500/15 text-green-300 border-green-500/30",
-  failed: "bg-red-500/15 text-red-300 border-red-500/30",
+  pending: "bg-[rgba(0,0,0,0.06)] text-[#6B7280] border-[rgba(0,0,0,0.10)]",
+  researching: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
+  generating: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
+  sending: "bg-amber-500/15 text-amber-700 border-amber-500/30",
+  completed: "bg-green-500/15 text-green-700 border-green-500/30",
+  failed: "bg-red-500/15 text-red-700 border-red-500/30",
 };
 
 const RAINBOW_BAR = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
@@ -227,8 +227,8 @@ export default function ColdEmailPage() {
           style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.12)" }}
         >
           <div className="flex items-center gap-2">
-            <Sparkles size={13} className="text-indigo-400" />
-            <h2 className="text-xs font-semibold text-indigo-300">New Campaign</h2>
+            <Sparkles size={13} className="text-[#2563EB]" />
+            <h2 className="text-xs font-semibold text-[#2563EB]">New Campaign</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -240,7 +240,7 @@ export default function ColdEmailPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Q2 dental outreach"
-                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40"
+                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
               />
             </div>
             <div>
@@ -251,7 +251,7 @@ export default function ColdEmailPage() {
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 placeholder="new"
-                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40"
+                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
               />
               <p className="text-[9px] text-muted mt-0.5">
                 We pull all leads with this status that have an email.
@@ -267,7 +267,7 @@ export default function ColdEmailPage() {
               value={templateSeed}
               onChange={(e) => setTemplateSeed(e.target.value)}
               rows={4}
-              className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40 font-mono"
+              className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB] font-mono"
             />
             <p className="text-[9px] text-muted mt-0.5">
               Tokens: <code>{"{{first_name}}"}</code>, <code>{"{{business_name}}"}</code>,{" "}
@@ -295,7 +295,7 @@ export default function ColdEmailPage() {
                     onClick={() => setDepth(d)}
                     className={`flex-1 text-[10px] px-2 py-1.5 rounded border transition-all ${
                       depth === d
-                        ? "border-indigo-500/40 bg-indigo-500/15 text-indigo-300"
+                        ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.10)] text-[#2563EB]"
                         : "border-border text-muted hover:text-foreground"
                     }`}
                   >
@@ -316,7 +316,7 @@ export default function ColdEmailPage() {
                 onChange={(e) => setThrottle(parseInt(e.target.value || "100") || 100)}
                 min={1}
                 max={5000}
-                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground focus:outline-none focus:border-indigo-500/40"
+                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground focus:outline-none focus:border-[#2563EB]"
               />
               <p className="text-[9px] text-muted mt-0.5">
                 Recommended: 100/hr to protect domain reputation.
@@ -335,7 +335,7 @@ export default function ColdEmailPage() {
               <button
                 onClick={handleCreate}
                 disabled={creating || !name.trim() || !templateSeed.trim()}
-                className="text-[10px] px-4 py-1.5 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
                 {creating ? "Building�" : "Create Campaign"}
               </button>
@@ -406,7 +406,7 @@ export default function ColdEmailPage() {
                         <button
                           onClick={() => handlePreview(j.id)}
                           disabled={previewing === j.id}
-                          className="text-[9px] px-2 py-1 rounded border border-blue-500/25 text-blue-400 hover:bg-blue-500/10 transition-all flex items-center gap-1 disabled:opacity-40"
+                          className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
                         >
                           {previewing === j.id ? (
                             <Loader2 size={9} className="animate-spin" />
@@ -427,7 +427,7 @@ export default function ColdEmailPage() {
                     {(j.status === "researching" || j.status === "generating") && (
                       <button
                         onClick={() => handleSend(j.id)}
-                        className="text-[9px] px-2 py-1 rounded border border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10 transition-all flex items-center gap-1"
+                        className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1"
                       >
                         <Send size={9} />
                         Send
@@ -445,7 +445,7 @@ export default function ColdEmailPage() {
                       Sent {j.sent_count} � Failed {j.failed_count}
                     </span>
                   </div>
-                  <div className="h-1.5 bg-black/40 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-[rgba(0,0,0,0.06)] rounded-full overflow-hidden">
                     <div
                       className="h-full transition-all"
                       style={{
@@ -471,7 +471,7 @@ export default function ColdEmailPage() {
                         ) : (
                           <>
                             <div className="text-[10px] text-muted">
-                              <span className="text-indigo-400">Subject:</span> {s.subject}
+                              <span className="text-[#2563EB]">Subject:</span> {s.subject}
                             </div>
                             <pre className="text-[10px] text-foreground whitespace-pre-wrap font-sans leading-relaxed">
                               {s.body}

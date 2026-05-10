@@ -44,10 +44,10 @@ export default function QuickCreateFab() {
             <button
               key={a.label}
               onClick={() => { router.push(a.href); setOpen(false); }}
-              className="flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full bg-surface border border-border shadow-md hover:border-gold/30 hover:shadow-lg transition-all group"
+              className="flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full bg-surface border border-border shadow-md hover:border-[rgba(37,99,235,0.3)] hover:shadow-lg transition-all group"
             >
               <span className={`${a.color}`}>{a.icon}</span>
-              <span className="text-[11px] font-medium group-hover:text-gold transition-colors">{a.label}</span>
+              <span className="text-[11px] font-medium group-hover:text-[#2563EB] transition-colors">{a.label}</span>
             </button>
           ))}
         </div>
@@ -60,7 +60,7 @@ export default function QuickCreateFab() {
         className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all ${
           open
             ? "bg-surface border border-border text-muted hover:text-foreground"
-            : "bg-gradient-to-br from-gold to-gold/80 text-black hover:scale-110"
+            : "bg-gradient-to-br from-[#2563EB] to-[rgba(37,99,235,0.8)] text-white hover:scale-110"
         }`}
         style={open ? {} : { boxShadow: "0 8px 24px -4px rgba(201,168,76,0.55)" }}
       >

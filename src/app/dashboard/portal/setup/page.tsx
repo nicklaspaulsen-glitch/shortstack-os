@@ -13,10 +13,10 @@ import toast from "react-hot-toast";
 const SOCIAL_PLATFORMS = [
   { id: "instagram", name: "Instagram", icon: <Camera size={24} />, color: "text-pink-500" },
   { id: "facebook", name: "Facebook", icon: <Globe size={24} />, color: "text-blue-500" },
-  { id: "tiktok", name: "TikTok", icon: <Hash size={24} />, color: "text-white" },
+  { id: "tiktok", name: "TikTok", icon: <Hash size={24} />, color: "text-[#111827]" },
   { id: "youtube", name: "YouTube", icon: <Video size={24} />, color: "text-red-500" },
-  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={24} />, color: "text-blue-400" },
-  { id: "twitter", name: "X (Twitter)", icon: <AtSign size={24} />, color: "text-white" },
+  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={24} />, color: "text-blue-700" },
+  { id: "twitter", name: "X (Twitter)", icon: <AtSign size={24} />, color: "text-[#111827]" },
 ];
 
 export default function ClientSetupPage() {
@@ -48,7 +48,7 @@ export default function ClientSetupPage() {
     <div key="welcome" className="text-center space-y-6">
       <Image src="/icons/shortstack-logo.svg" alt="Trinity" width={80} height={80} className="mx-auto" />
       <div>
-        <h1 className="text-3xl font-bold text-gold">Welcome aboard</h1>
+        <h1 className="text-3xl font-bold text-[#111827]">Welcome aboard</h1>
         <p className="text-muted mt-2 max-w-md mx-auto">
           Hi {profile?.full_name || "there"}! Let&apos;s get your account set up so our AI agents can start working for you.
         </p>
@@ -58,7 +58,7 @@ export default function ClientSetupPage() {
 
     // Step 1: Tell us about your business
     <div key="business" className="space-y-4">
-      <h2 className="text-xl font-bold text-gold">Tell us about your business</h2>
+      <h2 className="text-xl font-bold text-[#111827]">Tell us about your business</h2>
       <p className="text-sm text-muted">This helps our AI personalize everything for you.</p>
       <div>
         <label className="block text-sm text-muted mb-1">What does your business do? *</label>
@@ -89,20 +89,20 @@ export default function ClientSetupPage() {
 
     // Step 2: Connect social media
     <div key="social" className="space-y-4">
-      <h2 className="text-xl font-bold text-gold">Connect Your Social Media</h2>
+      <h2 className="text-xl font-bold text-[#111827]">Connect Your Social Media</h2>
       <p className="text-sm text-muted">Select the platforms you use. We&apos;ll manage content and publishing for you.</p>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {SOCIAL_PLATFORMS.map(platform => (
           <button key={platform.id} onClick={() => togglePlatform(platform.id)}
             className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${
               connectedPlatforms.includes(platform.id)
-                ? "border-gold bg-gold/10"
-                : "border-border hover:border-gold/30"
+                ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
+                : "border-black/[0.06] hover:border-[rgba(37,99,235,0.25)]"
             }`}>
             <span className={platform.color}>{platform.icon}</span>
             <span className="text-sm font-medium">{platform.name}</span>
             {connectedPlatforms.includes(platform.id) && (
-              <Check size={14} className="text-gold" />
+              <Check size={14} className="text-[#2563EB]" />
             )}
           </button>
         ))}
@@ -112,7 +112,7 @@ export default function ClientSetupPage() {
           <X size={14} /> No thanks, maybe later
         </button>
         <button onClick={() => toast("Contact your account manager for help connecting accounts.")}
-          className="text-sm text-gold hover:text-gold-light flex items-center gap-1">
+          className="text-sm text-[#2563EB] hover:text-[#3B82F6] flex items-center gap-1">
           <HelpCircle size={14} /> Need help setting it up?
         </button>
       </div>
@@ -120,17 +120,17 @@ export default function ClientSetupPage() {
 
     // Step 3: Meet Trinity
     <div key="trinity" className="text-center space-y-6">
-      <div className="w-16 h-16 bg-gold/10  flex items-center justify-center mx-auto">
-        <MessageSquare size={32} className="text-gold" />
+      <div className="w-16 h-16 bg-[rgba(37,99,235,0.08)] flex items-center justify-center mx-auto">
+        <MessageSquare size={32} className="text-[#2563EB]" />
       </div>
       <div>
-        <h2 className="text-xl font-bold text-gold">Meet Your AI Assistant</h2>
+        <h2 className="text-xl font-bold text-[#111827]">Meet Your AI Assistant</h2>
         <p className="text-muted mt-2 max-w-md mx-auto">
           Trinity is your personal AI assistant. Ask questions about your account, request content, check progress, or get marketing advice — anytime.
         </p>
       </div>
-      <div className="bg-surface-light rounded-xl p-4 max-w-md mx-auto text-left">
-        <p className="text-sm text-gold mb-2">Try asking Trinity:</p>
+      <div className="bg-[rgba(0,0,0,0.04)] rounded-xl p-4 max-w-md mx-auto text-left">
+        <p className="text-sm text-[#2563EB] mb-2">Try asking Trinity:</p>
         <ul className="space-y-1.5 text-sm text-muted">
           <li>&quot;What&apos;s the status of my content?&quot;</li>
           <li>&quot;When is my next invoice due?&quot;</li>
@@ -153,21 +153,21 @@ export default function ClientSetupPage() {
           Our AI agents are now configured for your business. Here&apos;s what happens next:
         </p>
       </div>
-      <div className="bg-surface-light rounded-xl p-6 max-w-md mx-auto text-left space-y-3">
+      <div className="bg-[rgba(0,0,0,0.04)] rounded-xl p-6 max-w-md mx-auto text-left space-y-3">
         <div className="flex items-center gap-3">
-          <Check size={16} className="text-gold shrink-0" />
+          <Check size={16} className="text-[#2563EB] shrink-0" />
           <span className="text-sm">Your account manager will reach out within 24 hours</span>
         </div>
         <div className="flex items-center gap-3">
-          <Check size={16} className="text-gold shrink-0" />
+          <Check size={16} className="text-[#2563EB] shrink-0" />
           <span className="text-sm">AI will analyze your competitors and create a strategy</span>
         </div>
         <div className="flex items-center gap-3">
-          <Check size={16} className="text-gold shrink-0" />
+          <Check size={16} className="text-[#2563EB] shrink-0" />
           <span className="text-sm">Content creation starts within the first week</span>
         </div>
         <div className="flex items-center gap-3">
-          <Check size={16} className="text-gold shrink-0" />
+          <Check size={16} className="text-[#2563EB] shrink-0" />
           <span className="text-sm">You can track everything from your portal</span>
         </div>
       </div>
@@ -179,7 +179,7 @@ export default function ClientSetupPage() {
       {/* Progress */}
       <div className="flex gap-1">
         {steps.map((_, i) => (
-          <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${i <= step ? "bg-gold" : "bg-surface-light"}`} />
+          <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${i <= step ? "bg-[#2563EB]" : "bg-black/[0.08]"}`} />
         ))}
       </div>
 

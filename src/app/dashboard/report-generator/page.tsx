@@ -253,7 +253,7 @@ export default function ReportGeneratorPage() {
             onClick={() => setRangePreset(p.id)}
             className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all ${
               rangePreset === p.id
-                ? "bg-gold/10 border-gold/40 text-gold"
+                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
                 : "bg-surface-light border-border/30 text-muted hover:text-foreground"
             }`}
           >
@@ -298,7 +298,7 @@ export default function ReportGeneratorPage() {
           <button
             type="button"
             onClick={() => setMetrics(METRIC_OPTIONS.map(m => m.id))}
-            className="text-gold hover:underline"
+            className="text-[#2563EB] hover:underline"
           >
             Select all
           </button>
@@ -318,14 +318,14 @@ export default function ReportGeneratorPage() {
                 <label
                   key={m.id}
                   className={`flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-xs transition-all ${
-                    on ? "border-gold/40 bg-gold/5 text-foreground" : "border-border/30 bg-surface-light text-muted hover:text-foreground"
+                    on ? "border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)] text-foreground" : "border-border/30 bg-surface-light text-muted hover:text-foreground"
                   }`}
                 >
                   <input
                     type="checkbox"
                     checked={on}
                     onChange={() => toggleMetric(m.id)}
-                    className="accent-gold"
+                    className="accent-[#2563EB]"
                   />
                   <span>{m.label}</span>
                 </label>
@@ -343,8 +343,8 @@ export default function ReportGeneratorPage() {
       <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
     <div className="p-5">
       <div className="flex items-center gap-2 mb-2">
-        <FileText size={12} className="text-gold" />
-        <p className="text-[10px] uppercase tracking-wider font-semibold text-gold">Report preview</p>
+        <FileText size={12} className="text-[#2563EB]" />
+        <p className="text-[10px] uppercase tracking-wider font-semibold text-[#2563EB]">Report preview</p>
       </div>
       <div className="space-y-1">
         <p className="text-base font-bold text-foreground">{selectedClientObj?.business_name || "No client selected"}</p>
@@ -362,7 +362,7 @@ export default function ReportGeneratorPage() {
             const meta = METRIC_OPTIONS.find(m => m.id === id);
             return (
               <div key={id} className="flex items-center gap-2 text-[11px]">
-                <Check size={11} className="text-gold" />
+                <Check size={11} className="text-[#2563EB]" />
                 <span className="text-foreground">{meta?.label || id}</span>
               </div>
             );
@@ -375,10 +375,10 @@ export default function ReportGeneratorPage() {
             type="checkbox"
             checked={emailToClient}
             onChange={e => setEmailToClient(e.target.checked)}
-            className="accent-gold"
+            className="accent-[#2563EB]"
             disabled={!selectedClientObj?.email}
           />
-          <Mail size={11} className="text-gold" />
+          <Mail size={11} className="text-[#2563EB]" />
           <span className={selectedClientObj?.email ? "text-foreground" : "text-muted"}>
             Email PDF to client{selectedClientObj?.email ? ` (${selectedClientObj.email})` : " (client email missing)"}
           </span>
@@ -442,7 +442,7 @@ export default function ReportGeneratorPage() {
         icon={<FileBarChart size={22} />}
         title="Report Generator"
         subtitle="Professional, white-labeled PDF reports for your clients — built from real data in your workspace."
-        gradient="gold"
+        gradient="blue"
         actions={
           <button
             onClick={() => { fetchClients(); fetchHistory(); }}
@@ -466,15 +466,15 @@ export default function ReportGeneratorPage() {
               step === 3 ? undefined : (
                 <div className="text-[11px] text-muted flex flex-wrap items-center gap-3">
                   <span className="inline-flex items-center gap-1">
-                    <Users size={10} className="text-gold" />
+                    <Users size={10} className="text-[#2563EB]" />
                     {selectedClientObj?.business_name || "No client"}
                   </span>
                   <span className="inline-flex items-center gap-1">
-                    <Calendar size={10} className="text-gold" />
+                    <Calendar size={10} className="text-[#2563EB]" />
                     {fromDate} → {toDate}
                   </span>
                   <span className="inline-flex items-center gap-1">
-                    <ListChecks size={10} className="text-gold" />
+                    <ListChecks size={10} className="text-[#2563EB]" />
                     {metrics.length} metric{metrics.length === 1 ? "" : "s"}
                   </span>
                 </div>
@@ -514,7 +514,7 @@ export default function ReportGeneratorPage() {
                   const c = clients.find(cl => cl.id === r.client_id);
                   return (
                     <li key={r.id} className="border border-border/30 rounded-xl px-3 py-2.5 flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#2563EB] shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-[11px] font-medium text-foreground truncate">
                           {c?.business_name || "Unknown client"}
@@ -532,7 +532,7 @@ export default function ReportGeneratorPage() {
                           href={r.pdf_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[10px] text-gold hover:underline shrink-0"
+                          className="inline-flex items-center gap-1 text-[10px] text-[#2563EB] hover:underline shrink-0"
                           title="Download (signed URL, 7-day expiry)"
                         >
                           <Download size={10} />

@@ -127,7 +127,7 @@ function VideoTimeline({
         <button
           type="button"
           onClick={() => void onSuggestEdits()}
-          className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border text-muted hover:text-gold"
+          className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border text-muted hover:text-[#2563EB]"
           title="Ask the AI editor for timed edit suggestions"
         >
           <Lightbulb size={10} /> Suggest

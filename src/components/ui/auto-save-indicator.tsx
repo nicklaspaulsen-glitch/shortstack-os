@@ -40,9 +40,9 @@ export default function AutoSaveIndicator({ status, lastSavedAt, error, classNam
   let bgClass = "";
 
   if (status === "saving") {
-    colorClass = "text-gold";
-    borderClass = "border-gold/30";
-    bgClass = "bg-gold/5";
+    colorClass = "text-[#2563EB]";
+    borderClass = "border-[rgba(37,99,235,0.3)]";
+    bgClass = "bg-[rgba(37,99,235,0.05)]";
     content = (
       <>
         <Loader2 size={12} className="animate-spin" />

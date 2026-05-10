@@ -71,7 +71,7 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "Content Generation": "bg-gold",
+  "Content Generation": "bg-[#2563EB]",
   "AI Chat": "bg-blue-400",
   "Email Generation": "bg-emerald-400",
   "Image Generation": "bg-purple-400",
@@ -96,7 +96,7 @@ function getProgressColor(pct: number): string {
   if (pct >= 90) return "bg-red-400";
   if (pct >= 75) return "bg-orange-400";
   if (pct >= 50) return "bg-amber-400";
-  return "bg-gold";
+  return "bg-[#2563EB]";
 }
 
 function getProgressGlow(pct: number): string {
@@ -257,7 +257,7 @@ export default function UsagePage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { icon: <Activity size={10} />, label: "Tokens Used", value: loading ? null : fmt(used), sub: "this month" },
-          { icon: <Zap size={10} />, label: "Remaining", value: loading ? null : (isUnlimited ? "∞" : fmt(remaining)), sub: isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`, valueClass: isUnlimited ? "text-gold" : remaining < effectiveLimit * 0.1 ? "text-red-400" : "text-foreground" },
+          { icon: <Zap size={10} />, label: "Remaining", value: loading ? null : (isUnlimited ? "∞" : fmt(remaining)), sub: isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`, valueClass: isUnlimited ? "text-[#2563EB]" : remaining < effectiveLimit * 0.1 ? "text-red-400" : "text-foreground" },
           { icon: <Clock size={10} />, label: "Resets In", value: loading ? null : String(tokenData.days_remaining), sub: "days" },
           { icon: <TrendingUp size={10} />, label: "Daily Avg", value: loading ? null : fmtShort(tokenData.daily_average), sub: "tokens / day" },
         ].map((stat, i) => (
@@ -309,7 +309,7 @@ export default function UsagePage() {
             <span>
               {fmt(used)} used of {fmt(effectiveLimit)}{" "}
               {tokenData.bonus_tokens > 0 && (
-                <span className="text-gold">
+                <span className="text-[#2563EB]">
                   (+{fmtShort(tokenData.bonus_tokens)} bonus)
                 </span>
               )}
@@ -338,7 +338,7 @@ export default function UsagePage() {
         {/* Usage by Category */}
         <div className="glass rounded-xl p-5 space-y-4">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <BarChart3 size={14} className="text-gold" />
+            <BarChart3 size={14} className="text-[#2563EB]" />
             Usage by Category
           </div>
 
@@ -393,7 +393,7 @@ export default function UsagePage() {
         {/* Daily Usage Chart */}
         <div className="glass rounded-xl p-5 space-y-4">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <Calendar size={14} className="text-gold" />
+            <Calendar size={14} className="text-[#2563EB]" />
             Daily Usage (Last 30 Days)
           </div>
 
@@ -418,7 +418,7 @@ export default function UsagePage() {
                     className="flex-1 flex flex-col items-center justify-end h-full group relative"
                   >
                     <div
-                      className="w-full rounded-t transition-all duration-300 bg-gold/60 group-hover:bg-gold"
+                      className="w-full rounded-t transition-all duration-300 bg-[rgba(37,99,235,0.6)] group-hover:bg-[#2563EB]"
                       style={{ height: `${Math.max(h, d.tokens > 0 ? 4 : 0)}%` }}
                     />
                     {/* Tooltip */}
@@ -448,7 +448,7 @@ export default function UsagePage() {
       {/* ── Buy More Tokens ── */}
       {isUnlimited ? (
         <div className="glass rounded-xl p-5 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center text-gold shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB] shrink-0">
             <Zap size={18} />
           </div>
           <div>
@@ -462,12 +462,12 @@ export default function UsagePage() {
         <div className="glass rounded-xl p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-              <Package size={14} className="text-gold" />
+              <Package size={14} className="text-[#2563EB]" />
               Buy More Tokens
             </div>
             <Link
               href="/dashboard/pricing"
-              className="flex items-center gap-1 text-xs text-gold hover:underline"
+              className="flex items-center gap-1 text-xs text-[#2563EB] hover:underline"
             >
               Or upgrade your plan <ChevronRight size={12} />
             </Link>
@@ -488,12 +488,12 @@ export default function UsagePage() {
                 }
                 className={`relative flex flex-col items-center gap-1.5 p-4 rounded-xl border text-center transition-all ${
                   selectedPack === pack.id
-                    ? "border-gold bg-gold/10 text-gold"
-                    : "border-border bg-surface-light text-foreground hover:border-gold/50"
+                    ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                    : "border-border bg-surface-light text-foreground hover:border-[rgba(37,99,235,0.4)]"
                 }`}
               >
                 {pack.popular && (
-                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-gold text-black text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-[#2563EB] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                     Popular
                   </div>
                 )}
@@ -517,7 +517,7 @@ export default function UsagePage() {
                 disabled={!selectedPack || buying}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   selectedPack && !buying
-                    ? "bg-gold text-black hover:bg-gold/90"
+                    ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8]"
                     : "bg-surface-light text-muted cursor-not-allowed"
                 }`}
               >
@@ -546,7 +546,7 @@ export default function UsagePage() {
       {/* ── Recent Activity ── */}
       <div className="glass rounded-xl p-5 space-y-4">
         <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-          <Activity size={14} className="text-gold" />
+          <Activity size={14} className="text-[#2563EB]" />
           Recent AI Activity
         </div>
 
@@ -586,7 +586,7 @@ export default function UsagePage() {
                     <td className="py-2.5 text-muted hidden sm:table-cell max-w-[200px] truncate">
                       {item.description || "—"}
                     </td>
-                    <td className="py-2.5 pr-1 text-right font-medium tabular-nums text-gold whitespace-nowrap">
+                    <td className="py-2.5 pr-1 text-right font-medium tabular-nums text-[#2563EB] whitespace-nowrap">
                       {fmt(item.tokens_used)}
                     </td>
                   </motion.tr>

@@ -46,18 +46,18 @@ export default function PlanGate({ requiredPlan, clientPlan, children, featureNa
   }
 
   return (
-    <div className="rounded-xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
-      <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-gold/10">
-        <ArrowUpCircle size={20} className="text-gold" />
+    <div className="rounded-xl border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] p-6 text-center">
+      <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)]">
+        <ArrowUpCircle size={20} className="text-[#2563EB]" />
       </div>
       <h3 className="text-sm font-semibold text-foreground mb-1">
         {featureName ? `${featureName} requires` : "Upgrade to"} {requiredPlan}
       </h3>
       <p className="text-xs text-muted mb-4 max-w-xs mx-auto">
         {clientPlan || "Starter"} plan doesn&apos;t include this feature.
-        Upgrade to <span className="text-gold font-medium">{requiredPlan}</span> to unlock it.
+        Upgrade to <span className="text-[#2563EB] font-medium">{requiredPlan}</span> to unlock it.
       </p>
-      <span className="inline-flex items-center gap-1.5 rounded-lg border border-gold/30 bg-gold/10 px-4 py-1.5 text-xs font-medium text-gold">
+      <span className="inline-flex items-center gap-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-4 py-1.5 text-xs font-medium text-[#2563EB]">
         <ArrowUpCircle size={12} />
         Upgrade to {requiredPlan}
       </span>

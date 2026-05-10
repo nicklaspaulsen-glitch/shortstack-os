@@ -163,7 +163,7 @@ export default function ClientChatWidget() {
       {/* Header */}
       <div className="bg-surface-light px-4 py-3 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gold/10 rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-full flex items-center justify-center">
             <Image src="/icons/shortstack-logo.svg" alt="Trinity" width={20} height={20} />
           </div>
           <div>
@@ -187,7 +187,7 @@ export default function ClientChatWidget() {
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div className={`max-w-[80%]  px-3.5 py-2.5 ${
               msg.role === "user"
-                ? "bg-gold text-black rounded-br-sm"
+                ? "bg-[#2563EB] text-white rounded-br-sm"
                 : "bg-surface-light text-foreground rounded-bl-sm"
             }`}>
               <p className="text-sm leading-relaxed">{msg.content}</p>
@@ -198,9 +198,9 @@ export default function ClientChatWidget() {
           <div className="flex justify-start">
             <div className="bg-surface-light  rounded-bl-sm px-4 py-3">
               <div className="flex gap-1">
-                <div className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                <div className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                <div className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                <div className="w-1.5 h-1.5 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                <div className="w-1.5 h-1.5 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                <div className="w-1.5 h-1.5 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
               </div>
             </div>
           </div>
@@ -228,12 +228,12 @@ export default function ClientChatWidget() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask Trinity anything..."
-            className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-gold/50"
+            className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
             disabled={sending}
           />
           <button type="submit" disabled={sending || !input.trim()}
-            className="w-9 h-9 bg-gold rounded-full flex items-center justify-center hover:bg-gold-light disabled:opacity-30 transition-all shrink-0">
-            <Send size={14} className="text-black" />
+            className="w-9 h-9 bg-[#2563EB] rounded-full flex items-center justify-center hover:bg-[#1D4ED8] disabled:opacity-30 transition-all shrink-0">
+            <Send size={14} className="text-white" />
           </button>
         </form>
       </div>

@@ -4,14 +4,14 @@
  * Unified Conversations Inbox
  *
  * Three-pane Gmail/Front-style inbox aggregating every messaging channel:
- *   email · sms · whatsapp · telegram · instagram · slack · discord · web_chat
+ *   email ï¿½ sms ï¿½ whatsapp ï¿½ telegram ï¿½ instagram ï¿½ slack ï¿½ discord ï¿½ web_chat
  *
  * Left  (320px): filter tabs + searchable conversation list
  * Middle(flex):  selected thread + composer
  * Right (280px): contact details + quick actions
  *
  * Realtime: subscribes to INSERTs on conversations and
- * conversation_messages — no polling.
+ * conversation_messages ï¿½ no polling.
  *
  * Keyboard shortcuts (focus NOT in a textbox):
  *   j/k  prev/next conversation
@@ -101,14 +101,14 @@ interface Message {
 
 // -- Channel chrome ---------------------------------------------------
 const CHANNEL_META: Record<Channel, { label: string; icon: React.ReactNode; tone: string }> = {
-  email: { label: "Email", icon: <Mail size={14} />, tone: "text-sky-300 bg-sky-500/10 border-sky-500/30" },
-  sms: { label: "SMS", icon: <MessageSquare size={14} />, tone: "text-emerald-300 bg-emerald-500/10 border-emerald-500/30" },
-  whatsapp: { label: "WhatsApp", icon: <MessageCircle size={14} />, tone: "text-green-300 bg-green-500/10 border-green-500/30" },
-  telegram: { label: "Telegram", icon: <Send size={14} />, tone: "text-cyan-300 bg-cyan-500/10 border-cyan-500/30" },
-  instagram: { label: "Instagram", icon: <Camera size={14} />, tone: "text-pink-300 bg-pink-500/10 border-pink-500/30" },
-  slack: { label: "Slack", icon: <Hash size={14} />, tone: "text-violet-300 bg-violet-500/10 border-violet-500/30" },
-  discord: { label: "Discord", icon: <Hash size={14} />, tone: "text-indigo-300 bg-indigo-500/10 border-indigo-500/30" },
-  web_chat: { label: "Web Chat", icon: <Globe size={14} />, tone: "text-amber-300 bg-amber-500/10 border-amber-500/30" },
+  email: { label: "Email", icon: <Mail size={14} />, tone: "text-sky-700 bg-sky-500/10 border-sky-500/30" },
+  sms: { label: "SMS", icon: <MessageSquare size={14} />, tone: "text-emerald-700 bg-emerald-500/10 border-emerald-500/30" },
+  whatsapp: { label: "WhatsApp", icon: <MessageCircle size={14} />, tone: "text-green-700 bg-green-500/10 border-green-500/30" },
+  telegram: { label: "Telegram", icon: <Send size={14} />, tone: "text-cyan-700 bg-cyan-500/10 border-cyan-500/30" },
+  instagram: { label: "Instagram", icon: <Camera size={14} />, tone: "text-pink-700 bg-pink-500/10 border-pink-500/30" },
+  slack: { label: "Slack", icon: <Hash size={14} />, tone: "text-violet-700 bg-violet-500/10 border-violet-500/30" },
+  discord: { label: "Discord", icon: <Hash size={14} />, tone: "text-indigo-700 bg-indigo-500/10 border-indigo-500/30" },
+  web_chat: { label: "Web Chat", icon: <Globe size={14} />, tone: "text-amber-700 bg-amber-500/10 border-amber-500/30" },
 };
 
 const FILTERS: { key: FilterKey; label: string }[] = [
@@ -253,7 +253,7 @@ export default function ConversationsPage() {
           filter: `user_id=eq.${user.id}`,
         },
         () => {
-          // Simpler than per-row merging — refetch the whole list.
+          // Simpler than per-row merging ï¿½ refetch the whole list.
           fetchList();
         },
       )
@@ -339,7 +339,7 @@ export default function ConversationsPage() {
       const target = e.target as HTMLElement;
       const isTyping = target.tagName === "INPUT" || target.tagName === "TEXTAREA";
 
-      // Number keys always jump filters (even while typing in search? no — only if not typing).
+      // Number keys always jump filters (even while typing in search? no ï¿½ only if not typing).
       if (!isTyping && /^[1-9]$/.test(e.key)) {
         const idx = Number(e.key) - 1;
         if (FILTERS[idx]) {
@@ -385,7 +385,7 @@ export default function ConversationsPage() {
 
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-[#FAFAFB] text-[#0A0A0B]">
-      {/* -- LEFT: conversation list — hidden on mobile when viewing a thread -- */}
+      {/* -- LEFT: conversation list ï¿½ hidden on mobile when viewing a thread -- */}
       <aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.08)] flex-col`}>
         <div className="p-4 border-b border-[rgba(0,0,0,0.08)]">
           <h1 className="text-lg font-semibold mb-3 flex items-center gap-2">
@@ -401,7 +401,7 @@ export default function ConversationsPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search…"
+              placeholder="Searchï¿½"
               className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg pl-9 pr-3 py-2 text-sm placeholder-[#71717A] focus:outline-none focus:border-[#1D4ED8]/40"
             />
           </div>
@@ -418,7 +418,7 @@ export default function ConversationsPage() {
               className={`text-xs px-2.5 py-1 rounded-md transition ${
                 filter === f.key
                   ? "bg-[#1D4ED8]/10 text-[#1D4ED8] border border-[#1D4ED8]/20"
-                  : "text-[#52525B] hover:text-white hover:bg-[rgba(0,0,0,0.04)] border border-transparent"
+                  : "text-[#52525B] hover:text-[#111827] hover:bg-[rgba(0,0,0,0.04)] border border-transparent"
               }`}
               title={`Shortcut: ${i + 1}`}
             >
@@ -474,7 +474,7 @@ export default function ConversationsPage() {
         </div>
       </aside>
 
-      {/* -- MIDDLE: thread — hidden on mobile when showing the list -- */}
+      {/* -- MIDDLE: thread ï¿½ hidden on mobile when showing the list -- */}
       <main className={`${mobileView === "list" ? "hidden" : "flex"} md:flex flex-1 flex-col min-w-0`}>
         {!selected ? (
           <div className="flex-1 flex items-center justify-center text-[#71717A] text-sm">
@@ -486,9 +486,9 @@ export default function ConversationsPage() {
             <header className="px-5 py-3 border-b border-[rgba(0,0,0,0.08)] flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  {/* Back button — mobile only */}
+                  {/* Back button ï¿½ mobile only */}
                   <button
-                    className="flex md:hidden items-center gap-1 text-[#52525B] hover:text-white mr-1"
+                    className="flex md:hidden items-center gap-1 text-[#52525B] hover:text-[#111827] mr-1"
                     onClick={() => setMobileView("list")}
                     aria-label="Back to conversations"
                   >
@@ -505,7 +505,7 @@ export default function ConversationsPage() {
                   <div className="text-xs text-[#71717A] mt-0.5 truncate">{selected.subject}</div>
                 )}
               </div>
-              <div className="flex items-center gap-1 text-[#52525B]">
+              <div className="flex items-center gap-1 text-[#374151]">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
@@ -551,8 +551,8 @@ export default function ConversationsPage() {
                 </div>
               ) : messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full gap-2 py-16 text-center">
-                  <MessageCircle size={28} className="text-white/10" />
-                  <p className="text-xs text-[#71717A]">No messages yet — say hello</p>
+                  <MessageCircle size={28} className="text-[#9CA3AF]" />
+                  <p className="text-xs text-[#71717A]">No messages yet ï¿½ say hello</p>
                 </div>
               ) : (
                 messages.map((m) => <MessageBubble key={m.id} m={m} />)
@@ -561,17 +561,17 @@ export default function ConversationsPage() {
 
             {/* Composer */}
             <div className="border-t border-[rgba(0,0,0,0.08)] p-3">
-              <div className="flex items-end gap-2 glass rounded-lg p-2">
+              <div className="flex items-end gap-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg p-2">
                 <button
                   type="button"
-                  className="p-1.5 text-[#71717A] hover:text-white rounded"
+                  className="p-1.5 text-[#71717A] hover:text-[#374151] rounded"
                   title="Attach"
                 >
                   <Paperclip size={16} />
                 </button>
                 <button
                   type="button"
-                  className="p-1.5 text-[#71717A] hover:text-white rounded"
+                  className="p-1.5 text-[#71717A] hover:text-[#374151] rounded"
                   title="Emoji"
                 >
                   <Smile size={16} />
@@ -586,16 +586,16 @@ export default function ConversationsPage() {
                       handleSend();
                     }
                   }}
-                  placeholder={`Reply via ${CHANNEL_META[selected.channel].label}… (Cmd/Ctrl+Enter to send)`}
+                  placeholder={`Reply via ${CHANNEL_META[selected.channel].label}â€¦ (Cmd/Ctrl+Enter to send)`}
                   rows={2}
-                  className="flex-1 bg-transparent outline-none resize-none text-sm placeholder-white/30"
+                  className="flex-1 bg-transparent outline-none resize-none text-sm text-[#374151] placeholder-[#9CA3AF]"
                 />
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleSend}
                   disabled={sending || !composerText.trim()}
-                  className="px-3 py-1.5 rounded bg-[#1D4ED8] text-white text-sm font-medium disabled:opacity-40 hover:bg-[#b01e1e] flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded bg-[#2563EB] text-white text-sm font-medium disabled:opacity-40 hover:bg-[#3B82F6] flex items-center gap-1.5"
                 >
                   {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                   Send
@@ -609,9 +609,9 @@ export default function ConversationsPage() {
         )}
       </main>
 
-      {/* -- RIGHT: contact + actions — desktop only -- */}
+      {/* -- RIGHT: contact + actions ï¿½ desktop only -- */}
       {selected && (
-        <aside className="hidden md:block w-[280px] flex-shrink-0 border-l border-[rgba(0,0,0,0.08)] overflow-y-auto glass-md">
+        <aside className="hidden md:block w-[280px] flex-shrink-0 border-l border-[rgba(0,0,0,0.08)] overflow-y-auto bg-white">
           <ContactPanel conversation={selected} contact={contact} onStatus={(s) => setStatus(selected.id, s)} />
         </aside>
       )}
@@ -650,7 +650,7 @@ function ConversationRow({
           <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] border ${meta.tone}`}>
             {meta.icon}
           </span>
-          <span className={`text-sm truncate ${c.unread_count > 0 ? "font-semibold text-white" : "text-[#0A0A0B]"}`}>
+          <span className={`text-sm truncate ${c.unread_count > 0 ? "font-semibold text-[#111827]" : "text-[#374151]"}`}>
             {name}
           </span>
         </div>
@@ -702,7 +702,7 @@ function MessageBubble({ m }: { m: Message }) {
         }`}
       >
         <div className="whitespace-pre-wrap break-words">{m.body || <em className="opacity-60">No content</em>}</div>
-        <div className={`text-[10px] mt-1 ${inbound ? "text-[#71717A]" : "text-[#52525B]"}`}>
+        <div className={`text-[10px] mt-1 ${inbound ? "text-[#6B7280]" : "text-white/70"}`}>
           {fmtTime(m.sent_at)}
         </div>
       </div>
@@ -722,7 +722,7 @@ function ContactPanel({
 }) {
   return (
     <div className="p-4 space-y-4">
-      <section className="glass-md rounded-xl p-3">
+      <section className="bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-xl p-3">
         <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Contact</h3>
         {contact ? (
           <div className="space-y-1 text-sm">
@@ -751,7 +751,7 @@ function ContactPanel({
         )}
       </section>
 
-      <section className="glass-md rounded-xl p-3">
+      <section className="bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-xl p-3">
         <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Thread</h3>
         <div className="text-xs space-y-1.5 text-[#52525B]">
           <div className="flex items-center gap-2">
@@ -770,7 +770,7 @@ function ContactPanel({
         </div>
       </section>
 
-      <section className="glass-md rounded-xl p-3">
+      <section className="bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-xl p-3">
         <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Actions</h3>
         <div className="space-y-1">
           <button
@@ -838,7 +838,7 @@ function ContactPanel({
           <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">e</kbd> archive</div>
           <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">s</kbd> snooze</div>
           <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">c</kbd> close</div>
-          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">1</kbd>–<kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">9</kbd> jump filter</div>
+          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">1</kbd>ï¿½<kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">9</kbd> jump filter</div>
         </div>
       </section>
     </div>

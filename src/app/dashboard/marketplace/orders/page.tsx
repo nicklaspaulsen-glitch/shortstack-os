@@ -27,13 +27,13 @@ interface OrderRow {
 type Role = "buyer" | "seller";
 
 const STATUS_COLOR: Record<string, string> = {
-  pending_payment: "bg-amber-500/10 text-amber-400",
-  paid: "bg-blue-500/10 text-blue-400",
-  in_progress: "bg-blue-500/10 text-blue-400",
-  delivered: "bg-emerald-500/10 text-emerald-400",
-  disputed: "bg-red-500/10 text-red-400",
-  refunded: "bg-white/10 text-white/60",
-  cancelled: "bg-white/10 text-white/60",
+  pending_payment: "bg-amber-500/10 text-amber-700",
+  paid: "bg-blue-500/10 text-blue-700",
+  in_progress: "bg-blue-500/10 text-blue-700",
+  delivered: "bg-emerald-500/10 text-emerald-700",
+  disputed: "bg-red-500/10 text-red-700",
+  refunded: "bg-black/[0.04] text-[#6B7280]",
+  cancelled: "bg-black/[0.04] text-[#6B7280]",
 };
 
 function formatPrice(cents: number, currency: string): string {
@@ -103,8 +103,8 @@ export default function OrdersPage() {
         <div className="py-12 text-center text-sm text-muted">Loading...</div>
       ) : orders.length === 0 ? (
         <div className="card flex flex-col items-center justify-center py-12 text-center">
-          <Receipt size={36} className="mb-3 text-muted/30" />
-          <p className="text-sm font-medium text-white">
+          <Receipt size={36} className="mb-3 text-[#9CA3AF]" />
+          <p className="text-sm font-medium text-[#111827]">
             No {role === "buyer" ? "purchases" : "incoming orders"} yet
           </p>
           <p className="mt-1 text-xs text-muted">
@@ -114,7 +114,7 @@ export default function OrdersPage() {
           </p>
           <Link
             href={role === "buyer" ? "/marketplace" : "/dashboard/marketplace/listings"}
-            className="mt-4 rounded-lg bg-gold/10 px-4 py-2 text-sm font-medium text-gold hover:bg-gold/20"
+            className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]"
           >
             {role === "buyer" ? "Browse marketplace" : "Manage listings"}
           </Link>
@@ -125,7 +125,7 @@ export default function OrdersPage() {
             <Link
               key={o.id}
               href={`/dashboard/marketplace/orders/${o.id}`}
-              className="card group flex items-center justify-between gap-4 transition hover:border-gold/30"
+              className="card group flex items-center justify-between gap-4 transition hover:border-[#2563EB]/30"
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function OrdersPage() {
                   </span>
                   <span
                     className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                      STATUS_COLOR[o.status] ?? "bg-white/10 text-white/60"
+                      STATUS_COLOR[o.status] ?? "bg-black/[0.04] text-[#6B7280]"
                     }`}
                   >
                     {o.status.replace("_", " ")}
@@ -145,7 +145,7 @@ export default function OrdersPage() {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-sm font-bold text-white">
+                <div className="text-sm font-bold text-[#111827]">
                   {formatPrice(o.amount_cents, o.currency)}
                 </div>
                 {role === "seller" && (
@@ -156,7 +156,7 @@ export default function OrdersPage() {
               </div>
               <ArrowRight
                 size={14}
-                className="text-muted transition group-hover:translate-x-0.5 group-hover:text-gold"
+                className="text-[#9CA3AF] transition group-hover:translate-x-0.5 group-hover:text-[#2563EB]"
               />
             </Link>
           ))}

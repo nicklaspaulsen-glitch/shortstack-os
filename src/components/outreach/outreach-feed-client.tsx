@@ -263,18 +263,21 @@ export default function OutreachFeedClient({
   );
 
   return (
-    <div className="flex h-[calc(100vh-14rem)] min-h-[480px]  border border-white/10 bg-[#0b0d12] overflow-hidden">
+    <div
+      className="flex h-[calc(100vh-14rem)] min-h-[480px] rounded-xl border border-[rgba(0,0,0,0.08)] overflow-hidden"
+      style={{ background: "rgba(255,255,255,0.88)" }}
+    >
       {/* LEFT: contact list */}
-      <aside className="w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-white/5 flex flex-col">
-        <div className="p-4 border-b border-white/5 space-y-3">
+      <aside className="w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.06)] flex flex-col">
+        <div className="p-4 border-b border-[rgba(0,0,0,0.06)] space-y-3">
           <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search contacts"
-              className="w-full pl-9 pr-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-amber-400/40"
+              className="w-full pl-9 pr-3 py-2 rounded-lg bg-white border border-[rgba(0,0,0,0.10)] text-sm text-[#111827] placeholder-[#9CA3AF] focus:outline-none focus:border-[#2563EB]"
             />
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -283,8 +286,8 @@ export default function OutreachFeedClient({
               onClick={() => setChannelFilter(null)}
               className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition-colors ${
                 !channelFilter
-                  ? "bg-white/15 text-white border-white/30"
-                  : "bg-white/5 text-white/60 border-white/10 hover:text-white"
+                  ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border-[rgba(37,99,235,0.30)]"
+                  : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] border-[rgba(0,0,0,0.08)] hover:text-[#111827]"
               }`}
             >
               All
@@ -296,8 +299,8 @@ export default function OutreachFeedClient({
                 onClick={() => setChannelFilter(f.key)}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition-colors flex items-center gap-1 ${
                   channelFilter === f.key
-                    ? "bg-white/15 text-white border-white/30"
-                    : "bg-white/5 text-white/60 border-white/10 hover:text-white"
+                    ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border-[rgba(37,99,235,0.30)]"
+                    : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] border-[rgba(0,0,0,0.08)] hover:text-[#111827]"
                 }`}
               >
                 <ChannelIcon channel={f.key} size={11} />
@@ -309,11 +312,11 @@ export default function OutreachFeedClient({
 
         <div className="flex-1 overflow-y-auto">
           {loadingList ? (
-            <div className="flex items-center justify-center h-32 text-white/40 text-xs">
+            <div className="flex items-center justify-center h-32 text-[#9CA3AF] text-xs">
               <Loader2 size={14} className="animate-spin mr-2" /> Loading…
             </div>
           ) : conversations.length === 0 ? (
-            <div className="text-center text-white/40 text-xs px-6 py-8">
+            <div className="text-center text-[#9CA3AF] text-xs px-6 py-8">
               No conversations yet. Outreach activity will appear here as soon as you start sending email, SMS, DMs, or making calls.
             </div>
           ) : (
@@ -326,13 +329,13 @@ export default function OutreachFeedClient({
                     <button
                       type="button"
                       onClick={() => setSelectedKey(key)}
-                      className={`w-full text-left px-4 py-3 border-b border-white/5 transition-colors ${
-                        isActive ? "bg-white/10" : "hover:bg-white/5"
+                      className={`w-full text-left px-4 py-3 border-b border-[rgba(0,0,0,0.06)] transition-colors ${
+                        isActive ? "bg-[rgba(37,99,235,0.06)]" : "hover:bg-[rgba(0,0,0,0.03)]"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2 mb-1">
-                        <span className="text-sm font-medium text-white truncate">{c.contact_name}</span>
-                        <span className="text-[10px] text-white/40 shrink-0">
+                        <span className="text-sm font-medium text-[#111827] truncate">{c.contact_name}</span>
+                        <span className="text-[10px] text-[#9CA3AF] shrink-0">
                           {formatTimestamp(c.last_message.ts)}
                         </span>
                       </div>
@@ -342,12 +345,12 @@ export default function OutreachFeedClient({
                         ))}
                         <OutcomeChip outcome={c.last_outcome as OutreachOutcome} />
                         {c.unread_count > 0 && (
-                          <span className="ml-auto inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-amber-400 text-[10px] font-bold text-black px-1">
+                          <span className="ml-auto inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-[#2563EB] text-[10px] font-bold text-white px-1">
                             {c.unread_count}
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-white/55 truncate">
+                      <p className="text-xs text-[#6B7280] truncate">
                         {c.last_message.direction === "out" ? "→ " : "← "}
                         {c.last_message.body || "(empty)"}
                       </p>
@@ -363,7 +366,7 @@ export default function OutreachFeedClient({
       {/* RIGHT: thread */}
       <section className="flex-1 flex flex-col min-w-0">
         {!selected || !thread ? (
-          <div className="flex-1 flex items-center justify-center text-white/40 text-sm">
+          <div className="flex-1 flex items-center justify-center text-[#6B7280] text-sm">
             {selectedKey ? (
               loadingThread ? (
                 <span className="inline-flex items-center">
@@ -379,22 +382,22 @@ export default function OutreachFeedClient({
         ) : (
           <>
             {/* Header */}
-            <div className="px-5 py-4 border-b border-white/5 flex items-start gap-3">
+            <div className="px-5 py-4 border-b border-[rgba(0,0,0,0.06)] flex items-start gap-3">
               <button
                 type="button"
                 onClick={() => setSelectedKey(null)}
-                className="md:hidden text-white/60 hover:text-white"
+                className="md:hidden text-[#6B7280] hover:text-[#111827]"
                 aria-label="Back to list"
               >
                 <ChevronLeft size={18} />
               </button>
               <div className="flex-1 min-w-0">
-                <h2 className="text-base font-semibold text-white truncate">{selected.contact_name}</h2>
-                <div className="flex flex-wrap items-center gap-2 text-[11px] text-white/50 mt-0.5">
+                <h2 className="text-base font-semibold text-[#111827] truncate">{selected.contact_name}</h2>
+                <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#6B7280] mt-0.5">
                   {selected.contact_email && <span>{selected.contact_email}</span>}
                   {selected.contact_phone && <span>{selected.contact_phone}</span>}
                   {selected.client_id && (
-                    <span className="px-1.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300">
+                    <span className="px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] text-[#2563EB]">
                       Client
                     </span>
                   )}
@@ -406,12 +409,12 @@ export default function OutreachFeedClient({
             {/* AI summary card */}
             {thread.summary?.summary && (
               <div className="px-5 pt-3">
-                <div className="flex items-start gap-2 rounded-xl border border-amber-500/20 bg-amber-500/5 px-3 py-2.5">
-                  <Sparkles size={14} className="text-amber-300 mt-0.5 shrink-0" />
-                  <div className="text-xs text-white/80 leading-relaxed flex-1">
+                <div className="flex items-start gap-2 rounded-xl border border-[rgba(37,99,235,0.20)] bg-[rgba(37,99,235,0.05)] px-3 py-2.5">
+                  <Sparkles size={14} className="text-[#2563EB] mt-0.5 shrink-0" />
+                  <div className="text-xs text-[#374151] leading-relaxed flex-1">
                     <p>{thread.summary.summary}</p>
                     {thread.summary.suggested_action && (
-                      <p className="mt-1 text-amber-300">
+                      <p className="mt-1 text-[#2563EB]">
                         Next: {thread.summary.suggested_action}
                       </p>
                     )}
@@ -423,7 +426,7 @@ export default function OutreachFeedClient({
             {/* Bubbles */}
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
               {thread.events.length === 0 ? (
-                <div className="text-center text-white/40 text-xs py-8">
+                <div className="text-center text-[#9CA3AF] text-xs py-8">
                   No interactions logged yet.
                 </div>
               ) : (
@@ -433,14 +436,14 @@ export default function OutreachFeedClient({
             </div>
 
             {/* Action bar */}
-            <div className="border-t border-white/5 p-3 space-y-2 bg-[#0d0f15]">
+            <div className="border-t border-[rgba(0,0,0,0.06)] p-3 space-y-2 bg-[rgba(0,0,0,0.02)]">
               {canCall && (
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => handleCall("ai")}
                     disabled={calling || !selected.contact_phone}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-500/15 border border-purple-500/30 text-purple-200 text-xs font-medium hover:bg-purple-500/25 disabled:opacity-40"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] text-xs font-medium hover:bg-[rgba(37,99,235,0.14)] disabled:opacity-40"
                   >
                     <PhoneCall size={13} />
                     Call back AI
@@ -449,13 +452,13 @@ export default function OutreachFeedClient({
                     type="button"
                     onClick={() => handleCall("human")}
                     disabled={calling || !selected.contact_phone}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/80 text-xs font-medium hover:bg-white/10 disabled:opacity-40"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#374151] text-xs font-medium hover:bg-[rgba(0,0,0,0.08)] disabled:opacity-40"
                   >
                     <Phone size={13} />
                     Call back manual
                   </button>
                   {!selected.contact_phone && (
-                    <span className="text-[10px] text-white/40">No phone on contact</span>
+                    <span className="text-[10px] text-[#9CA3AF]">No phone on contact</span>
                   )}
                 </div>
               )}
@@ -463,7 +466,7 @@ export default function OutreachFeedClient({
               {canReply ? (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[11px] text-white/50">Reply via:</span>
+                    <span className="text-[11px] text-[#6B7280]">Reply via:</span>
                     {(["email", "sms", "dm"] as const).map((ch) => (
                       <button
                         key={ch}
@@ -474,8 +477,8 @@ export default function OutreachFeedClient({
                         className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${
                           composerChannel === ch ||
                           (!composerChannel && pickReplyChannel(thread.events, null) === ch)
-                            ? "bg-white/15 text-white border-white/30"
-                            : "bg-white/5 text-white/55 border-white/10 hover:text-white"
+                            ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border-[rgba(37,99,235,0.30)]"
+                            : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] border-[rgba(0,0,0,0.08)] hover:text-[#111827]"
                         }`}
                       >
                         {ch.toUpperCase()}
@@ -485,7 +488,7 @@ export default function OutreachFeedClient({
                       <button
                         type="button"
                         onClick={() => setComposerChannel(null)}
-                        className="text-[10px] text-white/40 hover:text-white inline-flex items-center gap-0.5"
+                        className="text-[10px] text-[#9CA3AF] hover:text-[#111827] inline-flex items-center gap-0.5"
                       >
                         <X size={10} /> auto
                       </button>
@@ -498,7 +501,7 @@ export default function OutreachFeedClient({
                       value={composerSubject}
                       onChange={(e) => setComposerSubject(e.target.value)}
                       placeholder="Subject (optional)"
-                      className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-white placeholder-white/30 focus:outline-none focus:border-amber-400/40"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-[rgba(0,0,0,0.10)] text-xs text-[#111827] placeholder-[#9CA3AF] focus:outline-none focus:border-[#2563EB]"
                     />
                   )}
                   <div className="flex items-end gap-2">
@@ -507,13 +510,13 @@ export default function OutreachFeedClient({
                       onChange={(e) => setComposer(e.target.value)}
                       placeholder="Write a reply…"
                       rows={2}
-                      className="flex-1 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-white/30 resize-none focus:outline-none focus:border-amber-400/40"
+                      className="flex-1 px-3 py-2 rounded-lg bg-white border border-[rgba(0,0,0,0.10)] text-sm text-[#111827] placeholder-[#9CA3AF] resize-none focus:outline-none focus:border-[#2563EB]"
                     />
                     <button
                       type="button"
                       onClick={handleSendReply}
                       disabled={sending || !composer.trim()}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-amber-400 text-black text-sm font-semibold hover:bg-amber-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#2563EB] text-white text-sm font-semibold hover:bg-[#3B82F6] disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                       Send
@@ -521,7 +524,7 @@ export default function OutreachFeedClient({
                   </div>
                 </div>
               ) : (
-                <p className="text-[11px] text-white/40 text-center py-2">
+                <p className="text-[11px] text-[#9CA3AF] text-center py-2">
                   Read-only — replies are managed by your agency.
                 </p>
               )}
@@ -542,8 +545,8 @@ function BubbleItem({ event }: BubbleItemProps) {
   const isOutbound = event.direction === "out";
   const align = isOutbound ? "items-end ml-auto" : "items-start mr-auto";
   const tone = isOutbound
-    ? "bg-sky-500/15 border-sky-500/25 text-white"
-    : "bg-white/[0.06] border-white/10 text-white";
+    ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)] text-[#111827]"
+    : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#374151]";
 
   if (event.channel === "voice_call") {
     return (
@@ -560,18 +563,18 @@ function BubbleItem({ event }: BubbleItemProps) {
             <button
               type="button"
               onClick={() => setExpanded((v) => !v)}
-              className="mt-1 text-[10px] text-amber-300 hover:underline"
+              className="mt-1 text-[10px] text-[#2563EB] hover:underline"
             >
               {expanded ? "Hide transcript" : "Show transcript"}
             </button>
           )}
           {expanded && event.transcript && (
-            <pre className="mt-2 whitespace-pre-wrap text-[11px] leading-snug text-white/70 max-h-64 overflow-y-auto">
+            <pre className="mt-2 whitespace-pre-wrap text-[11px] leading-snug text-[#374151] max-h-64 overflow-y-auto">
               {event.transcript}
             </pre>
           )}
         </div>
-        <span className="text-[10px] text-white/35 mt-0.5 px-1">{formatTimestamp(event.ts)}</span>
+        <span className="text-[10px] text-[#9CA3AF] mt-0.5 px-1">{formatTimestamp(event.ts)}</span>
       </div>
     );
   }
@@ -583,20 +586,20 @@ function BubbleItem({ event }: BubbleItemProps) {
   return (
     <div className={`flex flex-col ${align} ${widthClass}`}>
       <div className={` border px-3 py-2 ${tone} ${isOutbound ? "rounded-br-md" : "rounded-bl-md"}`}>
-        <div className="flex items-center gap-2 text-[10px] text-white/50 mb-1">
+        <div className="flex items-center gap-2 text-[10px] text-[#6B7280] mb-1">
           <ChannelIcon channel={event.channel} size={11} />
           <span className="uppercase tracking-wider">{event.channel}</span>
           {event.outcome && <OutcomeChip outcome={event.outcome} />}
           {event.attachment_count && (
-            <span className="text-[10px] text-white/40">+{event.attachment_count} attached</span>
+            <span className="text-[10px] text-[#9CA3AF]">+{event.attachment_count} attached</span>
           )}
         </div>
         {isEmail && event.subject && (
-          <p className="text-xs font-semibold text-white/85 mb-1">{event.subject}</p>
+          <p className="text-xs font-semibold text-[#111827] mb-1">{event.subject}</p>
         )}
         <p className="text-sm whitespace-pre-wrap leading-relaxed">{event.body || "(empty)"}</p>
       </div>
-      <span className="text-[10px] text-white/35 mt-0.5 px-1">{formatTimestamp(event.ts)}</span>
+      <span className="text-[10px] text-[#9CA3AF] mt-0.5 px-1">{formatTimestamp(event.ts)}</span>
     </div>
   );
 }

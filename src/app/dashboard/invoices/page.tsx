@@ -133,11 +133,11 @@ export default function InvoicesPage() {
   ];
 
   const STATS = [
-    { label: "Outstanding", value: formatCurrency(totalSent), icon: <Clock size={12} />, color: "text-yellow-400" },
-    { label: "Collected", value: formatCurrency(totalPaid), icon: <CheckCircle size={12} />, color: "text-green-400" },
-    { label: "Overdue", value: formatCurrency(totalOverdue), icon: <AlertTriangle size={12} />, color: "text-red-400" },
+    { label: "Outstanding", value: formatCurrency(totalSent), icon: <Clock size={12} />, color: "text-amber-600" },
+    { label: "Collected", value: formatCurrency(totalPaid), icon: <CheckCircle size={12} />, color: "text-emerald-700" },
+    { label: "Overdue", value: formatCurrency(totalOverdue), icon: <AlertTriangle size={12} />, color: "text-rose-700" },
     { label: "Draft", value: formatCurrency(totalDraft), icon: <FileText size={12} />, color: "text-muted" },
-    { label: "Monthly Recurring", value: formatCurrency(recurringTotal), icon: <RefreshCw size={12} />, color: "text-gold" },
+    { label: "Monthly Recurring", value: formatCurrency(recurringTotal), icon: <RefreshCw size={12} />, color: "text-[#2563EB]" },
   ];
 
   return (
@@ -148,7 +148,7 @@ export default function InvoicesPage() {
         icon={<CreditCard size={22} />}
         title="Invoices"
         subtitle={`${invoicesData.length} invoices � track payments, reminders, and recurring billing.`}
-        gradient="gold"
+        gradient="blue"
         actions={
           <div className="flex gap-2">
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
@@ -192,7 +192,7 @@ export default function InvoicesPage() {
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+              activeTab === t.key ? "bg-[rgba(37,99,235,0.10)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] font-medium" : "text-muted hover:text-foreground"
             }`}>{t.icon} {t.label}</button>
         ))}
       </div>
@@ -215,7 +215,7 @@ export default function InvoicesPage() {
               {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (
                 <button key={f} onClick={() => setFilter(f)}
                   className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                    filter === f ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-[rgba(0,0,0,0.06)]"
+                    filter === f ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)]" : "text-muted border border-[rgba(0,0,0,0.06)]"
                   }`}>{f}</button>
               ))}
             </div>
@@ -244,24 +244,24 @@ export default function InvoicesPage() {
                       <motion.div
                         variants={itemVariants}
                         onClick={() => setExpandedInvoice(expandedInvoice === inv.id ? null : inv.id)}
-                        className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-indigo-500/5 ${
-                          isOverdue ? "bg-red-400/5" : ""
+                        className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-[rgba(37,99,235,0.05)] ${
+                          isOverdue ? "bg-rose-50" : ""
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            inv.status === "paid" ? "bg-green-400/10" : isOverdue ? "bg-red-400/10" : inv.status === "draft" ? "bg-surface" : "bg-yellow-400/10"
+                            inv.status === "paid" ? "bg-emerald-50" : isOverdue ? "bg-rose-50" : inv.status === "draft" ? "bg-surface" : "bg-amber-50"
                           }`}>
-                            {inv.status === "paid" ? <CheckCircle size={16} className="text-green-400" /> :
-                             isOverdue ? <AlertTriangle size={16} className="text-red-400" /> :
+                            {inv.status === "paid" ? <CheckCircle size={16} className="text-emerald-700" /> :
+                             isOverdue ? <AlertTriangle size={16} className="text-rose-700" /> :
                              inv.status === "draft" ? <FileText size={16} className="text-muted" /> :
-                             <Clock size={16} className="text-yellow-400" />}
+                             <Clock size={16} className="text-amber-600" />}
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
                               <p className="text-sm font-semibold">{inv.client}</p>
                               <span className="text-[8px] font-mono text-muted">{inv.id}</span>
-                              {inv.recurring && <RefreshCw size={8} className="text-gold" />}
+                              {inv.recurring && <RefreshCw size={8} className="text-[#2563EB]" />}
                               {inv.currency !== "USD" && <Globe size={8} className="text-blue-400" />}
                             </div>
                             <p className="text-[10px] text-muted">{inv.description}</p>
@@ -273,11 +273,11 @@ export default function InvoicesPage() {
                             <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
                           </div>
                           <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                            inv.status === "paid" ? "bg-green-400/10 text-green-400" :
-                            isOverdue ? "bg-red-400/10 text-red-400" :
+                            inv.status === "paid" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
+                            isOverdue ? "bg-rose-50 text-rose-700 border border-rose-200" :
                             inv.status === "draft" ? "bg-[rgba(0,0,0,0.05)] text-muted border border-[rgba(0,0,0,0.08)]" :
-                            inv.status === "sent" ? "bg-blue-400/10 text-blue-400" :
-                            "bg-yellow-400/10 text-yellow-400"
+                            inv.status === "sent" ? "bg-blue-50 text-blue-700 border border-blue-200" :
+                            "bg-amber-50 text-amber-700 border border-amber-200"
                           }`}>{isOverdue ? "overdue" : inv.status}</span>
                           <ChevronRight size={14} className="text-muted" />
                         </div>
@@ -371,12 +371,12 @@ export default function InvoicesPage() {
                         <span className="col-span-2 text-right font-bold">{formatCurrency(item.qty * item.rate, selectedCurrency)}</span>
                         <button
                           onClick={() => toast("The in-app invoice builder is being replaced with Stripe's hosted invoices. Use /dashboard/billing ? Stripe portal to create real invoices today.", { icon: "??", duration: 6000 })}
-                          className="col-span-1 text-right text-muted hover:text-red-400"><X size={10} /></button>
+                          className="col-span-1 text-right text-muted hover:text-rose-700"><X size={10} /></button>
                       </div>
                     ))}
                     <button
                       onClick={() => toast("In-app line items aren't wired. Create invoices via Stripe's hosted portal at /dashboard/billing.", { icon: "??", duration: 6000 })}
-                      className="text-[9px] text-gold flex items-center gap-1 px-2"><Plus size={9} /> Add Line Item</button>
+                      className="text-[9px] text-[#2563EB] flex items-center gap-1 px-2"><Plus size={9} /> Add Line Item</button>
                   </div>
                 </div>
 
@@ -407,7 +407,7 @@ export default function InvoicesPage() {
                   <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
                   <div className="flex justify-between"><span className="text-muted">Tax ({taxRate}%)</span><span>{formatCurrency(Math.round(2497 * taxRate / 100), selectedCurrency)}</span></div>
                   <div className="border-t border-[rgba(0,0,0,0.08)] pt-2 flex justify-between font-bold">
-                    <span>Total</span><span className="text-gold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
+                    <span>Total</span><span className="text-[#1D4ED8] font-bold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
                   </div>
                 </div>
                 <Link href="/dashboard/billing" className="btn-primary w-full text-xs mt-4 flex items-center justify-center gap-1.5">
@@ -423,7 +423,7 @@ export default function InvoicesPage() {
               {/* Quick Invoice from Proposal */}
               <PrismPanel rainbow padding="p-4">
                 <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
-                  <Zap size={12} className="text-gold" /> Quick Invoice
+                  <Zap size={12} className="text-[#2563EB]" /> Quick Invoice
                 </h4>
                 <p className="text-[9px] text-muted mb-3">Generate invoice from an accepted proposal</p>
                 <select className="input w-full text-xs mb-2">
@@ -431,7 +431,7 @@ export default function InvoicesPage() {
                 </select>
                 <button
                   onClick={() => toast("Proposals ? invoice pipeline ships with the proposals module. Track progress on the roadmap.", { icon: "??", duration: 6000 })}
-                  className="btn-gold w-full text-xs flex items-center justify-center gap-1.5 bg-gold/10 text-gold border border-gold/20 rounded-lg py-1.5 hover:bg-gold/20 transition-all">
+                  className="w-full text-xs flex items-center justify-center gap-1.5 bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] rounded-lg py-1.5 hover:bg-[rgba(37,99,235,0.14)] transition-all">
                   <ArrowRight size={12} /> Create from Proposal
                 </button>
               </PrismPanel>
@@ -439,7 +439,7 @@ export default function InvoicesPage() {
               {/* Payment Link */}
               <PrismPanel rainbow padding="p-4">
                 <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
-                  <CreditCard size={12} className="text-gold" /> Payment Links
+                  <CreditCard size={12} className="text-[#2563EB]" /> Payment Links
                 </h4>
                 <p className="text-[9px] text-muted mb-2">Stripe-powered payment links for quick collection</p>
                 <Link href="/dashboard/clients" className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
@@ -456,7 +456,7 @@ export default function InvoicesPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold flex items-center gap-2">
-              <RefreshCw size={14} className="text-gold" /> Recurring Invoices
+              <RefreshCw size={14} className="text-[#2563EB]" /> Recurring Invoices
             </h3>
             <Link href="/dashboard/clients" className="btn-primary text-xs flex items-center gap-1.5">
               <Plus size={12} /> Add Recurring
@@ -477,7 +477,7 @@ export default function InvoicesPage() {
                 className="rounded-xl p-4 flex items-center justify-between border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
               >
                 <div className="flex items-center gap-3">
-                  <RefreshCw size={14} className="text-gold" />
+                  <RefreshCw size={14} className="text-[#2563EB]" />
                   <div>
                     <p className="text-xs font-semibold">{inv.client}</p>
                     <p className="text-[10px] text-muted">{inv.description}</p>
@@ -485,23 +485,23 @@ export default function InvoicesPage() {
                 </div>
                 <div className="flex items-center gap-4 text-[10px]">
                   <div className="text-center">
-                    <p className="font-bold text-gold">{formatCurrency(inv.amount)}</p>
+                    <p className="font-bold text-[#1D4ED8]">{formatCurrency(inv.amount)}</p>
                     <p className="text-[8px] text-muted">Monthly</p>
                   </div>
                   <div className="text-center">
                     <p className="font-medium">1st of month</p>
                     <p className="text-[8px] text-muted">Next invoice</p>
                   </div>
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400">Active</span>
+                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
                   <button
                     onClick={() => toast("Pause recurring from the Stripe customer portal � use Billing ? Manage subscription.", { icon: "??", duration: 6000 })}
-                    className="text-[9px] text-muted hover:text-red-400">Pause</button>
+                    className="text-[9px] text-muted hover:text-rose-700">Pause</button>
                 </div>
               </motion.div>
             ))}
           </div>
           <PrismPanel rainbow padding="p-4" className="text-center">
-            <p className="text-sm font-bold text-gold">{formatCurrency(recurringTotal)}/mo</p>
+            <p className="text-sm font-bold text-[#1D4ED8]">{formatCurrency(recurringTotal)}/mo</p>
             <p className="text-[10px] text-muted">Total monthly recurring revenue from invoices</p>
           </PrismPanel>
         </div>
@@ -511,7 +511,7 @@ export default function InvoicesPage() {
       {activeTab === "reminders" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Clock size={14} className="text-gold" /> Late Payment Reminder Settings
+            <Clock size={14} className="text-[#2563EB]" /> Late Payment Reminder Settings
           </h3>
           <div className="space-y-2">
             {[
@@ -529,15 +529,15 @@ export default function InvoicesPage() {
                 className={`rounded-xl p-4 flex items-center justify-between border border-[rgba(0,0,0,0.08)] ${!reminder.enabled ? "opacity-50" : ""}`} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-yellow-400/10" : i < 4 ? "bg-orange-400/10" : "bg-red-400/10"}`}>
-                    <Clock size={14} className={i < 2 ? "text-yellow-400" : i < 4 ? "text-orange-400" : "text-red-400"} />
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-amber-50" : i < 4 ? "bg-orange-50" : "bg-rose-50"}`}>
+                    <Clock size={14} className={i < 2 ? "text-amber-600" : i < 4 ? "text-orange-600" : "text-rose-700"} />
                   </div>
                   <div>
                     <p className="text-xs font-semibold">{reminder.delay}</p>
                     <p className="text-[10px] text-muted">{reminder.message}</p>
                   </div>
                 </div>
-                <div className={`w-8 h-4 rounded-full ${reminder.enabled ? "bg-gold" : "bg-surface-light"}`}>
+                <div className={`w-8 h-4 rounded-full ${reminder.enabled ? "bg-[#2563EB]" : "bg-surface-light"}`}>
                   <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${reminder.enabled ? "ml-4" : "ml-0.5"}`} />
                 </div>
               </motion.div>
@@ -545,23 +545,23 @@ export default function InvoicesPage() {
           </div>
           {/* Currently overdue */}
           <PrismPanel rainbow padding="p-4">
-            <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-red-400">
+            <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-rose-700">
               <AlertTriangle size={12} /> Currently Overdue
             </h4>
             <div className="space-y-1.5">
               {invoicesData.filter(i => i.status === "overdue").length === 0 ? (
                 <p className="text-[10px] text-muted text-center py-4">No overdue invoices</p>
               ) : invoicesData.filter(i => i.status === "overdue").map(inv => (
-                <div key={inv.id} className="flex items-center justify-between p-2.5 rounded bg-red-400/5 border border-red-400/10 text-[10px]">
+                <div key={inv.id} className="flex items-center justify-between p-2.5 rounded bg-rose-50 border border-rose-200 text-[10px]">
                   <div>
                     <p className="font-semibold">{inv.client} - {inv.id}</p>
                     <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <p className="font-bold text-red-400">{formatCurrency(inv.amount)}</p>
+                    <p className="font-bold text-rose-700">{formatCurrency(inv.amount)}</p>
                     <button
                       onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "??", duration: 6000 })}
-                      className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20">Send Reminder</button>
+                      className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] hover:bg-[rgba(37,99,235,0.14)]">Send Reminder</button>
                   </div>
                 </div>
               ))}
@@ -591,8 +591,8 @@ export default function InvoicesPage() {
                 className="rounded-xl p-4 cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center">
-                    <FileText size={16} className="text-gold" />
+                  <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                    <FileText size={16} className="text-[#2563EB]" />
                   </div>
                   <div>
                     <p className="text-xs font-semibold">{t.name}</p>
@@ -617,15 +617,15 @@ export default function InvoicesPage() {
       {activeTab === "aging" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <AlertTriangle size={14} className="text-gold" /> Accounts Receivable Aging
+            <AlertTriangle size={14} className="text-[#2563EB]" /> Accounts Receivable Aging
           </h3>
           <div className="grid grid-cols-5 gap-3">
             {[
-              { range: "Current", amount: totalSent - totalOverdue, count: invoicesData.filter(i => i.status === "sent" && i.dueDate >= today).length, color: "text-green-400" },
-              { range: "1-7 days", amount: 0, count: 0, color: "text-yellow-400" },
-              { range: "8-14 days", amount: 0, count: 0, color: "text-orange-400" },
-              { range: "15-30 days", amount: 0, count: 0, color: "text-red-400" },
-              { range: "30+ days", amount: 0, count: 0, color: "text-red-400" },
+              { range: "Current", amount: totalSent - totalOverdue, count: invoicesData.filter(i => i.status === "sent" && i.dueDate >= today).length, color: "text-emerald-700" },
+              { range: "1-7 days", amount: 0, count: 0, color: "text-amber-600" },
+              { range: "8-14 days", amount: 0, count: 0, color: "text-orange-600" },
+              { range: "15-30 days", amount: 0, count: 0, color: "text-rose-700" },
+              { range: "30+ days", amount: 0, count: 0, color: "text-rose-700" },
             ].map((bucket, i) => (
               <motion.div
                 key={i}
@@ -670,11 +670,11 @@ export default function InvoicesPage() {
                     <span className="font-bold">{formatCurrency(inv.amount, inv.currency)}</span>
                     <span className="text-muted">{inv.dueDate}</span>
                     <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
-                      inv.status === "paid" ? "bg-green-400/10 text-green-400" :
-                      inv.status === "overdue" ? "bg-red-400/10 text-red-400" :
-                      "bg-yellow-400/10 text-yellow-400"
+                      inv.status === "paid" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
+                      inv.status === "overdue" ? "bg-rose-50 text-rose-700 border border-rose-200" :
+                      "bg-amber-50 text-amber-700 border border-amber-200"
                     }`}>{inv.status}</span>
-                    <span className={ageDays > 7 ? "text-red-400" : "text-muted"}>{ageDays}d</span>
+                    <span className={ageDays > 7 ? "text-rose-700" : "text-muted"}>{ageDays}d</span>
                   </motion.div>
                 );
               })}
@@ -687,13 +687,13 @@ export default function InvoicesPage() {
       {activeTab === "revenue" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <BarChart3 size={14} className="text-gold" /> Revenue Summary
+            <BarChart3 size={14} className="text-[#2563EB]" /> Revenue Summary
           </h3>
           <div className="grid grid-cols-3 gap-4">
             {[
-              { label: "Paid Invoices", value: formatCurrency(totalPaid), sub: "All-time collected", color: "text-gold" },
-              { label: "Outstanding", value: formatCurrency(totalSent), sub: "Sent, not paid", color: "text-purple-400" },
-              { label: "Overdue", value: formatCurrency(totalOverdue), sub: "Needs chasing", color: "text-red-400" },
+              { label: "Paid Invoices", value: formatCurrency(totalPaid), sub: "All-time collected", color: "text-emerald-700" },
+              { label: "Outstanding", value: formatCurrency(totalSent), sub: "Sent, not paid", color: "text-[#2563EB]" },
+              { label: "Overdue", value: formatCurrency(totalOverdue), sub: "Needs chasing", color: "text-rose-700" },
             ].map((card, index) => (
               <motion.div
                 key={card.label}
@@ -726,7 +726,7 @@ export default function InvoicesPage() {
               ].map((m, i) => (
                 <div key={i} className="flex-1 flex flex-col items-center gap-1">
                   <p className="text-[9px] font-bold">{formatCurrency(m.amount)}</p>
-                  <div className="w-full bg-gold rounded-t" style={{ height: `${m.amount > 0 ? Math.max((m.amount / 20000) * 100, 4) : 0}%`, minHeight: m.amount > 0 ? 8 : 2 }} />
+                  <div className="w-full bg-[#2563EB] rounded-t" style={{ height: `${m.amount > 0 ? Math.max((m.amount / 20000) * 100, 4) : 0}%`, minHeight: m.amount > 0 ? 8 : 2 }} />
                   <span className="text-[8px] text-muted">{m.month}</span>
                 </div>
               ))}
@@ -737,7 +737,7 @@ export default function InvoicesPage() {
             <h4 className="text-xs font-semibold mb-3">Collection Metrics</h4>
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-surface-light rounded-lg p-3 text-center">
-                <p className="text-xl font-bold text-green-400">--</p>
+                <p className="text-xl font-bold text-emerald-700">--</p>
                 <p className="text-[9px] text-muted">Collection Rate</p>
               </div>
               <div className="bg-surface-light rounded-lg p-3 text-center">
@@ -745,7 +745,7 @@ export default function InvoicesPage() {
                 <p className="text-[9px] text-muted">Avg Days to Pay</p>
               </div>
               <div className="bg-surface-light rounded-lg p-3 text-center">
-                <p className="text-xl font-bold text-gold">{formatCurrency(recurringTotal)}</p>
+                <p className="text-xl font-bold text-[#1D4ED8]">{formatCurrency(recurringTotal)}</p>
                 <p className="text-[9px] text-muted">Monthly Recurring</p>
               </div>
             </div>

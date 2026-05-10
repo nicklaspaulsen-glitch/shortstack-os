@@ -317,7 +317,7 @@ export default function PhoneSetupPage() {
         {/* Quota / agency-pays hint — always visible under the hero */}
         <div className="mb-4 flex flex-wrap items-start gap-3 rounded-xl border border-border/40 bg-surface-light/20 p-3 text-[11px] text-muted">
           <div className="flex items-center gap-1.5 text-[11px] text-foreground/80">
-            <Sparkles size={12} className="text-gold" />
+            <Sparkles size={12} className="text-[#2563EB]" />
             <span>
               You&apos;ve provisioned{" "}
               <span className="font-semibold text-foreground">{phoneUsed}</span> of{" "}
@@ -347,7 +347,7 @@ export default function PhoneSetupPage() {
               of <span className="font-semibold text-foreground">{phoneLimitDisplay}</span>{" "}
               numbers. Upgrade to a higher tier to provision another, or release an existing
               number from{" "}
-              <a href="/dashboard/phone-email" className="text-gold hover:underline">
+              <a href="/dashboard/phone-email" className="text-[#2563EB] hover:underline">
                 Phone &amp; Email
               </a>
               .
@@ -355,7 +355,7 @@ export default function PhoneSetupPage() {
             <div className="flex flex-wrap items-center gap-2">
               <a
                 href="/dashboard/upgrade"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black transition hover:bg-gold/90"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
               >
                 <ArrowUpRight size={14} /> See plans
               </a>
@@ -381,9 +381,9 @@ export default function PhoneSetupPage() {
                 <div
                   className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold transition ${
                     done
-                      ? "bg-gold text-black"
+                      ? "bg-[#2563EB] text-white"
                       : active
-                        ? "bg-gold/15 text-gold ring-2 ring-gold/50"
+                        ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] ring-2 ring-[rgba(37,99,235,0.4)]"
                         : "bg-surface-light text-muted"
                   }`}
                 >
@@ -424,7 +424,7 @@ export default function PhoneSetupPage() {
                 </p>
                 <a
                   href="/dashboard/clients"
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-xs font-semibold text-black transition hover:bg-gold/90"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#1D4ED8]"
                 >
                   <ArrowRight size={12} /> Go to Clients
                 </a>
@@ -444,13 +444,13 @@ export default function PhoneSetupPage() {
                       disabled={alreadyHas}
                       className={`flex items-center gap-3 rounded-lg border p-3 text-left transition ${
                         selected
-                          ? "border-gold bg-gold/10"
+                          ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
                           : alreadyHas
                             ? "border-border/30 bg-surface-light/10 opacity-50 cursor-not-allowed"
-                            : "border-border/50 hover:border-gold/40"
+                            : "border-border/50 hover:border-[rgba(37,99,235,0.2)]"
                       }`}
                     >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold/10 text-gold font-semibold">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold">
                         {c.business_name[0] || "?"}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -461,7 +461,7 @@ export default function PhoneSetupPage() {
                             : c.contact_name || c.email || "—"}
                         </p>
                       </div>
-                      {selected && <Check size={16} className="text-gold" />}
+                      {selected && <Check size={16} className="text-[#2563EB]" />}
                     </motion.button>
                   );
                 })}
@@ -472,7 +472,7 @@ export default function PhoneSetupPage() {
               <button
                 onClick={() => setStep(2)}
                 disabled={!canProceedStep1}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black transition hover:bg-gold/90 disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Next <ArrowRight size={14} />
               </button>
@@ -553,8 +553,8 @@ export default function PhoneSetupPage() {
                       onClick={() => setSelectedNumber(n)}
                       className={`rounded-lg border p-3 text-left transition ${
                         selected
-                          ? "border-gold bg-gold/10"
-                          : "border-border/50 hover:border-gold/40"
+                          ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
+                          : "border-border/50 hover:border-[rgba(37,99,235,0.2)]"
                       }`}
                     >
                       <p className="font-mono text-sm font-semibold">{n.phone}</p>
@@ -577,7 +577,7 @@ export default function PhoneSetupPage() {
               <button
                 onClick={() => setStep(3)}
                 disabled={!canProceedStep2}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black transition hover:bg-gold/90 disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Next <ArrowRight size={14} />
               </button>
@@ -626,8 +626,8 @@ export default function PhoneSetupPage() {
 
             {/* Live progress during the 2-3s Twilio → ElevenLabs pipeline */}
             {buying && (
-              <div className="mb-5 rounded-lg border border-gold/30 bg-gold/5 p-4">
-                <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-gold">
+              <div className="mb-5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4">
+                <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-[#2563EB]">
                   <Loader size={13} className="animate-spin" /> Provisioning your number —
                   hang tight, this takes 2-3 seconds
                 </div>
@@ -667,7 +667,7 @@ export default function PhoneSetupPage() {
               <button
                 onClick={provision}
                 disabled={buying}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-5 py-2 text-sm font-semibold text-black transition hover:bg-gold/90 disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
               >
                 {buying ? (
                   <>
@@ -726,7 +726,7 @@ export default function PhoneSetupPage() {
               <button
                 onClick={sendTestSms}
                 disabled={testSending}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black transition hover:bg-gold/90 disabled:opacity-60"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
               >
                 {testSending ? (
                   <>
@@ -772,7 +772,7 @@ export default function PhoneSetupPage() {
             <div className="mt-5 rounded-lg border border-border/40 bg-background/40 p-3 text-[11px] text-muted">
               <span className="font-semibold text-foreground">Next step:</span> assign a sender
               identity and compose your first broadcast from{" "}
-              <a href="/dashboard/phone-email" className="text-gold hover:underline">
+              <a href="/dashboard/phone-email" className="text-[#2563EB] hover:underline">
                 Phone &amp; Email
               </a>
               .
@@ -790,7 +790,7 @@ function PipelineStep({ label, active, done }: { label: string; active: boolean;
       {done ? (
         <CheckCircle2 size={12} className="text-emerald-400" />
       ) : active ? (
-        <Loader size={12} className="animate-spin text-gold" />
+        <Loader size={12} className="animate-spin text-[#2563EB]" />
       ) : (
         <span className="inline-block h-[10px] w-[10px] rounded-full border border-border/60" />
       )}

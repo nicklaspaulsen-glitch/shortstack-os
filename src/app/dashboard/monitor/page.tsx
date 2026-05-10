@@ -40,7 +40,7 @@ function timeAgo(ts: string | null): string {
 
 function StatusIcon({ status }: { status: string }) {
   if (status === "healthy") return <CheckCircle className="w-5 h-5 text-emerald-400" />;
-  if (status === "degraded") return <AlertTriangle className="w-5 h-5 text-amber-400" />;
+  if (status === "degraded") return <AlertTriangle className="w-5 h-5 text-[#2563EB]" />;
   if (status === "down") return <XCircle className="w-5 h-5 text-red-400" />;
   return <Clock className="w-5 h-5 text-slate-400" />;
 }
@@ -48,7 +48,7 @@ function StatusIcon({ status }: { status: string }) {
 function StatusDot({ status }: { status: string }) {
   const cls: Record<string, string> = {
     healthy: "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]",
-    degraded: "bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.6)]",
+    degraded: "bg-[#2563EB] shadow-[0_0_6px_rgba(37,99,235,0.5)]",
     down: "bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.6)]",
     unknown: "bg-slate-400",
   };
@@ -118,7 +118,7 @@ export default function MonitorPage() {
   const overallLabel = { healthy: "All Systems Operational", degraded: "Partial Outage", down: "Major Outage" }[overall];
   const overallCls = {
     healthy: "bg-emerald-500/15 border-emerald-500/30 text-emerald-400",
-    degraded: "bg-amber-500/15 border-amber-500/30 text-amber-400",
+    degraded: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]",
     down: "bg-red-500/15 border-red-500/30 text-red-400",
   }[overall];
 
@@ -132,10 +132,10 @@ export default function MonitorPage() {
         gradient="gold"
         actions={
           <div className="flex items-center gap-3">
-            <span className="text-xs text-white/50 tabular-nums">Next refresh in {countdown}s</span>
+            <span className="text-xs text-[#9CA3AF] tabular-nums">Next refresh in {countdown}s</span>
             <button
               onClick={load}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm transition-colors border border-white/15"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-[#374151] text-sm transition-colors border border-[rgba(0,0,0,0.08)]"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
               Refresh now
@@ -160,7 +160,7 @@ export default function MonitorPage() {
       <div className="grid grid-cols-3 gap-3">
         {[
           { label: "Healthy", count: annotated.filter(s => s.computedStatus === "healthy").length, cls: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
-          { label: "Degraded", count: annotated.filter(s => s.computedStatus === "degraded").length, cls: "text-amber-400", bar: "from-amber-500 to-amber-400" },
+          { label: "Degraded", count: annotated.filter(s => s.computedStatus === "degraded").length, cls: "text-[#2563EB]", bar: "from-[#2563EB] to-[#3B82F6]" },
           { label: "Down", count: annotated.filter(s => s.computedStatus === "down").length, cls: "text-red-400", bar: "from-red-500 to-red-400" },
         ].map(({ label, count, cls, bar }, i) => (
           <motion.div
@@ -183,9 +183,9 @@ export default function MonitorPage() {
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="glass rounded-xl p-5 animate-pulse">
-              <div className="h-4 bg-white/10 rounded w-1/4 mb-4" />
+              <div className="h-4 bg-[rgba(0,0,0,0.06)] rounded w-1/4 mb-4" />
               <div className="space-y-2">
-                {Array.from({ length: 3 }).map((_, j) => <div key={j} className="h-10 bg-white/5 rounded" />)}
+                {Array.from({ length: 3 }).map((_, j) => <div key={j} className="h-10 bg-[rgba(0,0,0,0.04)] rounded" />)}
               </div>
             </div>
           ))}
@@ -205,26 +205,26 @@ export default function MonitorPage() {
               transition={{ duration: 0.35, delay: ci * 0.06 }}
               className="glass rounded-xl overflow-hidden"
             >
-              <div className="px-5 py-3 border-b border-white/5 flex items-center justify-between">
-                <span className="text-sm font-semibold text-white">{category}</span>
+              <div className="px-5 py-3 border-b border-[rgba(0,0,0,0.06)] flex items-center justify-between">
+                <span className="text-sm font-semibold text-[#111827]">{category}</span>
                 <span className="text-xs text-muted">{svcs.length} service{svcs.length !== 1 ? "s" : ""}</span>
               </div>
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-[rgba(0,0,0,0.06)]">
                 {svcs.map((svc, si) => (
                   <motion.div
                     key={svc.id}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.25, delay: ci * 0.06 + si * 0.04 }}
-                    className="px-5 py-3.5 flex items-center gap-3 flex-wrap hover:bg-indigo-500/5 transition-colors"
+                    className="px-5 py-3.5 flex items-center gap-3 flex-wrap hover:bg-[rgba(37,99,235,0.04)] transition-colors"
                   >
                     <StatusDot status={svc.computedStatus} />
                     <StatusIcon status={svc.computedStatus} />
-                    <span className="flex-1 text-sm text-white/90">{svc.integration_name}</span>
+                    <span className="flex-1 text-sm text-[#374151]">{svc.integration_name}</span>
                     <div className="flex items-center gap-4 text-xs text-muted">
                       {svc.response_time_ms != null && <span>{svc.response_time_ms}ms</span>}
                       {svc.uptime_percentage != null && (
-                        <span className="text-white/60">{Number(svc.uptime_percentage).toFixed(1)}% uptime</span>
+                        <span className="text-[#6B7280]">{Number(svc.uptime_percentage).toFixed(1)}% uptime</span>
                       )}
                       <span>Checked {timeAgo(svc.last_check_at)}</span>
                     </div>

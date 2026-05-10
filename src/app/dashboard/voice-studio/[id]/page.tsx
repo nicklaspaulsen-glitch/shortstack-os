@@ -231,23 +231,23 @@ export default function VoiceCloneDetailPage() {
 
       <div className="mx-auto mt-6 max-w-5xl space-y-6 px-4 sm:px-6">
         {error && (
-          <div className="flex items-start gap-3 rounded-lg border border-rose-500/30 bg-rose-950/40 p-4 text-sm text-rose-200">
+          <div className="flex items-start gap-3 rounded-lg border border-rose-500/30 bg-rose-50 p-4 text-sm text-rose-700">
             <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
             <div>{error}</div>
           </div>
         )}
 
         {loading || !clone ? (
-          <div className="flex justify-center py-12 text-white/60">
+          <div className="flex justify-center py-12 text-[#6B7280]">
             <Loader2 size={20} className="animate-spin" />
           </div>
         ) : (
           <>
             {/* Status + actions */}
-            <section className="rounded-xl border border-white/10 bg-white/5 p-6">
+            <section className="rounded-xl border border-black/[0.08] bg-white p-6">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-white/50">
+                  <div className="text-xs uppercase tracking-wider text-[#9CA3AF]">
                     Status
                   </div>
                   <div className="mt-1 flex items-center gap-2">
@@ -265,7 +265,7 @@ export default function VoiceCloneDetailPage() {
                       )}
                       {clone.status}
                     </span>
-                    <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/60">
+                    <span className="rounded-full border border-black/[0.08] bg-black/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#6B7280]">
                       {clone.provider}
                     </span>
                   </div>
@@ -281,7 +281,7 @@ export default function VoiceCloneDetailPage() {
                       type="button"
                       onClick={onPoll}
                       disabled={polling}
-                      className="flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10"
+                      className="flex items-center gap-1.5 rounded-lg border border-black/[0.08] bg-black/[0.04] px-3 py-1.5 text-xs font-medium text-[#374151] hover:bg-black/[0.06]"
                     >
                       {polling ? (
                         <Loader2 size={12} className="animate-spin" />
@@ -307,11 +307,11 @@ export default function VoiceCloneDetailPage() {
             {/* Defaults */}
             {clone.status === "ready" &&
               clone.owner_subject_kind !== "preset" && (
-                <section className="rounded-xl border border-white/10 bg-white/5 p-6">
-                  <h3 className="text-sm font-semibold text-white">
+                <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+                  <h3 className="text-sm font-semibold text-[#111827]">
                     Default for surfaces
                   </h3>
-                  <p className="mt-1 text-xs text-white/60">
+                  <p className="mt-1 text-xs text-[#6B7280]">
                     When a surface is on, this clone is auto-selected for that
                     delivery channel.
                   </p>
@@ -325,8 +325,8 @@ export default function VoiceCloneDetailPage() {
                           onClick={() => onToggleDefault(f.key)}
                           className={`flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                             active
-                              ? "border-emerald-400/60 bg-emerald-500/15 text-emerald-200"
-                              : "border-white/15 bg-white/5 text-white/70 hover:bg-white/10"
+                              ? "border-emerald-500/40 bg-emerald-50 text-emerald-700"
+                              : "border-black/[0.08] bg-black/[0.04] text-[#374151] hover:bg-black/[0.06]"
                           }`}
                         >
                           {active && <CheckCircle2 size={12} />}
@@ -341,15 +341,15 @@ export default function VoiceCloneDetailPage() {
 
             {/* Test playback */}
             {clone.status === "ready" && (
-              <section className="rounded-xl border border-white/10 bg-white/5 p-6">
-                <h3 className="text-sm font-semibold text-white">
+              <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+                <h3 className="text-sm font-semibold text-[#111827]">
                   Test playback
                 </h3>
                 <textarea
                   value={testText}
                   onChange={(e) => setTestText(e.target.value)}
                   rows={3}
-                  className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#2563EB]/60 focus:outline-none"
+                  className="mt-2 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#374151] placeholder:text-[#9CA3AF] focus:border-[#2563EB]/60 focus:outline-none"
                   placeholder="Test text..."
                 />
                 <div className="mt-3 flex items-center gap-2">
@@ -357,7 +357,7 @@ export default function VoiceCloneDetailPage() {
                     type="button"
                     onClick={onTest}
                     disabled={testing || testText.trim().length === 0}
-                    className="flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#3B82F6] disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
+                    className="flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#3B82F6] disabled:cursor-not-allowed disabled:bg-black/[0.06] disabled:text-[#9CA3AF]"
                   >
                     {testing ? (
                       <Loader2 size={12} className="animate-spin" />
@@ -368,7 +368,7 @@ export default function VoiceCloneDetailPage() {
                   </button>
                 </div>
                 {testUrl && (
-                  <div className="mt-3 rounded-lg border border-white/10 bg-black/30 p-3">
+                  <div className="mt-3 rounded-lg border border-black/[0.08] bg-[#F8FAFC] p-3">
                     {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
                     <audio src={testUrl} controls className="w-full" />
                   </div>
@@ -377,26 +377,26 @@ export default function VoiceCloneDetailPage() {
             )}
 
             {/* Consent */}
-            <section className="rounded-xl border border-white/10 bg-white/5 p-6">
-              <h3 className="text-sm font-semibold text-white">Consent</h3>
-              <div className="mt-2 text-xs text-white/70">
+            <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+              <h3 className="text-sm font-semibold text-[#111827]">Consent</h3>
+              <div className="mt-2 text-xs text-[#374151]">
                 Kind: <span className="font-mono">{clone.consent_kind}</span>
               </div>
               {clone.consent_evidence &&
                 Object.keys(clone.consent_evidence).length > 0 && (
-                  <pre className="mt-2 max-h-64 overflow-auto rounded-lg border border-white/10 bg-black/30 p-3 text-[11px] text-white/70">
+                  <pre className="mt-2 max-h-64 overflow-auto rounded-lg border border-black/[0.08] bg-[#F8FAFC] p-3 text-[11px] text-[#374151]">
                     {JSON.stringify(clone.consent_evidence, null, 2)}
                   </pre>
                 )}
             </section>
 
             {/* Samples */}
-            <section className="rounded-xl border border-white/10 bg-white/5 p-6">
-              <h3 className="text-sm font-semibold text-white">
+            <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+              <h3 className="text-sm font-semibold text-[#111827]">
                 Samples ({samples.length})
               </h3>
               {samples.length === 0 ? (
-                <p className="mt-2 text-xs text-white/60">
+                <p className="mt-2 text-xs text-[#6B7280]">
                   No samples on this clone (presets don&apos;t have stored
                   samples).
                 </p>
@@ -408,7 +408,7 @@ export default function VoiceCloneDetailPage() {
                     return (
                       <li
                         key={s.id}
-                        className="rounded-lg border border-white/10 bg-black/20 px-3 py-2.5 text-xs"
+                        className="rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2.5 text-xs"
                       >
                         <div className="flex items-center justify-between gap-3">
                           <div className="flex items-center gap-2 min-w-0">
@@ -422,13 +422,13 @@ export default function VoiceCloneDetailPage() {
                                 {isPlaying ? <Pause size={10} className="text-[#3B82F6]" /> : <Play size={10} className="text-[#2563EB]" />}
                               </button>
                             ) : (
-                              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                                <Mic size={10} className="text-white/40" />
+                              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-black/[0.04] flex items-center justify-center">
+                                <Mic size={10} className="text-[#9CA3AF]" />
                               </div>
                             )}
-                            <span className="truncate font-mono text-white/50 text-[10px]">{s.r2_key}</span>
+                            <span className="truncate font-mono text-[#9CA3AF] text-[10px]">{s.r2_key}</span>
                           </div>
-                          <div className="flex items-center gap-2 flex-shrink-0 text-white/40">
+                          <div className="flex items-center gap-2 flex-shrink-0 text-[#9CA3AF]">
                             {s.duration_seconds != null && (
                               <span className="flex items-center gap-1">
                                 <Clock size={9} />
@@ -464,12 +464,12 @@ export default function VoiceCloneDetailPage() {
             </section>
 
             {/* Render history */}
-            <section className="rounded-xl border border-white/10 bg-white/5 p-6">
-              <h3 className="text-sm font-semibold text-white">
+            <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+              <h3 className="text-sm font-semibold text-[#111827]">
                 Recent renders ({renders.length})
               </h3>
               {renders.length === 0 ? (
-                <p className="mt-2 text-xs text-white/60">
+                <p className="mt-2 text-xs text-[#6B7280]">
                   No renders yet — try the test playback above.
                 </p>
               ) : (
@@ -480,7 +480,7 @@ export default function VoiceCloneDetailPage() {
                     return (
                       <li
                         key={r.id}
-                        className="rounded-lg border border-white/10 bg-black/20 p-3 text-xs"
+                        className="rounded-lg border border-black/[0.08] bg-[#F8FAFC] p-3 text-xs"
                       >
                         <div className="flex items-start gap-3">
                           {audioUrl ? (
@@ -493,13 +493,13 @@ export default function VoiceCloneDetailPage() {
                               {isPlaying ? <Pause size={10} className="text-[#3B82F6]" /> : <Play size={10} className="text-[#2563EB]" />}
                             </button>
                           ) : (
-                            <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                              <Play size={10} className="text-white/30" />
+                            <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-black/[0.04] flex items-center justify-center">
+                              <Play size={10} className="text-[#9CA3AF]" />
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
-                            <p className="text-white/90 leading-snug">{r.text_preview}</p>
-                            <p className="mt-1 text-[10px] text-white/40">
+                            <p className="text-[#374151] leading-snug">{r.text_preview}</p>
+                            <p className="mt-1 text-[10px] text-[#9CA3AF]">
                               {new Date(r.rendered_at).toLocaleString(undefined, {
                                 dateStyle: "short",
                                 timeStyle: "short",

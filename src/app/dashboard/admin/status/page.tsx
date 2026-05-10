@@ -69,13 +69,13 @@ const SEVERITY_STYLES: Record<Severity, { label: string; pill: string; dot: stri
   },
   identified: {
     label: "Identified",
-    pill: "bg-orange-500/15 border-orange-500/40 text-orange-300",
+    pill: "bg-orange-50 border-orange-300 text-orange-700",
     dot: "bg-orange-400",
   },
   monitoring: {
     label: "Monitoring",
-    pill: "bg-blue-500/15 border-blue-500/40 text-blue-300",
-    dot: "bg-blue-400",
+    pill: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#1D4ED8]",
+    dot: "bg-[#2563EB]",
   },
   resolved: {
     label: "Resolved",
@@ -262,7 +262,7 @@ export default function AdminStatusPage() {
         title="System Status"
         subtitle="Manage incidents shown on your public status page."
         eyebrow="Admin"
-        gradient="gold"
+        gradient="blue"
         icon={<ShieldCheck size={28} />}
         actions={
           <div className="flex items-center gap-2">
@@ -313,7 +313,7 @@ export default function AdminStatusPage() {
 
       {/* Composer panel */}
       {draft && (
-        <section className=" border border-gold/30 bg-surface p-5 space-y-4">
+        <section className=" border border-[rgba(37,99,235,0.25)] bg-surface p-5 space-y-4">
           <header className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">
               {draft.id ? "Edit incident" : "New incident"}
@@ -404,7 +404,7 @@ export default function AdminStatusPage() {
             <button
               onClick={saveDraft}
               disabled={saving}
-              className="text-xs px-4 py-2 rounded-xl bg-gold text-black hover:bg-gold/90 font-semibold disabled:opacity-50"
+              className="text-xs px-4 py-2 rounded-xl bg-[#2563EB] text-white hover:bg-[#1D4ED8] font-semibold disabled:opacity-50"
             >
               {saving ? "Saving…" : draft.id ? "Save changes" : "Post incident"}
             </button>

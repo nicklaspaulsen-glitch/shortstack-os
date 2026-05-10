@@ -283,7 +283,7 @@ export default function NewSmartInvoicePage() {
 
         <div>
           <label className="text-[9px] text-muted uppercase tracking-wider block mb-1 flex items-center gap-1">
-            <Sparkles size={9} className="text-gold" /> Scope (AI will draft line items from this)
+            <Sparkles size={9} className="text-[#2563EB]" /> Scope (AI will draft line items from this)
           </label>
           <textarea
             value={scope}
@@ -308,7 +308,7 @@ export default function NewSmartInvoicePage() {
         </button>
 
         {reasoning && (
-          <p className="text-[10px] text-muted italic border-l-2 border-gold/30 pl-2">
+          <p className="text-[10px] text-muted italic border-l-2 border-[rgba(37,99,235,0.30)] pl-2">
             {reasoning}
           </p>
         )}
@@ -320,7 +320,7 @@ export default function NewSmartInvoicePage() {
           <h3 className="text-sm font-semibold">Line items</h3>
           <button
             onClick={addItem}
-            className="text-[10px] text-gold flex items-center gap-1 hover:underline"
+            className="text-[10px] text-[#2563EB] flex items-center gap-1 hover:underline"
           >
             <Plus size={10} /> Add line
           </button>
@@ -374,7 +374,7 @@ export default function NewSmartInvoicePage() {
                 </span>
                 <button
                   onClick={() => removeItem(i)}
-                  className="col-span-1 text-right text-muted hover:text-red-400"
+                  className="col-span-1 text-right text-muted hover:text-rose-700"
                 >
                   <Trash2 size={11} />
                 </button>
@@ -405,7 +405,7 @@ export default function NewSmartInvoicePage() {
           </div>
           <div className="flex justify-between text-sm font-bold pt-1 border-t border-border">
             <span>Total</span>
-            <span className="text-gold">${centsToDollars(total)}</span>
+            <span className="text-[#1D4ED8] font-bold">${centsToDollars(total)}</span>
           </div>
         </div>
       </div>
@@ -425,14 +425,14 @@ export default function NewSmartInvoicePage() {
       </div>
 
       {paymentLink && (
-        <div className="card border-gold/30 bg-gold/5 p-4 flex items-center justify-between gap-3">
+        <div className="card border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4 flex items-center justify-between gap-3">
           <div>
             <p className="text-[11px] font-semibold">Stripe payment link ready</p>
             <a
               href={paymentLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[10px] text-gold underline break-all"
+              className="text-[10px] text-[#2563EB] underline break-all"
             >
               {paymentLink}
             </a>

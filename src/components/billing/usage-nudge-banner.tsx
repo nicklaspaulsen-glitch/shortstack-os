@@ -110,14 +110,14 @@ export default function UsageNudgeBanner({ planTier }: { planTier?: string | nul
       </div>
       <Link
         href="/dashboard/upgrade"
-        className="shrink-0 hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gold text-white text-xs font-semibold hover:bg-gold/90 transition-colors shadow-sm"
+        className="shrink-0 hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-colors shadow-sm"
       >
         <ArrowUpRight size={12} />
         Upgrade
       </Link>
       <Link
         href="/dashboard/upgrade"
-        className="shrink-0 sm:hidden p-2 rounded-xl bg-gold text-white hover:bg-gold/90 transition-colors"
+        className="shrink-0 sm:hidden p-2 rounded-xl bg-[#2563EB] text-white hover:bg-[#1D4ED8] transition-colors"
         aria-label="Upgrade"
       >
         <ArrowUpRight size={12} />

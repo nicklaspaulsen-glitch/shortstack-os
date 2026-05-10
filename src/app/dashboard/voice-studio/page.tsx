@@ -477,7 +477,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
               type="button"
               onClick={onSubmit}
               disabled={submitting}
-              className="ml-auto flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-medium text-white hover:bg-[#2563EB]/90 transition-colors disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/50"
+              className="ml-auto flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-medium text-white hover:bg-[#1D4ED8] transition-colors disabled:cursor-not-allowed disabled:bg-[rgba(0,0,0,0.08)] disabled:text-[#9CA3AF]"
             >
               {submitting ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -612,7 +612,7 @@ function CloneRow({
           <button
             type="button"
             onClick={onDelete}
-            className="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-200 hover:bg-rose-500/20"
+            className="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-500/20"
           >
             <Trash2 size={12} />
             Delete
@@ -662,9 +662,9 @@ function CloneRow({
 
 function StatusChip({ status }: { status: VoiceClone["status"] }) {
   const map = {
-    training: { cls: "bg-amber-500/15 text-amber-200", label: "Training" },
-    ready: { cls: "bg-emerald-500/15 text-emerald-200", label: "Ready" },
-    failed: { cls: "bg-rose-500/15 text-rose-200", label: "Failed" },
+    training: { cls: "bg-[rgba(37,99,235,0.10)] text-[#2563EB]", label: "Training" },
+    ready: { cls: "bg-emerald-500/15 text-emerald-700", label: "Ready" },
+    failed: { cls: "bg-rose-500/15 text-rose-700", label: "Failed" },
   };
   const meta = map[status];
   return (
@@ -1123,7 +1123,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <audio src={testUrl ?? prevUrlRef.current ?? ""} controls className="w-full" style={{ height: 32 }} />
             {testing && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
+              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-[rgba(0,0,0,0.04)]">
                 <Loader2 size={16} className="animate-spin text-[#2563EB]" />
               </div>
             )}

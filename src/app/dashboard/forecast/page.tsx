@@ -84,7 +84,7 @@ function BarChart({ buckets }: { buckets: MonthBucket[] }) {
   const max = Math.max(...buckets.map((b) => b.weighted), 1);
   return (
     <PrismPanel rainbow padding="p-5">
-      <p className="text-sm font-semibold text-[#0A0A0B] mb-5">Weighted Pipeline — Next 6 Months</p>
+      <p className="text-sm font-semibold text-[#0A0A0B] mb-5">Weighted Pipeline ï¿½ Next 6 Months</p>
       <div className="flex items-end gap-3 h-40">
         {buckets.map((b, i) => {
           const heightPct = (b.weighted / max) * 100;
@@ -152,14 +152,14 @@ export default function ForecastPage() {
       <PageHero
         title="Revenue Forecast"
         eyebrow="REVENUE FORECAST"
-        subtitle="Weighted pipeline by close date — next 6 months."
+        subtitle="Weighted pipeline by close date ï¿½ next 6 months."
         icon={<TrendingUp size={22} />}
         gradient="gold"
       />
 
       {loading ? <TableSkeleton rows={8} /> : error ? (
         <PrismPanel padding="p-8" className="flex flex-col items-center gap-3 text-center">
-          <AlertCircle size={32} className="text-red-400" />
+          <AlertCircle size={32} className="text-red-700" />
           <p className="text-[#0A0A0B] font-semibold">Failed to load deals</p>
           <p className="text-muted text-sm">{error}</p>
           <motion.button
@@ -191,13 +191,13 @@ export default function ForecastPage() {
                 label: "Likely This Month",
                 value: fmt(likelyClose.reduce((s, d) => s + d.value * (d.probability / 100), 0)),
                 sub: `${likelyClose.length} deal${likelyClose.length !== 1 ? "s" : ""} =70% probability`,
-                valueClass: "text-yellow-400",
+                valueClass: "text-amber-700",
               },
               {
                 label: "Closed Won (All Time)",
                 value: fmt(wonTotal),
                 sub: `${deals.filter((d) => d.stage === "closed_won").length} deals won`,
-                valueClass: "text-green-400",
+                valueClass: "text-green-700",
               },
             ].map((stat, i) => (
               <motion.div
@@ -259,11 +259,11 @@ export default function ForecastPage() {
                           <td className="px-4 py-3 text-muted hidden sm:table-cell">{d.client_name}</td>
                           <td className="px-4 py-3 text-right text-[#0A0A0B]">{fmt(d.value)}</td>
                           <td className="px-4 py-3 text-right hidden md:table-cell">
-                            <span className="text-xs bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full">
+                            <span className="text-xs bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded-full">
                               {d.probability}%
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-right text-yellow-400 font-medium hidden md:table-cell">
+                          <td className="px-4 py-3 text-right text-amber-700 font-medium hidden md:table-cell">
                             {fmt(d.value * d.probability / 100)}
                           </td>
                         </motion.tr>
@@ -314,9 +314,9 @@ export default function ForecastPage() {
                           <td className="px-4 py-3 text-right text-muted hidden md:table-cell">
                             {d.expected_close_date
                               ? new Date(d.expected_close_date).toLocaleDateString()
-                              : "—"}
+                              : "ï¿½"}
                           </td>
-                          <td className="px-4 py-3 text-right text-yellow-400 hidden md:table-cell">
+                          <td className="px-4 py-3 text-right text-amber-700 hidden md:table-cell">
                             {fmt(d.value * d.probability / 100)}
                           </td>
                         </motion.tr>

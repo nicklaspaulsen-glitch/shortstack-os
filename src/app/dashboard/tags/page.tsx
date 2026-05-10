@@ -232,7 +232,7 @@ export default function TagsPage() {
         title="Tag Manager"
         subtitle="Unified tag namespace across leads, clients, deals, and content."
         icon={<Tag size={22} />}
-        gradient="gold"
+        gradient="blue"
         actions={
           <div className="flex items-center gap-2">
             <button onClick={handleBulkDeleteUnused} disabled={bulkBusy}
@@ -251,8 +251,8 @@ export default function TagsPage() {
       {/* Bulk-action bar — appears when at least one tag is selected */}
       {selected.size > 0 && (
         <PrismPanel padding="p-3" border="strong" className="flex items-center justify-between gap-3">
-          <p className="text-xs text-white/70">
-            <span className="font-semibold text-white">{selected.size}</span> tag{selected.size === 1 ? "" : "s"} selected
+          <p className="text-xs text-[#6B7280]">
+            <span className="font-semibold text-[#374151]">{selected.size}</span> tag{selected.size === 1 ? "" : "s"} selected
           </p>
           <div className="flex items-center gap-2">
             <button onClick={() => setShowMerge((v) => !v)} disabled={bulkBusy}
@@ -268,7 +268,7 @@ export default function TagsPage() {
 
       {showMerge && selected.size > 0 && (
         <PrismPanel padding="p-4" border="strong" className="space-y-3">
-          <p className="text-sm font-semibold text-white">Merge {selected.size} tag{selected.size === 1 ? "" : "s"} into:</p>
+          <p className="text-sm font-semibold text-[#374151]">Merge {selected.size} tag{selected.size === 1 ? "" : "s"} into:</p>
           <input
             className="input w-full text-sm"
             placeholder="Target tag name (existing or new)"
@@ -295,7 +295,7 @@ export default function TagsPage() {
 
       {showCreate && (
         <PrismPanel padding="p-5" className="space-y-4">
-          <p className="font-semibold text-white text-sm">New Tag</p>
+          <p className="font-semibold text-[#374151] text-sm">New Tag</p>
           <div className="flex flex-wrap gap-3">
             <input className="input flex-1 min-w-[160px] text-sm" placeholder="Tag name"
               value={newName} onChange={(e) => setNewName(e.target.value)}
@@ -323,7 +323,7 @@ export default function TagsPage() {
       {loading ? <TableSkeleton rows={6} /> : tags.length === 0 ? (
         <PrismPanel padding="p-12" className="flex flex-col items-center gap-4 text-center">
           <Tag size={40} className="text-muted opacity-30" />
-          <p className="text-white font-semibold">No tags yet</p>
+          <p className="text-[#374151] font-semibold">No tags yet</p>
           <p className="text-muted text-sm max-w-xs">Create tags to segment and organise every record in one place.</p>
           <button onClick={() => setShowCreate(true)}
             className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
@@ -334,7 +334,7 @@ export default function TagsPage() {
         <PrismPanel padding="p-0" className="overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5 text-muted text-xs">
+              <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
                 <th className="px-3 py-3 w-10">
                   <input
                     type="checkbox"
@@ -344,7 +344,7 @@ export default function TagsPage() {
                         prev.size === tags.length ? new Set() : new Set(tags.map((t) => t.id)),
                       )
                     }
-                    className="rounded accent-gold"
+                    className="rounded accent-[#2563EB]"
                     title="Select all"
                   />
                 </th>
@@ -354,7 +354,7 @@ export default function TagsPage() {
                 <th className="px-4 py-3 w-24" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[rgba(0,0,0,0.06)]">
               {tags.map((tag) =>
                 editId === tag.id ? (
                   <tr key={tag.id}>
@@ -378,20 +378,20 @@ export default function TagsPage() {
                           className="p-1.5 rounded hover:bg-green-500/20 text-green-400">
                           {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
                         </button>
-                        <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-white/10 text-muted">
+                        <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted">
                           <X size={13} />
                         </button>
                       </div>
                     </td>
                   </tr>
                 ) : (
-                  <motion.tr key={tag.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: tags.indexOf(tag) * 0.04 }} className="hover:bg-white/[0.02] transition-colors group">
+                  <motion.tr key={tag.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: tags.indexOf(tag) * 0.04 }} className="hover:bg-[rgba(0,0,0,0.02)] transition-colors group">
                     <td className="px-3 py-3">
                       <input
                         type="checkbox"
                         checked={selected.has(tag.id)}
                         onChange={() => toggleSelect(tag.id)}
-                        className="rounded accent-gold"
+                        className="rounded accent-[#2563EB]"
                       />
                     </td>
                     <td className="px-4 py-3"><TagBadge tag={tag} /></td>
@@ -400,7 +400,7 @@ export default function TagsPage() {
                       {tag._leadCount + tag._assetCount > 0 ? (
                         <Link
                           href={`/dashboard/leads?tag=${encodeURIComponent(tag.name)}`}
-                          className="inline-flex items-center gap-1 text-xs bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded-full transition-all"
+                          className="inline-flex items-center gap-1 text-xs bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] px-2 py-0.5 rounded-full transition-all"
                           title={`${tag._leadCount} leads · ${tag._assetCount} assets — click to filter Leads`}
                         >
                           <Users size={11} /> {tag._leadCount}
@@ -413,7 +413,7 @@ export default function TagsPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onClick={() => startEdit(tag)}
-                          className="p-1.5 rounded hover:bg-white/10 text-muted hover:text-white">
+                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#374151]">
                           <Pencil size={13} />
                         </button>
                         <button onClick={() => handleDelete(tag.id)} disabled={deleting === tag.id}

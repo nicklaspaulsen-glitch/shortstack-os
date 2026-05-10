@@ -190,7 +190,7 @@ export default function SurveysPage() {
         actions={
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors border border-white/20"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
           >
             <Plus size={15} /> New Survey
           </button>
@@ -198,15 +198,15 @@ export default function SurveysPage() {
       />
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-white/10">
+      <div className="flex gap-1 border-b border-[rgba(0,0,0,0.08)]">
         {(["surveys", "responses"] as const).map(t => (
           <button
             key={t}
             onClick={() => setActiveTab(t)}
             className={`px-4 py-2 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${
               activeTab === t
-                ? "border-indigo-400 text-indigo-400"
-                : "border-transparent text-white/50 hover:text-white/80"
+                ? "border-[#2563EB] text-[#2563EB]"
+                : "border-transparent text-[#9CA3AF] hover:text-[#6B7280]"
             }`}
           >
             {t}
@@ -219,7 +219,7 @@ export default function SurveysPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="glass rounded-xl p-8 text-center text-white/40"
+          className="glass rounded-xl p-8 text-center text-[#9CA3AF]"
         >
           <BarChart2 size={36} className="mx-auto mb-3 opacity-40" />
           <p className="text-sm">Select a survey to view its responses.</p>
@@ -227,7 +227,7 @@ export default function SurveysPage() {
       ) : loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-20 rounded-xl bg-white/5 animate-pulse" />
+            <div key={i} className="h-20 rounded-xl bg-[rgba(0,0,0,0.04)] animate-pulse" />
           ))}
         </div>
       ) : surveys.length === 0 ? (
@@ -237,11 +237,11 @@ export default function SurveysPage() {
           transition={{ duration: 0.35 }}
           className="glass rounded-xl p-12 text-center"
         >
-          <ClipboardCheck size={40} className="mx-auto mb-4 text-white/20" />
-          <p className="text-white/60 mb-4">No surveys yet. Create your first one.</p>
+          <ClipboardCheck size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
+          <p className="text-[#6B7280] mb-4">No surveys yet. Create your first one.</p>
           <button
             onClick={openCreate}
-            className="px-4 py-2 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-sm font-medium transition-colors"
+            className="px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.10)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors"
           >
             <Plus size={14} className="inline mr-1" /> New Survey
           </button>
@@ -260,41 +260,41 @@ export default function SurveysPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span
-                      className={`w-2 h-2 rounded-full ${s.is_active ? "bg-green-400" : "bg-white/20"}`}
+                      className={`w-2 h-2 rounded-full ${s.is_active ? "bg-green-400" : "bg-[rgba(0,0,0,0.10)]"}`}
                     />
-                    <span className="font-medium text-white truncate">{s.title}</span>
+                    <span className="font-medium text-foreground truncate">{s.title}</span>
                   </div>
-                  <p className="text-xs text-white/40 truncate">
+                  <p className="text-xs text-[#9CA3AF] truncate">
                     {s.description || "No description"}
                   </p>
-                  <p className="text-xs text-white/30 mt-1">
+                  <p className="text-xs text-[#9CA3AF] mt-1">
                     {s.questions.length} questions · {s.response_count} responses
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => toggleActive(s)}
-                    className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-foreground transition-colors"
                     title={s.is_active ? "Deactivate" : "Activate"}
                   >
                     <ToggleLeft size={16} />
                   </button>
                   <button
                     onClick={() => copyLink(s)}
-                    className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-foreground transition-colors"
                     title="Copy share link"
                   >
                     <Share2 size={16} />
                   </button>
                   <button
                     onClick={() => openEdit(s)}
-                    className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-foreground transition-colors"
                   >
                     <Edit2 size={16} />
                   </button>
                   <button
                     onClick={() => deleteSurvey(s.id)}
-                    className="p-1.5 rounded-lg hover:bg-red-500/20 text-white/40 hover:text-red-400 transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400 transition-colors"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -314,30 +314,30 @@ export default function SurveysPage() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-xs text-white/50 mb-1">Title *</label>
+            <label className="block text-xs text-[#9CA3AF] mb-1">Title *</label>
             <input
               value={title}
               onChange={e => setTitle(e.target.value)}
-              className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
+              className="w-full glass rounded-lg px-3 py-2 text-foreground text-sm focus:outline-none focus:border-[#2563EB]"
               placeholder="e.g. Client Satisfaction Survey"
             />
           </div>
           <div>
-            <label className="block text-xs text-white/50 mb-1">Description</label>
+            <label className="block text-xs text-[#9CA3AF] mb-1">Description</label>
             <input
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
+              className="w-full glass rounded-lg px-3 py-2 text-foreground text-sm focus:outline-none focus:border-[#2563EB]"
               placeholder="Brief intro for respondents"
             />
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs text-white/50">Questions</label>
+              <label className="text-xs text-[#9CA3AF]">Questions</label>
               <button
                 onClick={addQuestion}
-                className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300"
+                className="flex items-center gap-1 text-xs text-[#2563EB] hover:text-[#3B82F6]"
               >
                 <Plus size={12} /> Add
               </button>
@@ -354,14 +354,14 @@ export default function SurveysPage() {
                   <div className="flex items-start gap-2">
                     <GripVertical
                       size={14}
-                      className="text-white/20 cursor-grab mt-2 shrink-0"
+                      className="text-[#9CA3AF] cursor-grab mt-2 shrink-0"
                     />
                     <div className="flex-1 space-y-2">
                       <div className="flex gap-2">
                         <input
                           value={q.label}
                           onChange={e => updateQuestion(idx, { label: e.target.value })}
-                          className="flex-1 glass rounded-lg px-2 py-1.5 text-white text-sm focus:outline-none focus:border-indigo-400/50"
+                          className="flex-1 glass rounded-lg px-2 py-1.5 text-foreground text-sm focus:outline-none focus:border-[#2563EB]"
                           placeholder="Question text"
                         />
                         <select
@@ -369,7 +369,7 @@ export default function SurveysPage() {
                           onChange={e =>
                             updateQuestion(idx, { type: e.target.value as QuestionType })
                           }
-                          className="glass rounded-lg px-2 py-1.5 text-white text-xs focus:outline-none"
+                          className="glass rounded-lg px-2 py-1.5 text-foreground text-xs focus:outline-none"
                         >
                           {(Object.keys(QUESTION_LABELS) as QuestionType[]).map(t => (
                             <option key={t} value={t}>
@@ -385,31 +385,31 @@ export default function SurveysPage() {
                               key={oIdx}
                               value={opt}
                               onChange={e => updateOption(idx, oIdx, e.target.value)}
-                              className="w-full glass rounded px-2 py-1 text-white text-xs focus:outline-none"
+                              className="w-full glass rounded px-2 py-1 text-foreground text-xs focus:outline-none"
                               placeholder={`Option ${oIdx + 1}`}
                             />
                           ))}
                           <button
                             onClick={() => addOption(idx)}
-                            className="text-xs text-white/40 hover:text-white/60"
+                            className="text-xs text-[#9CA3AF] hover:text-[#6B7280]"
                           >
                             <Plus size={10} className="inline" /> Add option
                           </button>
                         </div>
                       )}
-                      <label className="flex items-center gap-1.5 text-xs text-white/40 cursor-pointer">
+                      <label className="flex items-center gap-1.5 text-xs text-[#9CA3AF] cursor-pointer">
                         <input
                           type="checkbox"
                           checked={q.required}
                           onChange={e => updateQuestion(idx, { required: e.target.checked })}
-                          className="accent-indigo-400"
+                          className="accent-[#2563EB]"
                         />
                         Required
                       </label>
                     </div>
                     <button
                       onClick={() => removeQuestion(idx)}
-                      className="text-white/20 hover:text-red-400 transition-colors mt-1"
+                      className="text-[#9CA3AF] hover:text-red-400 transition-colors mt-1"
                     >
                       <X size={14} />
                     </button>
@@ -422,14 +422,14 @@ export default function SurveysPage() {
           <div className="flex justify-end gap-2 pt-2">
             <button
               onClick={() => setShowCreate(false)}
-              className="px-4 py-2 rounded-lg border border-white/10 text-white/60 hover:text-white text-sm transition-colors"
+              className="px-4 py-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-foreground text-sm transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={save}
               disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium transition-colors disabled:opacity-50"
             >
               {saving && <Loader size={13} className="animate-spin" />}
               {editSurvey ? "Save Changes" : "Create Survey"}
@@ -442,19 +442,19 @@ export default function SurveysPage() {
       {shareUrl && (
         <Modal isOpen={!!shareUrl} onClose={() => setShareUrl(null)} title="Share Survey">
           <div className="space-y-3">
-            <p className="text-sm text-white/60">Share this link with your respondents:</p>
+            <p className="text-sm text-[#6B7280]">Share this link with your respondents:</p>
             <div className="flex gap-2">
               <input
                 readOnly
                 value={shareUrl}
-                className="flex-1 glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none"
+                className="flex-1 glass rounded-lg px-3 py-2 text-foreground text-sm focus:outline-none"
               />
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(shareUrl);
                   toast.success("Copied!");
                 }}
-                className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors"
+                className="px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.06)] text-foreground text-sm transition-colors"
               >
                 <Copy size={14} />
               </button>

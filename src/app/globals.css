@@ -890,8 +890,8 @@ body {
     transform: translateX(100%);
   }
   /* Preset accent colors — override --card-accent-color or stack classes */
-  .card-accent-gold   { --card-accent-color: #FF2D2D; }
-  .card-accent-blue   { --card-accent-color: #FF2D2D; }
+  .card-accent-gold   { --card-accent-color: #2563EB; }
+  .card-accent-blue   { --card-accent-color: #2563EB; }
   .card-accent-green  { --card-accent-color: #FF2D2D; }
   .card-accent-purple { --card-accent-color: #A855F7; }
   .card-accent-warning{ --card-accent-color: #F59E0B; }
@@ -1148,11 +1148,11 @@ body {
 
   /* ═══════════ NOTIFY DOT ═══════════ */
   .notify-dot {
-    @apply relative w-2 h-2 rounded-full bg-gold;
+    @apply relative w-2 h-2 rounded-full bg-blue-600;
   }
   .notify-dot::before {
     content: '';
-    @apply absolute inset-0 rounded-full bg-gold;
+    @apply absolute inset-0 rounded-full bg-blue-600;
     animation: notifyPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 
@@ -1665,28 +1665,25 @@ body {
     0 24px 56px -16px rgba(0,0,0,0.5);
 }
 
-/* ═══════════ PRISM WINDOW-GLASS SYSTEM ═══════════ */
-/* May 7 v3: true window-glass depth — panels float above a grey base
-   like frosted glass windows with prominent drop shadows. Multi-layer
-   shadow stack creates perceived elevation hierarchy. Top-edge inner
-   light simulates overhead illumination on glass surface. */
-.glass {
+/* ═══════════ PRISM WINDOW-GLASS SYSTEM — dark theme only ═══════════ */
+/* May 7 v3: true window-glass depth. Scoped to [data-theme="dark"] so
+   the light theme @layer definitions (white frosted glass) take precedence
+   on the default :root. Do not remove the dark-theme scoping. */
+:root[data-theme="dark"] .glass,
+.theme-dark .glass {
   background: rgba(255,255,255,0.04);
   backdrop-filter: blur(20px) saturate(1.15);
   -webkit-backdrop-filter: blur(20px) saturate(1.15);
   border: 1px solid rgba(255,255,255,0.08);
   border-top-color: rgba(255,255,255,0.14);
   box-shadow:
-    /* inner top-edge light — simulates overhead illumination on glass */
     inset 0 1px 0 rgba(255,255,255,0.06),
-    /* close contact shadow */
     0 1px 2px rgba(0,0,0,0.3),
-    /* mid-range diffuse shadow */
     0 4px 16px rgba(0,0,0,0.25),
-    /* far ambient shadow — creates depth from base */
     0 12px 40px -8px rgba(0,0,0,0.4);
 }
-.glass-md {
+:root[data-theme="dark"] .glass-md,
+.theme-dark .glass-md {
   background: rgba(255,255,255,0.055);
   backdrop-filter: blur(28px) saturate(1.2);
   -webkit-backdrop-filter: blur(28px) saturate(1.2);
@@ -1698,7 +1695,8 @@ body {
     0 6px 20px rgba(0,0,0,0.28),
     0 16px 48px -8px rgba(0,0,0,0.45);
 }
-.glass-strong {
+:root[data-theme="dark"] .glass-strong,
+.theme-dark .glass-strong {
   background: rgba(255,255,255,0.07);
   backdrop-filter: blur(32px) saturate(1.25);
   -webkit-backdrop-filter: blur(32px) saturate(1.25);
@@ -1711,8 +1709,9 @@ body {
     0 20px 56px -12px rgba(0,0,0,0.5),
     0 0 0 1px rgba(255,45,45,0.04);
 }
-/* Back-compat alias — resolves to .glass now */
-.glass-indigo {
+/* Back-compat alias — resolves to .glass in dark theme */
+:root[data-theme="dark"] .glass-indigo,
+.theme-dark .glass-indigo {
   background: rgba(255,255,255,0.04);
   backdrop-filter: blur(20px) saturate(1.15);
   -webkit-backdrop-filter: blur(20px) saturate(1.15);
@@ -1724,14 +1723,20 @@ body {
     0 4px 16px rgba(0,0,0,0.25),
     0 12px 40px -8px rgba(0,0,0,0.4);
 }
-/* Window-glass hover state — lifts the panel + intensifies glow */
-.glass:hover, .glass-md:hover, .glass-strong:hover, .glass-indigo:hover {
+/* Window-glass hover state — dark theme only */
+:root[data-theme="dark"] .glass:hover,
+:root[data-theme="dark"] .glass-md:hover,
+:root[data-theme="dark"] .glass-strong:hover,
+:root[data-theme="dark"] .glass-indigo:hover,
+.theme-dark .glass:hover,
+.theme-dark .glass-md:hover,
+.theme-dark .glass-strong:hover,
+.theme-dark .glass-indigo:hover {
   border-top-color: rgba(255,255,255,0.22);
 }
-/* Elevated window variant — spatial-tier depth for hero cards, feature
-   panels, modals. blur(40px) + saturate(1.6) from VisionOS spatial UI
-   reference — the deepest glass layer in the system. */
-.glass-elevated {
+/* Elevated window variant — dark theme only */
+:root[data-theme="dark"] .glass-elevated,
+.theme-dark .glass-elevated {
   background: rgba(255,255,255,0.06);
   backdrop-filter: blur(40px) saturate(1.6);
   -webkit-backdrop-filter: blur(40px) saturate(1.6);
@@ -1746,7 +1751,8 @@ body {
     0 0 0 1px rgba(255,45,45,0.06),
     0 0 48px -12px rgba(255,45,45,0.08);
 }
-.glass-elevated:hover {
+:root[data-theme="dark"] .glass-elevated:hover,
+.theme-dark .glass-elevated:hover {
   backdrop-filter: blur(44px) saturate(1.7);
   -webkit-backdrop-filter: blur(44px) saturate(1.7);
   border-top-color: rgba(255,255,255,0.32);

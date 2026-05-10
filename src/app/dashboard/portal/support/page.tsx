@@ -51,21 +51,21 @@ export default function ClientSupportPage() {
   return (
     <div className="fade-in space-y-5">
       <div>
-        <h1 className="page-header mb-0 flex items-center gap-2"><MessageSquare size={18} className="text-gold" /> Support</h1>
-        <p className="text-xs text-muted mt-0.5">Chat with your AI assistant or contact your account manager</p>
+        <h1 className="page-header mb-0 flex items-center gap-2"><MessageSquare size={18} className="text-blue-600" /> Support</h1>
+        <p className="text-xs text-gray-500 mt-0.5">Chat with your AI assistant or contact your account manager</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Chat */}
         <div className="lg:col-span-2 card flex flex-col" style={{ minHeight: "500px" }}>
-          <div className="flex items-center gap-2 pb-3 border-b border-border mb-3">
-            <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center">
-              <Bot size={16} className="text-gold" />
+          <div className="flex items-center gap-2 pb-3 border-b border-gray-200 mb-3">
+            <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
+              <Bot size={16} className="text-blue-600" />
             </div>
             <div>
-              <p className="text-xs font-semibold">Trinity AI</p>
-              <p className="text-[9px] text-success flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-success inline-block" /> Online
+              <p className="text-xs font-semibold text-gray-900">Trinity AI</p>
+              <p className="text-[9px] text-green-700 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" /> Online
               </p>
             </div>
           </div>
@@ -73,8 +73,8 @@ export default function ClientSupportPage() {
           <div className="flex-1 overflow-y-auto space-y-3 mb-3">
             {messages.length === 0 && (
               <div className="text-center py-12">
-                <Bot size={28} className="mx-auto mb-3 text-gold/30" />
-                <p className="text-xs text-muted mb-3">How can I help you today?</p>
+                <Bot size={28} className="mx-auto mb-3 text-blue-300" />
+                <p className="text-xs text-gray-500 mb-3">How can I help you today?</p>
                 <div className="flex flex-wrap justify-center gap-1.5">
                   {[
                     "What tasks are pending?",
@@ -83,7 +83,7 @@ export default function ClientSupportPage() {
                     "I have a question about my invoice",
                   ].map((s, i) => (
                     <button key={i} onClick={() => setInput(s)}
-                      className="text-[10px] bg-surface-light/50 px-2.5 py-1.5 rounded-md text-muted hover:text-foreground border border-border transition-all">
+                      className="text-[10px] bg-gray-50 px-2.5 py-1.5 rounded-md text-gray-500 hover:text-gray-800 border border-gray-200 transition-all">
                       {s}
                     </button>
                   ))}
@@ -95,8 +95,8 @@ export default function ClientSupportPage() {
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[75%] rounded-lg px-3 py-2 ${
                   msg.role === "user"
-                    ? "bg-gold/10 border border-gold/15"
-                    : "bg-surface-light/50 border border-border"
+                    ? "bg-blue-50 border border-blue-200"
+                    : "bg-gray-50 border border-gray-200"
                 }`}>
                   <p className="text-xs whitespace-pre-wrap">{msg.content}</p>
                 </div>
@@ -105,8 +105,8 @@ export default function ClientSupportPage() {
 
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-surface-light/50 border border-border rounded-lg px-3 py-2">
-                  <Loader size={12} className="animate-spin text-gold" />
+                <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+                  <Loader size={12} className="animate-spin text-blue-600" />
                 </div>
               </div>
             )}
@@ -132,41 +132,41 @@ export default function ClientSupportPage() {
             <h3 className="section-header">Contact Your Team</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center">
-                  <Mail size={14} className="text-gold" />
+                <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
+                  <Mail size={14} className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium">Email</p>
-                  <p className="text-[10px] text-gold">support@shortstack.work</p>
+                  <p className="text-xs font-medium text-gray-900">Email</p>
+                  <p className="text-[10px] text-blue-600">support@shortstack.work</p>
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-success/10 rounded-lg flex items-center justify-center">
-                  <Phone size={14} className="text-success" />
+                <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
+                  <Phone size={14} className="text-green-700" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium">Phone</p>
-                  <p className="text-[10px] text-muted">Available on request</p>
+                  <p className="text-xs font-medium text-gray-900">Phone</p>
+                  <p className="text-[10px] text-gray-500">Available on request</p>
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-warning/10 rounded-lg flex items-center justify-center">
-                  <Clock size={14} className="text-warning" />
+                <div className="w-8 h-8 bg-yellow-50 rounded-lg flex items-center justify-center">
+                  <Clock size={14} className="text-yellow-600" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium">Response Time</p>
-                  <p className="text-[10px] text-muted">Within 24 hours</p>
+                  <p className="text-xs font-medium text-gray-900">Response Time</p>
+                  <p className="text-[10px] text-gray-500">Within 24 hours</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="card bg-gold/[0.03] border-gold/10">
+          <div className="card bg-blue-50 border-blue-200">
             <div className="flex items-center gap-2 mb-2">
-              <Bot size={14} className="text-gold" />
-              <span className="text-xs font-semibold">AI Assistant</span>
+              <Bot size={14} className="text-blue-600" />
+              <span className="text-xs font-semibold text-gray-900">AI Assistant</span>
             </div>
-            <p className="text-[10px] text-muted">
+            <p className="text-[10px] text-gray-500">
               Your AI assistant can answer questions about your services, check task status, and provide updates on your content and campaigns — instantly.
             </p>
           </div>

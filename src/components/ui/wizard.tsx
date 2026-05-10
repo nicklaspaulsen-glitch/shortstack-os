@@ -135,7 +135,7 @@ export function AdvancedToggle({
       data-advanced-toggle
       className={`relative z-20 shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-[11px] font-semibold border backdrop-blur-sm transition-all whitespace-nowrap ${
         value
-          ? "bg-gold text-black border-gold shadow-sm shadow-gold/30 hover:shadow-gold/50"
+          ? "bg-[#2563EB] text-white border-[#2563EB] shadow-sm shadow-[rgba(37,99,235,0.18)] hover:shadow-[rgba(37,99,235,0.4)]"
           : "bg-black/30 text-white border-white/25 hover:bg-black/40 hover:border-white/40"
       } ${className}`}
       title={value ? "Click to return to the guided wizard" : "Click for full control"}
@@ -285,21 +285,21 @@ export function Wizard({
       data-wizard-root
     >
       {/* Progress bar */}
-      <div className="relative px-4 md:px-6 pt-4 pb-3 border-b border-border bg-gradient-to-br from-gold/[0.06] via-transparent to-transparent">
+      <div className="relative px-4 md:px-6 pt-4 pb-3 border-b border-border bg-gradient-to-br from-[rgba(37,99,235,0.06)] via-transparent to-transparent">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2 text-[11px] text-muted">
-            <Wand2 size={12} className="text-gold" />
+            <Wand2 size={12} className="text-[#2563EB]" />
             <span className="font-semibold text-foreground">Guided Mode</span>
             <span className="text-muted">·</span>
             <span>{current.title}</span>
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-gold bg-gold/10 border border-gold/20 px-2 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] px-2 py-0.5 rounded-full">
             Step {idx + 1} of {steps.length}
           </span>
         </div>
         <div className="h-1.5 rounded-full bg-surface-light overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-gold to-amber-400 transition-all duration-500 ease-out"
+            className="h-full bg-gradient-to-r from-[#2563EB] to-amber-400 transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -317,9 +317,9 @@ export function Wizard({
                 disabled={!reachable || disabled}
                 className={`group flex items-center gap-1.5 text-[10px] font-medium shrink-0 px-2 py-1 rounded-full transition-colors ${
                   active
-                    ? "bg-gold text-black shadow-sm shadow-gold/30"
+                    ? "bg-[#2563EB] text-white shadow-sm shadow-[rgba(37,99,235,0.18)]"
                     : done
-                    ? "bg-gold/15 text-gold hover:bg-gold/25"
+                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]"
                     : "bg-surface-light text-muted/70 cursor-not-allowed"
                 }`}
                 aria-current={active ? "step" : undefined}
@@ -327,9 +327,9 @@ export function Wizard({
                 <span
                   className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-bold ${
                     active
-                      ? "bg-black/20 text-black"
+                      ? "bg-black/20 text-white"
                       : done
-                      ? "bg-gold text-black"
+                      ? "bg-[#2563EB] text-white"
                       : "bg-border text-muted"
                   }`}
                 >
@@ -346,7 +346,7 @@ export function Wizard({
       {preview && (
         <div className="border-b border-border bg-surface-light/40 px-4 md:px-6 py-3">
           <div className="flex items-center gap-1.5 text-[10px] text-muted uppercase tracking-wider mb-2 font-semibold">
-            <Sparkles size={10} className="text-gold" /> Live Preview
+            <Sparkles size={10} className="text-[#2563EB]" /> Live Preview
           </div>
           {preview}
         </div>
@@ -365,7 +365,7 @@ export function Wizard({
           >
             <div className="flex items-start gap-3 mb-5">
               {current.icon && (
-                <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-gold shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[#2563EB] shrink-0">
                   {current.icon}
                 </div>
               )}
@@ -437,8 +437,8 @@ export function Wizard({
           disabled={!canAdvance || disabled}
           className={`flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
             isLast
-              ? "bg-gradient-to-r from-gold to-amber-500 text-black shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.02] active:scale-[0.99]"
-              : "bg-gradient-to-r from-gold to-amber-500 text-black shadow shadow-gold/25 hover:shadow-gold/40"
+              ? "bg-gradient-to-r from-[#2563EB] to-amber-500 text-white shadow-lg shadow-[rgba(37,99,235,0.18)] hover:shadow-[rgba(37,99,235,0.4)] hover:scale-[1.02] active:scale-[0.99]"
+              : "bg-gradient-to-r from-[#2563EB] to-amber-500 text-white shadow shadow-[rgba(37,99,235,0.12)] hover:shadow-[rgba(37,99,235,0.25)]"
           }`}
         >
           {finishing ? (

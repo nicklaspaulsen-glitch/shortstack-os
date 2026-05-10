@@ -165,7 +165,7 @@ export default function TokenUsageWidget() {
           onMouseLeave={() => setExpanded(false)}
         >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-gold">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#2563EB]">
               Token usage
             </span>
             <span className="text-[10px] text-muted">{data.plan}</span>
@@ -218,7 +218,7 @@ export default function TokenUsageWidget() {
         className={`group flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-surface border shadow-lg backdrop-blur transition-all hover:scale-[1.02] active:scale-95 ${
           atLimit
             ? "border-danger/50 shadow-danger/20 animate-pulse"
-            : "border-border hover:border-gold/40"
+            : "border-border hover:border-[rgba(37,99,235,0.4)]"
         }`}
         style={{
           background:

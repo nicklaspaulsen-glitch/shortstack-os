@@ -38,10 +38,10 @@ export default function TrinitySettings({ ttsSupported, muted, speaking, onToggl
         title={muted ? "Unmute Trinity's voice" : "Mute Trinity's voice"}
         className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
           muted
-            ? "bg-surface-light text-muted hover:text-gold"
+            ? "bg-surface-light text-muted hover:text-[#2563EB]"
             : speaking
-            ? "bg-gold/15 text-gold animate-pulse"
-            : "bg-surface-light text-gold hover:bg-gold/10"
+            ? "bg-[rgba(37,99,235,0.15)] text-[#2563EB] animate-pulse"
+            : "bg-surface-light text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)]"
         }`}
       >
         {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}

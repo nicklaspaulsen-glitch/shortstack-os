@@ -53,10 +53,10 @@ export default function ManageHubPage() {
         { label: "Download Desktop", href: "/dashboard/download", icon: Download },
       ]}
       stats={[
-        { label: "Team Members", key: "team_members", icon: UsersRound, color: "text-blue-400" },
-        { label: "Workspaces", key: "workspaces", icon: Building2, color: "text-purple-400" },
-        { label: "Plan", key: "plan_tier", icon: Crown, color: "text-amber-400", format: "passthrough" },
-        { label: "Spend (30d)", key: "monthly_spend", icon: DollarSign, color: "text-emerald-400", format: "currency" },
+        { label: "Team Members", key: "team_members", icon: UsersRound, color: "text-[#2563EB]" },
+        { label: "Workspaces", key: "workspaces", icon: Building2, color: "text-[#2563EB]" },
+        { label: "Plan", key: "plan_tier", icon: Crown, color: "text-amber-700", format: "passthrough" },
+        { label: "Spend (30d)", key: "monthly_spend", icon: DollarSign, color: "text-emerald-700", format: "currency" },
       ]}
       tools={[
         {

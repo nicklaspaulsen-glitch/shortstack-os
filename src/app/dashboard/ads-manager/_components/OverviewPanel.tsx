@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * OverviewPanel — top-level Ads Manager dashboard.
+ * OverviewPanel ï¿½ top-level Ads Manager dashboard.
  *
  * Renders:
  *   - 4 stat tiles: total spend / active campaigns / avg ROAS / best platform
@@ -132,7 +132,7 @@ export default function OverviewPanel() {
           return (
             <div
               key={p}
-              className="rounded-lg border border-white/5 bg-white/[0.02] p-4"
+              className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4"
               style={{ borderLeftColor: PLATFORM_COLORS[p], borderLeftWidth: 3 }}
             >
               <div className="flex items-center justify-between mb-2">
@@ -163,7 +163,7 @@ export default function OverviewPanel() {
         })}
       </div>
 
-      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
+      <div className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-medium">Last 30 days spend</h3>
           <span className="text-[11px] text-muted">
@@ -184,23 +184,23 @@ export default function OverviewPanel() {
                   <stop offset="100%" stopColor="#2563EB" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
               <XAxis
                 dataKey="date"
-                tick={{ fontSize: 10, fill: "rgba(255,255,255,0.5)" }}
+                tick={{ fontSize: 10, fill: "#9CA3AF" }}
                 tickLine={false}
                 tickFormatter={(d: string) => d.slice(5)}
               />
               <YAxis
-                tick={{ fontSize: 10, fill: "rgba(255,255,255,0.5)" }}
+                tick={{ fontSize: 10, fill: "#9CA3AF" }}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(v: number) => `$${v}`}
               />
               <Tooltip
                 contentStyle={{
-                  background: "rgba(10,10,15,0.95)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "rgba(255,255,255,0.97)",
+                  border: "1px solid rgba(0,0,0,0.10)",
                   borderRadius: 6,
                   fontSize: 12,
                 }}
@@ -218,8 +218,8 @@ export default function OverviewPanel() {
         )}
       </div>
 
-      <div className="rounded-lg border border-white/5 bg-white/[0.02] overflow-hidden">
-        <div className="px-4 py-3 border-b border-white/5">
+      <div className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] overflow-hidden">
+        <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
           <h3 className="text-sm font-medium">Top 5 campaigns by spend</h3>
         </div>
         {topCampaigns.length === 0 ? (
@@ -228,7 +228,7 @@ export default function OverviewPanel() {
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="text-[11px] uppercase tracking-wide text-muted bg-white/[0.01]">
+            <thead className="text-[11px] uppercase tracking-wide text-muted bg-[rgba(0,0,0,0.02)]">
               <tr>
                 <th className="text-left px-4 py-2 font-medium">Campaign</th>
                 <th className="text-left px-4 py-2 font-medium">Platform</th>
@@ -239,7 +239,7 @@ export default function OverviewPanel() {
             </thead>
             <tbody>
               {topCampaigns.map((c) => (
-                <tr key={c.id} className="border-t border-white/5">
+                <tr key={c.id} className="border-t border-[rgba(0,0,0,0.06)]">
                   <td className="px-4 py-2 truncate max-w-xs">{c.name}</td>
                   <td className="px-4 py-2">
                     <PlatformBadge platform={c.platform} />

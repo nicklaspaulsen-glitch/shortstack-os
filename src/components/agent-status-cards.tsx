@@ -84,7 +84,7 @@ export default function AgentStatusCards() {
           <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
           <span className="text-[10px] text-muted font-semibold uppercase tracking-wider">AI Agents</span>
         </div>
-        <Link href="/dashboard/agent-supervisor" className="text-[9px] text-gold hover:text-gold-light">
+        <Link href="/dashboard/agent-supervisor" className="text-[9px] text-[#2563EB] hover:text-[#3B82F6]">
           {activeCount}/{agents.length} active — View All
         </Link>
       </div>
@@ -98,7 +98,7 @@ export default function AgentStatusCards() {
                 : agent.status === "error"
                 ? "border-red-500/20 bg-red-500/5"
                 : "border-border/10 bg-surface/50 opacity-50"
-            } hover:border-gold/20 hover:opacity-100`}>
+            } hover:border-[rgba(37,99,235,0.2)] hover:opacity-100`}>
               {/* 3D Agent Head */}
               <div className="relative mb-1">
                 <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${agent.gradient} flex items-center justify-center transition-all duration-300`}

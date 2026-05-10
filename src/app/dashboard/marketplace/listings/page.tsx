@@ -165,7 +165,7 @@ export default function ListingsPage() {
         icon={<Store size={28} />}
         title="My Listings"
         subtitle="Sell your services on the ShortStack marketplace."
-        gradient="gold"
+        gradient="blue"
         actions={
           <button
             onClick={() => setShowForm((v) => !v)}
@@ -180,13 +180,13 @@ export default function ListingsPage() {
       {showForm && (
         <div className="rounded-xl border border-border bg-surface p-5">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-white">New service listing</h2>
+            <h2 className="text-sm font-semibold text-[#111827]">New service listing</h2>
             <button
               onClick={() => {
                 setShowForm(false);
                 setDraft(EMPTY_DRAFT);
               }}
-              className="text-muted hover:text-white"
+              className="text-muted hover:text-[#111827]"
               aria-label="Cancel"
             >
               <X size={16} />
@@ -202,7 +202,7 @@ export default function ListingsPage() {
                 value={draft.title}
                 onChange={(e) => setDraft({ ...draft, title: e.target.value })}
                 maxLength={200}
-                className="w-full rounded-lg border border-border bg-black/30 px-3 py-2 text-sm text-white"
+                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
                 placeholder="Short, specific. e.g. Edit a 60-second YouTube Short"
               />
             </div>
@@ -219,7 +219,7 @@ export default function ListingsPage() {
                 onChange={(e) => setDraft({ ...draft, description: e.target.value })}
                 maxLength={5000}
                 rows={5}
-                className="w-full rounded-lg border border-border bg-black/30 px-3 py-2 text-sm text-white"
+                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
                 placeholder="What's included, what you need from the buyer, what they'll receive."
               />
             </div>
@@ -231,7 +231,7 @@ export default function ListingsPage() {
                 id="svc-cat"
                 value={draft.category}
                 onChange={(e) => setDraft({ ...draft, category: e.target.value })}
-                className="w-full rounded-lg border border-border bg-black/30 px-3 py-2 text-sm text-white"
+                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c} className="capitalize">
@@ -256,7 +256,7 @@ export default function ListingsPage() {
                 onChange={(e) =>
                   setDraft({ ...draft, priceDollars: e.target.value })
                 }
-                className="w-full rounded-lg border border-border bg-black/30 px-3 py-2 text-sm text-white"
+                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
               />
             </div>
             <div>
@@ -275,7 +275,7 @@ export default function ListingsPage() {
                 onChange={(e) =>
                   setDraft({ ...draft, deliveryDays: e.target.value })
                 }
-                className="w-full rounded-lg border border-border bg-black/30 px-3 py-2 text-sm text-white"
+                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
               />
             </div>
             <div>
@@ -291,7 +291,7 @@ export default function ListingsPage() {
                 onChange={(e) =>
                   setDraft({ ...draft, status: e.target.value as "active" | "draft" })
                 }
-                className="w-full rounded-lg border border-border bg-black/30 px-3 py-2 text-sm text-white"
+                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
               >
                 <option value="active">Active (visible to buyers)</option>
                 <option value="draft">Draft (hidden)</option>
@@ -304,14 +304,14 @@ export default function ListingsPage() {
                 setShowForm(false);
                 setDraft(EMPTY_DRAFT);
               }}
-              className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-white"
+              className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-[#111827]"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={submitting || !draft.title || !draft.description}
-              className="flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-xs font-bold text-black hover:bg-gold/90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-bold text-white hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {submitting && <Loader2 size={12} className="animate-spin" />}
               Create listing
@@ -325,7 +325,7 @@ export default function ListingsPage() {
       ) : services.length === 0 ? (
         <div className="card flex flex-col items-center justify-center py-12 text-center">
           <Store size={36} className="mb-3 text-muted/30" />
-          <p className="text-sm font-medium text-white">No listings yet</p>
+          <p className="text-sm font-medium text-[#111827]">No listings yet</p>
           <p className="mt-1 text-xs text-muted">
             Create your first service to start selling.
           </p>
@@ -336,7 +336,7 @@ export default function ListingsPage() {
             <div key={svc.id} className="card flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="truncate text-sm font-semibold text-white">
+                  <h3 className="truncate text-sm font-semibold text-[#111827]">
                     {svc.title}
                   </h3>
                   <span
@@ -344,8 +344,8 @@ export default function ListingsPage() {
                       svc.status === "active"
                         ? "bg-emerald-500/10 text-emerald-400"
                         : svc.status === "paused"
-                          ? "bg-amber-500/10 text-amber-400"
-                          : "bg-white/10 text-white/60"
+                          ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                          : "bg-[rgba(0,0,0,0.06)] text-[#9CA3AF]"
                     }`}
                   >
                     {svc.status}
@@ -364,7 +364,7 @@ export default function ListingsPage() {
                 {(svc.status === "active" || svc.status === "paused") && (
                   <button
                     onClick={() => togglePause(svc)}
-                    className="rounded-lg border border-border p-2 text-muted hover:text-white"
+                    className="rounded-lg border border-border p-2 text-muted hover:text-[#111827]"
                     title={svc.status === "active" ? "Pause" : "Activate"}
                   >
                     {svc.status === "active" ? (

@@ -133,7 +133,7 @@ export function NewTaskModal({
                   autoFocus
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(37,99,235,0.4)] focus:outline-none text-sm"
                   placeholder="Edit the launch video"
                   maxLength={280}
                 />
@@ -147,7 +147,7 @@ export function NewTaskModal({
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm resize-none"
+                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(37,99,235,0.4)] focus:outline-none text-sm resize-none"
                   placeholder="Optional context — links, requirements, references..."
                 />
               </div>
@@ -160,7 +160,7 @@ export function NewTaskModal({
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value as TaskType)}
-                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(37,99,235,0.4)] focus:outline-none text-sm"
                   >
                     {TASK_TYPES.map((t) => (
                       <option key={t} value={t}>
@@ -176,7 +176,7 @@ export function NewTaskModal({
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(37,99,235,0.4)] focus:outline-none text-sm"
                   >
                     {TASK_PRIORITIES.map((p) => (
                       <option key={p} value={p}>
@@ -195,7 +195,7 @@ export function NewTaskModal({
                   <select
                     value={clientId}
                     onChange={(e) => setClientId(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(37,99,235,0.4)] focus:outline-none text-sm"
                   >
                     <option value="">No client</option>
                     {clients.map((c) => (
@@ -212,7 +212,7 @@ export function NewTaskModal({
                   <select
                     value={assigneeId}
                     onChange={(e) => setAssigneeId(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(37,99,235,0.4)] focus:outline-none text-sm"
                   >
                     <option value="">Unassigned</option>
                     {members.map((m) => (
@@ -232,7 +232,7 @@ export function NewTaskModal({
                   type="date"
                   value={dueAt}
                   onChange={(e) => setDueAt(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-gold/50 focus:outline-none text-sm"
+                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(37,99,235,0.4)] focus:outline-none text-sm"
                 />
               </div>
 
@@ -253,7 +253,7 @@ export function NewTaskModal({
                 <button
                   type="submit"
                   disabled={submitting || !title.trim()}
-                  className="px-4 py-1.5 rounded-lg text-sm font-medium bg-gold text-black hover:bg-gold/90 transition-colors disabled:opacity-50"
+                  className="px-4 py-1.5 rounded-lg text-sm font-medium bg-[#2563EB] text-white hover:bg-[#1D4ED8] transition-colors disabled:opacity-50"
                 >
                   {submitting ? "Creating..." : "Create task"}
                 </button>

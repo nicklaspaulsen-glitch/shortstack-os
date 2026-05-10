@@ -113,7 +113,7 @@ export default function JumpBackIn() {
           </p>
           <Link
             href="/dashboard/ai-studio"
-            className="inline-flex items-center gap-1 text-[10px] text-gold hover:underline font-medium"
+            className="inline-flex items-center gap-1 text-[10px] text-[#2563EB] hover:underline font-medium"
           >
             Start something new <ChevronRight size={10} />
           </Link>
@@ -126,7 +126,7 @@ export default function JumpBackIn() {
               <Link
                 key={item.id}
                 href={item.href}
-                className="group p-3 rounded-xl border border-border bg-surface hover:border-gold/30 hover:shadow-sm transition-all flex flex-col gap-2"
+                className="group p-3 rounded-xl border border-border bg-surface hover:border-[rgba(37,99,235,0.25)] hover:shadow-sm transition-all flex flex-col gap-2"
               >
                 <div className="flex items-center justify-between">
                   <span className={`inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full font-semibold ${meta.bg} ${meta.color}`}>
@@ -134,10 +134,10 @@ export default function JumpBackIn() {
                   </span>
                   <span className="text-[8px] text-muted">{timeAgo(item.updated_at)}</span>
                 </div>
-                <p className="text-[11px] font-semibold truncate group-hover:text-gold transition-colors">
+                <p className="text-[11px] font-semibold truncate group-hover:text-[#2563EB] transition-colors">
                   {item.title}
                 </p>
-                <span className="inline-flex items-center gap-1 text-[10px] text-info group-hover:text-gold font-medium mt-auto">
+                <span className="inline-flex items-center gap-1 text-[10px] text-info group-hover:text-[#2563EB] font-medium mt-auto">
                   Resume <ArrowRight size={10} />
                 </span>
               </Link>

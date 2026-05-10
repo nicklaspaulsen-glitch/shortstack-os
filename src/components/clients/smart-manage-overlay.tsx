@@ -159,8 +159,8 @@ export default function SmartManageOverlay({
       <div className="relative w-full max-w-md h-full bg-surface border-l border-border/50 shadow-2xl shadow-black/50 overflow-y-auto fade-in">
         <div className="sticky top-0 z-10 bg-surface/95 backdrop-blur-sm border-b border-border/30 px-5 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-gold/10 rounded-lg flex items-center justify-center">
-              <Sparkles size={14} className="text-gold" />
+            <div className="w-7 h-7 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center">
+              <Sparkles size={14} className="text-[#2563EB]" />
             </div>
             <div>
               <h2 className="text-sm font-semibold">Smart Manage</h2>
@@ -221,12 +221,12 @@ export default function SmartManageOverlay({
                       ? "border-danger/30 bg-danger/[0.04]"
                       : state === "todo"
                         ? "border-warning/30 bg-warning/[0.04]"
-                        : "border-border bg-surface-light/40 hover:border-gold/30"
+                        : "border-border bg-surface-light/40 hover:border-[rgba(37,99,235,0.25)]"
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center shrink-0">
-                    <Icon size={14} className="text-gold" />
+                  <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center shrink-0">
+                    <Icon size={14} className="text-[#2563EB]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-bold text-foreground leading-tight">
@@ -236,7 +236,7 @@ export default function SmartManageOverlay({
                       {s.reason}
                     </p>
                     {s.estimated_impact && (
-                      <p className="text-[10px] text-gold font-semibold mt-1.5">
+                      <p className="text-[10px] text-[#2563EB] font-semibold mt-1.5">
                         Impact: {s.estimated_impact}
                       </p>
                     )}
@@ -255,7 +255,7 @@ export default function SmartManageOverlay({
                         ? "bg-success/10 text-success cursor-default"
                         : state === "failed"
                           ? "bg-danger/10 text-danger hover:bg-danger/15"
-                          : "bg-gold text-background hover:bg-gold/90 disabled:opacity-50"
+                          : "bg-[#2563EB] text-white hover:bg-[#1D4ED8] disabled:opacity-50"
                     }`}
                   >
                     {isRunning ? (

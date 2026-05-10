@@ -129,7 +129,7 @@ export default function AgentDrawer({ agent, status, integrationEnvStatus, run, 
               {agent.href && (
                 <Link
                   href={agent.href}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gold/15 border border-gold/30 px-3 py-2 text-sm font-medium text-gold hover:bg-gold/25 transition-colors"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[rgba(37,99,235,0.15)] border border-[rgba(37,99,235,0.3)] px-3 py-2 text-sm font-medium text-[#2563EB] hover:bg-[rgba(37,99,235,0.25)] transition-colors"
                 >
                   Open {agent.name}
                   <ArrowUpRight size={14} />

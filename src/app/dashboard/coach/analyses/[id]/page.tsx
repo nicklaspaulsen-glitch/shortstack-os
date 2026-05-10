@@ -118,11 +118,11 @@ function formatTimestamp(seconds: number): string {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  objection: "border-amber-400/30 bg-amber-500/10 text-amber-200",
-  missed_question: "border-rose-400/30 bg-rose-500/10 text-rose-200",
-  positive_moment: "border-emerald-400/30 bg-emerald-500/10 text-emerald-200",
-  risk: "border-orange-400/30 bg-orange-500/10 text-orange-200",
-  tone: "border-sky-400/30 bg-sky-500/10 text-sky-200",
+  objection: "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#374151]",
+  missed_question: "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#374151]",
+  positive_moment: "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#374151]",
+  risk: "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#374151]",
+  tone: "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#374151]",
 };
 
 function isMeetingSource(s: unknown): s is MeetingSource {
@@ -208,7 +208,7 @@ export default function CoachAnalysisDetail() {
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 text-white/60 text-sm">
+      <div className="flex items-center gap-2 text-[#6B7280] text-sm">
         <Loader2 className="h-4 w-4 animate-spin" /> Loading analysis…
       </div>
     );
@@ -216,7 +216,7 @@ export default function CoachAnalysisDetail() {
 
   if (error || !data) {
     return (
-      <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+      <div className="rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
         {error || "Analysis not found."}
       </div>
     );
@@ -230,7 +230,7 @@ export default function CoachAnalysisDetail() {
     <div className="space-y-6">
       <Link
         href="/dashboard/coach"
-        className="inline-flex items-center gap-1 text-sm text-white/60 hover:text-white"
+        className="inline-flex items-center gap-1 text-sm text-[#6B7280] hover:text-[#111827]"
       >
         <ArrowLeft className="h-4 w-4" /> Back to coach
       </Link>
@@ -263,36 +263,36 @@ export default function CoachAnalysisDetail() {
         {/* Transcript */}
         <div
           ref={transcriptRef}
-          className="rounded-xl border border-white/5 bg-white/[0.02] p-4 max-h-[70vh] overflow-y-auto"
+          className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4 max-h-[70vh] overflow-y-auto"
         >
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white/60">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#6B7280]">
             Transcript
           </h2>
 
           {analysis.source_type === "email_thread" && isEmailSource(source) ? (
             <div className="space-y-4">
               {source.messages.length === 0 ? (
-                <p className="text-sm text-white/50">No messages on this thread.</p>
+                <p className="text-sm text-[#9CA3AF]">No messages on this thread.</p>
               ) : (
                 source.messages.map((m) => (
                   <div
                     key={m.id}
-                    className="rounded-lg border border-white/5 bg-white/[0.02] p-3"
+                    className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-3"
                   >
                     {m.message_text && (
                       <div className="mb-2">
-                        <div className="mb-1 text-[10px] uppercase tracking-wider text-emerald-300/80">
+                        <div className="mb-1 text-[10px] uppercase tracking-wider text-[#2563EB]">
                           Rep • {m.sent_at ? new Date(m.sent_at).toLocaleString() : ""}
                         </div>
-                        <p className="whitespace-pre-wrap text-sm text-white/80">{m.message_text}</p>
+                        <p className="whitespace-pre-wrap text-sm text-[#374151]">{m.message_text}</p>
                       </div>
                     )}
                     {m.reply_text && (
                       <div>
-                        <div className="mb-1 text-[10px] uppercase tracking-wider text-sky-300/80">
+                        <div className="mb-1 text-[10px] uppercase tracking-wider text-[#6B7280]">
                           Prospect • {m.replied_at ? new Date(m.replied_at).toLocaleString() : ""}
                         </div>
-                        <p className="whitespace-pre-wrap text-sm text-white/80">{m.reply_text}</p>
+                        <p className="whitespace-pre-wrap text-sm text-[#374151]">{m.reply_text}</p>
                       </div>
                     )}
                   </div>
@@ -300,7 +300,7 @@ export default function CoachAnalysisDetail() {
               )}
             </div>
           ) : segments.length === 0 ? (
-            <p className="text-sm text-white/50">No transcript content available.</p>
+            <p className="text-sm text-[#9CA3AF]">No transcript content available.</p>
           ) : (
             <div className="space-y-2">
               {segments.map((seg, idx) => {
@@ -312,16 +312,16 @@ export default function CoachAnalysisDetail() {
                     data-ts={ts}
                     className={`rounded-md px-3 py-2 transition-colors ${
                       isActive
-                        ? "bg-amber-500/10 border border-amber-500/30"
+                        ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)]"
                         : "border border-transparent"
                     }`}
                   >
-                    <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-white/40">
+                    <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-[#9CA3AF]">
                       <Clock className="h-3 w-3" />
                       <span className="font-mono">{formatTimestamp(seg.start)}</span>
-                      {seg.speaker && <span className="text-white/60">{seg.speaker}</span>}
+                      {seg.speaker && <span className="text-[#6B7280]">{seg.speaker}</span>}
                     </div>
-                    <p className="mt-1 text-sm text-white/85">{seg.text}</p>
+                    <p className="mt-1 text-sm text-[#374151]">{seg.text}</p>
                   </div>
                 );
               })}
@@ -331,8 +331,8 @@ export default function CoachAnalysisDetail() {
 
         {/* Sidebar */}
         <div className="space-y-4">
-          <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white/60">
+          <div className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#6B7280]">
               Metrics
             </h3>
             <div className="grid grid-cols-2 gap-3 text-sm">
@@ -348,12 +348,12 @@ export default function CoachAnalysisDetail() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white/60">
+          <div className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#6B7280]">
               Insights ({analysis.insights.length})
             </h3>
             {analysis.insights.length === 0 ? (
-              <p className="text-sm text-white/50">No qualitative findings.</p>
+              <p className="text-sm text-[#9CA3AF]">No qualitative findings.</p>
             ) : (
               <div className="space-y-2">
                 {analysis.insights.map((insight, idx) => {
@@ -378,7 +378,7 @@ export default function CoachAnalysisDetail() {
                           </span>
                         )}
                         {insight.severity && (
-                          <span className="ml-auto rounded-full border border-white/20 px-1.5 py-0.5 text-[9px] font-semibold">
+                          <span className="ml-auto rounded-full border border-[rgba(0,0,0,0.10)] px-1.5 py-0.5 text-[9px] font-semibold">
                             sev {insight.severity}
                           </span>
                         )}
@@ -391,12 +391,12 @@ export default function CoachAnalysisDetail() {
             )}
           </div>
 
-          <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white/60">
+          <div className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#6B7280]">
               Next actions ({analysis.next_actions.length})
             </h3>
             {analysis.next_actions.length === 0 ? (
-              <p className="text-sm text-white/50">No follow-ups suggested.</p>
+              <p className="text-sm text-[#9CA3AF]">No follow-ups suggested.</p>
             ) : (
               <ul className="space-y-2">
                 {analysis.next_actions.map((action, idx) => {
@@ -406,19 +406,19 @@ export default function CoachAnalysisDetail() {
                       <button
                         type="button"
                         onClick={() => toggleDone(idx)}
-                        className={`flex w-full items-start gap-2 rounded-md border border-white/5 bg-white/[0.02] px-3 py-2 text-left text-sm transition-colors hover:bg-white/[0.05] ${
+                        className={`flex w-full items-start gap-2 rounded-md border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-left text-sm transition-colors hover:bg-[rgba(0,0,0,0.06)] ${
                           done ? "opacity-50 line-through" : ""
                         }`}
                       >
                         {done ? (
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2563EB]" />
                         ) : (
-                          <Circle className="mt-0.5 h-4 w-4 shrink-0 text-white/30" />
+                          <Circle className="mt-0.5 h-4 w-4 shrink-0 text-[#9CA3AF]" />
                         )}
                         <div>
-                          <span className="text-white/85">{action.text}</span>
+                          <span className="text-[#374151]">{action.text}</span>
                           {action.due && (
-                            <span className="ml-2 text-xs text-amber-200/70">due {action.due}</span>
+                            <span className="ml-2 text-xs text-[#6B7280]">due {action.due}</span>
                           )}
                         </div>
                       </button>
@@ -436,9 +436,9 @@ export default function CoachAnalysisDetail() {
 
 function Metric({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-md border border-white/5 bg-white/[0.02] px-3 py-2">
-      <div className="text-[10px] uppercase tracking-wider text-white/50">{label}</div>
-      <div className="mt-1 text-base font-semibold text-white">{value}</div>
+    <div className="rounded-md border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] px-3 py-2">
+      <div className="text-[10px] uppercase tracking-wider text-[#9CA3AF]">{label}</div>
+      <div className="mt-1 text-base font-semibold text-[#111827]">{value}</div>
     </div>
   );
 }

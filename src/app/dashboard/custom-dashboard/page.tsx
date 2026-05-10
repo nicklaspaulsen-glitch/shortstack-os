@@ -65,32 +65,32 @@ function WidgetCard({
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDrop={onDrop}
-      className={`glass rounded-xl overflow-hidden cursor-grab active:cursor-grabbing transition-all select-none ${
-        isDragOver ? "border-[#2563EB]/60 scale-[1.02]" : ""
+      className={`bg-white border border-[rgba(0,0,0,0.08)] rounded-xl overflow-hidden cursor-grab active:cursor-grabbing transition-all select-none shadow-sm ${
+        isDragOver ? "border-[rgba(37,99,235,0.60)] scale-[1.02]" : ""
       }`}
     >
       <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
       <div className="p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <GripVertical className="w-4 h-4 text-white/20 shrink-0" />
+            <GripVertical className="w-4 h-4 text-[#9CA3AF] shrink-0" />
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center"
               style={{ background: `${def.color}20`, color: def.color }}
             >
               {def.icon}
             </div>
-            <span className="text-xs font-semibold text-white/70">{def.label}</span>
+            <span className="text-xs font-semibold text-[#374151]">{def.label}</span>
           </div>
           <button
             onClick={onRemove}
-            className="w-6 h-6 rounded-md flex items-center justify-center text-white/20 hover:text-red-400 hover:bg-red-400/10 transition-all"
+            className="w-6 h-6 rounded-md flex items-center justify-center text-[#9CA3AF] hover:text-red-600 hover:bg-red-100 transition-all"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
-        <p className="text-2xl font-bold text-white/30 pl-6">--</p>
-        <p className="text-[10px] text-white/30 pl-6 uppercase tracking-wider">No data yet</p>
+        <p className="text-2xl font-bold text-[#9CA3AF] pl-6">--</p>
+        <p className="text-[10px] text-[#9CA3AF] pl-6 uppercase tracking-wider">No data yet</p>
       </div>
     </div>
     </motion.div>
@@ -215,7 +215,7 @@ export default function CustomDashboardPage() {
             <button
               onClick={() => saveLayout(widgets)}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#3B82F6] text-white transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Layout
@@ -226,8 +226,8 @@ export default function CustomDashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Widget picker sidebar */}
-        <div className="lg:col-span-1 glass rounded-xl p-4 flex flex-col gap-3 h-fit">
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/40">
+        <div className="lg:col-span-1 bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-4 flex flex-col gap-3 h-fit shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280]">
             Add Widgets
           </p>
           <div className="flex flex-col gap-2">
@@ -235,7 +235,7 @@ export default function CustomDashboardPage() {
               <button
                 key={wt.id}
                 onClick={() => addWidget(wt.id)}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-lg glass-md hover:bg-white/8 hover:border-white/12 transition-all text-left"
+                className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] transition-all text-left"
               >
                 <div
                   className="w-7 h-7 rounded-md flex items-center justify-center shrink-0"
@@ -243,12 +243,12 @@ export default function CustomDashboardPage() {
                 >
                   {wt.icon}
                 </div>
-                <span className="text-xs text-white/70 font-medium">{wt.label}</span>
-                <Plus className="w-3.5 h-3.5 text-white/30 ml-auto shrink-0" />
+                <span className="text-xs text-[#374151] font-medium">{wt.label}</span>
+                <Plus className="w-3.5 h-3.5 text-[#9CA3AF] ml-auto shrink-0" />
               </button>
             ))}
           </div>
-          <p className="text-[10px] text-white/25 text-center mt-1">
+          <p className="text-[10px] text-[#9CA3AF] text-center mt-1">
             Click to add � drag to reorder
           </p>
         </div>
@@ -257,12 +257,12 @@ export default function CustomDashboardPage() {
         <div className="lg:col-span-3">
           {widgets.length === 0 ? (
             <div
-              className="rounded-xl border-2 border-dashed border-white/10 flex flex-col items-center justify-center gap-3 py-20 text-center"
+              className="rounded-xl border-2 border-dashed border-[rgba(0,0,0,0.08)] flex flex-col items-center justify-center gap-3 py-20 text-center"
               onDragOver={(e) => e.preventDefault()}
             >
-              <LayoutDashboard className="w-10 h-10 text-white/20" />
-              <p className="text-white/40 text-sm">Your dashboard is empty</p>
-              <p className="text-white/25 text-xs">Add widgets from the panel on the left</p>
+              <LayoutDashboard className="w-10 h-10 text-[#9CA3AF]" />
+              <p className="text-[#6B7280] text-sm">Your dashboard is empty</p>
+              <p className="text-[#9CA3AF] text-xs">Add widgets from the panel on the left</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -215,9 +215,9 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
 
   if (!status?.connected) {
     return (
-      <div className="card border-gold/30 bg-gold/[0.03]">
+      <div className="card border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]">
         <div className="flex items-start gap-3">
-          <DollarSign size={18} className="text-gold shrink-0 mt-0.5" />
+          <DollarSign size={18} className="text-[#2563EB] shrink-0 mt-0.5" />
           <div className="flex-1">
             <h3 className="text-sm font-semibold">Connect Stripe to bill this client</h3>
             <p className="text-[10px] text-muted mt-1">
@@ -264,7 +264,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
       {/* ── Create Payment Link ────────────────────────────── */}
       <div className="card">
         <h3 className="section-header flex items-center gap-2">
-          <Link2 size={14} className="text-gold" /> Create Payment Link
+          <Link2 size={14} className="text-[#2563EB]" /> Create Payment Link
         </h3>
         <p className="text-[10px] text-muted mb-3">
           Generate a Stripe-hosted checkout URL you can paste anywhere — DMs, email, SMS, proposal docs.
@@ -319,7 +319,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
                   <p className="text-xs font-medium truncate">{link.product_name || "Payment"}</p>
                   <p className="text-[9px] text-muted font-mono truncate">{link.url}</p>
                 </div>
-                <span className="text-sm font-bold text-gold shrink-0">
+                <span className="text-sm font-bold text-[#2563EB] shrink-0">
                   {(link.amount_cents / 100).toFixed(2)} {link.currency.toUpperCase()}
                 </span>
                 <button
@@ -347,7 +347,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
       {/* ── Send Invoice ──────────────────────────────────── */}
       <div className="card">
         <h3 className="section-header flex items-center gap-2">
-          <Receipt size={14} className="text-gold" /> Send Invoice
+          <Receipt size={14} className="text-[#2563EB]" /> Send Invoice
         </h3>
         <p className="text-[10px] text-muted mb-3">
           Stripe will email the client a hosted invoice page. Payment lands in your account.
@@ -393,7 +393,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
         </div>
         <button
           onClick={() => setInvoiceItems([...invoiceItems, { description: "", amount: "" }])}
-          className="text-[10px] text-gold hover:underline flex items-center gap-1 mb-3"
+          className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-1 mb-3"
         >
           <Plus size={10} /> Add line item
         </button>
@@ -462,13 +462,13 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
                     inv.status === "paid"
                       ? "bg-success/10 text-success"
                       : inv.status === "open"
-                      ? "bg-gold/10 text-gold"
+                      ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                       : "bg-surface-light text-muted"
                   }`}
                 >
                   {inv.status}
                 </span>
-                <span className="text-sm font-bold text-gold shrink-0">
+                <span className="text-sm font-bold text-[#2563EB] shrink-0">
                   {(inv.amount_cents / 100).toFixed(2)} {inv.currency.toUpperCase()}
                 </span>
                 {inv.hosted_invoice_url && (

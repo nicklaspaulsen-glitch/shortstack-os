@@ -52,7 +52,7 @@ export default function Tab3Trends() {
       <div className="rounded-xl border border-border/40 bg-surface p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles size={14} className="text-gold" />
+            <Sparkles size={14} className="text-[#2563EB]" />
             <h3 className="text-sm font-semibold tracking-tight">Niche</h3>
           </div>
           <button
@@ -73,7 +73,7 @@ export default function Tab3Trends() {
               onClick={() => setNiche(n)}
               className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
                 niche === n
-                  ? "bg-gold/20 border-gold/40 text-gold"
+                  ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.3)] text-[#2563EB]"
                   : "border-border/40 text-muted hover:bg-elevated"
               }`}
             >
@@ -102,7 +102,7 @@ export default function Tab3Trends() {
 
       <div className="rounded-xl border border-border/40 bg-surface p-4">
         <div className="flex items-center gap-2 mb-3">
-          <Hash size={14} className="text-gold" />
+          <Hash size={14} className="text-[#2563EB]" />
           <h3 className="text-sm font-semibold tracking-tight">Trending hashtags by platform</h3>
         </div>
         {loading && !data ? (
@@ -140,7 +140,7 @@ export default function Tab3Trends() {
 
       <div className="rounded-xl border border-border/40 bg-surface p-4">
         <div className="flex items-center gap-2 mb-3">
-          <Lightbulb size={14} className="text-gold" />
+          <Lightbulb size={14} className="text-[#2563EB]" />
           <h3 className="text-sm font-semibold tracking-tight">Content ideas for this week</h3>
         </div>
         {loading && !data ? (
@@ -153,7 +153,7 @@ export default function Tab3Trends() {
             {(data?.ideas ?? []).map((idea: ContentIdea, i) => (
               <div
                 key={`${idea.title}-${i}`}
-                className="rounded-lg border border-border/40 bg-elevated p-3 hover:border-gold/40 transition-all"
+                className="rounded-lg border border-border/40 bg-elevated p-3 hover:border-[rgba(37,99,235,0.3)] transition-all"
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <h4 className="text-sm font-medium leading-snug flex-1">{idea.title}</h4>

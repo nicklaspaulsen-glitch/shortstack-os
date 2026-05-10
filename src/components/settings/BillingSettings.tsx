@@ -54,7 +54,7 @@ function PlanUsageWidget({ planUsage }: { planUsage: PlanUsage | null }) {
             </div>
             {limit !== "unlimited" && (
               <div className="h-1.5 rounded-full bg-surface">
-                <div className={`h-1.5 rounded-full ${pct >= 90 ? "bg-danger" : pct >= 70 ? "bg-gold" : "bg-success"}`}
+                <div className={`h-1.5 rounded-full ${pct >= 90 ? "bg-danger" : pct >= 70 ? "bg-[#2563EB]" : "bg-success"}`}
                   style={{ width: `${pct}%` }} />
               </div>
             )}
@@ -70,7 +70,7 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
     <div className="space-y-4">
       <div className="card">
         <h3 className="section-header">Current Plan</h3>
-        <div className="flex items-center justify-between p-4 bg-gold/5 border border-gold/20 rounded-xl flex-wrap gap-3">
+        <div className="flex items-center justify-between p-4 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] rounded-xl flex-wrap gap-3">
           <div>
             <p className="text-lg font-bold" style={{ color: getPlanConfig(profile?.plan_tier).color }}>{getPlanConfig(profile?.plan_tier).badge_label}</p>
             <p className="text-xs text-muted">${getPlanConfig(profile?.plan_tier).price_monthly}/month</p>
@@ -135,13 +135,13 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
           </div>
         ) : paymentMethod ? (
           <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border">
-            <CreditCard size={20} className="text-gold" />
+            <CreditCard size={20} className="text-[#2563EB]" />
             <div>
               <p className="text-sm font-medium capitalize">{paymentMethod.brand} ending in {paymentMethod.last4}</p>
               <p className="text-xs text-muted">Expires {String(paymentMethod.exp_month).padStart(2, "0")}/{paymentMethod.exp_year}</p>
             </div>
             <button onClick={openBillingPortal} disabled={portalLoading}
-              className="ml-auto text-xs text-gold hover:underline flex items-center gap-1 disabled:opacity-50">
+              className="ml-auto text-xs text-[#2563EB] hover:underline flex items-center gap-1 disabled:opacity-50">
               {portalLoading ? <Loader2 size={10} className="animate-spin" /> : <ExternalLink size={10} />}
               Update
             </button>
@@ -153,7 +153,7 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
               <p className="text-sm text-muted">No payment method on file</p>
             </div>
             <button onClick={openBillingPortal} disabled={portalLoading}
-              className="text-xs bg-gold/10 text-gold border border-gold/20 px-3 py-1.5 rounded-lg hover:bg-gold/20 transition flex items-center gap-1 disabled:opacity-50">
+              className="text-xs bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] px-3 py-1.5 rounded-lg hover:bg-[rgba(37,99,235,0.12)] transition flex items-center gap-1 disabled:opacity-50">
               {portalLoading ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
               Add Payment Method
             </button>

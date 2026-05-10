@@ -57,16 +57,16 @@ const TYPE_CONFIG: Record<string, {
   },
   outreach: {
     icon: <Send size={16} />,
-    color: "text-blue-400",
-    bg: "bg-blue-500/10",
-    border: "border-blue-500/30",
+    color: "text-[#2563EB]",
+    bg: "bg-[rgba(37,99,235,0.08)]",
+    border: "border-[rgba(37,99,235,0.25)]",
     label: "Outreach",
   },
   autopilot: {
     icon: <Sparkles size={16} />,
-    color: "text-gold",
-    bg: "bg-gold/10",
-    border: "border-gold/30",
+    color: "text-[#2563EB]",
+    bg: "bg-[rgba(37,99,235,0.08)]",
+    border: "border-[rgba(37,99,235,0.25)]",
     label: "Auto-Pilot",
   },
   system: {
@@ -85,9 +85,9 @@ const TYPE_CONFIG: Record<string, {
   },
   info: {
     icon: <Info size={16} />,
-    color: "text-blue-400",
-    bg: "bg-blue-500/10",
-    border: "border-blue-500/30",
+    color: "text-[#2563EB]",
+    bg: "bg-[rgba(37,99,235,0.08)]",
+    border: "border-[rgba(37,99,235,0.25)]",
     label: "Info",
   },
   success: {
@@ -99,9 +99,9 @@ const TYPE_CONFIG: Record<string, {
   },
   warning: {
     icon: <AlertTriangle size={16} />,
-    color: "text-amber-400",
-    bg: "bg-amber-500/10",
-    border: "border-amber-500/30",
+    color: "text-[#2563EB]",
+    bg: "bg-[rgba(37,99,235,0.08)]",
+    border: "border-[rgba(37,99,235,0.25)]",
     label: "Warning",
   },
   error: {
@@ -344,7 +344,7 @@ export default function NotificationsPage() {
             aria-label="Search notifications"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500/30 transition-all"
+            className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.25)] focus:border-[rgba(37,99,235,0.25)] transition-all"
           />
         </div>
 
@@ -356,7 +356,7 @@ export default function NotificationsPage() {
               onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium whitespace-nowrap transition-all ${
                 activeTab === tab.key
-                  ? "text-gold bg-gold/10 border border-gold/20"
+                  ? "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)]"
                   : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
               }`}
             >
@@ -364,7 +364,7 @@ export default function NotificationsPage() {
               {tab.label}
               {tabCounts[tab.key] > 0 && (
                 <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
-                  activeTab === tab.key ? "bg-gold/20 text-gold" : "bg-surface-light text-muted"
+                  activeTab === tab.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"
                 }`}>
                   {tabCounts[tab.key]}
                 </span>
@@ -384,7 +384,7 @@ export default function NotificationsPage() {
           <p className="text-xs text-muted mb-4">{error}</p>
           <button
             onClick={fetchNotifications}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium text-gold bg-gold/10 hover:bg-gold/20 transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium text-[#2563EB] bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
           >
             <RefreshCw size={12} />
             Try Again
@@ -400,7 +400,7 @@ export default function NotificationsPage() {
             </p>
             <button
               onClick={() => { setSearchQuery(""); setActiveTab("all"); }}
-              className="mt-3 text-xs text-gold hover:text-gold-light font-medium transition-colors"
+              className="mt-3 text-xs text-[#2563EB] hover:text-[#3B82F6] font-medium transition-colors"
             >
               Clear filters
             </button>
@@ -460,7 +460,7 @@ export default function NotificationsPage() {
                               {n.title}
                             </p>
                             {!n.read && (
-                              <div className="w-2 h-2 rounded-full bg-gold shrink-0 animate-pulse" />
+                              <div className="w-2 h-2 rounded-full bg-[#2563EB] shrink-0 animate-pulse" />
                             )}
                             <span className={`text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${config.bg} ${config.color}`}>
                               {config.label}
@@ -490,14 +490,14 @@ export default function NotificationsPage() {
                               <Link
                                 href={n.link}
                                 onClick={() => markRead(n.id)}
-                                className="text-[10px] text-gold hover:text-gold-light flex items-center gap-1 font-medium transition-colors"
+                                className="text-[10px] text-[#2563EB] hover:text-[#3B82F6] flex items-center gap-1 font-medium transition-colors"
                               >
                                 {actionLabel}
                                 <ExternalLink size={9} />
                               </Link>
                             )}
                             {actionLabel && !n.link && (
-                              <span className="text-[10px] text-gold/50 flex items-center gap-1">
+                              <span className="text-[10px] text-[rgba(37,99,235,0.5)] flex items-center gap-1">
                                 {actionLabel}
                                 <ChevronRight size={9} />
                               </span>
@@ -544,7 +544,7 @@ export default function NotificationsPage() {
                 </div>
                 <p className="text-[10px] text-muted">{tab.label}</p>
                 {unread > 0 && (
-                  <span className="text-[8px] text-gold bg-gold/10 px-1.5 py-0.5 rounded-full mt-1 inline-block">
+                  <span className="text-[8px] text-[#2563EB] bg-[rgba(37,99,235,0.08)] px-1.5 py-0.5 rounded-full mt-1 inline-block">
                     {unread} new
                   </span>
                 )}

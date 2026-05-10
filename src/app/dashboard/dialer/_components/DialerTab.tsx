@@ -391,11 +391,11 @@ export default function DialerTab() {
   return (
     <div className="space-y-6">
       {tokenError && (
-        <div className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-950/40 p-4 text-sm text-amber-200">
+        <div className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-50 p-4 text-sm text-amber-700">
           <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
           <div>
             <div className="font-medium">Voice not ready</div>
-            <div className="mt-1 text-amber-200/80">{tokenError}</div>
+            <div className="mt-1 text-amber-700/80">{tokenError}</div>
           </div>
         </div>
       )}
@@ -419,19 +419,19 @@ export default function DialerTab() {
       </div>
 
       {/* Voice clone selector + TCPA disclosure for cold calls. */}
-      <div className="rounded-xl border border-amber-500/20 bg-gradient-to-r from-amber-950/20 to-orange-950/10 p-4">
+      <div className="rounded-xl border border-amber-500/20 bg-amber-50 p-4">
         <div className="flex flex-wrap items-center gap-4">
           <VoicePicker
             value={selectedVoiceId}
             onChange={setSelectedVoiceId}
             surface="dialer"
           />
-          <label className="flex items-center gap-2 text-xs text-white/70">
+          <label className="flex items-center gap-2 text-xs text-[#374151]">
             <input
               type="checkbox"
               checked={tcpaAccepted}
               onChange={(e) => setTcpaAccepted(e.target.checked)}
-              className="h-3 w-3 rounded border border-white/20 bg-black/30 text-amber-500 focus:ring-amber-400"
+              className="h-3 w-3 rounded border border-black/[0.08] bg-[#F8FAFC] text-amber-500 focus:ring-amber-400"
             />
             <ShieldAlert size={12} className="text-amber-300" />
             TCPA disclosure spoken (if cloned voice in use)
@@ -442,21 +442,21 @@ export default function DialerTab() {
           onChange={(e) => setOpeningLine(e.target.value)}
           rows={2}
           placeholder="Opening line — pre-rendered with the chosen voice. Use {{first_name}} for personalisation."
-          className="mt-3 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-amber-400/60 focus:outline-none"
+          className="mt-3 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-amber-400/60 focus:outline-none"
         />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left: Contact list ─────────────────────────────── */}
         <section className="lg:col-span-1">
-          <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+          <div className="rounded-xl border border-black/[0.06] bg-white p-5">
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-white">Call list ({contacts.length})</h2>
+              <h2 className="text-sm font-semibold text-[#111827]">Call list ({contacts.length})</h2>
               {contacts.length > 0 && (
                 <button
                   type="button"
                   onClick={handleClearList}
-                  className="text-xs text-white/60 hover:text-white"
+                  className="text-xs text-[#6B7280] hover:text-[#111827]"
                 >
                   Clear all
                 </button>
@@ -468,13 +468,13 @@ export default function DialerTab() {
               onChange={(e) => setPasteValue(e.target.value)}
               placeholder="Paste phone numbers, one per line.&#10;Optional format: Name, +1 555 123 4567"
               rows={4}
-              className="w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-orange-400/50 focus:outline-none"
+              className="w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
             />
             <button
               type="button"
               onClick={handleAddPasted}
               disabled={!pasteValue.trim()}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-white/5 disabled:text-white/40"
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-[#9CA3AF]"
             >
               <Plus size={14} /> Add to list
             </button>
@@ -486,8 +486,8 @@ export default function DialerTab() {
                     key={c.id}
                     className={`flex items-center justify-between rounded-lg px-2 py-1.5 text-xs ${
                       i === currentIndex
-                        ? "bg-orange-500/15 text-orange-200"
-                        : "text-white/70 hover:bg-white/5"
+                        ? "bg-orange-500/15 text-orange-700"
+                        : "text-[#374151] hover:bg-black/[0.04]"
                     }`}
                   >
                     <button
@@ -496,12 +496,12 @@ export default function DialerTab() {
                       className="flex-1 truncate text-left"
                     >
                       <span className="font-medium">{c.name}</span>
-                      <span className="ml-2 text-white/40">{c.phone}</span>
+                      <span className="ml-2 text-[#9CA3AF]">{c.phone}</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => removeContact(c.id)}
-                      className="ml-2 text-white/40 hover:text-white"
+                      className="ml-2 text-[#9CA3AF] hover:text-[#111827]"
                       aria-label={`Remove ${c.name}`}
                     >
                       <Trash2 size={12} />
@@ -515,12 +515,12 @@ export default function DialerTab() {
 
         {/* Right: Active call panel ─────────────────────────── */}
         <section className="lg:col-span-2">
-          <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+          <div className="rounded-xl border border-black/[0.06] bg-white p-6">
             {!currentContact ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <Phone size={36} className="text-white/30" />
-                <h3 className="mt-4 text-base font-medium text-white">No contact loaded</h3>
-                <p className="mt-1 max-w-xs text-sm text-white/50">
+                <Phone size={36} className="text-[#9CA3AF]" />
+                <h3 className="mt-4 text-base font-medium text-[#111827]">No contact loaded</h3>
+                <p className="mt-1 max-w-xs text-sm text-[#6B7280]">
                   Paste numbers in the list and click a contact to start dialing.
                 </p>
               </div>
@@ -528,13 +528,13 @@ export default function DialerTab() {
               <>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <div className="text-xs uppercase tracking-wider text-white/40">
+                    <div className="text-xs uppercase tracking-wider text-[#9CA3AF]">
                       Now dialing
                     </div>
-                    <div className="mt-1 text-2xl font-semibold text-white">
+                    <div className="mt-1 text-2xl font-semibold text-[#111827]">
                       {currentContact.name}
                     </div>
-                    <div className="mt-1 font-mono text-base text-white/70">
+                    <div className="mt-1 font-mono text-base text-[#374151]">
                       {currentContact.phone}
                     </div>
                   </div>
@@ -549,8 +549,8 @@ export default function DialerTab() {
                 </div>
 
                 {currentContact.notes && (
-                  <div className="mt-4 rounded-lg border border-white/10 bg-black/20 p-3 text-sm text-white/70">
-                    <span className="text-xs uppercase tracking-wider text-white/40">
+                  <div className="mt-4 rounded-lg border border-black/[0.06] bg-[#F8FAFC] p-3 text-sm text-[#374151]">
+                    <span className="text-xs uppercase tracking-wider text-[#9CA3AF]">
                       Previous notes
                     </span>
                     <p className="mt-1">{currentContact.notes}</p>
@@ -563,7 +563,7 @@ export default function DialerTab() {
                       type="button"
                       onClick={() => startCall(currentContact)}
                       disabled={!deviceReady}
-                      className="flex items-center gap-2 rounded-lg bg-emerald-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-white/5 disabled:text-white/40"
+                      className="flex items-center gap-2 rounded-lg bg-emerald-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-[#9CA3AF]"
                     >
                       <PhoneCall size={14} /> Call
                     </button>
@@ -580,7 +580,7 @@ export default function DialerTab() {
                       <button
                         type="button"
                         onClick={toggleMute}
-                        className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white hover:bg-white/10"
+                        className="flex items-center gap-2 rounded-lg border border-black/[0.06] bg-[rgba(0,0,0,0.06)] px-4 py-2 text-sm font-medium text-[#111827] hover:bg-[rgba(0,0,0,0.10)]"
                       >
                         {muted ? <MicOff size={14} /> : <Mic size={14} />}
                         {muted ? "Unmute" : "Mute"}
@@ -591,14 +591,14 @@ export default function DialerTab() {
                     type="button"
                     onClick={nextCall}
                     disabled={currentIndex >= contacts.length - 1 || inCall}
-                    className="ml-auto flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="ml-auto flex items-center gap-2 rounded-lg border border-black/[0.06] bg-[rgba(0,0,0,0.06)] px-4 py-2 text-sm font-medium text-[#111827] hover:bg-[rgba(0,0,0,0.10)] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Next <SkipForward size={14} />
                   </button>
                 </div>
 
                 <div className="mt-6">
-                  <label className="text-xs uppercase tracking-wider text-white/40">
+                  <label className="text-xs uppercase tracking-wider text-[#9CA3AF]">
                     Notes
                   </label>
                   <textarea
@@ -606,13 +606,13 @@ export default function DialerTab() {
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Notes from this call (saved with disposition)..."
                     rows={3}
-                    className="mt-1 w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-orange-400/50 focus:outline-none"
+                    className="mt-1 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
                   />
                 </div>
 
                 {(callJustEnded || activeCallId) && (
                   <div className="mt-4">
-                    <div className="text-xs uppercase tracking-wider text-white/40">
+                    <div className="text-xs uppercase tracking-wider text-[#9CA3AF]">
                       Disposition
                     </div>
                     <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -621,7 +621,7 @@ export default function DialerTab() {
                           key={d}
                           type="button"
                           onClick={() => saveDisposition(d)}
-                          className="flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white hover:border-orange-400/40 hover:bg-orange-500/10"
+                          className="flex items-center justify-center gap-2 rounded-lg border border-black/[0.06] bg-black/[0.04] px-3 py-2 text-sm font-medium text-[#111827] hover:border-orange-400/40 hover:bg-orange-500/10"
                         >
                           {DISPOSITION_ICONS[d]} {DISPOSITION_LABELS[d]}
                         </button>
@@ -640,23 +640,23 @@ export default function DialerTab() {
 
 function CallStatusBadge({ status }: { status: CallStatus }) {
   const map: Record<CallStatus, { label: string; cls: string; icon?: React.ReactNode }> = {
-    idle: { label: "Idle", cls: "bg-white/10 text-white/60" },
+    idle: { label: "Idle", cls: "bg-black/[0.06] text-[#6B7280]" },
     connecting: {
       label: "Connecting",
-      cls: "bg-amber-500/15 text-amber-200",
+      cls: "bg-amber-500/15 text-amber-700",
       icon: <Loader2 size={12} className="animate-spin" />,
     },
     ringing: {
       label: "Ringing",
-      cls: "bg-amber-500/15 text-amber-200",
+      cls: "bg-amber-500/15 text-amber-700",
       icon: <Loader2 size={12} className="animate-spin" />,
     },
     in_progress: {
       label: "Live",
-      cls: "bg-emerald-500/15 text-emerald-200",
+      cls: "bg-emerald-500/15 text-emerald-700",
     },
-    ended: { label: "Ended", cls: "bg-white/10 text-white/60" },
-    failed: { label: "Failed", cls: "bg-rose-500/15 text-rose-200" },
+    ended: { label: "Ended", cls: "bg-black/[0.06] text-[#6B7280]" },
+    failed: { label: "Failed", cls: "bg-rose-500/15 text-rose-700" },
   };
   const { label, cls, icon } = map[status];
   return (

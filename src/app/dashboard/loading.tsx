@@ -2,16 +2,16 @@ export default function DashboardLoading() {
   return (
     <div className="fade-in space-y-5 p-1">
       {/* Hero banner skeleton — matches PageHero component */}
-      <div className="relative overflow-hidden  border border-border bg-gradient-to-br from-gold/[0.08] via-gold/[0.03] to-transparent p-6">
+      <div className="relative overflow-hidden  border border-border bg-gradient-to-br from-[rgba(37,99,235,0.08)] via-[rgba(37,99,235,0.03)] to-transparent p-6">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14  bg-gold/10 animate-pulse" />
+          <div className="w-14 h-14  bg-[rgba(37,99,235,0.08)] animate-pulse" />
           <div className="flex-1 space-y-2">
-            <div className="h-6 w-64 bg-white/5 rounded-lg animate-pulse" />
-            <div className="h-3 w-48 bg-white/5 rounded animate-pulse" />
+            <div className="h-6 w-64 bg-black/[0.06] rounded-lg animate-pulse" />
+            <div className="h-3 w-48 bg-black/[0.06] rounded animate-pulse" />
           </div>
           <div className="hidden md:flex gap-2">
-            <div className="h-8 w-24 bg-white/5 rounded-lg animate-pulse" />
-            <div className="h-8 w-20 bg-white/5 rounded-lg animate-pulse" />
+            <div className="h-8 w-24 bg-black/[0.06] rounded-lg animate-pulse" />
+            <div className="h-8 w-20 bg-black/[0.06] rounded-lg animate-pulse" />
           </div>
         </div>
       </div>
@@ -44,13 +44,13 @@ export default function DashboardLoading() {
         ))}
       </div>
 
-      {/* Subtle gold accent — gives energy instead of dead skeleton */}
-      <div className="fixed bottom-6 right-6 flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/20 backdrop-blur-sm">
+      {/* Subtle blue accent — gives energy instead of dead skeleton */}
+      <div className="fixed bottom-6 right-6 flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] backdrop-blur-sm">
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-gold" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2563EB] opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2563EB]" />
         </span>
-        <span className="text-[10px] text-gold font-medium">Loading...</span>
+        <span className="text-[10px] text-[#2563EB] font-medium">Loading...</span>
       </div>
     </div>
   );

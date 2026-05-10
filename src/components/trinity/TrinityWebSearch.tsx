@@ -22,7 +22,7 @@ export default function TrinityWebSearch({ onDismiss }: Props) {
   return (
     <div className="mt-3 p-3 rounded-xl bg-surface-light border border-border max-w-2xl mx-auto">
       <div className="flex items-start gap-2.5">
-        <Globe size={14} className="text-gold mt-0.5 shrink-0" />
+        <Globe size={14} className="text-[#2563EB] mt-0.5 shrink-0" />
         <div className="flex-1">
           <p className="text-xs font-medium mb-0.5">Web search is built in</p>
           <p className="text-[10px] text-muted">
@@ -33,7 +33,7 @@ export default function TrinityWebSearch({ onDismiss }: Props) {
         {onDismiss && (
           <button
             onClick={onDismiss}
-            className="text-[10px] text-muted hover:text-gold transition-colors"
+            className="text-[10px] text-muted hover:text-[#2563EB] transition-colors"
           >
             Dismiss
           </button>

@@ -168,7 +168,7 @@ export default function AffiliatePortalPage() {
   if (affiliates.length === 0) {
     return (
       <div className="max-w-3xl mx-auto py-16 px-6 text-center space-y-4">
-        <Award size={40} className="mx-auto text-gold/60" />
+        <Award size={40} className="mx-auto text-[rgba(37,99,235,0.6)]" />
         <h1 className="text-2xl font-semibold">Affiliate portal</h1>
         <p className="text-muted">
           You're not enrolled in any affiliate program yet. If you've been invited
@@ -192,8 +192,8 @@ export default function AffiliatePortalPage() {
   return (
     <div className="max-w-5xl mx-auto py-10 px-6 space-y-8">
       <div className="flex items-center gap-3">
-        <div className="p-3  bg-gold/10 border border-gold/30">
-          <Award size={24} className="text-gold" />
+        <div className="p-3  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)]">
+          <Award size={24} className="text-[#2563EB]" />
         </div>
         <div>
           <h1 className="text-2xl font-semibold">Your affiliate portal</h1>
@@ -204,7 +204,7 @@ export default function AffiliatePortalPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className=" border border-border bg-card/40 p-5">
           <div className="text-xs uppercase text-muted">Total earned</div>
-          <div className="text-2xl font-bold text-gold mt-1">{fmtCents(totalEarned)}</div>
+          <div className="text-2xl font-bold text-[#2563EB] mt-1">{fmtCents(totalEarned)}</div>
         </div>
         <div className=" border border-border bg-card/40 p-5">
           <div className="text-xs uppercase text-muted">Pending</div>
@@ -228,7 +228,7 @@ export default function AffiliatePortalPage() {
           <button
             onClick={connectStripe}
             disabled={connectingStripe}
-            className="flex items-center gap-2 px-4 py-2 bg-gold text-dark text-sm font-semibold rounded-lg disabled:opacity-60"
+            className="flex items-center gap-2 px-4 py-2 bg-[#2563EB] text-white text-sm font-semibold rounded-lg disabled:opacity-60"
           >
             <ExternalLink size={14} />
             {connectingStripe ? "Opening…" : "Connect Stripe"}
@@ -346,7 +346,7 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
             <p className="text-xs text-muted">{program.description}</p>
           )}
           {program && (
-            <p className="text-xs text-gold mt-1">
+            <p className="text-xs text-[#2563EB] mt-1">
               {commissionLabel(program)} · {program.cookie_days}d cookie · payout threshold{" "}
               {fmtCents(program.payout_threshold_cents)}
             </p>
@@ -373,7 +373,7 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
         />
         <button
           onClick={copy}
-          className="px-3 py-2 bg-gold text-dark rounded-lg text-sm font-semibold flex items-center gap-2"
+          className="px-3 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold flex items-center gap-2"
         >
           <Copy size={14} /> Copy
         </button>
@@ -388,7 +388,7 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
       <div className="grid grid-cols-3 gap-2 text-xs">
         <div className="rounded-lg bg-muted/10 p-2">
           <div className="text-muted">Earned</div>
-          <div className="font-semibold text-gold">{fmtCents(affiliate.total_earned_cents)}</div>
+          <div className="font-semibold text-[#2563EB]">{fmtCents(affiliate.total_earned_cents)}</div>
         </div>
         <div className="rounded-lg bg-muted/10 p-2">
           <div className="text-muted">Pending</div>

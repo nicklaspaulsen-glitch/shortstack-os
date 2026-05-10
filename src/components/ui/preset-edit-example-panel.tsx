@@ -246,13 +246,13 @@ function VideoEditExample({
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Custom preset name..."
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-gold/40"
+            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
           />
           <button
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-gold text-black px-4 py-2 text-sm font-semibold hover:bg-gold/90 disabled:opacity-60 transition"
+            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#2563EB] text-white px-4 py-2 text-sm font-semibold hover:bg-[#1D4ED8] disabled:opacity-60 transition"
           >
             {saving ? (
               <Loader size={13} className="animate-spin" />
@@ -364,13 +364,13 @@ function ThumbnailEditExample({
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Custom preset name..."
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-gold/40"
+            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
           />
           <button
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-gold text-black px-4 py-2 text-sm font-semibold hover:bg-gold/90 disabled:opacity-60 transition"
+            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#2563EB] text-white px-4 py-2 text-sm font-semibold hover:bg-[#1D4ED8] disabled:opacity-60 transition"
           >
             {saving ? (
               <Loader size={13} className="animate-spin" />
@@ -412,7 +412,7 @@ function ThumbnailEditExample({
           value={overlayText}
           onChange={(e) => setOverlayText(e.target.value)}
           placeholder="Your headline here..."
-          className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-gold/40"
+          className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
         />
       </div>
 
@@ -500,13 +500,13 @@ function TelegramEditExample({
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Custom preset name..."
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-gold/40"
+            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
           />
           <button
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-gold text-black px-4 py-2 text-sm font-semibold hover:bg-gold/90 disabled:opacity-60 transition"
+            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#2563EB] text-white px-4 py-2 text-sm font-semibold hover:bg-[#1D4ED8] disabled:opacity-60 transition"
           >
             {saving ? (
               <Loader size={13} className="animate-spin" />
@@ -526,7 +526,7 @@ function TelegramEditExample({
           <p className="text-xs text-muted font-medium">Fill in variables to preview</p>
           {vars.map((v) => (
             <div key={v} className="flex items-center gap-2">
-              <span className="text-[10px] text-gold font-mono bg-gold/10 border border-gold/20 rounded px-2 py-1 min-w-[110px] text-center shrink-0">
+              <span className="text-[10px] text-[#2563EB] font-mono bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-2 py-1 min-w-[110px] text-center shrink-0">
                 {`{{${v}}}`}
               </span>
               <input
@@ -535,7 +535,7 @@ function TelegramEditExample({
                   setVarValues((prev) => ({ ...prev, [v]: e.target.value }))
                 }
                 placeholder={v}
-                className="flex-1 bg-surface-light border border-border rounded-lg px-3 py-1.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-gold/40"
+                className="flex-1 bg-surface-light border border-border rounded-lg px-3 py-1.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
               />
             </div>
           ))}

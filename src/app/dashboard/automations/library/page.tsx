@@ -45,13 +45,13 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  sales: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
-  onboarding: "bg-blue-500/10 text-blue-300 border-blue-500/20",
-  retention: "bg-purple-500/10 text-purple-300 border-purple-500/20",
-  recovery: "bg-rose-500/10 text-rose-300 border-rose-500/20",
-  social: "bg-pink-500/10 text-pink-300 border-pink-500/20",
-  support: "bg-amber-500/10 text-amber-300 border-amber-500/20",
-  marketing: "bg-cyan-500/10 text-cyan-300 border-cyan-500/20",
+  sales: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  onboarding: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
+  retention: "bg-violet-50 text-violet-700 border-violet-200",
+  recovery: "bg-rose-50 text-rose-700 border-rose-200",
+  social: "bg-pink-50 text-pink-700 border-pink-200",
+  support: "bg-amber-50 text-amber-700 border-amber-200",
+  marketing: "bg-cyan-50 text-cyan-700 border-cyan-200",
 };
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
@@ -128,7 +128,7 @@ export default function WorkflowLibraryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="min-h-screen bg-[#F3F6FA] text-[#111827]">
       <PageHero
         title="Workflow Library"
         subtitle="Battle-tested automations you can install in one click"
@@ -143,21 +143,21 @@ export default function WorkflowLibraryPage() {
           <div className="relative flex-1 min-w-[240px]">
             <Search
               size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]"
             />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search templates..."
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-900 pl-9 pr-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-zinc-600 focus:outline-none"
+              className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white pl-9 pr-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter size={14} className="text-zinc-500" />
+            <Filter size={14} className="text-[#9CA3AF]" />
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 focus:border-zinc-600 focus:outline-none"
+              className="rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-sm text-[#111827] focus:border-[#2563EB] focus:outline-none"
             >
               <option value="all">All categories</option>
               {Object.entries(CATEGORY_LABELS).map(([k, label]) => (
@@ -169,7 +169,7 @@ export default function WorkflowLibraryPage() {
           </div>
           <Link
             href="/dashboard/automations"
-            className="ml-auto inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-200"
+            className="ml-auto inline-flex items-center gap-1.5 text-xs text-[#6B7280] hover:text-[#374151]"
           >
             Back to automations <ArrowRight size={12} />
           </Link>
@@ -177,11 +177,11 @@ export default function WorkflowLibraryPage() {
 
         {/* Cards */}
         {loading ? (
-          <div className="flex items-center justify-center py-24 text-zinc-500">
+          <div className="flex items-center justify-center py-24 text-[#9CA3AF]">
             <Loader className="animate-spin" size={20} />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 px-6 py-16 text-center text-zinc-500">
+          <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-6 py-16 text-center text-[#9CA3AF]">
             No templates match your filters.
           </div>
         ) : (
@@ -190,13 +190,13 @@ export default function WorkflowLibraryPage() {
               <motion.article
                 key={t.id}
                 variants={itemVariants}
-                className="group rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 transition hover:border-zinc-700 hover:bg-zinc-900"
+                className="group rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 transition hover:border-[rgba(0,0,0,0.14)] hover:bg-[#F8FAFC]"
               >
                 <div className="mb-3 flex items-center justify-between gap-2">
                   <span
                     className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
                       CATEGORY_COLORS[t.category] ||
-                      "bg-zinc-700/30 text-zinc-300 border-zinc-700"
+                      "bg-[rgba(0,0,0,0.06)] text-[#374151] border-[rgba(0,0,0,0.10)]"
                     }`}
                   >
                     {CATEGORY_LABELS[t.category] || t.category}
@@ -208,14 +208,14 @@ export default function WorkflowLibraryPage() {
                   )}
                 </div>
 
-                <h3 className="mb-1.5 text-base font-semibold text-zinc-100">
+                <h3 className="mb-1.5 text-base font-semibold text-[#111827]">
                   {t.name}
                 </h3>
-                <p className="mb-4 text-sm text-zinc-400 leading-relaxed">
+                <p className="mb-4 text-sm text-[#6B7280] leading-relaxed">
                   {t.description}
                 </p>
 
-                <div className="mb-4 flex flex-wrap gap-2 text-[11px] text-zinc-500">
+                <div className="mb-4 flex flex-wrap gap-2 text-[11px] text-[#9CA3AF]">
                   <span className="inline-flex items-center gap-1">
                     <Zap size={11} /> {t.step_count} steps
                   </span>
@@ -225,12 +225,12 @@ export default function WorkflowLibraryPage() {
                 </div>
 
                 {t.required_integrations.length > 0 && (
-                  <div className="mb-4 text-[11px] text-zinc-500">
-                    <span className="text-zinc-600">Needs:</span>{" "}
+                  <div className="mb-4 text-[11px] text-[#9CA3AF]">
+                    <span className="text-[#6B7280]">Needs:</span>{" "}
                     {t.required_integrations.map((i) => (
                       <span
                         key={i}
-                        className="ml-1 inline-flex rounded bg-zinc-800/80 px-1.5 py-0.5 font-mono text-[10px] text-zinc-300"
+                        className="ml-1 inline-flex rounded bg-[rgba(0,0,0,0.06)] px-1.5 py-0.5 font-mono text-[10px] text-[#374151]"
                       >
                         {i}
                       </span>
@@ -242,7 +242,7 @@ export default function WorkflowLibraryPage() {
                   {t.installed ? (
                     <Link
                       href={`/dashboard/automations`}
-                      className="flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-center text-xs font-semibold text-zinc-200 hover:bg-zinc-700"
+                      className="flex-1 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-center text-xs font-semibold text-[#374151] hover:bg-[rgba(0,0,0,0.06)]"
                     >
                       Open
                     </Link>
@@ -250,7 +250,7 @@ export default function WorkflowLibraryPage() {
                     <button
                       onClick={() => install(t.id)}
                       disabled={installing === t.id}
-                      className="flex-1 rounded-lg bg-amber-500/90 px-3 py-2 text-xs font-semibold text-zinc-950 transition hover:bg-amber-400 disabled:opacity-60"
+                      className="flex-1 rounded-lg bg-[#2563EB] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#3B82F6] disabled:opacity-60"
                     >
                       {installing === t.id ? "Installing..." : "Install"}
                     </button>

@@ -253,13 +253,13 @@ export default function Tab2AIUpload() {
         onDrop={onDrop}
         className={`relative  border-2 border-dashed transition-all p-8 text-center ${
           dragOver
-            ? "border-gold/60 bg-gold/5"
+            ? "border-[rgba(37,99,235,0.5)] bg-[rgba(37,99,235,0.05)]"
             : "border-border/40 bg-surface hover:border-border/60"
         }`}
       >
         <div className="flex flex-col items-center gap-3">
-          <div className="w-14 h-14  bg-gold/10 border border-gold/30 flex items-center justify-center">
-            <UploadCloud size={26} className="text-gold" />
+          <div className="w-14 h-14  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center">
+            <UploadCloud size={26} className="text-[#2563EB]" />
           </div>
           <div>
             <h3 className="text-base font-semibold tracking-tight">
@@ -321,7 +321,7 @@ export default function Tab2AIUpload() {
                 onClick={() => setTone(t)}
                 className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
                   tone === t
-                    ? "bg-gold/20 border-gold/40 text-gold"
+                    ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
                     : "border-border/40 text-muted hover:bg-elevated"
                 }`}
               >
@@ -333,7 +333,7 @@ export default function Tab2AIUpload() {
             type="button"
             onClick={handleAnalyze}
             disabled={analyzing || uploading || (!asset && !textInput.trim())}
-            className="px-4 py-1.5 rounded-md bg-gold/20 border border-gold/40 text-gold inline-flex items-center gap-2 text-xs font-medium hover:bg-gold/30 disabled:opacity-50"
+            className="px-4 py-1.5 rounded-md bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.4)] text-[#2563EB] inline-flex items-center gap-2 text-xs font-medium hover:bg-[rgba(37,99,235,0.18)] disabled:opacity-50"
           >
             {analyzing ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
             {analyzing ? "AI thinking..." : "Run AI"}
@@ -346,7 +346,7 @@ export default function Tab2AIUpload() {
           <div className="rounded-xl border border-border/40 bg-surface p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Wand2 size={14} className="text-gold" />
+                <Wand2 size={14} className="text-[#2563EB]" />
                 <h3 className="text-sm font-semibold tracking-tight">AI summary</h3>
               </div>
               <button
@@ -406,7 +406,7 @@ export default function Tab2AIUpload() {
                             onClick={() => pickVariant(platform, c)}
                             className={`text-[10px] px-2 py-1 rounded border transition-all ${
                               e.selectedVariant === c.variant
-                                ? "border-gold/40 bg-gold/10 text-gold"
+                                ? "border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                                 : "border-border/40 text-muted hover:bg-elevated"
                             }`}
                           >
@@ -492,7 +492,7 @@ export default function Tab2AIUpload() {
               type="button"
               onClick={() => handleScheduleAll(false)}
               disabled={scheduling}
-              className="px-4 py-2 rounded-md bg-gold/20 border border-gold/40 text-gold text-xs font-medium inline-flex items-center gap-2 disabled:opacity-50"
+              className="px-4 py-2 rounded-md bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.4)] text-[#2563EB] text-xs font-medium inline-flex items-center gap-2 disabled:opacity-50"
             >
               {scheduling ? <Loader2 size={12} className="animate-spin" /> : <CalendarIcon size={12} />}
               Schedule all

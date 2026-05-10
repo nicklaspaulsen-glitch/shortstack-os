@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Voice Receptionist — 24/7 AI phone agent that answers, qualifies, and books.
+ * Voice Receptionist ï¿½ 24/7 AI phone agent that answers, qualifies, and books.
  *
- * Production-wired (Apr 27): the full pipeline is live —
+ * Production-wired (Apr 27): the full pipeline is live ï¿½
  *   Twilio inbound ? /api/twilio/voice-webhook (validates X-Twilio-Signature,
  *     resolves the owning client, upserts voice_calls row, returns TwiML
  *     <Connect><Stream> to ElevenLabs ConvAI when client.eleven_agent_id is set)
@@ -21,10 +21,10 @@
  *
  * Sections:
  *   1. Overview + stat cards (calls handled / booked / avg duration)
- *   2. Agent setup card — voice pick, greeting, hours, transfer rules
- *   3. Call log table — live from voice_calls; falls back to ElevenLabs API; demo data last
- *   4. Calendar integration panel — link to /dashboard/calendar
- *   5. Quota indicator — call_minutes used/limit this month
+ *   2. Agent setup card ï¿½ voice pick, greeting, hours, transfer rules
+ *   3. Call log table ï¿½ live from voice_calls; falls back to ElevenLabs API; demo data last
+ *   4. Calendar integration panel ï¿½ link to /dashboard/calendar
+ *   5. Quota indicator ï¿½ call_minutes used/limit this month
  *
  * Demo-data banner only shows when the user hasn't set up ElevenLabs OR
  * hasn't received a call yet. Once a real call lands in voice_calls the
@@ -158,7 +158,7 @@ const DEFAULT_CONFIG: AgentConfig = {
   agentName: "Front-desk AI",
   voiceId: "",
   greeting:
-    "Hi, thanks for calling. I'm the AI receptionist — I can book a call, answer questions, or get a message to the team. How can I help?",
+    "Hi, thanks for calling. I'm the AI receptionist ï¿½ I can book a call, answer questions, or get a message to the team. How can I help?",
   hoursStart: "00:00",
   hoursEnd: "23:59",
   transferRule: "qualified_only",
@@ -168,7 +168,7 @@ const DEFAULT_CONFIG: AgentConfig = {
 const CONFIG_STORAGE_KEY = "voice-receptionist:config:v1";
 const DEMO_CALLS_STORAGE_KEY = "voice-receptionist:demo-calls:v1";
 
-// Honest demo data — labelled clearly as demo in the UI so it can't be
+// Honest demo data ï¿½ labelled clearly as demo in the UI so it can't be
 // mistaken for real customer calls.
 const DEMO_CALLS: CallRow[] = [
   {
@@ -178,7 +178,7 @@ const DEMO_CALLS: CallRow[] = [
     durationSec: 184,
     outcome: "booked",
     transcriptPreview:
-      "Caller wanted a demo for their 12-person agency. Walked through pricing, booked Tuesday 2pm…",
+      "Caller wanted a demo for their 12-person agency. Walked through pricing, booked Tuesday 2pmï¿½",
     crmLink: null,
   },
   {
@@ -225,7 +225,7 @@ function fmtDuration(sec: number): string {
 }
 
 function fmtDurationAvg(sec: number): string {
-  if (!sec || sec < 1) return "—";
+  if (!sec || sec < 1) return "ï¿½";
   const m = Math.floor(sec / 60);
   const s = Math.floor(sec % 60);
   return `${m}:${s.toString().padStart(2, "0")}`;
@@ -257,7 +257,7 @@ function outcomeMeta(outcome: CallOutcome): {
     case "qualified":
       return {
         label: "Qualified",
-        className: "bg-sky-500/15 text-sky-300",
+        className: "bg-[rgba(37,99,235,0.10)] text-[#2563EB]",
         icon: UserCheck,
       };
     case "unqualified":
@@ -275,13 +275,13 @@ function outcomeMeta(outcome: CallOutcome): {
     case "missed":
       return {
         label: "Missed",
-        className: "bg-amber-500/15 text-amber-300",
+        className: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
         icon: AlertCircle,
       };
     case "dropped":
       return {
         label: "Dropped",
-        className: "bg-amber-500/15 text-amber-300",
+        className: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
         icon: AlertCircle,
       };
     case "pending":
@@ -324,19 +324,19 @@ function voiceCallToCallRow(v: VoiceCallRow): CallRow {
     outcome,
     transcriptPreview:
       transcript.length > 0
-        ? transcript.slice(0, 280) + (transcript.length > 280 ? "…" : "")
+        ? transcript.slice(0, 280) + (transcript.length > 280 ? "ï¿½" : "")
         : v.recording_url
-          ? "Recording available — transcript still processing."
+          ? "Recording available ï¿½ transcript still processing."
           : v.status === "completed"
             ? "No transcript captured for this call."
-            : "Call in progress…",
+            : "Call in progressï¿½",
     crmLink: v.client_id ? `/dashboard/clients/${v.client_id}` : null,
   };
 }
 
 /**
  * Normalise an ElevenLabs conversation object to the UI's CallRow shape.
- * The ElevenLabs schema here is best-effort — the exposed /convai/conversations
+ * The ElevenLabs schema here is best-effort ï¿½ the exposed /convai/conversations
  * response shape isn't strongly documented, so we fall back gracefully.
  */
 function convoToCallRow(c: ElevenConversation, idx: number): CallRow {
@@ -345,7 +345,7 @@ function convoToCallRow(c: ElevenConversation, idx: number): CallRow {
       ? new Date(c.start_time_unix_secs * 1000).toISOString()
       : new Date().toISOString();
 
-  // ElevenLabs ConvAI doesn't classify outcomes natively yet — default to
+  // ElevenLabs ConvAI doesn't classify outcomes natively yet ï¿½ default to
   // "other" until a proper classifier ships. Very short calls look like spam.
   let outcome: CallOutcome = "other";
   if (c.call_duration_secs && c.call_duration_secs < 15) outcome = "spam";
@@ -358,7 +358,7 @@ function convoToCallRow(c: ElevenConversation, idx: number): CallRow {
     durationSec: c.call_duration_secs || 0,
     outcome,
     transcriptPreview:
-      c.transcript_summary || "Transcript summary unavailable — open in ElevenLabs.",
+      c.transcript_summary || "Transcript summary unavailable ï¿½ open in ElevenLabs.",
     crmLink: null,
   };
 }
@@ -395,7 +395,7 @@ export default function VoiceReceptionistPage() {
         setConfig((prev) => ({ ...prev, ...parsed }));
       }
     } catch {
-      /* ignore — fall back to defaults */
+      /* ignore ï¿½ fall back to defaults */
     }
   }, []);
 
@@ -417,7 +417,7 @@ export default function VoiceReceptionistPage() {
       errors.push("usage");
     }
 
-    // 2. Voices — requires ELEVENLABS_API_KEY on the server
+    // 2. Voices ï¿½ requires ELEVENLABS_API_KEY on the server
     let backendLive = false;
     try {
       const res = await fetch("/api/eleven-agents/voices", { cache: "no-store" });
@@ -445,7 +445,7 @@ export default function VoiceReceptionistPage() {
       /* no-op */
     }
 
-    // 4. Call log — prefer the authoritative voice_calls table (real Twilio
+    // 4. Call log ï¿½ prefer the authoritative voice_calls table (real Twilio
     //    events + Haiku-classified outcomes). Fall back to ElevenLabs
     //    conversations list, then to demo data.
     let gotRealRows = false;
@@ -468,7 +468,7 @@ export default function VoiceReceptionistPage() {
     setUsingRealCalls(gotRealRows);
 
     if (!gotRealRows) {
-      // No voice_calls rows yet — try the ElevenLabs fallback (matches
+      // No voice_calls rows yet ï¿½ try the ElevenLabs fallback (matches
       // previous behaviour), then demo data.
       let gotFromEleven = false;
       try {
@@ -542,7 +542,7 @@ export default function VoiceReceptionistPage() {
       return;
     }
     setCreatingAgent(true);
-    const tid = toast.loading("Creating agent on ElevenLabs…");
+    const tid = toast.loading("Creating agent on ElevenLabsï¿½");
     try {
       const res = await fetch("/api/eleven-agents", {
         method: "POST",
@@ -615,19 +615,19 @@ export default function VoiceReceptionistPage() {
     <div className="min-h-screen bg-background text-foreground">
       <PageHero
         title="AI Voice Receptionist"
-        subtitle="Your 24/7 AI receptionist — never miss a call again. Answers every ring, books qualified leads directly to your calendar, screens spam."
+        subtitle="Your 24/7 AI receptionist ï¿½ never miss a call again. Answers every ring, books qualified leads directly to your calendar, screens spam."
         icon={<PhoneCall size={20} />}
         gradient="purple"
         eyebrow="Beta"
       />
 
       <div className="mx-auto max-w-6xl space-y-6 px-6 pb-10 pt-6">
-        {/* First-call setup wizard — self-hides once a client is fully
+        {/* First-call setup wizard ï¿½ self-hides once a client is fully
             wired (twilio_phone_number + eleven_agent_id both set) and the
             user has explicitly dismissed it. */}
         <FirstCallWizard />
 
-        {/* Beta honesty banner — shown until the first real call lands in
+        {/* Beta honesty banner ï¿½ shown until the first real call lands in
             voice_calls. Agent setup + Twilio webhook + Haiku classifier are
             all live; the banner just explains why the log is still empty on
             first run. */}
@@ -636,17 +636,17 @@ export default function VoiceReceptionistPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22 }}
-            className="flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4"
+            className="flex items-start gap-3 rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] p-4"
           >
-            <AlertCircle size={18} className="mt-0.5 shrink-0 text-amber-400" />
+            <AlertCircle size={18} className="mt-0.5 shrink-0 text-[#2563EB]" />
             <div className="text-[12px] leading-relaxed">
-              <p className="font-semibold text-amber-300">
+              <p className="font-semibold text-[#2563EB]">
                 {liveBackend
-                  ? "No real calls yet — showing sample data"
+                  ? "No real calls yet ï¿½ showing sample data"
                   : "Connect ElevenLabs + a Twilio number to start tracking real calls"}
               </p>
               <p className="mt-1 text-muted">
-                The pipeline is fully wired — Twilio voice-webhook,
+                The pipeline is fully wired ï¿½ Twilio voice-webhook,
                 ElevenLabs ConvAI bridge, status callback, and the
                 conversation-ended webhook all log straight into your{" "}
                 <code className="rounded bg-black/40 px-1 py-0.5 text-[10.5px]">
@@ -723,7 +723,7 @@ export default function VoiceReceptionistPage() {
         >
           <div className="mb-4 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/15 text-purple-300">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.10)] text-[#2563EB]">
                 <Mic size={14} />
               </div>
               <div>
@@ -775,13 +775,13 @@ export default function VoiceReceptionistPage() {
                   {voices.map((v) => (
                     <option key={v.voice_id} value={v.voice_id}>
                       {v.name}
-                      {v.category ? ` · ${v.category}` : ""}
+                      {v.category ? ` ï¿½ ${v.category}` : ""}
                     </option>
                   ))}
                 </select>
               </Field>
 
-              {/* Voice-clone upload — honest about not being wired */}
+              {/* Voice-clone upload ï¿½ honest about not being wired */}
               <div className="rounded-lg border border-dashed border-border/50 bg-surface-light/20 p-4">
                 <div className="mb-1 flex items-center justify-between">
                   <p className="text-[12px] font-semibold">Upload voice sample</p>
@@ -791,7 +791,7 @@ export default function VoiceReceptionistPage() {
                 </div>
                 <p className="text-[11px] text-muted">
                   Drop a 30-second recording to clone your best salesperson into ElevenLabs.
-                  Shipping next — for now, pick from the stock voice list above.
+                  Shipping next ï¿½ for now, pick from the stock voice list above.
                 </p>
                 <button
                   disabled
@@ -811,7 +811,7 @@ export default function VoiceReceptionistPage() {
                     setConfig({ ...config, greeting: e.target.value })
                   }
                   rows={4}
-                  placeholder="Hi, thanks for calling…"
+                  placeholder="Hi, thanks for callingï¿½"
                   className="w-full resize-none rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] leading-relaxed placeholder:text-muted/60"
                 />
               </Field>
@@ -857,7 +857,7 @@ export default function VoiceReceptionistPage() {
                     Only after the lead is qualified
                   </option>
                   <option value="always">Always, after the greeting</option>
-                  <option value="never">Never — AI handles the whole call</option>
+                  <option value="never">Never ï¿½ AI handles the whole call</option>
                 </select>
               </Field>
 
@@ -901,7 +901,7 @@ export default function VoiceReceptionistPage() {
             >
               {creatingAgent ? (
                 <>
-                  <Loader2 size={13} className="animate-spin" /> Creating…
+                  <Loader2 size={13} className="animate-spin" /> Creatingï¿½
                 </>
               ) : (
                 <>
@@ -921,7 +921,7 @@ export default function VoiceReceptionistPage() {
         >
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-sky-500/15 text-sky-300">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.10)] text-[#2563EB]">
                 <FileText size={14} />
               </div>
               <div>
@@ -932,7 +932,7 @@ export default function VoiceReceptionistPage() {
               </div>
             </div>
             {!liveBackend && calls.length > 0 && (
-              <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold text-amber-300">
+              <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[10px] font-semibold text-[#2563EB]">
                 Demo data
               </span>
             )}
@@ -940,13 +940,13 @@ export default function VoiceReceptionistPage() {
 
           {loading ? (
             <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted">
-              <Loader2 size={14} className="animate-spin" /> Loading calls…
+              <Loader2 size={14} className="animate-spin" /> Loading callsï¿½
             </div>
           ) : calls.length === 0 ? (
             <EmptyState
               icon={<PhoneCall size={28} />}
               title="No calls yet"
-              description="Once your receptionist picks up its first call, it'll show up here — caller, outcome, transcript, CRM link."
+              description="Once your receptionist picks up its first call, it'll show up here ï¿½ caller, outcome, transcript, CRM link."
             />
           ) : (
             <div className="overflow-x-auto">
@@ -997,12 +997,12 @@ export default function VoiceReceptionistPage() {
                           {c.crmLink ? (
                             <Link
                               href={c.crmLink}
-                              className="inline-flex items-center gap-1 text-[11px] text-indigo-300 hover:underline"
+                              className="inline-flex items-center gap-1 text-[11px] text-[#2563EB] hover:underline"
                             >
                               Open <ExternalLink size={10} />
                             </Link>
                           ) : (
-                            <span className="text-[10px] text-muted/70">—</span>
+                            <span className="text-[10px] text-muted/70">ï¿½</span>
                           )}
                         </td>
                       </motion.tr>
@@ -1038,21 +1038,21 @@ export default function VoiceReceptionistPage() {
               allowed) book directly into your connected calendar.
             </li>
             <li>
-              Call minutes count against your plan tier — see the quota panel for your
+              Call minutes count against your plan tier ï¿½ see the quota panel for your
               current usage.
             </li>
             <li>
               Provision phone numbers under{" "}
               <Link
                 href="/dashboard/phone-email"
-                className="text-indigo-300 underline"
+                className="text-[#2563EB] underline"
               >
                 Phone / Email
               </Link>
               . Browse every agent under{" "}
               <Link
                 href="/dashboard/eleven-agents"
-                className="text-indigo-300 underline"
+                className="text-[#2563EB] underline"
               >
                 ElevenAgents
               </Link>
@@ -1145,7 +1145,7 @@ function CalendarIntegrationCard() {
 
       {state === "loading" ? (
         <div className="flex items-center gap-2 text-[12px] text-muted">
-          <Loader2 size={12} className="animate-spin" /> Checking connection…
+          <Loader2 size={12} className="animate-spin" /> Checking connectionï¿½
         </div>
       ) : state === "connected" ? (
         <div className="flex items-center justify-between gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
@@ -1156,7 +1156,7 @@ function CalendarIntegrationCard() {
                 Connected
               </p>
               <p className="text-[11px] text-muted">
-                {provider || "Google Calendar"} · bookings land directly on your
+                {provider || "Google Calendar"} ï¿½ bookings land directly on your
                 calendar.
               </p>
             </div>
@@ -1175,7 +1175,7 @@ function CalendarIntegrationCard() {
           <div className="flex items-start gap-2">
             <AlertCircle
               size={15}
-              className="mt-0.5 shrink-0 text-amber-400"
+              className="mt-0.5 shrink-0 text-[#2563EB]"
             />
             <div>
               <p className="text-[12.5px] font-semibold text-foreground">
@@ -1222,7 +1222,7 @@ function QuotaCard({
       className="glass rounded-xl !p-5"
     >
       <div className="mb-3 flex items-center gap-2">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/15 text-amber-300">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB]">
           <Phone size={14} />
         </div>
         <div>
@@ -1240,14 +1240,14 @@ function QuotaCard({
           <div className="flex items-center justify-between text-[12px]">
             <span className="text-muted">
               Plan:{" "}
-              <span className="font-semibold text-indigo-300">
-                {planTier || "—"}
+              <span className="font-semibold text-[#2563EB]">
+                {planTier || "ï¿½"}
               </span>
             </span>
             <span className="font-mono text-[13px] text-foreground">
               {quota.used.toLocaleString()}
               {quota.isUnlimited
-                ? " · Unlimited"
+                ? " ï¿½ Unlimited"
                 : ` / ${quota.limitNum.toLocaleString()}`}
             </span>
           </div>
@@ -1271,7 +1271,7 @@ function QuotaCard({
           </div>
           {!quota.isUnlimited && quota.pct >= 100 && (
             <p className="text-[11px] text-rose-300">
-              Limit reached —{" "}
+              Limit reached ï¿½{" "}
               <Link
                 href="/dashboard/pricing"
                 className="underline hover:text-rose-200"
@@ -1282,7 +1282,7 @@ function QuotaCard({
             </p>
           )}
           {!quota.isUnlimited && quota.pct >= 80 && quota.pct < 100 && (
-            <p className="text-[11px] text-amber-300">
+            <p className="text-[11px] text-[#2563EB]">
               {Math.max(0, quota.limitNum - quota.used).toLocaleString()} minutes
               left this month.
             </p>
@@ -1301,10 +1301,10 @@ function buildSystemPrompt(c: AgentConfig): string {
   const hours =
     c.hoursStart === "00:00" && c.hoursEnd === "23:59"
       ? "You are available 24/7."
-      : `Business hours are ${c.hoursStart}–${c.hoursEnd} local time.`;
+      : `Business hours are ${c.hoursStart}ï¿½${c.hoursEnd} local time.`;
   const transfer =
     c.transferRule === "never"
-      ? "Never transfer to a human — handle every call yourself."
+      ? "Never transfer to a human ï¿½ handle every call yourself."
       : c.transferRule === "always"
         ? `After the greeting, offer to transfer the caller to a human at ${c.transferNumber || "[number not set]"}.`
         : `If the caller is qualified (real business, specific need, not a robocall), offer to transfer to a human at ${c.transferNumber || "[number not set]"}. Otherwise book them on the calendar instead.`;
@@ -1314,10 +1314,10 @@ function buildSystemPrompt(c: AgentConfig): string {
     "Qualify every caller: who they are, what business they run, what they need.",
     "If they want to book a meeting, use the booking tool to schedule it directly.",
     transfer,
-    "Keep responses short and natural — under 25 words. Never say you're an AI unless asked directly.",
+    "Keep responses short and natural ï¿½ under 25 words. Never say you're an AI unless asked directly.",
   ].join(" ");
 }
 
-// Silence unused-import lint — buttons referenced conditionally above.
+// Silence unused-import lint ï¿½ buttons referenced conditionally above.
 void Play;
 void Pause;

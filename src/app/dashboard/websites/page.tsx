@@ -56,9 +56,9 @@ interface PriceQuote {
 
 const STATUS_BADGE: Record<string, string> = {
   draft: "bg-slate-500/10 text-slate-400 border-slate-500/30",
-  generating: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+  generating: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
   preview: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
-  deploying: "bg-purple-500/10 text-purple-400 border-purple-500/30",
+  deploying: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
   live: "bg-green-500/10 text-green-400 border-green-500/30",
   failed: "bg-red-500/10 text-red-400 border-red-500/30",
   archived: "bg-slate-500/10 text-slate-400 border-slate-500/30",
@@ -879,7 +879,7 @@ export default function WebsitesPage() {
           </div>
           <span className="w-px h-4 bg-border" />
           <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
-            <Target size={12} className="text-amber-400" />
+            <Target size={12} className="text-[#2563EB]" />
             <span className="font-semibold">4.6% avg CVR</span>
             <span className="text-muted">across templates</span>
           </div>
@@ -922,7 +922,7 @@ export default function WebsitesPage() {
         <div className="flex items-end justify-between flex-wrap gap-2">
           <div>
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Layout size={14} className="text-gold" />
+              <Layout size={14} className="text-[#2563EB]" />
               Pick a niche. Ship in 30 seconds.
             </h2>
             <p className="text-[11px] text-muted mt-0.5">
@@ -931,7 +931,7 @@ export default function WebsitesPage() {
           </div>
           <button
             onClick={startBlank}
-            className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-gold/30 flex items-center gap-1"
+            className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] flex items-center gap-1"
           >
             Start from a blank canvas <ArrowRight size={10} />
           </button>
@@ -968,7 +968,7 @@ export default function WebsitesPage() {
             <button
               key={t.id}
               onClick={() => pickTemplate(t)}
-              className="group relative text-left  overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-1 hover:border-gold/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
+              className="group relative text-left  overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-1 hover:border-[rgba(37,99,235,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(37,99,235,0.6)] [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
             >
               {/* Preview image */}
               <div className="relative aspect-[3/2] overflow-hidden">
@@ -1045,9 +1045,9 @@ export default function WebsitesPage() {
               {/* Footer bar */}
               <div className="flex items-center justify-between px-3 py-2.5 bg-surface">
                 <span className="text-[10px] text-muted flex items-center gap-1">
-                  <Clock size={10} className="text-gold/70" /> {t.avgLaunch}
+                  <Clock size={10} className="text-[rgba(37,99,235,0.7)]" /> {t.avgLaunch}
                 </span>
-                <span className="text-[10px] text-gold font-semibold flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5">
+                <span className="text-[10px] text-[#2563EB] font-semibold flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5">
                   Use this <ArrowRight size={11} />
                 </span>
               </div>
@@ -1101,7 +1101,7 @@ export default function WebsitesPage() {
                 {STATUS_LABEL[effectiveStatus(active)] || active.status}
               </span>
               {effectiveStatus(active) === "preview" && active.demo_expires_at && (
-                <span className="text-[9px] px-2 py-0.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 inline-flex items-center gap-1">
+                <span className="text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] inline-flex items-center gap-1">
                   <Clock size={9} /> {daysUntil(active.demo_expires_at)} days left
                 </span>
               )}
@@ -1146,7 +1146,7 @@ export default function WebsitesPage() {
 
           {(active.preview_url || active.vercel_url) && (
             <div className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border">
-              <a href={active.preview_url || active.vercel_url || "#"} target="_blank" rel="noopener" className="text-[11px] text-gold hover:text-gold-light truncate">
+              <a href={active.preview_url || active.vercel_url || "#"} target="_blank" rel="noopener" className="text-[11px] text-[#2563EB] hover:text-[#3B82F6] truncate">
                 {active.preview_url || active.vercel_url}
               </a>
               <button onClick={() => { navigator.clipboard.writeText(active.preview_url || active.vercel_url || ""); toast.success("Copied"); }}>
@@ -1172,7 +1172,7 @@ export default function WebsitesPage() {
                       aria-label={v.label}
                       aria-pressed={on}
                       className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] transition ${
-                        on ? "bg-gold text-black font-semibold" : "text-muted hover:text-foreground"
+                        on ? "bg-[#2563EB] text-white font-semibold" : "text-muted hover:text-foreground"
                       }`}
                     >
                       <v.Icon size={11} /> {v.label}
@@ -1185,7 +1185,7 @@ export default function WebsitesPage() {
                   href={active.preview_url || active.vercel_url || "#"}
                   target="_blank"
                   rel="noopener"
-                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-gold/30 flex items-center gap-1"
+                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] flex items-center gap-1"
                 >
                   <ExternalLink size={10} /> Open in new tab
                 </a>
@@ -1219,7 +1219,7 @@ export default function WebsitesPage() {
       <div className="glass rounded-xl overflow-hidden">
         <div className="px-4 pt-4 pb-3">
           <h2 className="section-header flex items-center gap-2">
-            <Layout size={13} className="text-gold" /> Your websites ({projects.length})
+            <Layout size={13} className="text-[#2563EB]" /> Your websites ({projects.length})
           </h2>
         </div>
         {loading ? (
@@ -1230,7 +1230,7 @@ export default function WebsitesPage() {
             <p className="text-xs text-muted mb-3">No websites yet. Pick a niche template above and you&apos;ll have a live demo URL in 3 minutes &mdash; no card required.</p>
             <button
               onClick={startBlank}
-              className="text-xs px-4 py-2 rounded-lg border border-border text-muted hover:text-foreground hover:border-gold/30 inline-flex items-center gap-1.5"
+              className="text-xs px-4 py-2 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] inline-flex items-center gap-1.5"
             >
               <Plus size={12} /> Or build from scratch
             </button>
@@ -1270,7 +1270,7 @@ export default function WebsitesPage() {
                       {STATUS_LABEL[status] || p.status}
                     </span>
                     {status === "preview" && days !== null && (
-                      <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-200 backdrop-blur inline-flex items-center gap-1">
+                      <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] backdrop-blur inline-flex items-center gap-1">
                         <Clock size={9} /> {days}d
                       </span>
                     )}
@@ -1295,7 +1295,7 @@ export default function WebsitesPage() {
                       const STEPS = ["draft", "generating", "preview", "live"] as const;
                       const stepIdx = STEPS.indexOf(status as typeof STEPS[number]);
                       const currentIdx = stepIdx === -1 ? 0 : stepIdx;
-                      const stepColors = ["text-muted", "text-blue-400", "text-amber-400", "text-green-400"] as const;
+                      const stepColors = ["text-muted", "text-[#2563EB]", "text-[#2563EB]", "text-green-400"] as const;
                       const activeColor = stepColors[currentIdx] || stepColors[0];
                       return (
                         <div className="flex items-center gap-0.5">
@@ -1306,7 +1306,7 @@ export default function WebsitesPage() {
                               <div key={step} className="flex items-center gap-0.5 flex-1">
                                 <div
                                   className={`h-1 rounded-full flex-1 transition-all ${
-                                    done ? "bg-indigo-500/60" : active ? "bg-indigo-500/30" : "bg-white/8"
+                                    done ? "bg-[#2563EB]/60" : active ? "bg-[#2563EB]/30" : "bg-[rgba(0,0,0,0.06)]"
                                   }`}
                                 />
                                 {i === STEPS.length - 1 && (
@@ -1326,7 +1326,7 @@ export default function WebsitesPage() {
                         href={p.custom_domain ? `https://${p.custom_domain}` : (p.preview_url || p.vercel_url || "#")}
                         target="_blank"
                         rel="noopener"
-                        className="text-[10px] text-gold hover:text-gold-light truncate block"
+                        className="text-[10px] text-[#2563EB] hover:text-[#3B82F6] truncate block"
                       >
                         {p.custom_domain || p.preview_url || p.vercel_url}
                       </a>
@@ -1334,7 +1334,7 @@ export default function WebsitesPage() {
 
                     <div className="flex items-center justify-between pt-1 gap-1">
                       <div className="flex items-center gap-1 flex-wrap">
-                        <button onClick={() => setActive(p)} className="text-[10px] px-2 py-1 rounded-md bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1">
+                        <button onClick={() => setActive(p)} className="text-[10px] px-2 py-1 rounded-md bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
                           <Eye size={10} /> Open
                         </button>
                         {status === "preview" && (
@@ -1348,7 +1348,7 @@ export default function WebsitesPage() {
                           </>
                         )}
                         {status === "expired" && (
-                          <button onClick={() => extendDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-300 flex items-center gap-1">
+                          <button onClick={() => extendDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] flex items-center gap-1">
                             <Calendar size={10} /> Extend
                           </button>
                         )}
@@ -1386,7 +1386,7 @@ export default function WebsitesPage() {
             className="glass rounded-xl p-4 relative overflow-hidden"
           >
             <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
-            <h3 className="section-header flex items-center gap-2 text-gold">{item.icon} {item.title}</h3>
+            <h3 className="section-header flex items-center gap-2 text-[#2563EB]">{item.icon} {item.title}</h3>
             <p className="text-[10px] text-muted">{item.body}</p>
           </motion.div>
         ))}
@@ -1394,7 +1394,7 @@ export default function WebsitesPage() {
 
       <div className="glass rounded-xl p-4">
         <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
-          <ShieldCheck size={11} className="text-gold" /> Every template ships with
+          <ShieldCheck size={11} className="text-[#2563EB]" /> Every template ships with
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] text-muted">
           <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Bold hero headline + subheader</div>
@@ -1467,7 +1467,7 @@ function PricingModal({
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-base font-bold flex items-center gap-2">
-              <Rocket size={16} className="text-gold" /> Your Website is Ready!
+              <Rocket size={16} className="text-[#2563EB]" /> Your Website is Ready!
             </h2>
             <p className="text-[11px] text-muted">{project.name} � pick a plan to go live.</p>
           </div>
@@ -1512,13 +1512,13 @@ function PricingModal({
             {/* Billing cycle toggle */}
             <div className="flex items-center bg-surface-light border border-border rounded-lg p-0.5">
               <button
-                className={`flex-1 text-[10px] py-1.5 rounded-md transition ${billingCycle === "monthly" ? "bg-gold text-black font-semibold" : "text-muted"}`}
+                className={`flex-1 text-[10px] py-1.5 rounded-md transition ${billingCycle === "monthly" ? "bg-[#2563EB] text-white font-semibold" : "text-muted"}`}
                 onClick={() => onCycleChange("monthly")}
               >
                 Monthly
               </button>
               <button
-                className={`flex-1 text-[10px] py-1.5 rounded-md transition ${billingCycle === "yearly" ? "bg-gold text-black font-semibold" : "text-muted"}`}
+                className={`flex-1 text-[10px] py-1.5 rounded-md transition ${billingCycle === "yearly" ? "bg-[#2563EB] text-white font-semibold" : "text-muted"}`}
                 onClick={() => onCycleChange("yearly")}
               >
                 Yearly <span className="text-[9px] opacity-80">(-17%)</span>
@@ -1551,15 +1551,15 @@ function PricingModal({
                     <button
                       key={a.key}
                       onClick={() => onToggleAddon(a.key)}
-                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-gold bg-gold/10" : "border-border hover:border-gold/30"}`}
+                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
                     >
                       <span className="flex items-center gap-2 text-[11px]">
-                        <span className={active ? "text-gold" : "text-muted"}>{a.icon}</span>
+                        <span className={active ? "text-[#2563EB]" : "text-muted"}>{a.icon}</span>
                         {a.label}
                       </span>
                       <span className="flex items-center gap-2">
                         <span className="text-[10px] text-muted">+${a.price}/mo</span>
-                        <span className={`w-4 h-4 rounded-full border flex items-center justify-center ${active ? "bg-gold border-gold" : "border-border"}`}>
+                        <span className={`w-4 h-4 rounded-full border flex items-center justify-center ${active ? "bg-[#2563EB] border-[#2563EB]" : "border-border"}`}>
                           {active && <Check size={10} className="text-black" />}
                         </span>
                       </span>
@@ -1604,9 +1604,9 @@ function PricingModal({
               <li className="flex items-center gap-1 text-muted/60"><X size={9} /> No analytics</li>
             </ul>
           </div>
-          <div className="card border-gold/30 bg-gradient-to-br from-amber-500/5 to-orange-500/5">
+          <div className="card border-[rgba(37,99,235,0.25)] bg-gradient-to-br from-amber-500/5 to-orange-500/5">
             <h3 className="text-[11px] font-semibold mb-2 flex items-center gap-1.5">
-              <Crown size={11} className="text-gold" /> Paid Plan
+              <Crown size={11} className="text-[#2563EB]" /> Paid Plan
             </h3>
             <ul className="text-[10px] text-muted space-y-1">
               <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Everything in demo</li>

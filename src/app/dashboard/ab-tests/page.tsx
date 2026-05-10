@@ -51,17 +51,17 @@ interface AbTest {
 const STATUS_CONFIG: Record<Status, { label: string; color: string; icon: React.ReactNode }> = {
   running: {
     label: "Running",
-    color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
+    color: "text-emerald-600 bg-emerald-500/10 border-emerald-500/20",
     icon: <Clock size={11} />,
   },
   paused: {
     label: "Paused",
-    color: "text-amber-400 bg-amber-400/10 border-amber-400/20",
+    color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
     icon: <Pause size={11} />,
   },
   completed: {
     label: "Completed",
-    color: "text-blue-400 bg-blue-400/10 border-blue-400/20",
+    color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
     icon: <CheckCircle2 size={11} />,
   },
 };
@@ -167,31 +167,31 @@ export default function AbTestsPage() {
       />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <SummaryTile label="Running" value={summary.running} icon={<Clock size={16} />} color="text-emerald-400" index={0} />
-        <SummaryTile label="Completed" value={summary.completed} icon={<Trophy size={16} />} color="text-blue-400" index={1} />
-        <SummaryTile label="Total Lift" value={`+${summary.totalLift}%`} icon={<TrendingUp size={16} />} color="text-purple-400" index={2} />
+        <SummaryTile label="Running" value={summary.running} icon={<Clock size={16} />} color="text-emerald-600" index={0} />
+        <SummaryTile label="Completed" value={summary.completed} icon={<Trophy size={16} />} color="text-[#2563EB]" index={1} />
+        <SummaryTile label="Total Lift" value={`+${summary.totalLift}%`} icon={<TrendingUp size={16} />} color="text-[#2563EB]" index={2} />
       </div>
 
       {loading ? (
         <div className="grid grid-cols-1 gap-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-24 rounded-xl glass-md animate-pulse" />
+            <div key={i} className="h-24 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] animate-pulse" />
           ))}
         </div>
       ) : tests.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <div className="w-16 h-16  bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-            <FlaskConical size={28} className="text-purple-400" />
+          <div className="w-16 h-16  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center">
+            <FlaskConical size={28} className="text-[#2563EB]" />
           </div>
           <div className="text-center">
-            <p className="text-zinc-200 font-semibold text-lg">No A/B tests yet</p>
-            <p className="text-zinc-500 text-sm mt-1">
+            <p className="text-[#111827] font-semibold text-lg">No A/B tests yet</p>
+            <p className="text-[#6B7280] text-sm mt-1">
               Run a test from any landing page or funnel step to start comparing variants.
             </p>
           </div>
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white text-sm font-semibold transition-colors"
           >
             <Plus size={15} />
             Start Test
@@ -213,14 +213,14 @@ export default function AbTestsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05, duration: 0.4 }}
                 whileHover={{ y: -4, scale: 1.01 }}
-                className="group relative glass rounded-xl p-4"
+                className="group relative bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-4 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="min-w-0">
-                    <Link href={`/dashboard/ab-tests/${test.id}`} className="text-white font-semibold text-base hover:underline">
+                    <Link href={`/dashboard/ab-tests/${test.id}`} className="text-[#111827] font-semibold text-base hover:underline">
                       {test.name}
                     </Link>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
+                    <div className="flex items-center gap-2 mt-1 text-xs text-[#6B7280]">
                       <span>{PARENT_LABEL[test.parent_type]}</span>
                       <span>·</span>
                       <span>Started {new Date(test.started_at).toLocaleDateString()}</span>
@@ -242,13 +242,13 @@ export default function AbTestsPage() {
                         key={v.id}
                         className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs border ${
                           isWinner
-                            ? "bg-amber-400/10 border-amber-400/30 text-amber-300"
-                            : "glass-md text-zinc-300"
+                            ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                            : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#374151]"
                         }`}
                       >
                         {isWinner && <Trophy size={11} />}
                         <span className="font-semibold">{v.variant_key}</span>
-                        <span className="text-zinc-500">{v.views} views</span>
+                        <span className="text-[#6B7280]">{v.views} views</span>
                         <span className="text-emerald-400">{conversionRate(v)}% conv</span>
                       </div>
                     );
@@ -261,13 +261,13 @@ export default function AbTestsPage() {
                       <TrendingUp size={12} />+{lift}% lift
                     </span>
                   ) : (
-                    <span className="text-zinc-600 text-xs">No lift yet</span>
+                    <span className="text-[#9CA3AF] text-xs">No lift yet</span>
                   )}
                   <div className="flex items-center gap-1">
                     {test.status === "running" && (
                       <button
                         onClick={() => void handleStatusChange(test.id, "paused")}
-                        className="p-1.5 rounded-md hover:bg-white/8 text-zinc-400 hover:text-amber-400 transition-colors"
+                        className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-[#2563EB] transition-colors"
                         title="Pause"
                       >
                         <Pause size={13} />
@@ -276,7 +276,7 @@ export default function AbTestsPage() {
                     {test.status === "paused" && (
                       <button
                         onClick={() => void handleStatusChange(test.id, "running")}
-                        className="p-1.5 rounded-md hover:bg-white/8 text-zinc-400 hover:text-emerald-400 transition-colors"
+                        className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-emerald-400 transition-colors"
                         title="Resume"
                       >
                         <Clock size={13} />
@@ -284,14 +284,14 @@ export default function AbTestsPage() {
                     )}
                     <Link
                       href={`/dashboard/ab-tests/${test.id}`}
-                      className="p-1.5 rounded-md hover:bg-white/8 text-zinc-400 hover:text-zinc-200 transition-colors"
+                      className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-[#374151] transition-colors"
                       title="Open"
                     >
                       <ArrowRight size={13} />
                     </Link>
                     <button
                       onClick={() => void handleDelete(test.id)}
-                      className="p-1.5 rounded-md hover:bg-red-500/10 text-zinc-400 hover:text-red-400 transition-colors"
+                      className="p-1.5 rounded-md hover:bg-red-500/10 text-[#9CA3AF] hover:text-red-400 transition-colors"
                       title="Delete"
                     >
                       <Trash2 size={13} />
@@ -332,8 +332,8 @@ function SummaryTile({
       <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
       <div className="p-4">
         <div className={`${color} mb-2`}>{icon}</div>
-        <div className="text-white font-bold text-xl">{value}</div>
-        <div className="text-zinc-500 text-xs mt-0.5">{label}</div>
+        <div className="text-[#111827] font-bold text-xl">{value}</div>
+        <div className="text-[#6B7280] text-xs mt-0.5">{label}</div>
       </div>
     </motion.div>
   );
@@ -380,30 +380,30 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.50)] backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 12, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.3 }}
-        className="glass  p-6 w-full max-w-md"
+        className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl shadow-xl p-6 w-full max-w-md"
       >
-        <h2 className="text-lg font-semibold text-white mb-4">New A/B Test</h2>
+        <h2 className="text-lg font-semibold text-[#111827] mb-4">New A/B Test</h2>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-white/60 mb-1">Name</label>
+            <label className="block text-sm text-[#6B7280] mb-1">Name</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Homepage hero v2"
-              className="w-full glass rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500"
+              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] placeholder-[#9CA3AF] text-sm focus:outline-none focus:border-[#2563EB] bg-white"
             />
           </div>
           <div>
-            <label className="block text-sm text-white/60 mb-1">Surface</label>
+            <label className="block text-sm text-[#6B7280] mb-1">Surface</label>
             <select
               value={parentType}
               onChange={(e) => setParentType(e.target.value as ParentType)}
-              className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB] bg-white"
             >
               <option value="landing_page">Landing Page</option>
               <option value="funnel_step">Funnel Step</option>
@@ -411,14 +411,14 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
             </select>
           </div>
           <div>
-            <label className="block text-sm text-white/60 mb-1">Parent id</label>
+            <label className="block text-sm text-[#6B7280] mb-1">Parent id</label>
             <input
               value={parentId}
               onChange={(e) => setParentId(e.target.value)}
               placeholder="UUID of the surface to test"
-              className="w-full glass rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500 font-mono"
+              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] placeholder-[#9CA3AF] text-sm focus:outline-none focus:border-[#2563EB] font-mono bg-white"
             />
-            <p className="text-[11px] text-white/40 mt-1">
+            <p className="text-[11px] text-[#9CA3AF] mt-1">
               Find this id from the URL of the landing page / funnel step / email.
             </p>
           </div>
@@ -426,14 +426,14 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
         <div className="flex gap-3 mt-6">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 glass hover:bg-white/10 text-white/80 rounded-lg text-sm transition-colors"
+            className="flex-1 px-4 py-2 border border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.06)] text-[#374151] rounded-lg text-sm transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={() => void submit()}
             disabled={submitting}
-            className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
+            className="flex-1 px-4 py-2 bg-[#2563EB] hover:bg-[#3B82F6] disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
           >
             {submitting ? "Creating…" : "Create Test"}
           </button>

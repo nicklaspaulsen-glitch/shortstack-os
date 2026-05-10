@@ -47,7 +47,7 @@ const SUPPORT_CHANNELS: SupportChannel[] = [
     cta: "Email us",
     href: `mailto:${SUPPORT_EMAIL}?subject=ShortStack%20support%20request`,
     external: true,
-    accent: "gold",
+    accent: "blue",
   },
   {
     icon: <MessageCircle size={22} />,
@@ -63,17 +63,17 @@ const SUPPORT_CHANNELS: SupportChannel[] = [
 ];
 
 const ACCENT_STYLES: Record<string, { ring: string; iconBg: string; iconText: string; cta: string }> = {
-  gold: {
-    ring: "border-gold/30 hover:border-gold/60 hover:shadow-[0_0_0_1px_rgba(212,175,55,0.18)]",
-    iconBg: "bg-gold/10",
-    iconText: "text-gold",
-    cta: "bg-gold text-black hover:bg-gold/90",
+  blue: {
+    ring: "border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.5)] hover:shadow-[0_0_0_1px_rgba(37,99,235,0.18)]",
+    iconBg: "bg-[rgba(37,99,235,0.08)]",
+    iconText: "text-[#2563EB]",
+    cta: "bg-[#2563EB] text-white hover:bg-[#1D4ED8]",
   },
   purple: {
-    ring: "border-purple-500/30 hover:border-purple-500/60 hover:shadow-[0_0_0_1px_rgba(168,85,247,0.18)]",
-    iconBg: "bg-purple-500/10",
-    iconText: "text-purple-300",
-    cta: "bg-purple-500 text-white hover:bg-purple-500/90",
+    ring: "border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.50)] hover:shadow-[0_0_0_1px_rgba(37,99,235,0.18)]",
+    iconBg: "bg-[rgba(37,99,235,0.08)]",
+    iconText: "text-[#2563EB]",
+    cta: "bg-[#2563EB] text-white hover:bg-[rgba(37,99,235,0.90)]",
   },
 };
 
@@ -85,7 +85,7 @@ export default function ContactSupportPage() {
         title="Contact Support"
         subtitle="Pick the channel that fits the question — every one is monitored by a real human."
         icon={<LifeBuoy size={20} />}
-        gradient="gold"
+        gradient="blue"
       />
 
       <div className="mx-auto max-w-5xl space-y-6 px-6 pb-12 pt-5">
@@ -138,7 +138,7 @@ export default function ContactSupportPage() {
           className="glass rounded-xl p-5"
         >
           <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold/10 text-gold">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(37,99,235,0.08)] text-[#2563EB]">
               <Sparkles size={18} />
             </div>
             <div className="flex-1">
@@ -153,7 +153,7 @@ export default function ContactSupportPage() {
                 <li>
                   <Link
                     href="/dashboard/integrations-hub"
-                    className="text-gold underline-offset-2 hover:underline"
+                    className="text-[#2563EB] underline-offset-2 hover:underline"
                   >
                     Integrations status
                   </Link>{" "}
@@ -162,7 +162,7 @@ export default function ContactSupportPage() {
                 <li>
                   <Link
                     href="/dashboard/usage"
-                    className="text-gold underline-offset-2 hover:underline"
+                    className="text-[#2563EB] underline-offset-2 hover:underline"
                   >
                     Token usage
                   </Link>{" "}
@@ -171,7 +171,7 @@ export default function ContactSupportPage() {
                 <li>
                   <Link
                     href="/dashboard/inbox"
-                    className="text-gold underline-offset-2 hover:underline"
+                    className="text-[#2563EB] underline-offset-2 hover:underline"
                   >
                     Unified inbox
                   </Link>{" "}
@@ -180,7 +180,7 @@ export default function ContactSupportPage() {
                 <li>
                   <Link
                     href="/dashboard/pricing"
-                    className="text-gold underline-offset-2 hover:underline"
+                    className="text-[#2563EB] underline-offset-2 hover:underline"
                   >
                     Plans &amp; billing
                   </Link>{" "}

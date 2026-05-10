@@ -25,8 +25,8 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "border-gold/20 bg-gold/[0.03]",
-  medium: "border-gold/15 bg-gold/[0.02]",
+  high: "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)]",
+  medium: "border-[rgba(37,99,235,0.1)] bg-[rgba(37,99,235,0.05)]",
   low: "border-border/30",
 };
 
@@ -36,7 +36,7 @@ const CATEGORY_BADGES: Record<string, string> = {
   seo: "bg-emerald-400/10 text-emerald-400",
   social: "bg-purple-400/10 text-purple-400",
   operations: "bg-amber-400/10 text-amber-400",
-  growth: "bg-gold/10 text-gold",
+  growth: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
 };
 
 export default function AIInsights({ clientId }: { clientId?: string }) {
@@ -84,9 +84,9 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
 
   if (loading) {
     return (
-      <div className="card border-gold/10">
+      <div className="card border-[rgba(37,99,235,0.1)]">
         <div className="flex items-center gap-2 mb-3">
-          <Sparkles size={14} className="text-gold animate-pulse" />
+          <Sparkles size={14} className="text-[#2563EB] animate-pulse" />
           <span className="text-xs font-semibold">AI is analyzing your business...</span>
         </div>
         <div className="space-y-2">
@@ -104,9 +104,9 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles size={14} className="text-gold" />
+          <Sparkles size={14} className="text-[#2563EB]" />
           <h2 className="text-sm font-semibold">AI Recommendations</h2>
-          <span className="text-[9px] bg-gold/10 text-gold px-1.5 py-0.5 rounded font-medium">
+          <span className="text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium">
             {insights.length - actionedIds.size} active
           </span>
         </div>
@@ -127,13 +127,13 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
             >
               <div className="flex items-start justify-between mb-1.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-gold">{TYPE_ICONS[insight.type] || <Zap size={14} />}</span>
+                  <span className="text-[#2563EB]">{TYPE_ICONS[insight.type] || <Zap size={14} />}</span>
                   <span className={`text-[8px] px-1.5 py-0.5 rounded-md font-medium ${CATEGORY_BADGES[insight.category] || "bg-surface-light text-muted"}`}>
                     {insight.category}
                   </span>
                 </div>
                 {insight.priority === "high" && (
-                  <span className="text-[8px] text-gold font-bold uppercase">Priority</span>
+                  <span className="text-[8px] text-[#2563EB] font-bold uppercase">Priority</span>
                 )}
               </div>
 
@@ -141,7 +141,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
               <p className="text-[10px] text-muted leading-relaxed mb-2">{insight.description}</p>
 
               <div className="flex items-center justify-between">
-                <p className="text-[9px] text-gold/80 flex items-center gap-1">
+                <p className="text-[9px] text-[rgba(37,99,235,0.8)] flex items-center gap-1">
                   <ArrowRight size={8} /> {insight.action}
                 </p>
                 {!isActioned && (

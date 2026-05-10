@@ -261,14 +261,14 @@ export default function VerticalDetailPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0d0d0d]">
+      <div>
         <PageHero
           title="Loading vertical…"
           icon={<Briefcase size={28} />}
           gradient="gold"
         />
         <div className="max-w-5xl mx-auto px-6 py-10">
-          <div className=" bg-white/5 h-96 animate-pulse" />
+          <div className="rounded-xl bg-[rgba(0,0,0,0.04)] h-96 animate-pulse" />
         </div>
       </div>
     );
@@ -277,7 +277,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
   if (!data) return null;
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d]">
+    <div>
       <PageHero
         title={data.template.display_name}
         subtitle={data.template.description}
@@ -299,10 +299,10 @@ export default function VerticalDetailPage({ params }: PageProps) {
         <section>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-xl font-semibold text-white">
+              <h2 className="text-xl font-semibold text-[#111827]">
                 Pick what to apply
               </h2>
-              <p className="text-sm text-white/50">
+              <p className="text-sm text-[#6B7280]">
                 Each module creates real rows in your account. Skip what you don&apos;t want — you can always come back.
               </p>
             </div>
@@ -311,7 +311,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
               onClick={() =>
                 setSelected(allSelected ? new Set() : new Set(ALL_MODULES))
               }
-              className="px-3 py-1.5 rounded-lg text-xs bg-white/5 hover:bg-white/10 text-white/70 hover:text-white border border-white/10"
+              className="px-3 py-1.5 rounded-lg text-xs bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.08)] text-[#374151] hover:text-[#111827] border border-[rgba(0,0,0,0.08)]"
             >
               {allSelected ? "Deselect all" : "Select all"}
             </button>
@@ -329,26 +329,26 @@ export default function VerticalDetailPage({ params }: PageProps) {
                   onClick={() => toggle(m.key)}
                   className={`text-left rounded-xl p-4 border transition-colors ${
                     isSel
-                      ? "bg-white/10 border-white/30"
-                      : "bg-black/30 border-white/10 hover:bg-white/5"
+                      ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.30)]"
+                      : "bg-[rgba(0,0,0,0.03)] border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.05)]"
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <div
                       className={`mt-0.5 h-9 w-9 rounded-lg flex items-center justify-center ${
-                        isSel ? "bg-emerald-500/15 text-emerald-300" : "bg-white/5 text-white/60"
+                        isSel ? "bg-emerald-500/15 text-emerald-600" : "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"
                       }`}
                     >
                       <Icon size={16} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 mb-0.5">
-                        <span className="font-medium text-white">{m.label}</span>
-                        <span className="text-xs text-white/50">{m.count}</span>
+                        <span className="font-medium text-[#111827]">{m.label}</span>
+                        <span className="text-xs text-[#6B7280]">{m.count}</span>
                       </div>
-                      <p className="text-xs text-white/50 leading-snug">{m.description}</p>
+                      <p className="text-xs text-[#6B7280] leading-snug">{m.description}</p>
                       {wasApplied && (
-                        <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-400/20 px-2 py-0.5 text-[10px] text-emerald-300">
+                        <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-400/20 px-2 py-0.5 text-[10px] text-emerald-700">
                           <CheckCircle2 size={10} />
                           Previously applied
                         </span>
@@ -357,8 +357,8 @@ export default function VerticalDetailPage({ params }: PageProps) {
                     <div
                       className={`mt-1 h-5 w-5 rounded-md border flex items-center justify-center ${
                         isSel
-                          ? "bg-emerald-500 border-emerald-500 text-black"
-                          : "border-white/20"
+                          ? "bg-emerald-500 border-emerald-500 text-white"
+                          : "border-[rgba(0,0,0,0.20)]"
                       }`}
                     >
                       {isSel && <CheckCircle2 size={14} />}
@@ -409,9 +409,18 @@ export default function VerticalDetailPage({ params }: PageProps) {
 
         {/* Apply CTA — sticky bar */}
         <div className="sticky bottom-4 z-10">
-          <div className="bg-black/80 backdrop-blur-xl border border-white/10  p-4 flex items-center justify-between gap-4 shadow-2xl">
-            <div className="text-sm text-white/70">
-              <Sparkles size={14} className="inline -mt-0.5 mr-1.5 text-amber-400" />
+          <div
+            className="rounded-xl p-4 flex items-center justify-between gap-4 shadow-2xl"
+            style={{
+              background: "rgba(255,255,255,0.94)",
+              backdropFilter: "blur(20px) saturate(1.5)",
+              WebkitBackdropFilter: "blur(20px) saturate(1.5)",
+              border: "1px solid rgba(0,0,0,0.08)",
+              boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 8px 24px rgba(0,0,0,0.10)",
+            }}
+          >
+            <div className="text-sm text-[#374151]">
+              <Sparkles size={14} className="inline -mt-0.5 mr-1.5 text-[#2563EB]" />
               {selected.size} module{selected.size === 1 ? "" : "s"} selected
             </div>
             <button
@@ -442,12 +451,12 @@ export default function VerticalDetailPage({ params }: PageProps) {
 function PreviewBlock({ title, items }: { title: string; items: string[] }) {
   if (items.length === 0) return null;
   return (
-    <div className="rounded-xl bg-black/30 border border-white/10 p-5">
-      <h3 className="text-sm font-medium text-white mb-3">{title}</h3>
-      <ul className="space-y-1.5 text-sm text-white/60">
+    <div className="rounded-xl border border-[rgba(0,0,0,0.08)] p-5" style={{ background: "rgba(255,255,255,0.88)" }}>
+      <h3 className="text-sm font-medium text-[#111827] mb-3">{title}</h3>
+      <ul className="space-y-1.5 text-sm text-[#6B7280]">
         {items.map((it, i) => (
           <li key={i} className="flex gap-2 items-start">
-            <span className="mt-1.5 w-1 h-1 rounded-full bg-white/40 flex-shrink-0" />
+            <span className="mt-1.5 w-1 h-1 rounded-full bg-[#9CA3AF] flex-shrink-0" />
             <span className="line-clamp-1">{it}</span>
           </li>
         ))}

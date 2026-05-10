@@ -123,7 +123,7 @@ export default function AutomationsPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard/automations/library"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 text-sm font-medium transition-colors border border-indigo-500/20"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
             >
               Browse template library
             </Link>
@@ -144,7 +144,7 @@ export default function AutomationsPage() {
         {[
           { label: "Total", value: workflows.length, color: "text-[#0A0A0B]" },
           { label: "Active", value: activeCount, color: "text-emerald-400" },
-          { label: "Paused", value: workflows.length - activeCount, color: "text-indigo-400" },
+          { label: "Paused", value: workflows.length - activeCount, color: "text-[#2563EB]" },
         ].map((s, index) => (
           <motion.div
             key={s.label}
@@ -192,7 +192,7 @@ export default function AutomationsPage() {
             !search ? (
               <Link
                 href="/dashboard/workflow-builder"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 text-sm font-medium transition-colors border border-indigo-500/20"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
               >
                 <Plus size={14} /> Create your first automation
               </Link>

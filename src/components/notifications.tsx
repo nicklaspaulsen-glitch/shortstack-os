@@ -30,10 +30,10 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
   success: <CheckCircle2 size={14} className="text-success" />,
   error:   <XCircle size={14} className="text-danger" />,
   // Legacy / domain-specific types
-  lead:    <Zap size={14} className="text-gold" />,
+  lead:    <Zap size={14} className="text-[#2563EB]" />,
   task:    <CheckCircle size={14} className="text-success" />,
   invoice: <CreditCard size={14} className="text-warning" />,
-  system:  <Activity size={14} className="text-gold" />,
+  system:  <Activity size={14} className="text-[#2563EB]" />,
   content: <Film size={14} className="text-pink-400" />,
   message: <MessageSquare size={14} className="text-blue-400" />,
   deal:    <Briefcase size={14} className="text-emerald-400" />,
@@ -156,7 +156,7 @@ export default function Notifications() {
             {/* Header */}
             <div className="px-4 py-2.5 border-b border-border/20 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Bell size={13} className="text-gold" />
+                <Bell size={13} className="text-[#2563EB]" />
                 <span className="text-xs font-semibold">Notifications</span>
                 {unreadCount > 0 && (
                   <span className="text-[9px] bg-danger/10 text-danger px-1.5 py-0.5 rounded-full font-medium">
@@ -168,7 +168,7 @@ export default function Notifications() {
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllRead}
-                    className="text-[9px] text-gold hover:text-gold-light"
+                    className="text-[9px] text-[#2563EB] hover:text-[#3B82F6]"
                   >
                     Mark all read
                   </button>
@@ -202,7 +202,7 @@ export default function Notifications() {
                       if (n.link) window.location.href = n.link;
                     }}
                     className={`w-full text-left px-4 py-2.5 border-b border-border/10 hover:bg-surface-light/30 transition-colors flex items-start gap-2.5 ${
-                      !n.read ? "bg-gold/[0.02]" : ""
+                      !n.read ? "bg-[rgba(37,99,235,0.05)]" : ""
                     }`}
                   >
                     <div className="mt-0.5 shrink-0">
@@ -222,7 +222,7 @@ export default function Notifications() {
                           {n.title}
                         </p>
                         {!n.read && (
-                          <div className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#2563EB] shrink-0" />
                         )}
                       </div>
                       {n.message && (
@@ -244,7 +244,7 @@ export default function Notifications() {
               <Link
                 href="/dashboard/notifications"
                 onClick={() => setOpen(false)}
-                className="block text-center text-[10px] text-gold hover:text-gold-light font-medium transition-colors"
+                className="block text-center text-[10px] text-[#2563EB] hover:text-[#3B82F6] font-medium transition-colors"
               >
                 View all notifications
               </Link>

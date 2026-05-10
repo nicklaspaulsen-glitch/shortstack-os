@@ -68,11 +68,11 @@ export default function EmailComposerPage() {
     fromEmail: "",
     replyTo: "",
   });
-  // SMTP is the default — it's the recommended path (branded Resend send).
+  // SMTP is the default ï¿½ it's the recommended path (branded Resend send).
   // Gmail/Outlook require the user to have connected a personal OAuth account.
   const [provider, setProvider] = useState<"gmail" | "outlook" | "smtp">("smtp");
 
-  // OAuth connection state for Gmail/Outlook — used to gate the send with a
+  // OAuth connection state for Gmail/Outlook ï¿½ used to gate the send with a
   // "Connect X" CTA instead of silently failing.
   const [connectedProviders, setConnectedProviders] = useState<{
     gmail: boolean;
@@ -100,7 +100,7 @@ export default function EmailComposerPage() {
           });
         }
       } catch {
-        // Best-effort — if we can't resolve connection state we still show the
+        // Best-effort ï¿½ if we can't resolve connection state we still show the
         // CTA (safer to prompt than to let a send silently fail).
       }
     })();
@@ -162,7 +162,7 @@ export default function EmailComposerPage() {
       toast.error("Write a body first");
       return;
     }
-    // Block sends via Gmail/Outlook when the user hasn't connected OAuth —
+    // Block sends via Gmail/Outlook when the user hasn't connected OAuth ï¿½
     // the API would accept the request but the personal-inbox path would
     // silently fall through to SMTP, which is surprising. Surface the real
     // missing step instead.
@@ -227,7 +227,7 @@ export default function EmailComposerPage() {
         metadata: { sent: true, provider, test: testMode },
       });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Network error — email not sent");
+      toast.error(err instanceof Error ? err.message : "Network error ï¿½ email not sent");
     } finally {
       setter(false);
     }
@@ -473,7 +473,7 @@ export default function EmailComposerPage() {
             toast.error("No audience data available");
             return {};
           } catch {
-            toast.error("Couldn't load audience — unchanged");
+            toast.error("Couldn't load audience ï¿½ unchanged");
             return {};
           }
         },
@@ -482,7 +482,7 @@ export default function EmailComposerPage() {
     {
       id: "subject",
       title: "Subject line",
-      description: "Hook them in the inbox — or let AI draft one for you.",
+      description: "Hook them in the inbox ï¿½ or let AI draft one for you.",
       icon: <Type size={16} />,
       field: {
         type: "text",
@@ -534,7 +534,7 @@ export default function EmailComposerPage() {
             toast.success("Subject generated");
             return { subject };
           } catch {
-            toast.error("Network error — subject unchanged");
+            toast.error("Network error ï¿½ subject unchanged");
             return {};
           }
         },
@@ -543,7 +543,7 @@ export default function EmailComposerPage() {
     {
       id: "bodyDirection",
       title: "What should the email say?",
-      description: "A few bullet points are fine — the AI will write the full email for you.",
+      description: "A few bullet points are fine ï¿½ the AI will write the full email for you.",
       icon: <Wand2 size={16} />,
       field: {
         type: "textarea",
@@ -594,7 +594,7 @@ export default function EmailComposerPage() {
             }
             return patch;
           } catch {
-            toast.error("Network error — body unchanged");
+            toast.error("Network error ï¿½ body unchanged");
             return {};
           }
         },
@@ -642,7 +642,7 @@ export default function EmailComposerPage() {
           if (!finalSubject && out?.subject) finalSubject = out.subject;
         } else {
           const err = await res.json().catch(() => ({}));
-          toast.error(err?.error || "Couldn't generate email — using your direction as the body");
+          toast.error(err?.error || "Couldn't generate email ï¿½ using your direction as the body");
         }
       }
 
@@ -738,7 +738,7 @@ export default function EmailComposerPage() {
     {
       id: "kind",
       title: "What kind of email?",
-      description: "Different goals, different voices — we'll pick a tone that fits.",
+      description: "Different goals, different voices ï¿½ we'll pick a tone that fits.",
       icon: <Mail size={18} />,
       component: (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
@@ -756,8 +756,8 @@ export default function EmailComposerPage() {
                 onClick={() => setGuidedKind(k.id)}
                 className={`text-left p-4 rounded-xl border transition-all ${
                   sel
-                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
-                    : "border-border hover:border-gold/30 bg-surface-light"
+                    ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                    : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                 }`}
               >
                 <p className="text-sm font-semibold">{k.label}</p>
@@ -771,7 +771,7 @@ export default function EmailComposerPage() {
     {
       id: "audience-goal",
       title: "Who's it for + the goal",
-      description: "A single line about the reader plus what you want them to do — AI takes it from there.",
+      description: "A single line about the reader plus what you want them to do ï¿½ AI takes it from there.",
       icon: <Users size={18} />,
       canProceed: guidedDirection.trim().length > 0,
       component: (
@@ -785,7 +785,7 @@ export default function EmailComposerPage() {
               value={guidedAudience}
               onChange={e => setGuidedAudience(e.target.value)}
               placeholder="e.g., SaaS founders on a free trial"
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-2 focus:ring-[rgba(37,99,235,0.12)] transition-all"
             />
           </div>
           <div>
@@ -795,9 +795,9 @@ export default function EmailComposerPage() {
             <textarea
               value={guidedDirection}
               onChange={e => setGuidedDirection(e.target.value)}
-              placeholder="Key points to cover, must-include details, what the reader should do next…"
+              placeholder="Key points to cover, must-include details, what the reader should do nextï¿½"
               rows={4}
-              className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+              className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-2 focus:ring-[rgba(37,99,235,0.12)] transition-all resize-none"
               autoFocus
             />
           </div>
@@ -810,12 +810,12 @@ export default function EmailComposerPage() {
       description: "We'll write the subject and body. You can tweak every line in Advanced mode before sending.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+        <div className="card bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)] space-y-2">
           <p className="text-sm">
             <span className="text-muted capitalize">{guidedKind} email</span>
             {guidedAudience.trim() && (
               <>
-                {" · "}
+                {" ï¿½ "}
                 <span>for {guidedAudience.trim()}</span>
               </>
             )}
@@ -844,7 +844,7 @@ export default function EmailComposerPage() {
         title="Email Composer"
         eyebrow="EMAIL COMPOSER"
         subtitle="Emails that open and convert. AI drafts subject lines, bodies, and send times."
-        gradient="gold"
+        gradient="blue"
         actions={
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
@@ -886,13 +886,13 @@ export default function EmailComposerPage() {
         }
       />
 
-      {/* Guided Mode — 3-step AI email drafter */}
+      {/* Guided Mode ï¿½ 3-step AI email drafter */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={guidedGenerating ? "Drafting…" : "Draft email"}
+          finishLabel={guidedGenerating ? "Draftingï¿½" : "Draft email"}
           busy={guidedGenerating}
           onFinish={handleGuidedGenerate}
           onCancel={() => setAdvancedMode(true)}
@@ -904,7 +904,7 @@ export default function EmailComposerPage() {
       <CreationWizard
         open={wizardOpen}
         title="Compose Email with AI"
-        subtitle="4 quick steps — AI handles subject + body"
+        subtitle="4 quick steps ï¿½ AI handles subject + body"
         icon={<Mail size={18} />}
         submitLabel={wizardSubmitting ? "Generating..." : "Create Email"}
         steps={wizardSteps}
@@ -946,7 +946,7 @@ export default function EmailComposerPage() {
                 <div className="flex items-center gap-1.5 mb-1">
                   <label className="text-[9px] text-muted uppercase tracking-wider">Send via</label>
                   <span
-                    className="inline-flex text-muted/70 hover:text-gold cursor-help"
+                    className="inline-flex text-muted/70 hover:text-[#2563EB] cursor-help"
                     title="SMTP = brand blasts, Gmail/Outlook = personal 1:1s"
                     aria-label="SMTP = brand blasts, Gmail/Outlook = personal 1:1s"
                   >
@@ -972,7 +972,7 @@ export default function EmailComposerPage() {
                     </button>
                   ))}
                 </div>
-                {/* Contextual help per provider — explains WHY you'd pick each one */}
+                {/* Contextual help per provider ï¿½ explains WHY you'd pick each one */}
                 <p className="text-[9px] text-muted mt-1.5 leading-relaxed">
                   {provider === "smtp" && (
                     "Branded send via your verified domain. Best for most outreach. Tracking, webhooks, unlimited volume."
@@ -984,13 +984,13 @@ export default function EmailComposerPage() {
                     "Send from your personal Outlook. Best for 1:1 personal replies. Requires Microsoft OAuth connection."
                   )}
                 </p>
-                {/* OAuth-gating CTA — if Gmail/Outlook is picked but not connected,
+                {/* OAuth-gating CTA ï¿½ if Gmail/Outlook is picked but not connected,
                     show a "Connect" link to /dashboard/integrations instead of
                     letting the send silently fall through. */}
                 {provider === "gmail" && !connectedProviders.gmail && (
                   <div className="mt-2 flex items-center justify-between gap-2 p-2 rounded-lg border border-amber-400/30 bg-amber-400/5">
                     <p className="text-[10px] text-amber-400 flex items-center gap-1.5">
-                      <AlertTriangle size={10} /> Gmail isn&apos;t connected yet — the send will fail.
+                      <AlertTriangle size={10} /> Gmail isn&apos;t connected yet ï¿½ the send will fail.
                     </p>
                     <Link
                       href="/dashboard/integrations-hub"
@@ -1003,7 +1003,7 @@ export default function EmailComposerPage() {
                 {provider === "outlook" && !connectedProviders.outlook && (
                   <div className="mt-2 flex items-center justify-between gap-2 p-2 rounded-lg border border-amber-400/30 bg-amber-400/5">
                     <p className="text-[10px] text-amber-400 flex items-center gap-1.5">
-                      <AlertTriangle size={10} /> Outlook isn&apos;t connected yet — the send will fail.
+                      <AlertTriangle size={10} /> Outlook isn&apos;t connected yet ï¿½ the send will fail.
                     </p>
                     <Link
                       href="/dashboard/integrations-hub"
@@ -1342,9 +1342,9 @@ export default function EmailComposerPage() {
                 </div>
               </div>
               <div className="p-6">
-                <p className="text-sm font-semibold text-white mb-1">{email.subject || "No subject"}</p>
-                <p className="text-[10px] text-muted mb-4">From: {email.fromName} &lt;{email.fromEmail || email.replyTo}&gt;</p>
-                <div className="text-sm text-white/80 leading-relaxed whitespace-pre-wrap">
+                <p className="text-sm font-semibold text-[#111827] mb-1">{email.subject || "No subject"}</p>
+                <p className="text-[10px] text-[#6B7280] mb-4">From: {email.fromName} &lt;{email.fromEmail || email.replyTo}&gt;</p>
+                <div className="text-sm text-[#374151] leading-relaxed whitespace-pre-wrap">
                   {email.body.replace(/\{first_name\}/g, "John").replace(/\{business_name\}/g, "Bright Smile Dental").replace(/\{industry\}/g, "dental").replace(/\{company\}/g, "ShortStack").replace(/\{city\}/g, "Miami")}
                 </div>
                 {attachments.length > 0 && (
@@ -1352,7 +1352,7 @@ export default function EmailComposerPage() {
                     <p className="text-[10px] text-muted mb-2">Attachments ({attachments.length})</p>
                     <div className="flex gap-2">
                       {attachments.map((f, i) => (
-                        <div key={i} className="flex items-center gap-1 px-2 py-1 rounded bg-white/5 text-[9px] text-muted">
+                        <div key={i} className="flex items-center gap-1 px-2 py-1 rounded bg-[rgba(0,0,0,0.04)] text-[9px] text-[#6B7280]">
                           <Paperclip size={8} /> {f}
                         </div>
                       ))}
@@ -1454,7 +1454,7 @@ export default function EmailComposerPage() {
                       toast.error("Fill recipient, subject, and body first");
                       return;
                     }
-                    toast.success("Scheduling arrives soon — send now for instant delivery");
+                    toast.success("Scheduling arrives soon ï¿½ send now for instant delivery");
                   }}
                   className="w-full text-xs flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all"
                 >
@@ -1539,7 +1539,7 @@ export default function EmailComposerPage() {
           )}
           {!loadingVariants && subjectVariants.map((v, i) => (
             <button key={i} onClick={() => { setEmail({ ...email, subject: v.subject }); setShowSubjectVariants(false); toast.success("Subject applied"); }}
-              className="block w-full text-left p-3 rounded-lg bg-surface-light border border-border hover:border-gold/30 transition-all">
+              className="block w-full text-left p-3 rounded-lg bg-surface-light border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
               <div className="flex items-center justify-between mb-1">
                 <p className="text-sm font-semibold">{v.subject}</p>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 font-bold">{v.predicted_open_rate.toFixed(0)}% open</span>

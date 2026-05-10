@@ -152,13 +152,13 @@ const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep
 ];
 
 const STEP_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  email: { bg: "bg-blue-500/10", text: "text-blue-400", border: "border-blue-500/20" },
-  sms: { bg: "bg-green-500/10", text: "text-green-400", border: "border-green-500/20" },
-  call: { bg: "bg-yellow-500/10", text: "text-yellow-400", border: "border-yellow-500/20" },
-  social: { bg: "bg-pink-500/10", text: "text-pink-400", border: "border-pink-500/20" },
-  wait: { bg: "bg-gray-500/10", text: "text-gray-400", border: "border-border" },
-  condition: { bg: "bg-purple-500/10", text: "text-purple-400", border: "border-purple-500/20" },
-  dm: { bg: "bg-pink-500/10", text: "text-pink-400", border: "border-pink-500/20" },
+  email: { bg: "bg-[rgba(37,99,235,0.08)]", text: "text-[#2563EB]", border: "border-[rgba(37,99,235,0.25)]" },
+  sms: { bg: "bg-green-500/10", text: "text-green-600", border: "border-green-500/20" },
+  call: { bg: "bg-amber-500/10", text: "text-amber-700", border: "border-amber-500/20" },
+  social: { bg: "bg-pink-500/10", text: "text-pink-600", border: "border-pink-500/20" },
+  wait: { bg: "bg-[rgba(0,0,0,0.04)]", text: "text-[#6B7280]", border: "border-border" },
+  condition: { bg: "bg-[rgba(37,99,235,0.08)]", text: "text-[#2563EB]", border: "border-[rgba(37,99,235,0.25)]" },
+  dm: { bg: "bg-pink-500/10", text: "text-pink-600", border: "border-pink-500/20" },
 };
 
 const STEP_ICONS: Record<string, React.ReactNode> = {
@@ -632,7 +632,7 @@ export default function SequencesPage() {
       <PrismPanel padding="p-4" className="overflow-hidden">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-xs font-semibold flex items-center gap-2">
-            <Activity size={12} className="text-gold" /> Recent activity
+            <Activity size={12} className="text-[#2563EB]" /> Recent activity
           </h3>
           <button onClick={() => void loadActivity()} className="text-[10px] text-muted hover:text-foreground">Refresh</button>
         </div>
@@ -666,16 +666,16 @@ export default function SequencesPage() {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Sparkles size={16} className="text-gold" />
+              <Sparkles size={16} className="text-[#2563EB]" />
               <div>
                 <p className="text-xs font-semibold">{aiSummary.name}</p>
                 <p className="text-[10px] text-muted">{aiSummary.description}</p>
               </div>
             </div>
             <div className="flex items-center gap-4 text-[10px]">
-              <div className="text-center"><p className="font-bold text-gold">{aiSummary.step_count}</p><p className="text-muted">Steps</p></div>
-              <div className="text-center"><p className="font-bold text-gold">{aiSummary.channels.length}</p><p className="text-muted">Channels</p></div>
-              <div className="text-center"><p className="font-bold text-gold">{aiSummary.duration_days}d</p><p className="text-muted">Duration</p></div>
+              <div className="text-center"><p className="font-bold text-[#2563EB]">{aiSummary.step_count}</p><p className="text-muted">Steps</p></div>
+              <div className="text-center"><p className="font-bold text-[#2563EB]">{aiSummary.channels.length}</p><p className="text-muted">Channels</p></div>
+              <div className="text-center"><p className="font-bold text-[#2563EB]">{aiSummary.duration_days}d</p><p className="text-muted">Duration</p></div>
               <button onClick={() => setAiSummary(null)} className="text-muted hover:text-foreground p-1"><XCircle size={12} /></button>
             </div>
           </div>
@@ -699,8 +699,8 @@ export default function SequencesPage() {
             <label className="text-[10px] text-muted uppercase tracking-wider block mb-2">Channels *</label>
             <div className="flex gap-2">
               {([{ key: "email", label: "Email" }, { key: "sms", label: "SMS" }, { key: "dm", label: "DM" }] as const).map(c => (
-                <label key={c.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border cursor-pointer hover:border-gold/20 transition-all">
-                  <input type="checkbox" checked={aiChannels[c.key]} onChange={() => setAiChannels(prev => ({ ...prev, [c.key]: !prev[c.key] }))} className="accent-gold" />
+                <label key={c.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border cursor-pointer hover:border-[rgba(37,99,235,0.2)] transition-all">
+                  <input type="checkbox" checked={aiChannels[c.key]} onChange={() => setAiChannels(prev => ({ ...prev, [c.key]: !prev[c.key] }))} className="accent-[#2563EB]" />
                   <span className="text-xs">{c.label}</span>
                 </label>
               ))}
@@ -739,7 +739,7 @@ export default function SequencesPage() {
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+              activeTab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
             }`}>{t.icon} {t.label}</button>
         ))}
       </div>
@@ -752,7 +752,7 @@ export default function SequencesPage() {
               {/* Sequence List */}
               {loading ? (
                 <div className="card p-8 text-center">
-                  <Loader2 size={24} className="animate-spin mx-auto text-gold mb-2" />
+                  <Loader2 size={24} className="animate-spin mx-auto text-[#2563EB] mb-2" />
                   <p className="text-[10px] text-muted">Loading sequences...</p>
                 </div>
               ) : (
@@ -777,7 +777,7 @@ export default function SequencesPage() {
                         <div className="grid grid-cols-3 gap-4 text-center text-[10px]">
                           <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-muted">Enrolled</p></div>
                           <div><p className="font-bold text-green-400">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
-                          <div><p className="font-bold text-gold">{seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100).toFixed(1) : 0}%</p><p className="text-[8px] text-muted">Rate</p></div>
+                          <div><p className="font-bold text-[#2563EB]">{seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100).toFixed(1) : 0}%</p><p className="text-[8px] text-muted">Rate</p></div>
                         </div>
                         <div className="flex gap-1.5">
                           <button onClick={() => void openSequence(seq)} className="btn-secondary text-[9px] py-1 px-2">Edit</button>
@@ -790,8 +790,8 @@ export default function SequencesPage() {
                 </PrismPanel>
               )}
               {/* Quick create from template hint */}
-              <div className="card border-gold/10 text-center py-6">
-                <Sparkles size={24} className="mx-auto mb-2 text-gold" />
+              <div className="card border-[rgba(37,99,235,0.1)] text-center py-6">
+                <Sparkles size={24} className="mx-auto mb-2 text-[#2563EB]" />
                 <p className="text-sm font-semibold">Create a new sequence</p>
                 <p className="text-[10px] text-muted mt-1">Pick a template from the Templates tab, or build from scratch</p>
                 <button onClick={() => setActiveTab("templates")} className="btn-secondary text-xs mt-3">Browse Templates</button>
@@ -828,14 +828,14 @@ export default function SequencesPage() {
               {/* A/B Test Toggle */}
               <div className="card p-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Target size={14} className="text-gold" />
+                  <Target size={14} className="text-[#2563EB]" />
                   <div>
                     <p className="text-xs font-semibold">A/B Testing</p>
                     <p className="text-[9px] text-muted">Split test subject lines and content</p>
                   </div>
                 </div>
                 <button onClick={() => setAbEnabled(!abEnabled)}
-                  className={`w-10 h-5 rounded-full transition-all flex items-center ${abEnabled ? "bg-gold justify-end" : "bg-surface-light justify-start"}`}>
+                  className={`w-10 h-5 rounded-full transition-all flex items-center ${abEnabled ? "bg-[#2563EB] justify-end" : "bg-surface-light justify-start"}`}>
                   <div className="w-4 h-4 bg-white rounded-full mx-0.5 shadow" />
                 </button>
               </div>
@@ -881,7 +881,7 @@ export default function SequencesPage() {
                           </div>
                         ) : step.type === "condition" ? (
                           <div className="flex items-center gap-2">
-                            <GitBranch size={14} className="text-purple-400" />
+                            <GitBranch size={14} className="text-[#2563EB]" />
                             <select className="input text-xs" value={step.conditionType || "replied"}
                               onChange={e => {
                                 const steps = [...activeSequence.steps];
@@ -987,7 +987,7 @@ export default function SequencesPage() {
             {templateCategories.map(c => (
               <button key={c} onClick={() => setTemplateFilter(c)}
                 className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                  templateFilter === c ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-black/[0.08]"
+                  templateFilter === c ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-black/[0.08]"
                 }`}>{c}</button>
             ))}
           </div>
@@ -1005,7 +1005,7 @@ export default function SequencesPage() {
                     <p className="text-xs font-semibold">{t.name}</p>
                     <p className="text-[10px] text-muted mt-0.5">{t.description}</p>
                   </div>
-                  <span className="text-[8px] px-1.5 py-0.5 rounded bg-gold/10 text-gold">{t.category}</span>
+                  <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{t.category}</span>
                 </div>
                 <div className="flex gap-1 mt-2 mb-3">
                   {t.steps.map((s, j) => (
@@ -1031,11 +1031,11 @@ export default function SequencesPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {[
-              { label: "Total Enrolled", value: sequences.reduce((s, seq) => s + seq.enrolled, 0), color: "text-indigo-400" },
-              { label: "Completed", value: sequences.reduce((s, seq) => s + seq.completed, 0), color: "text-green-400" },
-              { label: "Replied", value: sequences.reduce((s, seq) => s + seq.replied, 0), color: "text-blue-400" },
-              { label: "Avg Reply Rate", value: sequences.length > 0 ? `${(sequences.reduce((s, seq) => s + (seq.enrolled > 0 ? seq.replied / seq.enrolled : 0), 0) / sequences.length * 100).toFixed(1)}%` : "0%", color: "text-violet-400" },
-              { label: "Active Sequences", value: sequences.filter(s => s.active).length, color: "text-indigo-400" },
+              { label: "Total Enrolled", value: sequences.reduce((s, seq) => s + seq.enrolled, 0), color: "text-[#2563EB]" },
+              { label: "Completed", value: sequences.reduce((s, seq) => s + seq.completed, 0), color: "text-green-600" },
+              { label: "Replied", value: sequences.reduce((s, seq) => s + seq.replied, 0), color: "text-[#2563EB]" },
+              { label: "Avg Reply Rate", value: sequences.length > 0 ? `${(sequences.reduce((s, seq) => s + (seq.enrolled > 0 ? seq.replied / seq.enrolled : 0), 0) / sequences.length * 100).toFixed(1)}%` : "0%", color: "text-[#2563EB]" },
+              { label: "Active Sequences", value: sequences.filter(s => s.active).length, color: "text-[#2563EB]" },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -1075,8 +1075,8 @@ export default function SequencesPage() {
                     <div className="grid grid-cols-4 gap-2 text-center text-[10px]">
                       <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-muted">Enrolled</p></div>
                       <div><p className="font-bold text-green-400">{seq.completed}</p><p className="text-[8px] text-muted">Completed</p></div>
-                      <div><p className="font-bold text-blue-400">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
-                      <div><p className="font-bold text-gold">{replyRate.toFixed(1)}%</p><p className="text-[8px] text-muted">Reply Rate</p></div>
+                      <div><p className="font-bold text-[#2563EB]">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
+                      <div><p className="font-bold text-[#2563EB]">{replyRate.toFixed(1)}%</p><p className="text-[8px] text-muted">Reply Rate</p></div>
                     </div>
                     <div className="w-full bg-surface rounded-full h-1.5 mt-2">
                       <div className="rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%`, background: RAINBOW_BAR }} />
@@ -1093,7 +1093,7 @@ export default function SequencesPage() {
       {activeTab === "enrollment" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Users size={14} className="text-gold" /> Contact Enrollment Rules
+            <Users size={14} className="text-[#2563EB]" /> Contact Enrollment Rules
           </h3>
           <div className="card">
             <p className="text-[10px] text-muted mb-3">
@@ -1103,7 +1103,7 @@ export default function SequencesPage() {
           </div>
           <div className="card">
             <h4 className="text-xs font-semibold mb-3 flex items-center gap-2">
-              <Eye size={12} className="text-gold" /> Reply Detection Rules
+              <Eye size={12} className="text-[#2563EB]" /> Reply Detection Rules
             </h4>
             <div className="space-y-1.5">
               {[
@@ -1132,7 +1132,7 @@ export default function SequencesPage() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Activity size={14} className="text-gold" /> Multi-channel runs
+              <Activity size={14} className="text-[#2563EB]" /> Multi-channel runs
             </h3>
             <div className="flex items-center gap-2">
               <select
@@ -1153,7 +1153,7 @@ export default function SequencesPage() {
           <PrismPanel padding="p-3" className="overflow-hidden">
             {runsLoading ? (
               <div className="text-center py-6">
-                <Loader2 size={16} className="animate-spin mx-auto text-gold mb-2" />
+                <Loader2 size={16} className="animate-spin mx-auto text-[#2563EB] mb-2" />
                 <p className="text-[10px] text-muted">Loading runs...</p>
               </div>
             ) : runs.length === 0 ? (
@@ -1176,8 +1176,8 @@ export default function SequencesPage() {
                       <span className={`px-1.5 py-0.5 rounded text-[9px] ${
                         r.status === "active" ? "bg-green-500/10 text-green-400"
                         : r.status === "paused" ? "bg-yellow-500/10 text-yellow-400"
-                        : r.status === "exited" ? "bg-purple-500/10 text-purple-400"
-                        : r.status === "completed" ? "bg-blue-500/10 text-blue-400"
+                        : r.status === "exited" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                        : r.status === "completed" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                         : "bg-red-500/10 text-red-400"}`}>
                         {r.status}
                       </span>
@@ -1219,7 +1219,7 @@ export default function SequencesPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="card">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Settings size={14} className="text-gold" /> Sending Limits
+                <Settings size={14} className="text-[#2563EB]" /> Sending Limits
               </h3>
               <div className="space-y-3">
                 {[
@@ -1231,14 +1231,14 @@ export default function SequencesPage() {
                 ].map((setting, i) => (
                   <div key={i} className="flex items-center justify-between text-[10px]">
                     <span>{setting.label}</span>
-                    <span className="text-gold font-semibold">{setting.value}</span>
+                    <span className="text-[#2563EB] font-semibold">{setting.value}</span>
                   </div>
                 ))}
               </div>
             </div>
             <div className="card">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Pause size={14} className="text-gold" /> Pause / Resume Controls
+                <Pause size={14} className="text-[#2563EB]" /> Pause / Resume Controls
               </h3>
               <div className="space-y-2">
                 {sequences.map(seq => (

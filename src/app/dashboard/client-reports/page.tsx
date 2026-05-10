@@ -128,14 +128,14 @@ export default function ClientReportsPage() {
           gradient="purple"
         />
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
-          <FileText size={40} className="mx-auto mb-4 text-white/20" />
-          <p className="text-white/60 mb-2">No reports generated yet.</p>
-          <p className="text-white/40 text-sm mb-6">
+          <FileText size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
+          <p className="text-[#6B7280] mb-2">No reports generated yet.</p>
+          <p className="text-[#9CA3AF] text-sm mb-6">
             Generate your first report using the Report Generator.
           </p>
           <Link
             href="/dashboard/report-generator"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-sm font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors"
           >
             Go to Report Generator
           </Link>
@@ -155,7 +155,7 @@ export default function ClientReportsPage() {
         actions={
           <Link
             href="/dashboard/report-generator"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors border border-white/20"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-white text-sm font-medium transition-colors border border-white/20"
           >
             <FileText size={14} /> Generate Report
           </Link>
@@ -170,11 +170,11 @@ export default function ClientReportsPage() {
         </div>
       ) : rows.length === 0 ? (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
-          <ClipboardList size={40} className="mx-auto mb-4 text-white/20" />
-          <p className="text-white/60 mb-2">No reports yet.</p>
+          <ClipboardList size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
+          <p className="text-[#6B7280] mb-2">No reports yet.</p>
           <Link
             href="/dashboard/report-generator"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-sm font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors"
           >
             Generate your first report
           </Link>
@@ -197,31 +197,31 @@ export default function ClientReportsPage() {
                   onClick={() =>
                     setExpandedClient(isExpanded ? null : row.client_id)
                   }
-                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/5 transition-colors"
+                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-[rgba(0,0,0,0.03)] transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
-                      <FileText size={14} className="text-purple-300" />
+                    <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center">
+                      <FileText size={14} className="text-[#2563EB]" />
                     </div>
                     <div className="text-left">
-                      <p className="font-medium text-white text-sm">{row.client_name}</p>
-                      <p className="text-xs text-white/40">
+                      <p className="font-medium text-[#111827] text-sm">{row.client_name}</p>
+                      <p className="text-xs text-[#9CA3AF]">
                         {row.reports.length} report{row.reports.length !== 1 ? "s" : ""}
                       </p>
                     </div>
                   </div>
-                  <span className="text-white/30 text-xs">
+                  <span className="text-[#9CA3AF] text-xs">
                     {isExpanded ? "Hide" : "Show"}
                   </span>
                 </button>
 
                 {/* Reports list */}
                 {isExpanded && (
-                  <div className="border-t border-white/10 divide-y divide-white/5">
+                  <div className="border-t border-[rgba(0,0,0,0.08)] divide-y divide-[rgba(0,0,0,0.06)]">
                     {row.reports.map(r => (
                       <div
                         key={r.id}
-                        className="flex items-center gap-4 px-5 py-3 hover:bg-white/5 transition-colors"
+                        className="flex items-center gap-4 px-5 py-3 hover:bg-[rgba(0,0,0,0.03)] transition-colors"
                       >
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-0.5">
@@ -230,11 +230,11 @@ export default function ClientReportsPage() {
                             ) : (
                               <Clock size={12} className="text-yellow-400 shrink-0" />
                             )}
-                            <span className="text-sm text-white truncate">
+                            <span className="text-sm text-[#111827] truncate">
                               {fmtDate(r.date_from)} – {fmtDate(r.date_to)}
                             </span>
                           </div>
-                          <div className="flex items-center gap-3 text-xs text-white/30">
+                          <div className="flex items-center gap-3 text-xs text-[#9CA3AF]">
                             <span className="flex items-center gap-1">
                               <Calendar size={10} /> Generated {fmtDate(r.created_at)}
                             </span>
@@ -252,7 +252,7 @@ export default function ClientReportsPage() {
                               onClick={() =>
                                 downloadReport(r.pdf_url!, `report-${r.id.slice(0, 8)}.pdf`)
                               }
-                              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-xs transition-colors"
+                              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] text-xs transition-colors"
                             >
                               <Download size={11} /> Download
                             </button>
@@ -260,7 +260,7 @@ export default function ClientReportsPage() {
                           <button
                             onClick={() => resendEmail(r.id)}
                             disabled={resending === r.id}
-                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-xs transition-colors disabled:opacity-50"
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-xs transition-colors disabled:opacity-50"
                           >
                             <Mail size={11} />
                             {resending === r.id ? "Sending…" : "Resend"}

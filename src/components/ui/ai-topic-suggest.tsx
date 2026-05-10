@@ -73,7 +73,7 @@ const DEFAULT_TITLE: Record<SuggestSurface, string> = {
 
 const IMPACT_BADGE: Record<SuggestedTopic["impact"], string> = {
   high: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30",
-  medium: "bg-gold/15 text-gold border border-gold/30",
+  medium: "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]",
   low: "bg-muted/15 text-muted border border-border/40",
 };
 
@@ -138,7 +138,7 @@ export default function AITopicSuggest({
     <div className={`space-y-2 ${className}`}>
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80">
-          <Sparkles size={12} className="text-gold" />
+          <Sparkles size={12} className="text-[#2563EB]" />
           <span>{title ?? DEFAULT_TITLE[surface]}</span>
         </div>
         <button
@@ -176,11 +176,11 @@ export default function AITopicSuggest({
               type="button"
               onClick={() => handlePick(s.topic)}
               title={s.reason || s.topic}
-              className="group inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-surface-light px-3 py-1 text-[11px] text-foreground/80 transition-all hover:border-gold/30 hover:bg-gold/10 hover:text-foreground"
+              className="group inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-surface-light px-3 py-1 text-[11px] text-foreground/80 transition-all hover:border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.08)] hover:text-foreground"
             >
               <span className={`h-1.5 w-1.5 rounded-full ${
                 s.impact === "high" ? "bg-emerald-400" :
-                s.impact === "medium" ? "bg-gold" : "bg-muted"
+                s.impact === "medium" ? "bg-[#2563EB]" : "bg-muted"
               }`} aria-hidden="true" />
               <span>{s.topic}</span>
               <span className={`ml-0.5 rounded-full px-1 py-px text-[8px] uppercase tracking-wide opacity-0 transition-opacity group-hover:opacity-100 ${IMPACT_BADGE[s.impact]}`}>

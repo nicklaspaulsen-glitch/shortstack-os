@@ -8,7 +8,7 @@
  *   - Daily spend sparkline (recharts)
  *   - Top tasks by cost
  *   - Top models by cost
- *   - Optimisation hints (e.g. "20% of code_review still on Sonnet — try qwen3-coder")
+ *   - Optimisation hints (e.g. "20% of code_review still on Sonnet ï¿½ try qwen3-coder")
  *
  * All numbers are USD. The dashboard is gated to role === "admin" or "founder".
  */
@@ -75,7 +75,7 @@ function formatUsd(n: number): string {
 }
 
 function formatDelta(pct: number): { label: string; type: "positive" | "negative" | "neutral" } {
-  if (Number.isNaN(pct) || !Number.isFinite(pct)) return { label: "—", type: "neutral" };
+  if (Number.isNaN(pct) || !Number.isFinite(pct)) return { label: "ï¿½", type: "neutral" };
   const arrow = pct >= 0 ? "+" : "";
   // For costs, negative delta is GOOD (saving money). Flip the colours.
   return {
@@ -143,7 +143,7 @@ export default function LlmCostsDashboard() {
   if (authLoading || state === "loading") {
     return (
       <div className="flex items-center justify-center min-h-[60vh] text-muted text-sm">
-        Loading LLM cost dashboard…
+        Loading LLM cost dashboardï¿½
       </div>
     );
   }
@@ -186,7 +186,7 @@ export default function LlmCostsDashboard() {
     <div className="space-y-6 pb-12">
       <PageHero
         title="LLM Cost Dashboard"
-        subtitle="Smart routing has saved you real money — see exactly where."
+        subtitle="Smart routing has saved you real money ï¿½ see exactly where."
         eyebrow="Admin"
         gradient="purple"
         icon={<Sparkles size={28} />}
@@ -194,7 +194,7 @@ export default function LlmCostsDashboard() {
           <button
             onClick={load}
             disabled={refreshing}
-            className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] disabled:opacity-50"
           >
             <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
             Refresh
@@ -236,7 +236,7 @@ export default function LlmCostsDashboard() {
         </header>
         {data.daily_series.length === 0 ? (
           <p className="text-xs text-muted py-8 text-center">
-            No usage events yet this month — once the smart router takes over, daily spend will appear here.
+            No usage events yet this month ï¿½ once the smart router takes over, daily spend will appear here.
           </p>
         ) : (
           <div className="h-56">
@@ -244,8 +244,8 @@ export default function LlmCostsDashboard() {
               <AreaChart data={data.daily_series}>
                 <defs>
                   <linearGradient id="spend-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#A855F7" stopOpacity={0.6} />
-                    <stop offset="100%" stopColor="#A855F7" stopOpacity={0.05} />
+                    <stop offset="0%" stopColor="#2563EB" stopOpacity={0.5} />
+                    <stop offset="100%" stopColor="#2563EB" stopOpacity={0.04} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeOpacity={0.08} />
@@ -272,7 +272,7 @@ export default function LlmCostsDashboard() {
                 <Area
                   type="monotone"
                   dataKey="cost_usd"
-                  stroke="#A855F7"
+                  stroke="#2563EB"
                   fill="url(#spend-gradient)"
                   strokeWidth={2}
                 />
@@ -282,7 +282,7 @@ export default function LlmCostsDashboard() {
         )}
       </section>
 
-      {/* Top tasks + Top models — side by side */}
+      {/* Top tasks + Top models ï¿½ side by side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <section className=" border border-border bg-surface p-5">
           <header className="mb-4">
@@ -372,7 +372,7 @@ export default function LlmCostsDashboard() {
               Heuristic suggestions for cutting spend further
               {totalEstimatedSavings > 0 ? (
                 <>
-                  {" "}— estimated potential savings: <strong className="text-success">{formatUsd(totalEstimatedSavings)}</strong>
+                  {" "}ï¿½ estimated potential savings: <strong className="text-success">{formatUsd(totalEstimatedSavings)}</strong>
                 </>
               ) : null}
             </p>

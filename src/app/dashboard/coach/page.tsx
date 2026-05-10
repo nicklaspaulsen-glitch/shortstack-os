@@ -1,16 +1,16 @@
 "use client";
 
 /**
- * AI Sales Coach — overview page.
+ * AI Sales Coach ï¿½ overview page.
  *
  * Three tabs share the same data source (`GET /api/coach/analyses`):
  *   - Recent Calls: list with score badges, click-through to detail.
  *   - By Rep: groups analyses by rep_id, shows trend strip per rep.
  *   - Leaderboard: top reps by avg score this period.
  *
- * The hero uses the gold gradient with the Award icon — coaching is a
+ * The hero uses the gold gradient with the Award icon ï¿½ coaching is a
  * premium-feel surface, kept consistent with the meetings + voice-receptionist
- * pages on the agency side. No PageHero overrides — this page reads as a
+ * pages on the agency side. No PageHero overrides ï¿½ this page reads as a
  * sibling of the rest of the dashboard family.
  */
 
@@ -117,10 +117,10 @@ function ScoreBadge({ score }: { score: number | null }) {
   const value = score ?? 0;
   const tone =
     value >= 80
-      ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+      ? "bg-emerald-500/15 text-emerald-700 border-emerald-500/30"
       : value >= 60
-        ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
-        : "bg-rose-500/15 text-rose-300 border-rose-500/30";
+        ? "bg-amber-500/15 text-amber-700 border-amber-500/30"
+        : "bg-rose-500/15 text-rose-700 border-rose-500/30";
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${tone}`}
@@ -191,7 +191,7 @@ export default function CoachPage() {
     <div className="space-y-6">
       <PageHero
         title="AI Sales Coach"
-        subtitle="Personalized feedback on every call and email — talk-time, objections, next-best-action."
+        subtitle="Personalized feedback on every call and email ï¿½ talk-time, objections, next-best-action."
         gradient="gold"
         icon={<Award className="h-6 w-6" />}
         eyebrow="Coaching"
@@ -240,7 +240,7 @@ export default function CoachPage() {
             onClick={() => setTab(t.id)}
             className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
               tab === t.id
-                ? "bg-indigo-500/15 text-indigo-300 border border-indigo-500/30"
+                ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
                 : "text-black/60 hover:bg-black/5 hover:text-[#0A0A0B]"
             }`}
           >
@@ -251,12 +251,12 @@ export default function CoachPage() {
 
       {loading && (
         <div className="flex items-center gap-2 text-black/60 text-sm">
-          <Loader2 className="h-4 w-4 animate-spin" /> Loading analyses…
+          <Loader2 className="h-4 w-4 animate-spin" /> Loading analysesï¿½
         </div>
       )}
 
       {error && !loading && (
-        <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+        <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700">
           {error}
         </div>
       )}
@@ -287,7 +287,7 @@ export default function CoachPage() {
                 <motion.div key={row.id} variants={rowVariants}>
                   <Link
                     href={`/dashboard/coach/analyses/${row.id}`}
-                    className="group flex items-center gap-4 border-b border-black/5 last:border-0 px-4 py-3 transition-colors hover:bg-indigo-500/5"
+                    className="group flex items-center gap-4 border-b border-black/5 last:border-0 px-4 py-3 transition-colors hover:bg-[rgba(37,99,235,0.04)]"
                   >
                     <div className="rounded-lg border border-black/10 bg-black/5 p-2 text-black/65">
                       <Icon className="h-4 w-4" />
@@ -317,7 +317,7 @@ export default function CoachPage() {
                       Talk {talkRatio}%
                     </div>
                     <ScoreBadge score={row.overall_score} />
-                    <ArrowRight className="h-4 w-4 text-black/35 transition-colors group-hover:text-indigo-400" />
+                    <ArrowRight className="h-4 w-4 text-black/35 transition-colors group-hover:text-[#2563EB]" />
                   </Link>
                 </motion.div>
               );
@@ -352,7 +352,7 @@ export default function CoachPage() {
                       {bucket.repId === "__owner" ? "Unassigned" : bucket.repId.slice(0, 8)}
                     </div>
                     <div className="text-xs text-black/50">
-                      {bucket.rows.length} analyses • avg {bucket.avg}
+                      {bucket.rows.length} analyses ï¿½ avg {bucket.avg}
                     </div>
                   </div>
                   <ScoreBadge score={bucket.avg} />
@@ -364,7 +364,7 @@ export default function CoachPage() {
                     return (
                       <span
                         key={row.id}
-                        title={`${value} • ${formatRelativeTime(row.created_at)}`}
+                        title={`${value} ï¿½ ${formatRelativeTime(row.created_at)}`}
                         className={`h-6 w-1.5 rounded-sm ${color}`}
                         style={{ opacity: 0.4 + (value / 100) * 0.6 }}
                       />
@@ -401,7 +401,7 @@ export default function CoachPage() {
                 onClick={() => setPeriod(p.id)}
                 className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                   period === p.id
-                    ? "border-indigo-500/40 bg-indigo-500/10 text-indigo-300"
+                    ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                     : "border-black/10 text-black/60 hover:border-black/15 hover:text-[#0A0A0B]"
                 }`}
               >
@@ -433,7 +433,7 @@ export default function CoachPage() {
                     <motion.tr
                       key={entry.rep_id}
                       variants={rowVariants}
-                      className="text-black/65 hover:bg-indigo-500/5 transition-colors"
+                      className="text-black/65 hover:bg-[rgba(37,99,235,0.04)] transition-colors"
                     >
                       <td className="px-4 py-3 font-semibold text-black/60">{idx + 1}</td>
                       <td className="px-4 py-3 text-[#0A0A0B]">
@@ -445,10 +445,10 @@ export default function CoachPage() {
                       <td className="px-4 py-3 text-right">
                         <ScoreBadge score={entry.avg_score} />
                       </td>
-                      <td className="px-4 py-3 text-right text-emerald-300/80">
+                      <td className="px-4 py-3 text-right text-emerald-700">
                         {entry.best_score}
                       </td>
-                      <td className="px-4 py-3 text-right text-rose-300/80">
+                      <td className="px-4 py-3 text-right text-rose-700">
                         {entry.worst_score}
                       </td>
                     </motion.tr>

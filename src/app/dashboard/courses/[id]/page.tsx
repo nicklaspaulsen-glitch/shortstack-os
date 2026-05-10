@@ -349,15 +349,15 @@ export default function CourseBuilderPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center">
-        <Loader2 size={32} className="text-purple-400 animate-spin" />
+      <div className="flex items-center justify-center py-24">
+        <Loader2 size={32} className="text-[#2563EB] animate-spin" />
       </div>
     );
   }
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center text-white/40">
+      <div className="flex items-center justify-center py-24 text-[#6B7280]">
         Course not found
       </div>
     );
@@ -366,7 +366,7 @@ export default function CourseBuilderPage() {
   const modules = (course.course_modules ?? []).sort((a, b) => a.sort_order - b.sort_order);
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] flex flex-col">
+    <div className="flex flex-col">
       <PageHero
         title={course.title}
         subtitle="Course Builder — modules, lessons, and settings"
@@ -374,10 +374,10 @@ export default function CourseBuilderPage() {
         gradient="purple"
         actions={
           <div className="flex items-center gap-2">
-            {saving && <Loader2 size={14} className="text-white/40 animate-spin" />}
+            {saving && <Loader2 size={14} className="text-[#9CA3AF] animate-spin" />}
             <Link
               href="/dashboard/courses"
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white/70 rounded-lg text-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[#374151] rounded-lg text-sm transition-colors"
             >
               <ArrowLeft size={14} />
               Back
@@ -385,8 +385,8 @@ export default function CourseBuilderPage() {
             <span
               className={`text-xs px-2 py-0.5 rounded-full ${
                 course.status === "published"
-                  ? "bg-green-500/20 text-green-400"
-                  : "bg-white/10 text-white/50"
+                  ? "bg-green-500/20 text-green-700"
+                  : "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"
               }`}
             >
               {course.status}
@@ -398,12 +398,12 @@ export default function CourseBuilderPage() {
       <div className="flex flex-1 max-w-[1600px] mx-auto w-full px-4 py-6 gap-4">
         {/* ── LEFT: Module tree ── */}
         <aside className="w-72 flex-shrink-0 flex flex-col gap-3">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-3 flex-1 overflow-y-auto max-h-[calc(100vh-220px)]">
+          <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl p-3 flex-1 overflow-y-auto max-h-[calc(100vh-220px)]">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium text-white/40 uppercase tracking-wider">Curriculum</span>
+              <span className="text-xs font-medium text-[#9CA3AF] uppercase tracking-wider">Curriculum</span>
               <button
                 onClick={() => void addModule()}
-                className="flex items-center gap-1 text-xs text-purple-400 hover:text-purple-300 transition-colors"
+                className="flex items-center gap-1 text-xs text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
               >
                 <Plus size={12} />
                 Module
@@ -411,7 +411,7 @@ export default function CourseBuilderPage() {
             </div>
 
             {modules.length === 0 ? (
-              <p className="text-white/30 text-xs text-center py-6">No modules yet</p>
+              <p className="text-[#9CA3AF] text-xs text-center py-6">No modules yet</p>
             ) : (
               <div className="space-y-1">
                 {modules.map((mod) => (
@@ -440,9 +440,9 @@ export default function CourseBuilderPage() {
         {/* ── CENTER: Lesson editor ── */}
         <main className="flex-1 min-w-0">
           {selectedLesson ? (
-            <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+            <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl p-5">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-white">Lesson Editor</h2>
+                <h2 className="font-semibold text-[#111827]">Lesson Editor</h2>
                 <button
                   onClick={() => { triggerLessonSave(); void saveLessonNow(); }}
                   disabled={saving}
@@ -456,17 +456,17 @@ export default function CourseBuilderPage() {
               <div className="space-y-4">
                 {/* Title */}
                 <div>
-                  <label className="block text-xs text-white/50 mb-1">Lesson title</label>
+                  <label className="block text-xs text-[#6B7280] mb-1">Lesson title</label>
                   <input
                     value={lessonTitle}
                     onChange={e => { setLessonTitle(e.target.value); triggerLessonSave(); }}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                    className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
                   />
                 </div>
 
                 {/* Content type */}
                 <div>
-                  <label className="block text-xs text-white/50 mb-1">Content type</label>
+                  <label className="block text-xs text-[#6B7280] mb-1">Content type</label>
                   <div className="flex gap-2">
                     {(["video","text","quiz","file"] as const).map(t => (
                       <button
@@ -475,7 +475,7 @@ export default function CourseBuilderPage() {
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs capitalize transition-colors ${
                           lessonType === t
                             ? "bg-purple-600 text-white"
-                            : "bg-white/5 text-white/50 hover:bg-white/10"
+                            : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] hover:bg-[rgba(0,0,0,0.06)]"
                         }`}
                       >
                         {CONTENT_TYPE_ICON[t]}
@@ -488,14 +488,14 @@ export default function CourseBuilderPage() {
                 {/* URL (for video/file) */}
                 {(lessonType === "video" || lessonType === "file") && (
                   <div>
-                    <label className="block text-xs text-white/50 mb-1">
+                    <label className="block text-xs text-[#6B7280] mb-1">
                       {lessonType === "video" ? "Video URL (YouTube, Vimeo, direct)" : "File URL"}
                     </label>
                     <input
                       value={lessonUrl}
                       onChange={e => { setLessonUrl(e.target.value); triggerLessonSave(); }}
                       placeholder="https://…"
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
                     />
                   </div>
                 )}
@@ -503,7 +503,7 @@ export default function CourseBuilderPage() {
                 {/* Body (for text/quiz) */}
                 {(lessonType === "text" || lessonType === "quiz") && (
                   <div>
-                    <label className="block text-xs text-white/50 mb-1">
+                    <label className="block text-xs text-[#6B7280] mb-1">
                       {lessonType === "quiz" ? "Quiz description / instructions" : "Lesson content (markdown)"}
                     </label>
                     <textarea
@@ -511,7 +511,7 @@ export default function CourseBuilderPage() {
                       onChange={e => { setLessonBody(e.target.value); triggerLessonSave(); }}
                       rows={10}
                       placeholder={lessonType === "text" ? "Write your lesson content here…" : "Quiz instructions…"}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500 resize-none font-mono"
+                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB] resize-none font-mono"
                     />
                   </div>
                 )}
@@ -519,27 +519,27 @@ export default function CourseBuilderPage() {
                 {/* Duration + drip + free preview */}
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-xs text-white/50 mb-1">Duration (seconds)</label>
+                    <label className="block text-xs text-[#6B7280] mb-1">Duration (seconds)</label>
                     <input
                       type="number"
                       value={lessonDuration}
                       onChange={e => { setLessonDuration(e.target.value); triggerLessonSave(); }}
                       placeholder="e.g. 300"
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-white/50 mb-1">Drip delay (days)</label>
+                    <label className="block text-xs text-[#6B7280] mb-1">Drip delay (days)</label>
                     <input
                       type="number"
                       value={lessonDrip}
                       onChange={e => { setLessonDrip(e.target.value); triggerLessonSave(); }}
                       min="0"
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-white/50 mb-1">Free preview</label>
+                    <label className="block text-xs text-[#6B7280] mb-1">Free preview</label>
                     <div className="flex items-center h-[38px]">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -548,7 +548,7 @@ export default function CourseBuilderPage() {
                           onChange={e => { setLessonFreePreview(e.target.checked); triggerLessonSave(); }}
                           className="accent-purple-500"
                         />
-                        <span className="text-sm text-white/70">Enabled</span>
+                        <span className="text-sm text-[#374151]">Enabled</span>
                       </label>
                     </div>
                   </div>
@@ -556,7 +556,7 @@ export default function CourseBuilderPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-white/5 border border-white/10 rounded-xl h-full flex items-center justify-center text-white/30">
+            <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl h-full flex items-center justify-center text-[#9CA3AF]">
               <div className="text-center">
                 <BookOpen size={40} className="mx-auto mb-3 opacity-30" />
                 <p className="text-sm">Select a lesson to edit</p>
@@ -568,25 +568,25 @@ export default function CourseBuilderPage() {
 
         {/* ── RIGHT: Settings panel ── */}
         <aside className="w-72 flex-shrink-0">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-4">
-            <h3 className="font-semibold text-white text-sm">Course Settings</h3>
+          <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl p-4 space-y-4">
+            <h3 className="font-semibold text-[#111827] text-sm">Course Settings</h3>
 
             <div>
-              <label className="block text-xs text-white/50 mb-1">Title</label>
+              <label className="block text-xs text-[#6B7280] mb-1">Title</label>
               <input
                 value={settingsTitle}
                 onChange={e => setSettingsTitle(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
               />
             </div>
 
             <div>
-              <label className="block text-xs text-white/50 mb-1">Description</label>
+              <label className="block text-xs text-[#6B7280] mb-1">Description</label>
               <textarea
                 value={settingsDesc}
                 onChange={e => setSettingsDesc(e.target.value)}
                 rows={3}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500 resize-none"
+                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB] resize-none"
               />
             </div>
 
@@ -598,28 +598,28 @@ export default function CourseBuilderPage() {
                   onChange={e => setSettingsIsFree(e.target.checked)}
                   className="accent-purple-500"
                 />
-                <span className="text-sm text-white/70">Free course</span>
+                <span className="text-sm text-[#374151]">Free course</span>
               </label>
             </div>
 
             {!settingsIsFree && (
               <div>
-                <label className="block text-xs text-white/50 mb-1">Price ($)</label>
+                <label className="block text-xs text-[#6B7280] mb-1">Price ($)</label>
                 <input
                   type="number"
                   value={settingsPrice}
                   onChange={e => setSettingsPrice(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                  className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-xs text-white/50 mb-1">Access type</label>
+              <label className="block text-xs text-[#6B7280] mb-1">Access type</label>
               <select
                 value={settingsAccess}
                 onChange={e => setSettingsAccess(e.target.value as typeof settingsAccess)}
-                className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
               >
                 <option value="lifetime">Lifetime</option>
                 <option value="subscription">Subscription</option>
@@ -628,7 +628,7 @@ export default function CourseBuilderPage() {
             </div>
 
             <div>
-              <label className="block text-xs text-white/50 mb-1">Status</label>
+              <label className="block text-xs text-[#6B7280] mb-1">Status</label>
               <div className="flex gap-2">
                 {(["draft","published"] as const).map(s => (
                   <button
@@ -636,8 +636,8 @@ export default function CourseBuilderPage() {
                     onClick={() => setSettingsStatus(s)}
                     className={`flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs capitalize transition-colors ${
                       settingsStatus === s
-                        ? s === "published" ? "bg-green-600 text-white" : "bg-white/15 text-white"
-                        : "bg-white/5 text-white/40 hover:bg-white/10"
+                        ? s === "published" ? "bg-green-600 text-white" : "bg-[rgba(0,0,0,0.08)] text-[#374151]"
+                        : "bg-[rgba(0,0,0,0.04)] text-[#9CA3AF] hover:bg-[rgba(0,0,0,0.06)]"
                     }`}
                   >
                     {s === "published" ? <Eye size={11} /> : <EyeOff size={11} />}
@@ -656,13 +656,13 @@ export default function CourseBuilderPage() {
               Save Settings
             </button>
 
-            <hr className="border-white/10" />
+            <hr className="border-[rgba(0,0,0,0.08)]" />
 
             {/* Enroll client */}
             <div>
               <button
                 onClick={() => setShowEnrollPanel(!showEnrollPanel)}
-                className="w-full flex items-center justify-between text-sm text-white/70 hover:text-white transition-colors"
+                className="w-full flex items-center justify-between text-sm text-[#374151] hover:text-[#111827] transition-colors"
               >
                 <span className="flex items-center gap-1.5">
                   <Users size={14} />
@@ -679,7 +679,7 @@ export default function CourseBuilderPage() {
                   <select
                     value={enrollClientId}
                     onChange={e => setEnrollClientId(e.target.value)}
-                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                    className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
                   >
                     <option value="">Select client…</option>
                     {clients.map(c => (
@@ -689,7 +689,7 @@ export default function CourseBuilderPage() {
                   <button
                     onClick={() => void enrollClient()}
                     disabled={enrolling || !enrollClientId}
-                    className="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg text-sm transition-colors"
+                    className="w-full py-1.5 bg-[#2563EB] hover:bg-[#3B82F6] disabled:opacity-50 text-white rounded-lg text-sm transition-colors"
                   >
                     {enrolling ? "Enrolling…" : "Enroll"}
                   </button>
@@ -697,19 +697,19 @@ export default function CourseBuilderPage() {
               )}
             </div>
 
-            <hr className="border-white/10" />
+            <hr className="border-[rgba(0,0,0,0.08)]" />
 
             {/* Portal link note */}
-            <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-lg p-3">
-              <p className="text-xs text-indigo-300 mb-2">
+            <div className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] rounded-lg p-3">
+              <p className="text-xs text-[#374151] mb-2">
                 Students access their courses at:
               </p>
-              <code className="block text-xs text-indigo-200 bg-black/20 rounded px-2 py-1 break-all">
+              <code className="block text-xs text-[#2563EB] bg-[rgba(0,0,0,0.04)] rounded px-2 py-1 break-all">
                 /portal/[slug]/courses
               </code>
               <button
                 onClick={copyPortalLink}
-                className="mt-2 flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+                className="mt-2 flex items-center gap-1.5 text-xs text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
               >
                 {copied ? <Check size={12} /> : <Copy size={12} />}
                 {copied ? "Copied!" : "Copy link"}
@@ -750,32 +750,32 @@ function ModuleItem({
   return (
     <div className="rounded-lg overflow-hidden">
       {/* Module header */}
-      <div className="group flex items-center gap-1 px-2 py-1.5 bg-white/5 hover:bg-white/10 rounded-lg cursor-pointer transition-colors">
-        <GripVertical size={12} className="text-white/20 flex-shrink-0" />
+      <div className="group flex items-center gap-1 px-2 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] rounded-lg cursor-pointer transition-colors">
+        <GripVertical size={12} className="text-[#D1D5DB] flex-shrink-0" />
         <button
           onClick={onToggle}
           className="flex-1 flex items-center gap-1 text-left min-w-0"
         >
           {expanded ? (
-            <ChevronDown size={13} className="text-white/40 flex-shrink-0" />
+            <ChevronDown size={13} className="text-[#9CA3AF] flex-shrink-0" />
           ) : (
-            <ChevronRight size={13} className="text-white/40 flex-shrink-0" />
+            <ChevronRight size={13} className="text-[#9CA3AF] flex-shrink-0" />
           )}
-          <span className="text-sm font-medium text-white truncate">{mod.title}</span>
-          <span className="ml-auto text-xs text-white/30 flex-shrink-0">
+          <span className="text-sm font-medium text-[#111827] truncate">{mod.title}</span>
+          <span className="ml-auto text-xs text-[#9CA3AF] flex-shrink-0">
             {lessons.length}
           </span>
         </button>
         <button
           onClick={onAddLesson}
-          className="opacity-0 group-hover:opacity-100 p-0.5 text-white/40 hover:text-purple-400 transition-all"
+          className="opacity-0 group-hover:opacity-100 p-0.5 text-[#9CA3AF] hover:text-[#2563EB] transition-all"
           title="Add lesson"
         >
           <Plus size={12} />
         </button>
         <button
           onClick={onDeleteModule}
-          className="opacity-0 group-hover:opacity-100 p-0.5 text-white/30 hover:text-red-400 transition-all"
+          className="opacity-0 group-hover:opacity-100 p-0.5 text-[#9CA3AF] hover:text-red-400 transition-all"
           title="Delete module"
         >
           <Trash2 size={12} />
@@ -814,24 +814,24 @@ function LessonItem({
   return (
     <div
       className={`group flex items-center gap-1.5 px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${
-        selected ? "bg-purple-600/25 border border-purple-500/30" : "hover:bg-white/5"
+        selected ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)]" : "hover:bg-[rgba(0,0,0,0.04)]"
       }`}
     >
-      <GripVertical size={11} className="text-white/15 flex-shrink-0" />
+      <GripVertical size={11} className="text-[#D1D5DB] flex-shrink-0" />
       <button onClick={onSelect} className="flex-1 flex items-center gap-1.5 min-w-0 text-left">
-        <span className={`flex-shrink-0 ${selected ? "text-purple-400" : "text-white/30"}`}>
+        <span className={`flex-shrink-0 ${selected ? "text-[#2563EB]" : "text-[#9CA3AF]"}`}>
           {CONTENT_TYPE_ICON[lesson.content_type]}
         </span>
-        <span className={`text-xs truncate ${selected ? "text-white" : "text-white/70"}`}>
+        <span className={`text-xs truncate ${selected ? "text-[#111827]" : "text-[#374151]"}`}>
           {lesson.title}
         </span>
         {lesson.drip_delay_days > 0 && (
-          <span className="ml-auto text-[10px] text-white/30 flex-shrink-0">+{lesson.drip_delay_days}d</span>
+          <span className="ml-auto text-[10px] text-[#9CA3AF] flex-shrink-0">+{lesson.drip_delay_days}d</span>
         )}
       </button>
       <button
         onClick={onDelete}
-        className="opacity-0 group-hover:opacity-100 p-0.5 text-white/20 hover:text-red-400 transition-all"
+        className="opacity-0 group-hover:opacity-100 p-0.5 text-[#D1D5DB] hover:text-red-500 transition-all"
         title="Delete lesson"
       >
         <Trash2 size={11} />

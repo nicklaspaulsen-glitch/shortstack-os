@@ -249,7 +249,7 @@ export default function RollingPreview({
                   >
                     <div className="absolute inset-0 flex flex-col justify-center p-3 text-left">
                       {item.tag && (
-                        <span className="text-[9px] uppercase tracking-widest text-gold/80 font-semibold mb-1.5">
+                        <span className="text-[9px] uppercase tracking-widest text-[rgba(37,99,235,0.8)] font-semibold mb-1.5">
                           {item.tag}
                         </span>
                       )}
@@ -311,7 +311,7 @@ export default function RollingPreview({
                     }}
                   />
                   {item.tag && (
-                    <span className="absolute bottom-1.5 left-1.5 text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-black/70 text-gold border border-gold/30 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="absolute bottom-1.5 left-1.5 text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-black/70 text-[#2563EB] border border-[rgba(37,99,235,0.3)] opacity-0 group-hover:opacity-100 transition-opacity">
                       {item.tag}
                     </span>
                   )}

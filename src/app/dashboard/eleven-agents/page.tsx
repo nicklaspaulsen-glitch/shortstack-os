@@ -211,17 +211,17 @@ export default function ElevenAgentsPage() {
   const filteredScripts: ScriptTemplate[] = [];
 
   const outcomeColors: Record<string, string> = {
-    qualified: "bg-green-500/10 text-green-400",
-    callback: "bg-blue-500/10 text-blue-400",
-    not_interested: "bg-red-500/10 text-red-400",
-    voicemail: "bg-yellow-500/10 text-yellow-400",
-    no_answer: "bg-gray-500/10 text-gray-400",
+    qualified: "bg-green-50 text-green-700",
+    callback: "bg-blue-50 text-blue-700",
+    not_interested: "bg-red-50 text-red-700",
+    voicemail: "bg-amber-50 text-amber-700",
+    no_answer: "bg-gray-100 text-gray-600",
   };
 
   const sentimentColors: Record<string, string> = {
-    positive: "text-green-400",
-    neutral: "text-yellow-400",
-    negative: "text-red-400",
+    positive: "text-green-700",
+    neutral: "text-amber-700",
+    negative: "text-red-700",
   };
 
   function toggleAgent(id: string) {
@@ -271,12 +271,12 @@ export default function ElevenAgentsPage() {
       {/* Stats Strip */}
       <div className="grid grid-cols-6 gap-3">
         {[
-          { label: "Calls Today", value: totalCallsToday, color: "text-gold" },
-          { label: "Qualified", value: qualifiedCalls, color: "text-green-400" },
-          { label: "Success Rate", value: `${avgSuccessRate}%`, color: avgSuccessRate >= 30 ? "text-green-400" : "text-yellow-400" },
-          { label: "Active Agents", value: agents.filter(a => a.status === "active").length, color: "text-purple-400" },
-          { label: "Avg Duration", value: agents.length ? `${Math.round(agents.reduce((s, a) => s + a.avgDuration, 0) / agents.length)}s` : "---", color: "text-foreground" },
-          { label: "Cost Today", value: `$${totalCost.toFixed(2)}`, color: "text-cyan-400" },
+          { label: "Calls Today", value: totalCallsToday, color: "text-[#2563EB]" },
+          { label: "Qualified", value: qualifiedCalls, color: "text-green-700" },
+          { label: "Success Rate", value: `${avgSuccessRate}%`, color: avgSuccessRate >= 30 ? "text-green-700" : "text-amber-700" },
+          { label: "Active Agents", value: agents.filter(a => a.status === "active").length, color: "text-[#374151]" },
+          { label: "Avg Duration", value: agents.length ? `${Math.round(agents.reduce((s, a) => s + a.avgDuration, 0) / agents.length)}s` : "---", color: "text-[#374151]" },
+          { label: "Cost Today", value: `$${totalCost.toFixed(2)}`, color: "text-[#2563EB]" },
         ].map((s, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
             <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
@@ -289,11 +289,11 @@ export default function ElevenAgentsPage() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex gap-1 border-b border-border overflow-x-auto pb-px">
+      <div className="flex gap-1 border-b border-[rgba(0,0,0,0.08)] overflow-x-auto pb-px">
         {TABS.map(t => (
           <button key={t} onClick={() => setActiveTab(t)}
             className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
-              activeTab === t ? "text-gold border-b-2 border-gold" : "text-muted hover:text-foreground"
+              activeTab === t ? "text-[#2563EB] border-b-2 border-[#2563EB]" : "text-[#6B7280] hover:text-[#374151]"
             }`}>{t}</button>
         ))}
       </div>
@@ -303,17 +303,17 @@ export default function ElevenAgentsPage() {
         <div className="space-y-4">
           {/* Error / Success Banners */}
           {apiError && (
-            <div className="flex items-center gap-2 p-3 rounded-lg border border-red-500/20 bg-red-500/5 text-red-400 text-[11px]">
+            <div className="flex items-center gap-2 p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 text-[11px]">
               <AlertTriangle size={14} />
               <span className="flex-1">{apiError}</span>
-              <button onClick={() => setApiError("")} className="hover:text-red-300"><X size={12} /></button>
+              <button onClick={() => setApiError("")} className="hover:text-red-900"><X size={12} /></button>
             </div>
           )}
           {apiSuccess && (
-            <div className="flex items-center gap-2 p-3 rounded-lg border border-green-500/20 bg-green-500/5 text-green-400 text-[11px]">
+            <div className="flex items-center gap-2 p-3 rounded-lg border border-green-200 bg-green-50 text-green-700 text-[11px]">
               <Check size={14} />
               <span className="flex-1">{apiSuccess}</span>
-              <button onClick={() => setApiSuccess("")} className="hover:text-green-300"><X size={12} /></button>
+              <button onClick={() => setApiSuccess("")} className="hover:text-green-900"><X size={12} /></button>
             </div>
           )}
 
@@ -326,15 +326,15 @@ export default function ElevenAgentsPage() {
                 <span className="text-[9px] text-muted font-normal">({liveAgents.length} from ElevenLabs)</span>
               </h2>
               <button onClick={() => { setShowCreateForm(!showCreateForm); if (!showCreateForm) handleLoadDefaults(); }}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1">
+                className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center gap-1">
                 {showCreateForm ? <><X size={10} /> Cancel</> : <><Plus size={10} /> New Agent</>}
               </button>
             </div>
 
             {/* ── Create Agent Form ── */}
             {showCreateForm && (
-              <div className="mb-4 p-4 rounded-lg border border-gold/20 bg-gold/5 space-y-3">
-                <h3 className="text-xs font-semibold text-gold">Create New ElevenLabs Agent</h3>
+              <div className="mb-4 p-4 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] space-y-3">
+                <h3 className="text-xs font-semibold text-[#2563EB]">Create New ElevenLabs Agent</h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-[9px] text-muted uppercase block mb-1">Agent Name *</label>
@@ -364,10 +364,10 @@ export default function ElevenAgentsPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <button onClick={handleCreateAgent} disabled={createLoading || !createForm.name.trim()}
-                    className="px-4 py-2 rounded-lg bg-gold text-black text-xs font-semibold hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center gap-2">
+                    className="px-4 py-2 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center gap-2">
                     {createLoading ? <><Loader2 size={12} className="animate-spin" /> Creating...</> : <><Plus size={12} /> Create Agent</>}
                   </button>
-                  <button onClick={handleLoadDefaults} className="px-3 py-2 rounded-lg border border-border text-xs text-muted hover:text-foreground transition-all">
+                  <button onClick={handleLoadDefaults} className="px-3 py-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-xs text-[#6B7280] hover:text-[#374151] transition-all">
                     Load Default Script
                   </button>
                 </div>
@@ -386,11 +386,11 @@ export default function ElevenAgentsPage() {
                   const language = (agentConfig?.language || "en") as string;
                   const voiceId = (ttsConfig?.voice_id || "default") as string;
                   return (
-                    <motion.div key={agentId} variants={itemVariants} className="p-3 rounded-lg border border-purple-500/20 bg-purple-500/5 transition-all">
+                    <motion.div key={agentId} variants={itemVariants} className="p-3 rounded-lg border border-[rgba(37,99,235,0.14)] bg-[rgba(37,99,235,0.04)] transition-all">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                            <Phone size={14} className="text-purple-400" />
+                          <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                            <Phone size={14} className="text-[#2563EB]" />
                           </div>
                           <div>
                             <p className="text-[11px] font-semibold">{name}</p>
@@ -398,25 +398,25 @@ export default function ElevenAgentsPage() {
                           </div>
                         </div>
                         <button onClick={() => handleDeleteAgent(agentId)}
-                          className="p-1.5 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all">
+                          className="p-1.5 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 transition-all">
                           <Trash2 size={12} />
                         </button>
                       </div>
-                      <div className="grid grid-cols-3 gap-2 text-[9px] text-muted">
-                        <div><span className="block text-[8px] uppercase">Language</span><span className="text-foreground font-mono">{language}</span></div>
-                        <div><span className="block text-[8px] uppercase">Voice</span><span className="text-foreground font-mono">{voiceId.slice(0, 10)}</span></div>
-                        <div><span className="block text-[8px] uppercase">Status</span><span className="text-green-400 font-mono">Live</span></div>
+                      <div className="grid grid-cols-3 gap-2 text-[9px] text-[#6B7280]">
+                        <div><span className="block text-[8px] uppercase">Language</span><span className="text-[#111827] font-mono">{language}</span></div>
+                        <div><span className="block text-[8px] uppercase">Voice</span><span className="text-[#111827] font-mono">{voiceId.slice(0, 10)}</span></div>
+                        <div><span className="block text-[8px] uppercase">Status</span><span className="text-green-700 font-mono">Live</span></div>
                       </div>
                     </motion.div>
                   );
                 })}
               </motion.div>
             ) : !apiLoading ? (
-              <div className="p-6 text-center border border-dashed border-border rounded-lg">
-                <Phone size={24} className="text-muted mx-auto mb-2" />
-                <p className="text-xs text-muted mb-2">No agents found on ElevenLabs</p>
+              <div className="p-6 text-center border border-dashed border-[rgba(0,0,0,0.12)] rounded-lg">
+                <Phone size={24} className="text-[#9CA3AF] mx-auto mb-2" />
+                <p className="text-xs text-[#6B7280] mb-2">No agents found on ElevenLabs</p>
                 <button onClick={() => { setShowCreateForm(true); handleLoadDefaults(); }}
-                  className="text-[10px] px-3 py-1.5 bg-gold/10 text-gold rounded-lg border border-gold/20 hover:bg-gold/20 transition-all">
+                  className="text-[10px] px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-lg border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all">
                   Create Your First Agent
                 </button>
               </div>
@@ -431,12 +431,12 @@ export default function ElevenAgentsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {agents.map(agent => (
                 <div key={agent.id} className={`p-3 rounded-lg border transition-all ${
-                  agent.status === "active" ? "border-purple-500/20 bg-purple-500/5" : "border-border"
+                  agent.status === "active" ? "border-[rgba(37,99,235,0.14)] bg-[rgba(37,99,235,0.04)]" : "border-[rgba(0,0,0,0.08)]"
                 }`}>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                        <Phone size={14} className="text-purple-400" />
+                      <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                        <Phone size={14} className="text-[#2563EB]" />
                       </div>
                       <div>
                         <p className="text-[11px] font-semibold">{agent.name}</p>
@@ -444,14 +444,14 @@ export default function ElevenAgentsPage() {
                       </div>
                     </div>
                     <button onClick={() => toggleAgent(agent.id)}
-                      className={`w-9 h-5 rounded-full transition-colors ${agent.status === "active" ? "bg-green-400" : "bg-surface-light"}`}>
+                      className={`w-9 h-5 rounded-full transition-colors ${agent.status === "active" ? "bg-green-600" : "bg-[rgba(0,0,0,0.12)]"}`}>
                       <div className={`w-4 h-4 rounded-full bg-white shadow transition-all mt-0.5 ${agent.status === "active" ? "ml-4" : "ml-0.5"}`} />
                     </button>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 text-[9px] text-muted">
-                    <div><span className="block text-[8px] uppercase">Calls</span><span className="text-foreground font-mono">{agent.callsToday}</span></div>
-                    <div><span className="block text-[8px] uppercase">Success</span><span className={`font-mono ${agent.successRate >= 30 ? "text-green-400" : "text-yellow-400"}`}>{agent.successRate}%</span></div>
-                    <div><span className="block text-[8px] uppercase">Avg Time</span><span className="text-foreground font-mono">{formatDuration(agent.avgDuration)}</span></div>
+                  <div className="grid grid-cols-3 gap-2 text-[9px] text-[#6B7280]">
+                    <div><span className="block text-[8px] uppercase">Calls</span><span className="text-[#111827] font-mono">{agent.callsToday}</span></div>
+                    <div><span className="block text-[8px] uppercase">Success</span><span className={`font-mono ${agent.successRate >= 30 ? "text-green-700" : "text-amber-700"}`}>{agent.successRate}%</span></div>
+                    <div><span className="block text-[8px] uppercase">Avg Time</span><span className="text-[#111827] font-mono">{formatDuration(agent.avgDuration)}</span></div>
                   </div>
                 </div>
               ))}
@@ -468,12 +468,12 @@ export default function ElevenAgentsPage() {
                   const status = (convo.status || "unknown") as string;
                   const agentId = (convo.agent_id || "") as string;
                   return (
-                    <div key={convId || i} className="flex items-center gap-3 p-2 rounded-lg border border-border text-[10px]">
-                      <span className={`w-2 h-2 rounded-full ${status === "done" ? "bg-green-400" : status === "failed" ? "bg-red-400" : "bg-yellow-400"}`} />
-                      <span className="font-mono text-muted w-40 truncate">{convId}</span>
-                      <span className="text-muted w-24 truncate">Agent: {agentId.slice(0, 8)}...</span>
+                    <div key={convId || i} className="flex items-center gap-3 p-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-[10px]">
+                      <span className={`w-2 h-2 rounded-full ${status === "done" ? "bg-green-600" : status === "failed" ? "bg-red-600" : "bg-amber-500"}`} />
+                      <span className="font-mono text-[#6B7280] w-40 truncate">{convId}</span>
+                      <span className="text-[#6B7280] w-24 truncate">Agent: {agentId.slice(0, 8)}...</span>
                       <span className={`px-1.5 py-0.5 rounded text-[8px] ${
-                        status === "done" ? "bg-green-500/10 text-green-400" : status === "failed" ? "bg-red-500/10 text-red-400" : "bg-yellow-500/10 text-yellow-400"
+                        status === "done" ? "bg-green-50 text-green-700" : status === "failed" ? "bg-red-50 text-red-700" : "bg-amber-50 text-amber-700"
                       }`}>{status}</span>
                     </div>
                   );
@@ -481,9 +481,9 @@ export default function ElevenAgentsPage() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-10 text-center">
-                <PhoneCall size={20} className="text-muted mb-2" />
-                <p className="text-xs text-muted">No conversations yet.</p>
-                <p className="text-[10px] text-muted mt-1">Create an agent and make calls to see live data here.</p>
+                <PhoneCall size={20} className="text-[#9CA3AF] mb-2" />
+                <p className="text-xs text-[#6B7280]">No conversations yet.</p>
+                <p className="text-[10px] text-[#9CA3AF] mt-1">Create an agent and make calls to see live data here.</p>
               </div>
             )}
           </motion.div>
@@ -501,12 +501,12 @@ export default function ElevenAgentsPage() {
                   <span className="text-[9px] text-muted font-normal">({liveConversations.length} conversations)</span>
                 </h2>
                 <button onClick={() => loadAgents()} disabled={apiLoading}
-                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all disabled:opacity-50 flex items-center gap-1">
+                  className="text-[10px] px-3 py-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] transition-all disabled:opacity-50 flex items-center gap-1">
                   <RefreshCw size={10} className={apiLoading ? "animate-spin" : ""} /> Refresh
                 </button>
               </div>
-              <div className="rounded-xl border border-border overflow-hidden">
-                <div className="grid grid-cols-5 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light">
+              <div className="rounded-xl border border-[rgba(0,0,0,0.08)] overflow-hidden">
+                <div className="grid grid-cols-5 gap-2 px-4 py-2 border-b border-[rgba(0,0,0,0.08)] text-[9px] text-[#6B7280] uppercase tracking-wider bg-[rgba(0,0,0,0.03)]">
                   <div>Conversation ID</div>
                   <div>Agent</div>
                   <div>Status</div>
@@ -522,16 +522,16 @@ export default function ElevenAgentsPage() {
                     : (convo.created_at as string) || "";
                   const callDuration = (convo.call_duration_secs as number) || 0;
                   return (
-                    <div key={convId || i} className="grid grid-cols-5 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[10px] items-center hover:bg-surface-light/50">
-                      <div className="font-mono text-muted truncate">{convId}</div>
-                      <div className="text-muted truncate">{agentId ? `${agentId.slice(0, 12)}...` : "---"}</div>
+                    <div key={convId || i} className="grid grid-cols-5 gap-2 px-4 py-2.5 border-b border-[rgba(0,0,0,0.06)] last:border-0 text-[10px] items-center hover:bg-[rgba(0,0,0,0.02)]">
+                      <div className="font-mono text-[#6B7280] truncate">{convId}</div>
+                      <div className="text-[#6B7280] truncate">{agentId ? `${agentId.slice(0, 12)}...` : "---"}</div>
                       <div>
                         <span className={`px-1.5 py-0.5 rounded text-[8px] ${
-                          status === "done" ? "bg-green-500/10 text-green-400" : status === "failed" ? "bg-red-500/10 text-red-400" : "bg-yellow-500/10 text-yellow-400"
+                          status === "done" ? "bg-green-50 text-green-700" : status === "failed" ? "bg-red-50 text-red-700" : "bg-amber-50 text-amber-700"
                         }`}>{status}</span>
                       </div>
-                      <div className="font-mono">{callDuration > 0 ? formatDuration(callDuration) : "---"}</div>
-                      <div className="text-muted">{startTime}</div>
+                      <div className="font-mono text-[#374151]">{callDuration > 0 ? formatDuration(callDuration) : "---"}</div>
+                      <div className="text-[#6B7280]">{startTime}</div>
                     </div>
                   );
                 })}
@@ -543,13 +543,13 @@ export default function ElevenAgentsPage() {
                 {["all", "qualified", "callback", "not_interested", "voicemail", "no_answer"].map(f => (
                   <button key={f} onClick={() => setCallFilter(f)}
                     className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${
-                      callFilter === f ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"
+                      callFilter === f ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-[rgba(0,0,0,0.08)] text-[#6B7280]"
                     }`}>{f.replace("_", " ")}</button>
                 ))}
               </div>
               {filteredCalls.length > 0 ? (
-                <div className="rounded-xl border border-border overflow-hidden">
-                  <div className="grid grid-cols-8 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light">
+                <div className="rounded-xl border border-[rgba(0,0,0,0.08)] overflow-hidden">
+                  <div className="grid grid-cols-8 gap-2 px-4 py-2 border-b border-[rgba(0,0,0,0.08)] text-[9px] text-[#6B7280] uppercase tracking-wider bg-[rgba(0,0,0,0.03)]">
                     <div className="col-span-2">Contact</div>
                     <div>Agent</div>
                     <div>Duration</div>
@@ -559,7 +559,7 @@ export default function ElevenAgentsPage() {
                     <div>Time</div>
                   </div>
                   {filteredCalls.map(call => (
-                    <div key={call.id} className="grid grid-cols-8 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[10px] items-center hover:bg-surface-light/50 cursor-pointer"
+                    <div key={call.id} className="grid grid-cols-8 gap-2 px-4 py-2.5 border-b border-[rgba(0,0,0,0.06)] last:border-0 text-[10px] items-center hover:bg-[rgba(0,0,0,0.02)] cursor-pointer"
                       onClick={() => setSelectedCall(selectedCall === call.id ? null : call.id)}>
                       <div className="col-span-2">
                         <p className="font-medium">{call.contactName}</p>
@@ -575,10 +575,10 @@ export default function ElevenAgentsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="p-6 text-center border border-dashed border-border rounded-lg">
-                  <PhoneCall size={24} className="text-muted mx-auto mb-2" />
-                  <p className="text-xs text-muted">No call history yet</p>
-                  <p className="text-[10px] text-muted mt-1">Create an agent and make calls to see live data here</p>
+                <div className="p-6 text-center border border-dashed border-[rgba(0,0,0,0.12)] rounded-lg">
+                  <PhoneCall size={24} className="text-[#9CA3AF] mx-auto mb-2" />
+                  <p className="text-xs text-[#6B7280]">No call history yet</p>
+                  <p className="text-[10px] text-[#9CA3AF] mt-1">Create an agent and make calls to see live data here</p>
                 </div>
               )}
             </div>
@@ -591,13 +591,13 @@ export default function ElevenAgentsPage() {
         <div className="space-y-4">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
-              <FileText size={14} className="text-gold" />
-              <h2 className="text-sm font-semibold">Call Transcript Viewer</h2>
+              <FileText size={14} className="text-[#2563EB]" />
+              <h2 className="text-sm font-semibold text-[#111827]">Call Transcript Viewer</h2>
             </div>
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <FileText size={24} className="text-muted mb-2" />
-              <p className="text-xs text-muted">No transcripts available yet.</p>
-              <p className="text-[10px] text-muted mt-1">Make calls with an agent to see transcripts here.</p>
+              <FileText size={24} className="text-[#9CA3AF] mb-2" />
+              <p className="text-xs text-[#6B7280]">No transcripts available yet.</p>
+              <p className="text-[10px] text-[#9CA3AF] mt-1">Make calls with an agent to see transcripts here.</p>
             </div>
           </motion.div>
         </div>
@@ -607,11 +607,11 @@ export default function ElevenAgentsPage() {
       {activeTab === "Sentiment" && (
         <div className="space-y-4">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
-            <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendingUp size={14} className="text-gold" /> Sentiment Analysis</h2>
+            <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-[#111827]"><TrendingUp size={14} className="text-[#2563EB]" /> Sentiment Analysis</h2>
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <TrendingUp size={24} className="text-muted mb-2" />
-              <p className="text-xs text-muted">No sentiment data yet.</p>
-              <p className="text-[10px] text-muted mt-1">Sentiment is tracked automatically as calls complete.</p>
+              <TrendingUp size={24} className="text-[#9CA3AF] mb-2" />
+              <p className="text-xs text-[#6B7280]">No sentiment data yet.</p>
+              <p className="text-[10px] text-[#9CA3AF] mt-1">Sentiment is tracked automatically as calls complete.</p>
             </div>
           </motion.div>
         </div>
@@ -621,13 +621,13 @@ export default function ElevenAgentsPage() {
       {activeTab === "Voices" && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Mic size={14} className="text-gold" /> ElevenLabs Voices
-              {voicesLoading && <Loader2 size={12} className="animate-spin text-muted" />}
-              <span className="text-[9px] text-muted font-normal">({liveVoices.length} available)</span>
+            <h2 className="text-sm font-semibold flex items-center gap-2 text-[#111827]">
+              <Mic size={14} className="text-[#2563EB]" /> ElevenLabs Voices
+              {voicesLoading && <Loader2 size={12} className="animate-spin text-[#6B7280]" />}
+              <span className="text-[9px] text-[#6B7280] font-normal">({liveVoices.length} available)</span>
             </h2>
             <button onClick={() => loadVoices()} disabled={voicesLoading}
-              className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all disabled:opacity-50 flex items-center gap-1">
+              className="text-[10px] px-3 py-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] transition-all disabled:opacity-50 flex items-center gap-1">
               <RefreshCw size={10} className={voicesLoading ? "animate-spin" : ""} /> Refresh
             </button>
           </div>
@@ -641,33 +641,33 @@ export default function ElevenAgentsPage() {
               const accent = labels?.accent || labels?.Accent || "";
               const useCase = labels?.use_case || labels?.["use case"] || "";
               return (
-                <div key={voiceId} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                    <Volume2 size={16} className="text-purple-400" />
+                <div key={voiceId} className="flex items-center gap-3 p-3 rounded-lg border border-[rgba(0,0,0,0.08)]">
+                  <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                    <Volume2 size={16} className="text-[#2563EB]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[11px] font-medium">{name}</p>
-                    <p className="text-[9px] text-muted truncate">
+                    <p className="text-[11px] font-medium text-[#111827]">{name}</p>
+                    <p className="text-[9px] text-[#6B7280] truncate">
                       {[gender, accent, useCase, category].filter(Boolean).join(" \u00b7 ")}
                     </p>
                   </div>
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">ready</span>
+                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-50 text-green-700">ready</span>
                   <button onClick={() => {
                     navigator.clipboard.writeText(voiceId);
                     setApiSuccess(`Copied voice ID: ${voiceId}`);
                     setTimeout(() => setApiSuccess(""), 2000);
                   }}
-                    className="text-[9px] px-2 py-1 rounded border border-border text-muted hover:text-foreground transition-all flex items-center gap-1">
+                    className="text-[9px] px-2 py-1 rounded border border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] transition-all flex items-center gap-1">
                     <Copy size={10} /> Copy ID
                   </button>
                 </div>
               );
             }) : !voicesLoading ? (
-              <div className="p-6 text-center border border-dashed border-border rounded-lg">
-                <Volume2 size={24} className="text-muted mx-auto mb-2" />
-                <p className="text-xs text-muted">No voices loaded</p>
+              <div className="p-6 text-center border border-dashed border-[rgba(0,0,0,0.12)] rounded-lg">
+                <Volume2 size={24} className="text-[#9CA3AF] mx-auto mb-2" />
+                <p className="text-xs text-[#6B7280]">No voices loaded</p>
                 <button onClick={() => loadVoices()}
-                  className="mt-2 text-[10px] px-3 py-1.5 bg-gold/10 text-gold rounded-lg border border-gold/20 hover:bg-gold/20 transition-all">
+                  className="mt-2 text-[10px] px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-lg border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all">
                   Load Voices
                 </button>
               </div>
@@ -683,14 +683,14 @@ export default function ElevenAgentsPage() {
             {["all", "cold-call", "follow-up", "reminder", "reactivation", "retention"].map(f => (
               <button key={f} onClick={() => setScriptFilter(f)}
                 className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${
-                  scriptFilter === f ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"
+                  scriptFilter === f ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-[rgba(0,0,0,0.08)] text-[#6B7280]"
                 }`}>{f.replace("-", " ")}</button>
             ))}
           </div>
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <FileText size={24} className="text-muted mb-2" />
-            <p className="text-xs text-muted">No scripts yet.</p>
-            <p className="text-[10px] text-muted mt-1">Scripts will appear here once created.</p>
+            <FileText size={24} className="text-[#9CA3AF] mb-2" />
+            <p className="text-xs text-[#6B7280]">No scripts yet.</p>
+            <p className="text-[10px] text-[#9CA3AF] mt-1">Scripts will appear here once created.</p>
           </div>
         </div>
       )}
@@ -705,7 +705,7 @@ export default function ElevenAgentsPage() {
               <input value={abScriptA} onChange={e => setAbScriptA(e.target.value)} className="input text-xs" placeholder="Script A description" />
               <div className="flex gap-2">
                 <input value={abScriptB} onChange={e => setAbScriptB(e.target.value)} className="input flex-1 text-xs" placeholder="Script B" />
-                <button onClick={createAbTest} disabled={!abTestName.trim()} className="px-3 py-1.5 bg-gold/10 text-gold text-xs rounded-lg border border-gold/20 hover:bg-gold/20 transition-all disabled:opacity-50">Create</button>
+                <button onClick={createAbTest} disabled={!abTestName.trim()} className="px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-xs rounded-lg border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all disabled:opacity-50">Create</button>
               </div>
             </div>
             <div className="space-y-3">
@@ -714,11 +714,11 @@ export default function ElevenAgentsPage() {
                 const totalB = test.callsB > 0 ? Math.round((test.convB / test.callsB) * 100) : 0;
                 const winner = totalA > totalB ? "A" : totalB > totalA ? "B" : "tie";
                 return (
-                  <div key={test.id} className="p-3 rounded-lg border border-border">
+                  <div key={test.id} className="p-3 rounded-lg border border-[rgba(0,0,0,0.08)]">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-semibold">{test.name}</span>
+                      <span className="text-xs font-semibold text-[#111827]">{test.name}</span>
                       <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                        test.status === "running" ? "bg-green-500/10 text-green-400" : "bg-blue-500/10 text-blue-400"
+                        test.status === "running" ? "bg-green-50 text-green-700" : "bg-blue-50 text-blue-700"
                       }`}>{test.status}</span>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
@@ -742,17 +742,17 @@ export default function ElevenAgentsPage() {
       {/* ═══ SCHEDULING TAB ═══ */}
       {activeTab === "Scheduling" && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
-          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Calendar size={14} className="text-gold" /> Call Scheduling</h2>
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-[#111827]"><Calendar size={14} className="text-[#2563EB]" /> Call Scheduling</h2>
           <div className="space-y-2">
             {scheduledCalls.map(s => (
-              <div key={s.id} className="flex items-center gap-3 p-3 rounded-lg glass-md">
-                <Clock size={14} className="text-gold shrink-0" />
+              <div key={s.id} className="flex items-center gap-3 p-3 rounded-lg bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)]">
+                <Clock size={14} className="text-[#2563EB] shrink-0" />
                 <div className="flex-1">
-                  <p className="text-[11px] font-medium">{s.list}</p>
-                  <p className="text-[9px] text-muted">{s.agent} &middot; {s.count} calls &middot; {s.time}</p>
+                  <p className="text-[11px] font-medium text-[#111827]">{s.list}</p>
+                  <p className="text-[9px] text-[#6B7280]">{s.agent} &middot; {s.count} calls &middot; {s.time}</p>
                 </div>
-                <span className="text-[9px] px-2 py-0.5 bg-blue-500/10 text-blue-400 rounded-full">{s.status}</span>
-                <button onClick={() => cancelScheduled(s.id)} className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all">Cancel</button>
+                <span className="text-[9px] px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full">{s.status}</span>
+                <button onClick={() => cancelScheduled(s.id)} className="text-[9px] px-2 py-1 rounded border border-red-200 text-red-700 hover:bg-red-50 transition-all">Cancel</button>
               </div>
             ))}
           </div>
@@ -762,11 +762,11 @@ export default function ElevenAgentsPage() {
       {/* ═══ CONTACTS TAB ═══ */}
       {activeTab === "Contacts" && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
-          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-gold" /> Contact Lists</h2>
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-[#111827]"><Users size={14} className="text-[#2563EB]" /> Contact Lists</h2>
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Users size={24} className="text-muted mb-2" />
-            <p className="text-xs text-muted">No contact lists yet.</p>
-            <p className="text-[10px] text-muted mt-1">Upload a contact list to start calling.</p>
+            <Users size={24} className="text-[#9CA3AF] mb-2" />
+            <p className="text-xs text-[#6B7280]">No contact lists yet.</p>
+            <p className="text-[10px] text-[#9CA3AF] mt-1">Upload a contact list to start calling.</p>
           </div>
         </motion.div>
       )}
@@ -775,25 +775,25 @@ export default function ElevenAgentsPage() {
       {activeTab === "Analytics" && (
         <div className="space-y-4">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
-            <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-gold" /> Call Analytics</h2>
+            <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-[#111827]"><BarChart3 size={14} className="text-[#2563EB]" /> Call Analytics</h2>
             <div className="space-y-3">
               <div>
-                <p className="text-[9px] text-muted uppercase mb-2">Outcome Distribution</p>
+                <p className="text-[9px] text-[#6B7280] uppercase mb-2">Outcome Distribution</p>
                 <div className="flex flex-col items-center justify-center py-6 text-center">
-                  <p className="text-xs text-muted">No call data yet.</p>
+                  <p className="text-xs text-[#6B7280]">No call data yet.</p>
                 </div>
               </div>
 
               <div>
-                <p className="text-[9px] text-muted uppercase mb-2">Agent Performance</p>
+                <p className="text-[9px] text-[#6B7280] uppercase mb-2">Agent Performance</p>
                 {agents.map(a => (
                   <div key={a.id} className="flex items-center gap-2 mb-1.5 text-[10px]">
-                    <span className="w-36 font-medium">{a.name}</span>
-                    <div className="flex-1 bg-surface-light rounded-full h-2.5">
-                      <div className="bg-purple-400 h-2.5 rounded-full" style={{ width: `${(a.callsToday / Math.max(...agents.map(x => x.callsToday), 1)) * 100}%` }} />
+                    <span className="w-36 font-medium text-[#374151]">{a.name}</span>
+                    <div className="flex-1 bg-[rgba(0,0,0,0.06)] rounded-full h-2.5">
+                      <div className="bg-[#3B82F6] h-2.5 rounded-full" style={{ width: `${(a.callsToday / Math.max(...agents.map(x => x.callsToday), 1)) * 100}%` }} />
                     </div>
-                    <span className="w-12 text-right font-mono">{a.callsToday}</span>
-                    <span className="w-12 text-right text-green-400 font-mono">{a.successRate}%</span>
+                    <span className="w-12 text-right font-mono text-[#374151]">{a.callsToday}</span>
+                    <span className="w-12 text-right text-green-700 font-mono">{a.successRate}%</span>
                   </div>
                 ))}
               </div>
@@ -805,30 +805,30 @@ export default function ElevenAgentsPage() {
       {/* ═══ COMPLIANCE TAB ═══ */}
       {activeTab === "Compliance" && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
-          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Shield size={14} className="text-gold" /> Compliance Settings</h2>
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-[#111827]"><Shield size={14} className="text-[#2563EB]" /> Compliance Settings</h2>
           <div className="space-y-3">
             {[
               { label: "Recording Notice", desc: "Play 'this call may be recorded' at start", state: recordingNotice, toggle: () => setRecordingNotice(!recordingNotice) },
               { label: "DNC List Check", desc: "Check against Do Not Call registry before dialing", state: dncCheck, toggle: () => setDncCheck(!dncCheck) },
               { label: "TCPA Compliance", desc: "Ensure all calls comply with TCPA regulations", state: complianceEnabled, toggle: () => setComplianceEnabled(!complianceEnabled) },
             ].map((item, i) => (
-              <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border">
+              <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-[rgba(0,0,0,0.08)]">
                 <div>
-                  <p className="text-[11px] font-medium">{item.label}</p>
-                  <p className="text-[9px] text-muted">{item.desc}</p>
+                  <p className="text-[11px] font-medium text-[#111827]">{item.label}</p>
+                  <p className="text-[9px] text-[#6B7280]">{item.desc}</p>
                 </div>
                 <button onClick={item.toggle}
-                  className={`w-10 h-5 rounded-full transition-colors ${item.state ? "bg-green-400" : "bg-surface-light"}`}>
+                  className={`w-10 h-5 rounded-full transition-colors ${item.state ? "bg-green-600" : "bg-[rgba(0,0,0,0.12)]"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow transition-all mt-0.5 ${item.state ? "ml-5" : "ml-0.5"}`} />
                 </button>
               </div>
             ))}
-            <div className="p-3 rounded-lg border border-yellow-500/20 bg-yellow-500/5">
+            <div className="p-3 rounded-lg border border-amber-200 bg-amber-50">
               <div className="flex items-center gap-2 mb-1">
-                <AlertTriangle size={12} className="text-yellow-400" />
-                <span className="text-[10px] font-semibold text-yellow-400">Important</span>
+                <AlertTriangle size={12} className="text-amber-700" />
+                <span className="text-[10px] font-semibold text-amber-700">Important</span>
               </div>
-              <p className="text-[10px] text-muted">Ensure all AI voice agents comply with local and federal regulations. Always disclose that the call is from an AI system when required by law.</p>
+              <p className="text-[10px] text-[#6B7280]">Ensure all AI voice agents comply with local and federal regulations. Always disclose that the call is from an AI system when required by law.</p>
             </div>
           </div>
         </motion.div>
@@ -837,18 +837,18 @@ export default function ElevenAgentsPage() {
       {/* ═══ TRANSFER RULES TAB ═══ */}
       {activeTab === "Transfer Rules" && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
-          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><ArrowRight size={14} className="text-gold" /> Call Transfer Rules</h2>
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-[#111827]"><ArrowRight size={14} className="text-[#2563EB]" /> Call Transfer Rules</h2>
           <div className="space-y-2">
             {transferRules.map(rule => (
-              <div key={rule.id} className={`p-3 rounded-lg border transition-all ${rule.active ? "border-border" : "border-border/50 opacity-60"}`}>
+              <div key={rule.id} className={`p-3 rounded-lg border transition-all ${rule.active ? "border-[rgba(0,0,0,0.08)]" : "border-[rgba(0,0,0,0.04)] opacity-60"}`}>
                 <div className="flex items-center gap-3">
                   <button onClick={() => toggleTransferRule(rule.id)}
-                    className={`w-9 h-5 rounded-full transition-colors shrink-0 ${rule.active ? "bg-green-400" : "bg-surface-light"}`}>
+                    className={`w-9 h-5 rounded-full transition-colors shrink-0 ${rule.active ? "bg-green-600" : "bg-[rgba(0,0,0,0.12)]"}`}>
                     <div className={`w-4 h-4 rounded-full bg-white shadow transition-all mt-0.5 ${rule.active ? "ml-4" : "ml-0.5"}`} />
                   </button>
                   <div className="flex-1">
-                    <p className="text-[10px] font-medium">{rule.trigger}</p>
-                    <p className="text-[9px] text-muted">{rule.action} {rule.number && `(${rule.number})`}</p>
+                    <p className="text-[10px] font-medium text-[#111827]">{rule.trigger}</p>
+                    <p className="text-[9px] text-[#6B7280]">{rule.action} {rule.number && `(${rule.number})`}</p>
                   </div>
                 </div>
               </div>

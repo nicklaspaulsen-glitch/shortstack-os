@@ -412,7 +412,7 @@ export function PresetPickerPanel({
       {/* Header */}
       <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-border bg-surface-light/30">
         <div className="flex items-center gap-2">
-          <Wand2 size={14} className="text-gold" />
+          <Wand2 size={14} className="text-[#2563EB]" />
           <span className="text-xs font-semibold">Preset Picker</span>
           <span className="text-[9px] text-muted hidden sm:inline">
             Cmd/Ctrl+K
@@ -612,9 +612,9 @@ function TabBtn({
       onClick={() => onSelect(id)}
       className={`relative flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors ${
         active
-          ? highlight ? "text-gold" : "text-[#2563EB]"
+          ? highlight ? "text-[#2563EB]" : "text-[#2563EB]"
           : highlight
-            ? "text-gold/70 hover:bg-surface-light hover:text-gold"
+            ? "text-[rgba(37,99,235,0.7)] hover:bg-surface-light hover:text-[#2563EB]"
             : "text-muted hover:bg-surface-light hover:text-foreground"
       }`}
       aria-pressed={active}
@@ -725,7 +725,7 @@ function FavStar({
         onToggle();
       }}
       className={`rounded p-1 transition ${
-        isFav ? "text-gold" : "text-muted hover:text-gold"
+        isFav ? "text-[#2563EB]" : "text-muted hover:text-[#2563EB]"
       } ${className}`}
       title={isFav ? "Unpin from Favourites" : "Pin to Favourites"}
     >
@@ -982,7 +982,7 @@ function EffectTile({
       draggable
       onDragStart={onDragStart}
       onDoubleClick={onToggleFav}
-      className="group relative rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-gold/40 transition cursor-grab active:cursor-grabbing"
+      className="group relative rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-[rgba(37,99,235,0.4)] transition cursor-grab active:cursor-grabbing"
     >
       <div
         className="aspect-video rounded overflow-hidden bg-gradient-to-br from-amber-500/40 via-rose-500/40 to-indigo-500/40 relative"
@@ -1005,7 +1005,7 @@ function EffectTile({
       <button
         type="button"
         onClick={onAdd}
-        className="absolute inset-x-1 bottom-1 rounded bg-gold/90 text-black text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
+        className="absolute inset-x-1 bottom-1 rounded bg-[#1D4ED8] text-white text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
       >
         + Add
       </button>
@@ -1118,7 +1118,7 @@ function TransitionTile({
       draggable
       onDragStart={onDragStart}
       onDoubleClick={onToggleFav}
-      className="group relative rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-gold/40 transition cursor-grab active:cursor-grabbing"
+      className="group relative rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-[rgba(37,99,235,0.4)] transition cursor-grab active:cursor-grabbing"
     >
       <button
         type="button"
@@ -1127,7 +1127,7 @@ function TransitionTile({
       >
         <div
           key={k}
-          className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gold/30 to-red-500/30 text-xs font-semibold ${
+          className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[rgba(37,99,235,0.18)] to-red-500/30 text-xs font-semibold ${
             playing ? animClass : "opacity-70"
           }`}
         >
@@ -1151,7 +1151,7 @@ function TransitionTile({
       <button
         type="button"
         onClick={onAdd}
-        className="absolute inset-x-1 bottom-1 rounded bg-gold/90 text-black text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
+        className="absolute inset-x-1 bottom-1 rounded bg-[#1D4ED8] text-white text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
       >
         + Add
       </button>
@@ -1260,7 +1260,7 @@ function BrollTile({
       onDoubleClick={onToggleFav}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
-      className="group relative rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-gold/40 transition cursor-grab active:cursor-grabbing"
+      className="group relative rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-[rgba(37,99,235,0.4)] transition cursor-grab active:cursor-grabbing"
     >
       <div className="aspect-video rounded overflow-hidden bg-black relative">
         {showVideo ? (
@@ -1306,7 +1306,7 @@ function BrollTile({
       <button
         type="button"
         onClick={onAdd}
-        className="absolute inset-x-1 bottom-1 rounded bg-gold/90 text-black text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
+        className="absolute inset-x-1 bottom-1 rounded bg-[#1D4ED8] text-white text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
       >
         + Add
       </button>
@@ -1379,7 +1379,7 @@ function FontTab({
             draggable
             onDragStart={startDrag(f.id, f)}
             onDoubleClick={() => onToggleFav(f.id)}
-            className="rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-gold/40 transition cursor-grab active:cursor-grabbing"
+            className="rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-[rgba(37,99,235,0.4)] transition cursor-grab active:cursor-grabbing"
           >
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
@@ -1403,7 +1403,7 @@ function FontTab({
             <button
               type="button"
               onClick={() => onApply(f)}
-              className="mt-1 rounded bg-gold/90 text-black text-[8px] font-semibold px-2 py-0.5"
+              className="mt-1 rounded bg-[#1D4ED8] text-white text-[8px] font-semibold px-2 py-0.5"
             >
               Apply to text
             </button>
@@ -1583,9 +1583,9 @@ function FavouritesTab({
               draggable
               onDragStart={startDrag("vfx", fx.id, { name: fx.name, category: fx.category })}
               onDoubleClick={() => onToggleFav("vfx", fx.id)}
-              className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-gold/40"
+              className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-[rgba(37,99,235,0.4)]"
             >
-              <Wand2 size={12} className="text-gold" />
+              <Wand2 size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{fx.name}</p>
                 <p className="text-[8px] text-muted">VFX · {fx.category}</p>
@@ -1593,7 +1593,7 @@ function FavouritesTab({
               <button
                 type="button"
                 onClick={() => onDrop("vfx", fx.id, { name: fx.name, category: fx.category })}
-                className="rounded bg-gold/80 px-1.5 py-0.5 text-[8px] font-semibold text-black"
+                className="rounded bg-[#1D4ED8] px-1.5 py-0.5 text-[8px] font-semibold text-white"
               >
                 Add
               </button>
@@ -1609,9 +1609,9 @@ function FavouritesTab({
               draggable
               onDragStart={startDrag("transition", t.id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
               onDoubleClick={() => onToggleFav("transition", t.id)}
-              className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-gold/40"
+              className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-[rgba(37,99,235,0.4)]"
             >
-              <Scissors size={12} className="text-gold" />
+              <Scissors size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{t.name}</p>
                 <p className="text-[8px] text-muted">Transition · {t.category}</p>
@@ -1619,7 +1619,7 @@ function FavouritesTab({
               <button
                 type="button"
                 onClick={() => onDrop("transition", t.id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
-                className="rounded bg-gold/80 px-1.5 py-0.5 text-[8px] font-semibold text-black"
+                className="rounded bg-[#1D4ED8] px-1.5 py-0.5 text-[8px] font-semibold text-white"
               >
                 Add
               </button>
@@ -1635,9 +1635,9 @@ function FavouritesTab({
               draggable
               onDragStart={startDrag("font", f.id, { family: f.family, url: f.url })}
               onDoubleClick={() => onToggleFav("font", f.id)}
-              className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-gold/40"
+              className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-[rgba(37,99,235,0.4)]"
             >
-              <TypeIcon size={12} className="text-gold" />
+              <TypeIcon size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{f.family}</p>
                 <p className="text-[8px] text-muted">Font · {f.category}</p>
@@ -1645,7 +1645,7 @@ function FavouritesTab({
               <button
                 type="button"
                 onClick={() => onApplyFont?.(f)}
-                className="rounded bg-gold/80 px-1.5 py-0.5 text-[8px] font-semibold text-black"
+                className="rounded bg-[#1D4ED8] px-1.5 py-0.5 text-[8px] font-semibold text-white"
               >
                 Apply
               </button>
@@ -1660,7 +1660,7 @@ function FavouritesTab({
               key={`broll-${b.id}`}
               className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2"
             >
-              <Film size={12} className="text-gold" />
+              <Film size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{b.label}</p>
                 <p className="text-[8px] text-muted">B-roll · pinned</p>
@@ -1750,7 +1750,7 @@ function AudioRow({
       onDragStart={onDragStart}
       onDoubleClick={onDoubleClick}
       data-preset-item-id={id}
-      className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-gold/40 cursor-grab active:cursor-grabbing"
+      className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-[rgba(37,99,235,0.4)] cursor-grab active:cursor-grabbing"
     >
       <GripVertical size={10} className="text-muted shrink-0" />
       <button
@@ -1761,8 +1761,8 @@ function AudioRow({
           error
             ? "bg-red-500/10 text-red-400"
             : playing
-              ? "bg-gold text-black"
-              : "bg-gold/20 text-gold hover:bg-gold/30"
+              ? "bg-[#2563EB] text-white"
+              : "bg-[rgba(37,99,235,0.12)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.18)]"
         }`}
         title={error ? "Preview URL broken" : playing ? "Pause" : "Play"}
       >
@@ -1775,7 +1775,7 @@ function AudioRow({
       <button
         type="button"
         onClick={onAdd}
-        className="shrink-0 rounded bg-surface-light/80 p-1 text-muted hover:text-gold"
+        className="shrink-0 rounded bg-surface-light/80 p-1 text-muted hover:text-[#2563EB]"
         title="Add to timeline"
       >
         <Check size={11} />

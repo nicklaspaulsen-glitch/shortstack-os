@@ -120,7 +120,7 @@ export default function WorkspacesPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <p className="font-semibold text-white text-sm">New Workspace</p>
+          <p className="font-semibold text-[#111827] text-sm">New Workspace</p>
           <div className="flex flex-wrap gap-3">
             <input className="input flex-1 min-w-[180px] text-sm" placeholder="Workspace name"
               value={form.name} onChange={(e) => handleNameChange(e.target.value)} autoFocus />
@@ -154,7 +154,7 @@ export default function WorkspacesPage() {
           transition={{ duration: 0.4 }}
         >
           <LayoutGrid size={40} className="text-muted opacity-30" />
-          <p className="text-white font-semibold">No workspaces yet</p>
+          <p className="text-[#111827] font-semibold">No workspaces yet</p>
           <p className="text-muted text-sm max-w-xs">Create your first workspace to start isolating data per brand or client.</p>
           <button onClick={() => setShowCreate(true)}
             className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
@@ -177,7 +177,7 @@ export default function WorkspacesPage() {
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="text-white font-semibold truncate">{w.name}</p>
+                      <p className="text-[#111827] font-semibold truncate">{w.name}</p>
                       {w.is_default && (
                         <span className="text-[10px] bg-[#2563EB]/10 text-[#3B82F6] border border-[#2563EB]/20 px-1.5 py-0.5 rounded-full shrink-0">Default</span>
                       )}
@@ -194,7 +194,7 @@ export default function WorkspacesPage() {
                 </div>
                 {!isActive && (
                   <button onClick={() => switchWorkspace(w.id)}
-                    className="btn-ghost text-sm py-1.5 rounded-lg w-full border border-white/10 hover:border-[#2563EB]/30 mt-1">
+                    className="btn-ghost text-sm py-1.5 rounded-lg w-full border border-[rgba(0,0,0,0.08)] hover:border-[#2563EB]/30 mt-1">
                     Switch to this workspace
                   </button>
                 )}

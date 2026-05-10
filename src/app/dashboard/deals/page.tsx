@@ -201,17 +201,17 @@ export default function DealsPage() {
       {/* Stats Row � collapsible (state persists) */}
       <CollapsibleStats
         storageKey="deals"
-        icon={<BarChart3 size={14} className="text-gold" />}
+        icon={<BarChart3 size={14} className="text-[#2563EB]" />}
         title="Deal Stats"
         summary={
           <>
-            <span>Pipe <span className="text-gold font-semibold">{formatCurrency(totalPipeline)}</span></span>
+            <span>Pipe <span className="text-[#2563EB] font-semibold">{formatCurrency(totalPipeline)}</span></span>
             <span className="opacity-30">�</span>
-            <span>Won <span className="text-green-400 font-semibold">{formatCurrency(wonValue)}</span></span>
+            <span>Won <span className="text-emerald-700 font-semibold">{formatCurrency(wonValue)}</span></span>
             <span className="opacity-30">�</span>
             <span>Win <span className="text-blue-400 font-semibold">{winRate}%</span></span>
             <span className="opacity-30">�</span>
-            <span>Avg <span className="text-gold font-semibold">{formatCurrency(avgDealSize)}</span></span>
+            <span>Avg <span className="text-[#2563EB] font-semibold">{formatCurrency(avgDealSize)}</span></span>
           </>
         }
       >
@@ -222,12 +222,12 @@ export default function DealsPage() {
           animate="show"
         >
           {[
-            { label: "Pipeline Value", value: formatCurrency(totalPipeline), icon: <DollarSign size={12} />, color: "text-gold" },
+            { label: "Pipeline Value", value: formatCurrency(totalPipeline), icon: <DollarSign size={12} />, color: "text-[#2563EB]" },
             { label: "Weighted", value: formatCurrency(Math.round(weightedPipeline)), icon: <Target size={12} />, color: "text-purple-400" },
-            { label: "Won", value: formatCurrency(wonValue), icon: <CheckCircle size={12} />, color: "text-green-400" },
-            { label: "Lost", value: formatCurrency(lostValue), icon: <TrendingDown size={12} />, color: "text-red-400" },
+            { label: "Won", value: formatCurrency(wonValue), icon: <CheckCircle size={12} />, color: "text-emerald-700" },
+            { label: "Lost", value: formatCurrency(lostValue), icon: <TrendingDown size={12} />, color: "text-rose-700" },
             { label: "Win Rate", value: `${winRate}%`, icon: <Award size={12} />, color: "text-blue-400" },
-            { label: "Avg Deal", value: formatCurrency(avgDealSize), icon: <BarChart3 size={12} />, color: "text-gold" },
+            { label: "Avg Deal", value: formatCurrency(avgDealSize), icon: <BarChart3 size={12} />, color: "text-[#2563EB]" },
           ].map((stat, i) => (
             <PrismPanel key={i} rainbow padding="p-3" className="text-center" delay={i * 0.06}>
               <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
@@ -243,7 +243,7 @@ export default function DealsPage() {
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-medium" : "text-muted hover:text-foreground"
+              activeTab === t.key ? "bg-[rgba(37,99,235,0.10)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] font-medium" : "text-muted hover:text-foreground"
             }`}>
             {t.icon} {t.label}
           </button>
@@ -255,7 +255,7 @@ export default function DealsPage() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-indigo rounded-xl p-4 space-y-3"
+          className="bg-white border border-[rgba(37,99,235,0.15)] rounded-xl p-4 space-y-3 shadow-sm"
         >
           <h3 className="text-sm font-semibold">Quick Create Deal</h3>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
@@ -342,7 +342,7 @@ export default function DealsPage() {
                               <button
                                 aria-label={`Delete deal: ${deal.title}`}
                                 onClick={(e) => { e.stopPropagation(); handleDelete(deal.id); }}
-                                className="text-[7px] px-1.5 py-0.5 rounded bg-red-400/10 text-red-400 border border-red-400/20">
+                                className="text-[7px] px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">
                                 Delete
                               </button>
                             </div>
@@ -361,7 +361,7 @@ export default function DealsPage() {
           {/* Deal Velocity Tracker */}
           <PrismPanel rainbow glow padding="p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <Clock size={14} className="text-gold" /> Deal Velocity Tracker
+              <Clock size={14} className="text-[#2563EB]" /> Deal Velocity Tracker
             </h3>
             <motion.div
               className="grid grid-cols-2 sm:grid-cols-4 gap-3"
@@ -378,19 +378,19 @@ export default function DealsPage() {
                 <motion.div key={i} variants={fadeUp} className="rounded-lg p-3 text-center border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
                   <p className="text-[9px] text-muted mb-1">{v.stage}</p>
                   <p className="text-sm font-bold">{v.avg}</p>
-                  <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-green-400" : "text-red-400"}`}>
+                  <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-emerald-700" : "text-rose-700"}`}>
                     {v.trend === "faster" ? <TrendingDown size={8} /> : <TrendingUp size={8} />} {v.trend}
                   </p>
                 </motion.div>
               ))}
             </motion.div>
-            <p className="text-[10px] text-muted mt-3">Average sales cycle: <span className="text-gold font-semibold">0 days</span></p>
+            <p className="text-[10px] text-muted mt-3">Average sales cycle: <span className="text-[#2563EB] font-semibold">0 days</span></p>
           </PrismPanel>
 
           {/* Deal Timeline */}
           <PrismPanel rainbow padding="p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <Calendar size={14} className="text-gold" /> Recent Deal Timeline
+              <Calendar size={14} className="text-[#2563EB]" /> Recent Deal Timeline
             </h3>
             <div className="text-center py-8 text-muted text-xs">No deal activity yet.</div>
           </PrismPanel>
@@ -418,9 +418,9 @@ export default function DealsPage() {
             animate="show"
           >
             {[
-              { label: "Conservative", value: formatCurrency(Math.round(weightedPipeline * 0.6)), sub: "60% of weighted pipeline", color: "text-red-400", bar: "bg-gradient-to-r from-red-500 to-rose-500" },
-              { label: "Most Likely", value: formatCurrency(Math.round(weightedPipeline)), sub: "Weighted probability", color: "text-gold", bar: "bg-gradient-to-r from-indigo-500 to-violet-500" },
-              { label: "Best Case", value: formatCurrency(totalPipeline), sub: "100% close rate", color: "text-green-400", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
+              { label: "Conservative", value: formatCurrency(Math.round(weightedPipeline * 0.6)), sub: "60% of weighted pipeline", color: "text-rose-700", bar: "bg-gradient-to-r from-red-500 to-rose-500" },
+              { label: "Most Likely", value: formatCurrency(Math.round(weightedPipeline)), sub: "Weighted probability", color: "text-[#2563EB]", bar: "bg-gradient-to-r from-indigo-500 to-violet-500" },
+              { label: "Best Case", value: formatCurrency(totalPipeline), sub: "100% close rate", color: "text-emerald-700", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
             ].map((card, i) => (
               <PrismPanel key={i} rainbow padding="p-5" className="text-center" delay={i * 0.06}>
                 <p className="text-[10px] text-muted mb-1 uppercase font-semibold">{card.label}</p>
@@ -446,14 +446,14 @@ export default function DealsPage() {
             {/* Win Reasons */}
             <PrismPanel rainbow padding="p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <CheckCircle size={14} className="text-green-400" /> Win Factors
+                <CheckCircle size={14} className="text-emerald-700" /> Win Factors
               </h3>
               <div className="text-center py-8 text-muted text-xs">No win data yet.</div>
             </PrismPanel>
             {/* Loss Reasons */}
             <PrismPanel rainbow padding="p-4" delay={0.06}>
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <AlertTriangle size={14} className="text-red-400" /> Loss Reasons
+                <AlertTriangle size={14} className="text-rose-700" /> Loss Reasons
               </h3>
               <div className="text-center py-8 text-muted text-xs">No loss data yet.</div>
             </PrismPanel>
@@ -461,7 +461,7 @@ export default function DealsPage() {
           {/* Competitor notes */}
           <PrismPanel rainbow glow padding="p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <Shield size={14} className="text-gold" /> Competitor Intelligence
+              <Shield size={14} className="text-[#2563EB]" /> Competitor Intelligence
             </h3>
             <div className="text-center py-8 text-muted text-xs">No competitor data yet.</div>
           </PrismPanel>
@@ -472,7 +472,7 @@ export default function DealsPage() {
       {activeTab === "scoring" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Zap size={14} className="text-gold" /> AI Deal Scoring
+            <Zap size={14} className="text-[#2563EB]" /> AI Deal Scoring
           </h3>
           <motion.div
             className="space-y-2"
@@ -487,7 +487,7 @@ export default function DealsPage() {
               const daysSinceUpdate = Math.floor((Date.now() - new Date(deal.updated_at).getTime()) / 86400000);
               const amt = Number(deal.value);
               const score = Math.round(deal.probability * 0.4 + (amt > 3000 ? 30 : 15) + (daysSinceUpdate < 5 ? 20 : 5));
-              const scoreColor = score >= 70 ? "text-green-400" : score >= 40 ? "text-yellow-400" : "text-red-400";
+              const scoreColor = score >= 70 ? "text-emerald-700" : score >= 40 ? "text-amber-600" : "text-rose-700";
               const scoreBg = score >= 70 ? "bg-green-400" : score >= 40 ? "bg-yellow-400" : "bg-red-400";
               return (
                 <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="rounded-xl p-4 flex items-center gap-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
@@ -509,7 +509,7 @@ export default function DealsPage() {
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-sm font-bold text-gold">{formatCurrency(amt)}</p>
+                    <p className="text-sm font-bold text-[#2563EB]">{formatCurrency(amt)}</p>
                     <p className="text-[9px] text-muted">Close: {deal.expected_close_date || "N/A"}</p>
                   </div>
                   <ChevronRight size={14} className="text-muted flex-shrink-0" />
@@ -521,7 +521,7 @@ export default function DealsPage() {
           {/* Stage Automation � starter rule templates */}
           <PrismPanel rainbow padding="p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <ArrowRight size={14} className="text-gold" /> Deal Stage Automation
+              <ArrowRight size={14} className="text-[#2563EB]" /> Deal Stage Automation
             </h3>
             <p className="text-[10px] text-muted mb-3">Starter rule templates. Automation not yet wired to real triggers.</p>
             <div className="space-y-2">
@@ -533,7 +533,7 @@ export default function DealsPage() {
               ].map((rule, i) => (
                 <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-[rgba(0,0,0,0.08)] opacity-60" style={{ background: "rgba(255,255,255,0.88)" }}>
                   <div className="flex items-center gap-2">
-                    <Zap size={12} className="text-gold" />
+                    <Zap size={12} className="text-[#2563EB]" />
                     <div>
                       <p className="text-[10px] font-semibold">When: {rule.trigger}</p>
                       <p className="text-[9px] text-muted">Then: {rule.action}</p>
@@ -556,7 +556,7 @@ export default function DealsPage() {
             {/* Contract Templates */}
             <PrismPanel rainbow padding="p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <FileText size={14} className="text-gold" /> Contract Templates
+                <FileText size={14} className="text-[#2563EB]" /> Contract Templates
               </h3>
               <div className="space-y-2">
                 {[
@@ -586,7 +586,7 @@ export default function DealsPage() {
             {/* Proposal Generator */}
             <PrismPanel rainbow padding="p-4" delay={0.06}>
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Star size={14} className="text-gold" /> Quick Proposal
+                <Star size={14} className="text-[#2563EB]" /> Quick Proposal
               </h3>
               <div className="space-y-2">
                 <input className="input w-full text-xs" placeholder="Client business name" />
@@ -626,7 +626,7 @@ export default function DealsPage() {
       {activeTab === "commission" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Calculator size={14} className="text-gold" /> Commission Calculator
+            <Calculator size={14} className="text-[#2563EB]" /> Commission Calculator
           </h3>
           <motion.div
             className="grid grid-cols-1 lg:grid-cols-3 gap-4"
@@ -635,9 +635,9 @@ export default function DealsPage() {
             animate="show"
           >
             {[
-              { label: "This Month", value: formatCurrency(Math.round(wonValue * 0.15)), sub: `15% of ${formatCurrency(wonValue)} closed`, color: "text-gold", bar: "bg-gradient-to-r from-indigo-500 to-violet-500" },
+              { label: "This Month", value: formatCurrency(Math.round(wonValue * 0.15)), sub: `15% of ${formatCurrency(wonValue)} closed`, color: "text-[#2563EB]", bar: "bg-gradient-to-r from-indigo-500 to-violet-500" },
               { label: "Projected", value: formatCurrency(Math.round(weightedPipeline * 0.15)), sub: "Based on weighted pipeline", color: "text-purple-400", bar: "bg-gradient-to-r from-purple-500 to-pink-500" },
-              { label: "YTD Earnings", value: formatCurrency(0), sub: "No data yet", color: "text-green-400", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
+              { label: "YTD Earnings", value: formatCurrency(0), sub: "No data yet", color: "text-emerald-700", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
             ].map((card, i) => (
               <PrismPanel key={i} rainbow padding="p-5" className="text-center" delay={i * 0.06}>
                 <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
@@ -676,10 +676,10 @@ export default function DealsPage() {
                     >
                       <span className="font-medium truncate">{deal.title}</span>
                       <span>{formatCurrency(amt)}</span>
-                      <span className="text-gold">{(rate * 100).toFixed(0)}%</span>
-                      <span className="font-bold text-green-400">{formatCurrency(commission)}</span>
+                      <span className="text-[#2563EB]">{(rate * 100).toFixed(0)}%</span>
+                      <span className="font-bold text-emerald-700">{formatCurrency(commission)}</span>
                       <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
-                        deal.stage === "closed_won" ? "bg-green-400/10 text-green-400" : "bg-yellow-400/10 text-yellow-400"
+                        deal.stage === "closed_won" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-amber-50 text-amber-700 border border-amber-200"
                       }`}>{deal.stage === "closed_won" ? "Paid" : "Pending"}</span>
                     </motion.div>
                   );

@@ -104,7 +104,7 @@ function LogoDropZone({
         tabIndex={0}
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputRef.current?.click(); }}
         className={`relative flex items-center gap-4 p-4 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
-          dragOver ? "border-gold bg-gold/[0.08]" : "border-border hover:border-gold/40 bg-surface-light/40"
+          dragOver ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.4)] bg-surface-light/40"
         } ${uploading ? "opacity-60 pointer-events-none" : ""}`}
       >
         <div className="w-14 h-14 rounded-lg border border-border bg-surface flex items-center justify-center overflow-hidden shrink-0">
@@ -126,7 +126,7 @@ function LogoDropZone({
             </p>
           )}
         </div>
-        {uploading && <Loader2 size={16} className="text-gold animate-spin shrink-0" />}
+        {uploading && <Loader2 size={16} className="text-[#2563EB] animate-spin shrink-0" />}
         {logoUrl && !uploading && (
           <button
             type="button"
@@ -150,7 +150,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
       <div className="lg:col-span-2 space-y-4">
         <div className="card">
           <h3 className="section-header flex items-center gap-2">
-            <Palette size={14} className="text-gold" /> Branding
+            <Palette size={14} className="text-[#2563EB]" /> Branding
           </h3>
           <p className="text-xs text-muted mb-4">Rebrand ShortStack as your own platform. Changes apply across the sidebar, login page, and client portal.</p>
 
@@ -241,7 +241,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                 <p className="text-[10px] text-muted">Display attribution footer in sidebar and client portal</p>
               </div>
               <button onClick={() => setWhiteLabel({ ...whiteLabel, show_powered_by: !whiteLabel.show_powered_by })}
-                className={`w-10 h-5 rounded-full transition-colors ${whiteLabel.show_powered_by ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                className={`w-10 h-5 rounded-full transition-colors ${whiteLabel.show_powered_by ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
                 <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${whiteLabel.show_powered_by ? "translate-x-5" : "translate-x-0.5"}`} />
               </button>
             </div>
@@ -311,7 +311,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
       <div className="space-y-4">
         <div className="card-static">
           <h3 className="section-header flex items-center gap-2">
-            <Eye size={14} className="text-gold" /> Live Preview
+            <Eye size={14} className="text-[#2563EB]" /> Live Preview
           </h3>
           <p className="text-[9px] text-muted mb-3">How your branding will appear</p>
 
@@ -322,7 +322,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={whiteLabel.logo_url} alt="" className="w-6 h-6 rounded object-contain" />
               ) : (
-                <div className="w-6 h-6 rounded bg-gold/10 flex items-center justify-center">
+                <div className="w-6 h-6 rounded bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
                   <Palette size={10} style={{ color: whiteLabel.primary_color || "#C9A84C" }} />
                 </div>
               )}

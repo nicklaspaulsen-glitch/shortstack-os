@@ -145,7 +145,7 @@ export default function PaymentLinksPage() {
             href="https://dashboard.stripe.com/payment-links"
             target="_blank"
             rel="noreferrer"
-            className="text-gold hover:underline"
+            className="text-[#2563EB] hover:underline"
           >
             Stripe Dashboard &rarr; Payment Links
           </a>
@@ -197,7 +197,7 @@ export default function PaymentLinksPage() {
                           <div className="flex gap-2">
                             <button
                               onClick={() => copyLink(key, link.url!)}
-                              className="flex-1 flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 border border-gold/20 font-medium"
+                              className="flex-1 flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.2)] font-medium"
                             >
                               {copiedKey === key ? <Check size={11} /> : <Copy size={11} />}
                               {copiedKey === key ? "Copied!" : "Copy"}
@@ -206,7 +206,7 @@ export default function PaymentLinksPage() {
                               href={link.url}
                               target="_blank"
                               rel="noreferrer"
-                              className="flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-surface-light text-foreground hover:bg-gold/10 hover:text-gold border border-border font-medium"
+                              className="flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-surface-light text-foreground hover:bg-[rgba(37,99,235,0.08)] hover:text-[#2563EB] border border-border font-medium"
                             >
                               <ExternalLink size={11} />
                               Preview

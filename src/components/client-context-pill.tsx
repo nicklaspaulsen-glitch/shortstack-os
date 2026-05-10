@@ -60,16 +60,16 @@ export default function ClientContextPill() {
     <>
       {/* Floating pill — shown when managing a client */}
       {managedClient ? (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-gradient-to-r from-gold/20 to-amber-500/10 border border-gold/40 backdrop-blur-md rounded-full pl-2 pr-3 py-2 shadow-lg shadow-gold/20">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-gradient-to-r from-[rgba(37,99,235,0.12)] to-amber-500/10 border border-[rgba(37,99,235,0.4)] backdrop-blur-md rounded-full pl-2 pr-3 py-2 shadow-lg shadow-[rgba(37,99,235,0.2)]">
           {/* Avatar */}
-          <div className="relative w-7 h-7 rounded-full bg-gradient-to-br from-gold to-amber-500 flex items-center justify-center text-black text-[11px] font-bold shadow-inner">
+          <div className="relative w-7 h-7 rounded-full bg-gradient-to-br from-[#2563EB] to-amber-500 flex items-center justify-center text-white text-[11px] font-bold shadow-inner">
             {initials}
             <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-background animate-pulse" />
           </div>
 
           {/* Label */}
           <div className="min-w-0 max-w-[200px]">
-            <p className="text-[9px] text-gold/80 uppercase tracking-wider leading-none">Viewing</p>
+            <p className="text-[9px] text-[rgba(37,99,235,0.8)] uppercase tracking-wider leading-none">Viewing</p>
             <p className="text-[11px] font-semibold text-foreground truncate leading-tight">{managedClient.business_name}</p>
           </div>
 
@@ -97,7 +97,7 @@ export default function ClientContextPill() {
         clients.length > 0 || open ? (
           <button
             onClick={() => setOpen(true)}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-surface/90 border border-border backdrop-blur-md rounded-full px-3 py-1.5 shadow-lg hover:border-gold/30 transition-all text-[11px] text-muted hover:text-foreground"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-surface/90 border border-border backdrop-blur-md rounded-full px-3 py-1.5 shadow-lg hover:border-[rgba(37,99,235,0.25)] transition-all text-[11px] text-muted hover:text-foreground"
           >
             <Users size={11} />
             <span>View as client</span>
@@ -119,7 +119,7 @@ export default function ClientContextPill() {
             {/* Header */}
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Building2 size={14} className="text-gold" />
+                <Building2 size={14} className="text-[#2563EB]" />
                 <h3 className="text-sm font-semibold">Switch Client View</h3>
               </div>
               <button onClick={() => setOpen(false)} className="p-1 text-muted hover:text-foreground">
@@ -135,7 +135,7 @@ export default function ClientContextPill() {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search clients..."
-                  className="w-full pl-7 pr-3 py-2 rounded-lg bg-surface-light border border-border text-xs focus:outline-none focus:border-gold/50"
+                  className="w-full pl-7 pr-3 py-2 rounded-lg bg-surface-light border border-border text-xs focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
                   autoFocus
                 />
               </div>
@@ -189,26 +189,26 @@ export default function ClientContextPill() {
                       }}
                       className={`w-full flex items-center gap-3 p-2.5 rounded-lg text-left transition-all mb-1 ${
                         isCurrent
-                          ? "bg-gold/10 border border-gold/30"
+                          ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)]"
                           : "hover:bg-surface-light/60 border border-transparent"
                       }`}
                     >
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shadow-inner ${
                         isCurrent
-                          ? "bg-gradient-to-br from-gold to-amber-500 text-black"
+                          ? "bg-gradient-to-br from-[#2563EB] to-amber-500 text-white"
                           : "bg-surface-light text-foreground"
                       }`}>
                         {clientInitials}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-xs font-medium truncate ${isCurrent ? "text-gold" : "text-foreground"}`}>
+                        <p className={`text-xs font-medium truncate ${isCurrent ? "text-[#2563EB]" : "text-foreground"}`}>
                           {c.business_name}
                         </p>
                         <p className="text-[10px] text-muted truncate">
                           {c.contact_name || c.email || c.package_tier}
                         </p>
                       </div>
-                      {isCurrent && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-gold/15 text-gold">Active</span>}
+                      {isCurrent && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB]">Active</span>}
                     </button>
                   );
                 })

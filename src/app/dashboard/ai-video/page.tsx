@@ -35,7 +35,7 @@ const PROMPT_IDEAS = [
   "Colorful paint splashing in slow motion against white background",
 ];
 
-// Named prompt categories — chips fill a strong, production-ready prompt on click.
+// Named prompt categories ï¿½ chips fill a strong, production-ready prompt on click.
 // Each label is =12 chars so chips stay compact in one row on mobile.
 const PROMPT_CATEGORIES = [
   {
@@ -60,7 +60,7 @@ const PROMPT_CATEGORIES = [
   },
 ];
 
-// Icon-first model picker — all backed by the same Higgsfield/RunPod pipeline.
+// Icon-first model picker ï¿½ all backed by the same Higgsfield/RunPod pipeline.
 // Changing the "style" here adjusts the downstream prompt enhancement, it does
 // NOT change the actual model endpoint (that still goes through /api/video/render).
 const MODELS = [
@@ -78,7 +78,7 @@ const ASPECTS = [
   { id: "1:1", label: "Square", w: 48, h: 48 },
 ];
 
-/** CSS device silhouettes for the aspect ratio picker — phone / monitor / square. */
+/** CSS device silhouettes for the aspect ratio picker ï¿½ phone / monitor / square. */
 const DEVICE_FRAMES: Record<string, JSX.Element> = {
   "9:16": (
     <svg width="14" height="22" viewBox="0 0 14 22" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -112,7 +112,7 @@ interface GenerationResult {
   created_at: string;
 }
 
-/** Progress ring — premium replacement for a text "generating..." */
+/** Progress ring ï¿½ premium replacement for a text "generating..." */
 function ProgressRing({ progress, size = 20 }: { progress: number; size?: number }) {
   const r = (size - 4) / 2;
   const c = 2 * Math.PI * r;
@@ -169,12 +169,12 @@ export default function AIVideoPage() {
     : null;
   const nextTierLabel =
     nextTier
-      ? `${nextTier} — ${formatVideoDuration(
+      ? `${nextTier} ï¿½ ${formatVideoDuration(
           limitsForTier(nextTier).max_video_seconds,
         )}`
       : null;
 
-  // Guided wizard (legacy modal — still accessible to preserve existing flow)
+  // Guided wizard (legacy modal ï¿½ still accessible to preserve existing flow)
   const [wizardOpen, setWizardOpen] = useState(false);
   useEffect(() => {
     try {
@@ -201,7 +201,7 @@ export default function AIVideoPage() {
             onChange={e => setPrompt(e.target.value)}
             placeholder="e.g., Golden retriever running through a field of sunflowers at sunset, cinematic warm lighting, slow tracking shot"
             rows={4}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.5)] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all resize-none"
             autoFocus
           />
           <div>
@@ -236,8 +236,8 @@ export default function AIVideoPage() {
               onClick={() => setAspectRatio(ar.id)}
               className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
                 aspectRatio === ar.id
-                  ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
-                  : "border-border hover:border-gold/30 bg-surface-light"
+                  ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]"
+                  : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
               }`}
             >
               <div
@@ -276,15 +276,15 @@ export default function AIVideoPage() {
                   disabled={locked}
                   className={`p-3 rounded-xl border transition-all text-center relative ${
                     locked
-                      ? "border-gold/30 bg-surface-light/40 opacity-60 cursor-not-allowed"
+                      ? "border-[rgba(37,99,235,0.25)] bg-surface-light/40 opacity-60 cursor-not-allowed"
                       : numFrames === opt.f
-                        ? "border-gold bg-gold/10"
-                        : "border-border hover:border-gold/30 bg-surface-light"
+                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
+                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                   }`}
                 >
                   {locked && (
                     <span className="absolute top-1 right-1">
-                      <Lock size={10} className="text-gold" />
+                      <Lock size={10} className="text-[#2563EB]" />
                     </span>
                   )}
                   <p className="text-sm font-bold">{opt.label}</p>
@@ -296,7 +296,7 @@ export default function AIVideoPage() {
           {nextTierLabel && (
             <Link
               href="/dashboard/upgrade"
-              className="flex items-center justify-center gap-1.5 text-[10px] text-gold hover:text-amber-400 py-1.5 rounded-lg border border-gold/20 bg-gold/[0.04] transition-all"
+              className="flex items-center justify-center gap-1.5 text-[10px] text-[#2563EB] hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] transition-all"
             >
               <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
             </Link>
@@ -311,8 +311,8 @@ export default function AIVideoPage() {
       icon: <Sparkles size={18} />,
       component: (
         <div className="space-y-3">
-          <div className="card bg-gold/[0.04] border-gold/20">
-            <p className="text-[10px] uppercase tracking-wider text-gold font-semibold mb-2">Your prompt</p>
+          <div className="card bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.2)]">
+            <p className="text-[10px] uppercase tracking-wider text-[#2563EB] font-semibold mb-2">Your prompt</p>
             <p className="text-sm text-foreground leading-relaxed">{prompt || <span className="text-muted italic">(no prompt set)</span>}</p>
             <div className="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-border/50">
               <div>
@@ -326,26 +326,26 @@ export default function AIVideoPage() {
             </div>
           </div>
           <p className="text-[11px] text-muted text-center">
-            Want finer control? Flip to <span className="text-gold font-semibold">Advanced mode</span> at the top.
+            Want finer control? Flip to <span className="text-[#2563EB] font-semibold">Advanced mode</span> at the top.
           </p>
         </div>
       ),
     },
   ];
 
-  // Legacy wizard config preserved — same API shape as before
+  // Legacy wizard config preserved ï¿½ same API shape as before
   const videoGenWizardSteps: WizardStep[] = [
     {
       id: "what",
       title: "What do you want in your video?",
-      description: "Describe the scene. Be visual — mention subjects, environment, lighting, camera movement.",
+      description: "Describe the scene. Be visual ï¿½ mention subjects, environment, lighting, camera movement.",
       icon: <Type size={16} />,
       field: { type: "textarea", key: "prompt", placeholder: "e.g., A sleek red sports car driving through a neon-lit city at night, rain on the streets, cinematic camera" },
     },
     {
       id: "style",
       title: "Pick a visual style",
-      description: "This changes the entire look — camera, lighting, color grade.",
+      description: "This changes the entire look ï¿½ camera, lighting, color grade.",
       icon: <Palette size={16} />,
       field: {
         type: "choice-cards",
@@ -384,10 +384,10 @@ export default function AIVideoPage() {
         type: "choice-cards",
         key: "duration",
         options: [
-          { value: "48", label: "2 seconds", description: "48 frames · Fast & cheap" },
-          { value: "72", label: "3 seconds", description: "72 frames · Balanced" },
-          { value: "120", label: "5 seconds", description: "120 frames · Standard" },
-          { value: "144", label: "6 seconds", description: "144 frames · Max quality" },
+          { value: "48", label: "2 seconds", description: "48 frames ï¿½ Fast & cheap" },
+          { value: "72", label: "3 seconds", description: "72 frames ï¿½ Balanced" },
+          { value: "120", label: "5 seconds", description: "120 frames ï¿½ Standard" },
+          { value: "144", label: "6 seconds", description: "144 frames ï¿½ Max quality" },
         ].filter(opt => parseInt(opt.value, 10) <= maxFrames),
       },
     },
@@ -492,21 +492,21 @@ export default function AIVideoPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Minimal top bar — no marketing chrome. Just mode toggle + subtle title. */}
+      {/* Minimal top bar ï¿½ no marketing chrome. Just mode toggle + subtle title. */}
       <div className="flex items-center justify-between gap-4 px-1 pt-1">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold/20 to-amber-500/10 border border-gold/20 flex items-center justify-center text-gold shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[rgba(37,99,235,0.2)] to-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB] shrink-0">
             <Film size={16} />
           </div>
           <div className="min-w-0">
             <h1 className="text-base font-semibold tracking-tight truncate">AI Video</h1>
-            <p className="text-[10px] text-muted truncate">Text ? rendered clip · {planTier}</p>
+            <p className="text-[10px] text-muted truncate">Text ? rendered clip ï¿½ {planTier}</p>
           </div>
         </div>
         <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
       </div>
 
-      {/* Scorecard strip — 3-cell stagger, same pattern as analytics/clients */}
+      {/* Scorecard strip ï¿½ 3-cell stagger, same pattern as analytics/clients */}
       <PrismPanel rainbow padding="p-0" className="rounded-xl">
         <motion.div
           className="grid grid-cols-3 divide-x divide-[rgba(0,0,0,0.08)] overflow-hidden"
@@ -532,13 +532,13 @@ export default function AIVideoPage() {
         </motion.div>
       </PrismPanel>
 
-      {/* Guided Mode — preserved untouched for beginners */}
+      {/* Guided Mode ï¿½ preserved untouched for beginners */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={generating ? "Generating…" : "Generate video"}
+          finishLabel={generating ? "Generatingï¿½" : "Generate video"}
           busy={generating}
           onFinish={async () => { await generateVideo(); }}
           onCancel={() => setAdvancedMode(true)}
@@ -546,11 +546,11 @@ export default function AIVideoPage() {
         />
       )}
 
-      {/* Legacy modal wizard — preserved for first-run users */}
+      {/* Legacy modal wizard ï¿½ preserved for first-run users */}
       <CreationWizard
         open={wizardOpen}
         title="Create Your AI Video"
-        subtitle="Step-by-step — describe, pick style, hit generate."
+        subtitle="Step-by-step ï¿½ describe, pick style, hit generate."
         icon={<Film size={18} />}
         submitLabel="Apply & Generate"
         initialData={{ prompt, style, aspectRatio, duration: String(numFrames) }}
@@ -579,9 +579,9 @@ export default function AIVideoPage() {
       {/* --------------- ADVANCED: Higgsfield-style cinematic hero --------------- */}
       {advancedMode && (
         <>
-          {/* HERO — huge prompt, dominant generate CTA, minimal chrome */}
+          {/* HERO ï¿½ huge prompt, dominant generate CTA, minimal chrome */}
           <div className="hf-canvas rounded-3xl p-8 sm:p-10 relative overflow-hidden">
-            {/* Category chips — above textarea, disappear once user starts typing */}
+            {/* Category chips ï¿½ above textarea, disappear once user starts typing */}
             {!prompt && (
               <div className="mb-3 flex flex-wrap gap-1.5">
                 {PROMPT_CATEGORIES.map((cat) => (
@@ -598,7 +598,7 @@ export default function AIVideoPage() {
               </div>
             )}
 
-            {/* Prompt textarea — the real star */}
+            {/* Prompt textarea ï¿½ the real star */}
             <textarea
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
@@ -607,12 +607,12 @@ export default function AIVideoPage() {
               autoFocus
             />
 
-            {/* Bottom rail — model picker + aspect picker + generate button */}
+            {/* Bottom rail ï¿½ model picker + aspect picker + generate button */}
             <div className="mt-7 flex items-end justify-between flex-wrap gap-5">
               <div className="flex items-end gap-5 flex-wrap">
-                {/* Model picker — icon-first, compact */}
+                {/* Model picker ï¿½ icon-first, compact */}
                 <div>
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-white/35 mb-1.5 font-medium">Style</p>
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-[#9CA3AF] mb-1.5 font-medium">Style</p>
                   <div className="flex gap-1.5">
                     {MODELS.map(m => {
                       const Icon = m.icon;
@@ -622,10 +622,10 @@ export default function AIVideoPage() {
                           onClick={() => setStyle(m.id)}
                           className="hf-tile min-w-[68px]"
                           data-active={style === m.id}
-                          title={`${m.name} — ${m.sub}`}
+                          title={`${m.name} ï¿½ ${m.sub}`}
                           style={{ overflow: "hidden" }}
                         >
-                          {/* Aesthetic gradient stripe — each style gets a unique palette signature */}
+                          {/* Aesthetic gradient stripe ï¿½ each style gets a unique palette signature */}
                           <span
                             aria-hidden="true"
                             style={{
@@ -649,9 +649,9 @@ export default function AIVideoPage() {
                   </div>
                 </div>
 
-                {/* Aspect picker — visual mini frames */}
+                {/* Aspect picker ï¿½ visual mini frames */}
                 <div>
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-white/35 mb-1.5 font-medium">Aspect</p>
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-[#9CA3AF] mb-1.5 font-medium">Aspect</p>
                   <div className="flex gap-1.5">
                     {ASPECTS.map(ar => (
                       <button
@@ -671,7 +671,7 @@ export default function AIVideoPage() {
                 </div>
               </div>
 
-              {/* Generate — big, gold, pulsing */}
+              {/* Generate ï¿½ big, gold, pulsing */}
               <button
                 onClick={generateVideo}
                 disabled={generating || !prompt.trim()}
@@ -692,7 +692,7 @@ export default function AIVideoPage() {
             </div>
           </div>
 
-          {/* Full-width progress bar — only visible during generation */}
+          {/* Full-width progress bar ï¿½ only visible during generation */}
           <AnimatePresence>
             {generating && (
               <motion.div
@@ -703,11 +703,11 @@ export default function AIVideoPage() {
                 className="overflow-hidden"
               >
                 <div className="space-y-2 py-1">
-                  <div className="flex items-center justify-between text-[10px] text-white/45">
-                    <span>Estimated 45–90 seconds · Frame {Math.round((progress / 100) * numFrames)}/{numFrames}</span>
+                  <div className="flex items-center justify-between text-[10px] text-[#9CA3AF]">
+                    <span>Estimated 45ï¿½90 seconds ï¿½ Frame {Math.round((progress / 100) * numFrames)}/{numFrames}</span>
                     <span>{Math.round(progress)}%</span>
                   </div>
-                  <div className="h-1 rounded-full bg-white/8 overflow-hidden">
+                  <div className="h-1 rounded-full bg-[rgba(0,0,0,0.06)] overflow-hidden">
                     <motion.div
                       className="h-full rounded-full bg-gradient-to-r from-[#2563EB] to-[#3B82F6]"
                       animate={{ width: `${progress}%` }}
@@ -719,24 +719,24 @@ export default function AIVideoPage() {
             )}
           </AnimatePresence>
 
-          {/* Advanced settings — collapsed by default, hover/click to expand */}
+          {/* Advanced settings ï¿½ collapsed by default, hover/click to expand */}
           <div>
             <button
               onClick={() => setAdvancedOpen(v => !v)}
-              className="flex items-center gap-1.5 text-[11px] text-white/45 hover:text-white/80 transition-colors px-1"
+              className="flex items-center gap-1.5 text-[11px] text-[#9CA3AF] hover:text-[#374151] transition-colors px-1"
             >
               {advancedOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
               Advanced settings
-              <span className="text-white/25 ml-1">
-                · {(numFrames / 24).toFixed(1)}s · guidance {guidanceScale}
+              <span className="text-[#9CA3AF] ml-1">
+                ï¿½ {(numFrames / 24).toFixed(1)}s ï¿½ guidance {guidanceScale}
               </span>
             </button>
             {advancedOpen && (
-              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 p-4  border border-white/5 bg-white/[0.015]">
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 p-4  border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)]">
                 <div>
-                  <label className="block text-[9px] text-white/35 uppercase tracking-[0.16em] mb-1.5">
+                  <label className="block text-[9px] text-[#9CA3AF] uppercase tracking-[0.16em] mb-1.5">
                     Frames
-                    <span className="normal-case tracking-normal ml-1 text-white/25">
+                    <span className="normal-case tracking-normal ml-1 text-[#9CA3AF]">
                       (max {Number.isFinite(maxFrames) ? maxFrames : "8"})
                     </span>
                   </label>
@@ -750,23 +750,23 @@ export default function AIVideoPage() {
                       const capped = Number.isFinite(maxFrames) ? Math.min(raw, maxFrames) : raw;
                       setNumFrames(capped);
                     }}
-                    className="input w-full text-xs bg-black/40 border-white/10"
+                    className="input w-full text-xs bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)]"
                   />
-                  <p className="text-[9px] text-white/30 mt-1">~{(numFrames / 24).toFixed(1)}s @ 24fps</p>
+                  <p className="text-[9px] text-[#9CA3AF] mt-1">~{(numFrames / 24).toFixed(1)}s @ 24fps</p>
                 </div>
                 <div>
-                  <label className="block text-[9px] text-white/35 uppercase tracking-[0.16em] mb-1.5">Guidance scale</label>
+                  <label className="block text-[9px] text-[#9CA3AF] uppercase tracking-[0.16em] mb-1.5">Guidance scale</label>
                   <input
                     type="number" min={1} max={20} step={0.5} value={guidanceScale}
                     onChange={e => setGuidanceScale(parseFloat(e.target.value) || 7.5)}
-                    className="input w-full text-xs bg-black/40 border-white/10"
+                    className="input w-full text-xs bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)]"
                   />
-                  <p className="text-[9px] text-white/30 mt-1">Higher = stricter prompt adherence</p>
+                  <p className="text-[9px] text-[#9CA3AF] mt-1">Higher = stricter prompt adherence</p>
                 </div>
                 {nextTierLabel && (
                   <Link
                     href="/dashboard/upgrade"
-                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-gold hover:text-amber-400 py-1.5 rounded-lg border border-gold/20 bg-gold/[0.04] transition-all"
+                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-[#2563EB] hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] transition-all"
                   >
                     <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
                   </Link>
@@ -775,9 +775,9 @@ export default function AIVideoPage() {
             )}
           </div>
 
-          {/* GALLERY — fullbleed thumbs, no card chrome */}
+          {/* GALLERY ï¿½ fullbleed thumbs, no card chrome */}
           {results.length === 0 ? (
-            <div className="text-center py-16 text-white/30">
+            <div className="text-center py-16 text-[#9CA3AF]">
               <Film size={28} strokeWidth={1} className="mx-auto mb-3 opacity-50" />
               <p className="text-sm font-light">Your generations will appear here.</p>
             </div>
@@ -819,14 +819,14 @@ export default function AIVideoPage() {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-black via-zinc-950 to-black">
                         {result.status === "generating" && (
-                          <div className="flex flex-col items-center gap-2 text-white/60">
+                          <div className="flex flex-col items-center gap-2 text-[#6B7280]">
                             <ProgressRing progress={progress} size={28} />
                             <p className="text-[10px] font-light">{Math.round(progress)}%</p>
                           </div>
                         )}
                         {result.status === "plan" && (
-                          <div className="text-center px-3 text-white/70">
-                            <Sparkles size={16} className="mx-auto mb-1.5 text-gold/70" />
+                          <div className="text-center px-3 text-[#6B7280]">
+                            <Sparkles size={16} className="mx-auto mb-1.5 text-[rgba(37,99,235,0.7)]" />
                             <p className="text-[10px] font-light">Plan ready</p>
                           </div>
                         )}
@@ -855,14 +855,14 @@ export default function AIVideoPage() {
                     )}
                     <div className="hf-thumb-meta">
                       <p className="line-clamp-2 leading-tight">{result.prompt}</p>
-                      <div className="flex items-center justify-between mt-1 text-[9px] text-white/55">
-                        <span>{result.aspect_ratio} · {result.style || "cinematic"}</span>
+                      <div className="flex items-center justify-between mt-1 text-[9px] text-[#9CA3AF]">
+                        <span>{result.aspect_ratio} ï¿½ {result.style || "cinematic"}</span>
                         {result.url && (
                           <div className="flex items-center gap-2">
                             <a
                               href={result.url}
                               download
-                              className="flex items-center gap-1 hover:text-white transition-colors"
+                              className="flex items-center gap-1 hover:text-[#374151] transition-colors"
                               onClick={e => e.stopPropagation()}
                             >
                               <Download size={10} /> Save
@@ -898,8 +898,8 @@ export default function AIVideoPage() {
                       </div>
                     </div>
                     {result.plan && (
-                      <details className="absolute inset-x-0 bottom-0 p-3 bg-black/95 text-white/80 text-[10px] max-h-[70%] overflow-y-auto">
-                        <summary className="cursor-pointer text-gold font-semibold mb-1">Scene plan</summary>
+                      <details className="absolute inset-x-0 bottom-0 p-3 bg-black/95 text-[#374151] text-[10px] max-h-[70%] overflow-y-auto">
+                        <summary className="cursor-pointer text-[#2563EB] font-semibold mb-1">Scene plan</summary>
                         <pre className="whitespace-pre-wrap font-sans leading-snug mt-1.5">{result.plan}</pre>
                       </details>
                     )}
@@ -915,7 +915,7 @@ export default function AIVideoPage() {
       {!advancedMode && results.length > 0 && (
         <div className="space-y-3">
           <h2 className="section-header flex items-center gap-2">
-            <Film size={14} className="text-gold" /> Your generated videos
+            <Film size={14} className="text-[#2563EB]" /> Your generated videos
           </h2>
           {results.slice(0, 3).map(result => (
             <div key={result.id} className="card">
@@ -925,7 +925,7 @@ export default function AIVideoPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{result.aspect_ratio}</span>
                     {result.status === "generating" && (
-                      <span className="text-[8px] text-gold flex items-center gap-1">
+                      <span className="text-[8px] text-[#2563EB] flex items-center gap-1">
                         <ProgressRing progress={progress} size={10} /> {Math.round(progress)}%
                       </span>
                     )}
@@ -936,7 +936,7 @@ export default function AIVideoPage() {
                     )}
                     {result.status === "failed" && (
                       <span className="text-[8px] text-danger flex items-center gap-1" title={result.error}>
-                        <AlertCircle size={8} /> Failed{result.error ? ` — ${result.error.slice(0, 40)}` : ""}
+                        <AlertCircle size={8} /> Failed{result.error ? ` ï¿½ ${result.error.slice(0, 40)}` : ""}
                       </span>
                     )}
                   </div>
@@ -992,7 +992,7 @@ export default function AIVideoPage() {
         </div>
       )}
 
-      {/* Setup / GPU env note — admin-only; clients should never see env-var names */}
+      {/* Setup / GPU env note ï¿½ admin-only; clients should never see env-var names */}
       {advancedMode && isPlatformAdmin && (
         <div className="flex items-center gap-2 text-[9px] text-[#0A0A0B]/35 px-1">
           <Zap size={10} />

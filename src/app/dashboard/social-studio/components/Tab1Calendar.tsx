@@ -298,7 +298,7 @@ export default function Tab1Calendar() {
                 key={key}
                 className={`bg-surface min-h-[100px] p-1.5 flex flex-col gap-1 ${inMonth ? "" : "opacity-40"}`}
               >
-                <div className={`text-[10px] font-semibold ${isToday ? "text-gold" : "text-muted"}`}>
+                <div className={`text-[10px] font-semibold ${isToday ? "text-[#2563EB]" : "text-muted"}`}>
                   {day.getDate()}
                 </div>
                 {loading && dayPosts.length === 0 ? null : (
@@ -449,7 +449,7 @@ export default function Tab1Calendar() {
                   type="button"
                   onClick={handleSaveEdit}
                   disabled={savingId === selected.id}
-                  className="px-3 py-1.5 text-xs rounded-md bg-gold/20 text-gold border border-gold/30 hover:bg-gold/30 disabled:opacity-50"
+                  className="px-3 py-1.5 text-xs rounded-md bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.18)] disabled:opacity-50"
                 >
                   {savingId === selected.id ? (
                     <Loader2 size={12} className="inline mr-1 animate-spin" />

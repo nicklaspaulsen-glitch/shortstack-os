@@ -67,19 +67,19 @@ interface AlertRule {
 
 // --- Change type metadata --------------------------------------------
 const CHANGE_TYPE_META: Record<ChangeType, { label: string; icon: typeof Globe; color: string }> = {
-  new_page:          { label: "New Page",          icon: Globe,          color: "text-blue-400 bg-blue-500/10" },
+  new_page:          { label: "New Page",          icon: Globe,          color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" },
   content_update:    { label: "Content Update",    icon: FileText,       color: "text-emerald-400 bg-emerald-500/10" },
   pricing_change:    { label: "Pricing Change",    icon: BarChart3,      color: "text-red-400 bg-red-500/10" },
-  new_feature:       { label: "New Feature",       icon: Zap,            color: "text-purple-400 bg-purple-500/10" },
-  new_blog_post:     { label: "New Blog Post",     icon: FileText,       color: "text-sky-400 bg-sky-500/10" },
+  new_feature:       { label: "New Feature",       icon: Zap,            color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" },
+  new_blog_post:     { label: "New Blog Post",     icon: FileText,       color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" },
   social_post:       { label: "Social Post",       icon: MessageSquare,  color: "text-pink-400 bg-pink-500/10" },
-  job_posting:       { label: "Job Posting",       icon: Briefcase,      color: "text-amber-400 bg-amber-500/10" },
+  job_posting:       { label: "Job Posting",       icon: Briefcase,      color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" },
   tech_stack_change: { label: "Tech Stack Change", icon: Code2,          color: "text-orange-400 bg-orange-500/10" },
 };
 
 const SEVERITY_META: Record<Severity, { label: string; color: string }> = {
   high:   { label: "High",   color: "text-red-400 bg-red-500/10 border-red-500/30" },
-  medium: { label: "Medium", color: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
+  medium: { label: "Medium", color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]" },
   low:    { label: "Low",    color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" },
 };
 
@@ -235,7 +235,7 @@ export default function CompetitiveMonitorPage() {
 
   const statusClasses: Record<MonitorStatus, string> = {
     active: "text-emerald-400 bg-emerald-500/10",
-    paused: "text-amber-400 bg-amber-500/10",
+    paused: "text-[#2563EB] bg-[rgba(37,99,235,0.08)]",
     error: "text-red-400 bg-red-500/10",
   };
 
@@ -275,7 +275,7 @@ export default function CompetitiveMonitorPage() {
       {/* --- Stats Row --- */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { icon: <Target className="w-3.5 h-3.5" />, label: "Monitoring", value: activeCompetitors, sub: `${competitors.length} total competitors`, color: "text-indigo-400", bar: "from-indigo-500 to-violet-400" },
+          { icon: <Target className="w-3.5 h-3.5" />, label: "Monitoring", value: activeCompetitors, sub: `${competitors.length} total competitors`, color: "text-[#2563EB]", bar: "from-indigo-500 to-violet-400" },
           { icon: <Activity className="w-3.5 h-3.5" />, label: "Changes (7d)", value: totalChanges, sub: "across all competitors", color: "text-[#0A0A0B]", bar: "from-indigo-500 to-blue-400" },
           { icon: <AlertTriangle className="w-3.5 h-3.5" />, label: "High Priority", value: highSeverityChanges, sub: "require attention", color: "text-red-400", bar: "from-red-500 to-rose-400" },
           { icon: <Zap className="w-3.5 h-3.5" />, label: "Credits", value: `${creditsUsed}/${creditsTotal}`, sub: null, color: "text-[#0A0A0B]", bar: "from-amber-500 to-yellow-400" },
@@ -310,23 +310,23 @@ export default function CompetitiveMonitorPage() {
           transition={{ duration: 0.3 }}
           className="rounded-xl p-5" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.12)" }}
         >
-          <h3 className="section-header text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-gold" /> Add New Competitor</h3>
+          <h3 className="section-header text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-[#2563EB]" /> Add New Competitor</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-muted mb-1">Company Name *</label>
-              <input value={addName} onChange={e => setAddName(e.target.value)} placeholder="e.g. Acme Agency Tools" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-gold/50 focus:outline-none" />
+              <input value={addName} onChange={e => setAddName(e.target.value)} placeholder="e.g. Acme Agency Tools" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(37,99,235,0.5)] focus:outline-none" />
             </div>
             <div>
               <label className="block text-xs text-muted mb-1">Website URL *</label>
-              <input value={addUrl} onChange={e => setAddUrl(e.target.value)} placeholder="https://competitor.com" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-gold/50 focus:outline-none" />
+              <input value={addUrl} onChange={e => setAddUrl(e.target.value)} placeholder="https://competitor.com" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(37,99,235,0.5)] focus:outline-none" />
             </div>
             <div>
               <label className="block text-xs text-muted mb-1">Industry</label>
-              <input value={addIndustry} onChange={e => setAddIndustry(e.target.value)} placeholder="e.g. Agency SaaS" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-gold/50 focus:outline-none" />
+              <input value={addIndustry} onChange={e => setAddIndustry(e.target.value)} placeholder="e.g. Agency SaaS" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(37,99,235,0.5)] focus:outline-none" />
             </div>
             <div>
               <label className="block text-xs text-muted mb-1">Notes</label>
-              <input value={addNotes} onChange={e => setAddNotes(e.target.value)} placeholder="Any context about this competitor..." className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-gold/50 focus:outline-none" />
+              <input value={addNotes} onChange={e => setAddNotes(e.target.value)} placeholder="Any context about this competitor..." className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(37,99,235,0.5)] focus:outline-none" />
             </div>
           </div>
           <div className="flex gap-2 mt-4">
@@ -338,7 +338,7 @@ export default function CompetitiveMonitorPage() {
 
       {/* --- Competitors Grid --- */}
       <div>
-        <h2 className="section-header text-sm mb-3 flex items-center gap-2"><Shield className="w-4 h-4 text-gold" /> Monitored Competitors</h2>
+        <h2 className="section-header text-sm mb-3 flex items-center gap-2"><Shield className="w-4 h-4 text-[#2563EB]" /> Monitored Competitors</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           {competitors.map((comp, ci) => (
             <motion.div
@@ -347,7 +347,7 @@ export default function CompetitiveMonitorPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: ci * 0.06 }}
               whileHover={{ y: -3 }}
-              className="rounded-xl p-4 hover:border-indigo-500/20 transition group" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+              className="rounded-xl p-4 hover:border-[rgba(37,99,235,0.14)] transition group" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
@@ -356,7 +356,7 @@ export default function CompetitiveMonitorPage() {
                   </div>
                   <div>
                     <div className="font-medium text-sm">{comp.name}</div>
-                    <a href={comp.url} target="_blank" rel="noopener noreferrer" className="text-xs text-muted hover:text-gold flex items-center gap-1">
+                    <a href={comp.url} target="_blank" rel="noopener noreferrer" className="text-xs text-muted hover:text-[#2563EB] flex items-center gap-1">
                       {comp.url.replace("https://", "")} <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
@@ -368,7 +368,7 @@ export default function CompetitiveMonitorPage() {
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-[10px] px-2 py-0.5 bg-surface-light rounded-full text-muted">{comp.industry}</span>
                 {comp.changeCount > 0 && (
-                  <span className="text-[10px] px-2 py-0.5 bg-gold/10 text-gold rounded-full font-medium">{comp.changeCount} changes</span>
+                  <span className="text-[10px] px-2 py-0.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-full font-medium">{comp.changeCount} changes</span>
                 )}
               </div>
               <div className="flex items-center justify-between text-[10px] text-muted mb-3">
@@ -376,7 +376,7 @@ export default function CompetitiveMonitorPage() {
                 <span>{FREQUENCY_LABELS[comp.frequency]}</span>
               </div>
               <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition">
-                <button onClick={() => checkNow(comp.id)} disabled={checkingId === comp.id} className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-gold/10 text-gold rounded text-[10px] font-medium hover:bg-gold/20 transition disabled:opacity-50">
+                <button onClick={() => checkNow(comp.id)} disabled={checkingId === comp.id} className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded text-[10px] font-medium hover:bg-[rgba(37,99,235,0.12)] transition disabled:opacity-50">
                   {checkingId === comp.id ? <Loader className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />} Check
                 </button>
                 <button onClick={() => togglePause(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-[#0A0A0B] transition">
@@ -396,7 +396,7 @@ export default function CompetitiveMonitorPage() {
 
       {/* --- Monitoring Schedule --- */}
       <PrismPanel padding="p-4">
-        <h3 className="section-header text-xs flex items-center gap-2 mb-3"><Calendar className="w-3.5 h-3.5 text-gold" /> Monitoring Schedule</h3>
+        <h3 className="section-header text-xs flex items-center gap-2 mb-3"><Calendar className="w-3.5 h-3.5 text-[#2563EB]" /> Monitoring Schedule</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {competitors.filter(c => c.status === "active").slice(0, 4).map(c => (
             <div key={c.id} className="flex items-center gap-2 p-2 bg-surface-light rounded-lg">
@@ -405,7 +405,7 @@ export default function CompetitiveMonitorPage() {
                 <div className="text-xs font-medium truncate">{c.name}</div>
                 <div className="text-[10px] text-muted">{FREQUENCY_LABELS[c.frequency]}</div>
               </div>
-              <div className="text-[10px] text-gold whitespace-nowrap">{c.nextCheck === "�" || c.nextCheck === "Retrying..." ? c.nextCheck : formatTime(c.nextCheck, true)}</div>
+              <div className="text-[10px] text-[#2563EB] whitespace-nowrap">{c.nextCheck === "�" || c.nextCheck === "Retrying..." ? c.nextCheck : formatTime(c.nextCheck, true)}</div>
             </div>
           ))}
         </div>
@@ -415,7 +415,7 @@ export default function CompetitiveMonitorPage() {
       <div className="flex gap-1 border-b border-border overflow-x-auto">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${tab === t.key ? "border-gold text-gold" : "border-transparent text-muted hover:text-[#0A0A0B]"}`}>
+            className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${tab === t.key ? "border-[#2563EB] text-[#2563EB]" : "border-transparent text-muted hover:text-[#0A0A0B]"}`}>
             <t.icon className="w-4 h-4" /> {t.label}
           </button>
         ))}
@@ -427,22 +427,22 @@ export default function CompetitiveMonitorPage() {
           {/* Filters */}
           <div className="flex flex-wrap gap-2 items-center">
             <Filter className="w-4 h-4 text-muted" />
-            <select value={filterCompetitor} onChange={e => setFilterCompetitor(e.target.value)} className="px-3 py-1.5 bg-surface-light border border-border rounded-lg text-xs focus:border-gold/50 focus:outline-none">
+            <select value={filterCompetitor} onChange={e => setFilterCompetitor(e.target.value)} className="px-3 py-1.5 bg-surface-light border border-border rounded-lg text-xs focus:border-[rgba(37,99,235,0.5)] focus:outline-none">
               <option value="all">All Competitors</option>
               {competitors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
-            <select value={filterType} onChange={e => setFilterType(e.target.value as ChangeType | "all")} className="px-3 py-1.5 bg-surface-light border border-border rounded-lg text-xs focus:border-gold/50 focus:outline-none">
+            <select value={filterType} onChange={e => setFilterType(e.target.value as ChangeType | "all")} className="px-3 py-1.5 bg-surface-light border border-border rounded-lg text-xs focus:border-[rgba(37,99,235,0.5)] focus:outline-none">
               <option value="all">All Types</option>
               {Object.entries(CHANGE_TYPE_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
             </select>
-            <select value={filterSeverity} onChange={e => setFilterSeverity(e.target.value as Severity | "all")} className="px-3 py-1.5 bg-surface-light border border-border rounded-lg text-xs focus:border-gold/50 focus:outline-none">
+            <select value={filterSeverity} onChange={e => setFilterSeverity(e.target.value as Severity | "all")} className="px-3 py-1.5 bg-surface-light border border-border rounded-lg text-xs focus:border-[rgba(37,99,235,0.5)] focus:outline-none">
               <option value="all">All Severities</option>
               <option value="high">High</option>
               <option value="medium">Medium</option>
               <option value="low">Low</option>
             </select>
             {(filterCompetitor !== "all" || filterType !== "all" || filterSeverity !== "all") && (
-              <button onClick={() => { setFilterCompetitor("all"); setFilterType("all"); setFilterSeverity("all"); }} className="text-xs text-gold hover:underline">Clear filters</button>
+              <button onClick={() => { setFilterCompetitor("all"); setFilterType("all"); setFilterSeverity("all"); }} className="text-xs text-[#2563EB] hover:underline">Clear filters</button>
             )}
             <span className="text-xs text-muted ml-auto">{filteredChanges.length} change{filteredChanges.length !== 1 ? "s" : ""}</span>
           </div>
@@ -460,7 +460,7 @@ export default function CompetitiveMonitorPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: chi * 0.05 }}
-                  className="rounded-xl p-4 hover:border-indigo-500/20 transition" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                  className="rounded-xl p-4 hover:border-[rgba(37,99,235,0.14)] transition" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
                 >
                   <div className="flex items-start gap-3">
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${meta.color}`}>
@@ -480,8 +480,8 @@ export default function CompetitiveMonitorPage() {
                       <p className="text-xs text-muted leading-relaxed">{change.description}</p>
 
                       {/* AI Summary */}
-                      <div className="mt-2 p-2.5 bg-gold/5 border border-gold/10 rounded-lg">
-                        <div className="flex items-center gap-1.5 text-[10px] text-gold font-medium mb-1">
+                      <div className="mt-2 p-2.5 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg">
+                        <div className="flex items-center gap-1.5 text-[10px] text-[#2563EB] font-medium mb-1">
                           <Sparkles className="w-3 h-3" /> AI Analysis
                         </div>
                         <p className="text-xs text-muted leading-relaxed">{change.aiSummary}</p>
@@ -491,7 +491,7 @@ export default function CompetitiveMonitorPage() {
                       {(change.beforeText || change.afterText) && (
                         <button
                           onClick={() => setExpandedChange(isExpanded ? null : change.id)}
-                          className="flex items-center gap-1 text-[10px] text-gold mt-2 hover:underline"
+                          className="flex items-center gap-1 text-[10px] text-[#2563EB] mt-2 hover:underline"
                           aria-expanded={isExpanded}
                           aria-controls={`competitor-change-${change.id}`}
                         >
@@ -530,7 +530,7 @@ export default function CompetitiveMonitorPage() {
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left p-3 text-muted font-medium sticky left-0 bg-surface z-10 min-w-[120px]">Metric</th>
-                    <th className="p-3 text-center text-gold font-bold min-w-[100px]">You</th>
+                    <th className="p-3 text-center text-[#2563EB] font-bold min-w-[100px]">You</th>
                     {competitors.map(c => (
                       <th key={c.id} className="p-3 text-center font-medium min-w-[100px]">
                         <div className="flex items-center justify-center gap-1.5">
@@ -554,7 +554,7 @@ export default function CompetitiveMonitorPage() {
 
           {/* Spider chart representation */}
           <PrismPanel padding="p-5">
-            <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-gold" /> Competitive Positioning</h3>
+            <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-[#2563EB]" /> Competitive Positioning</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Simple radar visualization */}
               <div className="relative flex items-center justify-center py-8">
@@ -575,21 +575,21 @@ export default function CompetitiveMonitorPage() {
                     const angle = (i * 60 - 90) * (Math.PI / 180);
                     const x = 50 + dist * Math.cos(angle);
                     const y = 50 + dist * Math.sin(angle);
-                    return <div key={i} className="absolute w-2.5 h-2.5 bg-gold rounded-full border-2 border-gold/30 -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }} />;
+                    return <div key={i} className="absolute w-2.5 h-2.5 bg-[#2563EB] rounded-full border-2 border-[rgba(37,99,235,0.3)] -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }} />;
                   })}
                   {/* Top competitor dots */}
                   {[35, 40, 45, 32, 38, 42].map((dist, i) => {
                     const angle = (i * 60 - 90) * (Math.PI / 180);
                     const x = 50 + dist * Math.cos(angle);
                     const y = 50 + dist * Math.sin(angle);
-                    return <div key={`comp-${i}`} className="absolute w-2 h-2 bg-purple-400 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-60" style={{ left: `${x}%`, top: `${y}%` }} />;
+                    return <div key={`comp-${i}`} className="absolute w-2 h-2 bg-[#2563EB] rounded-full -translate-x-1/2 -translate-y-1/2 opacity-60" style={{ left: `${x}%`, top: `${y}%` }} />;
                   })}
                 </div>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-xs">
-                  <div className="w-3 h-3 bg-gold rounded-full" /> <span>Your company</span>
-                  <div className="w-3 h-3 bg-purple-400 rounded-full ml-4 opacity-60" /> <span className="text-muted">Top competitor avg.</span>
+                  <div className="w-3 h-3 bg-[#2563EB] rounded-full" /> <span>Your company</span>
+                  <div className="w-3 h-3 bg-[#2563EB] rounded-full ml-4 opacity-60" /> <span className="text-muted">Top competitor avg.</span>
                 </div>
                 <div className="p-3 bg-surface-light rounded-lg space-y-2">
                   <div className="text-xs font-medium">Strengths</div>
@@ -604,14 +604,14 @@ export default function CompetitiveMonitorPage() {
           {/* AI Analysis */}
           <PrismPanel padding="p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Sparkles className="w-4 h-4 text-gold" /> AI Competitive Analysis</h3>
-              <button onClick={generateAiAnalysis} disabled={generatingAnalysis} className="flex items-center gap-2 px-3 py-1.5 bg-gold/10 text-gold rounded-lg text-xs font-medium hover:bg-gold/20 transition disabled:opacity-50">
+              <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Sparkles className="w-4 h-4 text-[#2563EB]" /> AI Competitive Analysis</h3>
+              <button onClick={generateAiAnalysis} disabled={generatingAnalysis} className="flex items-center gap-2 px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-lg text-xs font-medium hover:bg-[rgba(37,99,235,0.12)] transition disabled:opacity-50">
                 {generatingAnalysis ? <Loader className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
                 Generate AI Analysis
               </button>
             </div>
             {showAiAnalysis ? (
-              <div className="p-4 bg-gold/5 border border-gold/10 rounded-lg text-sm text-muted leading-relaxed space-y-3">
+              <div className="p-4 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg text-sm text-muted leading-relaxed space-y-3">
                 <p><strong className="text-[#0A0A0B]">Market Position:</strong> Trinity occupies a strong mid-market position in the agency SaaS space. Your pricing is competitive against 6 of 8 tracked competitors, and your feature count (42) exceeds the median (32). However, MarketMind AI&apos;s introduction of a free tier and AgencyFlow&apos;s upmarket push are creating a squeeze that requires strategic response.</p>
                 <p><strong className="text-[#0A0A0B]">Key Threats:</strong> The convergence of AgencyFlow and ClientPulse toward enterprise signals a market bifurcation. SocialSpark&apos;s rapid growth (5,000 customers) and AI content calendar launch pose the most immediate feature-parity threat. MarketMind&apos;s free tier could erode your starter plan acquisition.</p>
                 <p><strong className="text-[#0A0A0B]">Opportunities:</strong> AgencyFlow&apos;s 34% price increase creates a window for targeted switching campaigns. ContentEngine&apos;s limited feature set (22) makes their customer base vulnerable. The enterprise space is underserved by purpose-built agency tools -- an enterprise tier with SSO and advanced reporting could capture this growing segment.</p>
@@ -628,8 +628,8 @@ export default function CompetitiveMonitorPage() {
       {tab === "alerts" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Bell className="w-4 h-4 text-gold" /> Alert Rules</h3>
-            <button onClick={() => setShowAddAlert(!showAddAlert)} className="flex items-center gap-2 px-3 py-1.5 bg-gold/10 text-gold rounded-lg text-xs font-medium hover:bg-gold/20 transition">
+            <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Bell className="w-4 h-4 text-[#2563EB]" /> Alert Rules</h3>
+            <button onClick={() => setShowAddAlert(!showAddAlert)} className="flex items-center gap-2 px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-lg text-xs font-medium hover:bg-[rgba(37,99,235,0.12)] transition">
               <Plus className="w-3.5 h-3.5" /> Add Rule
             </button>
           </div>
@@ -646,25 +646,25 @@ export default function CompetitiveMonitorPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs text-muted mb-1">Alert Name *</label>
-                  <input value={newAlertName} onChange={e => setNewAlertName(e.target.value)} placeholder="e.g. Price drop detected" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-gold/50 focus:outline-none" />
+                  <input value={newAlertName} onChange={e => setNewAlertName(e.target.value)} placeholder="e.g. Price drop detected" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(37,99,235,0.5)] focus:outline-none" />
                 </div>
                 <div>
                   <label className="block text-xs text-muted mb-1">Trigger (Change Type)</label>
-                  <select value={newAlertTrigger} onChange={e => setNewAlertTrigger(e.target.value as ChangeType | "any")} className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-gold/50 focus:outline-none">
+                  <select value={newAlertTrigger} onChange={e => setNewAlertTrigger(e.target.value as ChangeType | "any")} className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(37,99,235,0.5)] focus:outline-none">
                     <option value="any">Any change type</option>
                     {Object.entries(CHANGE_TYPE_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs text-muted mb-1">Competitor</label>
-                  <select value={newAlertCompetitor} onChange={e => setNewAlertCompetitor(e.target.value)} className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-gold/50 focus:outline-none">
+                  <select value={newAlertCompetitor} onChange={e => setNewAlertCompetitor(e.target.value)} className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(37,99,235,0.5)] focus:outline-none">
                     <option value="all">All competitors</option>
                     {competitors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs text-muted mb-1">Urgency</label>
-                  <select value={newAlertUrgency} onChange={e => setNewAlertUrgency(e.target.value as "critical" | "normal" | "low")} className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-gold/50 focus:outline-none">
+                  <select value={newAlertUrgency} onChange={e => setNewAlertUrgency(e.target.value as "critical" | "normal" | "low")} className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(37,99,235,0.5)] focus:outline-none">
                     <option value="critical">Critical</option>
                     <option value="normal">Normal</option>
                     <option value="low">Low</option>
@@ -676,7 +676,7 @@ export default function CompetitiveMonitorPage() {
                 <div className="flex gap-2">
                   {CHANNEL_OPTIONS.map(ch => (
                     <button key={ch} onClick={() => toggleAlertChannel(ch)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${newAlertChannels.includes(ch) ? "bg-gold/20 text-gold border border-gold/30" : "bg-surface-light text-muted border border-border hover:text-[#0A0A0B]"}`}>
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${newAlertChannels.includes(ch) ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "bg-surface-light text-muted border border-border hover:text-[#0A0A0B]"}`}>
                       {ch}
                     </button>
                   ))}
@@ -693,7 +693,7 @@ export default function CompetitiveMonitorPage() {
           <div className="space-y-2">
             {alertRules.map((rule, ri) => {
               const triggerMeta = rule.triggerType === "any" ? null : CHANGE_TYPE_META[rule.triggerType];
-              const urgencyColor = rule.urgency === "critical" ? "text-red-400 bg-red-500/10" : rule.urgency === "normal" ? "text-amber-400 bg-amber-500/10" : "text-emerald-400 bg-emerald-500/10";
+              const urgencyColor = rule.urgency === "critical" ? "text-red-400 bg-red-500/10" : rule.urgency === "normal" ? "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" : "text-emerald-400 bg-emerald-500/10";
               return (
                 <motion.div
                   key={rule.id}
@@ -701,10 +701,10 @@ export default function CompetitiveMonitorPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: ri * 0.05 }}
                   style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-                  className={`rounded-xl p-4 flex items-center gap-4 hover:border-indigo-500/20 transition ${!rule.enabled ? "opacity-50" : ""}`}
+                  className={`rounded-xl p-4 flex items-center gap-4 hover:border-[rgba(37,99,235,0.14)] transition ${!rule.enabled ? "opacity-50" : ""}`}
                 >
                   <button onClick={() => setAlertRules(prev => prev.map(r => r.id === rule.id ? { ...r, enabled: !r.enabled } : r))}
-                    className={`w-10 h-5 rounded-full transition relative ${rule.enabled ? "bg-gold" : "bg-surface-light"}`}>
+                    className={`w-10 h-5 rounded-full transition relative ${rule.enabled ? "bg-[#2563EB]" : "bg-surface-light"}`}>
                     <div className={`absolute w-4 h-4 rounded-full bg-white top-0.5 transition-all ${rule.enabled ? "left-5.5" : "left-0.5"}`}
                       style={{ left: rule.enabled ? "22px" : "2px" }} />
                   </button>
@@ -723,7 +723,7 @@ export default function CompetitiveMonitorPage() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={() => testAlert(rule.id)} className="px-3 py-1.5 bg-surface-light border border-border text-muted rounded-lg text-xs hover:text-gold transition">Test</button>
+                    <button onClick={() => testAlert(rule.id)} className="px-3 py-1.5 bg-surface-light border border-border text-muted rounded-lg text-xs hover:text-[#2563EB] transition">Test</button>
                     <button onClick={() => setAlertRules(prev => prev.filter(r => r.id !== rule.id))} className="px-2 py-1.5 bg-surface-light border border-border text-muted rounded-lg text-xs hover:text-red-400 transition">
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -740,7 +740,7 @@ export default function CompetitiveMonitorPage() {
         <div className="space-y-6">
           {/* AI Market Summary */}
           <PrismPanel padding="p-5">
-            <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-gold" /> AI Market Summary</h3>
+            <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-[#2563EB]" /> AI Market Summary</h3>
             <div className="text-sm text-muted leading-relaxed space-y-2">
               <p>The agency SaaS market continues to consolidate around AI-first platforms. Over the past week, <strong className="text-[#0A0A0B]">3 of 8 tracked competitors</strong> made AI-related announcements. Pricing is trending upward (AgencyFlow +34%), while MarketMind bucks the trend with a free tier launch. The enterprise segment is heating up with both AgencyFlow and ClientPulse making upmarket moves.</p>
               <p>Your positioning remains strong on <span className="text-emerald-400">pricing</span> and <span className="text-emerald-400">review ratings</span>, but you are falling behind on <span className="text-red-400">social media presence</span> and <span className="text-red-400">content velocity</span>. The biggest opportunity window is the 2-4 week period before competitors ship their announced features.</p>
@@ -749,7 +749,7 @@ export default function CompetitiveMonitorPage() {
 
           {/* Activity Heatmap */}
           <PrismPanel padding="p-5">
-            <h3 className="section-header text-sm flex items-center gap-2 mb-4"><LayoutGrid className="w-4 h-4 text-gold" /> Competitor Activity Heatmap (Last 4 Weeks)</h3>
+            <h3 className="section-header text-sm flex items-center gap-2 mb-4"><LayoutGrid className="w-4 h-4 text-[#2563EB]" /> Competitor Activity Heatmap (Last 4 Weeks)</h3>
             <div className="overflow-x-auto">
               <div className="min-w-[500px]">
                 <div className="flex items-center gap-2 mb-2 pl-28">
@@ -803,7 +803,7 @@ export default function CompetitiveMonitorPage() {
                   <div className="flex items-center gap-2 mb-2">
                     <AlertTriangle className="w-4 h-4 text-red-400" />
                     <span className="text-xs font-medium text-red-400">{threat.competitor}</span>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${threat.severity === "critical" ? "bg-red-500/10 text-red-400" : "bg-amber-500/10 text-amber-400"}`}>{threat.severity}</span>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${threat.severity === "critical" ? "bg-red-500/10 text-red-400" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"}`}>{threat.severity}</span>
                   </div>
                   <div className="text-sm font-medium mb-1.5">{threat.title}</div>
                   <p className="text-xs text-muted leading-relaxed">{threat.desc}</p>
@@ -814,7 +814,7 @@ export default function CompetitiveMonitorPage() {
 
           {/* Opportunities */}
           <div>
-            <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Lightbulb className="w-4 h-4 text-gold" /> Opportunities</h3>
+            <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Lightbulb className="w-4 h-4 text-[#2563EB]" /> Opportunities</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
                 { title: "AgencyFlow Price Increase", desc: "Their 34% price hike on the Pro plan creates a migration window. Launch a targeted \"Switch & Save\" campaign offering 6 months at your current rate with white-glove migration support.", impact: "high" },
@@ -830,8 +830,8 @@ export default function CompetitiveMonitorPage() {
                   className="rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.12)" }}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <Target className="w-4 h-4 text-gold" />
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${opp.impact === "high" ? "bg-gold/10 text-gold" : "bg-amber-500/10 text-amber-400"}`}>{opp.impact} impact</span>
+                    <Target className="w-4 h-4 text-[#2563EB]" />
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${opp.impact === "high" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"}`}>{opp.impact} impact</span>
                   </div>
                   <div className="text-sm font-medium mb-1.5">{opp.title}</div>
                   <p className="text-xs text-muted leading-relaxed">{opp.desc}</p>
@@ -842,7 +842,7 @@ export default function CompetitiveMonitorPage() {
 
           {/* Market Share Estimation */}
           <PrismPanel padding="p-5">
-            <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-gold" /> Estimated Market Share (Agency SaaS Segment)</h3>
+            <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-[#2563EB]" /> Estimated Market Share (Agency SaaS Segment)</h3>
             <div className="space-y-3">
               {[
                 { name: "AgencyFlow", share: 22, color: "#2563EB" },

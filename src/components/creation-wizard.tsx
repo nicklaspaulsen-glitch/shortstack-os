@@ -153,9 +153,9 @@ export default function CreationWizard({
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative px-6 py-4 border-b border-border bg-gradient-to-br from-gold/[0.08] via-transparent to-transparent">
+        <div className="relative px-6 py-4 border-b border-border bg-gradient-to-br from-[rgba(37,99,235,0.08)] via-transparent to-transparent">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gold/15 flex items-center justify-center text-gold">
+            <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[#2563EB]">
               {icon || <Sparkles size={18} />}
             </div>
             <div className="flex-1 min-w-0">
@@ -194,7 +194,7 @@ export default function CreationWizard({
                 disabled={i > stepIdx}
                 className={`group flex items-center gap-1.5 px-2.5 py-1.5 rounded-t-lg text-[10px] font-medium shrink-0 transition-all ${
                   isCurrent
-                    ? "bg-gold/15 text-gold border-b-2 border-gold"
+                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-b-2 border-[#2563EB]"
                     : isDone
                     ? "text-muted hover:text-foreground cursor-pointer"
                     : "text-muted/50 cursor-not-allowed"
@@ -204,7 +204,7 @@ export default function CreationWizard({
                   <Check size={10} className="text-emerald-400" />
                 ) : (
                   <span className={`w-4 h-4 rounded-full border flex items-center justify-center text-[8px] font-bold ${
-                    isCurrent ? "border-gold bg-gold text-black" : "border-muted/30"
+                    isCurrent ? "border-[#2563EB] bg-[#2563EB] text-white" : "border-muted/30"
                   }`}>{i + 1}</span>
                 )}
                 <span className="whitespace-nowrap">{s.title}</span>
@@ -228,7 +228,7 @@ export default function CreationWizard({
             >
               <div className="flex items-start gap-3 mb-5">
                 {currentStep.icon && (
-                  <div className="w-9 h-9 rounded-xl bg-gold/10 flex items-center justify-center text-gold shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[#2563EB] shrink-0">
                     {currentStep.icon}
                   </div>
                 )}
@@ -256,11 +256,11 @@ export default function CreationWizard({
                 {currentStep.aiHelper && (
                   <div className="relative group">
                     {/* Glow halo */}
-                    <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-gold via-amber-400 to-gold opacity-60 blur group-hover:opacity-90 transition-opacity animate-pulse-slow" />
+                    <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#2563EB] opacity-60 blur group-hover:opacity-90 transition-opacity animate-pulse-slow" />
                     <button
                       onClick={runAiHelper}
                       disabled={aiLoading}
-                      className="relative w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-60 disabled:hover:scale-100"
+                      className="relative w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-bold shadow-lg shadow-[rgba(37,99,235,0.3)] hover:shadow-[rgba(37,99,235,0.5)] hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-60 disabled:hover:scale-100"
                     >
                       {aiLoading ? (
                         <>
@@ -287,7 +287,7 @@ export default function CreationWizard({
           {currentStep.preview && (
             <div className="w-72 md:w-80 shrink-0 border-l border-border bg-surface-light/40 p-5 overflow-y-auto hidden md:block">
               <div className="flex items-center gap-1.5 text-[10px] text-muted uppercase tracking-wider mb-3 font-semibold">
-                <Sparkles size={9} className="text-gold" /> Live Preview
+                <Sparkles size={9} className="text-[#2563EB]" /> Live Preview
               </div>
               <div className="space-y-2">
                 {currentStep.preview(data)}
@@ -324,7 +324,7 @@ export default function CreationWizard({
             <button
               onClick={() => setStepIdx(stepIdx + 1)}
               disabled={!canAdvance()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(37,99,235,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Next <ChevronRight size={12} />
             </button>
@@ -332,7 +332,7 @@ export default function CreationWizard({
             <button
               onClick={handleComplete}
               disabled={!canAdvance() || submitting}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(37,99,235,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {submitting ? <RefreshCw size={12} className="animate-spin" /> : <Sparkles size={12} />}
               {submitting ? "Creating..." : submitLabel}
@@ -363,7 +363,7 @@ function FieldRenderer({
           value={(value as string) || ""}
           onChange={e => onChange(e.target.value)}
           placeholder={field.placeholder}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
           autoFocus
         />
       );
@@ -375,7 +375,7 @@ function FieldRenderer({
           onChange={e => onChange(e.target.value)}
           placeholder={field.placeholder}
           rows={4}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all resize-none"
           autoFocus
         />
       );
@@ -389,7 +389,7 @@ function FieldRenderer({
           min={field.min}
           max={field.max}
           step={field.step}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
           autoFocus
         />
       );
@@ -404,11 +404,11 @@ function FieldRenderer({
             min={field.min ?? 0}
             max={field.max ?? 100}
             step={field.step ?? 1}
-            className="w-full accent-gold"
+            className="w-full accent-[#2563EB]"
           />
           <div className="flex justify-between text-[10px] text-muted">
             <span>{field.min ?? 0}</span>
-            <span className="text-gold font-bold">{String(value ?? field.min ?? 0)}</span>
+            <span className="text-[#2563EB] font-bold">{String(value ?? field.min ?? 0)}</span>
             <span>{field.max ?? 100}</span>
           </div>
         </div>
@@ -419,11 +419,11 @@ function FieldRenderer({
         <button
           onClick={() => onChange(!value)}
           className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
-            value ? "bg-gold/15 border-gold/30 text-gold" : "bg-surface-light border-border text-muted"
+            value ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]" : "bg-surface-light border-border text-muted"
           }`}
         >
           <span className="text-sm">{value ? "Yes, enabled" : "No, disabled"}</span>
-          <div className={`w-10 h-5 rounded-full relative transition-all ${value ? "bg-gold" : "bg-surface-light border border-border"}`}>
+          <div className={`w-10 h-5 rounded-full relative transition-all ${value ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
             <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${value ? "translate-x-5" : "translate-x-0.5"}`} />
           </div>
         </button>
@@ -443,7 +443,7 @@ function FieldRenderer({
             value={(value as string) || "#C9A84C"}
             onChange={e => onChange(e.target.value)}
             placeholder="#C9A84C"
-            className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border text-sm font-mono focus:outline-none focus:border-gold/50"
+            className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border text-sm font-mono focus:outline-none focus:border-[#2563EB]"
           />
         </div>
       );
@@ -453,7 +453,7 @@ function FieldRenderer({
         <select
           value={(value as string) || ""}
           onChange={e => onChange(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB]"
         >
           <option value="" disabled>{field.placeholder || "Choose..."}</option>
           {(field.options || []).map(opt => (
@@ -475,14 +475,14 @@ function FieldRenderer({
                 onClick={() => onChange(opt.value)}
                 className={`group relative text-left p-3.5 rounded-xl border bg-surface-light/50 backdrop-blur-sm transition-all duration-200 hover:translate-y-[-2px] ${
                   selected
-                    ? "border-gold/70 bg-gold/[0.08] shadow-[0_4px_20px_-4px_rgba(218,165,32,0.35)] ring-1 ring-gold/40"
-                    : "border-border hover:border-gold/40 hover:shadow-md"
+                    ? "border-[rgba(37,99,235,0.7)] bg-[rgba(37,99,235,0.08)] shadow-[0_4px_20px_-4px_rgba(37,99,235,0.35)] ring-1 ring-[rgba(37,99,235,0.4)]"
+                    : "border-border hover:border-[rgba(37,99,235,0.4)] hover:shadow-md"
                 }`}
               >
                 {/* subtle gold-gradient border glow on hover, only when unselected */}
                 {!selected && (
                   <div
-                    className="pointer-events-none absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-gold/10 via-transparent to-transparent"
+                    className="pointer-events-none absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-[rgba(37,99,235,0.08)] via-transparent to-transparent"
                     aria-hidden
                   />
                 )}
@@ -495,8 +495,8 @@ function FieldRenderer({
                     <div
                       className={`w-10 h-10 shrink-0 rounded-lg flex items-center justify-center transition-colors ${
                         selected
-                          ? "bg-gold/20 text-gold"
-                          : "bg-gold/[0.08] text-gold/85 group-hover:bg-gold/15 group-hover:text-gold"
+                          ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]"
+                          : "bg-[rgba(37,99,235,0.08)] text-[rgba(37,99,235,0.7)] group-hover:bg-[rgba(37,99,235,0.08)] group-hover:text-[#2563EB]"
                       }`}
                     >
                       {opt.icon ? opt.icon : <EmojiIcon emoji={opt.emoji} size={18} strokeWidth={1.75} />}
@@ -514,7 +514,7 @@ function FieldRenderer({
                   </div>
                 </div>
                 {selected && (
-                  <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-gold flex items-center justify-center shadow-sm shadow-gold/30">
+                  <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#2563EB] flex items-center justify-center shadow-sm shadow-[rgba(37,99,235,0.3)]">
                     <Check size={9} className="text-black" strokeWidth={3} />
                   </div>
                 )}
@@ -541,7 +541,7 @@ function FieldRenderer({
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] border transition-all ${
                   selected
-                    ? "bg-gold/15 border-gold/30 text-gold"
+                    ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
                     : "bg-surface-light border-border text-muted hover:text-foreground"
                 }`}
               >
@@ -573,7 +573,7 @@ function FieldRenderer({
           />
           <label
             htmlFor="wizard-upload"
-            className="block border-2 border-dashed border-border/60 rounded-xl p-6 text-center cursor-pointer hover:border-gold/40 hover:bg-surface-light/50 transition-all"
+            className="block border-2 border-dashed border-border/60 rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(37,99,235,0.4)] hover:bg-surface-light/50 transition-all"
           >
             {value ? (
               // eslint-disable-next-line @next/next/no-img-element

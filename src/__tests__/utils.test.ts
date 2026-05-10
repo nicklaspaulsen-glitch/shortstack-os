@@ -82,7 +82,7 @@ describe("getStatusColor", () => {
   it("returns correct color for known statuses", () => {
     expect(getStatusColor("new")).toBe("text-info");
     expect(getStatusColor("booked")).toBe("text-success");
-    expect(getStatusColor("converted")).toBe("text-gold");
+    expect(getStatusColor("converted")).toBe("text-[#2563EB]");
     expect(getStatusColor("bounced")).toBe("text-danger");
     expect(getStatusColor("pending")).toBe("text-warning");
   });

@@ -128,7 +128,7 @@ export default function AgentControlsPage() {
       {/* Diff panel */}
       {showDiff && changed.length > 0 && (
         <div className="glass rounded-xl p-4 space-y-3">
-          <h3 className="text-sm font-semibold text-white mb-2">Pending changes</h3>
+          <h3 className="text-sm font-semibold text-[#374151] mb-2">Pending changes</h3>
           {changed.map((row, idx) => (
             <motion.div key={row.key} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="text-xs font-mono space-y-1">
               <div className="text-muted">{row.key}</div>
@@ -144,8 +144,8 @@ export default function AgentControlsPage() {
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="glass rounded-xl p-5 animate-pulse">
-              <div className="h-4 bg-white/10 rounded w-1/4 mb-2" />
-              <div className="h-3 bg-white/5 rounded w-1/2" />
+              <div className="h-4 bg-[rgba(0,0,0,0.06)] rounded w-1/4 mb-2" />
+              <div className="h-3 bg-[rgba(0,0,0,0.04)] rounded w-1/2" />
             </div>
           ))}
         </div>
@@ -162,13 +162,13 @@ export default function AgentControlsPage() {
             const isDirty = JSON.stringify(parseValue(row.value)) !== JSON.stringify(cur);
 
             return (
-              <motion.div key={row.key} variants={itemVariants} className={`glass rounded-xl p-5 transition-all ${isDirty ? "ring-1 ring-purple-500/40" : ""}`}>
+              <motion.div key={row.key} variants={itemVariants} className={`glass rounded-xl p-5 transition-all ${isDirty ? "ring-1 ring-[rgba(37,99,235,0.35)]" : ""}`}>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-white font-mono">{row.key}</span>
+                      <span className="text-sm font-semibold text-[#111827] font-mono">{row.key}</span>
                       {isDirty && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]">
                           modified
                         </span>
                       )}
@@ -181,7 +181,7 @@ export default function AgentControlsPage() {
                     {type === "boolean" && (
                       <button
                         onClick={() => updateEdit(row.key, !(cur as boolean))}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${cur ? "bg-purple-600" : "bg-white/20"}`}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${cur ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.10)]"}`}
                         role="switch"
                         aria-checked={!!cur}
                       >
@@ -193,7 +193,7 @@ export default function AgentControlsPage() {
                         type="number"
                         value={cur as number}
                         onChange={e => updateEdit(row.key, parseFloat(e.target.value) || 0)}
-                        className="w-28 px-3 py-1.5 rounded-lg bg-white/5 border border-white/15 text-white text-sm text-right focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+                        className="w-28 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm text-right focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.40)]"
                       />
                     )}
                     {type === "json" && (
@@ -203,7 +203,7 @@ export default function AgentControlsPage() {
                           try { updateEdit(row.key, JSON.parse(e.target.value)); } catch { /* keep typing */ }
                         }}
                         rows={3}
-                        className="w-64 px-3 py-2 rounded-lg bg-white/5 border border-white/15 text-white text-xs font-mono focus:outline-none focus:ring-1 focus:ring-purple-500/50 resize-none"
+                        className="w-64 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.40)] resize-none"
                       />
                     )}
                     {type === "string" && (
@@ -211,7 +211,7 @@ export default function AgentControlsPage() {
                         type="text"
                         value={cur as string}
                         onChange={e => updateEdit(row.key, e.target.value)}
-                        className="w-48 px-3 py-1.5 rounded-lg bg-white/5 border border-white/15 text-white text-sm focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+                        className="w-48 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.40)]"
                       />
                     )}
                   </div>

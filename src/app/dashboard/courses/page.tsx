@@ -264,7 +264,7 @@ function CourseCard({
       whileHover={{ y: -4, scale: 1.01 }}
       className="group glass rounded-xl overflow-hidden">
       {/* Thumbnail */}
-      <div className="relative h-36 bg-gradient-to-br from-purple-900/40 to-indigo-900/40 flex items-center justify-center">
+      <div className="relative h-36 bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center">
         {course.thumbnail_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -273,14 +273,14 @@ function CourseCard({
             className="w-full h-full object-cover"
           />
         ) : (
-          <BookOpen size={36} className="text-purple-400/40" />
+          <BookOpen size={36} className="text-purple-300" />
         )}
         {/* Status badge */}
         <span
           className={`absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full font-medium ${
             course.status === "published"
-              ? "bg-green-500/20 text-green-400 border border-green-500/30"
-              : "bg-black/10 text-black/50 border border-black/15"
+              ? "bg-emerald-500/15 text-emerald-700 border border-emerald-500/25"
+              : "bg-black/[0.06] text-[#6B7280] border border-black/[0.08]"
           }`}
         >
           {course.status}
@@ -319,7 +319,7 @@ function CourseCard({
         <div className="flex gap-1 mt-3 pt-3 border-t border-black/5">
           <Link
             href={`/dashboard/courses/${course.id}`}
-            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg text-xs transition-colors"
+            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-blue-600/10 hover:bg-blue-600/20 text-blue-700 rounded-lg text-xs transition-colors"
           >
             <Pencil size={12} />
             Edit

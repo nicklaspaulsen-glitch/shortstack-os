@@ -170,7 +170,7 @@ export default function RoiCalculatorPage() {
       label: "Payback Period",
       value: results.payback_months > 0 ? fmtN(results.payback_months) + " mo" : "—",
       icon: <Clock size={18} />,
-      color: "text-purple-400",
+      color: "text-[#2563EB]",
     },
   ];
 
@@ -192,7 +192,7 @@ export default function RoiCalculatorPage() {
           transition={{ duration: 0.4 }}
           className="lg:col-span-1 glass rounded-xl p-5 space-y-4"
         >
-          <h3 className="text-sm font-semibold text-white/80">Inputs</h3>
+          <h3 className="text-sm font-semibold text-[#374151]">Inputs</h3>
 
           {(
             [
@@ -203,33 +203,33 @@ export default function RoiCalculatorPage() {
             ]
           ).map(({ key, label, suffix, prefix }) => (
             <div key={key}>
-              <label className="block text-xs text-white/50 mb-1">{label}</label>
+              <label className="block text-xs text-[#9CA3AF] mb-1">{label}</label>
               <div className="flex items-center gap-1">
-                {prefix ? <span className="text-white/40 text-sm">{prefix}</span> : null}
+                {prefix ? <span className="text-[#9CA3AF] text-sm">{prefix}</span> : null}
                 <input
                   type="number"
                   value={inputs[key]}
                   min={0}
                   onChange={e => setInput(key, e.target.value)}
-                  className="flex-1 glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50 [appearance:textfield]"
+                  className="flex-1 glass rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB] [appearance:textfield]"
                 />
-                {suffix ? <span className="text-white/40 text-sm">{suffix}</span> : null}
+                {suffix ? <span className="text-[#9CA3AF] text-sm">{suffix}</span> : null}
               </div>
             </div>
           ))}
 
-          <div className="pt-2 border-t border-white/10 space-y-2">
-            <label className="block text-xs text-white/50">Save Scenario</label>
+          <div className="pt-2 border-t border-[rgba(0,0,0,0.08)] space-y-2">
+            <label className="block text-xs text-[#9CA3AF]">Save Scenario</label>
             <input
               value={scenarioName}
               onChange={e => setScenarioName(e.target.value)}
               placeholder="Scenario name"
-              className="w-full glass rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-400/50"
+              className="w-full glass rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
             />
             <button
               onClick={saveScenario}
               disabled={saving}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-sm font-medium transition-colors disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.12)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors disabled:opacity-50"
             >
               {saving ? <Loader size={13} className="animate-spin" /> : <Save size={13} />}
               Save
@@ -252,7 +252,7 @@ export default function RoiCalculatorPage() {
                 <div className="p-4">
                   <div className={`mb-2 ${c.color}`}>{c.icon}</div>
                   <p className={`text-xl font-bold ${c.color}`}>{c.value}</p>
-                  <p className="text-xs text-white/40 mt-0.5">{c.label}</p>
+                  <p className="text-xs text-[#9CA3AF] mt-0.5">{c.label}</p>
                 </div>
               </motion.div>
             ))}
@@ -265,13 +265,13 @@ export default function RoiCalculatorPage() {
             transition={{ delay: 0.28, duration: 0.4 }}
             className="glass rounded-xl p-5"
           >
-            <h3 className="text-sm font-semibold text-white/80 mb-3">
+            <h3 className="text-sm font-semibold text-[#374151] mb-3">
               Sensitivity: Close Rate ±20%
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="text-white/40 border-b border-white/10">
+                  <tr className="text-[#9CA3AF] border-b border-[rgba(0,0,0,0.08)]">
                     <th className="text-left pb-2">Scenario</th>
                     <th className="text-right pb-2">Close Rate</th>
                     <th className="text-right pb-2">Revenue / mo</th>
@@ -289,8 +289,8 @@ export default function RoiCalculatorPage() {
                         initial={{ opacity: 0, x: -8 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.04 }}
-                        className={`border-b border-white/5 last:border-0 ${
-                          isBase ? "text-indigo-300 font-semibold" : "text-white/70"
+                        className={`border-b border-[rgba(0,0,0,0.06)] last:border-0 ${
+                          isBase ? "text-[#2563EB] font-semibold" : "text-[#6B7280]"
                         }`}
                       >
                         <td className="py-1.5">
@@ -317,7 +317,7 @@ export default function RoiCalculatorPage() {
 
       {/* Saved Scenarios */}
       <div>
-        <h3 className="text-sm font-semibold text-white/60 mb-3">Saved Scenarios</h3>
+        <h3 className="text-sm font-semibold text-[#6B7280] mb-3">Saved Scenarios</h3>
         {loading ? (
           <div className="space-y-2">
             {[1, 2].map(i => (
@@ -325,7 +325,7 @@ export default function RoiCalculatorPage() {
             ))}
           </div>
         ) : scenarios.length === 0 ? (
-          <p className="text-sm text-white/30 text-center py-6">No saved scenarios yet.</p>
+          <p className="text-sm text-[#9CA3AF] text-center py-6">No saved scenarios yet.</p>
         ) : (
           <div className="space-y-2">
             {scenarios.map((s, i) => (
@@ -338,8 +338,8 @@ export default function RoiCalculatorPage() {
                 className="flex items-center gap-4 glass rounded-xl px-4 py-3"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-white text-sm truncate">{s.name}</p>
-                  <p className="text-xs text-white/40">
+                  <p className="font-medium text-[#111827] text-sm truncate">{s.name}</p>
+                  <p className="text-xs text-[#9CA3AF]">
                     {s.monthly_leads} leads · {s.close_rate}% close · {fmtUSD(s.avg_deal_size)} deal · {fmtUSD(s.monthly_spend)}/mo spend
                   </p>
                 </div>
@@ -353,13 +353,13 @@ export default function RoiCalculatorPage() {
                   </span>
                   <button
                     onClick={() => loadScenario(s)}
-                    className="text-xs text-white/40 hover:text-white px-2 py-1 rounded border border-white/10 hover:border-white/20 transition-colors"
+                    className="text-xs text-[#9CA3AF] hover:text-[#111827] px-2 py-1 rounded border border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.10)] transition-colors"
                   >
                     Load
                   </button>
                   <button
                     onClick={() => deleteScenario(s.id)}
-                    className="text-white/20 hover:text-red-400 transition-colors"
+                    className="text-[#9CA3AF] hover:text-red-500 transition-colors"
                   >
                     <Trash2 size={14} />
                   </button>

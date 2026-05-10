@@ -28,7 +28,7 @@ interface Generation {
 /* ── Category Config ── */
 
 const CATEGORIES: { key: string; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
-  { key: "all",          label: "All",          icon: <Layers size={14} />,    color: "text-gold",        bg: "bg-gold/10" },
+  { key: "all",          label: "All",          icon: <Layers size={14} />,    color: "text-[#2563EB]",        bg: "bg-[rgba(37,99,235,0.08)]" },
   { key: "video",        label: "Videos",       icon: <Film size={14} />,      color: "text-blue-400",    bg: "bg-blue-500/10" },
   { key: "ad_copy",      label: "Ads & Copy",   icon: <Megaphone size={14} />, color: "text-purple-400",  bg: "bg-purple-500/10" },
   { key: "thumbnail",    label: "Images",       icon: <ImageIcon size={14} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
@@ -140,7 +140,7 @@ export default function GenerationsPage() {
       {/* Stats Strip */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
         {[
-          { label: "Total Items",  value: total,            icon: <Layers size={14} />,      color: "text-gold" },
+          { label: "Total Items",  value: total,            icon: <Layers size={14} />,      color: "text-[#2563EB]" },
           { label: "This Week",    value: thisWeekCount,    icon: <TrendingUp size={14} />,  color: "text-emerald-400" },
           { label: "Categories",   value: uniqueCategories, icon: <Calendar size={14} />,    color: "text-blue-400" },
           { label: "Latest",       value: latest,           icon: <Clock size={14} />,       color: "text-purple-400" },
@@ -178,11 +178,11 @@ export default function GenerationsPage() {
             onClick={() => { setCategory(c.key); setPage(1); }}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all ${
               category === c.key
-                ? "bg-gold/15 text-gold border border-gold/20 font-medium"
-                : "bg-white/5 text-muted hover:text-white hover:bg-white/10 border border-transparent"
+                ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] font-medium"
+                : "bg-black/4 text-muted hover:text-foreground hover:bg-black/8 border border-transparent"
             }`}
           >
-            <span className={category === c.key ? "text-gold" : c.color}>{c.icon}</span>
+            <span className={category === c.key ? "text-[#2563EB]" : c.color}>{c.icon}</span>
             {c.label}
           </button>
         ))}
@@ -192,7 +192,7 @@ export default function GenerationsPage() {
       <div className="space-y-2">
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader size={20} className="animate-spin text-gold" />
+            <Loader size={20} className="animate-spin text-[#2563EB]" />
           </div>
         ) : filtered.length === 0 ? (
           /* Empty State */
@@ -213,7 +213,7 @@ export default function GenerationsPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.04 }}
                 whileHover={{ y: -4, scale: 1.01 }}
-                className="glass rounded-xl !p-0 overflow-hidden hover:border-gold/20 transition-all group"
+                className="glass rounded-xl !p-0 overflow-hidden hover:border-[rgba(37,99,235,0.2)] transition-all group"
               >
                 <div className="flex items-start gap-3 px-4 py-3">
                   {/* Category Icon */}
@@ -244,7 +244,7 @@ export default function GenerationsPage() {
                   <div className="shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
                     <button
                       onClick={() => copyContent(gen)}
-                      className="p-1.5 rounded-lg hover:bg-white/10 text-muted hover:text-white transition-all"
+                      className="p-1.5 rounded-lg hover:bg-black/6 text-muted hover:text-foreground transition-all"
                       title="Copy content"
                     >
                       <Copy size={13} />
@@ -274,14 +274,14 @@ export default function GenerationsPage() {
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-muted hover:text-white disabled:opacity-30 transition-all"
+              className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-muted hover:text-foreground disabled:opacity-30 transition-all"
             >
               Previous
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={!hasMore}
-              className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-muted hover:text-white disabled:opacity-30 transition-all"
+              className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-muted hover:text-foreground disabled:opacity-30 transition-all"
             >
               Next
             </button>

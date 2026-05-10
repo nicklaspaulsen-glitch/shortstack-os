@@ -33,8 +33,8 @@ export function FocusModeToggle({ focus, onToggle }: { focus: boolean; onToggle:
       title={focus ? "Exit focus mode" : "Enter focus mode"}
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[11px] font-medium transition-all ${
         focus
-          ? "bg-gold/10 border-gold/30 text-gold shadow-[0_0_18px_-4px_rgba(201,168,76,0.55)]"
-          : "bg-surface border-border text-muted hover:border-gold/20 hover:text-foreground"
+          ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.3)] text-[#2563EB] shadow-[0_0_18px_-4px_rgba(37,99,235,0.4)]"
+          : "bg-surface border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
       }`}
     >
       {focus ? <Focus size={12} /> : <Eye size={12} />}
@@ -65,7 +65,7 @@ export function CommandPaletteHint() {
     <button
       onClick={openPalette}
       title="Quick search"
-      className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-surface text-[11px] text-muted hover:border-gold/20 hover:text-foreground transition-all"
+      className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-surface text-[11px] text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground transition-all"
     >
       <kbd className="text-[9px] font-mono bg-surface-light px-1 py-0.5 rounded border border-border/50">
         {isMac ? "⌘" : "Ctrl"}

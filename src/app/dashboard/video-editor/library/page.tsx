@@ -316,7 +316,7 @@ function TabButton({
       onClick={() => onClick(id)}
       className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition ${
         isActive
-          ? "bg-gold/15 text-gold"
+          ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
           : "text-muted hover:text-foreground hover:bg-surface-light/60"
       }`}
     >
@@ -324,7 +324,7 @@ function TabButton({
       <span>{label}</span>
       <span
         className={`rounded px-1.5 py-0.5 text-[10px] ${
-          isActive ? "bg-gold/20 text-gold" : "bg-surface-light text-muted"
+          isActive ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"
         }`}
       >
         {count}
@@ -350,7 +350,7 @@ function CategoryChips({
         onClick={() => onChange("all")}
         className={`rounded-full px-2.5 py-1 text-[11px] transition ${
           active === "all"
-            ? "bg-gold/20 text-gold border border-gold/30"
+            ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
             : "bg-surface-light/60 text-muted hover:text-foreground border border-transparent"
         }`}
       >
@@ -362,7 +362,7 @@ function CategoryChips({
           onClick={() => onChange(c)}
           className={`rounded-full px-2.5 py-1 text-[11px] transition ${
             active === c
-              ? "bg-gold/20 text-gold border border-gold/30"
+              ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
               : "bg-surface-light/60 text-muted hover:text-foreground border border-transparent"
           }`}
         >
@@ -470,7 +470,7 @@ function FontCard({
   onEdit: () => void;
 }) {
   return (
-    <div className="group rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-gold/40">
+    <div className="group rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-[rgba(37,99,235,0.4)]">
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold">{font.family}</p>
@@ -481,7 +481,7 @@ function FontCard({
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEdit}
-            className="rounded bg-surface-light/80 p-1 text-muted hover:text-gold transition"
+            className="rounded bg-surface-light/80 p-1 text-muted hover:text-[#2563EB] transition"
             title="Edit example"
           >
             <ExternalLink size={12} />
@@ -605,7 +605,7 @@ function TransitionCard({
   }, [transition.category]);
 
   return (
-    <div className="rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-gold/40">
+    <div className="rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-[rgba(37,99,235,0.4)]">
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold">{transition.name}</p>
@@ -616,7 +616,7 @@ function TransitionCard({
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEdit}
-            className="rounded bg-surface-light/80 p-1 text-muted hover:text-gold transition"
+            className="rounded bg-surface-light/80 p-1 text-muted hover:text-[#2563EB] transition"
             title="Edit example"
           >
             <ExternalLink size={12} />
@@ -637,7 +637,7 @@ function TransitionCard({
       >
         <div
           key={k}
-          className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gold/30 to-red-500/30 text-xs font-semibold text-foreground ${
+          className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[rgba(37,99,235,0.3)] to-red-500/30 text-xs font-semibold text-foreground ${
             playing ? animClass : "opacity-70"
           }`}
         >
@@ -734,7 +734,7 @@ function EffectCard({
   }, [effect.category]);
 
   return (
-    <div className="rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-gold/40">
+    <div className="rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-[rgba(37,99,235,0.4)]">
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold">{effect.name}</p>
@@ -743,7 +743,7 @@ function EffectCard({
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEdit}
-            className="rounded bg-surface-light/80 p-1 text-muted hover:text-gold transition"
+            className="rounded bg-surface-light/80 p-1 text-muted hover:text-[#2563EB] transition"
             title="Edit example"
           >
             <ExternalLink size={12} />
@@ -982,7 +982,7 @@ function AudioCard({
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-gold/40">
+    <div className="flex items-center gap-3 rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-[rgba(37,99,235,0.4)]">
       <button
         onClick={toggle}
         disabled={error}
@@ -990,8 +990,8 @@ function AudioCard({
           error
             ? "bg-red-500/20 text-red-400"
             : playing
-              ? "bg-gold text-black"
-              : "bg-gold/20 text-gold hover:bg-gold/30"
+              ? "bg-[#2563EB] text-white"
+              : "bg-[rgba(37,99,235,0.12)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.18)]"
         }`}
         title={error ? "Preview URL broken" : playing ? "Pause" : "Play"}
       >

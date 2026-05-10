@@ -234,7 +234,7 @@ function playMoodTone(moodId: string): void {
   }
 }
 
-// Music moods — each gets a lucide icon + a color tint so the grid feels
+// Music moods ï¿½ each gets a lucide icon + a color tint so the grid feels
 // like a designed product instead of an emoji picker. Tints are tailwind
 // arbitrary-value classes so every tile can have its own hue without a
 // full theme extension.
@@ -662,7 +662,7 @@ const STOCK_CATEGORIES = [
 
 /* --- Export Formats & Quality Presets --- */
 const EXPORT_FORMATS = [
-  { id: "prores", name: "ProRes", desc: "Apple ProRes 422 HQ — mastering" },
+  { id: "prores", name: "ProRes", desc: "Apple ProRes 422 HQ ï¿½ mastering" },
   { id: "h264", name: "H.264", desc: "Universal codec, web-ready" },
   { id: "h265", name: "H.265 / HEVC", desc: "Efficient 4K/8K compression" },
   { id: "webm", name: "WebM", desc: "Open web format, VP9" },
@@ -1241,7 +1241,7 @@ const YOUTUBER_PRESETS = [
   },
 ];
 
-// Default editor settings snapshot — used by the "Custom" reset card
+// Default editor settings snapshot ï¿½ used by the "Custom" reset card
 const DEFAULT_EDITOR_SETTINGS_CONFIG = {
   captions: { enabled: false, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Inter", fontSize: 48, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "bottom" as const, customY: 80, maxWordsPerLine: 4, emphasizeKeywords: false, autoEmoji: false },
   textAnimation: { enabled: false, preset: "fade_in", duration: 0.4, easing: "ease-out" },
@@ -1293,14 +1293,14 @@ export default function VideoEditorPage() {
     : null;
   const nextVideoTierLabel =
     nextVideoTier
-      ? `${nextVideoTier} — ${formatVideoDuration(
+      ? `${nextVideoTier} ï¿½ ${formatVideoDuration(
           limitsForTier(nextVideoTier).max_video_seconds,
         )}`
       : null;
 
   // --- Adobe-Premiere-style multi-track timeline state --------------
   // Seeded from result.storyboard when one becomes available.
-  // Shape is defensive — if nothing exists, we show empty rails.
+  // Shape is defensive ï¿½ if nothing exists, we show empty rails.
   const timelineVideoRef = useRef<HTMLVideoElement | null>(null);
   const [timelineProject, setTimelineProject] = useState<TimelineProject>({
     duration: 30000,
@@ -1392,7 +1392,7 @@ export default function VideoEditorPage() {
               : undefined,
         };
       } else if (drop.kind === "font") {
-        // Fonts aren't clips — apply to the selected caption layer instead.
+        // Fonts aren't clips ï¿½ apply to the selected caption layer instead.
         // Store the font family into CSS variable so caption rendering can
         // pick it up. Silent no-op on the timeline.
         try {
@@ -1419,7 +1419,7 @@ export default function VideoEditorPage() {
 
   useEffect(() => {
     if (!result) return;
-    // Only seed when storyboard first arrives — don't clobber user's manual edits.
+    // Only seed when storyboard first arrives ï¿½ don't clobber user's manual edits.
     const sig = JSON.stringify({ u: result.url, s: result.storyboard?.length, id: result.render_id });
     if (lastSeededResultRef.current === sig) return;
     lastSeededResultRef.current = sig;
@@ -1428,7 +1428,7 @@ export default function VideoEditorPage() {
       const next = buildProjectFromStoryboard(result.storyboard);
       setTimelineProject(next);
     } else if (result.url) {
-      // No storyboard but we have a rendered MP4 — create a single-clip project.
+      // No storyboard but we have a rendered MP4 ï¿½ create a single-clip project.
       const durMs = 30000;
       setTimelineProject({
         duration: durMs,
@@ -1504,7 +1504,7 @@ export default function VideoEditorPage() {
     target_platform: "instagram",
   });
 
-  // -- Handoff consumer — reads ?handoff= on mount, merges AI-generated clip --
+  // -- Handoff consumer ï¿½ reads ?handoff= on mount, merges AI-generated clip --
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -1536,7 +1536,7 @@ export default function VideoEditorPage() {
         }));
         setAdvancedMode(true);
         setTab("storyboard");
-        toast.success("Clip loaded — ready to edit");
+        toast.success("Clip loaded ï¿½ ready to edit");
         const u = new URL(window.location.href);
         u.searchParams.delete("handoff");
         window.history.replaceState(null, "", u.toString());
@@ -1557,11 +1557,11 @@ export default function VideoEditorPage() {
   // Assets ? references / uploads / project details
   const [editorLeftTab, setEditorLeftTab] = useState<"style" | "brand" | "ai" | "assets">("style");
 
-  // Classify-footage wiring — maps reference-file index ? detected footage type + confidence.
+  // Classify-footage wiring ï¿½ maps reference-file index ? detected footage type + confidence.
   const [footageBadges, setFootageBadges] = useState<Record<number, { footage_type: FootageType; confidence: number; recommended_creator_pack_id?: string } | null>>({});
   const [classifyingIdx, setClassifyingIdx] = useState<number | null>(null);
 
-  // Viral-analysis wiring — one-shot analyze of a pasted URL.
+  // Viral-analysis wiring ï¿½ one-shot analyze of a pasted URL.
   const [viralUrl, setViralUrl] = useState("");
   const [viralAnalyzing, setViralAnalyzing] = useState(false);
   const [viralResult, setViralResult] = useState<Record<string, unknown> | null>(null);
@@ -1983,7 +1983,7 @@ export default function VideoEditorPage() {
         setAiMusicUrl(url);
         toast.success(`Music generated${data.provider === "acestep" ? " with ACE-Step" : ""}`);
       } else if (data.job_id) {
-        // Async job — poll until done (max 30 attempts × 2s)
+        // Async job ï¿½ poll until done (max 30 attempts ï¿½ 2s)
         const pollUrl = data.status_url;
         for (let i = 0; i < 30; i++) {
           await new Promise((r) => setTimeout(r, 2000));
@@ -2088,7 +2088,7 @@ export default function VideoEditorPage() {
     }));
     setSelectedYouTuberPreset("");
     setAdsPresetActive(true);
-    toast.success(`Applied "${ADS_PRESET.name}" preset — bold type, hard cuts, kinetic captions`);
+    toast.success(`Applied "${ADS_PRESET.name}" preset ï¿½ bold type, hard cuts, kinetic captions`);
   }
 
   async function runScriptToAd() {
@@ -2125,7 +2125,7 @@ export default function VideoEditorPage() {
       applyAdsPreset();
       setBrollSuggestions(Array.isArray(data.broll) ? data.broll : []);
       if (data.music) setMusicMatch(data.music);
-      toast.success("Ad generated — script, B-roll, and music loaded");
+      toast.success("Ad generated ï¿½ script, B-roll, and music loaded");
       setAdsGenOpen(false);
     } catch (err) {
       console.error("[script-to-ad] failed", err);
@@ -2369,8 +2369,8 @@ export default function VideoEditorPage() {
       }));
       toast.success(
         audioFiles.length > 1
-          ? `${audioFiles.length} voice samples uploaded — ready to clone`
-          : "Voice sample uploaded — ready to clone",
+          ? `${audioFiles.length} voice samples uploaded ï¿½ ready to clone`
+          : "Voice sample uploaded ï¿½ ready to clone",
       );
     };
     reader.readAsDataURL(audioFiles[0]);
@@ -2398,7 +2398,7 @@ export default function VideoEditorPage() {
         }),
       });
       if (!res.ok) {
-        toast.error("Voice preview backend pending — endpoint not ready");
+        toast.error("Voice preview backend pending ï¿½ endpoint not ready");
       } else {
         toast.success("Voice preview ready");
       }
@@ -2442,7 +2442,7 @@ export default function VideoEditorPage() {
 
   function openThumbnailEditor() {
     // Open the thumbnail generator in a new tab. Route was formerly
-    // "/dashboard/thumbnail-editor" which 404s — the real page is
+    // "/dashboard/thumbnail-editor" which 404s ï¿½ the real page is
     // /dashboard/thumbnail-generator.
     if (typeof window !== "undefined") {
       window.open("/dashboard/thumbnail-generator", "_blank");
@@ -2537,7 +2537,7 @@ export default function VideoEditorPage() {
             </div>
           </div>
         ) : (
-          <div className="text-[11px] text-muted">No preset selected — using custom settings.</div>
+          <div className="text-[11px] text-muted">No preset selected ï¿½ using custom settings.</div>
         );
       })(),
       editableSettings: [
@@ -2586,14 +2586,14 @@ export default function VideoEditorPage() {
             {aiProject?.captions?.[0]?.text || "This is your caption style"}
           </div>
           <div className="text-[10px] text-muted">
-            {editorSettings.captions.fontFamily} · {editorSettings.captions.fontSize}px · {editorSettings.captions.position}
+            {editorSettings.captions.fontFamily} ï¿½ {editorSettings.captions.fontSize}px ï¿½ {editorSettings.captions.position}
           </div>
           {Array.isArray(aiProject?.captions) && (aiProject.captions?.length ?? 0) > 0 && (
             <div className="text-[10px] text-muted space-y-0.5 max-h-24 overflow-y-auto pt-1">
               <div className="font-semibold text-foreground">Generated ({aiProject.captions?.length}):</div>
               {aiProject.captions?.slice(0, 6).map((c, i) => (
                 <div key={i}>
-                  <span className={c.emphasis ? "font-bold text-gold" : ""}>{c.text}</span>
+                  <span className={c.emphasis ? "font-bold text-[#2563EB]" : ""}>{c.text}</span>
                 </div>
               ))}
             </div>
@@ -2734,7 +2734,7 @@ export default function VideoEditorPage() {
             <video src={result.url} controls className="w-full rounded-lg border border-border" />
           )}
           {result && !result.url && (result.plan || result.storyboard) && (
-            <div className="text-muted">Plan/storyboard ready — open the Storyboard tab.</div>
+            <div className="text-muted">Plan/storyboard ready ï¿½ open the Storyboard tab.</div>
           )}
         </div>
       ),
@@ -2746,7 +2746,7 @@ export default function VideoEditorPage() {
     return new Promise<void>(resolve => setTimeout(resolve, ms));
   }
 
-  // --- One-click Auto-Edit (full-pass) — detect-scenes ? suggest ? captions ? broll -
+  // --- One-click Auto-Edit (full-pass) ï¿½ detect-scenes ? suggest ? captions ? broll -
   // Wired to /api/video/auto-edit/full-pass. Requires an existing project_id
   // (from AI-generated project) and a video_url. Seeds the timeline with the
   // returned scenes + suggestions. This replaces the stubbed "AI Auto-Edit"
@@ -2755,9 +2755,9 @@ export default function VideoEditorPage() {
     const videoUrl = result?.url;
     const projectId = aiProject?.project_id;
     if (!videoUrl) { toast.error("Render or load a video first (need a video URL)"); return; }
-    if (!projectId) { toast.error("Generate an AI project first — full-pass needs a project_id"); return; }
+    if (!projectId) { toast.error("Generate an AI project first ï¿½ full-pass needs a project_id"); return; }
     setFullPassRunning(true);
-    const tid = toast.loading("Running full-pass auto-edit…");
+    const tid = toast.loading("Running full-pass auto-editï¿½");
     try {
       const res = await fetch("/api/video/auto-edit/full-pass", {
         method: "POST",
@@ -2779,7 +2779,7 @@ export default function VideoEditorPage() {
       if (sugs.length > 0) {
         setTimelineSuggestions(sugs);
       }
-      toast.success(`Full-pass complete — ${sugs.length} suggestion(s), ${j.errors?.length || 0} sub-error(s)`, { id: tid });
+      toast.success(`Full-pass complete ï¿½ ${sugs.length} suggestion(s), ${j.errors?.length || 0} sub-error(s)`, { id: tid });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Full-pass request failed", { id: tid });
     } finally {
@@ -2787,7 +2787,7 @@ export default function VideoEditorPage() {
     }
   }
 
-  // --- Classify Footage — detect footage type + confidence ? render FootageBadge -
+  // --- Classify Footage ï¿½ detect footage type + confidence ? render FootageBadge -
   async function classifyReferenceFootage(idx: number) {
     const f = referenceFiles[idx];
     if (!f) return;
@@ -2796,11 +2796,11 @@ export default function VideoEditorPage() {
       return;
     }
     setClassifyingIdx(idx);
-    const tid = toast.loading(`Classifying ${f.name}…`);
+    const tid = toast.loading(`Classifying ${f.name}ï¿½`);
     try {
       const body: Record<string, unknown> = { client_id: selectedClient || managedClientId || undefined };
       if (f.type.startsWith("video/")) {
-        body.video_url = f.data; // data: URL — server accepts per route docs
+        body.video_url = f.data; // data: URL ï¿½ server accepts per route docs
       } else {
         body.video_url = f.data;
       }
@@ -2833,12 +2833,12 @@ export default function VideoEditorPage() {
     }
   }
 
-  // --- Analyze Viral Video — pass a URL, get a ViralPattern -
+  // --- Analyze Viral Video ï¿½ pass a URL, get a ViralPattern -
   async function analyzeViralUrl() {
     const url = viralUrl.trim();
     if (!url) { toast.error("Paste a YouTube / Shorts URL first"); return; }
     setViralAnalyzing(true);
-    const tid = toast.loading("Analyzing viral video…");
+    const tid = toast.loading("Analyzing viral videoï¿½");
     try {
       const res = await fetch("/api/video/analyze-viral", {
         method: "POST",
@@ -2855,7 +2855,7 @@ export default function VideoEditorPage() {
         return;
       }
       setViralResult(j as Record<string, unknown>);
-      toast.success("Pattern extracted — see results below", { id: tid });
+      toast.success("Pattern extracted ï¿½ see results below", { id: tid });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Analyze request failed", { id: tid });
     } finally {
@@ -2868,7 +2868,7 @@ export default function VideoEditorPage() {
     if (!aiGenTopic.trim()) { toast.error("Enter a topic first"); return; }
     setAiGenLoading(true);
     try {
-      // fetchWithWall surfaces the QuotaWall on 402 (plan limit) — saves
+      // fetchWithWall surfaces the QuotaWall on 402 (plan limit) ï¿½ saves
       // the user from a mysterious "Request failed (402)" toast.
       const res = await fetchWithWall("/api/video/generate-project", {
         method: "POST",
@@ -2892,8 +2892,8 @@ export default function VideoEditorPage() {
         const remaining = payload?.remaining;
         const msg =
           typeof remaining === "number"
-            ? `AI token budget reached — ${remaining.toLocaleString()} tokens left. Upgrade or buy more to continue.`
-            : "You hit your AI token limit — upgrade to continue.";
+            ? `AI token budget reached ï¿½ ${remaining.toLocaleString()} tokens left. Upgrade or buy more to continue.`
+            : "You hit your AI token limit ï¿½ upgrade to continue.";
         toast.error(msg, { duration: 7000 });
         setAiGenLoading(false);
         return;
@@ -2906,7 +2906,7 @@ export default function VideoEditorPage() {
       setAiProject(data);
       applyAiProjectToEditor(data);
       setAiGenOpen(false);
-      toast.success("Project generated — script, captions, and shotlist ready");
+      toast.success("Project generated ï¿½ script, captions, and shotlist ready");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "AI generation failed");
     } finally {
@@ -2956,7 +2956,7 @@ export default function VideoEditorPage() {
     try {
       const body: Record<string, unknown> = {};
       if (f.type.startsWith("image/")) {
-        // Already base64 data URL — strip prefix
+        // Already base64 data URL ï¿½ strip prefix
         const base64 = (f.data || "").split(",")[1] || f.data;
         body.frame_base64 = base64;
       } else if (f.type.startsWith("video/")) {
@@ -2998,7 +2998,7 @@ export default function VideoEditorPage() {
   // Helper used by walkthrough steps.
   // Returns true if the step completed, false if it was cancelled OR threw.
   // When a step throws we mark it as `failed` and set the cancelled ref so
-  // the caller bails out — otherwise we'd pretend the remaining steps
+  // the caller bails out ï¿½ otherwise we'd pretend the remaining steps
   // succeeded and mislead the user ("fake success").
   async function runStep(index: number, task: () => Promise<void>): Promise<boolean> {
     if (walkthroughCancelledRef.current) return false;
@@ -3037,7 +3037,7 @@ export default function VideoEditorPage() {
     let script = config.script || "";
     let captions: AiGeneratedCaption[] = [];
 
-    // Step 1 — Analyze: generate script via Claude
+    // Step 1 ï¿½ Analyze: generate script via Claude
     const ok1 = await runStep(0, async () => {
       const res = await fetch("/api/video/script-generate", {
         method: "POST",
@@ -3067,11 +3067,11 @@ export default function VideoEditorPage() {
     });
     if (!ok1) { setGenerating(false); return; }
 
-    // Step 2 — Style: apply preset (already applied via UI)
+    // Step 2 ï¿½ Style: apply preset (already applied via UI)
     const ok2 = await runStep(1, async () => { await sleep(400); });
     if (!ok2) { setGenerating(false); return; }
 
-    // Step 3 — Captions: generate from the script
+    // Step 3 ï¿½ Captions: generate from the script
     const ok3 = await runStep(2, async () => {
       if (!script) return;
       const res = await fetch("/api/video/captions-generate", {
@@ -3091,19 +3091,19 @@ export default function VideoEditorPage() {
     });
     if (!ok3) { setGenerating(false); return; }
 
-    // Step 4 — Motion: apply motion presets from settings
+    // Step 4 ï¿½ Motion: apply motion presets from settings
     const ok4 = await runStep(3, async () => { await sleep(300); });
     if (!ok4) { setGenerating(false); return; }
 
-    // Step 5 — Transitions
+    // Step 5 ï¿½ Transitions
     const ok5 = await runStep(4, async () => { await sleep(300); });
     if (!ok5) { setGenerating(false); return; }
 
-    // Step 6 — Color grading
+    // Step 6 ï¿½ Color grading
     const ok6 = await runStep(5, async () => { await sleep(300); });
     if (!ok6) { setGenerating(false); return; }
 
-    // Step 7 — Audio (optional music gen)
+    // Step 7 ï¿½ Audio (optional music gen)
     const ok7 = await runStep(6, async () => {
       // Fire-and-forget music gen; don't block on it
       try {
@@ -3116,7 +3116,7 @@ export default function VideoEditorPage() {
     });
     if (!ok7) { setGenerating(false); return; }
 
-    // Step 8 — Finalize: render via existing endpoint
+    // Step 8 ï¿½ Finalize: render via existing endpoint
     const ok8 = await runStep(7, async () => {
       const res = await fetch("/api/video/render", {
         method: "POST",
@@ -3143,7 +3143,7 @@ export default function VideoEditorPage() {
       if (data.success) {
         setResult(data);
         if (data.url) {
-          toast.success("Video rendered — ready to download");
+          toast.success("Video rendered ï¿½ ready to download");
         } else if (data.storyboard || data.plan) {
           toast.success(mode === "storyboard" ? "Storyboard created!" : "Video plan generated!");
           if (mode === "storyboard") setTab("storyboard");
@@ -3360,7 +3360,7 @@ export default function VideoEditorPage() {
       field: {
         type: "text",
         key: "cta",
-        placeholder: "e.g., Follow for more tips • Visit the link in bio",
+        placeholder: "e.g., Follow for more tips ï¿½ Visit the link in bio",
         optional: true,
       },
     },
@@ -3382,12 +3382,12 @@ export default function VideoEditorPage() {
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-sm font-semibold text-[#0A0A0B] leading-tight">Video Editor</h1>
-          <p className="text-[9px] text-[#71717A]">AI writes the script · GPU renders the cuts</p>
+          <p className="text-[9px] text-[#71717A]">AI writes the script ï¿½ GPU renders the cuts</p>
         </div>
         <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
       </div>
 
-      {/* Guided Mode — 5-step "4-year-old friendly" flow */}
+      {/* Guided Mode ï¿½ 5-step "4-year-old friendly" flow */}
       {!advancedMode && (
         <Wizard
           steps={[
@@ -3407,12 +3407,12 @@ export default function VideoEditorPage() {
                       type="button"
                       onClick={() => setConfig(prev => ({ ...prev, type: vt.id, aspect_ratio: vt.aspect, duration: vt.duration }))}
                       className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
-                        selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
+                        selected ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]" : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                       }`}
                     >
                       <div className="w-full h-20 flex items-center justify-center rounded-lg mb-2 overflow-hidden">
                         <div
-                          className="rounded-md bg-gradient-to-br from-gold/30 to-amber-400/20 flex items-center justify-center"
+                          className="rounded-md bg-gradient-to-br from-[rgba(37,99,235,0.3)] to-amber-400/20 flex items-center justify-center"
                           style={{
                             aspectRatio: vt.aspect.replace(":", " / "),
                             height: "100%",
@@ -3420,11 +3420,11 @@ export default function VideoEditorPage() {
                             maxWidth: "100%",
                           }}
                         >
-                          <span className="text-gold">{vt.icon}</span>
+                          <span className="text-[#2563EB]">{vt.icon}</span>
                         </div>
                       </div>
                       <p className="text-xs font-bold">{vt.name}</p>
-                      <p className="text-[10px] text-muted">{vt.aspect} · ~{vt.duration}s</p>
+                      <p className="text-[10px] text-muted">{vt.aspect} ï¿½ ~{vt.duration}s</p>
                     </button>
                   );
                 };
@@ -3476,7 +3476,7 @@ export default function VideoEditorPage() {
                     onChange={e => setConfig(prev => ({ ...prev, title: e.target.value, script: e.target.value }))}
                     placeholder="e.g., 30-second hook for my new course launch"
                     rows={3}
-                    className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.5)] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all resize-none"
                     autoFocus
                   />
                   {/* Director's Brief tip card */}
@@ -3534,7 +3534,7 @@ export default function VideoEditorPage() {
             {
               id: "footage",
               title: "Do you have footage?",
-              description: "No worries either way — AI can fill in with stock/b-roll.",
+              description: "No worries either way ï¿½ AI can fill in with stock/b-roll.",
               icon: <Upload size={18} />,
               component: (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -3549,10 +3549,10 @@ export default function VideoEditorPage() {
                         key={opt.id}
                         onClick={() => setGuidedFootageSource(opt.id)}
                         className={`p-5 rounded-xl border text-center transition-all ${
-                          selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
+                          selected ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]" : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                         }`}
                       >
-                        <div className="w-12 h-12 rounded-full bg-gold/15 flex items-center justify-center mx-auto mb-3 text-gold">
+                        <div className="w-12 h-12 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center mx-auto mb-3 text-[#2563EB]">
                           {opt.icon}
                         </div>
                         <p className="text-sm font-bold">{opt.label}</p>
@@ -3566,7 +3566,7 @@ export default function VideoEditorPage() {
             {
               id: "pack",
               title: "Pick a creator pack",
-              description: "These are proven styles — captions, zooms, color grading tuned for each creator.",
+              description: "These are proven styles ï¿½ captions, zooms, color grading tuned for each creator.",
               icon: <Palette size={18} />,
               optional: true,
               component: (
@@ -3578,7 +3578,7 @@ export default function VideoEditorPage() {
                         key={p.id}
                         onClick={() => applyYouTuberPreset(p)}
                         className={`text-left rounded-xl border overflow-hidden transition-all ${
-                          selected ? "border-gold ring-2 ring-gold/30 shadow-lg shadow-gold/20" : "border-border hover:border-gold/30"
+                          selected ? "border-[#2563EB] ring-2 ring-[rgba(37,99,235,0.3)] shadow-lg shadow-[rgba(37,99,235,0.12)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"
                         }`}
                       >
                         <div className={`h-16 ${p.preview}`} />
@@ -3598,7 +3598,7 @@ export default function VideoEditorPage() {
               description: "We'll assemble the edit. Fine-tune captions, music, SFX, and scenes in Advanced mode.",
               icon: <Wand2 size={18} />,
               component: (
-                <div className="glass rounded-xl bg-gold/[0.04] border-gold/20 space-y-2">
+                <div className="glass rounded-xl bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.2)] space-y-2">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <p className="text-[9px] uppercase tracking-wider text-muted">Type</p>
@@ -3627,7 +3627,7 @@ export default function VideoEditorPage() {
           ]}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={generating ? "Rendering…" : "Generate video"}
+          finishLabel={generating ? "Renderingï¿½" : "Generate video"}
           busy={generating}
           onFinish={async () => {
             await generateVideo();
@@ -3641,14 +3641,14 @@ export default function VideoEditorPage() {
       {!advancedMode && result && (
         <div className="glass rounded-xl space-y-3">
           <h2 className="section-header flex items-center gap-2">
-            <Film size={14} className="text-gold" /> {config.title || "Your video"}
+            <Film size={14} className="text-[#2563EB]" /> {config.title || "Your video"}
           </h2>
           {result.url ? (
             <video src={result.url} controls className="w-full rounded-xl border border-border bg-black" />
           ) : (
-            <div className="rounded-xl border border-gold/20 bg-gold/[0.03] p-4">
-              <p className="text-[10px] uppercase tracking-wider text-gold font-semibold mb-1.5">Scene plan ready</p>
-              <pre className="text-[11px] text-foreground/90 whitespace-pre-wrap font-sans leading-relaxed">{result.plan || "Plan generated — check Advanced mode to review full details."}</pre>
+            <div className="rounded-xl border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.03)] p-4">
+              <p className="text-[10px] uppercase tracking-wider text-[#2563EB] font-semibold mb-1.5">Scene plan ready</p>
+              <pre className="text-[11px] text-foreground/90 whitespace-pre-wrap font-sans leading-relaxed">{result.plan || "Plan generated ï¿½ check Advanced mode to review full details."}</pre>
             </div>
           )}
         </div>
@@ -3711,7 +3711,7 @@ export default function VideoEditorPage() {
       <CreationWizard
         open={videoWizardOpen}
         title="Create Your Video"
-        subtitle="Step-by-step — pick a style, captions, music. We handle the rest."
+        subtitle="Step-by-step ï¿½ pick a style, captions, music. We handle the rest."
         icon={<Film size={18} />}
         submitLabel="Apply & Continue"
         initialData={{
@@ -3776,7 +3776,7 @@ export default function VideoEditorPage() {
           ] as const).map(st => (
             <button key={st.id} onClick={() => setCreateSubTab(st.id)}
               className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
-                createSubTab === st.id ? "bg-gold/10 text-gold border-gold/20 font-semibold" : "text-muted border-border hover:border-gold/15"
+                createSubTab === st.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)] font-semibold" : "text-muted border-border hover:border-[rgba(37,99,235,0.15)]"
               }`}>
               {st.icon} {st.label}
             </button>
@@ -3790,10 +3790,10 @@ export default function VideoEditorPage() {
               {/* Scene Builder - Drag & Drop */}
               <div className="card">
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="section-header flex items-center gap-2 mb-0"><GripVertical size={13} className="text-gold" /> Scene Builder</h2>
+                  <h2 className="section-header flex items-center gap-2 mb-0"><GripVertical size={13} className="text-[#2563EB]" /> Scene Builder</h2>
                   <div className="flex items-center gap-2">
                     <span className="text-[9px] text-muted">Total: {sceneBuilderScenes.reduce((sum, s) => sum + s.duration, 0)}s</span>
-                    <button onClick={addSceneToBuilder} className="text-[9px] px-2 py-1 bg-gold/10 text-gold rounded-lg border border-gold/20 flex items-center gap-1">
+                    <button onClick={addSceneToBuilder} className="text-[9px] px-2 py-1 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-lg border border-[rgba(37,99,235,0.2)] flex items-center gap-1">
                       <Plus size={10} /> Add Scene
                     </button>
                   </div>
@@ -3807,11 +3807,11 @@ export default function VideoEditorPage() {
                       onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
                       onDrop={() => handleSceneDrop(scene.id)}
                       className={`flex items-center gap-3 p-3 rounded-xl border transition-all cursor-grab active:cursor-grabbing ${
-                        draggedScene === scene.id ? "border-gold/40 bg-gold/5 opacity-60" : "border-border hover:border-gold/20"
+                        draggedScene === scene.id ? "border-[#2563EB]/40 bg-[rgba(37,99,235,0.05)] opacity-60" : "border-border hover:border-[rgba(37,99,235,0.2)]"
                       }`}
                     >
                       <GripVertical size={14} className="text-muted flex-shrink-0" />
-                      <span className="text-[10px] font-bold text-gold w-6">{idx + 1}</span>
+                      <span className="text-[10px] font-bold text-[#2563EB] w-6">{idx + 1}</span>
                       <div className="flex-1 min-w-0">
                         <input
                           value={scene.name}
@@ -3851,14 +3851,14 @@ export default function VideoEditorPage() {
                     <button onClick={() => {
                       setConfig(prev => ({ ...prev, duration: sceneBuilderScenes.reduce((sum, s) => sum + s.duration, 0) }));
                       toast.success("Scene durations applied to video config");
-                    }} className="text-[9px] text-gold hover:underline">Apply to Video</button>
+                    }} className="text-[9px] text-[#2563EB] hover:underline">Apply to Video</button>
                   </div>
                 </div>
               </div>
 
               {/* Speed Control per Scene */}
               <div className="card">
-                <h2 className="section-header flex items-center gap-2"><Gauge size={13} className="text-gold" /> Speed Control per Scene</h2>
+                <h2 className="section-header flex items-center gap-2"><Gauge size={13} className="text-[#2563EB]" /> Speed Control per Scene</h2>
                 <div className="space-y-2">
                   {sceneBuilderScenes.map(scene => (
                     <div key={scene.id} className="flex items-center gap-3 p-2 rounded-lg border border-border">
@@ -3867,9 +3867,9 @@ export default function VideoEditorPage() {
                         type="range" min={0.25} max={4} step={0.25}
                         value={speedControl[scene.id] || 1}
                         onChange={e => setSpeedControl(prev => ({ ...prev, [scene.id]: parseFloat(e.target.value) }))}
-                        className="flex-1 accent-gold h-1"
+                        className="flex-1 accent-[#2563EB] h-1"
                       />
-                      <span className="text-[9px] font-mono text-gold w-10 text-right">{speedControl[scene.id] || 1}x</span>
+                      <span className="text-[9px] font-mono text-[#2563EB] w-10 text-right">{speedControl[scene.id] || 1}x</span>
                       <span className="text-[8px] text-muted w-16 text-right">
                         {(speedControl[scene.id] || 1) < 1 ? "Slow-mo" : (speedControl[scene.id] || 1) > 1 ? "Timelapse" : "Normal"}
                       </span>
@@ -3881,16 +3881,16 @@ export default function VideoEditorPage() {
 
             {/* Scene Builder Sidebar */}
             <div className="space-y-4">
-              <div className="glass rounded-xl border-gold/10">
-                <h3 className="section-header flex items-center gap-2"><Timer size={12} className="text-gold" /> Scene Timeline</h3>
+              <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+                <h3 className="section-header flex items-center gap-2"><Timer size={12} className="text-[#2563EB]" /> Scene Timeline</h3>
                 <div className="space-y-1">
                   {sceneBuilderScenes.map((scene, idx) => {
                     const startTime = sceneBuilderScenes.slice(0, idx).reduce((sum, s) => sum + s.duration, 0);
                     return (
                       <div key={scene.id} className="flex items-center gap-2 text-[9px]">
                         <span className="text-muted font-mono w-10">{startTime}s</span>
-                        <div className="flex-1 bg-gold/10 rounded-full h-3 overflow-hidden" style={{ flex: scene.duration }}>
-                          <div className="bg-gradient-gold h-full rounded-full flex items-center px-1.5">
+                        <div className="flex-1 bg-[rgba(37,99,235,0.08)] rounded-full h-3 overflow-hidden" style={{ flex: scene.duration }}>
+                          <div className="bg-[#2563EB] h-full rounded-full flex items-center px-1.5">
                             <span className="text-[7px] text-white font-medium truncate">{scene.name}</span>
                           </div>
                         </div>
@@ -3901,10 +3901,10 @@ export default function VideoEditorPage() {
                 </div>
               </div>
               <div className="card">
-                <h3 className="section-header flex items-center gap-2"><Sparkles size={12} className="text-gold" /> AI Suggestions</h3>
+                <h3 className="section-header flex items-center gap-2"><Sparkles size={12} className="text-[#2563EB]" /> AI Suggestions</h3>
                 <div className="space-y-2 text-[9px] text-muted">
-                  <p><AlertCircle size={9} className="inline text-gold mr-1" /> Hook should be under 3 seconds for best retention</p>
-                  <p><AlertCircle size={9} className="inline text-gold mr-1" /> Consider adding a pattern interrupt at scene 2</p>
+                  <p><AlertCircle size={9} className="inline text-[#2563EB] mr-1" /> Hook should be under 3 seconds for best retention</p>
+                  <p><AlertCircle size={9} className="inline text-[#2563EB] mr-1" /> Consider adding a pattern interrupt at scene 2</p>
                   <p><Check size={9} className="inline text-success mr-1" /> CTA placement at end is optimal</p>
                 </div>
               </div>
@@ -3917,7 +3917,7 @@ export default function VideoEditorPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2 space-y-4">
               <div className="card">
-                <h2 className="section-header flex items-center gap-2"><FileText size={13} className="text-gold" /> AI Script-to-Video</h2>
+                <h2 className="section-header flex items-center gap-2"><FileText size={13} className="text-[#2563EB]" /> AI Script-to-Video</h2>
                 <p className="text-[9px] text-muted mb-3">Paste your script and AI will auto-split it into timed scenes with style suggestions.</p>
                 <textarea
                   value={aiScriptInput}
@@ -3936,14 +3936,14 @@ export default function VideoEditorPage() {
 
               {aiScriptScenes.length > 0 && (
                 <div className="card">
-                  <h3 className="section-header flex items-center gap-2"><Layers size={13} className="text-gold" /> Generated Scenes ({aiScriptScenes.length})</h3>
+                  <h3 className="section-header flex items-center gap-2"><Layers size={13} className="text-[#2563EB]" /> Generated Scenes ({aiScriptScenes.length})</h3>
                   <div className="space-y-2">
                     {aiScriptScenes.map((scene, idx) => (
-                      <div key={idx} className="p-3 rounded-xl border border-border hover:border-gold/20 transition-all">
+                      <div key={idx} className="p-3 rounded-xl border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-bold text-gold">Scene {idx + 1}</span>
+                          <span className="text-[10px] font-bold text-[#2563EB]">Scene {idx + 1}</span>
                           <div className="flex items-center gap-2">
-                            <span className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{scene.suggestedStyle}</span>
+                            <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">{scene.suggestedStyle}</span>
                             <span className="text-[8px] text-muted font-mono">{scene.duration}s</span>
                           </div>
                         </div>
@@ -3979,8 +3979,8 @@ export default function VideoEditorPage() {
 
             {/* Script Sidebar */}
             <div className="space-y-4">
-              <div className="glass rounded-xl border-gold/10">
-                <h3 className="section-header flex items-center gap-2"><BarChart3 size={12} className="text-gold" /> Script Analysis</h3>
+              <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+                <h3 className="section-header flex items-center gap-2"><BarChart3 size={12} className="text-[#2563EB]" /> Script Analysis</h3>
                 <div className="space-y-2 text-[9px]">
                   <div className="flex justify-between"><span className="text-muted">Word Count</span><span className="font-mono">{aiScriptInput.split(/\s+/).filter(Boolean).length}</span></div>
                   <div className="flex justify-between"><span className="text-muted">Est. Speaking Time</span><span className="font-mono">{Math.round(aiScriptInput.split(/\s+/).filter(Boolean).length / 2.5)}s</span></div>
@@ -3997,20 +3997,20 @@ export default function VideoEditorPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2 space-y-4">
               <div className="card">
-                <h2 className="section-header flex items-center gap-2"><Music size={13} className="text-gold" /> Audio Mixer</h2>
+                <h2 className="section-header flex items-center gap-2"><Music size={13} className="text-[#2563EB]" /> Audio Mixer</h2>
                 <p className="text-[9px] text-muted mb-3">Layer background music, voiceover, and sound effects with individual volume controls.</p>
                 <div className="space-y-4">
                   {/* Background Music Layer */}
                   <div className="p-3 rounded-xl border border-border">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <Music size={12} className="text-gold" />
+                        <Music size={12} className="text-[#2563EB]" />
                         <span className="text-[10px] font-semibold">Background Music</span>
                       </div>
                       <label className="flex items-center gap-1.5 text-[9px] text-muted cursor-pointer">
                         <input type="checkbox" checked={audioLayers.bgMusic.enabled}
                           onChange={e => setAudioLayers(prev => ({ ...prev, bgMusic: { ...prev.bgMusic, enabled: e.target.checked } }))}
-                          className="rounded border-border text-gold focus:ring-gold/30" />
+                          className="rounded border-border text-[#2563EB] focus:ring-[rgba(37,99,235,0.3)]" />
                         Enabled
                       </label>
                     </div>
@@ -4029,7 +4029,7 @@ export default function VideoEditorPage() {
                       <Volume2 size={10} className="text-muted" />
                       <input type="range" min={0} max={100} value={audioLayers.bgMusic.volume}
                         onChange={e => setAudioLayers(prev => ({ ...prev, bgMusic: { ...prev.bgMusic, volume: parseInt(e.target.value) } }))}
-                        className="flex-1 accent-gold h-1" />
+                        className="flex-1 accent-[#2563EB] h-1" />
                       <span className="text-[9px] font-mono w-8 text-right">{audioLayers.bgMusic.volume}%</span>
                     </div>
                   </div>
@@ -4038,13 +4038,13 @@ export default function VideoEditorPage() {
                   <div className="p-3 rounded-xl border border-border">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <Mic size={12} className="text-gold" />
+                        <Mic size={12} className="text-[#2563EB]" />
                         <span className="text-[10px] font-semibold">Voiceover</span>
                       </div>
                       <label className="flex items-center gap-1.5 text-[9px] text-muted cursor-pointer">
                         <input type="checkbox" checked={audioLayers.voiceover.enabled}
                           onChange={e => setAudioLayers(prev => ({ ...prev, voiceover: { ...prev.voiceover, enabled: e.target.checked } }))}
-                          className="rounded border-border text-gold focus:ring-gold/30" />
+                          className="rounded border-border text-[#2563EB] focus:ring-[rgba(37,99,235,0.3)]" />
                         Enabled
                       </label>
                     </div>
@@ -4052,7 +4052,7 @@ export default function VideoEditorPage() {
                       <Volume2 size={10} className="text-muted" />
                       <input type="range" min={0} max={100} value={audioLayers.voiceover.volume}
                         onChange={e => setAudioLayers(prev => ({ ...prev, voiceover: { ...prev.voiceover, volume: parseInt(e.target.value) } }))}
-                        className="flex-1 accent-gold h-1" />
+                        className="flex-1 accent-[#2563EB] h-1" />
                       <span className="text-[9px] font-mono w-8 text-right">{audioLayers.voiceover.volume}%</span>
                     </div>
                   </div>
@@ -4061,13 +4061,13 @@ export default function VideoEditorPage() {
                   <div className="p-3 rounded-xl border border-border">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <Zap size={12} className="text-gold" />
+                        <Zap size={12} className="text-[#2563EB]" />
                         <span className="text-[10px] font-semibold">Sound Effects</span>
                       </div>
                       <label className="flex items-center gap-1.5 text-[9px] text-muted cursor-pointer">
                         <input type="checkbox" checked={audioLayers.sfx.enabled}
                           onChange={e => setAudioLayers(prev => ({ ...prev, sfx: { ...prev.sfx, enabled: e.target.checked } }))}
-                          className="rounded border-border text-gold focus:ring-gold/30" />
+                          className="rounded border-border text-[#2563EB] focus:ring-[rgba(37,99,235,0.3)]" />
                         Enabled
                       </label>
                     </div>
@@ -4086,7 +4086,7 @@ export default function VideoEditorPage() {
                       <Volume2 size={10} className="text-muted" />
                       <input type="range" min={0} max={100} value={audioLayers.sfx.volume}
                         onChange={e => setAudioLayers(prev => ({ ...prev, sfx: { ...prev.sfx, volume: parseInt(e.target.value) } }))}
-                        className="flex-1 accent-gold h-1" />
+                        className="flex-1 accent-[#2563EB] h-1" />
                       <span className="text-[9px] font-mono w-8 text-right">{audioLayers.sfx.volume}%</span>
                     </div>
                   </div>
@@ -4095,7 +4095,7 @@ export default function VideoEditorPage() {
 
               {/* AI Voiceover Generator */}
               <div className="card">
-                <h2 className="section-header flex items-center gap-2"><Speech size={13} className="text-gold" /> AI Voiceover Generator</h2>
+                <h2 className="section-header flex items-center gap-2"><Speech size={13} className="text-[#2563EB]" /> AI Voiceover Generator</h2>
                 <div className="space-y-3">
                   <div>
                     <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Voice</label>
@@ -4103,7 +4103,7 @@ export default function VideoEditorPage() {
                       {VOICEOVER_VOICES.map(v => (
                         <button key={v.id} onClick={() => setVoiceoverConfig(prev => ({ ...prev, voice: v.id }))}
                           className={`p-2 rounded-xl border text-left transition-all ${
-                            voiceoverConfig.voice === v.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                            voiceoverConfig.voice === v.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                           }`}>
                           <p className="text-[10px] font-semibold">{v.name}</p>
                           <p className="text-[8px] text-muted">{v.gender} - {v.desc}</p>
@@ -4127,7 +4127,7 @@ export default function VideoEditorPage() {
                       <div className="flex items-center gap-2">
                         <input type="range" min={0.5} max={2} step={0.1} value={voiceoverConfig.speed}
                           onChange={e => setVoiceoverConfig(prev => ({ ...prev, speed: parseFloat(e.target.value) }))}
-                          className="flex-1 accent-gold h-1" />
+                          className="flex-1 accent-[#2563EB] h-1" />
                         <span className="text-[9px] font-mono w-8">{voiceoverConfig.speed}x</span>
                       </div>
                     </div>
@@ -4151,34 +4151,34 @@ export default function VideoEditorPage() {
 
             {/* Audio Sidebar */}
             <div className="space-y-4">
-              <div className="glass rounded-xl border-gold/10">
-                <h3 className="section-header flex items-center gap-2"><Sliders size={12} className="text-gold" /> Mix Summary</h3>
+              <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+                <h3 className="section-header flex items-center gap-2"><Sliders size={12} className="text-[#2563EB]" /> Mix Summary</h3>
                 <div className="space-y-2 text-[9px]">
                   <div className="flex justify-between items-center">
                     <span className="text-muted">Music</span>
                     <div className="flex items-center gap-1.5">
                       <div className="w-16 bg-surface-light rounded-full h-1.5">
-                        <div className="bg-gold rounded-full h-1.5" style={{ width: `${audioLayers.bgMusic.volume}%` }} />
+                        <div className="bg-[#2563EB] rounded-full h-1.5" style={{ width: `${audioLayers.bgMusic.volume}%` }} />
                       </div>
-                      <span className={audioLayers.bgMusic.enabled ? "text-gold" : "text-muted"}>{audioLayers.bgMusic.volume}%</span>
+                      <span className={audioLayers.bgMusic.enabled ? "text-[#2563EB]" : "text-muted"}>{audioLayers.bgMusic.volume}%</span>
                     </div>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-muted">Voiceover</span>
                     <div className="flex items-center gap-1.5">
                       <div className="w-16 bg-surface-light rounded-full h-1.5">
-                        <div className="bg-gold rounded-full h-1.5" style={{ width: `${audioLayers.voiceover.volume}%` }} />
+                        <div className="bg-[#2563EB] rounded-full h-1.5" style={{ width: `${audioLayers.voiceover.volume}%` }} />
                       </div>
-                      <span className={audioLayers.voiceover.enabled ? "text-gold" : "text-muted"}>{audioLayers.voiceover.volume}%</span>
+                      <span className={audioLayers.voiceover.enabled ? "text-[#2563EB]" : "text-muted"}>{audioLayers.voiceover.volume}%</span>
                     </div>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-muted">SFX</span>
                     <div className="flex items-center gap-1.5">
                       <div className="w-16 bg-surface-light rounded-full h-1.5">
-                        <div className="bg-gold rounded-full h-1.5" style={{ width: `${audioLayers.sfx.volume}%` }} />
+                        <div className="bg-[#2563EB] rounded-full h-1.5" style={{ width: `${audioLayers.sfx.volume}%` }} />
                       </div>
-                      <span className={audioLayers.sfx.enabled ? "text-gold" : "text-muted"}>{audioLayers.sfx.volume}%</span>
+                      <span className={audioLayers.sfx.enabled ? "text-[#2563EB]" : "text-muted"}>{audioLayers.sfx.volume}%</span>
                     </div>
                   </div>
                 </div>
@@ -4192,21 +4192,21 @@ export default function VideoEditorPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Color Grading Presets */}
             <div className="card">
-              <h2 className="section-header flex items-center gap-2"><SunMedium size={13} className="text-gold" /> Color Grading Presets</h2>
+              <h2 className="section-header flex items-center gap-2"><SunMedium size={13} className="text-[#2563EB]" /> Color Grading Presets</h2>
               <div className="grid grid-cols-2 gap-2">
                 <button onClick={() => setColorGrading("none")}
-                  className={`p-2.5 rounded-xl border text-left transition-all ${colorGrading === "none" ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"}`}>
+                  className={`p-2.5 rounded-xl border text-left transition-all ${colorGrading === "none" ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
                   <p className="text-[10px] font-semibold">None</p>
                   <p className="text-[8px] text-muted">Original colors</p>
                 </button>
                 {COLOR_PRESETS.map(preset => (
                   <button key={preset.id} onClick={() => setColorGrading(preset.id)}
                     className={`p-2.5 rounded-xl border text-left transition-all ${
-                      colorGrading === preset.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                      colorGrading === preset.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                     }`}>
                     <div className="flex items-center gap-1 mb-1">
                       {preset.colors.map((c, i) => (
-                        <div key={i} className="w-3 h-3 rounded-full border border-white/10" style={{ backgroundColor: c }} />
+                        <div key={i} className="w-3 h-3 rounded-full border border-black/[0.08]" style={{ backgroundColor: c }} />
                       ))}
                     </div>
                     <p className="text-[10px] font-semibold">{preset.name}</p>
@@ -4218,7 +4218,7 @@ export default function VideoEditorPage() {
 
             {/* Subtitle Style Editor */}
             <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Type size={13} className="text-gold" /> Subtitle Style Editor</h2>
+              <h2 className="section-header flex items-center gap-2"><Type size={13} className="text-[#2563EB]" /> Subtitle Style Editor</h2>
               <div className="space-y-3">
                 <div className="bg-surface-light rounded-xl p-4 text-center relative" style={{ minHeight: 120 }}>
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 rounded-xl" />
@@ -4240,7 +4240,7 @@ export default function VideoEditorPage() {
                   {(["top", "center", "bottom"] as const).map(pos => (
                     <button key={pos} onClick={() => setSubtitlePreview(prev => ({ ...prev, position: pos }))}
                       className={`text-[9px] p-1.5 rounded-lg border transition-all capitalize ${
-                        subtitlePreview.position === pos ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                        subtitlePreview.position === pos ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
                       }`}>{pos}</button>
                   ))}
                 </div>
@@ -4269,7 +4269,7 @@ export default function VideoEditorPage() {
                   <div className="flex items-center gap-2">
                     <input type="range" min={0} max={100} value={subtitlePreview.bgOpacity}
                       onChange={e => setSubtitlePreview(prev => ({ ...prev, bgOpacity: parseInt(e.target.value) }))}
-                      className="flex-1 accent-gold h-1" />
+                      className="flex-1 accent-[#2563EB] h-1" />
                     <span className="text-[9px] font-mono w-8">{subtitlePreview.bgOpacity}%</span>
                   </div>
                 </div>
@@ -4278,12 +4278,12 @@ export default function VideoEditorPage() {
 
             {/* Text Animation Presets */}
             <div className="card">
-              <h2 className="section-header flex items-center gap-2"><TextCursorInput size={13} className="text-gold" /> Text Animation Presets</h2>
+              <h2 className="section-header flex items-center gap-2"><TextCursorInput size={13} className="text-[#2563EB]" /> Text Animation Presets</h2>
               <div className="grid grid-cols-4 gap-1.5">
                 {TEXT_ANIMATIONS.map(anim => (
                   <button key={anim.id} onClick={() => setSelectedTextAnimation(anim.id)}
                     className={`text-[9px] p-2 rounded-lg border transition-all text-center ${
-                      selectedTextAnimation === anim.id ? "border-gold/30 bg-gold/[0.05] text-gold font-semibold" : "border-border text-muted hover:text-foreground"
+                      selectedTextAnimation === anim.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] font-semibold" : "border-border text-muted hover:text-foreground"
                     }`}>
                     {anim.name}
                   </button>
@@ -4293,12 +4293,12 @@ export default function VideoEditorPage() {
 
             {/* Watermark Settings */}
             <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Droplets size={13} className="text-gold" /> Watermark Settings</h2>
+              <h2 className="section-header flex items-center gap-2"><Droplets size={13} className="text-[#2563EB]" /> Watermark Settings</h2>
               <div className="space-y-3">
                 <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
                   <input type="checkbox" checked={watermarkSettings.enabled}
                     onChange={e => setWatermarkSettings(prev => ({ ...prev, enabled: e.target.checked }))}
-                    className="rounded border-border text-gold focus:ring-gold/30" />
+                    className="rounded border-border text-[#2563EB] focus:ring-[rgba(37,99,235,0.3)]" />
                   Enable Watermark
                 </label>
                 {watermarkSettings.enabled && (
@@ -4338,7 +4338,7 @@ export default function VideoEditorPage() {
                       <div className="flex items-center gap-2">
                         <input type="range" min={10} max={100} value={watermarkSettings.opacity}
                           onChange={e => setWatermarkSettings(prev => ({ ...prev, opacity: parseInt(e.target.value) }))}
-                          className="flex-1 accent-gold h-1" />
+                          className="flex-1 accent-[#2563EB] h-1" />
                         <span className="text-[9px] font-mono w-8">{watermarkSettings.opacity}%</span>
                       </div>
                     </div>
@@ -4349,7 +4349,7 @@ export default function VideoEditorPage() {
 
             {/* Aspect Ratio Converter */}
             <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Ratio size={13} className="text-gold" /> Aspect Ratio Converter</h2>
+              <h2 className="section-header flex items-center gap-2"><Ratio size={13} className="text-[#2563EB]" /> Aspect Ratio Converter</h2>
               <p className="text-[9px] text-muted mb-3">One-click convert between aspect ratios with smart cropping.</p>
               <div className="grid grid-cols-3 gap-2 mb-3">
                 {(["9:16", "16:9", "1:1", "4:5"] as const).map(ratio => (
@@ -4359,11 +4359,11 @@ export default function VideoEditorPage() {
                     toast.success(`Aspect ratio set to ${ratio}`);
                   }}
                     className={`p-2 rounded-xl border text-center transition-all ${
-                      config.aspect_ratio === ratio ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                      config.aspect_ratio === ratio ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                     }`}>
                     <div className={`mx-auto mb-1 border border-current rounded ${
                       ratio === "9:16" ? "w-4 h-7" : ratio === "16:9" ? "w-7 h-4" : ratio === "4:5" ? "w-5 h-6" : "w-5 h-5"
-                    } ${config.aspect_ratio === ratio ? "text-gold" : "text-muted"}`} />
+                    } ${config.aspect_ratio === ratio ? "text-[#2563EB]" : "text-muted"}`} />
                     <p className="text-[9px] font-semibold">{ratio}</p>
                   </button>
                 ))}
@@ -4374,7 +4374,7 @@ export default function VideoEditorPage() {
                   {(["smart", "center", "top", "bottom"] as const).map(mode => (
                     <button key={mode} onClick={() => setAspectRatioConverter(prev => ({ ...prev, cropMode: mode }))}
                       className={`text-[8px] p-1.5 rounded-lg border capitalize transition-all ${
-                        aspectRatioConverter.cropMode === mode ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                        aspectRatioConverter.cropMode === mode ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
                       }`}>{mode}</button>
                   ))}
                 </div>
@@ -4383,16 +4383,16 @@ export default function VideoEditorPage() {
 
             {/* Green Screen Backgrounds */}
             <div className="card">
-              <h2 className="section-header flex items-center gap-2"><MonitorPlay size={13} className="text-gold" /> Green Screen Backgrounds</h2>
+              <h2 className="section-header flex items-center gap-2"><MonitorPlay size={13} className="text-[#2563EB]" /> Green Screen Backgrounds</h2>
               <div className="grid grid-cols-2 gap-1.5">
                 <button onClick={() => setGreenScreenBg("none")}
-                  className={`text-[9px] p-2 rounded-lg border transition-all ${greenScreenBg === "none" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"}`}>
+                  className={`text-[9px] p-2 rounded-lg border transition-all ${greenScreenBg === "none" ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"}`}>
                   None
                 </button>
                 {GREEN_SCREEN_BG.map(bg => (
                   <button key={bg.id} onClick={() => setGreenScreenBg(bg.id)}
                     className={`text-[9px] p-2 rounded-lg border transition-all text-left ${
-                      greenScreenBg === bg.id ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted hover:text-foreground"
+                      greenScreenBg === bg.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"
                     }`}>
                     <p className="font-semibold">{bg.name}</p>
                     <p className="text-[8px] opacity-70">{bg.desc}</p>
@@ -4403,7 +4403,7 @@ export default function VideoEditorPage() {
           </div>
         )}
 
-        {/* Smart Presets Sub-Tab — MASSIVE upgrade with captions, animations, motion, transitions, color, audio, smart features */}
+        {/* Smart Presets Sub-Tab ï¿½ MASSIVE upgrade with captions, animations, motion, transitions, color, audio, smart features */}
         {createSubTab === "smart" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2 space-y-3">
@@ -4411,7 +4411,7 @@ export default function VideoEditorPage() {
               {/* === YouTuber Styles Panel (FIRST) === */}
               <CollapsiblePanel
                 id="youtuberStyles"
-                icon={<Star size={13} className="text-gold" />}
+                icon={<Star size={13} className="text-[#2563EB]" />}
                 title="YouTuber Styles"
                 desc="One-click presets that emulate popular creators' editing styles"
                 open={openPanels.youtuberStyles}
@@ -4420,17 +4420,17 @@ export default function VideoEditorPage() {
               >
                 <div className="mb-3 flex items-center justify-between gap-2">
                   <p className="text-[9px] text-muted">
-                    {YOUTUBER_PRESETS.length} creator presets — click any card to apply a full suite of caption, motion, color, audio, and smart settings
+                    {YOUTUBER_PRESETS.length} creator presets ï¿½ click any card to apply a full suite of caption, motion, color, audio, and smart settings
                   </p>
                   {selectedYouTuberPreset && (
-                    <span className="text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full font-mono border border-gold/20">
+                    <span className="text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2 py-0.5 rounded-full font-mono border border-[rgba(37,99,235,0.2)]">
                       {YOUTUBER_PRESETS.find(p => p.id === selectedYouTuberPreset)?.name} active
                     </span>
                   )}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                  {/* Ads preset — our signature ad template, promoted to the top */}
+                  {/* Ads preset ï¿½ our signature ad template, promoted to the top */}
                   <div
                     key="ads"
                     className={`group relative rounded-lg border overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 hover:shadow-lg ${adsPresetActive ? "border-red-400 ring-2 ring-red-400/40" : "border-red-500/40 hover:border-red-400"}`}
@@ -4451,7 +4451,7 @@ export default function VideoEditorPage() {
                         <Megaphone size={10} className="text-red-500" /> {ADS_PRESET.name}
                       </h4>
                       <p className="text-[8px] text-muted mt-0.5 leading-tight line-clamp-2">
-                        Bold display type, hard cuts, kinetic captions — IG Reels / TikTok ads
+                        Bold display type, hard cuts, kinetic captions ï¿½ IG Reels / TikTok ads
                       </p>
                       <div className="flex flex-wrap gap-0.5 mt-1.5">
                         <span className="text-[7px] bg-red-500/10 text-red-400 px-1 py-0.5 rounded font-mono">9:16</span>
@@ -4465,14 +4465,14 @@ export default function VideoEditorPage() {
                     return (
                       <div
                         key={preset.id}
-                        className={`group relative rounded-lg border overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 hover:shadow-lg ${active ? "border-gold ring-2 ring-gold/40" : "border-border hover:border-gold/30"}`}
+                        className={`group relative rounded-lg border overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 hover:shadow-lg ${active ? "border-[#2563EB] ring-2 ring-[rgba(37,99,235,0.4)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
                         onClick={() => applyYouTuberPreset(preset)}
                       >
                         {/* Visual preview gradient */}
                         <div className={`h-12 w-full ${preset.preview} relative`}>
                           <div className="absolute inset-0 bg-black/10" />
                           {active && (
-                            <div className="absolute top-1 right-1 bg-gold text-black rounded-full p-0.5">
+                            <div className="absolute top-1 right-1 bg-[#2563EB] text-white rounded-full p-0.5">
                               <Check size={10} />
                             </div>
                           )}
@@ -4503,11 +4503,11 @@ export default function VideoEditorPage() {
 
                   {/* Custom / Reset card */}
                   <div
-                    className={`group relative rounded-lg border-2 border-dashed overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 ${selectedYouTuberPreset === "" ? "border-gold/60 bg-gold/[0.03]" : "border-border hover:border-gold/30"}`}
+                    className={`group relative rounded-lg border-2 border-dashed overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 ${selectedYouTuberPreset === "" ? "border-[#2563EB]/60 bg-[rgba(37,99,235,0.03)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
                     onClick={resetYouTuberPreset}
                   >
                     <div className="h-12 w-full bg-gradient-to-br from-surface-light via-surface to-surface-light flex items-center justify-center">
-                      <Settings2 size={16} className="text-muted group-hover:text-gold transition-colors" />
+                      <Settings2 size={16} className="text-muted group-hover:text-[#2563EB] transition-colors" />
                     </div>
                     <div className="p-2">
                       <h4 className="text-[10px] font-bold leading-tight">Custom</h4>
@@ -4524,11 +4524,11 @@ export default function VideoEditorPage() {
                 </p>
               </CollapsiblePanel>
 
-              {/* === Ads Pack Sidebar — B-roll, Music, Kinetic Captions === */}
+              {/* === Ads Pack Sidebar ï¿½ B-roll, Music, Kinetic Captions === */}
               <CollapsiblePanel
                 id="adsPack"
                 icon={<Megaphone size={13} className="text-red-500" />}
-                title="Ads Pack — B-roll, Music, Captions"
+                title="Ads Pack ï¿½ B-roll, Music, Captions"
                 desc="Script-driven helpers tuned for high-converting ads"
                 open={openPanels.adsPack}
                 onToggle={() => togglePanel("adsPack")}
@@ -4585,7 +4585,7 @@ export default function VideoEditorPage() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[8px] text-muted uppercase mb-1">Video URL (optional — uses render URL if empty)</label>
+                      <label className="block text-[8px] text-muted uppercase mb-1">Video URL (optional ï¿½ uses render URL if empty)</label>
                       <input
                         value={captionsVideoUrl}
                         onChange={e => setCaptionsVideoUrl(e.target.value)}
@@ -4628,7 +4628,7 @@ export default function VideoEditorPage() {
                           <div>
                             <h4 className="text-[10px] font-bold">{musicMatch.title}</h4>
                             <p className="text-[8px] text-muted">
-                              {musicMatch.mood} • {musicMatch.bpm} BPM • {musicMatch.duration_sec}s
+                              {musicMatch.mood} ï¿½ {musicMatch.bpm} BPM ï¿½ {musicMatch.duration_sec}s
                             </p>
                           </div>
                         </div>
@@ -4646,18 +4646,18 @@ export default function VideoEditorPage() {
                   {captionsResult && (
                     <div className="p-2.5 rounded-lg border border-border bg-surface-light">
                       <h4 className="text-[9px] font-bold uppercase text-muted mb-1.5">
-                        Caption Track ({captionsResult.style}) — {captionsResult.words.length} words
+                        Caption Track ({captionsResult.style}) ï¿½ {captionsResult.words.length} words
                       </h4>
                       <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
                         {captionsResult.words.slice(0, 60).map((w, i) => (
                           <span
                             key={i}
                             className={`text-[9px] px-1.5 py-0.5 rounded font-mono ${w.emphasis ? "bg-yellow-400 text-black font-bold" : "bg-surface text-muted"}`}
-                            title={`${w.start_ms}ms – ${w.end_ms}ms`}
+                            title={`${w.start_ms}ms ï¿½ ${w.end_ms}ms`}
                           >{w.text}</span>
                         ))}
                         {captionsResult.words.length > 60 && (
-                          <span className="text-[8px] text-muted">+{captionsResult.words.length - 60} more…</span>
+                          <span className="text-[8px] text-muted">+{captionsResult.words.length - 60} moreï¿½</span>
                         )}
                       </div>
                     </div>
@@ -4668,7 +4668,7 @@ export default function VideoEditorPage() {
               {/* === Smart Features Panel (TOP) === */}
               <CollapsiblePanel
                 id="smart"
-                icon={<Brain size={13} className="text-gold" />}
+                icon={<Brain size={13} className="text-[#2563EB]" />}
                 title="Smart editing"
                 desc="One-click shortcuts"
                 open={openPanels.smart}
@@ -4715,7 +4715,7 @@ export default function VideoEditorPage() {
                   />
                   <ToggleRow
                     label="Viral moment finder"
-                    desc="Top 15–60s clips identified"
+                    desc="Top 15ï¿½60s clips identified"
                     icon={<TrendingUp size={11} />}
                     checked={editorSettings.smart.viralMomentFinder}
                     onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, viralMomentFinder: v } }))}
@@ -4744,9 +4744,9 @@ export default function VideoEditorPage() {
                         type="range" min={0.3} max={5} step={0.1}
                         value={editorSettings.smart.silenceThreshold}
                         onChange={e => setEditorSettings(p => ({ ...p, smart: { ...p.smart, silenceThreshold: parseFloat(e.target.value) } }))}
-                        className="flex-1 accent-gold h-1"
+                        className="flex-1 accent-[#2563EB] h-1"
                       />
-                      <span className="text-[9px] font-mono text-gold w-10 text-right">{editorSettings.smart.silenceThreshold}s</span>
+                      <span className="text-[9px] font-mono text-[#2563EB] w-10 text-right">{editorSettings.smart.silenceThreshold}s</span>
                     </div>
                   </div>
                 )}
@@ -4756,7 +4756,7 @@ export default function VideoEditorPage() {
                   <div className="grid grid-cols-4 gap-1">
                     {(["none", "9:16", "1:1", "16:9"] as const).map(r => (
                       <button key={r} onClick={() => setEditorSettings(p => ({ ...p, smart: { ...p.smart, autoReframeRatio: r } }))}
-                        className={`text-[9px] py-1 rounded-lg border transition-all ${editorSettings.smart.autoReframeRatio === r ? "border-gold/40 bg-gold/10 text-gold font-semibold" : "border-border text-muted"}`}>
+                        className={`text-[9px] py-1 rounded-lg border transition-all ${editorSettings.smart.autoReframeRatio === r ? "border-[#2563EB]/40 bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold" : "border-border text-muted"}`}>
                         {r === "none" ? "Off" : r}
                       </button>
                     ))}
@@ -4767,7 +4767,7 @@ export default function VideoEditorPage() {
               {/* === Captions / Subtitles Panel === */}
               <CollapsiblePanel
                 id="captions"
-                icon={<Captions size={13} className="text-gold" />}
+                icon={<Captions size={13} className="text-[#2563EB]" />}
                 title="Captions & Subtitles"
                 desc="Auto-generate and style captions from audio"
                 open={openPanels.captions}
@@ -4807,7 +4807,7 @@ export default function VideoEditorPage() {
                                   position: preset.position as "top" | "center" | "bottom",
                                 },
                               }))}
-                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}
+                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}
                             >
                               <div
                                 className="mb-1.5 rounded-md flex items-center justify-center h-8 relative overflow-hidden"
@@ -4854,7 +4854,7 @@ export default function VideoEditorPage() {
                           type="range" min={12} max={120} step={1}
                           value={editorSettings.captions.fontSize}
                           onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, fontSize: parseInt(e.target.value) } }))}
-                          className="w-full accent-gold h-1"
+                          className="w-full accent-[#2563EB] h-1"
                         />
                       </div>
                     </div>
@@ -4886,7 +4886,7 @@ export default function VideoEditorPage() {
                         <input type="range" min={0} max={12} step={1}
                           value={editorSettings.captions.strokeWidth}
                           onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, strokeWidth: parseInt(e.target.value) } }))}
-                          className="w-full accent-gold h-1" />
+                          className="w-full accent-[#2563EB] h-1" />
                       </div>
                       <div>
                         <label className="block text-[8px] text-muted uppercase mb-1">Max Words Per Line</label>
@@ -4902,7 +4902,7 @@ export default function VideoEditorPage() {
                       <div className="grid grid-cols-4 gap-1">
                         {(["top", "center", "bottom", "custom"] as const).map(pos => (
                           <button key={pos} onClick={() => setEditorSettings(p => ({ ...p, captions: { ...p.captions, position: pos } }))}
-                            className={`text-[9px] py-1.5 rounded-lg border capitalize transition-all ${editorSettings.captions.position === pos ? "border-gold/40 bg-gold/10 text-gold font-semibold" : "border-border text-muted"}`}>
+                            className={`text-[9px] py-1.5 rounded-lg border capitalize transition-all ${editorSettings.captions.position === pos ? "border-[#2563EB]/40 bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold" : "border-border text-muted"}`}>
                             {pos}
                           </button>
                         ))}
@@ -4913,7 +4913,7 @@ export default function VideoEditorPage() {
                           <input type="range" min={0} max={100}
                             value={editorSettings.captions.customY}
                             onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, customY: parseInt(e.target.value) } }))}
-                            className="w-full accent-gold h-1" />
+                            className="w-full accent-[#2563EB] h-1" />
                         </div>
                       )}
                     </div>
@@ -4941,7 +4941,7 @@ export default function VideoEditorPage() {
               {/* === Text Animation Panel === */}
               <CollapsiblePanel
                 id="textAnimation"
-                icon={<TextCursorInput size={13} className="text-gold" />}
+                icon={<TextCursorInput size={13} className="text-[#2563EB]" />}
                 title="Text Animations"
                 desc="Entrance / exit animations for text layers"
                 open={openPanels.textAnimation}
@@ -4960,7 +4960,7 @@ export default function VideoEditorPage() {
                           <button
                             key={a.id}
                             onClick={() => setEditorSettings(p => ({ ...p, textAnimation: { ...p.textAnimation, preset: a.id } }))}
-                            className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-gold/40 bg-gold/10 text-gold font-semibold" : "border-border text-muted hover:border-gold/20"}`}
+                            className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-[#2563EB]/40 bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold" : "border-border text-muted hover:border-[rgba(37,99,235,0.2)]"}`}
                           >
                             <p className="text-[9px] font-semibold leading-tight">{a.name}</p>
                             <p className="text-[7px] opacity-70 leading-tight mt-0.5">{a.desc}</p>
@@ -4975,7 +4975,7 @@ export default function VideoEditorPage() {
                         <input type="range" min={0.1} max={3} step={0.1}
                           value={editorSettings.textAnimation.duration}
                           onChange={e => setEditorSettings(p => ({ ...p, textAnimation: { ...p.textAnimation, duration: parseFloat(e.target.value) } }))}
-                          className="w-full accent-gold h-1" />
+                          className="w-full accent-[#2563EB] h-1" />
                       </div>
                       <div>
                         <label className="block text-[8px] text-muted uppercase mb-1">Easing</label>
@@ -4995,7 +4995,7 @@ export default function VideoEditorPage() {
               {/* === Motion / Zoom Panel === */}
               <CollapsiblePanel
                 id="motion"
-                icon={<Camera size={13} className="text-gold" />}
+                icon={<Camera size={13} className="text-[#2563EB]" />}
                 title="Motion & Zoom Presets"
                 desc="Camera movements and zoom effects"
                 open={openPanels.motion}
@@ -5038,7 +5038,7 @@ export default function VideoEditorPage() {
                           const active = editorSettings.motion.preset === m.id;
                           return (
                             <button key={m.id} onClick={() => setEditorSettings(p => ({ ...p, motion: { ...p.motion, preset: m.id } }))}
-                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
                               <p className="text-[10px] font-semibold">{m.name}</p>
                               <p className="text-[8px] text-muted">{m.desc}</p>
                             </button>
@@ -5052,7 +5052,7 @@ export default function VideoEditorPage() {
                       <input type="range" min={0} max={100}
                         value={editorSettings.motion.intensity}
                         onChange={e => setEditorSettings(p => ({ ...p, motion: { ...p.motion, intensity: parseInt(e.target.value) } }))}
-                        className="w-full accent-gold h-1" />
+                        className="w-full accent-[#2563EB] h-1" />
                     </div>
                   </div>
                 )}
@@ -5061,7 +5061,7 @@ export default function VideoEditorPage() {
               {/* === Transitions Panel === */}
               <CollapsiblePanel
                 id="transitions"
-                icon={<ArrowUpDown size={13} className="text-gold" />}
+                icon={<ArrowUpDown size={13} className="text-[#2563EB]" />}
                 title="Transitions Library"
                 desc="25+ transitions between clips"
                 open={openPanels.transitions}
@@ -5086,7 +5086,7 @@ export default function VideoEditorPage() {
                         return (
                           <button key={t.id}
                             onClick={() => setEditorSettings(p => ({ ...p, transitions: { ...p.transitions, preset: t.id } }))}
-                            className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-gold/40 bg-gold/10 text-gold" : "border-border text-muted hover:border-gold/20"}`}>
+                            className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-[#2563EB]/40 bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted hover:border-[rgba(37,99,235,0.2)]"}`}>
                             <div
                               className="mx-auto mb-1 rounded h-5 w-full"
                               style={{ background: `linear-gradient(90deg, ${t.color}33, ${t.color}aa)` }}
@@ -5101,7 +5101,7 @@ export default function VideoEditorPage() {
                       <input type="range" min={0.1} max={2} step={0.1}
                         value={editorSettings.transitions.duration}
                         onChange={e => setEditorSettings(p => ({ ...p, transitions: { ...p.transitions, duration: parseFloat(e.target.value) } }))}
-                        className="w-full accent-gold h-1" />
+                        className="w-full accent-[#2563EB] h-1" />
                     </div>
                   </div>
                 )}
@@ -5110,7 +5110,7 @@ export default function VideoEditorPage() {
               {/* === Color Grading Panel === */}
               <CollapsiblePanel
                 id="color"
-                icon={<Palette size={13} className="text-gold" />}
+                icon={<Palette size={13} className="text-[#2563EB]" />}
                 title="Color Grading"
                 desc="LUTs and manual color controls"
                 open={openPanels.color}
@@ -5147,7 +5147,7 @@ export default function VideoEditorPage() {
                           return (
                             <button key={lut.id}
                               onClick={() => setEditorSettings(p => ({ ...p, color: { ...p.color, lut: lut.id } }))}
-                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
                               <div className="w-full h-6 rounded-md mb-1.5" style={{ background: lut.preview }} />
                               <p className="text-[10px] font-semibold">{lut.name}</p>
                               <p className="text-[8px] text-muted">{lut.desc}</p>
@@ -5170,12 +5170,12 @@ export default function VideoEditorPage() {
                         <div key={s.key}>
                           <div className="flex justify-between">
                             <label className="block text-[8px] text-muted uppercase mb-1">{s.label}</label>
-                            <span className="text-[8px] font-mono text-gold">{editorSettings.color[s.key]}</span>
+                            <span className="text-[8px] font-mono text-[#2563EB]">{editorSettings.color[s.key]}</span>
                           </div>
                           <input type="range" min={s.min} max={s.max}
                             value={editorSettings.color[s.key]}
                             onChange={e => setEditorSettings(p => ({ ...p, color: { ...p.color, [s.key]: parseInt(e.target.value) } }))}
-                            className="w-full accent-gold h-1" />
+                            className="w-full accent-[#2563EB] h-1" />
                         </div>
                       ))}
                     </div>
@@ -5186,7 +5186,7 @@ export default function VideoEditorPage() {
               {/* === Audio / Music Panel === */}
               <CollapsiblePanel
                 id="audio"
-                icon={<Music size={13} className="text-gold" />}
+                icon={<Music size={13} className="text-[#2563EB]" />}
                 title="Audio & Music Enhancers"
                 desc="Music, ducking, noise removal, beat sync"
                 open={openPanels.audio}
@@ -5243,7 +5243,7 @@ export default function VideoEditorPage() {
                           const active = editorSettings.audio.bgGenre === g.id;
                           return (
                             <button key={g.id} onClick={() => setEditorSettings(p => ({ ...p, audio: { ...p.audio, bgGenre: g.id } }))}
-                              className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-gold/40 bg-gold/10 text-gold font-semibold" : "border-border text-muted hover:border-gold/20"}`}>
+                              className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-[#2563EB]/40 bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold" : "border-border text-muted hover:border-[rgba(37,99,235,0.2)]"}`}>
                               <p className="text-[9px] font-semibold">{g.name}</p>
                               <p className="text-[7px] opacity-70">{g.desc}</p>
                             </button>
@@ -5258,7 +5258,7 @@ export default function VideoEditorPage() {
               {/* === Aspect Ratio Panel === */}
               <CollapsiblePanel
                 id="aspect"
-                icon={<Ratio size={13} className="text-gold" />}
+                icon={<Ratio size={13} className="text-[#2563EB]" />}
                 title="Aspect Ratio Presets"
                 desc="Pick a canvas ratio"
                 open={openPanels.aspect}
@@ -5273,7 +5273,7 @@ export default function VideoEditorPage() {
                           setEditorSettings(p => ({ ...p, aspect: { ...p.aspect, preset: ar.id } }));
                           if (ar.id !== "custom") setConfig(prev => ({ ...prev, aspect_ratio: ar.id }));
                         }}
-                        className={`p-2 rounded-xl border text-center transition-all ${active ? "border-gold/40 bg-gold/[0.06] text-gold" : "border-border text-muted hover:border-gold/20"}`}>
+                        className={`p-2 rounded-xl border text-center transition-all ${active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06] text-[#2563EB]" : "border-border text-muted hover:border-[rgba(37,99,235,0.2)]"}`}>
                         <div className="mx-auto mb-1 border border-current rounded" style={{ width: ar.w, height: ar.h }} />
                         <p className="text-[9px] font-semibold">{ar.name}</p>
                         <p className="text-[7px] opacity-70 leading-tight">{ar.desc}</p>
@@ -5302,7 +5302,7 @@ export default function VideoEditorPage() {
               {/* === Overlays / Stickers Panel === */}
               <CollapsiblePanel
                 id="overlays"
-                icon={<Star size={13} className="text-gold" />}
+                icon={<Star size={13} className="text-[#2563EB]" />}
                 title="Overlays & Stickers"
                 desc="Progress bars, CTAs, arrows, emojis"
                 open={openPanels.overlays}
@@ -5327,9 +5327,9 @@ export default function VideoEditorPage() {
                                 : [...p.overlays.selected, ov.id],
                             },
                           }))}
-                          className={`p-2 rounded-xl border text-left transition-all relative ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                          className={`p-2 rounded-xl border text-left transition-all relative ${active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
                           {active && (
-                            <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-gold rounded-full flex items-center justify-center">
+                            <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-[#2563EB] rounded-full flex items-center justify-center">
                               <Check size={7} className="text-white" />
                             </div>
                           )}
@@ -5345,7 +5345,7 @@ export default function VideoEditorPage() {
               {/* === Platform-Optimized Export Presets === */}
               <CollapsiblePanel
                 id="platformExport"
-                icon={<Share2 size={13} className="text-gold" />}
+                icon={<Share2 size={13} className="text-[#2563EB]" />}
                 title="Platform Export Presets"
                 desc="One-click platform optimization"
                 open={openPanels.platformExport}
@@ -5356,11 +5356,11 @@ export default function VideoEditorPage() {
                     const active = editorSettings.platformExport === p.id;
                     return (
                       <button key={p.id} onClick={() => applyPlatformExportPreset(p.id)}
-                        className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                        className={`p-2 rounded-xl border text-left transition-all ${active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
                         <p className="text-[10px] font-semibold">{p.name}</p>
                         <p className="text-[8px] text-muted">{p.desc}</p>
                         <div className="flex gap-1 mt-1">
-                          <span className="text-[7px] px-1 py-0.5 rounded bg-gold/10 text-gold">{p.aspect}</span>
+                          <span className="text-[7px] px-1 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{p.aspect}</span>
                           <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{p.maxDur}s max</span>
                           {p.captions && <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">CC baked</span>}
                         </div>
@@ -5373,7 +5373,7 @@ export default function VideoEditorPage() {
                 <div className="mt-4 pt-3 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                      <Download size={11} className="text-gold" /> Export Formats
+                      <Download size={11} className="text-[#2563EB]" /> Export Formats
                     </h4>
                     <div className="grid grid-cols-2 gap-1.5">
                       {EXPORT_FORMATS.map(fmt => {
@@ -5384,7 +5384,7 @@ export default function VideoEditorPage() {
                               ...prev,
                               exportAdvanced: { ...prev.exportAdvanced, format: fmt.id },
                             }))}
-                            className={`p-2 rounded-lg border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                            className={`p-2 rounded-lg border text-left transition-all ${active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
                             <p className="text-[9px] font-semibold">{fmt.name}</p>
                             <p className="text-[8px] text-muted mt-0.5 leading-tight">{fmt.desc}</p>
                           </button>
@@ -5394,7 +5394,7 @@ export default function VideoEditorPage() {
                   </div>
                   <div>
                     <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                      <Gauge size={11} className="text-gold" /> Quality Presets
+                      <Gauge size={11} className="text-[#2563EB]" /> Quality Presets
                     </h4>
                     <div className="grid grid-cols-1 gap-1.5">
                       {QUALITY_PRESETS.map(q => {
@@ -5405,7 +5405,7 @@ export default function VideoEditorPage() {
                               ...prev,
                               exportAdvanced: { ...prev.exportAdvanced, quality: q.id },
                             }))}
-                            className={`p-2 rounded-lg border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                            className={`p-2 rounded-lg border text-left transition-all ${active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
                             <p className="text-[9px] font-semibold">{q.name}</p>
                             <p className="text-[8px] text-muted">{q.desc}</p>
                           </button>
@@ -5430,7 +5430,7 @@ export default function VideoEditorPage() {
               {/* === Effects Library (50+ VFX presets) === */}
               <CollapsiblePanel
                 id="effects"
-                icon={<Sparkles size={13} className="text-gold" />}
+                icon={<Sparkles size={13} className="text-[#2563EB]" />}
                 title="Effects Library"
                 desc={`${EFFECTS_LIBRARY.length} VFX presets across ${EFFECT_CATEGORIES.length} categories`}
                 open={openPanels.effects}
@@ -5445,8 +5445,8 @@ export default function VideoEditorPage() {
                         onClick={() => setEffectCategoryFilter(cat)}
                         className={`text-[9px] px-2 py-1 rounded-lg border transition-all ${
                           effectCategoryFilter === cat
-                            ? "bg-gold/10 text-gold border-gold/20 font-semibold"
-                            : "text-muted border-border hover:border-gold/15"
+                            ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)] font-semibold"
+                            : "text-muted border-border hover:border-[rgba(37,99,235,0.15)]"
                         }`}
                       >
                         {cat}
@@ -5457,7 +5457,7 @@ export default function VideoEditorPage() {
                     <button
                       type="button"
                       onClick={clearAllEffects}
-                      className="text-[9px] text-muted hover:text-gold flex items-center gap-1"
+                      className="text-[9px] text-muted hover:text-[#2563EB] flex items-center gap-1"
                     >
                       <X size={10} /> Clear ({editorSettings.effects.active.length})
                     </button>
@@ -5471,7 +5471,7 @@ export default function VideoEditorPage() {
                     return (
                       <div
                         key={fx.id}
-                        className={`relative rounded-lg border overflow-hidden transition-all ${active ? "border-gold ring-1 ring-gold/30" : "border-border hover:border-gold/20"}`}
+                        className={`relative rounded-lg border overflow-hidden transition-all ${active ? "border-[#2563EB] ring-1 ring-[rgba(37,99,235,0.3)]" : "border-border hover:border-[rgba(37,99,235,0.2)]"}`}
                       >
                         <button
                           type="button"
@@ -5481,7 +5481,7 @@ export default function VideoEditorPage() {
                         >
                           <div className={`h-10 w-full ${fx.preview} relative animate-pulse`}>
                             {active && (
-                              <div className="absolute top-0.5 right-0.5 bg-gold text-black rounded-full p-0.5">
+                              <div className="absolute top-0.5 right-0.5 bg-[#2563EB] text-white rounded-full p-0.5">
                                 <Check size={8} />
                               </div>
                             )}
@@ -5500,7 +5500,7 @@ export default function VideoEditorPage() {
                               max={100}
                               value={intensity}
                               onChange={(e) => setEffectIntensity(fx.id, Number(e.target.value))}
-                              className="w-full accent-gold"
+                              className="w-full accent-[#2563EB]"
                             />
                           </div>
                         )}
@@ -5513,7 +5513,7 @@ export default function VideoEditorPage() {
               {/* === Voice & Narration Panel === */}
               <CollapsiblePanel
                 id="voice"
-                icon={<Mic size={13} className="text-gold" />}
+                icon={<Mic size={13} className="text-[#2563EB]" />}
                 title="Voice & Narration"
                 desc={`${VOICE_PRESETS.length} AI voices + cloning + tone controls`}
                 open={openPanels.voice}
@@ -5526,7 +5526,7 @@ export default function VideoEditorPage() {
                 {/* Voice preset grid */}
                 <div className="mb-4">
                   <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                    <Speech size={11} className="text-gold" /> Select a Voice Preset
+                    <Speech size={11} className="text-[#2563EB]" /> Select a Voice Preset
                   </h4>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1.5">
                     {VOICE_PRESETS.map(v => {
@@ -5536,11 +5536,11 @@ export default function VideoEditorPage() {
                           key={v.id}
                           type="button"
                           onClick={() => selectVoicePreset(v.id)}
-                          className={`p-2 rounded-lg border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}
+                          className={`p-2 rounded-lg border text-left transition-all ${active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}
                         >
                           <p className="text-[9px] font-semibold leading-tight">{v.name}</p>
                           <div className="flex gap-0.5 mt-1 flex-wrap">
-                            <span className="text-[7px] px-1 py-0.5 rounded bg-gold/10 text-gold">{v.gender}</span>
+                            <span className="text-[7px] px-1 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{v.gender}</span>
                             <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{v.style}</span>
                             <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{v.accent}</span>
                           </div>
@@ -5553,7 +5553,7 @@ export default function VideoEditorPage() {
                 {/* Voice cloning */}
                 <div className="mb-4 p-3 rounded-lg border border-border">
                   <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                    <Upload size={11} className="text-gold" /> Voice Cloning
+                    <Upload size={11} className="text-[#2563EB]" /> Voice Cloning
                   </h4>
                   <p className="text-[9px] text-muted mb-2">Upload a 30-second voice sample to clone the voice</p>
                   <input
@@ -5572,14 +5572,14 @@ export default function VideoEditorPage() {
                     onClick={() => voiceSampleInputRef.current?.click()}
                     className="btn btn-sm w-full flex items-center justify-center gap-1.5"
                   >
-                    <Upload size={11} /> {editorSettings.voice.cloneSampleUrl ? "Sample Uploaded — Replace" : "Upload Voice Sample"}
+                    <Upload size={11} /> {editorSettings.voice.cloneSampleUrl ? "Sample Uploaded ï¿½ Replace" : "Upload Voice Sample"}
                   </button>
                 </div>
 
                 {/* Tone controls */}
                 <div className="mb-4 p-3 rounded-lg border border-border">
                   <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                    <Sliders size={11} className="text-gold" /> Tone Controls
+                    <Sliders size={11} className="text-[#2563EB]" /> Tone Controls
                   </h4>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -5590,7 +5590,7 @@ export default function VideoEditorPage() {
                         max={12}
                         value={editorSettings.voice.pitch}
                         onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, pitch: Number(e.target.value) } }))}
-                        className="w-full accent-gold"
+                        className="w-full accent-[#2563EB]"
                       />
                     </div>
                     <div>
@@ -5602,7 +5602,7 @@ export default function VideoEditorPage() {
                         step={0.05}
                         value={editorSettings.voice.speed}
                         onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, speed: Number(e.target.value) } }))}
-                        className="w-full accent-gold"
+                        className="w-full accent-[#2563EB]"
                       />
                     </div>
                     <div>
@@ -5613,7 +5613,7 @@ export default function VideoEditorPage() {
                         max={100}
                         value={editorSettings.voice.emphasis}
                         onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, emphasis: Number(e.target.value) } }))}
-                        className="w-full accent-gold"
+                        className="w-full accent-[#2563EB]"
                       />
                     </div>
                     <div>
@@ -5624,7 +5624,7 @@ export default function VideoEditorPage() {
                         max={100}
                         value={editorSettings.voice.pauseLength}
                         onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, pauseLength: Number(e.target.value) } }))}
-                        className="w-full accent-gold"
+                        className="w-full accent-[#2563EB]"
                       />
                     </div>
                   </div>
@@ -5633,7 +5633,7 @@ export default function VideoEditorPage() {
                 {/* Script-to-voice preview */}
                 <div className="p-3 rounded-lg border border-border">
                   <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                    <MessageSquare size={11} className="text-gold" /> Script-to-Voice Preview
+                    <MessageSquare size={11} className="text-[#2563EB]" /> Script-to-Voice Preview
                   </h4>
                   <textarea
                     value={voiceScriptPreview}
@@ -5657,7 +5657,7 @@ export default function VideoEditorPage() {
               {/* === B-Roll & Stock Footage === */}
               <CollapsiblePanel
                 id="broll"
-                icon={<Film size={13} className="text-gold" />}
+                icon={<Film size={13} className="text-[#2563EB]" />}
                 title="B-Roll & Stock"
                 desc="Search stock libraries + AI match + upload custom clips"
                 open={openPanels.broll}
@@ -5687,7 +5687,7 @@ export default function VideoEditorPage() {
                     className="btn btn-sm flex items-center justify-center gap-1.5"
                     title="Open the full B-roll browser (Cmd/Ctrl+K)"
                   >
-                    <Sparkles size={11} className="text-gold" /> Browse all B-roll
+                    <Sparkles size={11} className="text-[#2563EB]" /> Browse all B-roll
                   </button>
                   <input
                     ref={brollFileInputRef}
@@ -5719,7 +5719,7 @@ export default function VideoEditorPage() {
                         <button
                           key={cat.id}
                           onClick={() => setEditorSettings(prev => ({ ...prev, broll: { ...prev.broll, activeCategory: cat.id } }))}
-                          className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${active ? "border-gold/40 bg-gold/[0.06] text-gold" : "border-border hover:border-gold/15 text-muted"}`}
+                          className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06] text-[#2563EB]" : "border-border hover:border-[rgba(37,99,235,0.15)] text-muted"}`}
                         >
                           <span>{cat.icon}</span> {cat.name}
                         </button>
@@ -5728,10 +5728,10 @@ export default function VideoEditorPage() {
                   </div>
                 </div>
 
-                {/* Pointer to the real Preset Picker — previously this was a
+                {/* Pointer to the real Preset Picker ï¿½ previously this was a
                     grid of 8 fake gradient tiles. The real clip browser lives
                     in the sidebar at Cmd/Ctrl+K (Preset Picker). */}
-                <div className="p-3 rounded-lg border border-dashed border-gold/25 bg-gold/[0.03] text-center">
+                <div className="p-3 rounded-lg border border-dashed border-[#2563EB]/25 bg-[rgba(37,99,235,0.03)] text-center">
                   <p className="text-[10px] text-muted mb-2">
                     {editorSettings.broll.selectedClips.length} clip{editorSettings.broll.selectedClips.length === 1 ? "" : "s"} selected. For the full library
                     (real Pexels / Pixabay results), open the Preset Picker.
@@ -5739,7 +5739,7 @@ export default function VideoEditorPage() {
                   <button
                     type="button"
                     onClick={() => setShowPresetPicker(true)}
-                    className="text-[10px] px-3 py-1.5 rounded-lg border border-gold/30 bg-gold/10 text-gold hover:bg-gold/20 flex items-center justify-center gap-1.5 mx-auto"
+                    className="text-[10px] px-3 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center justify-center gap-1.5 mx-auto"
                   >
                     <Wand2 size={10} /> Open Preset Picker <span className="text-[8px] opacity-70">?K</span>
                   </button>
@@ -5749,7 +5749,7 @@ export default function VideoEditorPage() {
               {/* === Advanced Timeline === */}
               <CollapsiblePanel
                 id="advancedTimeline"
-                icon={<Layers size={13} className="text-gold" />}
+                icon={<Layers size={13} className="text-[#2563EB]" />}
                 title="Advanced Timeline"
                 desc="Multi-track preview, keyframes, beat sync, audio ducking"
                 open={openPanels.advancedTimeline}
@@ -5790,7 +5790,7 @@ export default function VideoEditorPage() {
                 {/* Audio ducking customization */}
                 <div className="p-3 rounded-lg border border-border">
                   <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                    <VolumeX size={11} className="text-gold" /> Audio Ducking
+                    <VolumeX size={11} className="text-[#2563EB]" /> Audio Ducking
                   </h4>
                   <p className="text-[9px] text-muted mb-2">How much music volume ducks under voiceover (higher = quieter)</p>
                   <div className="flex items-center gap-2">
@@ -5800,19 +5800,19 @@ export default function VideoEditorPage() {
                       max={100}
                       value={editorSettings.timeline.audioDucking}
                       onChange={(e) => setEditorSettings(prev => ({ ...prev, timeline: { ...prev.timeline, audioDucking: Number(e.target.value) } }))}
-                      className="flex-1 accent-gold"
+                      className="flex-1 accent-[#2563EB]"
                     />
-                    <span className="text-[10px] font-mono text-gold w-10 text-right">{editorSettings.timeline.audioDucking}%</span>
+                    <span className="text-[10px] font-mono text-[#2563EB] w-10 text-right">{editorSettings.timeline.audioDucking}%</span>
                   </div>
                 </div>
               </CollapsiblePanel>
 
             </div>
 
-            {/* Sidebar — active-config summary */}
+            {/* Sidebar ï¿½ active-config summary */}
             <div className="space-y-3">
-              <div className="glass rounded-xl border-gold/10">
-                <h3 className="section-header flex items-center gap-2"><ListChecks size={12} className="text-gold" /> Active Config Summary</h3>
+              <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+                <h3 className="section-header flex items-center gap-2"><ListChecks size={12} className="text-[#2563EB]" /> Active Config Summary</h3>
                 <div className="space-y-1.5 text-[9px]">
                   <SummaryRow label="Captions" on={editorSettings.captions.enabled} value={editorSettings.captions.enabled ? ADVANCED_CAPTION_PRESETS.find(x => x.id === editorSettings.captions.preset)?.name : "off"} />
                   <SummaryRow label="Text Anim" on={editorSettings.textAnimation.enabled} value={editorSettings.textAnimation.enabled ? editorSettings.textAnimation.preset : "off"} />
@@ -5832,7 +5832,7 @@ export default function VideoEditorPage() {
               </div>
 
               <div className="card">
-                <h3 className="section-header flex items-center gap-2"><Sparkles size={12} className="text-gold" /> Smart Flags</h3>
+                <h3 className="section-header flex items-center gap-2"><Sparkles size={12} className="text-[#2563EB]" /> Smart Flags</h3>
                 <div className="space-y-1 text-[9px]">
                   {[
                     ["Cut silence", editorSettings.smart.autoCutSilence],
@@ -5846,16 +5846,16 @@ export default function VideoEditorPage() {
                   ].map(([label, on], i) => (
                     <div key={i} className="flex justify-between">
                       <span className="text-muted">{label as string}</span>
-                      <span className={on ? "text-gold font-mono" : "text-muted/50 font-mono"}>{on ? "on" : "-"}</span>
+                      <span className={on ? "text-[#2563EB] font-mono" : "text-muted/50 font-mono"}>{on ? "on" : "-"}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="glass rounded-xl border-gold/10">
-                <h3 className="section-header flex items-center gap-2"><AlertCircle size={12} className="text-gold" /> Tips</h3>
+              <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+                <h3 className="section-header flex items-center gap-2"><AlertCircle size={12} className="text-[#2563EB]" /> Tips</h3>
                 <ul className="text-[9px] text-muted space-y-1 list-disc pl-3.5">
-                  <li>Every panel is optional — toggle only what you need.</li>
+                  <li>Every panel is optional ï¿½ toggle only what you need.</li>
                   <li>Platform presets auto-set aspect, duration, and captions.</li>
                   <li>All settings pass through to the render backend on generate.</li>
                 </ul>
@@ -5871,7 +5871,7 @@ export default function VideoEditorPage() {
             {/* --- Left-panel tabs: Style / Brand / AI / Assets ---------
              *  Collapses the old wall of 4 accordions (Caption/Effects/SFX/
              *  Music + Brand + Details + AI Options + Style) into a single
-             *  tab-switcher. Only one group renders at a time — this is the
+             *  tab-switcher. Only one group renders at a time ï¿½ this is the
              *  biggest win against the "every section is the same weight"
              *  complaint from the audit. */}
             <div className="tab-group">
@@ -5898,7 +5898,7 @@ export default function VideoEditorPage() {
               <div className="space-y-3">
                 <div className="glass rounded-xl space-y-2">
                   <h2 className="section-header flex items-center gap-2 mb-0">
-                    <Wand2 size={13} className="text-gold" /> One-click Auto-Edit
+                    <Wand2 size={13} className="text-[#2563EB]" /> One-click Auto-Edit
                   </h2>
                   <p className="text-[9px] text-muted">
                     Runs detect-scenes ? suggest ? captions ? B-roll candidates on your rendered video.
@@ -5911,7 +5911,7 @@ export default function VideoEditorPage() {
                     className="btn-primary w-full text-xs py-2 flex items-center justify-center gap-1.5 disabled:opacity-40"
                   >
                     {fullPassRunning ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-                    {fullPassRunning ? "Running full-pass…" : "Run Full-Pass Auto-Edit"}
+                    {fullPassRunning ? "Running full-passï¿½" : "Run Full-Pass Auto-Edit"}
                   </button>
                   {(!result?.url || !aiProject?.project_id) && (
                     <p className="text-[8px] text-muted italic">
@@ -5922,11 +5922,11 @@ export default function VideoEditorPage() {
 
                 <div className="glass rounded-xl space-y-2">
                   <h2 className="section-header flex items-center gap-2 mb-0">
-                    <Eye size={13} className="text-gold" /> Classify Footage
+                    <Eye size={13} className="text-[#2563EB]" /> Classify Footage
                   </h2>
                   <p className="text-[9px] text-muted">
                     Claude Vision detects the content type of each reference (webcam talk,
-                    vlog, drone, gameplay…) and suggests a creator pack. Click any
+                    vlog, drone, gameplayï¿½) and suggests a creator pack. Click any
                     reference below, then click Classify.
                   </p>
                   {referenceFiles.length === 0 ? (
@@ -5947,7 +5947,7 @@ export default function VideoEditorPage() {
                                 fallback={<ImageIcon size={12} className="text-muted" />}
                               />
                             ) : f.type.startsWith("video/") ? (
-                              <Film size={12} className="text-gold" />
+                              <Film size={12} className="text-[#2563EB]" />
                             ) : (
                               <ImageIcon size={12} className="text-muted" />
                             )}
@@ -5969,7 +5969,7 @@ export default function VideoEditorPage() {
                             type="button"
                             onClick={() => classifyReferenceFootage(i)}
                             disabled={classifyingIdx === i}
-                            className="text-[8px] px-1.5 py-0.5 rounded border border-gold/30 bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1 disabled:opacity-40"
+                            className="text-[8px] px-1.5 py-0.5 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1 disabled:opacity-40"
                           >
                             {classifyingIdx === i ? <Loader2 size={8} className="animate-spin" /> : <Bot size={8} />}
                             {classifyingIdx === i ? "Classifying" : "Classify"}
@@ -5982,7 +5982,7 @@ export default function VideoEditorPage() {
 
                 <div className="glass rounded-xl space-y-2">
                   <h2 className="section-header flex items-center gap-2 mb-0">
-                    <TrendingUp size={13} className="text-gold" /> Analyze Viral Video
+                    <TrendingUp size={13} className="text-[#2563EB]" /> Analyze Viral Video
                   </h2>
                   <p className="text-[9px] text-muted">
                     Paste a YouTube / Shorts URL. Claude Vision extracts the visual
@@ -5994,7 +5994,7 @@ export default function VideoEditorPage() {
                       type="url"
                       value={viralUrl}
                       onChange={(e) => setViralUrl(e.target.value)}
-                      placeholder="https://youtube.com/watch?v=…"
+                      placeholder="https://youtube.com/watch?v=ï¿½"
                       className="input flex-1 text-xs"
                     />
                     <button
@@ -6004,7 +6004,7 @@ export default function VideoEditorPage() {
                       className="btn-primary text-xs px-3 flex items-center gap-1 disabled:opacity-40"
                     >
                       {viralAnalyzing ? <Loader2 size={11} className="animate-spin" /> : <TrendingUp size={11} />}
-                      {viralAnalyzing ? "…" : "Analyze"}
+                      {viralAnalyzing ? "ï¿½" : "Analyze"}
                     </button>
                   </div>
                   {viralResult && (
@@ -6019,7 +6019,7 @@ export default function VideoEditorPage() {
             {/* Brand Kit Integration */}
             {editorLeftTab === "brand" && (
             <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Paintbrush size={13} className="text-gold" /> Brand Kit</h2>
+              <h2 className="section-header flex items-center gap-2"><Paintbrush size={13} className="text-[#2563EB]" /> Brand Kit</h2>
               <div className="grid grid-cols-3 gap-2">
                 {brandKits.map(kit => (
                   <button key={kit.id} onClick={() => {
@@ -6028,11 +6028,11 @@ export default function VideoEditorPage() {
                     toast.success(`Brand kit "${kit.name}" applied`);
                   }}
                     className={`p-2.5 rounded-xl border text-left transition-all ${
-                      selectedBrandKit === kit.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                      selectedBrandKit === kit.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                     }`}>
                     <div className="flex items-center gap-1 mb-1">
                       {kit.colors.map((c, i) => (
-                        <div key={i} className="w-3 h-3 rounded-full border border-white/10" style={{ backgroundColor: c }} />
+                        <div key={i} className="w-3 h-3 rounded-full border border-black/[0.08]" style={{ backgroundColor: c }} />
                       ))}
                     </div>
                     <p className="text-[10px] font-semibold">{kit.name}</p>
@@ -6052,7 +6052,7 @@ export default function VideoEditorPage() {
                 className="w-full flex items-center justify-between mb-2"
               >
                 <h2 className="section-header flex items-center gap-2 mb-0">
-                  <Captions size={13} className="text-gold" /> Caption Style ({CAPTION_STYLES_LIBRARY.length})
+                  <Captions size={13} className="text-[#2563EB]" /> Caption Style ({CAPTION_STYLES_LIBRARY.length})
                 </h2>
                 {openAssetPanels.captionStyle ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
               </button>
@@ -6066,7 +6066,7 @@ export default function VideoEditorPage() {
                         onClick={() => setCaptionStyleFilter(f)}
                         className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${
                           captionStyleFilter === f
-                            ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold"
+                            ? "border-[rgba(37,99,235,0.25)] bg-[#2563EB]/[0.08] text-[#2563EB] font-semibold"
                             : "border-border text-muted hover:text-foreground"
                         }`}
                       >
@@ -6101,7 +6101,7 @@ export default function VideoEditorPage() {
                             }));
                           }}
                           className={`p-2.5 rounded-xl border text-left transition-all ${
-                            active ? "border-gold/40 bg-gold/[0.07]" : "border-border hover:border-gold/15"
+                            active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.07]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                           }`}
                         >
                           <div
@@ -6120,11 +6120,11 @@ export default function VideoEditorPage() {
                             <div>This video went</div>
                             <div>viral overnight</div>
                           </div>
-                          <p className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{c.name}</p>
+                          <p className={`text-[10px] font-semibold ${active ? "text-[#2563EB]" : ""}`}>{c.name}</p>
                           <p className="text-[8px] text-muted">{c.desc}</p>
                           <div className="flex gap-1 mt-1 flex-wrap">
                             {c.best_for.map((b) => (
-                              <span key={b} className="text-[7px] px-1 py-[1px] rounded bg-gold/10 text-gold/90">
+                              <span key={b} className="text-[7px] px-1 py-[1px] rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]/90">
                                 {b}
                               </span>
                             ))}
@@ -6147,13 +6147,13 @@ export default function VideoEditorPage() {
                 className="w-full flex items-center justify-between mb-2"
               >
                 <h2 className="section-header flex items-center gap-2 mb-0">
-                  <Wand2 size={13} className="text-gold" /> Effects &amp; Transitions ({EFFECTS_CATALOG.length})
+                  <Wand2 size={13} className="text-[#2563EB]" /> Effects &amp; Transitions ({EFFECTS_CATALOG.length})
                 </h2>
                 {openAssetPanels.effectsTransitions ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
               </button>
               {openAssetPanels.effectsTransitions && (
                 <>
-                  <p className="text-[9px] text-muted mb-2">Hover for description. Click to toggle — multiple allowed.</p>
+                  <p className="text-[9px] text-muted mb-2">Hover for description. Click to toggle ï¿½ multiple allowed.</p>
                   <div className="flex flex-wrap gap-1 mb-2">
                     {(["all", "transition", "overlay", "filter"] as const).map((cat) => (
                       <button
@@ -6161,7 +6161,7 @@ export default function VideoEditorPage() {
                         onClick={() => setEffectsCategoryTab(cat)}
                         className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${
                           effectsCategoryTab === cat
-                            ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold"
+                            ? "border-[rgba(37,99,235,0.25)] bg-[#2563EB]/[0.08] text-[#2563EB] font-semibold"
                             : "border-border text-muted hover:text-foreground"
                         }`}
                       >
@@ -6191,8 +6191,8 @@ export default function VideoEditorPage() {
                           }}
                           className={`flex items-center gap-1.5 px-2 py-1 rounded-full border text-[10px] transition-all ${
                             active
-                              ? "border-gold/40 bg-gold/[0.08] text-gold"
-                              : "border-border text-muted hover:border-gold/20 hover:text-foreground"
+                              ? "border-[#2563EB]/40 bg-[#2563EB]/[0.08] text-[#2563EB]"
+                              : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
                           }`}
                         >
                           {e.preview && <span className={`inline-block w-3 h-3 rounded-sm ${e.preview}`} />}
@@ -6203,7 +6203,7 @@ export default function VideoEditorPage() {
                     })}
                   </div>
                   {selectedEffectIds.length > 0 && (
-                    <p className="text-[9px] text-gold mt-2">{selectedEffectIds.length} effect{selectedEffectIds.length === 1 ? "" : "s"} selected</p>
+                    <p className="text-[9px] text-[#2563EB] mt-2">{selectedEffectIds.length} effect{selectedEffectIds.length === 1 ? "" : "s"} selected</p>
                   )}
                 </>
               )}
@@ -6216,7 +6216,7 @@ export default function VideoEditorPage() {
                 className="w-full flex items-center justify-between mb-2"
               >
                 <h2 className="section-header flex items-center gap-2 mb-0">
-                  <Volume2 size={13} className="text-gold" /> SFX Palette ({SFX_LIBRARY.length})
+                  <Volume2 size={13} className="text-[#2563EB]" /> SFX Palette ({SFX_LIBRARY.length})
                 </h2>
                 {openAssetPanels.sfxPalette ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
               </button>
@@ -6230,7 +6230,7 @@ export default function VideoEditorPage() {
                         onClick={() => setSfxCategoryTab(cat)}
                         className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${
                           sfxCategoryTab === cat
-                            ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold"
+                            ? "border-[rgba(37,99,235,0.25)] bg-[#2563EB]/[0.08] text-[#2563EB] font-semibold"
                             : "border-border text-muted hover:text-foreground"
                         }`}
                       >
@@ -6245,19 +6245,19 @@ export default function VideoEditorPage() {
                         <div
                           key={s.id}
                           className={`flex items-center gap-2 p-2 rounded-lg border transition-all ${
-                            active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"
+                            active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                           }`}
                         >
                           <button
                             onClick={() => playSfxPlaceholderTone(s)}
-                            className="p-1 rounded-full bg-gold/15 text-gold hover:bg-gold/25 transition-all flex-shrink-0"
+                            className="p-1 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[#2563EB]/25 transition-all flex-shrink-0"
                             title={`Preview ${s.name}`}
                           >
                             <Play size={10} />
                           </button>
                           <div className="flex-1 min-w-0">
-                            <p className={`text-[10px] font-semibold truncate ${active ? "text-gold" : ""}`}>{s.name}</p>
-                            <p className="text-[8px] text-muted truncate">{s.desc} · {s.duration_sec}s</p>
+                            <p className={`text-[10px] font-semibold truncate ${active ? "text-[#2563EB]" : ""}`}>{s.name}</p>
+                            <p className="text-[8px] text-muted truncate">{s.desc} ï¿½ {s.duration_sec}s</p>
                           </div>
                           <span className="text-[7px] px-1 py-[1px] rounded bg-muted/20 text-muted">{s.category}</span>
                           <button
@@ -6268,7 +6268,7 @@ export default function VideoEditorPage() {
                             }
                             className={`text-[9px] px-2 py-0.5 rounded-full border transition-all flex-shrink-0 ${
                               active
-                                ? "border-gold/40 bg-gold/[0.12] text-gold"
+                                ? "border-[#2563EB]/40 bg-[#2563EB]/[0.12] text-[#2563EB]"
                                 : "border-border text-muted hover:text-foreground"
                             }`}
                           >
@@ -6279,7 +6279,7 @@ export default function VideoEditorPage() {
                     })}
                   </div>
                   {selectedSfxIds.length > 0 && (
-                    <p className="text-[9px] text-gold mt-2">{selectedSfxIds.length} SFX selected</p>
+                    <p className="text-[9px] text-[#2563EB] mt-2">{selectedSfxIds.length} SFX selected</p>
                   )}
                 </>
               )}
@@ -6292,7 +6292,7 @@ export default function VideoEditorPage() {
                 className="w-full flex items-center justify-between mb-2"
               >
                 <h2 className="section-header flex items-center gap-2 mb-0">
-                  <Music size={13} className="text-gold" /> Music ({MUSIC_LIBRARY.length})
+                  <Music size={13} className="text-[#2563EB]" /> Music ({MUSIC_LIBRARY.length})
                 </h2>
                 {openAssetPanels.music ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
               </button>
@@ -6313,7 +6313,7 @@ export default function VideoEditorPage() {
                       className="w-full flex items-center justify-center gap-1.5 text-[10px] font-semibold py-1.5 rounded-lg bg-[#2563EB] text-white hover:bg-[#1D4ED8] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       {aiMusicLoading ? <Loader2 size={10} className="animate-spin" /> : <Waves size={10} />}
-                      {aiMusicLoading ? "Generating…" : "Generate music"}
+                      {aiMusicLoading ? "Generatingï¿½" : "Generate music"}
                     </button>
                     {aiMusicUrl && (
                       <div className="mt-1.5">
@@ -6372,19 +6372,19 @@ export default function VideoEditorPage() {
                             }));
                           }}
                           className={`w-full flex items-center gap-2 p-2 rounded-lg border text-left transition-all ${
-                            active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"
+                            active ? "border-[#2563EB]/40 bg-[#2563EB]/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                           }`}
                         >
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
-                              <p className={`text-[10px] font-semibold truncate ${active ? "text-gold" : ""}`}>{m.name}</p>
-                              {active && <Check size={10} className="text-gold flex-shrink-0" />}
+                              <p className={`text-[10px] font-semibold truncate ${active ? "text-[#2563EB]" : ""}`}>{m.name}</p>
+                              {active && <Check size={10} className="text-[#2563EB] flex-shrink-0" />}
                             </div>
-                            <p className="text-[8px] text-muted truncate">{m.genre} · {m.mood} · {m.bpm} BPM · {m.duration_sec}s</p>
+                            <p className="text-[8px] text-muted truncate">{m.genre} ï¿½ {m.mood} ï¿½ {m.bpm} BPM ï¿½ {m.duration_sec}s</p>
                           </div>
                           <div className="flex gap-1 flex-shrink-0">
                             {m.suggested_platforms.slice(0, 2).map((p) => (
-                              <span key={p} className="text-[7px] px-1 py-[1px] rounded bg-gold/10 text-gold/90">{p}</span>
+                              <span key={p} className="text-[7px] px-1 py-[1px] rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]/90">{p}</span>
                             ))}
                           </div>
                         </button>
@@ -6392,7 +6392,7 @@ export default function VideoEditorPage() {
                     })}
                   </div>
                   {selectedMusicId && (
-                    <p className="text-[9px] text-gold mt-2">
+                    <p className="text-[9px] text-[#2563EB] mt-2">
                       Selected: {MUSIC_LIBRARY.find((m) => m.id === selectedMusicId)?.name}
                     </p>
                   )}
@@ -6400,14 +6400,14 @@ export default function VideoEditorPage() {
               )}
             </div>
 
-            {/* Style (visual style — belongs with Style tab) */}
+            {/* Style (visual style ï¿½ belongs with Style tab) */}
             <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-gold" /> Visual Style</h2>
+              <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-[#2563EB]" /> Visual Style</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {(stylesExpanded ? STYLES : STYLES.slice(0, 6)).map(s => (
                   <button key={s.id} onClick={() => setConfig({ ...config, style: s.id })}
                     className={`p-2 rounded-xl border text-left transition-all ${
-                      config.style === s.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                      config.style === s.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                     }`}>
                     <p className="text-[10px] font-semibold">{s.name}</p>
                     <p className="text-[8px] text-muted">{s.desc}</p>
@@ -6439,14 +6439,14 @@ export default function VideoEditorPage() {
             <>
             {/* Video type */}
             <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Film size={13} className="text-gold" /> Video Type</h2>
+              <h2 className="section-header flex items-center gap-2"><Film size={13} className="text-[#2563EB]" /> Video Type</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {VIDEO_TYPES.map(t => (
                   <button key={t.id} onClick={() => selectType(t)}
                     className={`flex items-center gap-2 p-2.5 rounded-xl border transition-all ${
-                      config.type === t.id ? "border-gold/30 bg-gold/[0.05]" : "border-border"
+                      config.type === t.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border"
                     }`}>
-                    <span className={config.type === t.id ? "text-gold" : "text-muted"}>{t.icon}</span>
+                    <span className={config.type === t.id ? "text-[#2563EB]" : "text-muted"}>{t.icon}</span>
                     <div>
                       <p className="text-[10px] font-semibold">{t.name}</p>
                       <p className="text-[8px] text-muted">{t.aspect} / {t.duration}s</p>
@@ -6465,7 +6465,7 @@ export default function VideoEditorPage() {
                   className="input w-full text-xs" placeholder="e.g., 5 Dental Marketing Tips That Actually Work" />
               </div>
               <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Script (optional — AI will create one if empty)</label>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Script (optional ï¿½ AI will create one if empty)</label>
                 <PromptEnhancer
                   value={config.script}
                   onChange={(v) => setConfig({ ...config, script: v })}
@@ -6478,13 +6478,13 @@ export default function VideoEditorPage() {
               <div>
                 <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Reference Files (faces, logos, footage, effects)</label>
                 <div
-                  className="border-2 border-dashed border-border/40 rounded-xl p-3 text-center hover:border-gold/30 transition-colors cursor-pointer"
-                  onDragOver={e => { e.preventDefault(); e.stopPropagation(); e.currentTarget.classList.add("border-gold/40", "bg-gold/5"); }}
-                  onDragLeave={e => { e.currentTarget.classList.remove("border-gold/40", "bg-gold/5"); }}
+                  className="border-2 border-dashed border-border/40 rounded-xl p-3 text-center hover:border-[rgba(37,99,235,0.25)] transition-colors cursor-pointer"
+                  onDragOver={e => { e.preventDefault(); e.stopPropagation(); e.currentTarget.classList.add("border-[#2563EB]/40", "bg-[rgba(37,99,235,0.05)]"); }}
+                  onDragLeave={e => { e.currentTarget.classList.remove("border-[#2563EB]/40", "bg-[rgba(37,99,235,0.05)]"); }}
                   onDrop={e => {
                     e.preventDefault();
                     e.stopPropagation();
-                    e.currentTarget.classList.remove("border-gold/40", "bg-gold/5");
+                    e.currentTarget.classList.remove("border-[#2563EB]/40", "bg-[rgba(37,99,235,0.05)]");
                     handleFileUpload(Array.from(e.dataTransfer.files));
                   }}
                   onClick={() => {
@@ -6521,8 +6521,8 @@ export default function VideoEditorPage() {
                           />
                         ) : (
                           <div className="w-14 h-14 bg-surface-light rounded-lg border border-border flex flex-col items-center justify-center">
-                            {f.type.startsWith("video/") ? <Film size={14} className="text-gold mb-0.5" /> :
-                             f.type.startsWith("audio/") ? <Music size={14} className="text-gold mb-0.5" /> :
+                            {f.type.startsWith("video/") ? <Film size={14} className="text-[#2563EB] mb-0.5" /> :
+                             f.type.startsWith("audio/") ? <Music size={14} className="text-[#2563EB] mb-0.5" /> :
                              <ImageIcon size={14} className="text-muted mb-0.5" />}
                             <span className="text-[7px] text-muted truncate max-w-[48px]">{f.name}</span>
                           </div>
@@ -6537,7 +6537,7 @@ export default function VideoEditorPage() {
                           <button
                             onClick={(e) => { e.stopPropagation(); void analyzeReferenceFile(i); }}
                             disabled={refAnalyzing}
-                            className="absolute -bottom-1 -right-1 px-1 py-0.5 rounded-full bg-gold text-black text-[7px] font-bold items-center justify-center hidden group-hover:flex disabled:opacity-40"
+                            className="absolute -bottom-1 -right-1 px-1 py-0.5 rounded-full bg-[#2563EB] text-white text-[7px] font-bold items-center justify-center hidden group-hover:flex disabled:opacity-40"
                             title="Analyze this style with AI"
                           >
                             {refAnalyzing ? <Loader2 size={7} className="animate-spin" /> : "AI"}
@@ -6561,7 +6561,7 @@ export default function VideoEditorPage() {
                   <button
                     onClick={() => analyzeReferenceFile(0)}
                     disabled={refAnalyzing}
-                    className="mt-2 w-full text-[10px] py-1.5 rounded-lg border border-gold/30 bg-gold/[0.05] text-gold hover:bg-gold/10 transition-all flex items-center justify-center gap-1.5 disabled:opacity-40"
+                    className="mt-2 w-full text-[10px] py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center justify-center gap-1.5 disabled:opacity-40"
                   >
                     {refAnalyzing ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
                     Analyze this style with AI
@@ -6610,7 +6610,7 @@ export default function VideoEditorPage() {
               {nextVideoTierLabel && (
                 <Link
                   href="/dashboard/upgrade"
-                  className="mt-2 flex items-center justify-center gap-1.5 text-[10px] text-gold hover:text-amber-400 py-1.5 rounded-lg border border-gold/20 bg-gold/[0.04] transition-all"
+                  className="mt-2 flex items-center justify-center gap-1.5 text-[10px] text-[#2563EB] hover:text-amber-400 py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] transition-all"
                 >
                   <Lock size={10} /> Upgrade to unlock longer videos ({nextVideoTierLabel})
                 </Link>
@@ -6619,7 +6619,7 @@ export default function VideoEditorPage() {
 
             {/* AI Options */}
             <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Wand2 size={13} className="text-gold" /> AI Enhancement Options</h2>
+              <h2 className="section-header flex items-center gap-2"><Wand2 size={13} className="text-[#2563EB]" /> AI Enhancement Options</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">Music Mood</label>
@@ -6628,7 +6628,7 @@ export default function VideoEditorPage() {
                       const active = config.music_mood === m.id;
                       const isHovered = hoveredMood === m.id;
                       const Icon = m.icon;
-                      // Per-mood bar heights (0–1) so each waveform looks distinct
+                      // Per-mood bar heights (0ï¿½1) so each waveform looks distinct
                       const WAVEFORM_HEIGHTS: Record<string, number[]> = {
                         upbeat:       [0.5, 1.0, 0.7, 0.9, 0.6],
                         motivational: [0.8, 0.5, 1.0, 0.6, 0.9],
@@ -6656,18 +6656,18 @@ export default function VideoEditorPage() {
                           onMouseLeave={() => setHoveredMood(null)}
                           className={`group flex flex-col items-center gap-1 rounded-lg border p-2 transition-all ${
                             active
-                              ? "border-gold/40 bg-gold/[0.08] text-gold shadow-[0_0_0_1px_rgba(201,168,76,0.15)]"
+                              ? "border-[#2563EB]/40 bg-[#2563EB]/[0.08] text-[#2563EB] shadow-[0_0_0_1px_rgba(201,168,76,0.15)]"
                               : "border-border text-muted hover:border-border/80 hover:text-foreground"
                           }`}
                           title={m.name}
                         >
                           <span
                             className={`flex h-7 w-7 items-center justify-center rounded-md transition-all ${
-                              active ? "bg-gold/15" : m.bg
+                              active ? "bg-[rgba(37,99,235,0.08)]" : m.bg
                             }`}
                           >
                             {isHovered && m.id !== "none" ? (
-                              /* Animated waveform bars — pure CSS, no server call */
+                              /* Animated waveform bars ï¿½ pure CSS, no server call */
                               <span className="flex items-end gap-[2px] h-4 w-full justify-center">
                                 {bars.map((h, i) => (
                                   <span
@@ -6681,7 +6681,7 @@ export default function VideoEditorPage() {
                                 ))}
                               </span>
                             ) : (
-                              <Icon size={13} className={active ? "text-gold" : m.tint} />
+                              <Icon size={13} className={active ? "text-[#2563EB]" : m.tint} />
                             )}
                           </span>
                           <p className="text-[8.5px] leading-tight">{m.name}</p>
@@ -6721,13 +6721,13 @@ export default function VideoEditorPage() {
                 <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
                   <input type="checkbox" checked={config.include_voiceover}
                     onChange={e => setConfig({ ...config, include_voiceover: e.target.checked })}
-                    className="rounded border-border text-gold focus:ring-gold/30" />
+                    className="rounded border-border text-[#2563EB] focus:ring-[rgba(37,99,235,0.3)]" />
                   <Volume2 size={11} /> AI Voiceover Notes
                 </label>
                 <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
                   <input type="checkbox" checked={config.include_cta}
                     onChange={e => setConfig({ ...config, include_cta: e.target.checked })}
-                    className="rounded border-border text-gold focus:ring-gold/30" />
+                    className="rounded border-border text-[#2563EB] focus:ring-[rgba(37,99,235,0.3)]" />
                   <Zap size={11} /> Include CTA Overlay
                 </label>
                 {config.include_cta && (
@@ -6741,8 +6741,8 @@ export default function VideoEditorPage() {
             {aiProject && (aiProject.shotlist || aiProject.scenes || aiProject.captions) && (
               <div className="glass rounded-xl space-y-3">
                 <h2 className="section-header flex items-center gap-2">
-                  <Bot size={13} className="text-gold" /> AI Project
-                  <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">Claude</span>
+                  <Bot size={13} className="text-[#2563EB]" /> AI Project
+                  <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium">Claude</span>
                 </h2>
                 {aiProject.hook && (
                   <div>
@@ -6763,7 +6763,7 @@ export default function VideoEditorPage() {
                       {aiProject.scenes.map((sc, i) => (
                         <li key={i} className="text-[10px] text-foreground">
                           <span className="font-semibold">{sc.title || sc.description?.slice(0, 50) || `Scene ${i + 1}`}</span>
-                          {sc.duration ? <span className="text-muted"> · {sc.duration}s</span> : null}
+                          {sc.duration ? <span className="text-muted"> ï¿½ {sc.duration}s</span> : null}
                         </li>
                       ))}
                     </ol>
@@ -6776,7 +6776,7 @@ export default function VideoEditorPage() {
                       {aiProject.shotlist.map((s, i) => (
                         <div key={i} className="p-2 rounded-lg border border-border text-[10px]">
                           <div className="flex items-center justify-between mb-0.5">
-                            <span className="font-semibold text-foreground">Shot {i + 1}{s.scene ? ` · ${s.scene}` : ""}</span>
+                            <span className="font-semibold text-foreground">Shot {i + 1}{s.scene ? ` ï¿½ ${s.scene}` : ""}</span>
                             {s.duration ? <span className="text-muted font-mono">{s.duration}s</span> : null}
                           </div>
                           {s.shot && <div className="text-muted">{s.shot}</div>}
@@ -6795,14 +6795,14 @@ export default function VideoEditorPage() {
                     <div className="space-y-1 max-h-32 overflow-y-auto">
                       {aiProject.captions.slice(0, 12).map((c, i) => (
                         <div key={i} className="text-[10px] text-foreground">
-                          <span className={c.emphasis ? "font-bold text-gold" : ""}>{c.text}</span>
+                          <span className={c.emphasis ? "font-bold text-[#2563EB]" : ""}>{c.text}</span>
                           {typeof c.start === "number" && typeof c.end === "number" && (
-                            <span className="text-muted text-[9px] ml-1">({c.start.toFixed(1)}s – {c.end.toFixed(1)}s)</span>
+                            <span className="text-muted text-[9px] ml-1">({c.start.toFixed(1)}s ï¿½ {c.end.toFixed(1)}s)</span>
                           )}
                         </div>
                       ))}
                       {aiProject.captions.length > 12 && (
-                        <div className="text-[9px] text-muted">… and {aiProject.captions.length - 12} more</div>
+                        <div className="text-[9px] text-muted">ï¿½ and {aiProject.captions.length - 12} more</div>
                       )}
                     </div>
                   </div>
@@ -6816,19 +6816,19 @@ export default function VideoEditorPage() {
             <div className="flex gap-2">
               <button onClick={() => setMode("storyboard")}
                 className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                  mode === "storyboard" ? "bg-gold/10 border-gold/30 text-gold" : "border-border text-muted hover:text-foreground"
+                  mode === "storyboard" ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"
                 }`}>
                 <LayoutGrid size={14} /> AI Storyboard
               </button>
               <button onClick={() => setMode("plan")}
                 className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                  mode === "plan" ? "bg-gold/10 border-gold/30 text-gold" : "border-border text-muted hover:text-foreground"
+                  mode === "plan" ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"
                 }`}>
                 <Sparkles size={14} /> AI Plan
               </button>
               <button onClick={() => setMode("render")}
                 className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                  mode === "render" ? "bg-gold/10 border-gold/30 text-gold" : "border-border text-muted hover:text-foreground"
+                  mode === "render" ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"
                 }`}>
                 <Film size={14} /> Render MP4
               </button>
@@ -6836,7 +6836,7 @@ export default function VideoEditorPage() {
 
             <button onClick={generateVideo} disabled={generating || !config.title}
               className={`w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl font-semibold transition-all ${
-                mode === "render" ? "btn-primary" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"
+                mode === "render" ? "btn-primary" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.12)]"
               }`}>
               {generating ? <Loader size={14} className="animate-spin" /> : mode === "storyboard" ? <LayoutGrid size={14} /> : mode === "render" ? <Film size={14} /> : <Sparkles size={14} />}
               {generating ? "Creating..." : mode === "storyboard" ? "Generate Storyboard" : mode === "render" ? "Render Video" : "Generate Video Plan"}
@@ -6849,7 +6849,7 @@ export default function VideoEditorPage() {
                 type="checkbox"
                 checked={walkthroughEnabled}
                 onChange={(e) => setWalkthroughEnabled(e.target.checked)}
-                className="accent-gold"
+                className="accent-[#2563EB]"
               />
               Show step-by-step walkthrough when generating
             </label>
@@ -6857,11 +6857,11 @@ export default function VideoEditorPage() {
 
           {/* Preview / Result */}
           <div className="space-y-4">
-            {/* Inspector — shows project meta when nothing's selected; swaps to
+            {/* Inspector ï¿½ shows project meta when nothing's selected; swaps to
                 clip properties when a timeline clip is picked. Minimal v1. */}
-            <div className="card border-gold/15 p-3 space-y-1">
+            <div className="card border-[rgba(37,99,235,0.15)] p-3 space-y-1">
               <h3 className="section-header flex items-center gap-2 mb-0">
-                <Sliders size={11} className="text-gold" /> Inspector
+                <Sliders size={11} className="text-[#2563EB]" /> Inspector
               </h3>
               <div className="text-[9px] text-muted space-y-0.5">
                 <div className="flex justify-between">
@@ -6887,7 +6887,7 @@ export default function VideoEditorPage() {
               </div>
             </div>
 
-            <div className="card-premium border-gold/10 text-center py-6 relative overflow-hidden">
+            <div className="card-premium border-[rgba(37,99,235,0.1)] text-center py-6 relative overflow-hidden">
               <div className="absolute inset-0 bg-mesh opacity-20" />
               <div className="relative">
                 <div className={`mx-auto mb-3 rounded-xl flex items-center justify-center overflow-hidden ${
@@ -6897,8 +6897,8 @@ export default function VideoEditorPage() {
                     <video ref={timelineVideoRef} src={result.url} controls className="w-full h-full object-cover rounded-xl" />
                   ) : generating ? (
                     <div className="flex flex-col items-center gap-2">
-                      <Loader size={20} className="animate-spin text-gold" />
-                      <span className="text-[9px] text-gold font-mono">{Math.round(renderProgress)}%</span>
+                      <Loader size={20} className="animate-spin text-[#2563EB]" />
+                      <span className="text-[9px] text-[#2563EB] font-mono">{Math.round(renderProgress)}%</span>
                     </div>
                   ) : (
                     <Film size={24} className="text-muted/30" />
@@ -6907,7 +6907,7 @@ export default function VideoEditorPage() {
                 {generating && (
                   <div className="mx-auto w-40 mt-2">
                     <div className="w-full bg-surface-light rounded-full h-1.5">
-                      <div className="bg-gradient-gold rounded-full h-1.5 transition-all duration-300"
+                      <div className="bg-[#2563EB] rounded-full h-1.5 transition-all duration-300"
                         style={{ width: `${renderProgress}%` }} />
                     </div>
                     <p className="text-[8px] text-muted mt-1">Creating {config.duration}s {selectedType.name}...</p>
@@ -6921,7 +6921,7 @@ export default function VideoEditorPage() {
             {result && (
               <div className="card">
                 <h3 className="section-header flex items-center gap-2">
-                  {result.url ? <Play size={12} className="text-success" /> : <Sparkles size={12} className="text-gold" />}
+                  {result.url ? <Play size={12} className="text-success" /> : <Sparkles size={12} className="text-[#2563EB]" />}
                   {result.url ? "Rendered Video" : result.storyboard ? "Storyboard Ready" : "Production Plan"}
                 </h3>
                 {result.url && (
@@ -6945,7 +6945,7 @@ export default function VideoEditorPage() {
                 )}
                 {result.music_suggestions && result.music_suggestions.length > 0 && (
                   <div className="mt-3 pt-3 border-t border-border">
-                    <p className="text-[9px] text-gold uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><Music size={9} /> Music Suggestions</p>
+                    <p className="text-[9px] text-[#2563EB] uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><Music size={9} /> Music Suggestions</p>
                     {result.music_suggestions.map((m, i) => (
                       <p key={i} className="text-[9px] text-muted">{m}</p>
                     ))}
@@ -6953,7 +6953,7 @@ export default function VideoEditorPage() {
                 )}
                 {result.thumbnail_suggestion && (
                   <div className="mt-2 pt-2 border-t border-border">
-                    <p className="text-[9px] text-gold uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><ImageIcon size={9} /> Thumbnail Idea</p>
+                    <p className="text-[9px] text-[#2563EB] uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><ImageIcon size={9} /> Thumbnail Idea</p>
                     <p className="text-[9px] text-muted">{result.thumbnail_suggestion}</p>
                   </div>
                 )}
@@ -6966,7 +6966,7 @@ export default function VideoEditorPage() {
              *  "Pro" toggle swaps to the new Premiere-style NLE. */}
             <div className="card">
               <h3 className="section-header flex items-center gap-2">
-                <Film size={12} className="text-gold" /> Timeline
+                <Film size={12} className="text-[#2563EB]" /> Timeline
                 <span className="text-[8px] text-muted font-normal">
                   {proEditorMode ? "Premiere Pro NLE" : "multi-track editor"}
                 </span>
@@ -6988,7 +6988,7 @@ export default function VideoEditorPage() {
                   onClick={() => setShowPresetPicker((v) => !v)}
                   className={`flex items-center gap-1 rounded border px-2 py-0.5 text-[9px] transition ${
                     showPresetPicker
-                      ? "border-gold/40 bg-gold/10 text-gold"
+                      ? "border-[#2563EB]/40 bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                       : "border-border text-muted hover:text-foreground"
                   }`}
                   title="Open Preset Picker (Cmd/Ctrl+K)"
@@ -7013,7 +7013,7 @@ export default function VideoEditorPage() {
                     Your <strong>{planTier}</strong> plan caps renders at{" "}
                     <strong>{formatVideoDuration(maxVideoSeconds)}</strong>.
                     Timeline is{" "}
-                    <strong>{Math.round(timelineProject.duration / 1000)}s</strong> —
+                    <strong>{Math.round(timelineProject.duration / 1000)}s</strong> ï¿½
                     only the first {formatVideoDuration(maxVideoSeconds)} will export.
                   </span>
                   {nextVideoTierLabel && (
@@ -7036,7 +7036,7 @@ export default function VideoEditorPage() {
                 onPlayPause={() => setTimelinePlaying((v) => !v)}
                 videoRef={timelineVideoRef}
                 onGenerateCaptions={result?.url ? async () => {
-                  const toastId = toast.loading("Generating captions…");
+                  const toastId = toast.loading("Generating captionsï¿½");
                   try {
                     const res = await fetch("/api/video/auto-edit/captions", {
                       method: "POST",
@@ -7074,7 +7074,7 @@ export default function VideoEditorPage() {
                   }
                 } : undefined}
                 onSuggestEdits={result?.url ? async () => {
-                  const toastId = toast.loading("Asking AI for edits…");
+                  const toastId = toast.loading("Asking AI for editsï¿½");
                   try {
                     // Use existing scenes from timeline video clips as a minimal scene list.
                     const videoClips = timelineProject.clips.filter((c) => c.trackId.startsWith("v") && !c.isMarker);
@@ -7152,12 +7152,12 @@ export default function VideoEditorPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Motion Graphics Library */}
           <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Layers size={13} className="text-gold" /> Motion Graphics Library</h2>
+            <h2 className="section-header flex items-center gap-2"><Layers size={13} className="text-[#2563EB]" /> Motion Graphics Library</h2>
             <div className="flex flex-wrap gap-1.5 mb-3">
               {(["lower-thirds", "transitions", "intros", "outros"] as const).map(cat => (
                 <button key={cat} onClick={() => setMotionGraphicsCategory(cat)}
                   className={`text-[9px] px-2.5 py-1 rounded-lg border capitalize transition-all ${
-                    motionGraphicsCategory === cat ? "bg-gold/10 text-gold border-gold/20 font-semibold" : "text-muted border-border hover:border-gold/15"
+                    motionGraphicsCategory === cat ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)] font-semibold" : "text-muted border-border hover:border-[rgba(37,99,235,0.15)]"
                   }`}>{cat.replace("-", " ")}</button>
               ))}
             </div>
@@ -7169,10 +7169,10 @@ export default function VideoEditorPage() {
                   );
                 }}
                   className={`p-2.5 rounded-xl border text-left transition-all relative ${
-                    selectedMotionGraphics.includes(mg.id) ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                    selectedMotionGraphics.includes(mg.id) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                   }`}>
                   {selectedMotionGraphics.includes(mg.id) && (
-                    <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-gold rounded-full flex items-center justify-center">
+                    <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-[#2563EB] rounded-full flex items-center justify-center">
                       <Check size={8} className="text-white" />
                     </div>
                   )}
@@ -7182,13 +7182,13 @@ export default function VideoEditorPage() {
               ))}
             </div>
             {selectedMotionGraphics.length > 0 && (
-              <p className="text-[8px] text-gold mt-2">{selectedMotionGraphics.length} graphic(s) selected</p>
+              <p className="text-[8px] text-[#2563EB] mt-2">{selectedMotionGraphics.length} graphic(s) selected</p>
             )}
           </div>
 
           {/* Video Template Library (30+) */}
           <div className="card">
-            <h2 className="section-header flex items-center gap-2"><LayoutGrid size={13} className="text-gold" /> Video Template Library</h2>
+            <h2 className="section-header flex items-center gap-2"><LayoutGrid size={13} className="text-[#2563EB]" /> Video Template Library</h2>
             <p className="text-[9px] text-muted mb-2">{EXPANDED_TEMPLATES.length} templates with preview thumbnails</p>
             <div className="max-h-[400px] overflow-y-auto space-y-1.5 pr-1">
               {EXPANDED_TEMPLATES.map(tmpl => (
@@ -7197,7 +7197,7 @@ export default function VideoEditorPage() {
                   setTab("create");
                   toast.success(`Template "${tmpl.name}" loaded`);
                 }}
-                  className="w-full flex items-center gap-2.5 p-2 rounded-lg border border-border hover:border-gold/20 transition-all text-left">
+                  className="w-full flex items-center gap-2.5 p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all text-left">
                   <div className="w-10 h-10 rounded-lg bg-surface-light border border-border flex items-center justify-center flex-shrink-0">
                     <Film size={12} className="text-muted" />
                   </div>
@@ -7216,12 +7216,12 @@ export default function VideoEditorPage() {
 
           {/* Effect Presets */}
           <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Sparkles size={13} className="text-gold" /> Effect Presets</h2>
+            <h2 className="section-header flex items-center gap-2"><Sparkles size={13} className="text-[#2563EB]" /> Effect Presets</h2>
             <p className="text-[9px] text-muted mb-3">Overlay effects, transitions, and motion styles to enhance your video.</p>
             <div className="grid grid-cols-2 gap-2">
               {EFFECT_PRESETS.map(effect => (
                 <button key={effect.id} onClick={() => toast.success(`Effect applied: ${effect.name}`)}
-                  className="p-2.5 rounded-xl border border-border hover:border-gold/15 text-left transition-all">
+                  className="p-2.5 rounded-xl border border-border hover:border-[rgba(37,99,235,0.15)] text-left transition-all">
                   <p className="text-[10px] font-semibold">{effect.name}</p>
                   <p className="text-[8px] text-muted">{effect.desc}</p>
                   <span className="text-[7px] bg-surface-light text-muted px-1 py-0.5 rounded mt-1 inline-block">{effect.category}</span>
@@ -7232,7 +7232,7 @@ export default function VideoEditorPage() {
 
           {/* Font Library */}
           <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Type size={13} className="text-gold" /> Font Library</h2>
+            <h2 className="section-header flex items-center gap-2"><Type size={13} className="text-[#2563EB]" /> Font Library</h2>
             <p className="text-[9px] text-muted mb-3">Choose a font for captions, titles, and text overlays.</p>
             <div className="grid grid-cols-2 gap-1.5">
               {FONT_PRESETS.map(font => (
@@ -7241,7 +7241,7 @@ export default function VideoEditorPage() {
                   toast.success(`Font set: ${font.name}`);
                 }}
                   className={`p-2 rounded-xl border text-left transition-all ${
-                    subtitlePreview.font === font.family ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                    subtitlePreview.font === font.family ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                   }`}>
                   <p className="text-[10px] font-semibold" style={{ fontFamily: font.family }}>{font.name}</p>
                   <p className="text-[8px] text-muted">{font.category} / {font.weight}</p>
@@ -7258,7 +7258,7 @@ export default function VideoEditorPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Export Quality Settings */}
           <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Settings2 size={13} className="text-gold" /> Export Quality Settings</h2>
+            <h2 className="section-header flex items-center gap-2"><Settings2 size={13} className="text-[#2563EB]" /> Export Quality Settings</h2>
             <div className="space-y-3">
               <div>
                 <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Resolution</label>
@@ -7266,7 +7266,7 @@ export default function VideoEditorPage() {
                   {(["720p", "1080p", "4k"] as const).map(res => (
                     <button key={res} onClick={() => setExportSettings(prev => ({ ...prev, resolution: res }))}
                       className={`text-[10px] p-2 rounded-xl border transition-all text-center uppercase font-semibold ${
-                        exportSettings.resolution === res ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                        exportSettings.resolution === res ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
                       }`}>{res}</button>
                   ))}
                 </div>
@@ -7277,7 +7277,7 @@ export default function VideoEditorPage() {
                   {(["low", "medium", "high"] as const).map(br => (
                     <button key={br} onClick={() => setExportSettings(prev => ({ ...prev, bitrate: br }))}
                       className={`text-[10px] p-2 rounded-xl border transition-all text-center capitalize ${
-                        exportSettings.bitrate === br ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                        exportSettings.bitrate === br ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
                       }`}>{br} {br === "low" ? "(~5Mb)" : br === "medium" ? "(~15Mb)" : "(~30Mb)"}</button>
                   ))}
                 </div>
@@ -7308,7 +7308,7 @@ export default function VideoEditorPage() {
 
           {/* Batch Render Queue */}
           <div className="card">
-            <h2 className="section-header flex items-center gap-2"><ListChecks size={13} className="text-gold" /> Batch Render Queue</h2>
+            <h2 className="section-header flex items-center gap-2"><ListChecks size={13} className="text-[#2563EB]" /> Batch Render Queue</h2>
             <p className="text-[9px] text-muted mb-3">Queue multiple videos for sequential rendering.</p>
             <button onClick={addToBatchQueue} className="btn-secondary text-[10px] w-full flex items-center justify-center gap-1.5 mb-3">
               <Plus size={10} /> Add Current Video to Queue
@@ -7321,7 +7321,7 @@ export default function VideoEditorPage() {
                     <span className="text-[10px] font-medium flex-1 truncate">{item.title}</span>
                     <span className={`text-[8px] px-1.5 py-0.5 rounded ${
                       item.status === "done" ? "bg-success/10 text-success" :
-                      item.status === "rendering" ? "bg-gold/10 text-gold" :
+                      item.status === "rendering" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" :
                       item.status === "failed" ? "bg-danger/10 text-danger" :
                       "bg-surface-light text-muted"
                     }`}>{item.status}</span>
@@ -7341,7 +7341,7 @@ export default function VideoEditorPage() {
 
           {/* Collaboration Notes */}
           <div className="card">
-            <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-gold" /> Collaboration Notes</h2>
+            <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-[#2563EB]" /> Collaboration Notes</h2>
             <p className="text-[9px] text-muted mb-3">Add timestamped notes for team review and feedback.</p>
             <div className="flex gap-2 mb-3">
               <input value={newNote.time} onChange={e => setNewNote(prev => ({ ...prev, time: e.target.value }))}
@@ -7355,7 +7355,7 @@ export default function VideoEditorPage() {
             <div className="space-y-1.5 max-h-[250px] overflow-y-auto">
               {collabNotes.length > 0 ? collabNotes.map((note, idx) => (
                 <div key={idx} className="flex items-start gap-2 p-2 rounded-lg bg-surface-light">
-                  <span className="text-[9px] font-mono text-gold flex-shrink-0">{note.time}</span>
+                  <span className="text-[9px] font-mono text-[#2563EB] flex-shrink-0">{note.time}</span>
                   <div className="flex-1">
                     <p className="text-[10px]">{note.note}</p>
                     <p className="text-[8px] text-muted">{note.author}</p>
@@ -7396,7 +7396,7 @@ export default function VideoEditorPage() {
                 {result.storyboard.map((scene, i) => (
                   <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl card-hover">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-bold text-gold">Scene {scene.scene_number}</span>
+                      <span className="text-[10px] font-bold text-[#2563EB]">Scene {scene.scene_number}</span>
                       <span className="text-[9px] text-muted font-mono">{scene.duration}</span>
                     </div>
                     <div className="space-y-2">
@@ -7407,7 +7407,7 @@ export default function VideoEditorPage() {
                       {scene.text_overlay && (
                         <div>
                           <p className="text-[8px] text-muted uppercase tracking-wider flex items-center gap-1"><Type size={8} /> Text Overlay</p>
-                          <p className="text-[10px] text-gold font-medium">{scene.text_overlay}</p>
+                          <p className="text-[10px] text-[#2563EB] font-medium">{scene.text_overlay}</p>
                         </div>
                       )}
                       {scene.voiceover && (
@@ -7427,7 +7427,7 @@ export default function VideoEditorPage() {
             </>
           ) : result?.plan ? (
             <div className="glass rounded-xl">
-              <h2 className="section-header flex items-center gap-2"><Sparkles size={13} className="text-gold" /> Video Plan</h2>
+              <h2 className="section-header flex items-center gap-2"><Sparkles size={13} className="text-[#2563EB]" /> Video Plan</h2>
               <pre className="text-[10px] text-muted bg-surface-light rounded-lg p-3 whitespace-pre-wrap max-h-[500px] overflow-y-auto">{result.plan}</pre>
               <div className="flex gap-2 mt-3">
                 <button onClick={() => { navigator.clipboard.writeText(result.plan || ""); toast.success("Copied!"); }}
@@ -7512,7 +7512,7 @@ export default function VideoEditorPage() {
                   const locked = Number.isFinite(maxVideoSeconds) && opt.v > maxVideoSeconds;
                   return (
                     <option key={opt.v} value={opt.v} disabled={locked}>
-                      {locked ? `?? ${opt.label} — upgrade` : opt.label}
+                      {locked ? `?? ${opt.label} ï¿½ upgrade` : opt.label}
                     </option>
                   );
                 })}
@@ -7520,7 +7520,7 @@ export default function VideoEditorPage() {
               {nextVideoTierLabel && (
                 <Link
                   href="/dashboard/upgrade"
-                  className="mt-1 flex items-center gap-1 text-[9px] text-gold hover:text-amber-400"
+                  className="mt-1 flex items-center gap-1 text-[9px] text-[#2563EB] hover:text-amber-400"
                 >
                   <Lock size={9} /> Upgrade for longer ({nextVideoTierLabel})
                 </Link>
@@ -7583,7 +7583,7 @@ export default function VideoEditorPage() {
           <div className="p-2.5 rounded-lg bg-gradient-to-r from-red-500/10 to-amber-500/10 border border-red-500/30">
             <p className="text-[11px] text-foreground flex items-center gap-1.5">
               <Megaphone size={13} className="text-red-400" />
-              <span><strong>Ads Pack</strong> — paste your product / offer. We write a 30s ad script (hook + benefits + CTA), pick B-roll moments, match music, and load the Ads preset into the editor.</span>
+              <span><strong>Ads Pack</strong> ï¿½ paste your product / offer. We write a 30s ad script (hook + benefits + CTA), pick B-roll moments, match music, and load the Ads preset into the editor.</span>
             </p>
           </div>
           <div>
@@ -7593,7 +7593,7 @@ export default function VideoEditorPage() {
               onChange={e => setAdsGenDescription(e.target.value)}
               rows={4}
               className="input w-full text-xs"
-              placeholder="e.g., A posture-correcting backpack for college students — lightweight frame, USB-C charging port, 25L capacity, waterproof, currently 30% off"
+              placeholder="e.g., A posture-correcting backpack for college students ï¿½ lightweight frame, USB-C charging port, 25L capacity, waterproof, currently 30% off"
             />
           </div>
           <div>
@@ -7623,7 +7623,7 @@ export default function VideoEditorPage() {
                 const locked = Number.isFinite(maxVideoSeconds) && opt.v > maxVideoSeconds;
                 return (
                   <option key={opt.v} value={opt.v} disabled={locked}>
-                    {locked ? `?? ${opt.label} — upgrade` : opt.label}
+                    {locked ? `?? ${opt.label} ï¿½ upgrade` : opt.label}
                   </option>
                 );
               })}
@@ -7631,7 +7631,7 @@ export default function VideoEditorPage() {
             {nextVideoTierLabel && (
               <Link
                 href="/dashboard/upgrade"
-                className="mt-1 flex items-center gap-1 text-[9px] text-gold hover:text-amber-400"
+                className="mt-1 flex items-center gap-1 text-[9px] text-[#2563EB] hover:text-amber-400"
               >
                 <Lock size={9} /> Upgrade for longer ({nextVideoTierLabel})
               </Link>
@@ -7733,7 +7733,7 @@ export default function VideoEditorPage() {
         currentStepIndex={walkthroughStepIndex}
         stepStatus={walkthroughStatus}
         onClose={() => {
-          // Closing the modal mid-generation should also abort the pipeline —
+          // Closing the modal mid-generation should also abort the pipeline ï¿½
           // otherwise `generating` stays true and the UI gets stuck.
           walkthroughCancelledRef.current = true;
           setWalkthroughOpen(false);
@@ -7767,23 +7767,23 @@ export default function VideoEditorPage() {
        *  Only rendered on the Create tab so other tabs stay clean. */}
       {tab === "create" && (
         <div
-          className="sticky bottom-2 z-30 mt-2  border border-gold/25 bg-surface/95 backdrop-blur px-3 py-2 flex items-center gap-2 shadow-lg"
+          className="sticky bottom-2 z-30 mt-2  border border-[#2563EB]/25 bg-surface/95 backdrop-blur px-3 py-2 flex items-center gap-2 shadow-lg"
           role="toolbar"
           aria-label="Video editor actions"
         >
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-semibold truncate">
               {generating ? (
-                <span className="flex items-center gap-1.5 text-gold">
+                <span className="flex items-center gap-1.5 text-[#2563EB]">
                   <Film size={10} className="shrink-0" />
-                  Rendering your Reel — ~{config.duration <= 30 ? "90 sec" : "3 min"}
+                  Rendering your Reel ï¿½ ~{config.duration <= 30 ? "90 sec" : "3 min"}
                   <span className="text-[9px] text-muted font-normal ml-1">{Math.round(renderProgress)}%</span>
                 </span>
               ) : (
                 <>
                   {config.title || "Untitled video"}
                   <span className="text-muted font-normal ml-2">
-                    · {selectedType.aspect} · {config.duration}s
+                    ï¿½ {selectedType.aspect} ï¿½ {config.duration}s
                   </span>
                 </>
               )}
@@ -7802,7 +7802,7 @@ export default function VideoEditorPage() {
             type="button"
             onClick={runFullPassAutoEdit}
             disabled={fullPassRunning || !result?.url || !aiProject?.project_id}
-            className="text-[10px] px-3 py-1.5 rounded-lg border border-gold/30 bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1.5 disabled:opacity-40"
+            className="text-[10px] px-3 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1.5 disabled:opacity-40"
             title={
               !result?.url || !aiProject?.project_id
                 ? "Generate a video + AI project first"
@@ -7830,13 +7830,13 @@ export default function VideoEditorPage() {
               className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1.5 disabled:opacity-40"
             >
               {generating ? <Loader2 size={10} className="animate-spin" /> : <Film size={10} />}
-              {generating ? "Rendering…" : "Render + Export"}
+              {generating ? "Renderingï¿½" : "Render + Export"}
             </button>
           )}
         </div>
       )}
 
-      {/* Preset Picker sidebar — right-side drawer; Cmd/Ctrl+K toggles. */}
+      {/* Preset Picker sidebar ï¿½ right-side drawer; Cmd/Ctrl+K toggles. */}
       <PresetPickerPanel
         open={showPresetPicker}
         onOpenChange={setShowPresetPicker}
@@ -7889,7 +7889,7 @@ function CollapsiblePanel({
             <h2 className="section-header mb-0 flex items-center gap-2">
               {title}
               {typeof badge === "number" && badge > 0 && (
-                <span className="text-[8px] bg-gold/15 text-gold px-1.5 py-0.5 rounded-full font-mono">{badge}</span>
+                <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded-full font-mono">{badge}</span>
               )}
             </h2>
             {desc && <p className="text-[9px] text-muted mt-0.5">{desc}</p>}
@@ -7905,7 +7905,7 @@ function CollapsiblePanel({
                 type="checkbox"
                 checked={enabledToggle.value}
                 onChange={e => enabledToggle.onChange(e.target.checked)}
-                className="rounded border-border text-gold focus:ring-gold/30"
+                className="rounded border-border text-[#2563EB] focus:ring-[rgba(37,99,235,0.3)]"
               />
               {enabledToggle.value ? "Enabled" : "Off"}
             </label>
@@ -7932,16 +7932,16 @@ function ToggleRow({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <label className={`flex items-start gap-2 p-2 rounded-lg border transition-all cursor-pointer ${checked ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"}`}>
+    <label className={`flex items-start gap-2 p-2 rounded-lg border transition-all cursor-pointer ${checked ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
       <input
         type="checkbox"
         checked={checked}
         onChange={e => onChange(e.target.checked)}
-        className="mt-0.5 rounded border-border text-gold focus:ring-gold/30 flex-shrink-0"
+        className="mt-0.5 rounded border-border text-[#2563EB] focus:ring-[rgba(37,99,235,0.3)] flex-shrink-0"
       />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
-          {icon && <span className={checked ? "text-gold" : "text-muted"}>{icon}</span>}
+          {icon && <span className={checked ? "text-[#2563EB]" : "text-muted"}>{icon}</span>}
           <p className="text-[10px] font-semibold leading-tight">{label}</p>
         </div>
         {desc && <p className="text-[8px] text-muted mt-0.5 leading-tight">{desc}</p>}
@@ -7954,7 +7954,7 @@ function SummaryRow({ label, on, value }: { label: string; on: boolean; value?: 
   return (
     <div className="flex justify-between items-center">
       <span className="text-muted">{label}</span>
-      <span className={`font-mono ${on ? "text-gold" : "text-muted/50"}`}>{value || (on ? "on" : "off")}</span>
+      <span className={`font-mono ${on ? "text-[#2563EB]" : "text-muted/50"}`}>{value || (on ? "on" : "off")}</span>
     </div>
   );
 }
@@ -7975,7 +7975,7 @@ function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-xs text-muted">{VIDEO_PRESETS.length} presets — select one to auto-fill all settings</p>
+        <p className="text-xs text-muted">{VIDEO_PRESETS.length} presets ï¿½ select one to auto-fill all settings</p>
         <div className="relative">
           <input
             type="text" placeholder="Search presets..." value={search}
@@ -7993,8 +7993,8 @@ function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void
             onClick={() => setActiveCategory(cat.id)}
             className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${
               activeCategory === cat.id
-                ? "bg-gold/10 text-gold border-gold/20 font-semibold"
-                : "text-muted border-border hover:border-gold/15 hover:text-foreground"
+                ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)] font-semibold"
+                : "text-muted border-border hover:border-[rgba(37,99,235,0.15)] hover:text-foreground"
             }`}
           >
             {cat.name}
@@ -8018,7 +8018,7 @@ function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void
             </div>
             <p className="text-[9px] text-muted mb-2">{preset.desc}</p>
             <div className="flex flex-wrap gap-1">
-              <span className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{preset.config.style}</span>
+              <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">{preset.config.style}</span>
               <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{preset.config.caption_style}</span>
               <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{preset.config.music_mood}</span>
             </div>
@@ -8033,9 +8033,9 @@ function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void
       )}
 
       {/* Batch ideas */}
-      <div className="glass rounded-xl border-gold/10">
-        <h3 className="section-header flex items-center gap-2"><Zap size={12} className="text-gold" /> Weekly Content Plan</h3>
-        <p className="text-[10px] text-muted mb-3">Auto-generate a week of video content — one preset per day</p>
+      <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+        <h3 className="section-header flex items-center gap-2"><Zap size={12} className="text-[#2563EB]" /> Weekly Content Plan</h3>
+        <p className="text-[10px] text-muted mb-3">Auto-generate a week of video content ï¿½ one preset per day</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {["Monday Motivation", "Tuesday Tip", "Wednesday BTS", "Thursday Myth Bust", "Friday Client Win", "Saturday Q&A", "Sunday Recap"].map((day, i) => (
             <div key={i} className="p-2 rounded-lg border border-border text-center">

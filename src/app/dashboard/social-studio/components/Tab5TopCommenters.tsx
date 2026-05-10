@@ -63,7 +63,7 @@ export default function Tab5TopCommenters() {
     <div className="space-y-4">
       <div className="rounded-xl border border-border/40 bg-surface p-4">
         <div className="flex items-center gap-2 mb-3">
-          <Users size={14} className="text-gold" />
+          <Users size={14} className="text-[#2563EB]" />
           <h3 className="text-sm font-semibold tracking-tight">Top commenters — last 30 days</h3>
         </div>
 
@@ -109,7 +109,7 @@ export default function Tab5TopCommenters() {
                     <button
                       type="button"
                       onClick={() => onDraft(c)}
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gold/10 border border-gold/30 text-[10px] text-gold hover:bg-gold/20"
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[10px] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]"
                     >
                       <Sparkles size={10} />
                       Reply with AI
@@ -175,7 +175,7 @@ export default function Tab5TopCommenters() {
                   }
                 }}
                 disabled={!draftReply}
-                className="px-3 py-1.5 text-xs rounded-md bg-gold/20 border border-gold/40 text-gold inline-flex items-center gap-1 disabled:opacity-50"
+                className="px-3 py-1.5 text-xs rounded-md bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.3)] text-[#2563EB] inline-flex items-center gap-1 disabled:opacity-50"
               >
                 <Reply size={10} />
                 Copy reply

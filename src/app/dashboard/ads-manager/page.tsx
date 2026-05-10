@@ -101,9 +101,9 @@ export default function AdsManagerPage() {
         title="Ads Manager"
         subtitle="One dashboard for Meta, Google, and TikTok ads — with AI-driven budget reallocation."
         icon={<Megaphone size={20} />}
-        gradient="gold"
+        gradient="blue"
         eyebrow={
-          <span className="inline-flex items-center gap-1 rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-gold">
+          <span className="inline-flex items-center gap-1 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[#2563EB]">
             Cross-platform · AI-optimised
           </span>
         }
@@ -123,7 +123,7 @@ export default function AdsManagerPage() {
               transition={{ delay: i * 0.06 }}
               className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border-b-2 -mb-px transition-colors ${
                 isActive
-                  ? "border-indigo-500 text-indigo-400 bg-indigo-500/8"
+                  ? "border-[#2563EB] text-[#2563EB] bg-[rgba(37,99,235,0.08)]"
                   : "border-transparent text-muted hover:text-text"
               }`}
             >

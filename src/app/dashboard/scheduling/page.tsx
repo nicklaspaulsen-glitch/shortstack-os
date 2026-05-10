@@ -70,7 +70,7 @@ const STATUS_COLORS: Record<string, string> = {
   confirmed: "bg-emerald-400/10 text-emerald-400",
   pending: "bg-yellow-400/10 text-yellow-400",
   cancelled: "bg-red-400/10 text-red-400",
-  completed: "bg-blue-400/10 text-blue-400",
+  completed: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
   no_show: "bg-orange-400/10 text-orange-400",
 };
 
@@ -267,7 +267,7 @@ export default function SchedulingPage() {
         title="AI Smart Scheduler"
         eyebrow="SCHEDULING"
         subtitle="Intelligent booking pages with AI conflict detection, smart availability, and client prep cards � share a link, skip the back-and-forth."
-        gradient="gold"
+        gradient="blue"
         actions={
           <>
             <div className="flex items-center gap-1.5 text-[10px] bg-white/10 text-white px-2.5 py-1 rounded-md border border-white/20">
@@ -287,9 +287,9 @@ export default function SchedulingPage() {
       <div className="grid grid-cols-5 gap-3">
         {[
           { value: meetingTypes.filter(m => m.active).length, label: "Active Types", color: "" },
-          { value: totalBookings, label: "Total Bookings", color: "text-gold" },
+          { value: totalBookings, label: "Total Bookings", color: "text-[#2563EB]" },
           { value: confirmedBookings, label: "Confirmed", color: "text-emerald-400" },
-          { value: `${conversionRate}%`, label: "Conversion Rate", color: "text-blue-400" },
+          { value: `${conversionRate}%`, label: "Conversion Rate", color: "text-[#2563EB]" },
           { value: `${noShowRate}%`, label: "No-Show Rate", color: "text-orange-400" },
         ].map((stat, i) => (
           <motion.div
@@ -313,7 +313,7 @@ export default function SchedulingPage() {
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-gold/10 text-gold font-medium" : "text-muted hover:text-foreground"
+              tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
             }`}>
             {t.icon} {t.label}
           </button>
@@ -455,7 +455,7 @@ export default function SchedulingPage() {
 
           {/* Recent Bookings */}
           <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}>
-            <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-gold" /> Recent Bookings</h2>
+            <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-[#2563EB]" /> Recent Bookings</h2>
             {bookings.length === 0 ? (
               <div className="py-6 text-center">
                 <Users size={24} className="mx-auto text-muted/30 mb-2" />
@@ -487,7 +487,7 @@ export default function SchedulingPage() {
                       )}
                       {b.status === "confirmed" && (
                         <button onClick={() => updateBookingStatus(b.id, "completed")}
-                          className="text-[9px] px-2 py-0.5 rounded-full bg-blue-400/10 text-blue-400 hover:bg-blue-400/20">
+                          className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]">
                           Complete
                         </button>
                       )}
@@ -502,7 +502,7 @@ export default function SchedulingPage() {
           {/* Confirmation Email Preview */}
           <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }}>
             <div className="flex items-center justify-between">
-              <h2 className="section-header flex items-center gap-2 mb-0"><Mail size={13} className="text-gold" /> Confirmation Email Preview</h2>
+              <h2 className="section-header flex items-center gap-2 mb-0"><Mail size={13} className="text-[#2563EB]" /> Confirmation Email Preview</h2>
               <button onClick={() => setShowEmailPreview(!showEmailPreview)} className="btn-ghost text-[10px]">
                 {showEmailPreview ? "Hide" : "Show"} Preview
               </button>
@@ -529,7 +529,7 @@ export default function SchedulingPage() {
       {tab === "availability" && (
         <div className="space-y-4">
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-gold" /> Weekly Availability</h2>
+            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Weekly Availability</h2>
             <div className="space-y-2">
               {DAYS.map(day => {
                 const dayAvail = availability[day];
@@ -538,7 +538,7 @@ export default function SchedulingPage() {
                     <label className="flex items-center gap-2 w-28 cursor-pointer">
                       <input type="checkbox" checked={dayAvail.enabled}
                         onChange={e => setAvailability(prev => ({ ...prev, [day]: { ...prev[day], enabled: e.target.checked } }))}
-                        className="accent-gold" />
+                        className="accent-[#2563EB]" />
                       <span className={`text-xs font-medium ${dayAvail.enabled ? "" : "text-muted"}`}>{day}</span>
                     </label>
                     {dayAvail.enabled ? (
@@ -566,7 +566,7 @@ export default function SchedulingPage() {
 
           {/* Time Slots Grid Visual */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-blue-400" /> Available Slots This Week</h2>
+            <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-[#2563EB]" /> Available Slots This Week</h2>
             <div className="grid grid-cols-8 gap-px text-[9px]">
               <div />
               {DAYS.slice(0, 7).map(d => (
@@ -585,7 +585,7 @@ export default function SchedulingPage() {
                     });
                     return (
                       <div key={`${day}-${slot}`}
-                        className={`text-center py-1 rounded ${booked ? "bg-gold/20 text-gold" : inRange ? "bg-emerald-400/10 text-emerald-400" : "bg-surface-light text-muted/20"}`}>
+                        className={`text-center py-1 rounded ${booked ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : inRange ? "bg-emerald-400/10 text-emerald-400" : "bg-surface-light text-muted/20"}`}>
                         {booked ? "Booked" : inRange ? "Open" : "-"}
                       </div>
                     );
@@ -597,7 +597,7 @@ export default function SchedulingPage() {
 
           {/* Calendar Integration */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-gold" /> Calendar Integration</h2>
+            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-[#2563EB]" /> Calendar Integration</h2>
             <div className="space-y-2">
               {([] as { name: string; connected: boolean; icon: string }[]).map(cal => (
                 <div key={cal.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
@@ -625,7 +625,7 @@ export default function SchedulingPage() {
           {/* AI Suggested Times */}
           <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
-              <Brain size={13} className="text-gold" /> AI-Suggested Optimal Meeting Times
+              <Brain size={13} className="text-[#2563EB]" /> AI-Suggested Optimal Meeting Times
             </h3>
             <p className="text-[10px] text-muted mb-3">Based on your past 90 days of booking patterns and client preferences</p>
             <div className="space-y-2">
@@ -633,15 +633,15 @@ export default function SchedulingPage() {
                 <p className="text-xs text-muted text-center py-4">No AI suggestions available yet. Book some meetings to get insights.</p>
               )}
               {AI_SUGGESTED_TIMES.map((slot, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-gold/20 transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center shrink-0">
-                    <span className="text-xs font-bold text-gold">{slot.score}</span>
+                <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-[rgba(37,99,235,0.12)] transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center shrink-0">
+                    <span className="text-xs font-bold text-[#2563EB]">{slot.score}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="text-xs font-semibold">{slot.day} at {slot.time}</p>
                       {i === 0 && (
-                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium flex items-center gap-0.5">
+                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium flex items-center gap-0.5">
                           <Star size={7} /> Top Pick
                         </span>
                       )}
@@ -649,7 +649,7 @@ export default function SchedulingPage() {
                     <p className="text-[10px] text-muted">{slot.reason}</p>
                   </div>
                   <div className="w-24 h-1.5 rounded-full bg-surface-light overflow-hidden">
-                    <div className="h-full rounded-full bg-gold transition-all" style={{ width: `${slot.score}%` }} />
+                    <div className="h-full rounded-full bg-[#2563EB] transition-all" style={{ width: `${slot.score}%` }} />
                   </div>
                 </div>
               ))}
@@ -670,14 +670,14 @@ export default function SchedulingPage() {
               <div className="space-y-2">
                 {CONFLICT_ALERTS.map(alert => (
                   <div key={alert.id} className={`flex items-start gap-3 p-3 rounded-xl border ${
-                    alert.severity === "warning" ? "border-amber-500/20 bg-amber-500/[0.03]" : "border-blue-400/20 bg-blue-400/[0.03]"
+                    alert.severity === "warning" ? "border-amber-500/20 bg-amber-500/[0.03]" : "border-[rgba(37,99,235,0.20)] bg-[rgba(37,99,235,0.03)]"
                   }`}>
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                      alert.severity === "warning" ? "bg-amber-500/10" : "bg-blue-400/10"
+                      alert.severity === "warning" ? "bg-amber-500/10" : "bg-[rgba(37,99,235,0.10)]"
                     }`}>
                       {alert.severity === "warning"
                         ? <AlertTriangle size={14} className="text-amber-400" />
-                        : <Globe size={14} className="text-blue-400" />
+                        : <Globe size={14} className="text-[#2563EB]" />
                       }
                     </div>
                     <div className="flex-1">
@@ -696,7 +696,7 @@ export default function SchedulingPage() {
           {/* Buffer Time Management */}
           <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
-              <Timer size={13} className="text-blue-400" /> Auto Buffer Management
+              <Timer size={13} className="text-[#2563EB]" /> Auto Buffer Management
             </h3>
             <div className="flex items-center justify-between p-3 rounded-xl bg-surface-light border border-border mb-3">
               <div>
@@ -704,7 +704,7 @@ export default function SchedulingPage() {
                 <p className="text-[10px] text-muted">Automatically add buffer between back-to-back meetings</p>
               </div>
               <button onClick={() => setAutoBuffer(!autoBuffer)}
-                className={`w-10 h-5 rounded-full transition-all relative ${autoBuffer ? "bg-gold" : "bg-white/10"}`}>
+                className={`w-10 h-5 rounded-full transition-all relative ${autoBuffer ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"}`}>
                 <div className="w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all" style={{ left: autoBuffer ? 22 : 2 }} />
               </button>
             </div>
@@ -715,7 +715,7 @@ export default function SchedulingPage() {
                   {[5, 10, 15, 20, 30].map(min => (
                     <button key={min} onClick={() => setBufferMinutes(min)}
                       className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
-                        bufferMinutes === min ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"
+                        bufferMinutes === min ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted"
                       }`}>
                       {min}m
                     </button>
@@ -737,10 +737,10 @@ export default function SchedulingPage() {
             <div className="space-y-1.5">
               {([] as { name: string; tz: string; offset: string }[]).map((client, i) => (
                 <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border text-xs">
-                  <Globe size={12} className="text-blue-400 shrink-0" />
+                  <Globe size={12} className="text-[#2563EB] shrink-0" />
                   <span className="font-medium w-28">{client.name}</span>
                   <span className="text-muted flex-1">{client.tz}</span>
-                  <span className="text-[10px] text-gold">{client.offset}</span>
+                  <span className="text-[10px] text-[#2563EB]">{client.offset}</span>
                 </div>
               ))}
               <p className="text-xs text-muted text-center py-2">No client timezone data available</p>
@@ -750,7 +750,7 @@ export default function SchedulingPage() {
           {/* Meeting Prep Cards */}
           <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
-              <Sparkles size={13} className="text-gold" /> AI Meeting Prep Cards
+              <Sparkles size={13} className="text-[#2563EB]" /> AI Meeting Prep Cards
             </h3>
             <p className="text-[10px] text-muted mb-3">AI-generated prep briefs for your upcoming meetings</p>
             <div className="space-y-3">
@@ -765,10 +765,10 @@ export default function SchedulingPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Bookings This Week", value: totalBookings, color: "text-gold" },
+              { label: "Bookings This Week", value: totalBookings, color: "text-[#2563EB]" },
               { label: "Show Rate", value: `${totalBookings > 0 ? Math.round((bookings.filter(b => b.status === "completed").length / totalBookings) * 100) : 0}%`, color: "text-emerald-400" },
               { label: "No-Show Rate", value: `${noShowRate}%`, color: "text-orange-400" },
-              { label: "Avg Duration", value: `${meetingTypes.length > 0 ? Math.round(meetingTypes.reduce((s, m) => s + m.duration, 0) / meetingTypes.length) : 0}m`, color: "text-blue-400" },
+              { label: "Avg Duration", value: `${meetingTypes.length > 0 ? Math.round(meetingTypes.reduce((s, m) => s + m.duration, 0) / meetingTypes.length) : 0}m`, color: "text-[#2563EB]" },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -789,7 +789,7 @@ export default function SchedulingPage() {
           {/* Popular Times Heatmap */}
           <div className="glass rounded-xl p-4">
             <h2 className="section-header flex items-center gap-2">
-              <Zap size={13} className="text-gold" /> Popular Times Heatmap
+              <Zap size={13} className="text-[#2563EB]" /> Popular Times Heatmap
             </h2>
             <p className="text-[10px] text-muted mb-3">Booking frequency by day and hour (last 90 days)</p>
             <div className="overflow-x-auto">
@@ -842,7 +842,7 @@ export default function SchedulingPage() {
 
           {/* Bookings by Type */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Bookings by Meeting Type</h2>
+            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-[#2563EB]" /> Bookings by Meeting Type</h2>
             {meetingTypes.length === 0 ? (
               <p className="text-xs text-muted text-center py-4">Create meeting types to see analytics.</p>
             ) : (
@@ -867,7 +867,7 @@ export default function SchedulingPage() {
 
           {/* Popular Booking Times */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-blue-400" /> Popular Booking Times</h2>
+            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Popular Booking Times</h2>
             {bookings.length === 0 ? (
               <p className="text-xs text-muted text-center py-4">Booking data will appear here once you have bookings.</p>
             ) : (
@@ -880,7 +880,7 @@ export default function SchedulingPage() {
                   return sorted.map(([time, count]) => (
                     <div key={time} className="text-center">
                       <div className="h-20 rounded-lg bg-surface-light flex items-end justify-center overflow-hidden mb-1">
-                        <div className="w-full rounded-t-lg bg-gold/20" style={{ height: `${(count / max) * 100}%` }} />
+                        <div className="w-full rounded-t-lg bg-[rgba(37,99,235,0.12)]" style={{ height: `${(count / max) * 100}%` }} />
                       </div>
                       <p className="text-[9px] text-muted">{time}</p>
                       <p className="text-[10px] font-bold">{count}</p>
@@ -893,7 +893,7 @@ export default function SchedulingPage() {
 
           {/* Status Distribution */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-purple-400" /> Bookings by Status</h2>
+            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-[#2563EB]" /> Bookings by Status</h2>
             <div className="grid grid-cols-4 gap-3">
               {(["confirmed", "completed", "cancelled", "no_show"] as const).map(status => {
                 const count = bookings.filter(b => b.status === status).length;
@@ -915,14 +915,14 @@ export default function SchedulingPage() {
         <div className="space-y-4">
           {/* Round-Robin */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Shuffle size={13} className="text-gold" /> Round-Robin Team Scheduling</h2>
+            <h2 className="section-header flex items-center gap-2"><Shuffle size={13} className="text-[#2563EB]" /> Round-Robin Team Scheduling</h2>
             <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light mb-3">
               <div>
                 <p className="text-xs font-semibold">Enable Round-Robin Scheduling</p>
                 <p className="text-[10px] text-muted">Automatically distribute bookings among team members</p>
               </div>
               <button onClick={() => setRoundRobin(!roundRobin)}
-                className={`w-10 h-5 rounded-full transition-all relative ${roundRobin ? "bg-gold" : "bg-surface"}`}>
+                className={`w-10 h-5 rounded-full transition-all relative ${roundRobin ? "bg-[#2563EB]" : "bg-surface-light"}`}>
                 <div className="w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all" style={{ left: roundRobin ? 22 : 2 }} />
               </button>
             </div>
@@ -953,14 +953,14 @@ export default function SchedulingPage() {
 
           {/* Timezone */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-blue-400" /> Timezone Detection</h2>
+            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-[#2563EB]" /> Timezone Detection</h2>
             <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light">
               <div>
                 <p className="text-xs font-semibold">Auto-detect Client Timezone</p>
                 <p className="text-[10px] text-muted">Show available times in the booker&apos;s local timezone</p>
               </div>
               <button onClick={() => setAutoTimezone(!autoTimezone)}
-                className={`w-10 h-5 rounded-full transition-all relative ${autoTimezone ? "bg-gold" : "bg-surface"}`}>
+                className={`w-10 h-5 rounded-full transition-all relative ${autoTimezone ? "bg-[#2563EB]" : "bg-surface-light"}`}>
                 <div className="w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all" style={{ left: autoTimezone ? 22 : 2 }} />
               </button>
             </div>
@@ -997,10 +997,10 @@ export default function SchedulingPage() {
 
       {/* ---- Link Generator Modal ---- */}
       {showLinkGen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowLinkGen(false)}>
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.35)] backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowLinkGen(false)}>
           <div className="bg-surface  border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold flex items-center gap-2"><Link2 size={14} className="text-gold" /> Booking Link Generator</h3>
+              <h3 className="text-sm font-bold flex items-center gap-2"><Link2 size={14} className="text-[#2563EB]" /> Booking Link Generator</h3>
               <button onClick={() => setShowLinkGen(false)} className="text-muted hover:text-foreground" aria-label="Close link generator"><X size={16} /></button>
             </div>
             {meetingTypes.filter(m => m.active).length === 0 ? (
@@ -1035,10 +1035,10 @@ export default function SchedulingPage() {
 
       {/* ---- Create Meeting Type Modal ---- */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreateModal(false)}>
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.35)] backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreateModal(false)}>
           <div className="bg-surface  border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-gold" /> New Meeting Type</h3>
+              <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-[#2563EB]" /> New Meeting Type</h3>
               <button onClick={() => setShowCreateModal(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
             </div>
 

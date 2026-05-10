@@ -161,10 +161,10 @@ export default function AdminProfileSwitcher() {
       <div className="mx-2 mb-1 relative">
         <button
           onClick={() => { setOpen(!open); fetchClients(); }}
-          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left bg-surface-light/30 hover:bg-surface-light/60 border border-border/30 hover:border-gold/15 transition-all"
+          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left bg-surface-light/30 hover:bg-surface-light/60 border border-border/30 hover:border-[rgba(37,99,235,0.1)] transition-all"
         >
-          <div className="w-6 h-6 bg-gold/10 rounded-md flex items-center justify-center shrink-0">
-            <Shield size={12} className="text-gold" />
+          <div className="w-6 h-6 bg-[rgba(37,99,235,0.08)] rounded-md flex items-center justify-center shrink-0">
+            <Shield size={12} className="text-[#2563EB]" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[10px] text-muted font-medium">Accounts</p>
@@ -182,7 +182,7 @@ export default function AdminProfileSwitcher() {
               <div className="px-3 py-2 border-b border-border/20 flex items-center justify-between">
                 <span className="text-[10px] text-muted font-semibold uppercase tracking-wider">Client Accounts</span>
                 <button onClick={() => { setOpen(false); router.push("/dashboard/onboard"); }}
-                  className="text-[10px] text-gold hover:text-gold-light flex items-center gap-0.5">
+                  className="text-[10px] text-[#2563EB] hover:text-[#3B82F6] flex items-center gap-0.5">
                   <Plus size={10} /> New Client
                 </button>
               </div>
@@ -229,7 +229,7 @@ export default function AdminProfileSwitcher() {
                       {/* Action buttons */}
                       <div className="flex items-center gap-1 mt-1.5 pl-3.5">
                         <button onClick={() => switchTo(client)}
-                          className="text-[9px] bg-gold/10 text-gold hover:bg-gold/20 px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
+                          className="text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
                           <Eye size={9} /> View as
                         </button>
                         <button onClick={() => manageClient(client)}
@@ -238,7 +238,7 @@ export default function AdminProfileSwitcher() {
                         </button>
                         {!client.profile_id ? (
                           <button onClick={() => { setOpen(false); setShowCreateProfile(client); }}
-                            className="text-[9px] bg-gold/10 text-gold hover:bg-gold/20 px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
+                            className="text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
                             <UserPlus size={9} /> Create Login
                           </button>
                         ) : (
@@ -261,7 +261,7 @@ export default function AdminProfileSwitcher() {
         {showCreateProfile && (
           <form onSubmit={createClientProfile} className="space-y-3">
             <p className="text-xs text-muted">
-              Create a login for <span className="text-gold font-medium">{showCreateProfile.business_name}</span> so they can access their client portal.
+              Create a login for <span className="text-[#2563EB] font-medium">{showCreateProfile.business_name}</span> so they can access their client portal.
             </p>
             <div>
               <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Full Name</label>

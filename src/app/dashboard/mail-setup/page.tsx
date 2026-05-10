@@ -231,7 +231,7 @@ export default function MailSetupPage() {
                   setStep(1);
                   setNewDomain("");
                 }}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black transition hover:bg-gold/90"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
               >
                 <Plus size={14} /> Add domain
               </button>
@@ -254,7 +254,7 @@ export default function MailSetupPage() {
                     setMode("new");
                     setStep(1);
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"
                 >
                   <Plus size={14} /> Add your first domain
                 </button>
@@ -277,7 +277,7 @@ export default function MailSetupPage() {
 
             {/* Detail pane for currently-selected row */}
             {selected && (
-              <div className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-5">
+              <div className="mt-6 rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-5">
                 <div className="mb-4 flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-semibold">DNS records for <span className="font-mono">{selected.domain}</span></h3>
@@ -301,7 +301,7 @@ export default function MailSetupPage() {
                   <button
                     onClick={() => selected.resend_id && verifyDomain(selected.resend_id)}
                     disabled={polling}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black disabled:opacity-60"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
                   >
                     {polling ? (
                       <>
@@ -330,9 +330,9 @@ export default function MailSetupPage() {
                     <div
                       className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold ${
                         done
-                          ? "bg-gold text-black"
+                          ? "bg-[#2563EB] text-white"
                           : active
-                            ? "bg-gold/15 text-gold ring-2 ring-gold/50"
+                            ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] ring-2 ring-[rgba(37,99,235,0.4)]"
                             : "bg-surface-light text-muted"
                       }`}
                     >
@@ -369,7 +369,7 @@ export default function MailSetupPage() {
                   autoFocus
                 />
                 {newDomain && !validDomain && (
-                  <p className="text-[11px] text-amber-400">
+                  <p className="text-[11px] text-[#2563EB]">
                     Use a real domain format — e.g. <span className="font-mono">mail.example.com</span>
                   </p>
                 )}
@@ -377,7 +377,7 @@ export default function MailSetupPage() {
                   <p className="text-[11px] text-emerald-400">✓ Looks good</p>
                 )}
 
-                <div className="mt-6 flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-[11px] text-amber-300">
+                <div className="mt-6 flex items-start gap-2 rounded-lg bg-[rgba(37,99,235,0.08)] p-3 text-[11px] text-[#2563EB]">
                   <AlertTriangle size={13} className="mt-0.5 shrink-0" />
                   <p>
                     Use a subdomain you CONTROL. You&apos;ll need to add 3–5 DNS records to
@@ -396,7 +396,7 @@ export default function MailSetupPage() {
                   <button
                     onClick={() => setStep(2)}
                     disabled={!validDomain}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black disabled:opacity-40"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
                   >
                     Review <ArrowRight size={14} />
                   </button>
@@ -437,7 +437,7 @@ export default function MailSetupPage() {
                   <button
                     onClick={createDomain}
                     disabled={submitting}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-5 py-2 text-sm font-semibold text-black disabled:opacity-60"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
                   >
                     {submitting ? (
                       <>
@@ -490,7 +490,7 @@ export default function MailSetupPage() {
                   <button
                     onClick={() => selected.resend_id && verifyDomain(selected.resend_id)}
                     disabled={polling}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black disabled:opacity-60"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
                   >
                     {polling ? (
                       <>
@@ -550,10 +550,10 @@ function DomainRow({
 }) {
   const statusColor =
     domain.status === "verified"
-      ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+      ? "bg-emerald-500/15 text-emerald-700 border-emerald-500/30"
       : domain.status === "failed"
-        ? "bg-rose-500/15 text-rose-300 border-rose-500/30"
-        : "bg-amber-500/15 text-amber-300 border-amber-500/30";
+        ? "bg-rose-500/15 text-rose-700 border-rose-500/30"
+        : "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]";
   const statusLabel =
     domain.status === "verified"
       ? "✓ Verified"
@@ -584,7 +584,7 @@ function DomainRow({
           <button
             onClick={onVerify}
             disabled={polling}
-            className="rounded bg-gold/15 px-2 py-1 text-[11px] text-gold hover:bg-gold/25 disabled:opacity-60"
+            className="rounded bg-[rgba(37,99,235,0.08)] px-2 py-1 text-[11px] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] disabled:opacity-60"
           >
             Verify
           </button>
@@ -631,7 +631,7 @@ function DnsRecordList({
             className="glass rounded-xl p-3"
           >
             <div className="mb-2 flex items-center justify-between">
-              <span className="rounded bg-gold/15 px-2 py-0.5 text-[10px] font-bold uppercase text-gold">
+              <span className="rounded bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[10px] font-bold uppercase text-[#2563EB]">
                 {r.type}
               </span>
               {r.priority !== undefined && (

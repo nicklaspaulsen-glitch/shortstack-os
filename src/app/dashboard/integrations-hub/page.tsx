@@ -1,5 +1,5 @@
 /**
- * Integrations Hub — Nango-powered tenant OAuth dashboard + API-key integrations.
+ * Integrations Hub ï¿½ Nango-powered tenant OAuth dashboard + API-key integrations.
  *
  * NOTE: This page is intentionally separate from `/dashboard/integrations`,
  * which is the legacy Zernio-based social-accounts dashboard. The two pages
@@ -45,7 +45,7 @@ import {
 import { NANGO_INTEGRATIONS } from "@/lib/nango/shared";
 
 // ------------------------------------------------------------------------
-// Extended local type — augments the card's IntegrationCardData with
+// Extended local type ï¿½ augments the card's IntegrationCardData with
 // routing metadata used by the page only. The card receives the base
 // IntegrationCardData type (supertype), so this is structurally safe.
 // ------------------------------------------------------------------------
@@ -210,7 +210,7 @@ const INTEGRATIONS: ReadonlyArray<ExtendedIntegrationData> = [
   },
 ];
 
-// Set of integration IDs that are NOT managed by Nango — status comes from
+// Set of integration IDs that are NOT managed by Nango ï¿½ status comes from
 // the health API instead.
 const NON_NANGO_IDS = new Set<string>(
   INTEGRATIONS.filter((i) => i.connectKind !== "nango").map((i) => i.id),
@@ -304,7 +304,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
             <p>
               {integration.name} accounts are managed through{" "}
               <strong className="text-[#0A0A0B]">Zernio</strong>. Connect your
-              account there — ShortStack will automatically detect it.
+              account there ï¿½ ShortStack will automatically detect it.
             </p>
             <ol className="list-decimal list-inside space-y-1.5 pl-1">
               <li>
@@ -427,7 +427,7 @@ export default function IntegrationsHubPage() {
       const res = await fetch("/api/integrations/health", {
         credentials: "include",
       });
-      if (!res.ok) return; // non-blocking — health failures don't block the page
+      if (!res.ok) return; // non-blocking ï¿½ health failures don't block the page
       const data = (await res.json()) as HealthResponse;
       const map = new Map<string, "connected" | "not_configured" | "error">();
       for (const result of data.results ?? []) {
@@ -556,7 +556,7 @@ export default function IntegrationsHubPage() {
     const route = DISCONNECT_ROUTES[integration.id];
     if (!route) {
       toast.error(
-        `Disconnect for ${integration.name} isn't wired up yet — coming soon.`,
+        `Disconnect for ${integration.name} isn't wired up yet ï¿½ coming soon.`,
       );
       return;
     }
@@ -619,7 +619,7 @@ export default function IntegrationsHubPage() {
       <PageHero
         icon={<Plug size={28} />}
         title="Integrations Hub"
-        subtitle="Connect your tools and let AI work across them. OAuth via Nango · Social via Zernio · API keys for the rest."
+        subtitle="Connect your tools and let AI work across them. OAuth via Nango ï¿½ Social via Zernio ï¿½ API keys for the rest."
         gradient="purple"
         eyebrow="All your integrations"
         actions={
@@ -690,8 +690,8 @@ export default function IntegrationsHubPage() {
               className={[
                 "px-3 py-1.5 text-[11px] font-semibold rounded-full border transition-all",
                 active
-                  ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-300"
-                  : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-muted hover:text-foreground hover:border-indigo-500/20",
+                  ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                  : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] hover:border-[rgba(37,99,235,0.14)]",
               ].join(" ")}
             >
               {cat}

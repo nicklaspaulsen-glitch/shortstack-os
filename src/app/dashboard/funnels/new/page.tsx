@@ -91,13 +91,13 @@ const TEMPLATES: FunnelTemplate[] = [
 ];
 
 const STEP_TYPE_COLORS: Record<string, string> = {
-  "opt-in": "bg-blue-500/15 text-blue-400 border-blue-500/20",
-  "thank-you": "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
-  vsl: "bg-purple-500/15 text-purple-400 border-purple-500/20",
-  checkout: "bg-amber-500/15 text-amber-400 border-amber-500/20",
-  upsell: "bg-pink-500/15 text-pink-400 border-pink-500/20",
-  downsell: "bg-orange-500/15 text-orange-400 border-orange-500/20",
-  webinar: "bg-cyan-500/15 text-cyan-400 border-cyan-500/20",
+  "opt-in": "bg-blue-500/10 text-blue-700 border-blue-500/20",
+  "thank-you": "bg-emerald-500/10 text-emerald-700 border-emerald-500/20",
+  vsl: "bg-purple-500/10 text-purple-700 border-purple-500/20",
+  checkout: "bg-amber-500/10 text-amber-700 border-amber-500/20",
+  upsell: "bg-pink-500/10 text-pink-700 border-pink-500/20",
+  downsell: "bg-orange-500/10 text-orange-700 border-orange-500/20",
+  webinar: "bg-cyan-500/10 text-cyan-700 border-cyan-500/20",
 };
 
 const STEP_TYPE_LABELS: Record<string, string> = {
@@ -170,11 +170,11 @@ export default function NewFunnelPage() {
           { n: 2, label: "Review & Create" },
         ].map((s, idx) => (
           <div key={s.n} className="flex items-center gap-2">
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-purple-500/20 text-purple-300 border border-purple-500/30" : step > s.n ? "text-emerald-400" : "text-zinc-600"}`}>
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(37,99,235,0.08)] text-blue-700 border border-[rgba(37,99,235,0.25)]" : step > s.n ? "text-emerald-700" : "text-[#9CA3AF]"}`}>
               {step > s.n ? <Check size={14} /> : <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-xs">{s.n}</span>}
               {s.label}
             </div>
-            {idx < 1 && <ChevronRight size={14} className="text-zinc-700" />}
+            {idx < 1 && <ChevronRight size={14} className="text-[#D1D5DB]" />}
           </div>
         ))}
       </div>
@@ -182,66 +182,66 @@ export default function NewFunnelPage() {
       {step === 1 && (
         <div className="space-y-6">
           {/* Name */}
-          <div className="bg-zinc-900/60 border border-white/8 rounded-xl p-5 space-y-4">
-            <h2 className="text-white font-semibold text-base">Funnel Details</h2>
+          <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
+            <h2 className="text-[#111827] font-semibold text-base">Funnel Details</h2>
             <div>
-              <label className="block text-xs text-zinc-400 font-medium mb-1.5">Funnel Name *</label>
+              <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Funnel Name *</label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Lead Gen — Free Audit"
-                className="w-full px-3 py-2.5 rounded-lg bg-zinc-800/60 border border-white/8 text-white text-sm placeholder-zinc-600 outline-none focus:border-purple-500/50"
+                className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)]"
               />
             </div>
             <div>
-              <label className="block text-xs text-zinc-400 font-medium mb-1.5">Description (optional)</label>
+              <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Description (optional)</label>
               <input
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Short description of the funnel goal"
-                className="w-full px-3 py-2.5 rounded-lg bg-zinc-800/60 border border-white/8 text-white text-sm placeholder-zinc-600 outline-none focus:border-purple-500/50"
+                className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)]"
               />
             </div>
           </div>
 
           {/* Templates */}
-          <div className="bg-zinc-900/60 border border-white/8 rounded-xl p-5 space-y-4">
+          <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
             <div className="flex items-center gap-2">
-              <Sparkles size={15} className="text-purple-400" />
-              <h2 className="text-white font-semibold text-base">Choose a Template</h2>
-              <span className="text-zinc-500 text-xs ml-1">(optional)</span>
+              <Sparkles size={15} className="text-purple-600" />
+              <h2 className="text-[#111827] font-semibold text-base">Choose a Template</h2>
+              <span className="text-[#9CA3AF] text-xs ml-1">(optional)</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {/* Blank option */}
               <button
                 onClick={() => setSelectedTemplate(null)}
-                className={`text-left p-4 rounded-lg border transition-all ${!selectedTemplate ? "border-purple-500/50 bg-purple-500/10" : "border-white/8 hover:border-white/15 bg-white/3"}`}
+                className={`text-left p-4 rounded-lg border transition-all ${!selectedTemplate ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-md bg-zinc-700/50 border border-white/10 flex items-center justify-center">
-                    <Plus size={15} className="text-zinc-400" />
+                  <div className="w-8 h-8 rounded-md bg-black/[0.04] border border-black/[0.08] flex items-center justify-center">
+                    <Plus size={15} className="text-[#6B7280]" />
                   </div>
-                  <span className="text-white text-sm font-semibold">Blank</span>
+                  <span className="text-[#111827] text-sm font-semibold">Blank</span>
                 </div>
-                <p className="text-zinc-500 text-xs">Start with an empty canvas.</p>
+                <p className="text-[#6B7280] text-xs">Start with an empty canvas.</p>
               </button>
 
               {TEMPLATES.map((tpl) => (
                 <button
                   key={tpl.id}
                   onClick={() => setSelectedTemplate(tpl)}
-                  className={`text-left p-4 rounded-lg border transition-all ${selectedTemplate?.id === tpl.id ? "border-purple-500/50 bg-purple-500/10" : "border-white/8 hover:border-white/15 bg-white/3"}`}
+                  className={`text-left p-4 rounded-lg border transition-all ${selectedTemplate?.id === tpl.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <div className={`w-8 h-8 rounded-md border flex items-center justify-center ${tpl.color}`}>
                       {tpl.icon}
                     </div>
-                    <span className="text-white text-sm font-semibold">{tpl.name}</span>
+                    <span className="text-[#111827] text-sm font-semibold">{tpl.name}</span>
                   </div>
-                  <p className="text-zinc-500 text-xs">{tpl.description}</p>
+                  <p className="text-[#6B7280] text-xs">{tpl.description}</p>
                   <div className="flex flex-wrap gap-1 mt-2">
                     {tpl.steps.map((s) => (
-                      <span key={s.title} className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/15 text-zinc-400 border-zinc-500/20"}`}>
+                      <span key={s.title} className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/10 text-[#6B7280] border-zinc-500/20"}`}>
                         {STEP_TYPE_LABELS[s.step_type] ?? s.step_type}
                       </span>
                     ))}
@@ -268,43 +268,43 @@ export default function NewFunnelPage() {
 
       {step === 2 && (
         <div className="space-y-6">
-          <div className="bg-zinc-900/60 border border-white/8 rounded-xl p-5 space-y-4">
-            <h2 className="text-white font-semibold text-base">Funnel Summary</h2>
+          <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
+            <h2 className="text-[#111827] font-semibold text-base">Funnel Summary</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <span className="text-zinc-500 text-xs">Name</span>
-                <p className="text-white font-medium mt-0.5">{name}</p>
+                <span className="text-[#6B7280] text-xs">Name</span>
+                <p className="text-[#111827] font-medium mt-0.5">{name}</p>
               </div>
               {description && (
                 <div>
-                  <span className="text-zinc-500 text-xs">Description</span>
-                  <p className="text-white font-medium mt-0.5">{description}</p>
+                  <span className="text-[#6B7280] text-xs">Description</span>
+                  <p className="text-[#111827] font-medium mt-0.5">{description}</p>
                 </div>
               )}
               <div>
-                <span className="text-zinc-500 text-xs">Template</span>
-                <p className="text-white font-medium mt-0.5">{selectedTemplate?.name ?? "Blank"}</p>
+                <span className="text-[#6B7280] text-xs">Template</span>
+                <p className="text-[#111827] font-medium mt-0.5">{selectedTemplate?.name ?? "Blank"}</p>
               </div>
             </div>
           </div>
 
           {selectedTemplate && (
-            <div className="bg-zinc-900/60 border border-white/8 rounded-xl p-5 space-y-3">
-              <h2 className="text-white font-semibold text-base">Steps Preview</h2>
+            <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-3">
+              <h2 className="text-[#111827] font-semibold text-base">Steps Preview</h2>
               <div className="flex items-center gap-2 overflow-x-auto pb-2">
                 {selectedTemplate.steps.map((s, idx) => (
                   <div key={idx} className="flex items-center gap-2 shrink-0">
-                    <div className="bg-zinc-800/80 border border-white/8 rounded-lg px-4 py-3 min-w-[120px]">
-                      <div className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-1">
+                    <div className="bg-[#F8FAFC] border border-black/[0.06] rounded-lg px-4 py-3 min-w-[120px]">
+                      <div className="text-[#9CA3AF] text-[10px] font-bold uppercase tracking-widest mb-1">
                         Step {idx + 1}
                       </div>
-                      <div className="text-white text-sm font-medium mb-1.5">{s.title}</div>
-                      <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/15 text-zinc-400 border-zinc-500/20"}`}>
+                      <div className="text-[#111827] text-sm font-medium mb-1.5">{s.title}</div>
+                      <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/10 text-[#6B7280] border-zinc-500/20"}`}>
                         {STEP_TYPE_LABELS[s.step_type] ?? s.step_type}
                       </span>
                     </div>
                     {idx < selectedTemplate.steps.length - 1 && (
-                      <ArrowRight size={16} className="text-zinc-600 shrink-0" />
+                      <ArrowRight size={16} className="text-[#9CA3AF] shrink-0" />
                     )}
                   </div>
                 ))}
@@ -315,7 +315,7 @@ export default function NewFunnelPage() {
           <div className="flex items-center justify-between">
             <button
               onClick={() => setStep(1)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/10 text-zinc-400 hover:text-white text-sm font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-black/[0.08] text-[#6B7280] hover:text-[#111827] text-sm font-medium transition-colors"
             >
               <ChevronLeft size={15} />
               Back

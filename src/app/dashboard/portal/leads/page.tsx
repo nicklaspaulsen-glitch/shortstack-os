@@ -222,7 +222,7 @@ export default function ClientLeadEnginePage() {
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-success";
-    if (score >= 50) return "text-gold";
+    if (score >= 50) return "text-[#2563EB]";
     return "text-muted";
   };
 
@@ -232,14 +232,14 @@ export default function ClientLeadEnginePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2">
-            <Sparkles size={20} className="text-gold" />
+            <Sparkles size={20} className="text-[#2563EB]" />
             AI Lead Engine
           </h1>
           <p className="text-xs text-muted mt-1">Find, score, and reach high-value prospects instantly</p>
         </div>
         <div className="flex items-center gap-2">
           {selectedLeads.size > 0 && (
-            <span className="text-[10px] text-gold font-medium px-2 py-1 bg-gold/10 rounded-lg">
+            <span className="text-[10px] text-[#2563EB] font-medium px-2 py-1 bg-[rgba(37,99,235,0.08)] rounded-lg">
               {selectedLeads.size} selected
             </span>
           )}
@@ -254,8 +254,8 @@ export default function ClientLeadEnginePage() {
         {[
           { label: "Total Leads", value: stats.total, icon: <Users size={14} />, color: "text-info" },
           { label: "With Email", value: stats.withEmail, icon: <Mail size={14} />, color: "text-success" },
-          { label: "With Phone", value: stats.withPhone, icon: <Phone size={14} />, color: "text-gold" },
-          { label: "Avg Score", value: `${stats.avgScore}%`, icon: <Target size={14} />, color: "text-gold" },
+          { label: "With Phone", value: stats.withPhone, icon: <Phone size={14} />, color: "text-[#2563EB]" },
+          { label: "Avg Score", value: `${stats.avgScore}%`, icon: <Target size={14} />, color: "text-[#2563EB]" },
         ].map((s) => (
           <div key={s.label} className="card flex items-center gap-3 py-3">
             <div className={`${s.color}`}>{s.icon}</div>
@@ -268,9 +268,9 @@ export default function ClientLeadEnginePage() {
       </div>
 
       {/* Search Bar — The Engine */}
-      <div className="card border-gold/20">
+      <div className="card border-[rgba(37,99,235,0.2)]">
         <div className="flex items-center gap-2 mb-3">
-          <Zap size={14} className="text-gold" />
+          <Zap size={14} className="text-[#2563EB]" />
           <span className="text-xs font-semibold">Find New Leads</span>
         </div>
 
@@ -358,13 +358,13 @@ export default function ClientLeadEnginePage() {
 
       {/* Bulk Action Bar */}
       {selectedLeads.size > 0 && (
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-gold/5 border border-gold/15">
-          <span className="text-xs font-medium text-gold">{selectedLeads.size} leads selected</span>
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.08)]">
+          <span className="text-xs font-medium text-[#2563EB]">{selectedLeads.size} leads selected</span>
           <div className="flex-1" />
           <button onClick={() => bulkAction("email")} className="text-[10px] px-3 py-1.5 rounded-lg bg-info/10 text-info hover:bg-info/20 flex items-center gap-1.5 transition-colors">
             <Mail size={11} /> Email All
           </button>
-          <button onClick={() => bulkAction("dm")} className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1.5 transition-colors">
+          <button onClick={() => bulkAction("dm")} className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1.5 transition-colors">
             <MessageSquare size={11} /> DM All
           </button>
           <button onClick={() => bulkAction("call")} className="text-[10px] px-3 py-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 flex items-center gap-1.5 transition-colors">
@@ -401,11 +401,11 @@ export default function ClientLeadEnginePage() {
               ) : error ? (
                 <tr><td colSpan={9} className="text-center py-12 text-danger">
                   <p className="text-xs mb-2">Failed to load leads: {error}</p>
-                  <button onClick={fetchExistingLeads} className="text-[10px] text-gold hover:text-gold-light underline">Try again</button>
+                  <button onClick={fetchExistingLeads} className="text-[10px] text-[#2563EB] hover:text-[#3B82F6] underline">Try again</button>
                 </td></tr>
               ) : leads.length === 0 ? (
                 <tr><td colSpan={9} className="text-center py-12 text-muted">
-                  <Sparkles size={20} className="mx-auto mb-2 text-gold/40" />
+                  <Sparkles size={20} className="mx-auto mb-2 text-[rgba(37,99,235,0.4)]" />
                   <p className="text-xs">No leads yet. Use the search above to find prospects.</p>
                 </td></tr>
               ) : (
@@ -442,7 +442,7 @@ export default function ClientLeadEnginePage() {
                       <td className="px-3 py-2.5 text-center">
                         {lead.google_rating ? (
                           <span className="flex items-center justify-center gap-0.5 text-[10px]">
-                            <Star size={10} className="text-gold fill-gold" /> {lead.google_rating}
+                            <Star size={10} className="text-[#2563EB] fill-[#2563EB]" /> {lead.google_rating}
                             <span className="text-muted">({lead.review_count})</span>
                           </span>
                         ) : <span className="text-muted text-[10px]">—</span>}
@@ -453,9 +453,9 @@ export default function ClientLeadEnginePage() {
                       <td className="px-3 py-2.5 text-center">
                         <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium uppercase tracking-wider ${
                           lead.status === "new" ? "bg-info/10 text-info" :
-                          lead.status === "contacted" ? "bg-gold/10 text-gold" :
+                          lead.status === "contacted" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" :
                           lead.status === "replied" ? "bg-success/10 text-success" :
-                          lead.status === "booked" ? "bg-gold/10 text-gold" :
+                          lead.status === "booked" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" :
                           "bg-surface-light text-muted"
                         }`}>
                           {lead.status}
@@ -466,7 +466,7 @@ export default function ClientLeadEnginePage() {
                           {lead.instagram_url && <span className="w-4 h-4 rounded-full bg-[#e4405f]/10 flex items-center justify-center" title="Instagram"><span className="text-[7px]">IG</span></span>}
                           {lead.facebook_url && <span className="w-4 h-4 rounded-full bg-[#1877f2]/10 flex items-center justify-center" title="Facebook"><span className="text-[7px]">FB</span></span>}
                           {lead.linkedin_url && <span className="w-4 h-4 rounded-full bg-[#0a66c2]/10 flex items-center justify-center" title="LinkedIn"><span className="text-[7px]">LI</span></span>}
-                          {lead.tiktok_url && <span className="w-4 h-4 rounded-full bg-white/10 flex items-center justify-center" title="TikTok"><span className="text-[7px]">TT</span></span>}
+                          {lead.tiktok_url && <span className="w-4 h-4 rounded-full bg-[rgba(0,0,0,0.06)] flex items-center justify-center" title="TikTok"><span className="text-[7px]">TT</span></span>}
                         </div>
                       </td>
                       <td className="px-3 py-2.5">

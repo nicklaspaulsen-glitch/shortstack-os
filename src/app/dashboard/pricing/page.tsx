@@ -153,7 +153,7 @@ export default function PricingPage() {
               whileHover={{ y: -4, scale: 1.01 }}
               className={`relative glass  border p-5 flex flex-col transition-shadow ${
                 plan.popular
-                  ? "border-gold/30 bg-gold/[0.03] shadow-card ring-1 ring-gold/10"
+                  ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.03)] shadow-card ring-1 ring-[rgba(37,99,235,0.08)]"
                   : isCurrentPlan
                   ? "border-success/30 bg-success/[0.03] ring-1 ring-success/10"
                   : "border-border shadow-soft"
@@ -161,7 +161,7 @@ export default function PricingPage() {
             >
               {plan.highlight && (
                 <div className={`absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-white text-[9px] font-bold uppercase tracking-wider ${
-                  plan.popular ? "bg-gold" : "bg-gradient-to-r from-red-500 to-orange-500"
+                  plan.popular ? "bg-[#2563EB]" : "bg-gradient-to-r from-red-500 to-orange-500"
                 }`}>
                   {plan.highlight}
                 </div>
@@ -189,7 +189,7 @@ export default function PricingPage() {
               </div>
               <p className="text-[10px] text-muted mb-4">
                 {plan.tokens === "Unlimited" || plan.tokens === "∞" ? "Unlimited AI tokens" : `${plan.tokens} AI tokens included`}
-                {annual && <span className="text-gold ml-1">(${(monthlyPrice * 12).toLocaleString()}/yr)</span>}
+                {annual && <span className="text-[#2563EB] ml-1">(${(monthlyPrice * 12).toLocaleString()}/yr)</span>}
               </p>
 
               <button
@@ -199,8 +199,8 @@ export default function PricingPage() {
                   isCurrentPlan
                     ? "bg-success/10 text-success border border-success/20 cursor-default"
                     : plan.popular
-                    ? "bg-gold text-white hover:bg-gold/90 shadow-sm"
-                    : "bg-surface-light text-foreground hover:bg-gold/10 hover:text-gold border border-border"
+                    ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8] shadow-sm"
+                    : "bg-surface-light text-foreground hover:bg-[rgba(37,99,235,0.08)] hover:text-[#2563EB] border border-border"
                 } ${checkoutLoading === plan.key ? "opacity-60 cursor-wait" : ""}`}
               >
                 {isCurrentPlan
@@ -216,7 +216,7 @@ export default function PricingPage() {
               <div className="mt-4 pt-4 border-t border-border space-y-2">
                 {plan.features.map((f) => (
                   <div key={f} className="flex items-start gap-2">
-                    <Check size={12} className="mt-0.5 shrink-0 text-gold" />
+                    <Check size={12} className="mt-0.5 shrink-0 text-[#2563EB]" />
                     <span className="text-[10px] text-foreground/80 leading-relaxed">{f}</span>
                   </div>
                 ))}
@@ -232,7 +232,7 @@ export default function PricingPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-              <Users size={14} className="text-blue-400" />
+              <Users size={14} className="text-[#2563EB]" />
               Clients
             </div>
             <div className="space-y-1">
@@ -250,7 +250,7 @@ export default function PricingPage() {
           </div>
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-              <Bot size={14} className="text-purple-400" />
+              <Bot size={14} className="text-[#2563EB]" />
               AI Tokens
             </div>
             <div className="space-y-1">
@@ -264,7 +264,7 @@ export default function PricingPage() {
           </div>
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-              <Film size={14} className="text-gold" />
+              <Film size={14} className="text-[#2563EB]" />
               Upload Limit
             </div>
             <div className="space-y-1">
@@ -315,10 +315,10 @@ export default function PricingPage() {
           { icon: <Headphones size={16} />, label: "Dedicated Support", desc: "Named success manager", plans: "Business+" },
         ].map((item, i) => (
           <motion.div key={item.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl p-4">
-            <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center text-gold mb-2">{item.icon}</div>
+            <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[#2563EB] mb-2">{item.icon}</div>
             <p className="text-xs font-medium text-foreground">{item.label}</p>
             <p className="text-[10px] text-muted mt-0.5">{item.desc}</p>
-            <p className="text-[9px] text-gold font-medium mt-1.5">{item.plans}</p>
+            <p className="text-[9px] text-[#2563EB] font-medium mt-1.5">{item.plans}</p>
           </motion.div>
         ))}
       </div>
@@ -340,7 +340,7 @@ export default function PricingPage() {
             <div key={item.label} className="glass rounded-xl p-3">
               <p className="text-xs font-medium text-foreground">{item.label}</p>
               <p className="text-[11px] text-muted mt-0.5">{item.tokens} tokens</p>
-              <p className="text-[10px] text-gold mt-1">~{item.uses}/500K</p>
+              <p className="text-[10px] text-[#2563EB] mt-1">~{item.uses}/500K</p>
             </div>
           ))}
         </div>
@@ -349,7 +349,7 @@ export default function PricingPage() {
       {/* Add-ons */}
       <div>
         <div className="flex items-center gap-2 mb-4">
-          <Plus size={16} className="text-gold" />
+          <Plus size={16} className="text-[#2563EB]" />
           <h2 className="text-sm font-bold text-foreground">Add-ons</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -369,7 +369,7 @@ export default function PricingPage() {
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-medium text-foreground">{addon.name}</p>
                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
-                    addon.type === "one-time" ? "bg-info/10 text-info" : "bg-gold/10 text-gold"
+                    addon.type === "one-time" ? "bg-info/10 text-info" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                   }`}>
                     {addon.type === "one-time" ? "One-time" : "Monthly"}
                   </span>
@@ -383,14 +383,14 @@ export default function PricingPage() {
       </div>
 
       {/* FAQ / CTA */}
-      <div className="glass  border-gold/20 bg-gold/[0.03] p-6 text-center">
+      <div className="glass  border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.03)] p-6 text-center">
         <h2 className="text-sm font-bold text-foreground mb-1">Not sure which plan is right?</h2>
         <p className="text-xs text-muted mb-4">
           Start with Starter and upgrade anytime. All plans include a 14-day free trial.
         </p>
         <button
           onClick={() => handleSubscribe("Starter")}
-          className="px-5 py-2 rounded-xl bg-gold text-white text-xs font-medium hover:bg-gold/90 transition-colors"
+          className="px-5 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-medium hover:bg-[#1D4ED8] transition-colors"
         >
           Start Free Trial
         </button>

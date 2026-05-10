@@ -128,7 +128,7 @@ export default function AgencyStripeConnect() {
       <div className="flex items-start justify-between mb-3">
         <div>
           <h3 className="section-header flex items-center gap-2">
-            <Plug size={14} className="text-gold" />
+            <Plug size={14} className="text-[#2563EB]" />
             Accept Payments from Clients
           </h3>
           <p className="text-[10px] text-muted">
@@ -147,7 +147,7 @@ export default function AgencyStripeConnect() {
         // ── Not connected ──
         <div className="space-y-3">
           <div className="flex items-start gap-3 p-3 bg-surface-light/50 rounded-lg border border-border">
-            <CreditCard size={18} className="text-gold shrink-0 mt-0.5" />
+            <CreditCard size={18} className="text-[#2563EB] shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-xs font-semibold">No Stripe account connected yet</p>
               <p className="text-[10px] text-muted mt-0.5">

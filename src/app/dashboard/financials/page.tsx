@@ -243,7 +243,7 @@ export default function FinancialsPage() {
       { name: "Starter", price: 497, count: 0, color: "bg-blue-400" },
       { name: "Growth", price: 997, count: 0, color: "bg-green-400" },
       { name: "Pro", price: 2497, count: 0, color: "bg-purple-400" },
-      { name: "Business", price: 4997, count: 0, color: "bg-gold" },
+      { name: "Business", price: 4997, count: 0, color: "bg-[#2563EB]" },
       { name: "Unlimited", price: 9997, count: 0, color: "bg-red-400" },
     ];
     activeClients.forEach(c => {
@@ -492,7 +492,7 @@ export default function FinancialsPage() {
               <StripeIcon size={14} /> Connect Stripe
             </button>
           ) : (
-            <span className="text-[10px] text-green-400 flex items-center gap-1">
+            <span className="text-[10px] text-emerald-700 flex items-center gap-1">
               <CheckCircle size={10} /> Synced {lastSyncTime || "just now"}
             </span>
           )}
@@ -512,7 +512,7 @@ export default function FinancialsPage() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-colors ${
               activeTab === tab.id
-                ? "bg-surface-light text-gold border border-border border-b-transparent -mb-px"
+                ? "bg-surface-light text-[#2563EB] border border-border border-b-transparent -mb-px"
                 : "text-muted hover:text-foreground"
             }`}
           >
@@ -536,10 +536,10 @@ export default function FinancialsPage() {
           {/* Key Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
             {[
-              { icon: <DollarSign size={12} className="text-gold" />, label: "MRR", value: formatCurrency(totalMRR), color: "text-gold", sub: `${activeClients.length} active clients` },
+              { icon: <DollarSign size={12} className="text-[#2563EB]" />, label: "MRR", value: formatCurrency(totalMRR), color: "text-[#2563EB]", sub: `${activeClients.length} active clients` },
               { icon: <Globe size={12} className="text-blue-400" />, label: "ARR", value: formatCurrency(annualRecurringRevenue), color: "text-blue-400", sub: "annualized" },
-              { icon: <TrendingUp size={12} className={netProfit >= 0 ? "text-green-400" : "text-red-400"} />, label: "Net Profit", value: formatCurrency(netProfit), color: netProfit >= 0 ? "text-green-400" : "text-red-400", sub: <span className="flex items-center gap-0.5">{marginPct >= 0 ? <ArrowUpRight size={10} className="text-green-400" /> : <ArrowDownRight size={10} className="text-red-400" />}{marginPct.toFixed(1)}% margin</span> },
-              { icon: <AlertTriangle size={12} className={churnRate > 5 ? "text-red-400" : "text-yellow-400"} />, label: "Churn Rate", value: `${churnRate.toFixed(1)}%`, color: churnRate > 5 ? "text-red-400" : "text-yellow-400", sub: `${churnedThisMonth} churned / ${totalClients} total` },
+              { icon: <TrendingUp size={12} className={netProfit >= 0 ? "text-emerald-700" : "text-rose-700"} />, label: "Net Profit", value: formatCurrency(netProfit), color: netProfit >= 0 ? "text-emerald-700" : "text-rose-700", sub: <span className="flex items-center gap-0.5">{marginPct >= 0 ? <ArrowUpRight size={10} className="text-emerald-700" /> : <ArrowDownRight size={10} className="text-rose-700" />}{marginPct.toFixed(1)}% margin</span> },
+              { icon: <AlertTriangle size={12} className={churnRate > 5 ? "text-rose-700" : "text-amber-600"} />, label: "Churn Rate", value: `${churnRate.toFixed(1)}%`, color: churnRate > 5 ? "text-rose-700" : "text-amber-600", sub: `${churnedThisMonth} churned / ${totalClients} total` },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
@@ -558,9 +558,9 @@ export default function FinancialsPage() {
           {/* Extended Metrics Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
             {[
-              { icon: <Minus size={12} className="text-red-400" />, label: "Monthly Expenses", value: formatCurrency(totalMonthlyExpenses), color: "text-red-400", sub: `${expenses.length} subscriptions` },
+              { icon: <Minus size={12} className="text-rose-700" />, label: "Monthly Expenses", value: formatCurrency(totalMonthlyExpenses), color: "text-rose-700", sub: `${expenses.length} subscriptions` },
               { icon: <Users size={12} className="text-purple-400" />, label: "Avg / Client", value: formatCurrency(avgRevenue), color: "text-purple-400", sub: `${activeClients.length} clients` },
-              { icon: <Zap size={12} className="text-gold" />, label: "Client LTV", value: formatCurrency(clv), color: "text-gold", sub: `avg ${avgClientLifeMonths} months` },
+              { icon: <Zap size={12} className="text-[#2563EB]" />, label: "Client LTV", value: formatCurrency(clv), color: "text-[#2563EB]", sub: `avg ${avgClientLifeMonths} months` },
               { icon: <Shield size={12} className="text-orange-400" />, label: "Est. Annual Tax", value: formatCurrency(estimatedTax), color: "text-orange-400", sub: `${estimatedTaxRate}% effective rate` },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
@@ -580,22 +580,22 @@ export default function FinancialsPage() {
           {/* Revenue vs Expenses Bar */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
-              <BarChart3 size={13} className="text-gold" /> Revenue vs Expenses vs Profit
+              <BarChart3 size={13} className="text-[#2563EB]" /> Revenue vs Expenses vs Profit
             </p>
             <div className="space-y-3">
               <div>
                 <div className="flex justify-between text-[10px] mb-1">
                   <span className="text-muted">Revenue</span>
-                  <span className="text-gold font-semibold">{formatCurrency(totalMRR)}</span>
+                  <span className="text-[#2563EB] font-semibold">{formatCurrency(totalMRR)}</span>
                 </div>
                 <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
-                  <div className="h-full rounded-lg bg-gold/70 transition-all duration-500" style={{ width: barWidth(totalMRR) }} />
+                  <div className="h-full rounded-lg transition-all duration-500" style={{ width: barWidth(totalMRR), background: "rgba(37,99,235,0.7)" }} />
                 </div>
               </div>
               <div>
                 <div className="flex justify-between text-[10px] mb-1">
                   <span className="text-muted">Expenses</span>
-                  <span className="text-red-400 font-semibold">{formatCurrency(totalMonthlyExpenses)}</span>
+                  <span className="text-rose-700 font-semibold">{formatCurrency(totalMonthlyExpenses)}</span>
                 </div>
                 <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
                   <div className="h-full rounded-lg bg-red-500/60 transition-all duration-500" style={{ width: barWidth(totalMonthlyExpenses) }} />
@@ -604,7 +604,7 @@ export default function FinancialsPage() {
               <div>
                 <div className="flex justify-between text-[10px] mb-1">
                   <span className="text-muted">Net Profit</span>
-                  <span className={`font-semibold ${netProfit >= 0 ? "text-green-400" : "text-red-400"}`}>{formatCurrency(netProfit)}</span>
+                  <span className={`font-semibold ${netProfit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>{formatCurrency(netProfit)}</span>
                 </div>
                 <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
                   <div className={`h-full rounded-lg transition-all duration-500 ${netProfit >= 0 ? "bg-green-500/60" : "bg-red-500/60"}`} style={{ width: barWidth(netProfit) }} />
@@ -617,7 +617,7 @@ export default function FinancialsPage() {
           {mrrTrend.length > 1 && (
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                <TrendingUp size={13} className="text-gold" /> MRR Growth Trend
+                <TrendingUp size={13} className="text-[#2563EB]" /> MRR Growth Trend
               </p>
               <div className="flex items-end gap-1.5 h-32">
                 {mrrTrend.map((item, i) => {
@@ -627,7 +627,7 @@ export default function FinancialsPage() {
                     <div key={i} className="flex-1 flex flex-col items-center gap-1">
                       <span className="text-[8px] text-muted">{formatCurrency(item.mrr)}</span>
                       <div className="w-full flex-1 flex items-end">
-                        <div className="w-full rounded-t-md bg-gold/60 transition-all duration-500 min-h-[4px]" style={{ height }} />
+                        <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(37,99,235,0.6)" }} />
                       </div>
                       <span className="text-[8px] text-muted">{item.month}</span>
                     </div>
@@ -640,7 +640,7 @@ export default function FinancialsPage() {
           {/* Revenue by Plan Tier */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <Layers size={13} className="text-gold" /> Revenue by Plan Tier
+              <Layers size={13} className="text-[#2563EB]" /> Revenue by Plan Tier
             </p>
             <div className="space-y-2">
               {revenueByTier.map(tier => (
@@ -662,7 +662,7 @@ export default function FinancialsPage() {
           {/* Payment Method Distribution */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <CreditCard size={13} className="text-gold" /> Payment Method Distribution
+              <CreditCard size={13} className="text-[#2563EB]" /> Payment Method Distribution
             </p>
             {paymentMethods.length === 0 ? (
               <p className="text-xs text-muted text-center py-6">Connect Stripe to see payment method data</p>
@@ -674,7 +674,7 @@ export default function FinancialsPage() {
                   <p className="text-lg font-bold text-foreground">{pm.count}</p>
                   <div className="flex items-center gap-1 mt-1">
                     <div className="flex-1 h-1.5 rounded bg-surface border border-border overflow-hidden">
-                      <div className="h-full rounded bg-gold/60" style={{ width: `${pm.pct}%` }} />
+                      <div className="h-full rounded" style={{ width: `${pm.pct}%`, background: "rgba(37,99,235,0.6)" }} />
                     </div>
                     <span className="text-[9px] text-muted">{pm.pct}%</span>
                   </div>
@@ -695,10 +695,10 @@ export default function FinancialsPage() {
           {/* Expense Summary Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
             {[
-              { icon: <Minus size={12} className="text-red-400" />, label: "Monthly Total", value: formatCurrency(totalMonthlyExpenses), color: "text-red-400" },
+              { icon: <Minus size={12} className="text-rose-700" />, label: "Monthly Total", value: formatCurrency(totalMonthlyExpenses), color: "text-rose-700" },
               { icon: <Calendar size={12} className="text-orange-400" />, label: "Annual Total", value: formatCurrency(totalMonthlyExpenses * 12), color: "text-orange-400" },
               { icon: <Layers size={12} className="text-blue-400" />, label: "Categories", value: String(categoryTotals.length), color: "text-blue-400" },
-              { icon: <Percent size={12} className={marginPct >= 0 ? "text-green-400" : "text-red-400"} />, label: "Profit Margin", value: `${marginPct.toFixed(1)}%`, color: marginPct >= 0 ? "text-green-400" : "text-red-400" },
+              { icon: <Percent size={12} className={marginPct >= 0 ? "text-emerald-700" : "text-rose-700"} />, label: "Profit Margin", value: `${marginPct.toFixed(1)}%`, color: marginPct >= 0 ? "text-emerald-700" : "text-rose-700" },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
@@ -716,7 +716,7 @@ export default function FinancialsPage() {
           {/* Budget vs Actual */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <Target size={13} className="text-gold" /> Budget vs Actual
+              <Target size={13} className="text-[#2563EB]" /> Budget vs Actual
             </p>
             <div className="space-y-2.5">
               {budgetsWithActual.map(b => (
@@ -731,7 +731,7 @@ export default function FinancialsPage() {
                     </div>
                     {b.budget > 0 && (
                       <div
-                        className="absolute top-0 h-4 w-0.5 bg-gold/80"
+                        className="absolute top-0 h-4 w-0.5 bg-[#2563EB]/80"
                         style={{ left: `${Math.min(100, 100)}%` }}
                       />
                     )}
@@ -739,7 +739,7 @@ export default function FinancialsPage() {
                   <span className="text-[10px] text-muted w-16 text-right">{formatCurrency(b.actual)}</span>
                   <span className="text-[10px] text-muted w-2">/</span>
                   <span className="text-[10px] font-semibold text-foreground w-16">{formatCurrency(b.budget)}</span>
-                  <span className={`text-[10px] w-16 text-right font-semibold ${b.variance >= 0 ? "text-green-400" : "text-red-400"}`}>
+                  <span className={`text-[10px] w-16 text-right font-semibold ${b.variance >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
                     {b.variance >= 0 ? "+" : ""}{formatCurrency(b.variance)}
                   </span>
                 </div>
@@ -751,7 +751,7 @@ export default function FinancialsPage() {
           {categoryTotals.length > 0 && (
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                <Receipt size={13} className="text-gold" /> Expense Categories
+                <Receipt size={13} className="text-[#2563EB]" /> Expense Categories
               </p>
               <div className="space-y-2">
                 {categoryTotals.map((cat) => (
@@ -786,7 +786,7 @@ export default function FinancialsPage() {
                       onClick={() => addPreset(preset)}
                       disabled={exists}
                       className={`text-left p-2.5 rounded-lg border text-xs transition-all ${
-                        exists ? "border-border/30 text-muted/40 cursor-not-allowed" : "border-border hover:border-gold/30 hover:bg-gold/5"
+                        exists ? "border-border/30 text-muted/40 cursor-not-allowed" : "border-border hover:border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.05)]"
                       }`}
                     >
                       <p className="font-semibold">{preset.name}</p>
@@ -825,24 +825,24 @@ export default function FinancialsPage() {
                   <div key={exp.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border transition-all hover:border-border/80">
                     <div className="col-span-4"><p className="text-sm font-semibold">{exp.name}</p></div>
                     <div className="col-span-2">
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.04] border border-border text-muted">{exp.category}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-muted">{exp.category}</span>
                     </div>
                     <div className="col-span-2 text-right">
                       <p className="text-sm">{formatCurrency(exp.cost)}</p>
                       <p className="text-[9px] text-muted">/{exp.interval === "annual" ? "yr" : "mo"}</p>
                     </div>
                     <div className="col-span-2 text-right">
-                      <p className="text-sm font-semibold text-red-400">{formatCurrency(monthlyEquivalent(exp))}</p>
+                      <p className="text-sm font-semibold text-rose-700">{formatCurrency(monthlyEquivalent(exp))}</p>
                     </div>
                     <div className="col-span-2 flex justify-end gap-1.5">
                       <button onClick={() => openEdit(exp)} className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors" aria-label="Edit expense"><Pencil size={12} /></button>
-                      <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400 transition-colors" aria-label="Delete expense"><Trash2 size={12} /></button>
+                      <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-rose-50 text-muted hover:text-rose-700 transition-colors" aria-label="Delete expense"><Trash2 size={12} /></button>
                     </div>
                   </div>
                 ))}
                 <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-t border-border mt-1">
                   <div className="col-span-8 text-xs font-semibold text-muted">Total Monthly</div>
-                  <div className="col-span-2 text-right"><p className="text-sm font-bold text-red-400">{formatCurrency(totalMonthlyExpenses)}</p></div>
+                  <div className="col-span-2 text-right"><p className="text-sm font-bold text-rose-700">{formatCurrency(totalMonthlyExpenses)}</p></div>
                   <div className="col-span-2" />
                 </div>
               </div>
@@ -860,11 +860,11 @@ export default function FinancialsPage() {
           {/* Summary cards */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
             {[
-              { label: "Monthly Spend", value: formatCurrency(totalMonthlySubs), color: "text-red-400", sub: `${activeSubs} active tools` },
+              { label: "Monthly Spend", value: formatCurrency(totalMonthlySubs), color: "text-rose-700", sub: `${activeSubs} active tools` },
               { label: "Annual Spend", value: formatCurrency(totalAnnualSubs), color: "text-foreground", sub: "Projected" },
-              { label: "Active", value: String(activeSubs), color: "text-emerald-400", sub: `of ${subscriptions.length} total` },
-              { label: "Renewals ≤7d", value: String(upcomingRenewals), color: "text-amber-400", sub: "Upcoming charges" },
-              { label: "Top Cost", value: mostExpensive?.tool_name || "—", color: "text-gold", sub: mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data", small: true },
+              { label: "Active", value: String(activeSubs), color: "text-emerald-700", sub: `of ${subscriptions.length} total` },
+              { label: "Renewals ≤7d", value: String(upcomingRenewals), color: "text-amber-600", sub: "Upcoming charges" },
+              { label: "Top Cost", value: mostExpensive?.tool_name || "—", color: "text-[#2563EB]", sub: mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data", small: true },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
@@ -912,7 +912,7 @@ export default function FinancialsPage() {
                 {subscriptions.map(s => (
                   <div key={s.id} className="grid grid-cols-12 px-4 py-3 items-center hover:bg-surface-light/30 transition-colors text-xs">
                     <div className="col-span-4 flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-gold/10 text-gold" : "bg-surface-light text-muted"}`}>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "bg-surface-light text-muted"}`}>
                         {s.tool_name.charAt(0).toUpperCase()}
                       </div>
                       <div>
@@ -934,13 +934,13 @@ export default function FinancialsPage() {
                       </span>
                     </div>
                     <div className="col-span-1 text-right">
-                      <button onClick={() => deleteSubscription(s.id)} className="text-red-400 hover:text-red-300 text-[10px]">Remove</button>
+                      <button onClick={() => deleteSubscription(s.id)} className="text-rose-700 hover:text-rose-900 text-[10px]">Remove</button>
                     </div>
                   </div>
                 ))}
                 <div className="grid grid-cols-12 px-4 py-3 bg-surface-light/40 text-xs font-semibold">
                   <div className="col-span-6 text-muted">Total Monthly</div>
-                  <div className="col-span-2 text-right text-red-400">{formatCurrency(totalMonthlySubs)}</div>
+                  <div className="col-span-2 text-right text-rose-700">{formatCurrency(totalMonthlySubs)}</div>
                   <div className="col-span-4" />
                 </div>
               </div>
@@ -949,7 +949,7 @@ export default function FinancialsPage() {
 
           {/* Add Subscription Modal */}
           {showAddSub && (
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowAddSub(false)}>
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowAddSub(false)}>
               <div className="card max-w-lg w-full p-5 space-y-3" onClick={e => e.stopPropagation()}>
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold">Add Subscription</h3>
@@ -999,10 +999,10 @@ export default function FinancialsPage() {
           {/* Invoice Summary */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
             {[
-              { icon: <AlertTriangle size={12} className="text-red-400" />, label: "Overdue", value: formatCurrency(invoiceTotals.overdue), color: "text-red-400", sub: `${invoices.filter(i => i.status === "overdue").length} invoices` },
-              { icon: <Clock size={12} className="text-yellow-400" />, label: "Due Soon", value: formatCurrency(invoiceTotals.dueSoon), color: "text-yellow-400", sub: `${invoices.filter(i => i.status === "due_soon").length} invoices` },
+              { icon: <AlertTriangle size={12} className="text-rose-700" />, label: "Overdue", value: formatCurrency(invoiceTotals.overdue), color: "text-rose-700", sub: `${invoices.filter(i => i.status === "overdue").length} invoices` },
+              { icon: <Clock size={12} className="text-amber-600" />, label: "Due Soon", value: formatCurrency(invoiceTotals.dueSoon), color: "text-amber-600", sub: `${invoices.filter(i => i.status === "due_soon").length} invoices` },
               { icon: <FileText size={12} className="text-blue-400" />, label: "Pending", value: formatCurrency(invoiceTotals.pending), color: "text-blue-400", sub: `${invoices.filter(i => i.status === "pending").length} invoices` },
-              { icon: <CheckCircle size={12} className="text-green-400" />, label: "Paid", value: formatCurrency(invoiceTotals.paid), color: "text-green-400", sub: `${invoices.filter(i => i.status === "paid").length} invoices` },
+              { icon: <CheckCircle size={12} className="text-emerald-700" />, label: "Paid", value: formatCurrency(invoiceTotals.paid), color: "text-emerald-700", sub: `${invoices.filter(i => i.status === "paid").length} invoices` },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                 <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
@@ -1021,7 +1021,7 @@ export default function FinancialsPage() {
           {/* Invoice Aging Chart */}
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <Clock size={13} className="text-gold" /> Invoice Aging Report
+              <Clock size={13} className="text-[#2563EB]" /> Invoice Aging Report
             </p>
             <div className="grid grid-cols-4 gap-2 mb-4">
               {[
@@ -1074,10 +1074,10 @@ export default function FinancialsPage() {
                   <div className="col-span-3"><p className="text-xs text-muted">{inv.due}</p></div>
                   <div className="col-span-2 text-right">
                     <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
-                      inv.status === "paid" ? "text-green-400 border-green-400/30 bg-green-400/10" :
-                      inv.status === "overdue" ? "text-red-400 border-red-400/30 bg-red-400/10" :
-                      inv.status === "due_soon" ? "text-yellow-400 border-yellow-400/30 bg-yellow-400/10" :
-                      "text-blue-400 border-blue-400/30 bg-blue-400/10"
+                      inv.status === "paid" ? "text-emerald-700 border-emerald-200 bg-emerald-50" :
+                      inv.status === "overdue" ? "text-rose-700 border-rose-200 bg-rose-50" :
+                      inv.status === "due_soon" ? "text-amber-600 border-amber-200 bg-amber-50" :
+                      "text-blue-700 border-blue-200 bg-blue-50"
                     }`}>
                       {inv.status === "due_soon" ? "Due Soon" : inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}
                     </span>
@@ -1093,7 +1093,7 @@ export default function FinancialsPage() {
             <button
               onClick={() => { window.location.href = "/dashboard/clients"; }}
               className="card-hover p-3 text-left">
-              <Plus size={14} className="text-gold mb-1.5" />
+              <Plus size={14} className="text-[#2563EB] mb-1.5" />
               <p className="text-xs font-semibold">Create Invoice</p>
               <p className="text-[10px] text-muted">Open a client → Billing tab</p>
             </button>
@@ -1114,7 +1114,7 @@ export default function FinancialsPage() {
             <button
               onClick={() => toast("Batch invoice export is not yet wired. Export individual invoices from Stripe via Billing → Manage subscription.", { icon: "💡", duration: 6000 })}
               className="card-hover p-3 text-left">
-              <Download size={14} className="text-green-400 mb-1.5" />
+              <Download size={14} className="text-emerald-700 mb-1.5" />
               <p className="text-xs font-semibold">Export Invoices</p>
               <p className="text-[10px] text-muted">Coming soon</p>
             </button>
@@ -1131,7 +1131,7 @@ export default function FinancialsPage() {
           {/* Forecast Config */}
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <Target size={13} className="text-gold" /> Forecast Parameters
+              <Target size={13} className="text-[#2563EB]" /> Forecast Parameters
             </p>
             <div className="grid grid-cols-3 gap-4">
               <div>
@@ -1140,11 +1140,11 @@ export default function FinancialsPage() {
               </div>
               <div>
                 <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Growth Rate</label>
-                <p className="text-sm font-semibold text-green-400">{monthlyGrowthRate}%</p>
+                <p className="text-sm font-semibold text-emerald-700">{monthlyGrowthRate}%</p>
               </div>
               <div>
                 <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Churn Rate</label>
-                <p className="text-sm font-semibold text-red-400">{monthlyChurnRate}%</p>
+                <p className="text-sm font-semibold text-rose-700">{monthlyChurnRate}%</p>
               </div>
             </div>
           </div>
@@ -1152,7 +1152,7 @@ export default function FinancialsPage() {
           {/* Forecast Chart */}
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <TrendingUp size={13} className="text-gold" /> Revenue Forecast ({forecastMonths}-Month)
+              <TrendingUp size={13} className="text-[#2563EB]" /> Revenue Forecast ({forecastMonths}-Month)
             </p>
             <div className="flex items-end gap-2 h-40">
               {forecast.map((item, i) => {
@@ -1162,7 +1162,7 @@ export default function FinancialsPage() {
                   <div key={i} className="flex-1 flex flex-col items-center gap-1">
                     <span className="text-[8px] text-muted">{formatCurrency(item.projected)}</span>
                     <div className="w-full flex-1 flex items-end">
-                      <div className="w-full rounded-t-md bg-gold/50 transition-all duration-500 min-h-[4px]" style={{ height }} />
+                      <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(37,99,235,0.5)" }} />
                     </div>
                     <span className="text-[8px] text-muted">{item.month}</span>
                   </div>
@@ -1174,7 +1174,7 @@ export default function FinancialsPage() {
           {/* Forecast Table */}
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <BarChart3 size={13} className="text-gold" /> Projected P&L
+              <BarChart3 size={13} className="text-[#2563EB]" /> Projected P&L
             </p>
             <div className="space-y-1.5">
               <div className="grid grid-cols-4 gap-2 px-3 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
@@ -1186,9 +1186,9 @@ export default function FinancialsPage() {
               {forecast.map((item, i) => (
                 <div key={i} className="grid grid-cols-4 gap-2 px-3 py-2 rounded-lg bg-surface-light border border-border">
                   <div className="text-xs font-semibold">{item.month}</div>
-                  <div className="text-xs text-right text-gold">{formatCurrency(item.projected)}</div>
-                  <div className="text-xs text-right text-red-400">{formatCurrency(item.expenses)}</div>
-                  <div className={`text-xs text-right font-semibold ${item.profit >= 0 ? "text-green-400" : "text-red-400"}`}>
+                  <div className="text-xs text-right text-[#2563EB]">{formatCurrency(item.projected)}</div>
+                  <div className="text-xs text-right text-rose-700">{formatCurrency(item.expenses)}</div>
+                  <div className={`text-xs text-right font-semibold ${item.profit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
                     {formatCurrency(item.profit)}
                   </div>
                 </div>
@@ -1200,7 +1200,7 @@ export default function FinancialsPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
             <div className="card p-3">
               <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Projected MRR ({forecastMonths}mo)</p>
-              <p className="text-lg font-bold text-gold">{formatCurrency(forecast[forecast.length - 1]?.projected || 0)}</p>
+              <p className="text-lg font-bold text-[#2563EB]">{formatCurrency(forecast[forecast.length - 1]?.projected || 0)}</p>
             </div>
             <div className="card p-3">
               <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Projected ARR ({forecastMonths}mo)</p>
@@ -1208,7 +1208,7 @@ export default function FinancialsPage() {
             </div>
             <div className="card p-3">
               <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Cumulative Profit</p>
-              <p className={`text-lg font-bold ${forecast.reduce((s, f) => s + f.profit, 0) >= 0 ? "text-green-400" : "text-red-400"}`}>
+              <p className={`text-lg font-bold ${forecast.reduce((s, f) => s + f.profit, 0) >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
                 {formatCurrency(forecast.reduce((s, f) => s + f.profit, 0))}
               </p>
             </div>
@@ -1217,16 +1217,16 @@ export default function FinancialsPage() {
           {/* Tax Summary */}
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <Shield size={13} className="text-gold" /> Tax Summary (Estimated)
+              <Shield size={13} className="text-[#2563EB]" /> Tax Summary (Estimated)
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div>
                 <p className="text-[10px] text-muted">Annual Revenue</p>
-                <p className="text-sm font-bold text-gold">{formatCurrency(annualRecurringRevenue)}</p>
+                <p className="text-sm font-bold text-[#2563EB]">{formatCurrency(annualRecurringRevenue)}</p>
               </div>
               <div>
                 <p className="text-[10px] text-muted">Annual Expenses</p>
-                <p className="text-sm font-bold text-red-400">{formatCurrency(totalMonthlyExpenses * 12)}</p>
+                <p className="text-sm font-bold text-rose-700">{formatCurrency(totalMonthlyExpenses * 12)}</p>
               </div>
               <div>
                 <p className="text-[10px] text-muted">Taxable Income</p>
@@ -1250,7 +1250,7 @@ export default function FinancialsPage() {
           {/* Export Config */}
           <div className="card p-4">
             <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
-              <Download size={13} className="text-gold" /> Financial Export
+              <Download size={13} className="text-[#2563EB]" /> Financial Export
             </p>
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
@@ -1261,7 +1261,7 @@ export default function FinancialsPage() {
                       key={fmt}
                       onClick={() => setExportFormat(fmt)}
                       className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                        exportFormat === fmt ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"
+                        exportFormat === fmt ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "border-border text-muted hover:text-foreground"
                       }`}
                     >
                       {fmt.toUpperCase()}
@@ -1277,7 +1277,7 @@ export default function FinancialsPage() {
                       key={range}
                       onClick={() => setExportRange(range)}
                       className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                        exportRange === range ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"
+                        exportRange === range ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "border-border text-muted hover:text-foreground"
                       }`}
                     >
                       {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -1291,9 +1291,9 @@ export default function FinancialsPage() {
           {/* Export Types */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
             {[
-              { label: "Revenue Report", desc: "MRR, ARR, growth trends", icon: TrendingUp, color: "text-gold" },
-              { label: "Expense Report", desc: "All tracked subscriptions", icon: Receipt, color: "text-red-400" },
-              { label: "Profit & Loss", desc: "Full P&L statement", icon: BarChart3, color: "text-green-400" },
+              { label: "Revenue Report", desc: "MRR, ARR, growth trends", icon: TrendingUp, color: "text-[#2563EB]" },
+              { label: "Expense Report", desc: "All tracked subscriptions", icon: Receipt, color: "text-rose-700" },
+              { label: "Profit & Loss", desc: "Full P&L statement", icon: BarChart3, color: "text-emerald-700" },
               { label: "Invoice Report", desc: "All invoices & aging", icon: FileText, color: "text-blue-400" },
               { label: "Tax Summary", desc: "Tax-ready financials", icon: Shield, color: "text-orange-400" },
               { label: "Client Revenue", desc: "Revenue by client/tier", icon: Users, color: "text-purple-400" },
@@ -1306,7 +1306,7 @@ export default function FinancialsPage() {
                 <report.icon size={16} className={`${report.color} mb-2`} />
                 <p className="text-xs font-semibold">{report.label}</p>
                 <p className="text-[10px] text-muted mt-0.5">{report.desc}</p>
-                <p className="text-[10px] text-gold mt-2 flex items-center gap-1">
+                <p className="text-[10px] text-[#2563EB] mt-2 flex items-center gap-1">
                   <Download size={10} /> Coming soon
                 </p>
               </button>
@@ -1316,7 +1316,7 @@ export default function FinancialsPage() {
           {/* Payment Processors */}
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <CreditCard size={13} className="text-gold" /> Payment Processors
+              <CreditCard size={13} className="text-[#2563EB]" /> Payment Processors
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {/* Stripe */}
@@ -1332,7 +1332,7 @@ export default function FinancialsPage() {
                 </div>
                 <button
                   onClick={() => toast(stripeSynced ? "Syncing..." : "Configure Stripe in Settings > Integrations")}
-                  className="w-full text-[10px] py-1.5 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center justify-center gap-1"
+                  className="w-full text-[10px] py-1.5 rounded bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center justify-center gap-1"
                 >
                   <RefreshCw size={10} /> {stripeSynced ? "Sync Now" : "Connect"}
                 </button>
@@ -1375,19 +1375,19 @@ export default function FinancialsPage() {
           {/* Import Section */}
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <FileText size={13} className="text-gold" /> Import Financial Data
+              <FileText size={13} className="text-[#2563EB]" /> Import Financial Data
             </p>
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => toast("CSV import is coming soon. Add expenses manually via the Expenses tab → Add Expense.", { icon: "💡", duration: 6000 })}
-                className="p-4 rounded-lg border-2 border-dashed border-border hover:border-gold/30 transition-colors text-center">
+                className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(37,99,235,0.25)] transition-colors text-center">
                 <FileText size={20} className="mx-auto mb-2 text-muted" />
                 <p className="text-xs font-semibold">Import CSV</p>
                 <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
               </button>
               <button
                 onClick={() => toast("QuickBooks sync is on the roadmap. For now, enter expenses manually or use the Subscriptions tab.", { icon: "💡", duration: 6000 })}
-                className="p-4 rounded-lg border-2 border-dashed border-border hover:border-gold/30 transition-colors text-center">
+                className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(37,99,235,0.25)] transition-colors text-center">
                 <Globe size={20} className="mx-auto mb-2 text-muted" />
                 <p className="text-xs font-semibold">QuickBooks Import</p>
                 <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
@@ -1473,7 +1473,7 @@ export default function FinancialsPage() {
 
           {form.interval === "annual" && form.cost > 0 && (
             <p className="text-[10px] text-muted bg-surface-light border border-border rounded-lg px-3 py-2">
-              Monthly equivalent: <span className="text-gold font-semibold">{formatCurrency(form.cost / 12)}</span>/mo
+              Monthly equivalent: <span className="text-[#2563EB] font-semibold">{formatCurrency(form.cost / 12)}</span>/mo
             </p>
           )}
 

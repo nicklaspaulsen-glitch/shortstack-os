@@ -209,7 +209,7 @@ export default function CampaignsTable() {
         <select
           value={platformFilter}
           onChange={(e) => setPlatformFilter(e.target.value as Platform | "all")}
-          className="bg-white/5 border border-white/10 rounded px-2.5 py-1.5 text-sm"
+          className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded px-2.5 py-1.5 text-sm"
         >
           <option value="all">All platforms</option>
           <option value="meta">Meta</option>
@@ -220,7 +220,7 @@ export default function CampaignsTable() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-          className="bg-white/5 border border-white/10 rounded px-2.5 py-1.5 text-sm"
+          className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded px-2.5 py-1.5 text-sm"
         >
           <option value="all">All statuses</option>
           <option value="active">Active</option>
@@ -231,7 +231,7 @@ export default function CampaignsTable() {
         <select
           value={sortKey}
           onChange={(e) => setSortKey(e.target.value as SortKey)}
-          className="bg-white/5 border border-white/10 rounded px-2.5 py-1.5 text-sm"
+          className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded px-2.5 py-1.5 text-sm"
         >
           <option value="spend">Sort: Spend</option>
           <option value="impressions">Sort: Impressions</option>
@@ -243,7 +243,7 @@ export default function CampaignsTable() {
 
         <button
           onClick={() => setSortDir(sortDir === "desc" ? "asc" : "desc")}
-          className="bg-white/5 border border-white/10 rounded px-2.5 py-1.5 text-sm hover:bg-white/10"
+          className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded px-2.5 py-1.5 text-sm hover:bg-[rgba(0,0,0,0.06)]"
         >
           {sortDir === "desc" ? "Desc" : "Asc"}
         </button>
@@ -251,7 +251,7 @@ export default function CampaignsTable() {
         <button
           onClick={() => void load()}
           disabled={refreshing}
-          className="ml-auto bg-white/5 border border-white/10 rounded px-2.5 py-1.5 text-sm hover:bg-white/10 inline-flex items-center gap-1.5 disabled:opacity-50"
+          className="ml-auto bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded px-2.5 py-1.5 text-sm hover:bg-[rgba(0,0,0,0.06)] inline-flex items-center gap-1.5 disabled:opacity-50"
         >
           <RefreshCw size={13} className={refreshing ? "animate-spin" : ""} />
           Refresh
@@ -259,29 +259,29 @@ export default function CampaignsTable() {
       </div>
 
       {selected.size > 0 && (
-        <div className="flex items-center gap-2 rounded border border-gold/30 bg-gold/[0.04] px-3 py-2 text-sm">
-          <span className="text-gold">{selected.size} selected</span>
+        <div className="flex items-center gap-2 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.04)] px-3 py-2 text-sm">
+          <span className="text-[#2563EB]">{selected.size} selected</span>
           <button
             onClick={() => void bulkPause("paused")}
-            className="ml-auto inline-flex items-center gap-1 rounded border border-white/10 bg-white/5 px-2 py-1 text-xs hover:bg-white/10"
+            className="ml-auto inline-flex items-center gap-1 rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-2 py-1 text-xs hover:bg-[rgba(0,0,0,0.06)]"
           >
             <Pause size={12} /> Pause
           </button>
           <button
             onClick={() => void bulkPause("active")}
-            className="inline-flex items-center gap-1 rounded border border-white/10 bg-white/5 px-2 py-1 text-xs hover:bg-white/10"
+            className="inline-flex items-center gap-1 rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-2 py-1 text-xs hover:bg-[rgba(0,0,0,0.06)]"
           >
             <Play size={12} /> Resume
           </button>
           <button
             onClick={() => void bulkBudgetBump(10)}
-            className="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs hover:bg-white/10"
+            className="rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-2 py-1 text-xs hover:bg-[rgba(0,0,0,0.06)]"
           >
             +10% budget
           </button>
           <button
             onClick={() => void bulkBudgetBump(-10)}
-            className="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs hover:bg-white/10"
+            className="rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-2 py-1 text-xs hover:bg-[rgba(0,0,0,0.06)]"
           >
             -10% budget
           </button>
@@ -298,13 +298,13 @@ export default function CampaignsTable() {
           {error}
         </div>
       ) : campaigns.length === 0 ? (
-        <div className="rounded-lg border border-white/5 bg-white/[0.02] py-12 text-center text-sm text-muted">
+        <div className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] py-12 text-center text-sm text-muted">
           No campaigns match these filters.
         </div>
       ) : (
-        <div className="rounded-lg border border-white/5 bg-white/[0.02] overflow-x-auto">
+        <div className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="text-[11px] uppercase tracking-wide text-muted bg-white/[0.01]">
+            <thead className="text-[11px] uppercase tracking-wide text-muted bg-[rgba(0,0,0,0.02)]">
               <tr>
                 <th className="px-3 py-2 w-8">
                   <button onClick={toggleAll} className="text-muted hover:text-text">
@@ -326,7 +326,7 @@ export default function CampaignsTable() {
             </thead>
             <tbody>
               {campaigns.map((c) => (
-                <tr key={c.id} className="border-t border-white/5 hover:bg-white/[0.02]">
+                <tr key={c.id} className="border-t border-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.03)]">
                   <td className="px-3 py-2">
                     <button
                       onClick={() => toggleRow(c.id)}
@@ -358,8 +358,8 @@ export default function CampaignsTable() {
                         c.status === "active"
                           ? "bg-success/15 text-success"
                           : c.status === "paused"
-                          ? "bg-amber-500/15 text-amber-400"
-                          : "bg-white/5 text-muted"
+                          ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                          : "bg-[rgba(0,0,0,0.04)] text-muted"
                       }`}
                     >
                       {c.status}
@@ -373,7 +373,7 @@ export default function CampaignsTable() {
                           step="0.01"
                           value={editingBudget}
                           onChange={(e) => setEditingBudget(e.target.value)}
-                          className="w-20 bg-white/10 border border-white/20 rounded px-1.5 py-0.5 text-right text-xs"
+                          className="w-20 bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] rounded px-1.5 py-0.5 text-right text-xs"
                           autoFocus
                         />
                         <button
@@ -419,7 +419,7 @@ export default function CampaignsTable() {
                     <div className="inline-flex items-center gap-1">
                       <button
                         onClick={() => void pauseCampaign(c)}
-                        className="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-xs hover:bg-white/10"
+                        className="rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 text-xs hover:bg-[rgba(0,0,0,0.06)]"
                         title={c.status === "active" ? "Pause" : "Resume"}
                       >
                         {c.status === "active" ? <Pause size={11} /> : <Play size={11} />}
@@ -429,7 +429,7 @@ export default function CampaignsTable() {
                           setEditingId(c.id);
                           setEditingBudget(String(c.dailyBudget ?? ""));
                         }}
-                        className="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-xs hover:bg-white/10"
+                        className="rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 text-xs hover:bg-[rgba(0,0,0,0.06)]"
                         title="Edit budget"
                       >
                         <Edit3 size={11} />

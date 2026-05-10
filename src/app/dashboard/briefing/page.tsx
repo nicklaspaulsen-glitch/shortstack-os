@@ -156,11 +156,11 @@ Be direct, specific, and action-oriented. No fluff.`;
   }, [stats]);
 
   const tiles: StatTile[] = [
-    { label: "New Leads (24h)", value: stats.newLeads, icon: Users, color: "text-blue-400", bgColor: "bg-blue-500/10 border-blue-500/20" },
-    { label: "Messages Received", value: stats.messagesReceived, icon: MessageSquare, color: "text-purple-400", bgColor: "bg-purple-500/10 border-purple-500/20" },
-    { label: "Appointments Today", value: stats.appointmentsToday, icon: Calendar, color: "text-emerald-400", bgColor: "bg-emerald-500/10 border-emerald-500/20" },
-    { label: "Invoices Due", value: stats.invoicesDue, icon: FileText, color: "text-amber-400", bgColor: "bg-amber-500/10 border-amber-500/20" },
-    { label: "Content Scheduled", value: stats.contentScheduled, icon: BookOpen, color: "text-rose-400", bgColor: "bg-rose-500/10 border-rose-500/20" },
+    { label: "New Leads (24h)", value: stats.newLeads, icon: Users, color: "text-[#2563EB]", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
+    { label: "Messages Received", value: stats.messagesReceived, icon: MessageSquare, color: "text-[#2563EB]", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
+    { label: "Appointments Today", value: stats.appointmentsToday, icon: Calendar, color: "text-emerald-600", bgColor: "bg-emerald-50 border-emerald-200" },
+    { label: "Invoices Due", value: stats.invoicesDue, icon: FileText, color: "text-[#2563EB]", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
+    { label: "Content Scheduled", value: stats.contentScheduled, icon: BookOpen, color: "text-rose-500", bgColor: "bg-rose-50 border-rose-200" },
   ];
 
   const dateStr = today.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
@@ -207,7 +207,7 @@ Be direct, specific, and action-oriented. No fluff.`;
               <span className="text-xs text-muted">{label}</span>
             </div>
             {loading ? (
-              <div className="h-8 w-12 bg-white/10 rounded animate-pulse" />
+              <div className="h-8 w-12 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
             ) : (
               <div className={`text-3xl font-bold ${color}`}>{value}</div>
             )}
@@ -223,28 +223,28 @@ Be direct, specific, and action-oriented. No fluff.`;
           animate="visible"
           className="glass rounded-xl p-6"
         >
-          <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
-            <Coffee className="w-4 h-4 text-orange-400" />
+          <h2 className="text-base font-semibold text-[#111827] mb-4 flex items-center gap-2">
+            <Coffee className="w-4 h-4 text-orange-500" />
             Morning snapshot
           </h2>
           <div className="grid sm:grid-cols-2 gap-4 text-sm">
             <div className="space-y-2">
               <p className="text-muted">
-                <span className="text-white font-medium">{stats.newLeads}</span> new lead{stats.newLeads !== 1 ? "s" : ""} captured in the last 24 hours.
+                <span className="text-[#111827] font-medium">{stats.newLeads}</span> new lead{stats.newLeads !== 1 ? "s" : ""} captured in the last 24 hours.
               </p>
               <p className="text-muted">
-                <span className="text-white font-medium">{stats.messagesReceived}</span> inbound message{stats.messagesReceived !== 1 ? "s" : ""} across all channels.
+                <span className="text-[#111827] font-medium">{stats.messagesReceived}</span> inbound message{stats.messagesReceived !== 1 ? "s" : ""} across all channels.
               </p>
               <p className="text-muted">
-                <span className="text-white font-medium">{stats.appointmentsToday}</span> appointment{stats.appointmentsToday !== 1 ? "s" : ""} scheduled for today.
+                <span className="text-[#111827] font-medium">{stats.appointmentsToday}</span> appointment{stats.appointmentsToday !== 1 ? "s" : ""} scheduled for today.
               </p>
             </div>
             <div className="space-y-2">
               <p className="text-muted">
-                <span className={`font-medium ${stats.invoicesDue > 0 ? "text-amber-400" : "text-white"}`}>{stats.invoicesDue}</span> invoice{stats.invoicesDue !== 1 ? "s" : ""} due or overdue.
+                <span className={`font-medium ${stats.invoicesDue > 0 ? "text-[#2563EB]" : "text-[#111827]"}`}>{stats.invoicesDue}</span> invoice{stats.invoicesDue !== 1 ? "s" : ""} due or overdue.
               </p>
               <p className="text-muted">
-                <span className="text-white font-medium">{stats.contentScheduled}</span> content piece{stats.contentScheduled !== 1 ? "s" : ""} queued to publish today.
+                <span className="text-[#111827] font-medium">{stats.contentScheduled}</span> content piece{stats.contentScheduled !== 1 ? "s" : ""} queued to publish today.
               </p>
             </div>
           </div>
@@ -259,14 +259,14 @@ Be direct, specific, and action-oriented. No fluff.`;
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="glass rounded-xl p-6"
         >
-          <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-orange-400" />
+          <h2 className="text-base font-semibold text-[#111827] mb-4 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-[#2563EB]" />
             AI Briefing
             {generating && <Loader2 className="w-3.5 h-3.5 animate-spin text-muted ml-1" />}
           </h2>
-          <div className="text-sm text-white/80 leading-relaxed whitespace-pre-wrap font-serif">
+          <div className="text-sm text-[#374151] leading-relaxed whitespace-pre-wrap font-serif">
             {aiText}
-            {generating && <span className="inline-block w-1 h-4 bg-orange-400 animate-pulse ml-0.5 align-middle" />}
+            {generating && <span className="inline-block w-1 h-4 bg-[#2563EB] animate-pulse ml-0.5 align-middle" />}
           </div>
         </motion.div>
       )}

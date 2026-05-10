@@ -55,15 +55,15 @@ interface InboxItem {
 
 /* -- Category Config -- */
 const CATEGORIES: { key: InboxCategory; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
-  { key: "all", label: "All Items", icon: <Inbox size={14} />, color: "text-gold", bg: "bg-gold/10" },
-  { key: "scripts", label: "Scripts", icon: <Film size={14} />, color: "text-blue-400", bg: "bg-blue-500/10" },
-  { key: "emails", label: "Email Drafts", icon: <Mail size={14} />, color: "text-purple-400", bg: "bg-purple-500/10" },
-  { key: "outreach", label: "Outreach", icon: <Megaphone size={14} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-  { key: "contracts", label: "Contracts", icon: <FileCheck size={14} />, color: "text-amber-400", bg: "bg-amber-500/10" },
-  { key: "ideas", label: "Ideas", icon: <Lightbulb size={14} />, color: "text-yellow-400", bg: "bg-yellow-500/10" },
-  { key: "reports", label: "Reports", icon: <BarChart3 size={14} />, color: "text-cyan-400", bg: "bg-cyan-500/10" },
-  { key: "briefings", label: "Briefings", icon: <BookOpen size={14} />, color: "text-rose-400", bg: "bg-rose-500/10" },
-  { key: "exports", label: "Exports", icon: <Download size={14} />, color: "text-teal-400", bg: "bg-teal-500/10" },
+  { key: "all", label: "All Items", icon: <Inbox size={14} />, color: "text-[#2563EB]", bg: "bg-blue-500/10" },
+  { key: "scripts", label: "Scripts", icon: <Film size={14} />, color: "text-blue-700", bg: "bg-blue-500/10" },
+  { key: "emails", label: "Email Drafts", icon: <Mail size={14} />, color: "text-purple-700", bg: "bg-purple-500/10" },
+  { key: "outreach", label: "Outreach", icon: <Megaphone size={14} />, color: "text-emerald-700", bg: "bg-emerald-500/10" },
+  { key: "contracts", label: "Contracts", icon: <FileCheck size={14} />, color: "text-amber-700", bg: "bg-amber-500/10" },
+  { key: "ideas", label: "Ideas", icon: <Lightbulb size={14} />, color: "text-yellow-700", bg: "bg-yellow-500/10" },
+  { key: "reports", label: "Reports", icon: <BarChart3 size={14} />, color: "text-cyan-700", bg: "bg-cyan-500/10" },
+  { key: "briefings", label: "Briefings", icon: <BookOpen size={14} />, color: "text-rose-700", bg: "bg-rose-500/10" },
+  { key: "exports", label: "Exports", icon: <Download size={14} />, color: "text-teal-700", bg: "bg-teal-500/10" },
 ];
 
 function getCategoryConfig(type: InboxCategory) {
@@ -499,22 +499,22 @@ export default function InboxPage() {
   /* -- Status badge -- */
   const StatusPill = ({ status }: { status: string }) => {
     const colors: Record<string, string> = {
-      draft: "bg-[rgba(0,0,0,0.06)] text-muted",
-      sent: "bg-blue-500/15 text-blue-400",
-      delivered: "bg-blue-500/15 text-blue-400",
-      read: "bg-emerald-500/15 text-emerald-400",
-      unread: "bg-amber-500/15 text-amber-400",
-      replied: "bg-emerald-500/15 text-emerald-400",
-      approved: "bg-emerald-500/15 text-emerald-400",
-      pending: "bg-amber-500/15 text-amber-400",
-      completed: "bg-emerald-500/15 text-emerald-400",
-      failed: "bg-red-500/15 text-red-400",
-      signed: "bg-emerald-500/15 text-emerald-400",
-      expired: "bg-red-500/15 text-red-400",
-      published: "bg-emerald-500/15 text-emerald-400",
-      scheduled: "bg-cyan-500/15 text-cyan-400",
-      idea: "bg-yellow-500/15 text-yellow-400",
-      scripted: "bg-blue-500/15 text-blue-400",
+      draft: "bg-[rgba(0,0,0,0.06)] text-[#6B7280]",
+      sent: "bg-blue-500/15 text-blue-700",
+      delivered: "bg-blue-500/15 text-blue-700",
+      read: "bg-emerald-500/15 text-emerald-700",
+      unread: "bg-amber-500/15 text-amber-700",
+      replied: "bg-emerald-500/15 text-emerald-700",
+      approved: "bg-emerald-500/15 text-emerald-700",
+      pending: "bg-amber-500/15 text-amber-700",
+      completed: "bg-emerald-500/15 text-emerald-700",
+      failed: "bg-red-500/15 text-red-700",
+      signed: "bg-emerald-500/15 text-emerald-700",
+      expired: "bg-red-500/15 text-red-700",
+      published: "bg-emerald-500/15 text-emerald-700",
+      scheduled: "bg-cyan-500/15 text-cyan-700",
+      idea: "bg-yellow-500/15 text-yellow-700",
+      scripted: "bg-blue-500/15 text-blue-700",
     };
     return (
       <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${colors[status] || "bg-[rgba(0,0,0,0.06)] text-muted"}`}>
@@ -533,7 +533,7 @@ export default function InboxPage() {
           title="Inbox"
           eyebrow="INBOX"
           subtitle="All your generated content, scripts & exports."
-          gradient="gold"
+          gradient="blue"
           actions={
             <>
               <div className="flex items-center gap-0.5 bg-white/10 rounded-lg p-0.5">
@@ -566,7 +566,7 @@ export default function InboxPage() {
         {view === "inbox" && (
         <div className="grid grid-cols-4 gap-3">
           {[
-            { label: "Total", value: stats.total, icon: <Inbox size={14} />, color: "text-gold" },
+            { label: "Total", value: stats.total, icon: <Inbox size={14} />, color: "text-[#2563EB]" },
             { label: "Unread", value: stats.unread, icon: <AlertCircle size={14} />, color: "text-amber-400" },
             { label: "Starred", value: stats.starred, icon: <Star size={14} />, color: "text-yellow-400" },
             { label: "This Week", value: stats.thisWeek, icon: <Calendar size={14} />, color: "text-emerald-400" },
@@ -602,14 +602,14 @@ export default function InboxPage() {
               className="input text-xs pl-9 w-full glass rounded-lg"
             />
             {search && (
-              <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-white">
+              <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#374151]">
                 <X size={12} />
               </button>
             )}
           </div>
-          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-gold/20 text-gold" : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#0A0A0B]"}`}>
+          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#0A0A0B]"}`}>
             <SlidersHorizontal size={12} /> Filters
-            {(filterStarred || filterUnread || filterPinned) && <span className="w-1.5 h-1.5 rounded-full bg-gold" />}
+            {(filterStarred || filterUnread || filterPinned) && <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />}
           </button>
           {/* Sort buttons */}
           <div className="flex items-center gap-0.5 bg-[rgba(0,0,0,0.04)] rounded-lg p-0.5">
@@ -617,7 +617,7 @@ export default function InboxPage() {
               <button
                 key={field}
                 onClick={() => toggleSort(field)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[10px] font-medium transition-all ${sortField === field ? "bg-gold/20 text-gold" : "text-muted hover:text-white"}`}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[10px] font-medium transition-all ${sortField === field ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-[#6B7280] hover:text-[#374151]"}`}
               >
                 {label}
                 {sortField === field && (sortDir === "desc" ? <ArrowDown size={10} /> : <ArrowUp size={10} />)}
@@ -637,13 +637,13 @@ export default function InboxPage() {
               <button
                 key={f.key}
                 onClick={f.toggle}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${f.active ? "bg-gold/20 text-gold border border-gold/30" : "bg-white/5 text-muted hover:text-white border border-white/10"}`}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${f.active ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"}`}
               >
                 {f.icon} {f.label}
               </button>
             ))}
             {(filterStarred || filterUnread || filterPinned) && (
-              <button onClick={() => { setFilterStarred(false); setFilterUnread(false); setFilterPinned(false); }} className="text-[10px] text-muted hover:text-white ml-1">
+              <button onClick={() => { setFilterStarred(false); setFilterUnread(false); setFilterPinned(false); }} className="text-[10px] text-[#6B7280] hover:text-[#374151] ml-1">
                 Clear all
               </button>
             )}
@@ -652,13 +652,13 @@ export default function InboxPage() {
 
         {/* Bulk Actions */}
         {selectedIds.size > 0 && (
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gold/10 border border-gold/20">
-            <span className="text-xs text-gold font-medium">{selectedIds.size} selected</span>
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)]">
+            <span className="text-xs text-[#2563EB] font-medium">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1 ml-auto">
               <button onClick={bulkMarkRead} className="px-2 py-1 text-[10px] rounded bg-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.08)] text-[#0A0A0B] transition-all">Mark Read</button>
               <button onClick={bulkStar} className="px-2 py-1 text-[10px] rounded bg-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.08)] text-[#0A0A0B] transition-all">Star</button>
               <button onClick={bulkArchive} className="px-2 py-1 text-[10px] rounded bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-all">Archive</button>
-              <button onClick={() => setSelectedIds(new Set())} className="px-2 py-1 text-[10px] text-muted hover:text-white transition-all">Cancel</button>
+              <button onClick={() => setSelectedIds(new Set())} className="px-2 py-1 text-[10px] text-[#6B7280] hover:text-[#374151] transition-all">Cancel</button>
             </div>
           </div>
         )}
@@ -675,15 +675,15 @@ export default function InboxPage() {
               key={c.key}
               onClick={() => { setCategory(c.key); setSelectedItem(null); }}
               className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all ${
-                category === c.key ? "bg-gold/15 text-gold border border-gold/20" : "text-muted hover:text-white hover:bg-white/5"
+                category === c.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "text-[#6B7280] hover:text-[#374151] hover:bg-[rgba(0,0,0,0.04)]"
               }`}
             >
               <div className="flex items-center gap-2">
-                <span className={category === c.key ? "text-gold" : c.color}>{c.icon}</span>
+                <span className={category === c.key ? "text-[#2563EB]" : c.color}>{c.icon}</span>
                 <span className="font-medium">{c.label}</span>
               </div>
               {categoryCounts[c.key] > 0 && (
-                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${category === c.key ? "bg-gold/20 text-gold" : "bg-[rgba(0,0,0,0.06)] text-muted"}`}>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${category === c.key ? "bg-[rgba(37,99,235,0.14)] text-[#2563EB]" : "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"}`}>
                   {categoryCounts[c.key]}
                 </span>
               )}
@@ -698,7 +698,7 @@ export default function InboxPage() {
               key={c.key}
               onClick={() => { setCategory(c.key); setSelectedItem(null); }}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] whitespace-nowrap transition-all ${
-                category === c.key ? "bg-gold/20 text-gold" : "bg-white/5 text-muted"
+                category === c.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280]"
               }`}
             >
               {c.icon} {c.label}
@@ -714,7 +714,7 @@ export default function InboxPage() {
             <button
               onClick={selectAll}
               className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                selectedIds.size === filtered.length && filtered.length > 0 ? "bg-gold border-gold" : "border-[rgba(0,0,0,0.15)] hover:border-[rgba(0,0,0,0.3)]"
+                selectedIds.size === filtered.length && filtered.length > 0 ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.15)] hover:border-[rgba(0,0,0,0.3)]"
               }`}
             >
               {selectedIds.size === filtered.length && filtered.length > 0 && <Check size={10} className="text-black" />}
@@ -726,7 +726,7 @@ export default function InboxPage() {
           <div className="flex-1 overflow-y-auto space-y-0.5">
             {loading ? (
               <div className="flex items-center justify-center py-20">
-                <Loader size={20} className="animate-spin text-gold" />
+                <Loader size={20} className="animate-spin text-[#2563EB]" />
               </div>
             ) : filtered.length === 0 ? (
               <EmptyState
@@ -748,7 +748,7 @@ export default function InboxPage() {
                     onClick={() => openItem(item)}
                     className={`group flex items-start gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
                       selectedItem?.id === item.id
-                        ? "bg-gold/10 border border-gold/20"
+                        ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)]"
                         : isSelected
                         ? "bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)]"
                         : !item.read
@@ -760,7 +760,7 @@ export default function InboxPage() {
                     <button
                       onClick={e => { e.stopPropagation(); toggleSelect(item.id); }}
                       className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                        isSelected ? "bg-gold border-gold" : "border-[rgba(0,0,0,0.15)] opacity-0 group-hover:opacity-100"
+                        isSelected ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.15)] opacity-0 group-hover:opacity-100"
                       }`}
                     >
                       {isSelected && <Check size={10} className="text-black" />}
@@ -785,8 +785,8 @@ export default function InboxPage() {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        {item.pinned && <Pin size={10} className="text-gold shrink-0" />}
-                        {!item.read && <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />}
+                        {item.pinned && <Pin size={10} className="text-[#2563EB] shrink-0" />}
+                        {!item.read && <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] shrink-0" />}
                         <span className={`text-xs truncate ${!item.read ? "font-semibold text-[#0A0A0B]" : "text-[rgba(0,0,0,0.65)]"}`}>
                           {item.title}
                         </span>
@@ -807,7 +807,7 @@ export default function InboxPage() {
                         <button onClick={e => { e.stopPropagation(); togglePin(item.id); }} className="p-1 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#0A0A0B] transition-all" title={item.pinned ? "Unpin" : "Pin"}>
                           {item.pinned ? <PinOff size={10} /> : <Pin size={10} />}
                         </button>
-                        <button onClick={e => { e.stopPropagation(); archiveItem(item.id); }} className="p-1 rounded hover:bg-white/10 text-muted hover:text-red-400 transition-all" title="Archive">
+                        <button onClick={e => { e.stopPropagation(); archiveItem(item.id); }} className="p-1 rounded hover:bg-[rgba(0,0,0,0.06)] text-[#6B7280] hover:text-red-600 transition-all" title="Archive">
                           <Archive size={10} />
                         </button>
                       </div>
@@ -837,10 +837,10 @@ export default function InboxPage() {
                   <span className="text-[10px] text-muted">{new Date(selectedItem.date).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</span>
                 </div>
               </div>
-              <button onClick={() => setSelectedItem(null)} className="p-1.5 rounded-lg hover:bg-white/10 text-muted hover:text-white transition-all lg:block hidden">
+              <button onClick={() => setSelectedItem(null)} className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#6B7280] hover:text-[#374151] transition-all lg:block hidden">
                 <X size={14} />
               </button>
-              <button onClick={() => setSelectedItem(null)} className="p-1.5 rounded-lg hover:bg-white/10 text-muted hover:text-white transition-all lg:hidden">
+              <button onClick={() => setSelectedItem(null)} className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#6B7280] hover:text-[#374151] transition-all lg:hidden">
                 <ChevronRight size={14} />
               </button>
             </div>
@@ -911,7 +911,7 @@ export default function InboxPage() {
         <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-4 md:pb-6">
           {autoRunsLoading ? (
             <div className="flex items-center justify-center py-20">
-              <Loader size={20} className="animate-spin text-gold" />
+              <Loader size={20} className="animate-spin text-[#2563EB]" />
             </div>
           ) : autoRuns.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -923,16 +923,16 @@ export default function InboxPage() {
             <div className="space-y-2">
               {autoRuns.map((run, index) => {
                 const iconMap: Record<string, React.ReactNode> = {
-                  scraper: <Search size={14} className="text-gold" />,
-                  outreach: <Send size={14} className="text-emerald-400" />,
-                  email: <Mail size={14} className="text-purple-400" />,
-                  automation: <Zap size={14} className="text-cyan-400" />,
+                  scraper: <Search size={14} className="text-[#2563EB]" />,
+                  outreach: <Send size={14} className="text-emerald-700" />,
+                  email: <Mail size={14} className="text-purple-700" />,
+                  automation: <Zap size={14} className="text-cyan-700" />,
                 };
                 const statusColors: Record<string, string> = {
-                  running: "bg-blue-500/15 text-blue-400",
-                  completed: "bg-emerald-500/15 text-emerald-400",
-                  failed: "bg-red-500/15 text-red-400",
-                  queued: "bg-amber-500/15 text-amber-400",
+                  running: "bg-blue-500/15 text-blue-700",
+                  completed: "bg-emerald-500/15 text-emerald-700",
+                  failed: "bg-red-500/15 text-red-700",
+                  queued: "bg-amber-500/15 text-amber-700",
                 };
                 const timeDiff = Date.now() - new Date(run.timestamp).getTime();
                 const mins = Math.floor(timeDiff / 60000);
@@ -1023,7 +1023,7 @@ export default function InboxPage() {
               </div>
               <button
                 onClick={closeOverlay}
-                className="ml-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 text-muted hover:text-white transition-all shrink-0"
+                className="ml-4 p-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] transition-all shrink-0"
               >
                 <X size={18} />
               </button>
@@ -1040,7 +1040,7 @@ export default function InboxPage() {
                     .map(([key, val]) => (
                       <div key={key} className="px-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)]">
                         <p className="text-[9px] text-muted uppercase tracking-wider mb-0.5">{key.replace(/_/g, " ")}</p>
-                        <p className="text-xs text-white/80 truncate">{String(val)}</p>
+                        <p className="text-xs text-[#374151] truncate">{String(val)}</p>
                       </div>
                     ))}
                 </div>
@@ -1054,18 +1054,18 @@ export default function InboxPage() {
               {/* Inline Reply */}
               {showReply && (
                 <div className="mt-4 space-y-3">
-                  <div className="border border-gold/20 rounded-xl overflow-hidden bg-white/[0.02]">
+                  <div className="border border-[rgba(37,99,235,0.25)] rounded-xl overflow-hidden bg-white">
                     <textarea
                       value={replyText}
                       onChange={e => setReplyText(e.target.value)}
-                      placeholder="Type your reply... (saved as a draft � send flows per channel)"
-                      className="w-full bg-transparent text-sm text-[rgba(0,0,0,0.75)] placeholder-[rgba(0,0,0,0.25)] px-4 py-3 resize-none focus:outline-none min-h-[120px]"
+                      placeholder="Type your reply... (saved as a draft — send flows per channel)"
+                      className="w-full bg-transparent text-sm text-[#374151] placeholder-[#9CA3AF] px-4 py-3 resize-none focus:outline-none min-h-[120px]"
                       autoFocus
                     />
                     <div className="flex items-center justify-between px-4 py-2.5 border-t border-[rgba(0,0,0,0.06)]">
                       <button
                         onClick={() => { setShowReply(false); setReplyText(""); }}
-                        className="text-[10px] text-muted hover:text-white transition-all"
+                        className="text-[10px] text-[#6B7280] hover:text-[#374151] transition-all"
                       >
                         Cancel
                       </button>
@@ -1074,14 +1074,14 @@ export default function InboxPage() {
                           if (!replyText.trim()) return;
                           // Copy the draft so the user can paste into the channel's own UI.
                           // Actual send flows differ per channel (email, SMS, outreach) and
-                          // don't have a unified endpoint yet � we don't want to fake a send.
+                          // don't have a unified endpoint yet — we don't want to fake a send.
                           navigator.clipboard.writeText(replyText).catch(() => {});
-                          toast.success("Draft copied � paste into your send flow");
+                          toast.success("Draft copied — paste into your send flow");
                           setShowReply(false);
                           setReplyText("");
                         }}
                         disabled={!replyText.trim()}
-                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-gold/90 hover:bg-gold text-black text-xs font-semibold transition-all disabled:opacity-50"
+                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white text-xs font-semibold transition-all disabled:opacity-50"
                       >
                         <Send size={12} /> Copy Draft
                       </button>
@@ -1097,8 +1097,8 @@ export default function InboxPage() {
                 onClick={() => setShowReply(!showReply)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
                   showReply
-                    ? "bg-gold/20 text-gold border border-gold/30"
-                    : "bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20"
+                    ? "bg-[rgba(37,99,235,0.14)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
+                    : "bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
                 }`}
               >
                 <Reply size={14} /> Reply

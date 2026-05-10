@@ -992,7 +992,7 @@ export default function ClientsPage() {
               status === "active"  ? "card-accent-green"   :
               status === "paused"  ? "card-accent-warning" :
               status === "churned" ? "card-accent-danger"  :
-              "card-accent-gold"; // trial
+              "card-accent-blue"; // trial
             return (
               <motion.div key={c.id}
                 className={`card card-accent ${accentClass} ${isFeatured ? "md:col-span-2" : ""} p-4 transition-all cursor-pointer group relative overflow-hidden`}
@@ -1273,7 +1273,7 @@ export default function ClientsPage() {
                 </div>
               )},
               { key: "package_tier", label: "Package", render: (c: Client) => (
-                <span className="text-gold font-medium">{c.package_tier || "-"}</span>
+                <span className="text-[#2563EB] font-medium">{c.package_tier || "-"}</span>
               )},
               { key: "mrr", label: "MRR", render: (c: Client) => {
                 const rev = getClientRevenue(c.id);
@@ -1309,7 +1309,7 @@ export default function ClientsPage() {
                 return (
                   <div className="flex items-center gap-1.5">
                     <div className="w-10 bg-surface-light rounded-full h-1.5">
-                      <div className={`h-full rounded-full ${pct >= 100 ? "bg-success" : "bg-gold"}`} style={{ width: `${pct}%` }} />
+                      <div className={`h-full rounded-full ${pct >= 100 ? "bg-success" : "bg-[#2563EB]"}`} style={{ width: `${pct}%` }} />
                     </div>
                     <span className="text-[10px] text-muted">{pct}%</span>
                   </div>
@@ -1358,7 +1358,7 @@ export default function ClientsPage() {
                     <StickyNote size={12} />
                   </button>
                   <button onClick={() => toggleCompare(c.id)}
-                    className={`p-1 rounded hover:bg-surface-light transition-colors ${compareClients.includes(c.id) ? "text-gold" : "text-muted hover:text-foreground"}`} title="Compare">
+                    className={`p-1 rounded hover:bg-surface-light transition-colors ${compareClients.includes(c.id) ? "text-[#2563EB]" : "text-muted hover:text-foreground"}`} title="Compare">
                     <Columns size={12} />
                   </button>
                   {/* Feature 5: Expand row for activity timeline */}
@@ -1410,7 +1410,7 @@ export default function ClientsPage() {
                         { action: "Invoice sent", time: "2 hours ago", icon: <FileText size={10} className="text-info" /> },
                         { action: "Content published", time: "1 day ago", icon: <CheckCircle size={10} className="text-success" /> },
                         { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-[#1D4ED8]" /> },
-                        { action: "Contract signed", time: "1 week ago", icon: <FileText size={10} className="text-gold" /> },
+                        { action: "Contract signed", time: "1 week ago", icon: <FileText size={10} className="text-[#2563EB]" /> },
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-2 text-[10px]">
                           <div className="w-5 h-5 rounded-full bg-surface flex items-center justify-center shrink-0">{item.icon}</div>
@@ -1427,7 +1427,7 @@ export default function ClientsPage() {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-muted">Monthly Recurring</span>
-                        <span className="font-bold text-gold">{formatCurrency(revenue.mrr)}/mo</span>
+                        <span className="font-bold text-[#2563EB]">{formatCurrency(revenue.mrr)}/mo</span>
                       </div>
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-muted">Total Paid</span>
@@ -1451,7 +1451,7 @@ export default function ClientsPage() {
                       <div className="text-xs bg-surface rounded-lg p-2.5">
                         <p>{note}</p>
                         <button onClick={() => { setEditingNote(expandedRow); setNoteText(note); }}
-                          className="text-[10px] text-gold hover:underline mt-2">Edit note</button>
+                          className="text-[10px] text-[#2563EB] hover:underline mt-2">Edit note</button>
                       </div>
                     ) : (
                       <button onClick={() => { setEditingNote(expandedRow); setNoteText(""); }}
@@ -1478,7 +1478,7 @@ export default function ClientsPage() {
             { key: "start_date", label: "Start", render: (c: Contract) => c.start_date ? formatDate(c.start_date) : "-" },
             { key: "end_date", label: "End", render: (c: Contract) => c.end_date ? formatDate(c.end_date) : "-" },
             { key: "document_url", label: "Doc", render: (c: Contract) => c.document_url ? (
-              <a href={c.document_url} target="_blank" rel="noopener" className="text-gold"><ArrowUpRight size={16} /></a>
+              <a href={c.document_url} target="_blank" rel="noopener" className="text-[#2563EB]"><ArrowUpRight size={16} /></a>
             ) : "-" },
           ]}
           data={contracts}
@@ -1554,7 +1554,7 @@ export default function ClientsPage() {
                           ) : (
                             <span className="text-muted flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-muted inline-block" /> No Stripe</span>
                           )}
-                          {hasSub && <span className="text-gold">Subscribed</span>}
+                          {hasSub && <span className="text-[#2563EB]">Subscribed</span>}
                           {client.mrr > 0 && <span>{formatCurrency(client.mrr)}/mo</span>}
                         </div>
                       </div>
@@ -1683,7 +1683,7 @@ export default function ClientsPage() {
               </div>
               <div>
                 <p className="text-xs text-muted">Package</p>
-                <p className="text-gold font-medium">{selectedClient.package_tier || "-"}</p>
+                <p className="text-[#2563EB] font-medium">{selectedClient.package_tier || "-"}</p>
               </div>
               <div>
                 <p className="text-xs text-muted">MRR</p>
@@ -1700,7 +1700,7 @@ export default function ClientsPage() {
               <p className="text-xs text-muted mb-2">Services</p>
               <div className="flex flex-wrap gap-2">
                 {(selectedClient.services || []).map((s, i) => (
-                  <span key={i} className="badge bg-gold/10 text-gold">{s}</span>
+                  <span key={i} className="badge bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{s}</span>
                 ))}
               </div>
             </div>
@@ -1731,7 +1731,7 @@ export default function ClientsPage() {
                       </button>
                     )}
                     {selectedClient.stripe_subscription_id && (
-                      <span className="badge bg-gold/10 text-gold text-xs flex items-center gap-1">
+                      <span className="badge bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-xs flex items-center gap-1">
                         <Zap size={12} /> Subscribed
                       </span>
                     )}
@@ -1812,8 +1812,8 @@ export default function ClientsPage() {
           }} className="space-y-4">
             <p className="text-sm text-muted">
               {showInviteModal.profile_id
-                ? <>Update password for <span className="text-gold font-medium">{showInviteModal.business_name}</span>. They already have portal access.</>
-                : <>Create a login for <span className="text-gold font-medium">{showInviteModal.business_name}</span> so they can access their portal.</>
+                ? <>Update password for <span className="text-[#2563EB] font-medium">{showInviteModal.business_name}</span>. They already have portal access.</>
+                : <>Create a login for <span className="text-[#2563EB] font-medium">{showInviteModal.business_name}</span> so they can access their portal.</>
               }
             </p>
             <div>
@@ -1858,7 +1858,7 @@ export default function ClientsPage() {
             setShowSubscribeModal(null);
           }} className="space-y-4">
             <p className="text-sm text-muted">
-              Set up recurring billing for <span className="text-gold font-medium">{showSubscribeModal.business_name}</span>.
+              Set up recurring billing for <span className="text-[#2563EB] font-medium">{showSubscribeModal.business_name}</span>.
               This creates a Stripe Checkout link you can send to the client.
             </p>
             <div>
@@ -1901,7 +1901,7 @@ export default function ClientsPage() {
           return (
             <div className="space-y-4">
               <p className="text-sm text-muted">
-                Assign tags to <span className="text-gold font-medium">{client?.business_name}</span>
+                Assign tags to <span className="text-[#2563EB] font-medium">{client?.business_name}</span>
               </p>
               <div className="flex flex-wrap gap-2">
                 {TAG_PRESETS.map(tag => {
@@ -1909,7 +1909,7 @@ export default function ClientsPage() {
                   return (
                     <button key={tag.label} onClick={() => toggleTag(showTagModal, tag)}
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
-                        isActive ? "border-transparent" : "border-border hover:border-gold/30"
+                        isActive ? "border-transparent" : "border-border hover:border-[rgba(37,99,235,0.25)]"
                       }`}
                       style={isActive ? { background: tag.color + "22", color: tag.color, borderColor: tag.color + "44" } : {}}>
                       {isActive && <Check size={10} className="inline mr-1" />}
@@ -1949,7 +1949,7 @@ export default function ClientsPage() {
           return (
             <div className="space-y-4">
               <p className="text-sm text-muted">
-                Notes for <span className="text-gold font-medium">{client?.business_name}</span>
+                Notes for <span className="text-[#2563EB] font-medium">{client?.business_name}</span>
               </p>
               <textarea
                 value={noteText}
@@ -2012,7 +2012,7 @@ export default function ClientsPage() {
                         const val = row.getValue(c);
                         const isBest = row.getNum && row.getNum(c) === bestVal && nums.filter(n => n === bestVal).length === 1;
                         return (
-                          <td key={c.id} className={`py-2 text-center ${isBest ? "text-gold font-bold" : ""}`}>
+                          <td key={c.id} className={`py-2 text-center ${isBest ? "text-[#2563EB] font-bold" : ""}`}>
                             {val}
                           </td>
                         );

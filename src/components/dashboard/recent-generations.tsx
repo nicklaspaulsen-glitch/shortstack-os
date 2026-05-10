@@ -28,7 +28,7 @@ const TYPE_META: Record<string, { label: string; icon: React.ReactNode; gradient
   form:         { label: "Form",         icon: <Layers size={11} />,    gradient: "from-violet-500/30 to-purple-500/20", color: "text-violet-400" },
   sequence:     { label: "Sequence",     icon: <Mail size={11} />,      gradient: "from-fuchsia-500/30 to-pink-500/20",  color: "text-fuchsia-400" },
   blog:         { label: "Blog",         icon: <FileText size={11} />,  gradient: "from-indigo-500/30 to-blue-500/20",   color: "text-indigo-400" },
-  other:        { label: "Generation",   icon: <Sparkles size={11} />,  gradient: "from-gold/30 to-amber-500/20",        color: "text-gold" },
+  other:        { label: "Generation",   icon: <Sparkles size={11} />,  gradient: "from-[rgba(37,99,235,0.18)] to-amber-500/20",        color: "text-[#2563EB]" },
 };
 
 function timeAgo(dateStr: string): string {
@@ -61,12 +61,12 @@ export default function RecentGenerations() {
     <div className="card-static">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold flex items-center gap-2">
-          <Sparkles size={14} className="text-gold" /> Recent AI Generations
-          <span className="text-[9px] text-muted font-normal bg-gold/10 text-gold px-2 py-0.5 rounded-full">
+          <Sparkles size={14} className="text-[#2563EB]" /> Recent AI Generations
+          <span className="text-[9px] text-muted font-normal bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2 py-0.5 rounded-full">
             Latest
           </span>
         </h2>
-        <Link href="/dashboard/generations" className="text-[10px] text-gold hover:underline flex items-center gap-0.5 font-medium">
+        <Link href="/dashboard/generations" className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-0.5 font-medium">
           View all <ChevronRight size={10} />
         </Link>
       </div>
@@ -90,7 +90,7 @@ export default function RecentGenerations() {
           </p>
           <Link
             href="/dashboard/ai-studio"
-            className="inline-flex items-center gap-1 text-[10px] text-gold hover:underline font-medium"
+            className="inline-flex items-center gap-1 text-[10px] text-[#2563EB] hover:underline font-medium"
           >
             Create your first AI generation <ChevronRight size={10} />
           </Link>
@@ -103,7 +103,7 @@ export default function RecentGenerations() {
               <Link
                 key={item.id}
                 href={item.href}
-                className="shrink-0 w-44 group rounded-xl border border-border bg-surface hover:border-gold/30 hover:shadow-md transition-all overflow-hidden"
+                className="shrink-0 w-44 group rounded-xl border border-border bg-surface hover:border-[rgba(37,99,235,0.25)] hover:shadow-md transition-all overflow-hidden"
               >
                 {/* Thumbnail */}
                 <div className={`relative h-24 w-full bg-gradient-to-br ${meta.gradient} flex items-center justify-center overflow-hidden`}>
@@ -125,7 +125,7 @@ export default function RecentGenerations() {
                 </div>
                 {/* Body */}
                 <div className="p-2.5">
-                  <p className="text-[11px] font-semibold truncate group-hover:text-gold transition-colors">
+                  <p className="text-[11px] font-semibold truncate group-hover:text-[#2563EB] transition-colors">
                     {item.title.length > 40 ? `${item.title.slice(0, 40)}…` : item.title}
                   </p>
                   <p className="text-[9px] text-muted mt-0.5">{timeAgo(item.created_at)}</p>

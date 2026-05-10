@@ -151,16 +151,16 @@ export default function DMComposerTab() {
         <StatCard label="Failed" value={stats.failed} icon={<AlertTriangle size={16} />} />
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-white/5 p-5">
-        <h3 className="text-sm font-semibold text-white">Compose direct message</h3>
-        <p className="mt-1 text-xs text-white/50">
+      <div className="rounded-xl border border-black/[0.06] bg-white p-5">
+        <h3 className="text-sm font-semibold text-[#111827]">Compose direct message</h3>
+        <p className="mt-1 text-xs text-[#6B7280]">
           {isPlatformAdmin
             ? "Sends via Zernio. When ZERNIO_API_KEY is missing the DM is queued in outreach_log so you can replay it later."
             : "Sends via your connected social accounts. If a platform isn't connected yet, the DM is saved so you can replay it once you reconnect."}
         </p>
 
         <div className="mt-4">
-          <label className="text-xs uppercase tracking-wider text-white/40">Platform</label>
+          <label className="text-xs uppercase tracking-wider text-[#9CA3AF]">Platform</label>
           <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-5">
             {PLATFORMS.map((p) => {
               const isActive = platform === p.value;
@@ -171,8 +171,8 @@ export default function DMComposerTab() {
                   onClick={() => setPlatform(p.value)}
                   className={`flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors ${
                     isActive
-                      ? "border-orange-400/60 bg-orange-500/10 text-orange-100"
-                      : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
+                      ? "border-orange-400/60 bg-orange-500/10 text-orange-700"
+                      : "border-black/[0.06] bg-black/[0.04] text-[#374151] hover:bg-[rgba(0,0,0,0.08)]"
                   }`}
                 >
                   {p.icon}
@@ -185,32 +185,32 @@ export default function DMComposerTab() {
 
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
-            <label className="text-xs uppercase tracking-wider text-white/40">
+            <label className="text-xs uppercase tracking-wider text-[#9CA3AF]">
               Recipient handle
             </label>
-            <div className="mt-1 flex items-center gap-1 rounded-lg border border-white/10 bg-black/20 px-3">
-              <span className="text-white/40">@</span>
+            <div className="mt-1 flex items-center gap-1 rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3">
+              <span className="text-[#9CA3AF]">@</span>
               <input
                 type="text"
                 value={handle}
                 onChange={(e) => setHandle(e.target.value)}
                 placeholder="username"
-                className="flex-1 bg-transparent py-2 text-sm text-white placeholder:text-white/30 focus:outline-none"
+                className="flex-1 bg-transparent py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:outline-none"
               />
             </div>
           </div>
         </div>
 
         <div className="mt-4">
-          <label className="text-xs uppercase tracking-wider text-white/40">Message</label>
+          <label className="text-xs uppercase tracking-wider text-[#9CA3AF]">Message</label>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Hey, I came across your profile and..."
             rows={6}
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-orange-400/50 focus:outline-none"
+            className="mt-1 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
           />
-          <div className="mt-1 text-xs text-white/40">{message.length} / 2000 chars</div>
+          <div className="mt-1 text-xs text-[#9CA3AF]">{message.length} / 2000 chars</div>
         </div>
 
         {/* Voice DM toggle. */}
@@ -221,7 +221,7 @@ export default function DMComposerTab() {
               checked={voiceMode}
               onChange={(e) => setVoiceMode(e.target.checked)}
               disabled={!voiceSupported}
-              className="h-3 w-3 rounded border border-white/20 bg-black/30 text-amber-500 focus:ring-amber-400 disabled:opacity-40"
+              className="h-3 w-3 rounded border border-black/[0.08] bg-[#F8FAFC] text-amber-500 focus:ring-amber-400 disabled:opacity-40"
             />
             <Mic size={12} />
             Send as voice note
@@ -252,7 +252,7 @@ export default function DMComposerTab() {
             type="button"
             onClick={polishMessage}
             disabled={!message.trim() || polishing}
-            className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm font-medium text-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg border border-black/[0.06] bg-[rgba(0,0,0,0.06)] px-3 py-2 text-sm font-medium text-[#111827] hover:bg-[rgba(0,0,0,0.10)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {polishing ? (
               <Loader2 size={14} className="animate-spin" />
@@ -265,7 +265,7 @@ export default function DMComposerTab() {
             type="button"
             onClick={sendDm}
             disabled={sending || !handle.trim() || !message.trim()}
-            className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-white/5 disabled:text-white/40"
+            className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-[#9CA3AF]"
           >
             {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
             Send DM

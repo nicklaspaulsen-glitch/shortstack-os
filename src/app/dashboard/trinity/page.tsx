@@ -177,7 +177,7 @@ export default function TrinityPage() {
         icon={<Bot size={22} />}
         title="Trinity AI"
         subtitle="Trinity autonomous AI agent — chat, orchestrate, and monitor."
-        gradient="gold"
+        gradient="blue"
         eyebrow="TRINITY AI"
       />
 
@@ -186,7 +186,7 @@ export default function TrinityPage() {
         {TABS.map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-3 py-1.5 rounded-lg text-[10px] font-medium whitespace-nowrap transition-all ${
-              tab === t ? "bg-gold/15 text-gold border border-gold/20" : "text-muted border border-transparent hover:text-foreground"
+              tab === t ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-transparent hover:text-foreground"
             }`}>{t}</button>
         ))}
       </div>
@@ -198,10 +198,10 @@ export default function TrinityPage() {
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[70%]  px-4 py-3 ${
-                  msg.role === "user" ? "bg-gold text-black rounded-br-sm" : "bg-surface-light text-foreground rounded-bl-sm"
+                  msg.role === "user" ? "bg-[#2563EB] text-white rounded-br-sm" : "bg-surface-light text-foreground rounded-bl-sm"
                 }`}>
                   <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                  <p className={`text-[10px] mt-1 ${msg.role === "user" ? "text-black/50" : "text-muted"}`}>
+                  <p className={`text-[10px] mt-1 ${msg.role === "user" ? "text-white/60" : "text-muted"}`}>
                     {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </p>
                 </div>
@@ -210,9 +210,9 @@ export default function TrinityPage() {
             {sending && (
               <div className="flex justify-start">
                 <div className="bg-surface-light  rounded-bl-sm px-4 py-3 flex gap-1">
-                  <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                  <div className="w-2 h-2 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <div className="w-2 h-2 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <div className="w-2 h-2 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                 </div>
               </div>
             )}
@@ -241,7 +241,7 @@ export default function TrinityPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Total Agents", value: agents.length, cls: "text-gold" },
+              { label: "Total Agents", value: agents.length, cls: "text-[#2563EB]" },
               { label: "Active Now", value: activeAgentCount, cls: "text-emerald-400" },
               { label: "Actions Today", value: totalActionsToday, cls: "text-foreground" },
               { label: "Errors", value: errorAgentCount, cls: errorAgentCount > 0 ? "text-red-400" : "text-emerald-400" },
@@ -259,7 +259,7 @@ export default function TrinityPage() {
             <h3 className="text-xs font-bold mb-3">Response Time Comparison (ms)</h3>
             <div className="flex items-end gap-2 h-28">
               {[
-                { name: "Claude", ms: 0, color: "bg-gold/60" },
+                { name: "Claude", ms: 0, color: "bg-[rgba(37,99,235,0.6)]" },
                 { name: "GPT-4o", ms: 0, color: "bg-blue-400/60" },
                 { name: "Gemini", ms: 0, color: "bg-purple-400/60" },
               ].map(m => (
@@ -277,7 +277,7 @@ export default function TrinityPage() {
       {/* ═══ AGENTS TAB ═══ */}
       {tab === "Agents" && (
         <div className="glass rounded-xl p-4">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-gold" /> Agent Status Grid</h2>
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-[#2563EB]" /> Agent Status Grid</h2>
           {agents.length === 0 ? (
             <p className="text-xs text-muted text-center py-8">No agents have run yet. Trigger a command in the Chat tab to populate agent activity.</p>
           ) : (
@@ -293,7 +293,7 @@ export default function TrinityPage() {
                   <p className="text-[9px] text-muted mb-1 truncate">{a.lastAction}</p>
                   <div className="flex justify-between text-[9px]">
                     <span className="text-muted">{a.actionsToday} today</span>
-                    <span className={a.successRate >= 90 ? "text-emerald-400" : "text-amber-400"}>{a.successRate}%</span>
+                    <span className={a.successRate >= 90 ? "text-emerald-400" : "text-[#2563EB]"}>{a.successRate}%</span>
                   </div>
                 </div>
               ))}
@@ -305,7 +305,7 @@ export default function TrinityPage() {
       {/* ═══ OUTPUTS TAB ═══ */}
       {tab === "Outputs" && (
         <div className="glass rounded-xl p-4">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Eye size={14} className="text-gold" /> Combined Output Viewer</h2>
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Eye size={14} className="text-[#2563EB]" /> Combined Output Viewer</h2>
           <div className="space-y-2">
             {history.length === 0 ? (
               <p className="text-xs text-muted text-center py-8">No Trinity outputs yet. Run a command in the Chat tab to see results here.</p>
@@ -313,7 +313,7 @@ export default function TrinityPage() {
               history.slice(0, 20).map(h => (
                 <div key={h.id} className="p-3 rounded-xl bg-surface-light border border-border">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-semibold text-gold">{h.agent}</span>
+                    <span className="text-[10px] font-semibold text-[#2563EB]">{h.agent}</span>
                     <span className="text-[9px] bg-surface px-1.5 py-0.5 rounded text-muted">{h.action_type}</span>
                     <span className="text-[9px] text-muted ml-auto">{h.created_at ? new Date(h.created_at).toLocaleString() : ""}</span>
                   </div>
@@ -328,7 +328,7 @@ export default function TrinityPage() {
       {/* ═══ QUEUE TAB ═══ */}
       {tab === "Queue" && (
         <div className="glass rounded-xl p-4">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Layers size={14} className="text-gold" /> Unified Task Queue</h2>
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Layers size={14} className="text-[#2563EB]" /> Unified Task Queue</h2>
           <div className="space-y-2">
             {queue.length === 0 ? (
               <p className="text-xs text-muted text-center py-8">Queue is empty. No Trinity actions are currently queued or running.</p>
@@ -336,10 +336,10 @@ export default function TrinityPage() {
               queue.map(q => (
                 <div key={q.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
                   <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-bold uppercase ${
-                    q.priority === "high" ? "bg-red-500/10 text-red-400" : q.priority === "medium" ? "bg-gold/10 text-gold" : "bg-blue-500/10 text-blue-400"
+                    q.priority === "high" ? "bg-red-500/10 text-red-400" : q.priority === "medium" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                   }`}>{q.priority}</span>
                   <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${
-                    q.status === "running" ? "bg-emerald-500/10 text-emerald-400" : "bg-amber-500/10 text-amber-400"
+                    q.status === "running" ? "bg-emerald-500/10 text-emerald-400" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                   }`}>{q.status}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium">{q.description}</p>
@@ -359,7 +359,7 @@ export default function TrinityPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
-                { label: "Events (Month)", value: history.length, cls: "text-gold" },
+                { label: "Events (Month)", value: history.length, cls: "text-[#2563EB]" },
                 { label: "Agents", value: costByAgent.length, cls: "text-foreground" },
                 { label: "This Month", value: `$${costTotal.toFixed(2)}`, cls: "text-foreground" },
                 { label: "Per Task Avg", value: `$${perTaskAvg.toFixed(2)}`, cls: "text-foreground" },
@@ -385,9 +385,9 @@ export default function TrinityPage() {
                       <div key={a.name} className="flex items-center gap-3">
                         <span className="text-[10px] w-28 shrink-0 truncate">{a.name}</span>
                         <div className="flex-1 h-2 rounded-full bg-surface-light">
-                          <div className="h-2 rounded-full bg-gold" style={{ width: `${pct}%` }} />
+                          <div className="h-2 rounded-full bg-[#2563EB]" style={{ width: `${pct}%` }} />
                         </div>
-                        <span className="text-[10px] font-mono text-gold w-16 text-right">${a.amount.toFixed(2)}</span>
+                        <span className="text-[10px] font-mono text-[#2563EB] w-16 text-right">${a.amount.toFixed(2)}</span>
                       </div>
                     );
                   })
@@ -401,7 +401,7 @@ export default function TrinityPage() {
       {/* ═══ QUALITY TAB ═══ */}
       {tab === "Quality" && (
         <div className="glass rounded-xl p-4">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Star size={14} className="text-gold" /> Quality Comparison</h2>
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Star size={14} className="text-[#2563EB]" /> Quality Comparison</h2>
           {agents.length === 0 ? (
             <p className="text-xs text-muted text-center py-8">No agent quality data yet.</p>
           ) : (
@@ -410,10 +410,10 @@ export default function TrinityPage() {
                 <div key={a.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
                   <span className="text-[10px] w-28 shrink-0 font-medium truncate">{a.name}</span>
                   <div className="flex-1 h-2 rounded-full bg-surface">
-                    <div className={`h-2 rounded-full ${a.successRate >= 95 ? "bg-emerald-400" : a.successRate >= 80 ? "bg-gold" : "bg-red-400"}`}
+                    <div className={`h-2 rounded-full ${a.successRate >= 95 ? "bg-emerald-400" : a.successRate >= 80 ? "bg-[#2563EB]" : "bg-red-400"}`}
                       style={{ width: `${a.successRate}%` }} />
                   </div>
-                  <span className={`text-[10px] font-mono w-10 text-right ${a.successRate >= 90 ? "text-emerald-400" : "text-amber-400"}`}>{a.successRate}%</span>
+                  <span className={`text-[10px] font-mono w-10 text-right ${a.successRate >= 90 ? "text-emerald-400" : "text-[#2563EB]"}`}>{a.successRate}%</span>
                 </div>
               ))}
             </div>
@@ -424,13 +424,13 @@ export default function TrinityPage() {
       {/* ═══ FALLBACK TAB ═══ */}
       {tab === "Fallback" && (
         <div className="glass rounded-xl p-4">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-gold" /> Fallback Chain Editor</h2>
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-[#2563EB]" /> Fallback Chain Editor</h2>
           <div className="space-y-2">
             {FALLBACK_CHAIN.map((f, i) => (
               <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
                 <div className="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded text-[10px] font-medium">{f.primary}</div>
                 <ArrowRight size={12} className="text-muted" />
-                <div className="bg-amber-500/10 text-amber-400 px-2 py-1 rounded text-[10px] font-medium">{f.fallback}</div>
+                <div className="bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2 py-1 rounded text-[10px] font-medium">{f.fallback}</div>
                 <span className="text-[9px] text-muted ml-auto">{f.trigger}</span>
               </motion.div>
             ))}
@@ -442,7 +442,7 @@ export default function TrinityPage() {
       {/* ═══ HISTORY TAB ═══ */}
       {tab === "History" && (
         <div className="glass rounded-xl p-4">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><History size={14} className="text-gold" /> Action History</h2>
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><History size={14} className="text-[#2563EB]" /> Action History</h2>
           <div className="space-y-1.5">
             {history.length === 0 ? (
               <p className="text-xs text-muted text-center py-8">No actions recorded yet.</p>
@@ -471,10 +471,10 @@ export default function TrinityPage() {
       {tab === "Analytics" && (
         <div className="space-y-4">
           <div className="glass rounded-xl p-4">
-            <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-gold" /> Trinity Analytics</h2>
+            <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-[#2563EB]" /> Trinity Analytics</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
-                { label: "Tasks This Month", value: history.length, cls: "text-gold" },
+                { label: "Tasks This Month", value: history.length, cls: "text-[#2563EB]" },
                 { label: "Success Rate", value: `${successRateAvg}%`, cls: "text-emerald-400" },
                 { label: "In Queue", value: queue.length, cls: "text-blue-400" },
                 { label: "Monthly Cost", value: `$${costTotal.toFixed(2)}`, cls: "text-foreground" },
@@ -501,7 +501,7 @@ export default function TrinityPage() {
                   <span className="text-[10px] w-28 shrink-0">{name}</span>
                   <input type="range" min={0} max={100} value={weight}
                     onChange={e => setAgentWeights(prev => ({ ...prev, [name]: Number(e.target.value) }))}
-                    className="flex-1 accent-gold" />
+                    className="flex-1 accent-[#2563EB]" />
                   <span className="text-[10px] font-mono w-8 text-right">{weight}%</span>
                 </div>
               ))}

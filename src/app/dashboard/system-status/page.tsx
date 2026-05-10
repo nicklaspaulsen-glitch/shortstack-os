@@ -69,7 +69,7 @@ interface StatusResponse {
 
 const STATUS_META: Record<Status, { color: string; bg: string; border: string; icon: LucideIcon; label: string }> = {
   ok: { color: "text-success", bg: "bg-success/10", border: "border-success/30", icon: CheckCircle2, label: "Connected" },
-  configured: { color: "text-gold", bg: "bg-gold/10", border: "border-gold/30", icon: CheckCircle2, label: "Configured" },
+  configured: { color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", border: "border-[rgba(37,99,235,0.25)]", icon: CheckCircle2, label: "Configured" },
   missing: { color: "text-muted", bg: "bg-muted/10", border: "border-border", icon: AlertTriangle, label: "Not set" },
   error: { color: "text-danger", bg: "bg-danger/10", border: "border-danger/30", icon: XCircle, label: "Error" },
 };
@@ -184,11 +184,11 @@ export default function SystemStatusPage() {
   }
 
   const { groups, summary, checked_at } = data;
-  const bannerGradient: "purple" | "sunset" | "gold" = summary.ready_to_launch
+  const bannerGradient: "purple" | "sunset" | "blue" = summary.ready_to_launch
     ? "purple"
     : summary.blockers > 0
       ? "sunset"
-      : "gold";
+      : "blue";
 
   return (
     <div className="fade-in max-w-5xl mx-auto space-y-5">
@@ -228,12 +228,12 @@ export default function SystemStatusPage() {
             ? "border-success/30 bg-success/5"
             : summary.blockers > 0
               ? "border-danger/30 bg-danger/5"
-              : "border-gold/30 bg-gold/5"
+              : "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]"
         }`}
       >
         <div
           className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-            summary.ready_to_launch ? "bg-success/20 text-success" : summary.blockers > 0 ? "bg-danger/20 text-danger" : "bg-gold/20 text-gold"
+            summary.ready_to_launch ? "bg-success/20 text-success" : summary.blockers > 0 ? "bg-danger/20 text-danger" : "bg-[rgba(37,99,235,0.12)] text-[#2563EB]"
           }`}
         >
           {summary.ready_to_launch ? <CheckCircle2 size={20} /> : summary.blockers > 0 ? <XCircle size={20} /> : <AlertTriangle size={20} />}
@@ -262,10 +262,10 @@ export default function SystemStatusPage() {
       {/* Groups */}
       <div className="space-y-4">
         {groups.map((group, gi) => (
-          <motion.div key={group.category} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: gi * 0.06, duration: 0.4 }} className="glass  p-5">
+          <motion.div key={group.category} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: gi * 0.06, duration: 0.4 }} className="bg-white border border-black/[0.06] rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <Zap size={14} className="text-gold" />
+                <Zap size={14} className="text-[#2563EB]" />
                 {group.category}
               </h2>
               <span className="text-[10px] text-muted">
@@ -306,7 +306,7 @@ export default function SystemStatusPage() {
                             <span className="text-muted-light">Add on Vercel:</span>{" "}
                             {check.missing.map((m, i) => (
                               <span key={m}>
-                                <code className="text-foreground bg-black/30 px-1 py-0.5 rounded">{m}</code>
+                                <code className="text-[#111827] bg-black/[0.06] px-1 py-0.5 rounded">{m}</code>
                                 {i < check.missing!.length - 1 ? ", " : ""}
                               </span>
                             ))}
@@ -333,7 +333,7 @@ export default function SystemStatusPage() {
       </div>
 
       {/* Quick-action footer */}
-      <div className="glass  p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div className="bg-white border border-black/[0.06] rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="text-[11px] text-muted">
           Missing env vars? Add them in Vercel → Project Settings → Environment Variables, then redeploy.
         </div>
@@ -341,7 +341,7 @@ export default function SystemStatusPage() {
           href="https://vercel.com/dashboard"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 border border-gold/20 font-medium"
+          className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.2)] font-medium"
         >
           Open Vercel <ExternalLink size={10} />
         </a>

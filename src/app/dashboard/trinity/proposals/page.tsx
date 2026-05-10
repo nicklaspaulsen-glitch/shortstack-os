@@ -83,12 +83,12 @@ const MODE_TILES: { mode: Mode; label: string; desc: string; icon: React.ReactNo
 ];
 
 const STATUS_COLOR: Record<string, string> = {
-  proposed: "bg-amber-500/10 text-amber-400",
-  approved: "bg-blue-500/10 text-blue-400",
-  executed: "bg-emerald-500/10 text-emerald-400",
-  vetoed: "bg-white/10 text-white/60",
-  expired: "bg-white/10 text-white/60",
-  failed: "bg-red-500/10 text-red-400",
+  proposed: "bg-amber-500/10 text-amber-700",
+  approved: "bg-blue-500/10 text-blue-700",
+  executed: "bg-emerald-500/10 text-emerald-700",
+  vetoed: "bg-[rgba(0,0,0,0.06)] text-[#6B7280]",
+  expired: "bg-[rgba(0,0,0,0.06)] text-[#6B7280]",
+  failed: "bg-red-500/10 text-red-700",
 };
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
@@ -221,21 +221,21 @@ export default function TrinityProposalsPage() {
               disabled={loadingSettings || savingSettings}
               className={`card text-left transition ${
                 active
-                  ? "border-purple-400/40 bg-purple-500/10"
-                  : "hover:border-purple-400/20"
+                  ? "border-purple-300 bg-purple-50"
+                  : "hover:border-purple-200"
               }`}
             >
               <div className="flex items-center gap-2">
                 <span
                   className={
-                    active ? "text-purple-300" : "text-muted"
+                    active ? "text-purple-600" : "text-muted"
                   }
                 >
                   {t.icon}
                 </span>
-                <h3 className="text-sm font-bold text-white">{t.label}</h3>
+                <h3 className="text-sm font-bold text-[#111827]">{t.label}</h3>
                 {active && (
-                  <span className="ml-auto rounded-full bg-purple-400/20 px-2 py-0.5 text-[10px] font-bold uppercase text-purple-300">
+                  <span className="ml-auto rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold uppercase text-purple-700">
                     Active
                   </span>
                 )}
@@ -248,7 +248,7 @@ export default function TrinityProposalsPage() {
 
       {/* Enabled actions + veto window */}
       <div className="card">
-        <h2 className="text-sm font-semibold text-white">Configure</h2>
+        <h2 className="text-sm font-semibold text-[#111827]">Configure</h2>
 
         <div className="mt-4 space-y-2">
           <div className="text-xs text-muted">Enabled action types</div>
@@ -262,8 +262,8 @@ export default function TrinityProposalsPage() {
                   disabled={savingSettings}
                   className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
                     enabled
-                      ? "bg-purple-400/15 text-purple-300 ring-1 ring-purple-400/30"
-                      : "bg-white/[0.03] text-muted hover:bg-white/[0.06]"
+                      ? "bg-purple-100 text-purple-700 ring-1 ring-purple-300"
+                      : "bg-[rgba(0,0,0,0.04)] text-muted hover:bg-[rgba(0,0,0,0.06)]"
                   }`}
                 >
                   {ACTION_LABELS[a] ?? a}
@@ -330,7 +330,7 @@ export default function TrinityProposalsPage() {
                 })
               }
               placeholder="you@example.com"
-              className="w-full rounded-lg border border-border bg-black/30 px-3 py-2 text-xs text-white"
+              className="w-full rounded-lg border border-border bg-white px-3 py-2 text-xs text-[#111827]"
             />
           </div>
         </div>
@@ -348,8 +348,8 @@ export default function TrinityProposalsPage() {
           onClick={() => setTab("pending")}
           className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
             tab === "pending"
-              ? "bg-white/10 text-white"
-              : "text-muted hover:text-white"
+              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+              : "text-muted hover:text-[#111827]"
           }`}
         >
           <Clock size={12} />
@@ -359,8 +359,8 @@ export default function TrinityProposalsPage() {
           onClick={() => setTab("history")}
           className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
             tab === "history"
-              ? "bg-white/10 text-white"
-              : "text-muted hover:text-white"
+              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+              : "text-muted hover:text-[#111827]"
           }`}
         >
           <History size={12} />
@@ -373,7 +373,7 @@ export default function TrinityProposalsPage() {
       ) : proposals.length === 0 ? (
         <div className="card flex flex-col items-center justify-center py-12 text-center">
           <Brain size={36} className="mb-3 text-muted/30" />
-          <p className="text-sm font-medium text-white">
+          <p className="text-sm font-medium text-[#111827]">
             {tab === "pending" ? "No pending proposals" : "No history yet"}
           </p>
           <p className="mt-1 text-xs text-muted">
@@ -392,12 +392,12 @@ export default function TrinityProposalsPage() {
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-semibold text-white">
+                      <h3 className="text-sm font-semibold text-[#111827]">
                         {ACTION_LABELS[p.action_type] ?? p.action_type}
                       </h3>
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                          STATUS_COLOR[p.status] ?? "bg-white/10 text-white/60"
+                          STATUS_COLOR[p.status] ?? "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"
                         }`}
                       >
                         {p.status}
@@ -433,7 +433,7 @@ export default function TrinityProposalsPage() {
                   )}
                 </div>
                 {p.rationale && (
-                  <p className="mt-3 text-sm text-white/80">{p.rationale}</p>
+                  <p className="mt-3 text-sm text-[#374151]">{p.rationale}</p>
                 )}
                 {p.veto_window_until && p.status === "proposed" && (
                   <p className="mt-2 text-[10px] text-muted">
@@ -443,7 +443,7 @@ export default function TrinityProposalsPage() {
                   </p>
                 )}
                 {p.result && (
-                  <pre className="mt-3 overflow-x-auto rounded-lg bg-black/30 p-3 text-[10px] leading-relaxed text-white/70">
+                  <pre className="mt-3 overflow-x-auto rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] p-3 text-[10px] leading-relaxed text-[#374151]">
                     {JSON.stringify(p.result, null, 2)}
                   </pre>
                 )}

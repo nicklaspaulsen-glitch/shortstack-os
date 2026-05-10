@@ -198,10 +198,10 @@ export default function CommandPalette() {
                       onClick={item.action}
                       onMouseEnter={() => setSelectedIndex(globalIndex)}
                       className={`w-full flex items-center gap-3 px-4 py-2 text-left transition-colors ${
-                        globalIndex === selectedIndex ? "bg-gold/[0.08] text-foreground" : "text-muted hover:text-foreground"
+                        globalIndex === selectedIndex ? "bg-[rgba(37,99,235,0.08)] text-foreground" : "text-muted hover:text-foreground"
                       }`}
                     >
-                      <span className={globalIndex === selectedIndex ? "text-gold" : ""}>{item.icon}</span>
+                      <span className={globalIndex === selectedIndex ? "text-[#2563EB]" : ""}>{item.icon}</span>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium">{item.label}</p>
                         {item.description && <p className="text-[9px] text-muted truncate">{item.description}</p>}

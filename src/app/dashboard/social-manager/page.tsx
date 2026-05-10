@@ -39,9 +39,9 @@ import {
 
 const SUPPORTED_PLATFORMS = [
   { key: "instagram", label: "Instagram", color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20", description: "Connect your Instagram Business or Creator account" },
-  { key: "facebook", label: "Facebook", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20", description: "Connect your Facebook Page for publishing" },
+  { key: "facebook", label: "Facebook", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", border: "border-[rgba(37,99,235,0.20)]", description: "Connect your Facebook Page for publishing" },
   { key: "tiktok", label: "TikTok", color: "text-white", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your TikTok account for video publishing" },
-  { key: "linkedin", label: "LinkedIn", color: "text-blue-400", bg: "bg-blue-600/10", border: "border-blue-600/20", description: "Connect your LinkedIn profile or company page" },
+  { key: "linkedin", label: "LinkedIn", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", border: "border-[rgba(37,99,235,0.18)]", description: "Connect your LinkedIn profile or company page" },
   { key: "twitter", label: "Twitter / X", color: "text-zinc-300", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your X (Twitter) account" },
   { key: "threads", label: "Threads", color: "text-foreground", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your Threads account for text posts" },
   { key: "pinterest", label: "Pinterest", color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20", description: "Connect Pinterest for pins and boards" },
@@ -203,7 +203,7 @@ export default function SocialManagerPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // client_id is optional — if null, connects at agency level
+          // client_id is optional ï¿½ if null, connects at agency level
           client_id: selectedClient || null,
           platform,
           action: "zernio_oauth",
@@ -403,7 +403,7 @@ export default function SocialManagerPage() {
         icon={<Share2 size={22} />}
         eyebrow="SOCIAL COMMAND"
         title="Social Manager"
-        subtitle="Post to every platform at once — AI plans the calendar, writes captions, and schedules everything. You just approve."
+        subtitle="Post to every platform at once ï¿½ AI plans the calendar, writes captions, and schedules everything. You just approve."
         gradient="purple"
       />
       <div className="flex items-center justify-end flex-wrap gap-3">
@@ -421,7 +421,7 @@ export default function SocialManagerPage() {
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               isAutopilot
                 ? "bg-success/10 text-success border border-success/20 pulse-ring"
-                : "bg-surface-light text-muted border border-border hover:border-gold/20"
+                : "bg-surface-light text-muted border border-border hover:border-[rgba(37,99,235,0.2)]"
             }`}>
             {isAutopilot ? <Play size={12} /> : <Pause size={12} />}
             {isAutopilot ? "Autopilot ON" : "Autopilot OFF"}
@@ -446,13 +446,13 @@ export default function SocialManagerPage() {
                 </div>
               ))}
               <button onClick={() => setConnectModalOpen(true)}
-                className="flex items-center gap-1 text-[10px] text-gold hover:text-gold/80 transition-colors px-1.5 py-0.5">
+                className="flex items-center gap-1 text-[10px] text-[#2563EB] hover:text-[#2563EB]/80 transition-colors px-1.5 py-0.5">
                 <Plus size={10} /> Add
               </button>
             </>
           ) : (
             <button onClick={() => setConnectModalOpen(true)}
-              className="flex items-center gap-1.5 text-[10px] text-gold hover:text-gold/80 bg-gold/5 border border-gold/20 rounded px-2.5 py-1 transition-all hover:bg-gold/10">
+              className="flex items-center gap-1.5 text-[10px] text-[#2563EB] hover:text-[#2563EB]/80 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] rounded px-2.5 py-1 transition-all hover:bg-[rgba(37,99,235,0.08)]">
               <Plus size={10} />
               Connect Social Accounts
             </button>
@@ -460,13 +460,13 @@ export default function SocialManagerPage() {
         </div>
       )}
 
-      {/* Connect Accounts Section — shown when no accounts connected */}
+      {/* Connect Accounts Section ï¿½ shown when no accounts connected */}
       {currentClient && connectedAccounts.filter(a => a.is_active).length === 0 && (
         <PrismPanel rainbow glow padding="p-0" className="relative overflow-hidden">
           <div className="absolute inset-0 bg-mesh opacity-20" />
           <div className="relative text-center py-6 px-6">
-            <div className="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center mx-auto mb-3">
-              <Globe size={22} className="text-gold" />
+            <div className="w-12 h-12 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center mx-auto mb-3">
+              <Globe size={22} className="text-[#2563EB]" />
             </div>
             <h2 className="text-sm font-semibold mb-1">Connect Your Social Accounts</h2>
             <p className="text-xs text-muted mb-4 max-w-md mx-auto">
@@ -521,15 +521,15 @@ export default function SocialManagerPage() {
                   </p>
                   <ol className="text-xs text-muted text-left max-w-sm mx-auto space-y-2 mb-4">
                     <li className="flex items-start gap-2">
-                      <span className="text-gold font-bold">1.</span>
-                      <span>Sign up at <span className="text-gold">zernio.com</span> and get your API key</span>
+                      <span className="text-[#2563EB] font-bold">1.</span>
+                      <span>Sign up at <span className="text-[#2563EB]">zernio.com</span> and get your API key</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-gold font-bold">2.</span>
+                      <span className="text-[#2563EB] font-bold">2.</span>
                       <span>Add <code className="bg-surface px-1 rounded text-[10px]">ZERNIO_API_KEY</code> to your environment variables</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-gold font-bold">3.</span>
+                      <span className="text-[#2563EB] font-bold">3.</span>
                       <span>Restart the application and connect your accounts</span>
                     </li>
                   </ol>
@@ -565,15 +565,15 @@ export default function SocialManagerPage() {
                 <p className="text-[10px] text-muted uppercase tracking-wider mb-2">What happens next:</p>
                 <ul className="text-xs text-muted space-y-1.5">
                   <li className="flex items-start gap-2">
-                    <ArrowRight size={10} className="text-gold mt-0.5 shrink-0" />
+                    <ArrowRight size={10} className="text-[#2563EB] mt-0.5 shrink-0" />
                     <span>You&apos;ll be redirected to Zernio to authorize {confirmPlatform.label}</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <ArrowRight size={10} className="text-gold mt-0.5 shrink-0" />
+                    <ArrowRight size={10} className="text-[#2563EB] mt-0.5 shrink-0" />
                     <span>Log in to your {confirmPlatform.label} account and grant permissions</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <ArrowRight size={10} className="text-gold mt-0.5 shrink-0" />
+                    <ArrowRight size={10} className="text-[#2563EB] mt-0.5 shrink-0" />
                     <span>You&apos;ll be redirected back here when complete</span>
                   </li>
                 </ul>
@@ -693,8 +693,8 @@ export default function SocialManagerPage() {
             <div className="relative">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 bg-gold/10 rounded-lg flex items-center justify-center breathe">
-                    <Sparkles size={18} className="text-gold" />
+                  <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center breathe">
+                    <Sparkles size={18} className="text-[#2563EB]" />
                   </div>
                   <div>
                     <h2 className="text-sm font-semibold">Generate This Week</h2>
@@ -715,7 +715,7 @@ export default function SocialManagerPage() {
             <PrismPanel padding="p-4">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="section-header mb-0 flex items-center gap-2">
-                  <Lightbulb size={13} className="text-gold" /> AI Suggestions
+                  <Lightbulb size={13} className="text-[#2563EB]" /> AI Suggestions
                 </h2>
                 <span className="text-[9px] text-muted">{suggestions.length} ideas</span>
               </div>
@@ -724,24 +724,24 @@ export default function SocialManagerPage() {
                   const meta = s.metadata || {};
                   const typeIcon: Record<string, React.ReactNode> = {
                     short_video: <Video size={12} className="text-pink-400" />,
-                    carousel: <LayoutGrid size={12} className="text-blue-400" />,
+                    carousel: <LayoutGrid size={12} className="text-[#2563EB]" />,
                     script: <FileTextIcon size={12} className="text-yellow-400" />,
-                    reel: <Film size={12} className="text-purple-400" />,
+                    reel: <Film size={12} className="text-[#2563EB]" />,
                     story: <Camera size={12} className="text-orange-400" />,
                     post: <MessageSquare size={12} className="text-green-400" />,
                     thread: <FileTextIcon size={12} className="text-cyan-400" />,
                   };
                   return (
-                    <motion.div key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-2.5 hover:border-gold/10 transition-all">
+                    <motion.div key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-2.5 hover:border-[rgba(37,99,235,0.1)] transition-all">
                       <div className="flex items-center gap-2 mb-1">
-                        {typeIcon[String(meta.type)] || <Sparkles size={12} className="text-gold" />}
-                        <span className="text-[10px] font-medium text-gold uppercase">{String(meta.type || "").replace("_", " ")}</span>
+                        {typeIcon[String(meta.type)] || <Sparkles size={12} className="text-[#2563EB]" />}
+                        <span className="text-[10px] font-medium text-[#2563EB] uppercase">{String(meta.type || "").replace("_", " ")}</span>
                         <span className="text-[9px] text-muted ml-auto capitalize">{String(meta.platform || "")}</span>
                       </div>
                       <p className="text-xs font-medium truncate">{String(meta.title || s.description)}</p>
                       <p className="text-[10px] text-muted mt-0.5 line-clamp-2">{String(meta.description || "")}</p>
                       {typeof meta.hook === "string" && meta.hook && (
-                        <p className="text-[10px] text-foreground/70 mt-1 italic border-l-2 border-gold/30 pl-2">&ldquo;{meta.hook}&rdquo;</p>
+                        <p className="text-[10px] text-foreground/70 mt-1 italic border-l-2 border-[rgba(37,99,235,0.25)] pl-2">&ldquo;{meta.hook}&rdquo;</p>
                       )}
                       {Array.isArray(meta.tags) && (
                         <div className="flex gap-1 mt-1.5">
@@ -762,9 +762,9 @@ export default function SocialManagerPage() {
             <PrismPanel padding="p-4">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="section-header mb-0 flex items-center gap-2">
-                  <Clock size={13} className="text-gold" /> Up Next
+                  <Clock size={13} className="text-[#2563EB]" /> Up Next
                 </h2>
-                <button onClick={() => setTab("scheduled")} className="text-[10px] text-gold flex items-center gap-0.5">
+                <button onClick={() => setTab("scheduled")} className="text-[10px] text-[#2563EB] flex items-center gap-0.5">
                   View all <ArrowRight size={10} />
                 </button>
               </div>
@@ -772,14 +772,14 @@ export default function SocialManagerPage() {
                 {scheduledPosts.slice(0, 5).map((post, idx) => {
                   const meta = (post.metadata as Record<string, unknown>) || {};
                   return (
-                    <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-lg border border-border hover:border-gold/10 transition-all">
+                    <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-lg border border-border hover:border-[rgba(37,99,235,0.1)] transition-all">
                       <div className="shrink-0">{PLATFORM_ICONS[post.platform] || <Globe size={14} />}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium truncate">{post.title}</p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-[9px] text-muted capitalize">{post.platform}</span>
                           {post.scheduled_at && <span className="text-[9px] text-muted">{formatDate(post.scheduled_at)}</span>}
-                          {meta.best_time ? <span className="text-[9px] text-gold">{String(meta.best_time)}</span> : null}
+                          {meta.best_time ? <span className="text-[9px] text-[#2563EB]">{String(meta.best_time)}</span> : null}
                         </div>
                       </div>
                       <button onClick={() => publishPost(post)} disabled={posting === post.id}
@@ -833,7 +833,7 @@ export default function SocialManagerPage() {
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold">Content Calendar — This Week</h2>
+              <h2 className="text-sm font-semibold">Content Calendar ï¿½ This Week</h2>
               <button onClick={generateWeek} disabled={generating}
                 className="btn-primary text-xs flex items-center gap-1.5">
                 {generating ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
@@ -850,13 +850,13 @@ export default function SocialManagerPage() {
 
                 return (
                   <div key={i} className={`rounded-xl border p-2.5 min-h-[160px] ${
-                    isToday ? "border-gold/30 bg-gold/[0.03]" : "border-border bg-surface"
+                    isToday ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.03)]" : "border-border bg-surface"
                   }`}>
                     <div className="flex items-center justify-between mb-2">
-                      <span className={`text-[10px] font-semibold ${isToday ? "text-gold" : "text-muted"}`}>
+                      <span className={`text-[10px] font-semibold ${isToday ? "text-[#2563EB]" : "text-muted"}`}>
                         {dayNames[i]}
                       </span>
-                      <span className={`text-[10px] font-mono ${isToday ? "text-gold" : "text-muted"}`}>
+                      <span className={`text-[10px] font-mono ${isToday ? "text-[#2563EB]" : "text-muted"}`}>
                         {day.getDate()}
                       </span>
                     </div>
@@ -865,7 +865,7 @@ export default function SocialManagerPage() {
                         <div key={post.id} className={`p-1.5 rounded-lg text-[9px] cursor-pointer transition-all hover:scale-[1.02] ${
                           post.status === "published"
                             ? "bg-success/10 border border-success/20 text-success"
-                            : "bg-gold/5 border border-gold/15 text-foreground"
+                            : "bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.15)] text-foreground"
                         }`}>
                           <div className="flex items-center gap-1 mb-0.5">
                             {PLATFORM_ICONS[post.platform] || <Globe size={8} />}
@@ -886,21 +886,21 @@ export default function SocialManagerPage() {
             {/* Content pillars */}
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <h3 className="section-header flex items-center gap-2 mb-3">
-                <Layers size={13} className="text-gold" /> Content Pillars
+                <Layers size={13} className="text-[#2563EB]" /> Content Pillars
               </h3>
               <p className="text-[10px] text-muted mb-3">Balanced content strategy across different post types</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {[
-                  { name: "Educational", desc: "Tips, how-tos, industry insights", color: "text-blue-400", bg: "bg-blue-400/10" },
+                  { name: "Educational", desc: "Tips, how-tos, industry insights", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]" },
                   { name: "Social Proof", desc: "Reviews, testimonials, case studies", color: "text-success", bg: "bg-success/10" },
-                  { name: "Behind the Scenes", desc: "Team, process, day-in-the-life", color: "text-purple-400", bg: "bg-purple-400/10" },
-                  { name: "Promotional", desc: "Offers, CTAs, product features", color: "text-gold", bg: "bg-gold/10" },
+                  { name: "Behind the Scenes", desc: "Team, process, day-in-the-life", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]" },
+                  { name: "Promotional", desc: "Offers, CTAs, product features", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]" },
                   { name: "Engagement", desc: "Polls, questions, challenges", color: "text-pink-400", bg: "bg-pink-400/10" },
                   { name: "Trending", desc: "Memes, trends, cultural moments", color: "text-orange-400", bg: "bg-orange-400/10" },
                   { name: "Storytelling", desc: "Client stories, founder journey", color: "text-cyan-400", bg: "bg-cyan-400/10" },
                   { name: "Value Bombs", desc: "Quick wins, cheat sheets, lists", color: "text-emerald-400", bg: "bg-emerald-400/10" },
                 ].map(pillar => (
-                  <div key={pillar.name} className={`p-3 rounded-xl border border-border hover:border-gold/10 transition-all`}>
+                  <div key={pillar.name} className={`p-3 rounded-xl border border-border hover:border-[rgba(37,99,235,0.1)] transition-all`}>
                     <div className={`w-7 h-7 ${pillar.bg} rounded-lg flex items-center justify-center mb-1.5`}>
                       <Sparkles size={12} className={pillar.color} />
                     </div>
@@ -914,7 +914,7 @@ export default function SocialManagerPage() {
             {/* Best posting times */}
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <h3 className="section-header flex items-center gap-2 mb-3">
-                <Clock size={13} className="text-gold" /> Best Posting Times
+                <Clock size={13} className="text-[#2563EB]" /> Best Posting Times
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
@@ -932,7 +932,7 @@ export default function SocialManagerPage() {
                     </div>
                     <div className="space-y-1">
                       {p.times.map(t => (
-                        <span key={t} className="inline-block text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded mr-1">{t}</span>
+                        <span key={t} className="inline-block text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2 py-0.5 rounded mr-1">{t}</span>
                       ))}
                     </div>
                     <p className="text-[8px] text-muted mt-1.5">Best days: {p.days}</p>
@@ -951,7 +951,7 @@ export default function SocialManagerPage() {
             <div className="absolute inset-0 bg-mesh opacity-30" />
             <div className="relative">
               <div className="flex items-center gap-2 mb-3">
-                <Hash size={16} className="text-gold" />
+                <Hash size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Trending Hashtag Research</h2>
               </div>
               <p className="text-xs text-muted mb-4">AI-curated hashtag sets for maximum reach. Click any set to copy.</p>
@@ -965,18 +965,18 @@ export default function SocialManagerPage() {
                   { category: "Reels & Video", tags: ["#reels", "#reelsinstagram", "#tiktokviral", "#shortsvideo", "#videocontent", "#reelsviral", "#instareels", "#contentcreation", "#videoediting", "#behindthescenes"] },
                   { category: "Call to Action", tags: ["#linkinbio", "#booknow", "#freeConsultation", "#limitedoffer", "#dmme", "#getstarted", "#learnmore", "#signupnow", "#actnow", "#dontmissout"] },
                 ].map(set => (
-                  <div key={set.category} className="p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
-                    <h4 className="text-[10px] font-semibold text-gold mb-2">{set.category}</h4>
+                  <div key={set.category} className="p-3 bg-surface-light rounded-xl border border-border hover:border-[rgba(37,99,235,0.1)] transition-all">
+                    <h4 className="text-[10px] font-semibold text-[#2563EB] mb-2">{set.category}</h4>
                     <div className="flex flex-wrap gap-1">
                       {set.tags.map(tag => (
                         <button key={tag} onClick={() => { navigator.clipboard.writeText(tag); toast.success(`Copied ${tag}`); }}
-                          className="text-[9px] bg-surface px-2 py-0.5 rounded text-muted hover:text-gold hover:bg-gold/5 transition-all cursor-pointer">
+                          className="text-[9px] bg-surface px-2 py-0.5 rounded text-muted hover:text-[#2563EB] hover:bg-[rgba(37,99,235,0.05)] transition-all cursor-pointer">
                           {tag}
                         </button>
                       ))}
                     </div>
                     <button onClick={() => { navigator.clipboard.writeText(set.tags.join(" ")); toast.success("All hashtags copied!"); }}
-                      className="mt-2 text-[9px] text-gold hover:underline flex items-center gap-1">
+                      className="mt-2 text-[9px] text-[#2563EB] hover:underline flex items-center gap-1">
                       <Copy size={9} /> Copy all
                     </button>
                   </div>
@@ -988,7 +988,7 @@ export default function SocialManagerPage() {
           {/* Caption templates */}
           <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
             <h3 className="section-header flex items-center gap-2 mb-3">
-              <FileTextIcon size={13} className="text-gold" /> Caption Templates
+              <FileTextIcon size={13} className="text-[#2563EB]" /> Caption Templates
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {[
@@ -1003,7 +1003,7 @@ export default function SocialManagerPage() {
                   <div className="flex items-center justify-between mb-1.5">
                     <h4 className="text-[10px] font-semibold">{t.name}</h4>
                     <button onClick={() => { navigator.clipboard.writeText(t.template); toast.success("Template copied!"); }}
-                      className="text-[9px] text-gold hover:underline flex items-center gap-1">
+                      className="text-[9px] text-[#2563EB] hover:underline flex items-center gap-1">
                       <Copy size={9} /> Copy
                     </button>
                   </div>
@@ -1042,7 +1042,7 @@ export default function SocialManagerPage() {
                       <div className="flex items-center gap-3 text-[9px] text-muted">
                         <span className="capitalize">{post.platform}</span>
                         {post.scheduled_at && <span>{formatDate(post.scheduled_at)}</span>}
-                        {meta.best_time ? <span className="text-gold">{String(meta.best_time)}</span> : null}
+                        {meta.best_time ? <span className="text-[#2563EB]">{String(meta.best_time)}</span> : null}
                         {meta.topic ? <span>{String(meta.topic)}</span> : null}
                       </div>
                     </div>
@@ -1072,7 +1072,7 @@ export default function SocialManagerPage() {
                 {PLATFORM_ICONS[post.platform] || <Globe size={14} />}
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{post.title}</p>
-                  <p className="text-[9px] text-muted">{post.scheduled_at ? formatRelativeTime(post.scheduled_at) : ""} · {post.platform}</p>
+                  <p className="text-[9px] text-muted">{post.scheduled_at ? formatRelativeTime(post.scheduled_at) : ""} ï¿½ {post.platform}</p>
                 </div>
                 <StatusBadge status="published" />
               </motion.div>
@@ -1086,7 +1086,7 @@ export default function SocialManagerPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Content Generation Settings */}
           <div className="rounded-xl p-5 space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-            <h2 className="text-sm font-semibold flex items-center gap-2"><Settings size={13} className="text-gold" /> Content Settings</h2>
+            <h2 className="text-sm font-semibold flex items-center gap-2"><Settings size={13} className="text-[#2563EB]" /> Content Settings</h2>
 
             <div>
               <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Posts Per Day</label>
@@ -1134,7 +1134,7 @@ export default function SocialManagerPage() {
             <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <Bot size={16} className="text-gold" />
+                  <Bot size={16} className="text-[#2563EB]" />
                   <h2 className="text-sm font-semibold">Social Autopilot</h2>
                 </div>
                 <button onClick={toggleAutopilot} disabled={savingConfig}
@@ -1157,13 +1157,13 @@ export default function SocialManagerPage() {
               <div className="space-y-2">
                 <p className="text-[9px] text-muted font-semibold uppercase tracking-wider">Allowed Actions</p>
                 {[
-                  { key: "auto_generate_content", label: "Auto-generate content", desc: "AI creates posts when queue is low", icon: <Sparkles size={11} className="text-gold" /> },
-                  { key: "auto_publish_scheduled", label: "Auto-publish on schedule", desc: "Publish posts when scheduled time arrives", icon: <Send size={11} className="text-blue-400" /> },
+                  { key: "auto_generate_content", label: "Auto-generate content", desc: "AI creates posts when queue is low", icon: <Sparkles size={11} className="text-[#2563EB]" /> },
+                  { key: "auto_publish_scheduled", label: "Auto-publish on schedule", desc: "Publish posts when scheduled time arrives", icon: <Send size={11} className="text-[#2563EB]" /> },
                   { key: "auto_reply_comments", label: "Auto-reply to comments", desc: "AI responds to comments & DMs", icon: <MessageSquare size={11} className="text-green-400" /> },
-                  { key: "auto_hashtag_research", label: "Trending hashtag research", desc: "AI finds trending hashtags for posts", icon: <Hash size={11} className="text-purple-400" /> },
+                  { key: "auto_hashtag_research", label: "Trending hashtag research", desc: "AI finds trending hashtags for posts", icon: <Hash size={11} className="text-[#2563EB]" /> },
                   { key: "require_approval", label: "Require approval before post", desc: "Posts go to queue for review first", icon: <Shield size={11} className="text-orange-400" /> },
                 ].map(toggle => (
-                  <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border hover:border-gold/10 transition-all">
+                  <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.1)] transition-all">
                     <div className="flex items-center gap-2">
                       {toggle.icon}
                       <div>
@@ -1201,7 +1201,7 @@ export default function SocialManagerPage() {
                         saveAutopilotSetting({ allowed_platforms: updated });
                       }}
                         className={`flex items-center gap-1 px-2 py-1 rounded-md text-[9px] font-medium border transition-all ${
-                          allowed ? "border-gold/30 bg-gold/5" : "border-border bg-surface-light text-muted"
+                          allowed ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border bg-surface-light text-muted"
                         }`}>
                         {PLATFORM_ICONS[p]} <span className="capitalize">{p}</span>
                       </button>
@@ -1231,13 +1231,13 @@ export default function SocialManagerPage() {
 
             {/* How it works */}
             <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-5">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Activity size={12} className="text-gold" /> How Social Autopilot Works</h3>
+              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Activity size={12} className="text-[#2563EB]" /> How Social Autopilot Works</h3>
               <ol className="space-y-1 text-[10px] text-muted">
-                <li className="flex gap-2"><span className="text-gold font-bold">1.</span> Checks if content queue is running low (less than 3 days ahead)</li>
-                <li className="flex gap-2"><span className="text-gold font-bold">2.</span> AI generates platform-specific content based on your settings</li>
-                <li className="flex gap-2"><span className="text-gold font-bold">3.</span> Posts go to queue (or publish immediately if approval is off)</li>
-                <li className="flex gap-2"><span className="text-gold font-bold">4.</span> Scheduled posts auto-publish when the time arrives</li>
-                <li className="flex gap-2"><span className="text-gold font-bold">5.</span> AI can auto-reply to comments on connected accounts</li>
+                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">1.</span> Checks if content queue is running low (less than 3 days ahead)</li>
+                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">2.</span> AI generates platform-specific content based on your settings</li>
+                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">3.</span> Posts go to queue (or publish immediately if approval is off)</li>
+                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">4.</span> Scheduled posts auto-publish when the time arrives</li>
+                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">5.</span> AI can auto-reply to comments on connected accounts</li>
               </ol>
             </div>
           </div>
@@ -1263,7 +1263,7 @@ export default function SocialManagerPage() {
             ] as const).map(st => (
               <button key={st.key} onClick={() => setToolsSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
-                  toolsSubTab === st.key ? "bg-gold/10 text-gold border border-gold/20" : "bg-surface-light text-muted border border-border hover:border-gold/10"
+                  toolsSubTab === st.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "bg-surface-light text-muted border border-border hover:border-[rgba(37,99,235,0.1)]"
                 }`}>
                 {st.icon} {st.label}
               </button>
@@ -1276,8 +1276,8 @@ export default function SocialManagerPage() {
               <div className="absolute inset-0 bg-mesh opacity-30" />
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center">
-                    <RefreshCw size={16} className="text-gold" />
+                  <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center">
+                    <RefreshCw size={16} className="text-[#2563EB]" />
                   </div>
                   <div>
                     <h2 className="text-sm font-semibold">AI Content Repurposer</h2>
@@ -1317,7 +1317,7 @@ export default function SocialManagerPage() {
                             <span className="text-[10px] font-semibold capitalize">{r.platform}</span>
                           </div>
                           <button onClick={() => { navigator.clipboard.writeText(r.caption); toast.success("Copied!"); }}
-                            className="text-[9px] text-gold flex items-center gap-1 hover:underline">
+                            className="text-[9px] text-[#2563EB] flex items-center gap-1 hover:underline">
                             <Copy size={9} /> Copy
                           </button>
                         </div>
@@ -1337,7 +1337,7 @@ export default function SocialManagerPage() {
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-purple-400/10 rounded-lg flex items-center justify-center">
-                    <GitCompare size={16} className="text-purple-400" />
+                    <GitCompare size={16} className="text-[#2563EB]" />
                   </div>
                   <div>
                     <h2 className="text-sm font-semibold">A/B Caption Tester</h2>
@@ -1361,7 +1361,7 @@ export default function SocialManagerPage() {
                   setTimeout(() => {
                     setAbVariants({
                       a: `Ever wished your skin could just... glow? Introducing our new organic line that makes it happen. No filters needed.\n\nTap the link in bio to discover your perfect match.\n\n#skincare #organic #glowup`,
-                      b: `We spent 2 years perfecting this formula.\n\nThe result? Skincare that actually works — backed by science, powered by nature.\n\n3 products. Zero compromises. Available now.\n\nLink in bio to shop the collection.`,
+                      b: `We spent 2 years perfecting this formula.\n\nThe result? Skincare that actually works ï¿½ backed by science, powered by nature.\n\n3 products. Zero compromises. Available now.\n\nLink in bio to shop the collection.`,
                     });
                     setGeneratingAB(false);
                   }, 1500);
@@ -1375,11 +1375,11 @@ export default function SocialManagerPage() {
                     {(["a", "b"] as const).map(variant => (
                       <div key={variant} className={`p-3 rounded-xl border ${variant === "a" ? "border-blue-400/20 bg-blue-400/[0.03]" : "border-pink-400/20 bg-pink-400/[0.03]"}`}>
                         <div className="flex items-center justify-between mb-2">
-                          <span className={`text-xs font-bold ${variant === "a" ? "text-blue-400" : "text-pink-400"}`}>
+                          <span className={`text-xs font-bold ${variant === "a" ? "text-[#2563EB]" : "text-pink-400"}`}>
                             Variant {variant.toUpperCase()}
                           </span>
                           <button onClick={() => { navigator.clipboard.writeText(abVariants[variant]); toast.success("Copied!"); }}
-                            className="text-[9px] text-gold flex items-center gap-1 hover:underline">
+                            className="text-[9px] text-[#2563EB] flex items-center gap-1 hover:underline">
                             <Copy size={9} /> Copy
                           </button>
                         </div>
@@ -1422,7 +1422,7 @@ export default function SocialManagerPage() {
                         score > 80 ? "Strong emotional hook detected" : "Consider adding a stronger hook",
                         viralInput.includes("?") ? "Question format encourages engagement" : "Try adding a question to boost comments",
                         viralInput.length > 100 ? "Good content length for storytelling" : "Longer captions tend to get more saves",
-                        viralInput.includes("#") ? "Hashtags detected — good for reach" : "Add 5-10 relevant hashtags for discovery",
+                        viralInput.includes("#") ? "Hashtags detected ï¿½ good for reach" : "Add 5-10 relevant hashtags for discovery",
                         "Trending topic alignment: moderate",
                         score > 70 ? "Strong share potential" : "Add a relatable angle to boost shares",
                       ],
@@ -1439,22 +1439,22 @@ export default function SocialManagerPage() {
                     <div className="flex items-center gap-4">
                       <div className={`w-20 h-20  flex flex-col items-center justify-center ${
                         viralScore.score >= 80 ? "bg-success/10 border border-success/20" :
-                        viralScore.score >= 60 ? "bg-gold/10 border border-gold/20" :
+                        viralScore.score >= 60 ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)]" :
                         "bg-orange-400/10 border border-orange-400/20"
                       }`}>
                         <span className={`text-2xl font-bold ${
-                          viralScore.score >= 80 ? "text-success" : viralScore.score >= 60 ? "text-gold" : "text-orange-400"
+                          viralScore.score >= 80 ? "text-success" : viralScore.score >= 60 ? "text-[#2563EB]" : "text-orange-400"
                         }`}>{viralScore.score}</span>
                         <span className="text-[8px] text-muted">/100</span>
                       </div>
                       <div className="flex-1">
                         <div className="w-full bg-surface-light rounded-full h-3 mb-1.5">
                           <div className={`h-3 rounded-full transition-all duration-1000 ${
-                            viralScore.score >= 80 ? "bg-success" : viralScore.score >= 60 ? "bg-gold" : "bg-orange-400"
+                            viralScore.score >= 80 ? "bg-success" : viralScore.score >= 60 ? "bg-[#2563EB]" : "bg-orange-400"
                           }`} style={{ width: `${viralScore.score}%` }} />
                         </div>
                         <span className={`text-[10px] font-semibold ${
-                          viralScore.score >= 80 ? "text-success" : viralScore.score >= 60 ? "text-gold" : "text-orange-400"
+                          viralScore.score >= 80 ? "text-success" : viralScore.score >= 60 ? "text-[#2563EB]" : "text-orange-400"
                         }`}>
                           {viralScore.score >= 80 ? "High Viral Potential" : viralScore.score >= 60 ? "Moderate Potential" : "Needs Improvement"}
                         </span>
@@ -1463,7 +1463,7 @@ export default function SocialManagerPage() {
                     <div className="space-y-1.5">
                       {viralScore.factors.map((f, i) => (
                         <div key={i} className="flex items-start gap-2 text-[10px]">
-                          <span className="text-gold mt-0.5">{i < 3 ? <Check size={10} /> : <AlertCircle size={10} />}</span>
+                          <span className="text-[#2563EB] mt-0.5">{i < 3 ? <Check size={10} /> : <AlertCircle size={10} />}</span>
                           <span className="text-muted">{f}</span>
                         </div>
                       ))}
@@ -1512,11 +1512,11 @@ export default function SocialManagerPage() {
                 {bioResults.length > 0 && (
                   <div className="space-y-2 mt-3">
                     {bioResults.map((bio, i) => (
-                      <div key={i} className="p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
+                      <div key={i} className="p-3 bg-surface-light rounded-xl border border-border hover:border-[rgba(37,99,235,0.1)] transition-all">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] font-semibold text-gold">Option {i + 1}</span>
+                          <span className="text-[10px] font-semibold text-[#2563EB]">Option {i + 1}</span>
                           <button onClick={() => { navigator.clipboard.writeText(bio); toast.success("Bio copied!"); }}
-                            className="text-[9px] text-gold flex items-center gap-1 hover:underline">
+                            className="text-[9px] text-[#2563EB] flex items-center gap-1 hover:underline">
                             <Copy size={9} /> Copy
                           </button>
                         </div>
@@ -1534,7 +1534,7 @@ export default function SocialManagerPage() {
             <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-blue-400/10 rounded-lg flex items-center justify-center">
-                  <Eye size={16} className="text-blue-400" />
+                  <Eye size={16} className="text-[#2563EB]" />
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold">Post Preview</h2>
@@ -1568,7 +1568,7 @@ export default function SocialManagerPage() {
                     <Video size={32} className="text-white/20" />
                     <div className="absolute bottom-3 left-3 right-10">
                       <p className="text-[10px] text-white font-semibold">@your_brand</p>
-                      <p className="text-[9px] text-white/80 mt-0.5">Your TikTok caption here... #fyp #viral</p>
+                      <p className="text-[9px] text-[#374151] mt-0.5">Your TikTok caption here... #fyp #viral</p>
                     </div>
                     <div className="absolute right-2 bottom-3 flex flex-col gap-3 items-center">
                       <Heart size={16} className="text-white" />
@@ -1581,7 +1581,7 @@ export default function SocialManagerPage() {
                 <div className="rounded-xl border border-border overflow-hidden">
                   <div className="bg-surface-light p-2.5 flex items-center gap-2 border-b border-border">
                     <div className="w-8 h-8 rounded-full bg-blue-400/20 flex items-center justify-center">
-                      <Briefcase size={12} className="text-blue-400" />
+                      <Briefcase size={12} className="text-[#2563EB]" />
                     </div>
                     <div>
                       <span className="text-[10px] font-semibold block">Your Name</span>
@@ -1615,7 +1615,7 @@ export default function SocialManagerPage() {
                 </div>
               </div>
               <div className="p-3 bg-surface-light rounded-xl border border-border">
-                <p className="text-[10px] text-muted mb-2">CSV Format: <code className="text-[9px] bg-surface px-1.5 py-0.5 rounded text-gold">platform, date, time, caption, hashtags</code></p>
+                <p className="text-[10px] text-muted mb-2">CSV Format: <code className="text-[9px] bg-surface px-1.5 py-0.5 rounded text-[#2563EB]">platform, date, time, caption, hashtags</code></p>
                 <textarea value={bulkCsv} onChange={e => setBulkCsv(e.target.value)}
                   className="input w-full h-32 text-xs font-mono" placeholder={`instagram, 2026-04-15, 09:00, "Your caption here", "#marketing #tips"\ntiktok, 2026-04-15, 12:00, "POV: When you discover...", "#fyp #viral"\nlinkedin, 2026-04-16, 08:00, "Just published a new article...", "#business"`} />
               </div>
@@ -1631,7 +1631,7 @@ export default function SocialManagerPage() {
                 <button onClick={() => {
                   const sample = `instagram, 2026-04-15, 09:00, "5 tips to grow your audience", "#growth #tips"\ntiktok, 2026-04-15, 12:00, "POV: Your first viral video", "#fyp #viral"\nlinkedin, 2026-04-16, 08:00, "Lessons from 10 years in business", "#leadership"`;
                   setBulkCsv(sample);
-                }} className="text-[10px] text-gold hover:underline flex items-center gap-1">
+                }} className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-1">
                   <FileTextIcon size={10} /> Load Sample CSV
                 </button>
               </div>
@@ -1643,7 +1643,7 @@ export default function SocialManagerPage() {
             <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-blue-400/10 rounded-lg flex items-center justify-center">
-                  <Columns size={16} className="text-blue-400" />
+                  <Columns size={16} className="text-[#2563EB]" />
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold">Carousel Builder</h2>
@@ -1663,9 +1663,9 @@ export default function SocialManagerPage() {
                 <>
                   <div className="flex gap-2 overflow-x-auto pb-2">
                     {carouselSlides.map((slide, i) => (
-                      <div key={slide.id} className="min-w-[200px] p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all shrink-0">
+                      <div key={slide.id} className="min-w-[200px] p-3 bg-surface-light rounded-xl border border-border hover:border-[rgba(37,99,235,0.1)] transition-all shrink-0">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[9px] font-bold text-gold">SLIDE {i + 1}</span>
+                          <span className="text-[9px] font-bold text-[#2563EB]">SLIDE {i + 1}</span>
                           {carouselSlides.length > 1 && (
                             <button onClick={() => setCarouselSlides(carouselSlides.filter(s => s.id !== slide.id))}
                               className="text-muted hover:text-red-400 transition-all"><X size={10} /></button>
@@ -1684,7 +1684,7 @@ export default function SocialManagerPage() {
                       </div>
                     ))}
                     <button onClick={() => setCarouselSlides([...carouselSlides, { id: Date.now(), heading: `Slide ${carouselSlides.length + 1}`, body: "" }])}
-                      className="min-w-[60px] flex items-center justify-center border border-dashed border-border rounded-xl hover:border-gold/30 transition-all">
+                      className="min-w-[60px] flex items-center justify-center border border-dashed border-border rounded-xl hover:border-[rgba(37,99,235,0.25)] transition-all">
                       <Plus size={16} className="text-muted" />
                     </button>
                   </div>
@@ -1779,7 +1779,7 @@ export default function SocialManagerPage() {
                   <Link size={24} className="mx-auto mb-2 text-muted/30" />
                   <p className="text-xs text-muted mb-2">No links added yet.</p>
                   <button onClick={() => setLinkBioLinks([{ id: Date.now(), label: "New Link", url: "https://", clicks: 0 }])}
-                    className="text-[10px] text-gold hover:underline flex items-center gap-1 mx-auto">
+                    className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-1 mx-auto">
                     <Plus size={10} /> Add Your First Link
                   </button>
                 </div>
@@ -1787,8 +1787,8 @@ export default function SocialManagerPage() {
                 <>
                   <div className="space-y-2">
                     {linkBioLinks.map((link, i) => (
-                      <div key={link.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
-                        <div className="w-8 h-8 bg-surface rounded-lg flex items-center justify-center text-xs font-bold text-gold">{i + 1}</div>
+                      <div key={link.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border hover:border-[rgba(37,99,235,0.1)] transition-all">
+                        <div className="w-8 h-8 bg-surface rounded-lg flex items-center justify-center text-xs font-bold text-[#2563EB]">{i + 1}</div>
                         <div className="flex-1 min-w-0">
                           <input value={link.label} onChange={e => {
                             const updated = [...linkBioLinks];
@@ -1802,7 +1802,7 @@ export default function SocialManagerPage() {
                           }} className="text-[9px] text-muted bg-transparent border-0 outline-none w-full" />
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-xs font-bold text-gold">{link.clicks}</p>
+                          <p className="text-xs font-bold text-[#2563EB]">{link.clicks}</p>
                           <p className="text-[8px] text-muted">clicks</p>
                         </div>
                         <button onClick={() => setLinkBioLinks(linkBioLinks.filter(l => l.id !== link.id))}
@@ -1811,7 +1811,7 @@ export default function SocialManagerPage() {
                     ))}
                   </div>
                   <button onClick={() => setLinkBioLinks([...linkBioLinks, { id: Date.now(), label: "New Link", url: "https://", clicks: 0 }])}
-                    className="text-[10px] text-gold hover:underline flex items-center gap-1">
+                    className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-1">
                     <Plus size={10} /> Add Link
                   </button>
                 </>
@@ -1859,13 +1859,13 @@ export default function SocialManagerPage() {
                   ]},
                 ].map(ind => (
                   <div key={ind.industry} className="space-y-2">
-                    <h4 className="text-[10px] font-semibold text-gold">{ind.industry}</h4>
+                    <h4 className="text-[10px] font-semibold text-[#2563EB]">{ind.industry}</h4>
                     {ind.templates.map(t => (
                       <div key={t.name} className="p-2.5 bg-surface-light rounded-lg border border-border">
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-[10px] font-medium">{t.name}</span>
                           <button onClick={() => { navigator.clipboard.writeText(t.template); toast.success("Copied!"); }}
-                            className="text-[9px] text-gold hover:underline flex items-center gap-1"><Copy size={8} /> Copy</button>
+                            className="text-[9px] text-[#2563EB] hover:underline flex items-center gap-1"><Copy size={8} /> Copy</button>
                         </div>
                         <pre className="text-[9px] text-muted whitespace-pre-wrap font-sans leading-relaxed">{t.template}</pre>
                       </div>
@@ -1896,7 +1896,7 @@ export default function SocialManagerPage() {
               ) : (
                 <div className="space-y-2">
                   {recentPosts.slice(0, 8).map((post) => (
-                      <div key={post.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
+                      <div key={post.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border hover:border-[rgba(37,99,235,0.1)] transition-all">
                         <div className="shrink-0">{PLATFORM_ICONS[post.platform] || <Globe size={14} />}</div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium truncate">{post.title}</p>
@@ -1907,7 +1907,7 @@ export default function SocialManagerPage() {
                           setRepurposeInput(String(meta.caption || post.title));
                           setToolsSubTab("repurpose");
                           toast.success("Post loaded into repurposer!");
-                        }} className="text-[9px] text-gold flex items-center gap-1 hover:underline shrink-0">
+                        }} className="text-[9px] text-[#2563EB] flex items-center gap-1 hover:underline shrink-0">
                           <RefreshCw size={9} /> Recycle
                         </button>
                       </div>
@@ -1934,7 +1934,7 @@ export default function SocialManagerPage() {
             ] as const).map(st => (
               <button key={st.key} onClick={() => setAnalyticsSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
-                  analyticsSubTab === st.key ? "bg-gold/10 text-gold border border-gold/20" : "bg-surface-light text-muted border border-border hover:border-gold/10"
+                  analyticsSubTab === st.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "bg-surface-light text-muted border border-border hover:border-[rgba(37,99,235,0.1)]"
                 }`}>
                 {st.icon} {st.label}
               </button>
@@ -1946,16 +1946,16 @@ export default function SocialManagerPage() {
             <div className="space-y-3">
               <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
                 <div className="flex items-center gap-2 mb-3">
-                  <TrendingUp size={16} className="text-gold" />
+                  <TrendingUp size={16} className="text-[#2563EB]" />
                   <h2 className="text-sm font-semibold">Engagement Rate Calculator</h2>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-4">
                   <div className="p-3 bg-surface-light rounded-xl border border-border text-center">
-                    <p className="text-lg font-bold text-gold">0%</p>
+                    <p className="text-lg font-bold text-[#2563EB]">0%</p>
                     <p className="text-[9px] text-muted">Avg Engagement Rate</p>
                   </div>
                   <div className="p-3 bg-surface-light rounded-xl border border-border text-center">
-                    <p className="text-lg font-bold text-blue-400">0</p>
+                    <p className="text-lg font-bold text-[#2563EB]">0</p>
                     <p className="text-[9px] text-muted">Avg Likes/Post</p>
                   </div>
                   <div className="p-3 bg-surface-light rounded-xl border border-border text-center">
@@ -1963,7 +1963,7 @@ export default function SocialManagerPage() {
                     <p className="text-[9px] text-muted">Avg Comments/Post</p>
                   </div>
                   <div className="p-3 bg-surface-light rounded-xl border border-border text-center">
-                    <p className="text-lg font-bold text-purple-400">0</p>
+                    <p className="text-lg font-bold text-[#2563EB]">0</p>
                     <p className="text-[9px] text-muted">Avg Shares/Post</p>
                   </div>
                 </div>
@@ -1980,7 +1980,7 @@ export default function SocialManagerPage() {
           {analyticsSubTab === "heatmap" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <Grid3X3 size={16} className="text-gold" />
+                <Grid3X3 size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Best Time to Post Heatmap</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Darker cells = higher engagement. Based on your audience activity patterns.</p>
@@ -1995,7 +1995,7 @@ export default function SocialManagerPage() {
           {analyticsSubTab === "hashtags" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <Hash size={16} className="text-gold" />
+                <Hash size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Hashtag Performance Analytics</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Track which hashtags drive the most engagement and reach</p>
@@ -2010,7 +2010,7 @@ export default function SocialManagerPage() {
           {analyticsSubTab === "growth" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <LineChart size={16} className="text-gold" />
+                <LineChart size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Audience Growth Tracker</h2>
               </div>
               <p className="text-[10px] text-muted mb-4">Track follower growth over time across all platforms</p>
@@ -2025,7 +2025,7 @@ export default function SocialManagerPage() {
           {analyticsSubTab === "comparison" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <BarChart3 size={16} className="text-gold" />
+                <BarChart3 size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Platform Analytics Comparison</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Side-by-side metrics across all your platforms</p>
@@ -2040,7 +2040,7 @@ export default function SocialManagerPage() {
           {analyticsSubTab === "pillars" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <PieChart size={16} className="text-gold" />
+                <PieChart size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Content Pillar Planner</h2>
               </div>
               <p className="text-[10px] text-muted mb-4">Visual breakdown of content categories with target vs actual percentages</p>
@@ -2090,7 +2090,7 @@ export default function SocialManagerPage() {
                       {contentPillars.filter(p => p.actual > p.target).map(p => (
                         <li key={p.name} className="text-[9px] text-muted flex items-start gap-1.5">
                           <Check size={9} className="text-success mt-0.5 shrink-0" />
-                          <span><strong>{p.name}</strong> is {p.actual - p.target}% above target — consider rebalancing</span>
+                          <span><strong>{p.name}</strong> is {p.actual - p.target}% above target ï¿½ consider rebalancing</span>
                         </li>
                       ))}
                     </ul>
@@ -2115,7 +2115,7 @@ export default function SocialManagerPage() {
             ] as const).map(st => (
               <button key={st.key} onClick={() => setInboxSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
-                  inboxSubTab === st.key ? "bg-gold/10 text-gold border border-gold/20" : "bg-surface-light text-muted border border-border hover:border-gold/10"
+                  inboxSubTab === st.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "bg-surface-light text-muted border border-border hover:border-[rgba(37,99,235,0.1)]"
                 }`}>
                 {st.icon} {st.label}
               </button>
@@ -2126,9 +2126,9 @@ export default function SocialManagerPage() {
           {inboxSubTab === "messages" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <Inbox size={16} className="text-gold" />
+                <Inbox size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Social Inbox</h2>
-                <span className="ml-auto text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full font-medium">0 unread</span>
+                <span className="ml-auto text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2 py-0.5 rounded-full font-medium">0 unread</span>
               </div>
               <p className="text-[10px] text-muted mb-3">Unified view of DMs and comments across all platforms</p>
               <div className="text-center py-8">
@@ -2142,7 +2142,7 @@ export default function SocialManagerPage() {
           {inboxSubTab === "listening" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <Search size={16} className="text-gold" />
+                <Search size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Social Listening</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Monitor keywords and brand mentions across all platforms</p>
@@ -2163,10 +2163,10 @@ export default function SocialManagerPage() {
               </div>
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {listeningKeywords.map(kw => (
-                  <span key={kw} className="flex items-center gap-1 text-[10px] bg-gold/10 text-gold px-2.5 py-1 rounded-lg border border-gold/20">
+                  <span key={kw} className="flex items-center gap-1 text-[10px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2.5 py-1 rounded-lg border border-[rgba(37,99,235,0.2)]">
                     <Search size={9} /> {kw}
                     <button onClick={() => setListeningKeywords(listeningKeywords.filter(k => k !== kw))}
-                      className="ml-1 text-gold/60 hover:text-gold"><X size={9} /></button>
+                      className="ml-1 text-[#2563EB]/60 hover:text-[#2563EB]"><X size={9} /></button>
                   </span>
                 ))}
               </div>
@@ -2181,13 +2181,13 @@ export default function SocialManagerPage() {
           {inboxSubTab === "ugc" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <AtSign size={16} className="text-gold" />
+                <AtSign size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">UGC Tracker</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Track user-generated content and brand mentions</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-4">
                 <div className="p-2.5 bg-surface-light rounded-xl border border-border text-center">
-                  <p className="text-lg font-bold text-gold">0</p>
+                  <p className="text-lg font-bold text-[#2563EB]">0</p>
                   <p className="text-[9px] text-muted">Total Mentions</p>
                 </div>
                 <div className="p-2.5 bg-surface-light rounded-xl border border-border text-center">
@@ -2195,7 +2195,7 @@ export default function SocialManagerPage() {
                   <p className="text-[9px] text-muted">Positive</p>
                 </div>
                 <div className="p-2.5 bg-surface-light rounded-xl border border-border text-center">
-                  <p className="text-lg font-bold text-blue-400">0</p>
+                  <p className="text-lg font-bold text-[#2563EB]">0</p>
                   <p className="text-[9px] text-muted">Repostable</p>
                 </div>
                 <div className="p-2.5 bg-surface-light rounded-xl border border-border text-center">
@@ -2213,7 +2213,7 @@ export default function SocialManagerPage() {
           {inboxSubTab === "autoreplies" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <Reply size={16} className="text-gold" />
+                <Reply size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Auto-Reply Rules</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Set up automatic responses to common comments and DMs</p>
@@ -2223,7 +2223,7 @@ export default function SocialManagerPage() {
                   <p className="text-xs text-muted mb-2">No auto-reply rules yet.</p>
                   <button onClick={() => {
                     setAutoReplyRules([{ id: Date.now(), trigger: "new keyword", response: "Your auto-reply message here...", active: false }]);
-                  }} className="text-[10px] text-gold hover:underline flex items-center gap-1 mx-auto">
+                  }} className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-1 mx-auto">
                     <Plus size={10} /> Add Your First Rule
                   </button>
                 </div>
@@ -2255,7 +2255,7 @@ export default function SocialManagerPage() {
                   </div>
                   <button onClick={() => {
                     setAutoReplyRules([...autoReplyRules, { id: Date.now(), trigger: "new keyword", response: "Your auto-reply message here...", active: false }]);
-                  }} className="mt-3 text-[10px] text-gold hover:underline flex items-center gap-1">
+                  }} className="mt-3 text-[10px] text-[#2563EB] hover:underline flex items-center gap-1">
                     <Plus size={10} /> Add New Rule
                   </button>
                 </>
@@ -2278,7 +2278,7 @@ export default function SocialManagerPage() {
             ] as const).map(st => (
               <button key={st.key} onClick={() => setCollabsSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
-                  collabsSubTab === st.key ? "bg-gold/10 text-gold border border-gold/20" : "bg-surface-light text-muted border border-border hover:border-gold/10"
+                  collabsSubTab === st.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "bg-surface-light text-muted border border-border hover:border-[rgba(37,99,235,0.1)]"
                 }`}>
                 {st.icon} {st.label}
               </button>
@@ -2289,7 +2289,7 @@ export default function SocialManagerPage() {
           {collabsSubTab === "competitors" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <Target size={16} className="text-gold" />
+                <Target size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Competitor Social Tracker</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Monitor competitor accounts and their posting frequency</p>
@@ -2316,7 +2316,7 @@ export default function SocialManagerPage() {
               ) : (
                 <div className="space-y-2">
                   {competitorHandles.map((comp, i) => (
-                    <div key={i} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
+                    <div key={i} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border hover:border-[rgba(37,99,235,0.1)] transition-all">
                       <div className="shrink-0">{PLATFORM_ICONS[comp.platform] || <Globe size={14} />}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold">{comp.handle}</p>
@@ -2343,7 +2343,7 @@ export default function SocialManagerPage() {
           {collabsSubTab === "influencers" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <Users size={16} className="text-gold" />
+                <Users size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Influencer Finder</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Search for micro-influencers by niche to collaborate with</p>
@@ -2364,7 +2364,7 @@ export default function SocialManagerPage() {
           {collabsSubTab === "collabs" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <Handshake size={16} className="text-gold" />
+                <Handshake size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Collab Manager</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Track brand collaboration opportunities and partnerships</p>
@@ -2376,24 +2376,24 @@ export default function SocialManagerPage() {
               ) : (
                 <div className="space-y-2">
                   {collabOpportunities.map(collab => (
-                    <div key={collab.id} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
-                      <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center shrink-0">
-                        <Handshake size={16} className="text-gold" />
+                    <div key={collab.id} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border hover:border-[rgba(37,99,235,0.1)] transition-all">
+                      <div className="w-10 h-10 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center shrink-0">
+                        <Handshake size={16} className="text-[#2563EB]" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold">{collab.brand}</p>
                         <p className="text-[9px] text-muted">{collab.niche} | {collab.followers} followers</p>
                       </div>
                       <div className="text-center px-2 shrink-0">
-                        <div className={`text-[10px] font-bold ${collab.match >= 90 ? "text-success" : collab.match >= 80 ? "text-gold" : "text-muted"}`}>
+                        <div className={`text-[10px] font-bold ${collab.match >= 90 ? "text-success" : collab.match >= 80 ? "text-[#2563EB]" : "text-muted"}`}>
                           {collab.match}%
                         </div>
                         <p className="text-[7px] text-muted">match</p>
                       </div>
                       <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium shrink-0 ${
                         collab.status === "confirmed" ? "bg-success/10 text-success" :
-                        collab.status === "negotiating" ? "bg-gold/10 text-gold" :
-                        collab.status === "completed" ? "bg-blue-400/10 text-blue-400" :
+                        collab.status === "negotiating" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" :
+                        collab.status === "completed" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" :
                         "bg-surface text-muted"
                       }`}>
                         {collab.status}
@@ -2409,7 +2409,7 @@ export default function SocialManagerPage() {
           {collabsSubTab === "trending" && (
             <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
-                <Music2 size={16} className="text-gold" />
+                <Music2 size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Trending Audio Finder</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Find trending TikTok and Reels sounds to use in your content</p>
@@ -2422,11 +2422,11 @@ export default function SocialManagerPage() {
         </div>
       )}
 
-      {/* 17. Content Calendar Export — add to calendar tab area */}
+      {/* 17. Content Calendar Export ï¿½ add to calendar tab area */}
       {tab === "calendar" && (
         <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
           <div className="flex items-center gap-2 mb-3">
-            <Download size={16} className="text-gold" />
+            <Download size={16} className="text-[#2563EB]" />
             <h2 className="text-sm font-semibold">Export Calendar</h2>
           </div>
           <p className="text-[10px] text-muted mb-3">Download your content calendar in CSV or PDF format</p>
@@ -2447,7 +2447,7 @@ export default function SocialManagerPage() {
             </button>
             <button onClick={() => {
               toast.success("PDF export coming soon!");
-            }} className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light text-muted border border-border hover:border-gold/10 transition-all">
+            }} className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light text-muted border border-border hover:border-[rgba(37,99,235,0.1)] transition-all">
               <FileTextIcon size={12} /> Export PDF
             </button>
           </div>

@@ -85,11 +85,11 @@ export default function AdminIndexPage() {
                 }}
                 className="absolute top-0 inset-x-0"
               />
-              <span className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg bg-brand-lime/10 flex items-center justify-center">
-                <Icon className="w-4 h-4 text-brand-lime" />
+              <span className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(37,99,235,0.08)" }}>
+                <Icon className="w-4 h-4" style={{ color: "#2563EB" }} />
               </span>
               <div>
-                <p className="font-medium text-text-primary group-hover:text-brand-lime transition-colors">
+                <p className="font-medium text-text-primary group-hover:text-brand-accent transition-colors">
                   {title}
                 </p>
                 <p className="text-xs text-muted mt-0.5 leading-relaxed">{description}</p>

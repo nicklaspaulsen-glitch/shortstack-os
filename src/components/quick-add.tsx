@@ -110,7 +110,7 @@ export default function QuickAdd() {
             ]).map(t => (
               <button key={t.type} onClick={() => setOpen(t.type)}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-all ${
-                  open === t.type ? "text-gold border-b-2 border-gold" : "text-muted"
+                  open === t.type ? "text-[#2563EB] border-b-2 border-[#2563EB]" : "text-muted"
                 }`}>
                 {t.icon} {t.label}
               </button>

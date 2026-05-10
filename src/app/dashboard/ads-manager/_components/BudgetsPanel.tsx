@@ -99,7 +99,7 @@ export default function BudgetsPanel() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-white/5 bg-white/[0.02] px-4 py-3 flex items-center justify-between">
+      <div className="rounded-lg border border-black/[0.06] bg-white px-4 py-3 flex items-center justify-between">
         <div>
           <div className="text-[11px] uppercase tracking-wide text-muted">
             Total active daily budget
@@ -119,10 +119,10 @@ export default function BudgetsPanel() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
+        <div className="rounded-lg border border-black/[0.06] bg-white p-4">
           <h3 className="text-sm font-medium mb-3">Current allocation</h3>
           {current.length === 0 ? (
-            <div className="text-sm text-muted py-12 text-center">
+            <div className="text-sm text-[#6B7280] py-12 text-center">
               No active daily-budget campaigns yet.
             </div>
           ) : (
@@ -135,17 +135,17 @@ export default function BudgetsPanel() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-gold/30 bg-gold/[0.04] p-4">
+        <div className="rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.04)] p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-medium inline-flex items-center gap-1.5">
-              <Sparkles size={14} className="text-gold" />
+              <Sparkles size={14} className="text-[#2563EB]" />
               AI-suggested allocation
             </h3>
             {suggested && suggested.length > 0 && (
               <button
                 onClick={() => void applyRebalance()}
                 disabled={applying}
-                className="inline-flex items-center gap-1 rounded border border-gold/50 bg-gold/20 px-2.5 py-1 text-xs text-gold hover:bg-gold/30 disabled:opacity-50"
+                className="inline-flex items-center gap-1 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-2.5 py-1 text-xs text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)] disabled:opacity-50"
               >
                 {applying ? (
                   <Loader2 className="animate-spin" size={12} />
@@ -157,7 +157,7 @@ export default function BudgetsPanel() {
             )}
           </div>
           {!suggested || suggested.length === 0 ? (
-            <div className="text-sm text-muted py-12 text-center">
+            <div className="text-sm text-[#6B7280] py-12 text-center">
               No reallocation suggestion yet. Visit the Insights tab and click
               Generate to ask Claude for one.
             </div>
@@ -170,7 +170,7 @@ export default function BudgetsPanel() {
                 ))}
               </div>
               {rationale && (
-                <div className="mt-3 pt-3 border-t border-white/5 text-xs text-muted leading-relaxed">
+                <div className="mt-3 pt-3 border-t border-black/[0.06] text-xs text-[#6B7280] leading-relaxed">
                   {rationale}
                 </div>
               )}
@@ -201,8 +201,8 @@ function AllocationPie({ slices }: { slices: AllocationSlice[] }) {
         </Pie>
         <Tooltip
           contentStyle={{
-            background: "rgba(10,10,15,0.95)",
-            border: "1px solid rgba(255,255,255,0.1)",
+            background: "rgba(255,255,255,0.98)",
+            border: "1px solid rgba(0,0,0,0.08)",
             borderRadius: 6,
             fontSize: 11,
           }}
@@ -229,7 +229,7 @@ function AllocationLegendRow({ slice }: { slice: AllocationSlice }) {
         />
         {PLATFORM_LABELS[slice.platform]}
       </span>
-      <span className="tabular-nums text-muted">
+      <span className="tabular-nums text-[#6B7280]">
         {fmtCurrency(slice.amount)} / day · {slice.pct.toFixed(1)}%
       </span>
     </div>

@@ -630,7 +630,7 @@ export default function ThumbnailEditorProPage() {
 
   return (
     <motion.div
-      className="fixed inset-0 bg-neutral-950 text-neutral-100 flex flex-col"
+      className="fixed inset-0 bg-[#F3F6FA] text-[#111827] flex flex-col"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.22 }}

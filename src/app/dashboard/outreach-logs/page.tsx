@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import {
@@ -80,7 +80,7 @@ type ViewMode = "compact" | "detailed";
 
 /* -- Platform icon map -- */
 const PLATFORM_ICON: Record<string, React.ReactNode> = {
-  email: <Mail size={13} className="text-gold" />,
+  email: <Mail size={13} className="text-[#2563EB]" />,
   sms: <Phone size={13} className="text-green-400" />,
   call: <PhoneCall size={13} className="text-emerald-400" />,
   instagram: <InstagramIcon size={14} />,
@@ -103,9 +103,9 @@ const STATUS_STYLE: Record<string, string> = {
   bounced: "bg-red-400/10 text-red-400",
   not_interested: "bg-orange-400/10 text-orange-400",
   pending: "bg-yellow-400/10 text-yellow-400",
-  maybe_later: "bg-amber-400/10 text-amber-400",
+  maybe_later: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
   no_answer: "bg-gray-400/10 text-gray-400",
-  voicemail: "bg-purple-400/10 text-purple-400",
+  voicemail: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
 };
 
 // Sentiment dot color based on status
@@ -542,7 +542,7 @@ export default function OutreachLogsPage() {
         icon={<Send size={22} />}
         title="Outreach Logs"
         subtitle="Full communication history � calls, emails, SMS, DMs with transcripts & details."
-        gradient="gold"
+        gradient="blue"
       />
       <div className="flex items-center justify-end">
         <div className="flex gap-2">
@@ -558,13 +558,13 @@ export default function OutreachLogsPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-9 gap-2">
         {[
-          { label: "Total", value: stats.total, color: "text-gold", icon: <Send size={12} /> },
+          { label: "Total", value: stats.total, color: "text-[#2563EB]", icon: <Send size={12} /> },
           { label: "Sent", value: stats.sent, color: "text-blue-400", icon: <CheckCircle size={12} /> },
           { label: "Replied", value: stats.replied, color: "text-green-400", icon: <ThumbsUp size={12} /> },
           { label: "Failed", value: stats.failed, color: "text-red-400", icon: <XCircle size={12} /> },
           { label: "Reply Rate", value: `${replyRate}%`, color: "text-green-400", icon: <BarChart3 size={12} /> },
           { label: "Book Rate", value: `${bookRate}%`, color: "text-emerald-400", icon: <BookCheck size={12} /> },
-          { label: "Emails", value: stats.byPlatform?.email || 0, color: "text-gold", icon: <Mail size={12} /> },
+          { label: "Emails", value: stats.byPlatform?.email || 0, color: "text-[#2563EB]", icon: <Mail size={12} /> },
           { label: "SMS", value: stats.byPlatform?.sms || 0, color: "text-emerald-400", icon: <Phone size={12} /> },
           { label: "Calls", value: stats.byPlatform?.call || 0, color: "text-blue-400", icon: <PhoneCall size={12} /> },
         ].map((s, i) => (
@@ -589,7 +589,7 @@ export default function OutreachLogsPage() {
         ]).map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 transition-all ${
-              tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+              tab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
             }`}>{t.icon} {t.label}</button>
         ))}
       </div>
@@ -619,7 +619,7 @@ export default function OutreachLogsPage() {
                 ].map(p => (
                   <button key={p.val} onClick={() => { setPlatformFilter(p.val); setPage(1); }}
                     className={`text-[10px] px-2 py-1.5 rounded-lg flex items-center gap-1 ${
-                      platformFilter === p.val ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.06] hover:border-white/10"
+                      platformFilter === p.val ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
                     }`}>{p.icon} {p.label}</button>
                 ))}
               </div>
@@ -633,13 +633,13 @@ export default function OutreachLogsPage() {
                 <option value="interested">Interested</option>
                 <option value="not_interested">Not Interested</option>
               </select>
-              <div className="flex items-center gap-1 border border-white/[0.06] rounded-lg">
+              <div className="flex items-center gap-1 border border-[rgba(0,0,0,0.06)] rounded-lg">
                 <button onClick={() => setViewMode("compact")}
-                  className={`p-1.5 rounded-l-lg ${viewMode === "compact" ? "bg-gold/10 text-gold" : "text-muted"}`}>
+                  className={`p-1.5 rounded-l-lg ${viewMode === "compact" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
                   <LayoutList size={14} />
                 </button>
                 <button onClick={() => setViewMode("detailed")}
-                  className={`p-1.5 rounded-r-lg ${viewMode === "detailed" ? "bg-gold/10 text-gold" : "text-muted"}`}>
+                  className={`p-1.5 rounded-r-lg ${viewMode === "detailed" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
                   <LayoutGrid size={14} />
                 </button>
               </div>
@@ -654,7 +654,7 @@ export default function OutreachLogsPage() {
             {/* Date range filter */}
             <div className="flex items-center gap-2 flex-wrap">
               <div className="flex items-center gap-1.5 text-[10px] text-muted">
-                <CalendarRange size={13} className="text-gold" />
+                <CalendarRange size={13} className="text-[#2563EB]" />
                 <span>Date range:</span>
               </div>
               <input
@@ -675,7 +675,7 @@ export default function OutreachLogsPage() {
               {(dateFrom || dateTo) && (
                 <button
                   onClick={() => { setDateFrom(""); setDateTo(""); setPage(1); }}
-                  className="text-[10px] px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-muted flex items-center gap-1"
+                  className="text-[10px] px-2 py-1 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-muted flex items-center gap-1"
                 >
                   <X size={9} /> Clear
                 </button>
@@ -684,8 +684,8 @@ export default function OutreachLogsPage() {
 
             {/* Bulk action bar */}
             {selectedIds.size > 0 && (
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-gold/[0.05] border border-gold/20 animate-in slide-in-from-top-1">
-                <span className="text-xs font-medium text-gold">{selectedIds.size} selected</span>
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] animate-in slide-in-from-top-1">
+                <span className="text-xs font-medium text-[#2563EB]">{selectedIds.size} selected</span>
                 <div className="flex-1" />
                 <div className="relative">
                   <button onClick={() => setShowDmPicker(!showDmPicker)} disabled={bulkLoading}
@@ -697,7 +697,7 @@ export default function OutreachLogsPage() {
                     <div className="absolute top-full left-0 mt-1 bg-surface border border-border rounded-lg p-1 shadow-xl z-20 min-w-[160px]">
                       {DM_PLATFORMS.map(p => (
                         <button key={p.id} onClick={() => handleBulkOutreach("dm", p.id)}
-                          className="w-full text-left flex items-center gap-2 px-3 py-2 text-xs hover:bg-white/5 rounded-md">
+                          className="w-full text-left flex items-center gap-2 px-3 py-2 text-xs hover:bg-[rgba(0,0,0,0.03)] rounded-md">
                           {p.icon} {p.label}
                         </button>
                       ))}
@@ -720,14 +720,14 @@ export default function OutreachLogsPage() {
                   className="text-xs text-muted hover:text-foreground px-2 py-1.5">
                   <X size={12} />
                 </button>
-                {bulkLoading && <Loader2 size={14} className="animate-spin text-gold" />}
+                {bulkLoading && <Loader2 size={14} className="animate-spin text-[#2563EB]" />}
               </div>
             )}
 
             {/* Entries */}
             {loading ? (
               <div className="flex items-center justify-center py-16">
-                <Loader2 size={20} className="animate-spin text-gold" />
+                <Loader2 size={20} className="animate-spin text-[#2563EB]" />
                 <span className="ml-2 text-xs text-muted">Loading outreach data...</span>
               </div>
             ) : entries.length === 0 ? (
@@ -744,7 +744,7 @@ export default function OutreachLogsPage() {
                     <tr className="border-b border-border text-[9px] text-muted uppercase tracking-wider">
                       <th className="p-2.5 w-8">
                         <button onClick={toggleAll} className={`w-4 h-4 rounded border flex items-center justify-center ${
-                          allSelected ? "bg-gold border-gold" : "border-white/20 hover:border-white/40"
+                          allSelected ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(37,99,235,0.25)]"
                         }`}>{allSelected && <Check size={10} className="text-black" />}</button>
                       </th>
                       <th className="p-2.5 text-left w-8">Ch</th>
@@ -766,12 +766,12 @@ export default function OutreachLogsPage() {
                         <tr key={entry.id}
                           onClick={() => openDetail(entry)}
                           className={`border-b border-border/50 text-[11px] transition-colors cursor-pointer ${
-                            isActive ? "bg-gold/[0.06] border-l-2 border-l-gold" :
-                            isSelected ? "bg-gold/[0.03]" : "hover:bg-white/[0.02]"
+                            isActive ? "bg-[rgba(37,99,235,0.05)] border-l-2 border-l-[#2563EB]" :
+                            isSelected ? "bg-[rgba(37,99,235,0.05)]" : "hover:bg-[rgba(0,0,0,0.04)]"
                           }`}>
                           <td className="p-2.5" onClick={e => e.stopPropagation()}>
                             <button onClick={() => toggleOne(entry.id)} className={`w-4 h-4 rounded border flex items-center justify-center ${
-                              isSelected ? "bg-gold border-gold" : "border-white/20 hover:border-white/40"
+                              isSelected ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(37,99,235,0.25)]"
                             }`}>{isSelected && <Check size={10} className="text-black" />}</button>
                           </td>
                           <td className="p-2.5">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-muted" />}</td>
@@ -788,7 +788,7 @@ export default function OutreachLogsPage() {
                             ) : entry.message_text?.substring(0, 80) || "�"}
                           </td>
                           <td className="p-2.5 text-center">
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-white/5 text-muted"}`}>
+                            <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-[rgba(0,0,0,0.04)] text-muted"}`}>
                               {entry.status}
                             </span>
                           </td>
@@ -820,15 +820,15 @@ export default function OutreachLogsPage() {
                     <div key={entry.id}
                       onClick={() => openDetail(entry)}
                       className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                        isActive ? "bg-gold/[0.06] border-gold/30" :
-                        isSelected ? "bg-gold/[0.03] border-gold/20" :
+                        isActive ? "bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.25)]" :
+                        isSelected ? "bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)]" :
                         entry.status === "replied" || entry.status === "interested" ? "bg-green-400/[0.02] border-green-400/10" :
                         entry.status === "failed" || entry.status === "bounced" ? "bg-red-400/[0.02] border-red-400/10" :
-                        "bg-surface-light border-border hover:border-white/10"
+                        "bg-surface-light border-border hover:border-[rgba(0,0,0,0.08)]"
                       }`}>
                       <div className="flex items-center gap-3">
                         <button onClick={e => { e.stopPropagation(); toggleOne(entry.id); }} className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center ${
-                          isSelected ? "bg-gold border-gold" : "border-white/20 hover:border-white/40"
+                          isSelected ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(37,99,235,0.25)]"
                         }`}>{isSelected && <Check size={10} className="text-black" />}</button>
 
                         <div className="flex-shrink-0">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-muted" />}</div>
@@ -837,7 +837,7 @@ export default function OutreachLogsPage() {
                           <div className="flex items-center gap-2">
                             <span className={`w-2 h-2 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
                             <p className="text-xs font-medium truncate">{entry.business_name || "Unknown"}</p>
-                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-muted capitalize">{entry.platform}</span>
+                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted capitalize">{entry.platform}</span>
                             {entry.reply_text && <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400">replied</span>}
                           </div>
                           <p className="text-[10px] text-muted truncate mt-0.5">
@@ -848,7 +848,7 @@ export default function OutreachLogsPage() {
                         </div>
 
                         <div className="flex items-center gap-2 flex-shrink-0">
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-white/5 text-muted"}`}>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-[rgba(0,0,0,0.04)] text-muted"}`}>
                             {entry.status}
                           </span>
                           <div className="text-right">
@@ -883,7 +883,7 @@ export default function OutreachLogsPage() {
                     return (
                       <button key={pageNum} onClick={() => setPage(pageNum)}
                         className={`text-xs px-2.5 py-1.5 rounded-md min-w-[32px] ${
-                          page === pageNum ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground hover:bg-white/5"
+                          page === pageNum ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground hover:bg-[rgba(0,0,0,0.03)]"
                         }`}>{pageNum}</button>
                     );
                   })}
@@ -921,8 +921,8 @@ export default function OutreachLogsPage() {
                     <span className={`w-1.5 h-1.5 rounded-full ${getSentimentColor(detailEntry.status)}`} />
                     <span className={STATUS_STYLE[detailEntry.status]?.split(" ")[1] || "text-muted"}>{detailEntry.status}</span>
                   </span>
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-muted capitalize">{detailEntry.platform}</span>
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-muted">
+                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-muted capitalize">{detailEntry.platform}</span>
+                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-muted">
                     {new Date(detailEntry.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
                   </span>
                 </div>
@@ -939,8 +939,8 @@ export default function OutreachLogsPage() {
                         onClick={() => updateEntryStatus(detailEntry.id, tag.status)}
                         className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${
                           detailEntry.status === tag.status
-                            ? "bg-gold/10 border-gold/30 text-gold font-medium"
-                            : "bg-white/5 border-white/[0.06] text-muted hover:border-white/20 hover:text-foreground"
+                            ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
+                            : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.06)] text-muted hover:border-[rgba(0,0,0,0.10)] hover:text-foreground"
                         }`}
                       >
                         <span>{tag.emoji}</span> {tag.label}
@@ -952,12 +952,12 @@ export default function OutreachLogsPage() {
                 {/* Quick actions */}
                 <div className="flex gap-1">
                   {detailEntry.recipient_handle && (
-                    <button onClick={() => copyText(detailEntry.recipient_handle)} className="text-[9px] px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 flex items-center gap-1">
+                    <button onClick={() => copyText(detailEntry.recipient_handle)} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] flex items-center gap-1">
                       <Copy size={9} /> Copy
                     </button>
                   )}
                   {detailEntry.lead_id && (
-                    <a href={`/dashboard/crm?lead=${detailEntry.lead_id}`} className="text-[9px] px-2 py-1 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1">
+                    <a href={`/dashboard/crm?lead=${detailEntry.lead_id}`} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
                       <ExternalLink size={9} /> View Lead
                     </a>
                   )}
@@ -976,7 +976,7 @@ export default function OutreachLogsPage() {
 
                     {detailLoading ? (
                       <div className="flex items-center justify-center py-8">
-                        <Loader2 size={16} className="animate-spin text-gold" />
+                        <Loader2 size={16} className="animate-spin text-[#2563EB]" />
                         <span className="ml-2 text-[10px] text-muted">Loading transcript...</span>
                       </div>
                     ) : conversationDetail ? (
@@ -1004,7 +1004,7 @@ export default function OutreachLogsPage() {
 
                         {/* Summary */}
                         {conversationDetail.summary && (
-                          <div className="bg-gold/[0.03] border border-gold/10 rounded-lg p-2.5">
+                          <div className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg p-2.5">
                             <p className="text-[9px] text-muted uppercase tracking-wider mb-1">AI Summary</p>
                             <p className="text-[10px] leading-relaxed">{conversationDetail.summary}</p>
                           </div>
@@ -1021,13 +1021,13 @@ export default function OutreachLogsPage() {
                             <div className="bg-surface-light rounded-lg p-2.5 space-y-1.5">
                               <p className="text-[8px] text-muted uppercase tracking-wider">Speaking Time</p>
                               <div className="flex items-center gap-2">
-                                <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                  <div className="h-full bg-gold rounded-full" style={{ width: `${agentPct}%` }} />
+                                <div className="flex-1 h-1.5 bg-[rgba(0,0,0,0.04)] rounded-full overflow-hidden">
+                                  <div className="h-full bg-[#2563EB] rounded-full" style={{ width: `${agentPct}%` }} />
                                 </div>
-                                <span className="text-[8px] text-gold">{agentPct}% AI</span>
+                                <span className="text-[8px] text-[#2563EB]">{agentPct}% AI</span>
                               </div>
                               <div className="flex justify-between text-[8px] text-muted">
-                                <span><Bot size={7} className="inline mr-0.5 text-gold" /> Agent: {agentLines.length} turns</span>
+                                <span><Bot size={7} className="inline mr-0.5 text-[#2563EB]" /> Agent: {agentLines.length} turns</span>
                                 <span><User size={7} className="inline mr-0.5 text-blue-400" /> Customer: {customerLines.length} turns</span>
                               </div>
                             </div>
@@ -1040,7 +1040,7 @@ export default function OutreachLogsPage() {
                             if (line.role === "system") {
                               return (
                                 <div key={i} className="text-center">
-                                  <span className="text-[8px] text-muted italic px-2 py-0.5 rounded bg-white/5">
+                                  <span className="text-[8px] text-muted italic px-2 py-0.5 rounded bg-[rgba(0,0,0,0.04)]">
                                     {line.timestamp !== undefined ? `[${formatTimestamp(line.timestamp)}] ` : ""}{line.message}
                                   </span>
                                 </div>
@@ -1050,12 +1050,12 @@ export default function OutreachLogsPage() {
                               <div key={i} className={`flex ${line.role === "agent" ? "justify-start" : "justify-end"}`}>
                                 <div className={`max-w-[85%] rounded-xl px-3 py-2 ${
                                   line.role === "agent"
-                                    ? "bg-gold/10 border border-gold/10 rounded-tl-sm"
-                                    : "bg-blue-500/10 border border-blue-500/10 rounded-tr-sm"
+                                    ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.1)] rounded-tl-sm"
+                                    : "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.08)] rounded-tr-sm"
                                 }`}>
                                   <div className="flex items-center gap-1 mb-0.5">
-                                    {line.role === "agent" ? <Bot size={8} className="text-gold" /> : <User size={8} className="text-blue-400" />}
-                                    <span className={`text-[8px] font-medium ${line.role === "agent" ? "text-gold" : "text-blue-400"}`}>
+                                    {line.role === "agent" ? <Bot size={8} className="text-[#2563EB]" /> : <User size={8} className="text-blue-400" />}
+                                    <span className={`text-[8px] font-medium ${line.role === "agent" ? "text-[#2563EB]" : "text-blue-400"}`}>
                                       {line.role === "agent" ? "AI Agent" : "Customer"}
                                     </span>
                                     {line.timestamp !== undefined && (
@@ -1086,19 +1086,19 @@ export default function OutreachLogsPage() {
                 {detailEntry.platform === "email" && (
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <Mail size={14} className="text-gold" />
+                      <Mail size={14} className="text-[#2563EB]" />
                       <h4 className="text-xs font-semibold">Email Content</h4>
                     </div>
 
                     {/* Sent message */}
                     <div className="space-y-2">
                       <div className="flex items-center gap-1.5 text-[9px] text-muted">
-                        <ArrowRight size={9} className="text-gold" /> <span className="font-medium text-gold">Sent</span>
+                        <ArrowRight size={9} className="text-[#2563EB]" /> <span className="font-medium text-[#2563EB]">Sent</span>
                         <span className="ml-auto">{detailEntry.sent_at ? new Date(detailEntry.sent_at).toLocaleString() : ""}</span>
                       </div>
-                      <div className="bg-gold/[0.03] border border-gold/10 rounded-lg p-3">
+                      <div className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg p-3">
                         {detailEntry.message_text?.startsWith("Subject:") && (
-                          <p className="text-[10px] font-semibold mb-2 pb-2 border-b border-gold/10">
+                          <p className="text-[10px] font-semibold mb-2 pb-2 border-b border-[rgba(37,99,235,0.1)]">
                             {detailEntry.message_text.split("\n")[0]}
                           </p>
                         )}
@@ -1136,10 +1136,10 @@ export default function OutreachLogsPage() {
                               <div key={te.id} className="bg-surface-light border border-border rounded-lg p-2.5 space-y-1.5">
                                 <div className="flex items-center justify-between text-[8px] text-muted">
                                   <span className="flex items-center gap-1">
-                                    <ArrowRight size={8} className="text-gold" />
-                                    <span className="font-medium text-gold">Sent</span>
+                                    <ArrowRight size={8} className="text-[#2563EB]" />
+                                    <span className="font-medium text-[#2563EB]">Sent</span>
                                   </span>
-                                  <span className={`px-1.5 py-0.5 rounded-full ${STATUS_STYLE[te.status] || "bg-white/5 text-muted"}`}>{te.status}</span>
+                                  <span className={`px-1.5 py-0.5 rounded-full ${STATUS_STYLE[te.status] || "bg-[rgba(0,0,0,0.04)] text-muted"}`}>{te.status}</span>
                                   <span>{new Date(te.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
                                 </div>
                                 {te.message_text?.startsWith("Subject:") && (
@@ -1174,10 +1174,10 @@ export default function OutreachLogsPage() {
 
                     {/* Outbound message */}
                     <div className="flex justify-end">
-                      <div className="max-w-[85%] bg-gold/10 border border-gold/10 rounded-xl rounded-tr-sm px-3 py-2">
+                      <div className="max-w-[85%] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.1)] rounded-xl rounded-tr-sm px-3 py-2">
                         <div className="flex items-center gap-1 mb-0.5">
-                          <Bot size={8} className="text-gold" />
-                          <span className="text-[8px] font-medium text-gold">You</span>
+                          <Bot size={8} className="text-[#2563EB]" />
+                          <span className="text-[8px] font-medium text-[#2563EB]">You</span>
                           <span className="text-[7px] text-muted ml-auto">
                             {detailEntry.sent_at ? new Date(detailEntry.sent_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : ""}
                           </span>
@@ -1189,7 +1189,7 @@ export default function OutreachLogsPage() {
                     {/* Reply */}
                     {detailEntry.reply_text && (
                       <div className="flex justify-start">
-                        <div className="max-w-[85%] bg-blue-500/10 border border-blue-500/10 rounded-xl rounded-tl-sm px-3 py-2">
+                        <div className="max-w-[85%] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.08)] rounded-xl rounded-tl-sm px-3 py-2">
                           <div className="flex items-center gap-1 mb-0.5">
                             <User size={8} className="text-blue-400" />
                             <span className="text-[8px] font-medium text-blue-400">{detailEntry.business_name}</span>
@@ -1247,7 +1247,7 @@ export default function OutreachLogsPage() {
                         <span className="font-bold">{count} ({pct.toFixed(0)}%)</span>
                       </div>
                       <div className="w-full bg-surface-light rounded-full h-2">
-                        <div className="bg-gold rounded-full h-2 transition-all" style={{ width: `${Math.max(pct, 2)}%` }} />
+                        <div className="bg-[#2563EB] rounded-full h-2 transition-all" style={{ width: `${Math.max(pct, 2)}%` }} />
                       </div>
                     </div>
                   );
@@ -1285,7 +1285,7 @@ export default function OutreachLogsPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {[
               { icon: <ThumbsUp size={20} className="mx-auto mb-2 text-green-400" />, value: stats.replied, label: "Total Replies", color: "text-green-400" },
-              { icon: <BarChart3 size={20} className="mx-auto mb-2 text-gold" />, value: `${replyRate}%`, label: "Reply Rate", color: "text-gold" },
+              { icon: <BarChart3 size={20} className="mx-auto mb-2 text-[#2563EB]" />, value: `${replyRate}%`, label: "Reply Rate", color: "text-[#2563EB]" },
               { icon: <ThumbsDown size={20} className="mx-auto mb-2 text-red-400" />, value: stats.failed, label: "Failed/Bounced", color: "text-red-400" },
               { icon: <Calendar size={20} className="mx-auto mb-2 text-blue-400" />, value: stats.total, label: "All Time Total", color: "text-blue-400" },
             ].map((tile, i) => (
@@ -1308,7 +1308,7 @@ export default function OutreachLogsPage() {
           {/* Active Phone Numbers */}
           <div className="card space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold flex items-center gap-2"><Phone size={14} className="text-gold" /> Active Phone Numbers</h3>
+              <h3 className="text-sm font-semibold flex items-center gap-2"><Phone size={14} className="text-[#2563EB]" /> Active Phone Numbers</h3>
               <button onClick={fetchProvisionedNumbers} className="btn-secondary text-xs flex items-center gap-1">
                 <RefreshCw size={10} className={provLoading ? "animate-spin" : ""} /> Refresh
               </button>
@@ -1316,7 +1316,7 @@ export default function OutreachLogsPage() {
 
             {provLoading ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 size={16} className="animate-spin text-gold" />
+                <Loader2 size={16} className="animate-spin text-[#2563EB]" />
               </div>
             ) : provNumbers.length === 0 ? (
               <div className="text-center py-8 bg-surface-light rounded-xl">
@@ -1344,7 +1344,7 @@ export default function OutreachLogsPage() {
                       <span className="text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
                         <Wifi size={8} /> Active
                       </span>
-                      <button onClick={() => copyText(num.phone_number)} className="p-1 hover:bg-white/5 rounded">
+                      <button onClick={() => copyText(num.phone_number)} className="p-1 hover:bg-[rgba(0,0,0,0.03)] rounded">
                         <Copy size={10} className="text-muted" />
                       </button>
                     </div>
@@ -1356,7 +1356,7 @@ export default function OutreachLogsPage() {
 
           {/* Buy New Number */}
           <div className="card space-y-4">
-            <h3 className="text-sm font-semibold flex items-center gap-2"><Plus size={14} className="text-gold" /> Buy Phone Number</h3>
+            <h3 className="text-sm font-semibold flex items-center gap-2"><Plus size={14} className="text-[#2563EB]" /> Buy Phone Number</h3>
             <p className="text-[10px] text-muted">Purchase a Twilio phone number for outbound SMS & AI calls. Numbers are auto-linked to ElevenLabs for AI calling.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -1391,14 +1391,14 @@ export default function OutreachLogsPage() {
                 <p className="text-[10px] text-muted">{availableNumbers.length} numbers available:</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[300px] overflow-y-auto">
                   {availableNumbers.map((num, i) => (
-                    <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-light border border-border hover:border-gold/20 transition-all">
+                    <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-light border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
                       <PhoneForwarded size={12} className="text-green-400 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-mono font-semibold">{num.phone}</p>
                         <p className="text-[9px] text-muted truncate">{num.locality}{num.locality && num.region ? ", " : ""}{num.region}</p>
                       </div>
                       <button onClick={() => buyNumber(num.phone)} disabled={buyingNumber === num.phone || !provClientId}
-                        className="text-[9px] px-3 py-1.5 rounded-lg bg-gold text-black font-medium hover:bg-gold/90 disabled:opacity-30 flex items-center gap-1">
+                        className="text-[9px] px-3 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#2563EB]/90 disabled:opacity-30 flex items-center gap-1">
                         {buyingNumber === num.phone ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />} Buy
                       </button>
                     </div>
@@ -1410,13 +1410,13 @@ export default function OutreachLogsPage() {
 
           {/* Email Configuration */}
           <div className="card space-y-4">
-            <h3 className="text-sm font-semibold flex items-center gap-2"><Mail size={14} className="text-gold" /> Email Configuration</h3>
+            <h3 className="text-sm font-semibold flex items-center gap-2"><Mail size={14} className="text-[#2563EB]" /> Email Configuration</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* Resend status */}
               <div className="p-3 rounded-xl bg-surface-light border border-border">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 rounded bg-blue-500/10 flex items-center justify-center">
+                  <div className="w-6 h-6 rounded bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
                     <Mail size={12} className="text-blue-400" />
                   </div>
                   <div>
@@ -1442,8 +1442,8 @@ export default function OutreachLogsPage() {
               {/* GHL status */}
               <div className="p-3 rounded-xl bg-surface-light border border-border">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 rounded bg-purple-500/10 flex items-center justify-center">
-                    <Globe size={12} className="text-purple-400" />
+                  <div className="w-6 h-6 rounded bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                    <Globe size={12} className="text-[#2563EB]" />
                   </div>
                   <div>
                     <p className="text-xs font-semibold">GoHighLevel</p>
@@ -1525,7 +1525,7 @@ export default function OutreachLogsPage() {
           <div className="card space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold flex items-center gap-2">
-                <Radar size={14} className="text-gold" /> Lead Scraping Configuration
+                <Radar size={14} className="text-[#2563EB]" /> Lead Scraping Configuration
               </h3>
               <div className="flex items-center gap-2">
                 {scraperResult && (
@@ -1554,7 +1554,7 @@ export default function OutreachLogsPage() {
                   return (
                     <button key={pl.id} onClick={() => toggleScrapePlatform(pl.id)}
                       className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all ${
-                        active ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-white/[0.06] hover:border-white/10"
+                        active ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
                       }`}>
                       {pl.icon} {pl.label}
                       {active && <Check size={10} className="ml-0.5" />}
@@ -1570,7 +1570,7 @@ export default function OutreachLogsPage() {
                 <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Niches / Industries</p>
                 <div className="flex flex-wrap gap-1.5 mb-2 min-h-[36px] p-2 rounded-lg bg-surface-light border border-border">
                   {config.scrape_niches.map((n: string) => (
-                    <span key={n} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-gold/10 text-gold border border-gold/20">
+                    <span key={n} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]">
                       {n}
                       <button onClick={() => removeTag("scrape_niches", n)} className="hover:text-white transition-colors ml-0.5">
                         <X size={9} />
@@ -1586,7 +1586,7 @@ export default function OutreachLogsPage() {
                 <div className="flex flex-wrap gap-1 mt-1.5">
                   {["Dentist","Med Spa","Plumber","HVAC","Roofing","Real Estate","Restaurant","Gym/Fitness","Salon/Barber","Auto Repair","Chiropractor","Lawyer","Accountant","Landscaping","Cleaning Services","Photography","Pet Services","Home Services"].filter((p: string) => !config.scrape_niches.includes(p)).slice(0, 10).map((preset: string) => (
                     <button key={preset} onClick={() => addTag("scrape_niches", preset)}
-                      className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-muted hover:bg-white/10 hover:text-foreground transition-colors">
+                      className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted hover:bg-[rgba(0,0,0,0.06)] hover:text-foreground transition-colors">
                       + {preset}
                     </button>
                   ))}
@@ -1621,7 +1621,7 @@ export default function OutreachLogsPage() {
                   <input type="range" min={5} max={50} step={5} value={config.scrape_volume}
                     onChange={e => setConfig(c => ({ ...c, scrape_volume: Number(e.target.value) }))}
                     className="flex-1 accent-yellow-400" />
-                  <span className="text-xs font-bold w-8 text-center text-gold">{config.scrape_volume}</span>
+                  <span className="text-xs font-bold w-8 text-center text-[#2563EB]">{config.scrape_volume}</span>
                   <span className="text-[9px] text-muted">leads</span>
                 </div>
                 <p className="text-[9px] text-muted mt-1">Max 50 per niche/location combo</p>
@@ -1649,7 +1649,7 @@ export default function OutreachLogsPage() {
                   ] as { key: "require_phone" | "require_website"; label: string }[]).map(f => (
                     <div key={f.key} className="flex items-center gap-2">
                       <button onClick={() => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, [f.key]: !c.scrape_filters[f.key] } }))}
-                        className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${config.scrape_filters[f.key] ? "bg-gold" : "bg-white/10"}`}>
+                        className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${config.scrape_filters[f.key] ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"}`}>
                         <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${config.scrape_filters[f.key] ? "translate-x-3" : "translate-x-0"}`} />
                       </button>
                       <span className="text-[10px] text-muted">{f.label}</span>
@@ -1663,7 +1663,7 @@ export default function OutreachLogsPage() {
           {/* -- Section 2: Daily Outreach Targets -- */}
           <div className="card space-y-4">
             <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Sliders size={14} className="text-gold" /> Daily Outreach Targets
+              <Sliders size={14} className="text-[#2563EB]" /> Daily Outreach Targets
             </h3>
 
             {/* Spam guard banner */}
@@ -1673,14 +1673,14 @@ export default function OutreachLogsPage() {
                 <p className="text-[10px] font-medium">Spam Guard is {spamGuardEnabled ? "ON" : "OFF"}</p>
                 <p className="text-[9px] text-muted">{spamGuardEnabled ? "Hard caps are enforced � effective limits shown below" : "Limits will not be capped � enable in Settings for protection"}</p>
               </div>
-              <a href="/dashboard/settings" className="text-[9px] text-gold hover:underline flex items-center gap-0.5">
+              <a href="/dashboard/settings" className="text-[9px] text-[#2563EB] hover:underline flex items-center gap-0.5">
                 <ExternalLink size={9} /> Settings
               </a>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {([
-                { key: "email_daily_limit" as const, label: "Email", icon: <Mail size={12} className="text-gold" />, max: 500, cap: 500 },
+                { key: "email_daily_limit" as const, label: "Email", icon: <Mail size={12} className="text-[#2563EB]" />, max: 500, cap: 500 },
                 { key: "sms_daily_limit" as const, label: "SMS", icon: <Phone size={12} className="text-green-400" />, max: 300, cap: 300 },
                 { key: "calls_daily_limit" as const, label: "AI Calls", icon: <PhoneCall size={12} className="text-emerald-400" />, max: 100, cap: 100 },
               ] as { key: "email_daily_limit" | "sms_daily_limit" | "calls_daily_limit"; label: string; icon: React.ReactNode; max: number; cap: number }[]).map(ch => {
@@ -1721,7 +1721,7 @@ export default function OutreachLogsPage() {
                         <button onClick={() => setConfig(c => ({
                           ...c,
                           platforms: { ...c.platforms, [p]: { ...plat, enabled: !plat.enabled } }
-                        }))} className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${plat.enabled ? "bg-gold" : "bg-white/10"}`}>
+                        }))} className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${plat.enabled ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"}`}>
                           <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${plat.enabled ? "translate-x-3" : "translate-x-0"}`} />
                         </button>
                         <span className="flex items-center gap-1 text-[10px] flex-1 capitalize">{PLATFORM_ICON[p]} {p}</span>
@@ -1748,7 +1748,7 @@ export default function OutreachLogsPage() {
           {/* -- Section 3: Schedule & Automation -- */}
           <div className="card space-y-4">
             <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Calendar size={14} className="text-gold" /> Schedule & Automation
+              <Calendar size={14} className="text-[#2563EB]" /> Schedule & Automation
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1785,7 +1785,7 @@ export default function OutreachLogsPage() {
                 ].map(s => (
                   <button key={s.val} onClick={() => setConfig(c => ({ ...c, message_style: s.val }))}
                     className={`text-left px-3 py-2 rounded-lg border transition-all ${
-                      config.message_style === s.val ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-white/[0.06] hover:border-white/10"
+                      config.message_style === s.val ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
                     }`}>
                     <p className="text-xs font-medium">{s.label}</p>
                     <p className="text-[9px] opacity-70">{s.desc}</p>
@@ -1803,10 +1803,10 @@ export default function OutreachLogsPage() {
                 { key: "exclude_contacted", label: "Exclude already contacted", desc: "Skip leads you have reached out to before" },
                 { key: "pause_on_reply", label: "Pause sequence on reply", desc: "Stop automated follow-ups when prospect replies" },
               ].map(item => (
-                <div key={item.key} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light hover:bg-white/[0.02] transition-colors">
+                <div key={item.key} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light hover:bg-[rgba(0,0,0,0.04)] transition-colors">
                   <button onClick={() => setConfig(c => ({ ...c, [item.key]: !(c[item.key as keyof typeof c]) }))}
                     className={`w-8 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${
-                      config[item.key as keyof typeof config] ? "bg-gold" : "bg-white/10"
+                      config[item.key as keyof typeof config] ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"
                     }`}>
                     <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${
                       config[item.key as keyof typeof config] ? "translate-x-4" : "translate-x-0"
@@ -1817,7 +1817,7 @@ export default function OutreachLogsPage() {
                     <p className="text-[9px] text-muted">{item.desc}</p>
                   </div>
                   <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
-                    config[item.key as keyof typeof config] ? "bg-green-400/10 text-green-400" : "bg-white/5 text-muted"
+                    config[item.key as keyof typeof config] ? "bg-green-400/10 text-green-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
                   }`}>{config[item.key as keyof typeof config] ? "On" : "Off"}</span>
                 </div>
               ))}
@@ -1827,7 +1827,7 @@ export default function OutreachLogsPage() {
           {/* -- Section 4: Compliance & Safety -- */}
           <div className="card space-y-4">
             <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Shield size={14} className="text-gold" /> Compliance & Safety
+              <Shield size={14} className="text-[#2563EB]" /> Compliance & Safety
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -1846,7 +1846,7 @@ export default function OutreachLogsPage() {
                   </span>
                 </div>
                 <p className="text-[9px] text-muted mb-2">Controls maximum daily send limits to protect sender reputation.</p>
-                <a href="/dashboard/settings" className="inline-flex items-center gap-1 text-[9px] text-gold hover:underline">
+                <a href="/dashboard/settings" className="inline-flex items-center gap-1 text-[9px] text-[#2563EB] hover:underline">
                   <ExternalLink size={9} /> Configure in Settings
                 </a>
               </div>
@@ -1927,7 +1927,7 @@ export default function OutreachLogsPage() {
             )}
 
             {!senderStats && (
-              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)]">
                 <Building2 size={12} className="text-muted" />
                 <p className="text-[10px] text-muted">Sender stats will appear here once the API is connected.</p>
               </div>
@@ -1937,7 +1937,7 @@ export default function OutreachLogsPage() {
           {/* Scheduled Runs */}
           <div className="card p-4 space-y-3">
             <div className="flex items-center gap-2">
-              <CalendarRange size={14} className="text-gold" />
+              <CalendarRange size={14} className="text-[#2563EB]" />
               <h3 className="text-xs font-semibold">Scheduled Runs</h3>
             </div>
 
@@ -2035,15 +2035,15 @@ export default function OutreachLogsPage() {
                           {cells.map((day, i) => (
                             <div key={i} className={`relative flex flex-col items-center justify-center h-6 rounded text-[9px]
                               ${!day ? "" : ""}
-                              ${day && isPast(day) ? "text-white/20" : "text-white/70"}
-                              ${day === todayDate ? "ring-1 ring-gold/60 bg-gold/10 font-bold text-gold" : ""}
+                              ${day && isPast(day) ? "text-[#9CA3AF]" : "text-[#6B7280]"}
+                              ${day === todayDate ? "ring-1 ring-[rgba(37,99,235,0.6)] bg-[rgba(37,99,235,0.08)] font-bold text-[#2563EB]" : ""}
                             `}>
                               {day && <span>{day}</span>}
                               {day && isScheduled(day) && !isPast(day) && (
-                                <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-gold" />
+                                <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-[#2563EB]" />
                               )}
                               {day && isScheduled(day) && isPast(day) && (
-                                <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-white/10" />
+                                <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-[rgba(0,0,0,0.06)]" />
                               )}
                             </div>
                           ))}
@@ -2054,7 +2054,7 @@ export default function OutreachLogsPage() {
                       <div className="flex items-center justify-between text-[10px]">
                         <span className="text-muted">
                           {nextRunDate ? (
-                            <>Next run: <span className="text-gold font-medium">
+                            <>Next run: <span className="text-[#2563EB] font-medium">
                               {weekdayFmt.format(nextRunDate)}, {nextRunDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} at {autoRunConfig.time}
                             </span></>
                           ) : (
@@ -2068,7 +2068,7 @@ export default function OutreachLogsPage() {
                 })()}
               </>
             ) : (
-              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)]">
                 <Radar size={12} className="text-muted animate-pulse" />
                 <p className="text-[10px] text-muted">Loading auto-run schedule...</p>
               </div>
@@ -2154,16 +2154,16 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
 
   if (!analysis) {
     return (
-      <div className="rounded-lg border border-gold/20 bg-gold/[0.04] p-3">
+      <div className="rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] p-3">
         <div className="flex items-center gap-2 mb-2">
-          <Bot size={12} className="text-gold" />
+          <Bot size={12} className="text-[#2563EB]" />
           <span className="text-[11px] font-semibold">AI Analysis</span>
         </div>
         <p className="text-[10px] text-muted mb-2">Get sentiment, win probability, objections, and a suggested reply.</p>
         <button
           onClick={runAnalysis}
           disabled={loading}
-          className="w-full py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-[10px] font-semibold hover:shadow-lg hover:shadow-gold/30 disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className="w-full py-1.5 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-[10px] font-semibold hover:shadow-lg hover:shadow-[rgba(37,99,235,0.3)] disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
           {loading ? <Loader2 size={10} className="animate-spin" /> : <Bot size={10} />}
           {loading ? "Analyzing..." : "Analyze with AI"}
@@ -2175,22 +2175,22 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
   const sentimentColor =
     analysis.sentiment === "positive" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
     analysis.sentiment === "negative" ? "text-red-400 bg-red-500/10 border-red-500/20" :
-    analysis.sentiment === "no_reply" ? "text-muted bg-white/5 border-white/10" :
-    "text-amber-400 bg-amber-500/10 border-amber-500/20";
+    analysis.sentiment === "no_reply" ? "text-muted bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)]" :
+    "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]";
 
   const urgencyColor =
     analysis.urgency === "high" ? "text-red-400 bg-red-500/10" :
-    analysis.urgency === "medium" ? "text-amber-400 bg-amber-500/10" :
-    "text-muted bg-white/5";
+    analysis.urgency === "medium" ? "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" :
+    "text-muted bg-[rgba(0,0,0,0.04)]";
 
   return (
-    <div className="rounded-lg border border-gold/20 bg-gradient-to-br from-gold/[0.06] to-transparent p-3 space-y-3">
+    <div className="rounded-lg border border-[rgba(37,99,235,0.2)] bg-gradient-to-br from-[rgba(37,99,235,0.06)] to-transparent p-3 space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Bot size={12} className="text-gold" />
+          <Bot size={12} className="text-[#2563EB]" />
           <span className="text-[11px] font-semibold">AI Analysis</span>
         </div>
-        <button onClick={runAnalysis} disabled={loading} className="text-[9px] text-muted hover:text-gold flex items-center gap-1">
+        <button onClick={runAnalysis} disabled={loading} className="text-[9px] text-muted hover:text-[#2563EB] flex items-center gap-1">
           <RefreshCw size={9} className={loading ? "animate-spin" : ""} /> Re-run
         </button>
       </div>
@@ -2210,7 +2210,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
           <p className="text-[8px] text-muted uppercase tracking-wider">Win Prob.</p>
           <p className={`text-sm font-bold ${
             analysis.win_probability >= 60 ? "text-emerald-400" :
-            analysis.win_probability >= 30 ? "text-amber-400" : "text-red-400"
+            analysis.win_probability >= 30 ? "text-[#2563EB]" : "text-red-400"
           }`}>{analysis.win_probability}%</p>
         </div>
         <div className="bg-surface-light/50 rounded-md px-2 py-1.5 text-center">
@@ -2232,7 +2232,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
         <p className="text-[9px] text-muted uppercase tracking-wider mb-1 flex items-center gap-1">
           <ArrowRight size={9} /> Recommended Action
         </p>
-        <div className="text-[10px] font-medium capitalize text-gold bg-gold/5 border border-gold/15 rounded px-2 py-1">
+        <div className="text-[10px] font-medium capitalize text-[#2563EB] bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.15)] rounded px-2 py-1">
           {analysis.recommended_action.replace(/_/g, " ")}
         </div>
       </div>
@@ -2271,7 +2271,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
           <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Topics</p>
           <div className="flex flex-wrap gap-1">
             {analysis.topics.slice(0, 6).map((t, i) => (
-              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-muted">
+              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">
                 #{t}
               </span>
             ))}
@@ -2284,14 +2284,14 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
         <div>
           <div className="flex items-center justify-between mb-1">
             <p className="text-[9px] text-muted uppercase tracking-wider flex items-center gap-1">
-              <Sparkles size={9} className="text-gold" /> Suggested Reply
+              <Sparkles size={9} className="text-[#2563EB]" /> Suggested Reply
             </p>
-            <button onClick={copyReply} className="text-[9px] text-gold hover:text-amber-400 flex items-center gap-1">
+            <button onClick={copyReply} className="text-[9px] text-[#2563EB] hover:text-[#2563EB] flex items-center gap-1">
               {copied ? <Check size={9} /> : <Copy size={9} />}
               {copied ? "Copied" : "Copy"}
             </button>
           </div>
-          <div className="bg-surface-light/80 border border-gold/20 rounded px-2 py-1.5">
+          <div className="bg-surface-light/80 border border-[rgba(37,99,235,0.2)] rounded px-2 py-1.5">
             <p className="text-[10px] leading-relaxed whitespace-pre-wrap">{analysis.next_reply_draft}</p>
           </div>
         </div>

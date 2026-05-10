@@ -44,7 +44,7 @@ const STORAGE_KEY = "ss_proposals_v1";
 
 const STATUS_STYLES: Record<Proposal["status"], { label: string; tint: string }> = {
   draft: { label: "Draft", tint: "bg-muted/20 text-muted" },
-  sent: { label: "Sent", tint: "bg-sky-500/15 text-sky-300" },
+  sent: { label: "Sent", tint: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" },
   signed: { label: "Signed", tint: "bg-emerald-500/15 text-emerald-300" },
   declined: { label: "Declined", tint: "bg-rose-500/15 text-rose-300" },
 };
@@ -134,7 +134,7 @@ export default function ProposalsPage() {
 
       <div className="mx-auto max-w-5xl space-y-5 px-6 pb-10 pt-5">
         {/* Beta banner */}
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-[12px] text-amber-200">
+        <div className="rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-4 py-3 text-[12px] text-[#2563EB]">
           <span className="font-semibold">Beta:</span> proposals are stored locally on this
           device. E-sign and PandaDoc wiring land next sprint — existing drafts will migrate.
         </div>
@@ -191,7 +191,7 @@ export default function ProposalsPage() {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => setShowNew(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#3B82F6]"
           >
             <Plus size={14} /> New proposal
           </motion.button>
@@ -225,7 +225,7 @@ export default function ProposalsPage() {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => setShowNew(true)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"
                 >
                   <Plus size={14} /> Create proposal
                 </motion.button>
@@ -259,11 +259,11 @@ export default function ProposalsPage() {
             <li>Workflow triggers on <code>proposal_signed</code> (onboarding, invoice, welcome)</li>
             <li>
               Related:{" "}
-              <Link href="/dashboard/deals" className="text-indigo-400 underline">
+              <Link href="/dashboard/deals" className="text-[#2563EB] underline">
                 Deals
               </Link>
               {" · "}
-              <Link href="/dashboard/clients" className="text-indigo-400 underline">
+              <Link href="/dashboard/clients" className="text-[#2563EB] underline">
                 Clients
               </Link>
             </li>
@@ -295,10 +295,10 @@ function ProposalCard({
         show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: [0.32, 0.72, 0, 1] } },
       }}
       whileHover={{ y: -3 }}
-      className="glass rounded-xl hover:border-indigo-500/20 transition-colors"
+      className="glass rounded-xl hover:border-[rgba(37,99,235,0.14)] transition-colors"
     >
       <div className="flex items-center gap-3 p-4">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-500/15 text-purple-300">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB]">
           <FileCheck size={16} />
         </div>
         <div className="min-w-0 flex-1">
@@ -324,7 +324,7 @@ function ProposalCard({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onMarkSent}
-              className="inline-flex items-center gap-1 rounded bg-sky-500/15 px-2.5 py-1.5 text-[11px] text-sky-300 hover:bg-sky-500/25"
+              className="inline-flex items-center gap-1 rounded bg-[rgba(37,99,235,0.08)] px-2.5 py-1.5 text-[11px] text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]"
               title="Mark as sent"
             >
               <Send size={11} /> Send
@@ -343,7 +343,7 @@ function ProposalCard({
         </div>
       </div>
       {proposal.summary && (
-        <div className="border-t border-white/5 bg-white/[0.02] p-3 rounded-b-xl">
+        <div className="border-t border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-3 rounded-b-xl">
           <p className="text-[12px] leading-relaxed text-muted">{proposal.summary}</p>
         </div>
       )}
@@ -415,7 +415,7 @@ function NewProposalForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Q2 Social Media Retainer"
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -427,7 +427,7 @@ function NewProposalForm({
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
             placeholder="Acme Inc."
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -439,7 +439,7 @@ function NewProposalForm({
             value={clientEmail}
             onChange={(e) => setClientEmail(e.target.value)}
             placeholder="hello@acme.com"
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -451,7 +451,7 @@ function NewProposalForm({
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="5000"
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -461,7 +461,7 @@ function NewProposalForm({
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
           >
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
@@ -478,7 +478,7 @@ function NewProposalForm({
             onChange={(e) => setSummary(e.target.value)}
             placeholder="One-paragraph pitch — scope, deliverables, timeline."
             rows={4}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
           />
         </div>
       </div>
@@ -495,7 +495,7 @@ function NewProposalForm({
           whileTap={{ scale: 0.97 }}
           onClick={submit}
           disabled={!canSubmit || submitting}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400 disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#3B82F6] disabled:opacity-40"
         >
           {submitting ? (
             <Loader size={14} className="animate-spin" />

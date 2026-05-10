@@ -427,8 +427,8 @@ export default function FormsPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { value: forms.length, label: "Total Forms", color: "text-white" },
-          { value: totalSubmissions, label: "Submissions", color: "text-indigo-400" },
+          { value: forms.length, label: "Total Forms", color: "text-[#111827]" },
+          { value: totalSubmissions, label: "Submissions", color: "text-[#2563EB]" },
           { value: `${avgCompletionRate}%`, label: "Avg Completion", color: "text-emerald-400" },
           { value: forms.reduce((s, f) => s + f.views, 0), label: "Total Views", color: "text-blue-400" },
         ].map((tile, i) => (
@@ -453,7 +453,7 @@ export default function FormsPage() {
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-indigo-500/20 text-indigo-300 font-medium" : "text-muted hover:text-foreground"
+              tab === t.id ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
             }`}>
             {t.icon} {t.label}
           </button>
@@ -527,21 +527,21 @@ export default function FormsPage() {
                       <span className="text-muted">{FIELD_TYPES.find(t => t.type === field.type)?.icon}</span>
                       <input value={field.label} onChange={e => updateField(field.id, "label", e.target.value)}
                         className="flex-1 bg-transparent text-xs outline-none font-medium" aria-label="Field label" />
-                      <span className="text-[8px] text-muted px-1.5 py-0.5 rounded bg-white/5">{field.type}</span>
+                      <span className="text-[8px] text-muted px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)]">{field.type}</span>
                       <button onClick={() => updateField(field.id, "required", !field.required)}
-                        className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-indigo-500/10 text-indigo-300" : "text-muted"}`}>
+                        className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
                         {field.required ? "Required" : "Optional"}
                       </button>
                       <button onClick={() => handleRegenFieldValidation(field.id)} disabled={regenFieldId === field.id}
-                        className="text-muted hover:text-indigo-300 p-1" title="Regenerate label / placeholder">
+                        className="text-muted hover:text-[#2563EB] p-1" title="Regenerate label / placeholder">
                         {regenFieldId === field.id ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
                       </button>
                       <button
                         onClick={() => setConditionEditorFieldId(conditionEditorFieldId === field.id ? null : field.id)}
                         className={`text-[8px] px-1.5 py-0.5 rounded flex items-center gap-1 ${
                           (field.conditions?.length ?? 0) > 0
-                            ? "bg-indigo-500/10 text-indigo-300"
-                            : "text-muted hover:text-indigo-300"
+                            ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                            : "text-muted hover:text-[#2563EB]"
                         }`}
                         title="Add show/hide/require rules"
                       >
@@ -580,7 +580,7 @@ export default function FormsPage() {
 
             {/* Form Settings */}
             <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-              <h2 className="section-header flex items-center gap-2"><Settings size={12} className="text-indigo-400" /> Form Settings</h2>
+              <h2 className="section-header flex items-center gap-2"><Settings size={12} className="text-[#2563EB]" /> Form Settings</h2>
               <div className="space-y-3">
                 <div>
                   <label className="block text-[10px] text-muted mb-1">Submit Button Text</label>
@@ -600,7 +600,7 @@ export default function FormsPage() {
                     {["#2563EB", "#2563EB", "#2563EB", "#ef4444", "#8b5cf6", "#ec4899", "#f59e0b"].map(c => (
                       <button key={c} onClick={() => {
                         const u = { ...activeForm, accentColor: c }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
-                      }} className={`w-6 h-6 rounded-full transition-all ${activeForm.accentColor === c ? "ring-2 ring-white/30 scale-110" : ""}`}
+                      }} className={`w-6 h-6 rounded-full transition-all ${activeForm.accentColor === c ? "ring-2 ring-[rgba(0,0,0,0.20)] scale-110" : ""}`}
                         style={{ background: c }} />
                     ))}
                   </div>
@@ -613,12 +613,12 @@ export default function FormsPage() {
                 </div>
                 <div className="flex items-center justify-between p-2.5 rounded-lg border" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.subtle }}>
                   <div className="flex items-center gap-2">
-                    <Shield size={12} className="text-indigo-400" />
+                    <Shield size={12} className="text-[#2563EB]" />
                     <span className="text-xs">Spam Protection</span>
                   </div>
                   <button onClick={() => {
                     const u = { ...activeForm, spamProtection: !activeForm.spamProtection }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
-                  }} className={`w-10 h-5 rounded-full transition-all relative ${activeForm.spamProtection ? "bg-indigo-500" : "bg-white/10"}`}>
+                  }} className={`w-10 h-5 rounded-full transition-all relative ${activeForm.spamProtection ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.08)]"}`}>
                     <div className="w-4 h-4 rounded-full bg-white absolute top-0.5" style={{ left: activeForm.spamProtection ? 22 : 2 }} />
                   </button>
                 </div>
@@ -627,8 +627,8 @@ export default function FormsPage() {
 
             {/* Embed Code */}
             <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-              <h2 className="section-header flex items-center gap-2"><Code size={12} className="text-indigo-400" /> Embed Code</h2>
-              <pre className="text-[9px] text-muted bg-black/20 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap">{generateEmbedCode()}</pre>
+              <h2 className="section-header flex items-center gap-2"><Code size={12} className="text-[#2563EB]" /> Embed Code</h2>
+              <pre className="text-[9px] text-muted bg-[rgba(0,0,0,0.04)] rounded-lg p-3 overflow-x-auto whitespace-pre-wrap">{generateEmbedCode()}</pre>
               <button onClick={() => navigator.clipboard.writeText(generateEmbedCode())} className="btn-primary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
                 <Copy size={12} /> Copy Embed Code
               </button>
@@ -637,7 +637,7 @@ export default function FormsPage() {
 
           {/* Live Preview */}
           <div className=" border p-4 sticky top-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-            <h2 className="section-header flex items-center gap-2"><Eye size={12} className="text-indigo-400" /> Live Preview</h2>
+            <h2 className="section-header flex items-center gap-2"><Eye size={12} className="text-[#2563EB]" /> Live Preview</h2>
             <div className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset" }}>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 16 }}>{activeForm.name}</h2>
               {(() => {
@@ -788,7 +788,7 @@ export default function FormsPage() {
       {tab === "analytics" && (
         <div className="space-y-4">
           <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-indigo-400" /> Form Funnel</h2>
+            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-[#2563EB]" /> Form Funnel</h2>
             <div className="flex items-end gap-4 h-40 justify-center">
               {[
                 { label: "Views", value: 0, color: "#2563EB" },
@@ -814,7 +814,7 @@ export default function FormsPage() {
               </div>
             </div>
             <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-              <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-indigo-400" /> Drop-off Points</h2>
+              <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-[#2563EB]" /> Drop-off Points</h2>
               <div className="space-y-2">
                 <div className="text-center py-4"><p className="text-[10px] text-muted">No drop-off data yet</p></div>
               </div>
@@ -827,7 +827,7 @@ export default function FormsPage() {
       {tab === "settings" && (
         <div className="space-y-4">
           <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-            <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-indigo-400" /> Form Styling</h2>
+            <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-[#2563EB]" /> Form Styling</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-[10px] text-muted mb-1">Font Family</label>
@@ -881,7 +881,7 @@ export default function FormsPage() {
                   className="flex items-center justify-between p-2.5 rounded-lg border" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.subtle }}
                 >
                   <span className="text-xs">{int.name}</span>
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${int.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-white/5 text-muted"}`}>
+                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${int.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-[rgba(0,0,0,0.04)] text-muted"}`}>
                     {int.connected ? "Connected" : "Connect"}
                   </span>
                 </motion.div>
@@ -962,7 +962,7 @@ function ConditionEditor({ field, otherFields, onChange }: ConditionEditorProps)
         <p className="text-[10px] uppercase tracking-wider text-muted">Conditions for {field.label}</p>
         <button
           onClick={addRule}
-          className="flex items-center gap-1 text-[9px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20"
+          className="flex items-center gap-1 text-[9px] px-2 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]"
         >
           <Plus size={9} /> Add rule
         </button>

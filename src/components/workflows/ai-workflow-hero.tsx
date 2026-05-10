@@ -150,7 +150,7 @@ export default function AiWorkflowHero({
             disabled={generating}
             rows={3}
             placeholder="e.g. When a new lead replies to outreach, send me a Telegram alert and tag the deal as 'hot' in CRM…"
-            className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-gold/40 resize-none disabled:opacity-60"
+            className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[rgba(37,99,235,0.4)] resize-none disabled:opacity-60"
             onKeyDown={(e) => {
               if ((e.metaKey || e.ctrlKey) && e.key === "Enter") generate();
             }}
@@ -162,7 +162,7 @@ export default function AiWorkflowHero({
             value={selectedClient}
             onChange={(e) => setSelectedClient(e.target.value)}
             disabled={generating}
-            className="flex-1 sm:flex-none sm:w-[240px] bg-card border border-border rounded-lg px-3 py-2 text-xs text-foreground focus:outline-none focus:border-gold/40 disabled:opacity-60"
+            className="flex-1 sm:flex-none sm:w-[240px] bg-card border border-border rounded-lg px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[rgba(37,99,235,0.4)] disabled:opacity-60"
           >
             <option value="">All clients (template)</option>
             {clients.map((c) => (

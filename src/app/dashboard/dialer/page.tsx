@@ -24,7 +24,7 @@ export default function DialerPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Power Dialer");
 
   return (
-    <div className="min-h-screen pb-12">
+    <div className="min-h-screen pb-12 bg-[#F3F6FA]">
       <PageHero
         eyebrow="AI DIALER"
         title="Dialer"
@@ -34,8 +34,8 @@ export default function DialerPage() {
       />
 
       <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
-        <div className="glass rounded-xl overflow-hidden">
-          <div className="border-b border-white/10">
+        <div className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl overflow-hidden">
+          <div className="border-b border-[rgba(0,0,0,0.08)]">
             <nav className="flex gap-1 overflow-x-auto px-2" aria-label="Dialer tabs">
               {TABS.map((tab, index) => {
                 const isActive = activeTab === tab;
@@ -50,8 +50,8 @@ export default function DialerPage() {
                     whileHover={{ y: -1 }}
                     className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
                       isActive
-                        ? "border-indigo-400 text-indigo-200"
-                        : "border-transparent text-white/60 hover:text-white"
+                        ? "border-[#2563EB] text-[#2563EB]"
+                        : "border-transparent text-[#6B7280] hover:text-[#374151]"
                     }`}
                     aria-current={isActive ? "page" : undefined}
                   >

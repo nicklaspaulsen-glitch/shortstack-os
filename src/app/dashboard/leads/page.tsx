@@ -186,7 +186,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
       <div className="card w-full max-w-2xl p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold flex items-center gap-2"><Upload size={14} className="text-gold" /> Import CSV</h2>
+          <h2 className="text-sm font-semibold flex items-center gap-2"><Upload size={14} className="text-[#2563EB]" /> Import CSV</h2>
           <button onClick={onClose} className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-foreground"><X size={14} /></button>
         </div>
 
@@ -198,7 +198,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
             onDrop={onDrop}
             onClick={() => fileRef.current?.click()}
             className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all ${
-              dragOver ? "border-gold bg-gold/5" : "border-border hover:border-gold/30"
+              dragOver ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"
             }`}
           >
             <FileSpreadsheet size={32} className="mx-auto mb-3 text-muted" />
@@ -269,7 +269,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
         {/* Importing step */}
         {step === "importing" && (
           <div className="flex flex-col items-center justify-center py-10 gap-3">
-            <Loader size={24} className="animate-spin text-gold" />
+            <Loader size={24} className="animate-spin text-[#2563EB]" />
             <p className="text-xs text-muted">Importing {rows.length} leads...</p>
           </div>
         )}
@@ -331,7 +331,7 @@ function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
       <div className="card w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold flex items-center gap-2"><UserPlus size={14} className="text-gold" /> Add Lead</h2>
+          <h2 className="text-sm font-semibold flex items-center gap-2"><UserPlus size={14} className="text-[#2563EB]" /> Add Lead</h2>
           <button onClick={onClose} className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-foreground"><X size={14} /></button>
         </div>
 
@@ -424,7 +424,7 @@ function ScoreBadge({ score, onClick }: { score: number | null; onClick?: () => 
     return (
       <button
         onClick={(e) => { e.stopPropagation(); onClick?.(); }}
-        className="text-[9px] px-2 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted hover:bg-gold/10 hover:text-gold border border-dashed border-border transition-all"
+        className="text-[9px] px-2 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted hover:bg-[rgba(37,99,235,0.08)] hover:text-[#2563EB] border border-dashed border-border transition-all"
         title="Score this lead with AI"
       >
         Score
@@ -830,7 +830,7 @@ export default function LeadEnginePage() {
       {/* Stats � collapsible (state persists) */}
       <CollapsibleStats
         storageKey="leads"
-        icon={<BarChart3 size={14} className="text-gold" />}
+        icon={<BarChart3 size={14} className="text-[#2563EB]" />}
         title="Lead Stats"
         summary={
           <>
@@ -842,21 +842,21 @@ export default function LeadEnginePage() {
             <span className="opacity-30">�</span>
             <span><span className="text-purple-400 font-semibold">{convertedLeads}</span> converted</span>
             <span className="opacity-30">�</span>
-            <span>Conv <span className="text-gold font-semibold">{totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%</span></span>
+            <span>Conv <span className="text-[#2563EB] font-semibold">{totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%</span></span>
           </>
         }
       >
         <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
           {[
-            { label: "Total Leads", value: totalLeads, icon: <Users size={12} />, color: "text-gold" },
+            { label: "Total Leads", value: totalLeads, icon: <Users size={12} />, color: "text-[#2563EB]" },
             { label: "Hot Leads", value: hotLeads, icon: <Flame size={12} />, color: "text-red-400" },
             { label: "Qualified", value: qualifiedLeads, icon: <CheckCircle size={12} />, color: "text-green-400" },
             { label: "Converted", value: convertedLeads, icon: <Star size={12} />, color: "text-purple-400" },
             { label: "Avg Score", value: totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0, icon: <Target size={12} />, color: "text-blue-400" },
-            { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-gold" },
+            { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-[#2563EB]" },
           ].map((stat, index) => (
             <PrismPanel key={index} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
-              <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+              <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
               <p className="text-lg font-bold">{stat.value}</p>
               <p className="text-[9px] text-muted">{stat.label}</p>
             </PrismPanel>
@@ -869,7 +869,7 @@ export default function LeadEnginePage() {
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+              activeTab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
             }`}>{t.icon} {t.label}</button>
         ))}
       </div>
@@ -901,7 +901,7 @@ export default function LeadEnginePage() {
               className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
                 highPriorityOnly
                   ? "bg-green-400/10 border-green-400/30 text-green-400"
-                  : "border-border text-muted hover:border-gold/20 hover:text-foreground"
+                  : "border-border text-muted hover:border-[rgba(37,99,235,0.1)] hover:text-foreground"
               }`}
             >
               <Flame size={11} /> High priority (70+)
@@ -911,8 +911,8 @@ export default function LeadEnginePage() {
               onClick={() => setSortByScore(v => !v)}
               className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
                 sortByScore
-                  ? "bg-gold/10 border-gold/30 text-gold"
-                  : "border-border text-muted hover:border-gold/20 hover:text-foreground"
+                  ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                  : "border-border text-muted hover:border-[rgba(37,99,235,0.1)] hover:text-foreground"
               }`}
             >
               <Target size={11} /> Sort by score
@@ -1004,7 +1004,7 @@ export default function LeadEnginePage() {
                   <span className="text-muted">{lead.source || "---"}</span>
                   <div className="text-center flex items-center justify-center">
                     {scoringLeads.has(lead.id) ? (
-                      <Loader size={12} className="animate-spin text-gold" />
+                      <Loader size={12} className="animate-spin text-[#2563EB]" />
                     ) : (
                       <ScoreBadge score={lead.score} onClick={() => scoreOneLead(lead)} />
                     )}
@@ -1020,7 +1020,7 @@ export default function LeadEnginePage() {
                   <div className="text-center flex items-center justify-center gap-0.5">
                     {lead.google_rating ? (
                       <>
-                        <Star size={9} className="text-gold" />
+                        <Star size={9} className="text-[#2563EB]" />
                         <span>{lead.google_rating}</span>
                         <span className="text-muted">({lead.review_count ?? 0})</span>
                       </>
@@ -1036,20 +1036,20 @@ export default function LeadEnginePage() {
                       href={lead.phone ? `tel:${lead.phone}` : undefined}
                       onClick={(e) => { if (!lead.phone) { e.preventDefault(); toast.error("No phone number"); } }}
                       aria-label={lead.phone ? `Call ${lead.business_name}` : "No phone number"}
-                      className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-gold ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
+                      className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-[#2563EB] ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
                       title={lead.phone || "No phone"}
                     ><Phone size={10} /></a>
                     <a
                       href={lead.email ? `mailto:${lead.email}` : undefined}
                       onClick={(e) => { if (!lead.email) { e.preventDefault(); toast.error("No email"); } }}
                       aria-label={lead.email ? `Email ${lead.business_name}` : "No email address"}
-                      className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-gold ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
+                      className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-[#2563EB] ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
                       title={lead.email || "No email"}
                     ><Mail size={10} /></a>
                     <Link
                       href="/dashboard/dm-controller"
                       aria-label={`Send DM to ${lead.business_name}`}
-                      className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-gold"
+                      className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-[#2563EB]"
                       title="DM via DM Controller"
                     ><MessageSquare size={10} /></Link>
                   </div>
@@ -1061,7 +1061,7 @@ export default function LeadEnginePage() {
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="text-[10px] font-semibold flex items-center gap-1.5">
-                          <Target size={10} className="text-gold" /> AI Score Breakdown
+                          <Target size={10} className="text-[#2563EB]" /> AI Score Breakdown
                         </h4>
                         {lead.score !== null ? (
                           <span className="text-[9px] text-muted">
@@ -1071,7 +1071,7 @@ export default function LeadEnginePage() {
                           <button
                             onClick={(e) => { e.stopPropagation(); scoreOneLead(lead); }}
                             disabled={scoringLeads.has(lead.id)}
-                            className="text-[9px] px-2.5 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1 disabled:opacity-50"
+                            className="text-[9px] px-2.5 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1 disabled:opacity-50"
                           >
                             {scoringLeads.has(lead.id) ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
                             Score now
@@ -1145,14 +1145,14 @@ export default function LeadEnginePage() {
               </p>
               <div className="flex items-center gap-2">
                 <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
-                  className="p-1.5 rounded-lg border border-border hover:border-gold/20 disabled:opacity-30 transition-all">
+                  className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all">
                   <ChevronLeft size={14} />
                 </button>
                 <span className="text-xs font-mono text-muted">
                   {page} / {totalPages}
                 </span>
                 <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
-                  className="p-1.5 rounded-lg border border-border hover:border-gold/20 disabled:opacity-30 transition-all">
+                  className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all">
                   <ChevronRightIcon size={14} />
                 </button>
               </div>
@@ -1176,7 +1176,7 @@ export default function LeadEnginePage() {
             {/* Scoring Rules */}
             <div className="card">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Target size={14} className="text-gold" /> Scoring Matrix
+                <Target size={14} className="text-[#2563EB]" /> Scoring Matrix
               </h3>
               <div className="space-y-1.5">
                 {[
@@ -1237,7 +1237,7 @@ export default function LeadEnginePage() {
                         <span className="font-semibold">{lead.business_name}</span>
                         <span className="text-muted">Score: {lead.lead_score}</span>
                       </div>
-                      <Link href={`/dashboard/crm?leadId=${lead.id}`} className="text-[9px] px-2 py-0.5 rounded bg-gold/10 text-gold hover:bg-gold/20">Open in CRM</Link>
+                      <Link href={`/dashboard/crm?leadId=${lead.id}`} className="text-[9px] px-2 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]">Open in CRM</Link>
                     </div>
                   ))}
                 </div>
@@ -1251,7 +1251,7 @@ export default function LeadEnginePage() {
       {activeTab === "routing" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <GitBranch size={14} className="text-gold" /> Smart Lead Routing Rules
+            <GitBranch size={14} className="text-[#2563EB]" /> Smart Lead Routing Rules
           </h3>
           <div className="space-y-2">
             {[
@@ -1274,7 +1274,7 @@ export default function LeadEnginePage() {
                   <span className={`text-[8px] px-1.5 py-0.5 rounded ${
                     rule.priority === "High" ? "bg-red-400/10 text-red-400" : rule.priority === "Medium" ? "bg-yellow-400/10 text-yellow-400" : "bg-blue-400/10 text-blue-400"
                   }`}>{rule.priority}</span>
-                  <div className={`w-8 h-4 rounded-full ${rule.active ? "bg-gold" : "bg-surface-light"}`}>
+                  <div className={`w-8 h-4 rounded-full ${rule.active ? "bg-[#2563EB]" : "bg-surface-light"}`}>
                     <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${rule.active ? "ml-4" : "ml-0.5"}`} />
                   </div>
                 </div>
@@ -1288,7 +1288,7 @@ export default function LeadEnginePage() {
       {activeTab === "attribution" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <BarChart3 size={14} className="text-gold" /> Lead Source Attribution
+            <BarChart3 size={14} className="text-[#2563EB]" /> Lead Source Attribution
           </h3>
           <div className="text-center py-12 text-muted text-xs">No source attribution data yet.</div>
         </div>
@@ -1298,7 +1298,7 @@ export default function LeadEnginePage() {
       {activeTab === "nurture" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Mail size={14} className="text-gold" /> Lead Nurture Sequences
+            <Mail size={14} className="text-[#2563EB]" /> Lead Nurture Sequences
           </h3>
           <div className="text-center py-12 text-muted text-xs">No nurture sequences configured yet.</div>
         </div>
@@ -1309,7 +1309,7 @@ export default function LeadEnginePage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Zap size={14} className="text-gold" /> Lead Enrichment Panel
+              <Zap size={14} className="text-[#2563EB]" /> Lead Enrichment Panel
             </h3>
             <button
               onClick={() => toast("Bulk enrichment coming soon � needs API")}
@@ -1362,7 +1362,7 @@ export default function LeadEnginePage() {
                   </div>
                   <button
                     onClick={() => toast("Per-lead enrichment coming soon � needs API")}
-                    className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20"
+                    className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]"
                   >Enrich</button>
                 </div>
               </motion.div>
@@ -1375,7 +1375,7 @@ export default function LeadEnginePage() {
       {activeTab === "funnel" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <TrendingUp size={14} className="text-gold" /> Lead Conversion Funnel
+            <TrendingUp size={14} className="text-[#2563EB]" /> Lead Conversion Funnel
           </h3>
           <div className="flex flex-col items-center gap-2">
             {[
@@ -1384,7 +1384,7 @@ export default function LeadEnginePage() {
               { stage: "Replied / Engaged", count: 0, pct: 0, color: "bg-yellow-400" },
               { stage: "Qualified (Score 70+)", count: 0, pct: 0, color: "bg-orange-400" },
               { stage: "Booked Discovery Call", count: 0, pct: 0, color: "bg-green-400" },
-              { stage: "Converted to Client", count: 0, pct: 0, color: "bg-gold" },
+              { stage: "Converted to Client", count: 0, pct: 0, color: "bg-[#2563EB]" },
             ].map((s, i) => (
               <div key={i} className="w-full max-w-2xl">
                 <div className="flex items-center justify-between mb-1 text-[10px]">
@@ -1417,11 +1417,11 @@ export default function LeadEnginePage() {
             {/* Lead Tagging System */}
             <div className="card">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Tag size={14} className="text-gold" /> Lead Tagging System
+                <Tag size={14} className="text-[#2563EB]" /> Lead Tagging System
               </h3>
               <div className="flex flex-wrap gap-2 mb-3">
                 {["high-value", "responsive", "warm", "needs-nurture", "follow-up", "hot", "referral", "decision-maker", "client", "upsell", "no-budget", "competitor-user"].map(tag => (
-                  <span key={tag} className="text-[9px] px-2 py-1 rounded-full bg-gold/10 text-gold border border-gold/20 cursor-pointer hover:bg-gold/20 transition-all">{tag}</span>
+                  <span key={tag} className="text-[9px] px-2 py-1 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] cursor-pointer hover:bg-[rgba(37,99,235,0.12)] transition-all">{tag}</span>
                 ))}
               </div>
               <div className="flex gap-2">
@@ -1439,7 +1439,7 @@ export default function LeadEnginePage() {
                   <Bell size={14} className="text-red-400" /> Hot Lead Alert Settings
                 </h3>
                 <button onClick={() => setHotAlerts(!hotAlerts)}
-                  className={`w-10 h-5 rounded-full transition-all flex items-center ${hotAlerts ? "bg-gold justify-end" : "bg-surface-light justify-start"}`}>
+                  className={`w-10 h-5 rounded-full transition-all flex items-center ${hotAlerts ? "bg-[#2563EB] justify-end" : "bg-surface-light justify-start"}`}>
                   <div className="w-4 h-4 bg-white rounded-full mx-0.5 shadow" />
                 </button>
               </div>

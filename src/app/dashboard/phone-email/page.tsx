@@ -103,7 +103,7 @@ const NUMBER_TYPES: { value: NumberType; label: string; cost: number }[] = [
 const WARMUP_BADGE: Record<WarmupStage, { label: string; class: string }> = {
   new:     { label: "New",     class: "bg-red-500/10 text-red-400 border-red-500/20" },
   warming: { label: "Warming", class: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" },
-  ramping: { label: "Ramping", class: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
+  ramping: { label: "Ramping", class: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]" },
   full:    { label: "Full",    class: "bg-green-500/10 text-green-400 border-green-500/20" },
 };
 
@@ -468,8 +468,8 @@ export default function PhoneEmailPage() {
 
   /* ── Helpers ── */
   const capBadgeColor = (cap: string) => {
-    if (cap === "Voice") return "bg-purple-500/10 text-purple-400 border-purple-500/20";
-    if (cap === "SMS") return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+    if (cap === "Voice") return "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]";
+    if (cap === "SMS") return "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]";
     return "bg-green-500/10 text-green-400 border-green-500/20";
   };
 
@@ -479,7 +479,7 @@ export default function PhoneEmailPage() {
     const p = pct(used, total);
     if (p > 85) return "bg-red-500";
     if (p > 60) return "bg-yellow-500";
-    return "bg-gold";
+    return "bg-[#2563EB]";
   };
 
   const clientsWithoutPhone = clients.filter(c => !c.twilio_phone_number);
@@ -498,7 +498,7 @@ export default function PhoneEmailPage() {
       <div className="glass rounded-xl p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Activity size={14} className="text-gold" />
+            <Activity size={14} className="text-[#2563EB]" />
             <span className="text-xs font-semibold">Smart Rotation</span>
             <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${
               computedStats.rotationActive
@@ -509,7 +509,7 @@ export default function PhoneEmailPage() {
             </span>
           </div>
           <button onClick={() => { loadAll(); fetchRotationStats(); }}
-            className="text-[10px] px-2 py-1 rounded-lg text-muted hover:text-foreground border border-border hover:border-gold/20 transition-all flex items-center gap-1">
+            className="text-[10px] px-2 py-1 rounded-lg text-muted hover:text-foreground border border-border hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center gap-1">
             <RefreshCw size={10} /> Refresh
           </button>
         </div>
@@ -520,10 +520,10 @@ export default function PhoneEmailPage() {
             <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-3">
               <div className="flex items-center gap-1.5 mb-1">
-                <BarChart3 size={11} className="text-gold" />
+                <BarChart3 size={11} className="text-[#2563EB]" />
                 <span className="text-[9px] text-muted uppercase tracking-wider">Total Capacity</span>
               </div>
-              <p className="text-lg font-bold text-gold">{totalCapacity.toLocaleString()}</p>
+              <p className="text-lg font-bold text-[#2563EB]">{totalCapacity.toLocaleString()}</p>
               <p className="text-[9px] text-muted">msgs/day across all senders</p>
             </div>
           </motion.div>
@@ -549,10 +549,10 @@ export default function PhoneEmailPage() {
             <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-3">
               <div className="flex items-center gap-1.5 mb-1">
-                <Phone size={11} className="text-purple-400" />
+                <Phone size={11} className="text-[#2563EB]" />
                 <span className="text-[9px] text-muted uppercase tracking-wider">Phone Senders</span>
               </div>
-              <p className="text-lg font-bold text-purple-400">{computedStats.phones.active}</p>
+              <p className="text-lg font-bold text-[#2563EB]">{computedStats.phones.active}</p>
               <p className="text-[9px] text-muted">
                 {computedStats.phones.usedToday.toLocaleString()} / {computedStats.phones.totalCapacity.toLocaleString()} used
               </p>
@@ -564,10 +564,10 @@ export default function PhoneEmailPage() {
             <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-3">
               <div className="flex items-center gap-1.5 mb-1">
-                <Mail size={11} className="text-blue-400" />
+                <Mail size={11} className="text-[#2563EB]" />
                 <span className="text-[9px] text-muted uppercase tracking-wider">Email Senders</span>
               </div>
-              <p className="text-lg font-bold text-blue-400">{computedStats.emails.active}</p>
+              <p className="text-lg font-bold text-[#2563EB]">{computedStats.emails.active}</p>
               <p className="text-[9px] text-muted">
                 {computedStats.emails.usedToday.toLocaleString()} / {computedStats.emails.totalCapacity.toLocaleString()} used
               </p>
@@ -577,7 +577,7 @@ export default function PhoneEmailPage() {
 
         {/* Remaining capacity bar */}
         <div className="flex items-center gap-3 text-[10px]">
-          <Zap size={11} className="text-gold shrink-0" />
+          <Zap size={11} className="text-[#2563EB] shrink-0" />
           <span className="text-muted shrink-0">Remaining today:</span>
           <div className="flex-1 h-2 bg-border rounded-full overflow-hidden">
             <div className="h-full bg-green-500/70 rounded-full transition-all"
@@ -595,7 +595,7 @@ export default function PhoneEmailPage() {
         ]).map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`flex items-center gap-1.5 px-4 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
-              activeTab === t.key ? "text-gold border-b-2 border-gold" : "text-muted hover:text-foreground"
+              activeTab === t.key ? "text-[#2563EB] border-b-2 border-[#2563EB]" : "text-muted hover:text-foreground"
             }`}>
             <t.icon size={13} />
             {t.label}
@@ -614,11 +614,11 @@ export default function PhoneEmailPage() {
             </div>
             <div className="flex items-center gap-2">
               <button onClick={() => { setShowManualPhoneModal(true); setManualPhone(""); setManualLabel(""); setManualType("local"); }}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-background text-foreground border border-border hover:border-gold/20 transition-all flex items-center gap-1">
+                className="text-[10px] px-3 py-1.5 rounded-lg bg-background text-foreground border border-border hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center gap-1">
                 <Plus size={12} /> Add Existing Number
               </button>
               <button onClick={() => { setShowBuyModal(true); setSearchResults([]); setSearchError(""); setPurchaseError(""); setSelectedClientId(""); setPurchaseTarget("pool"); }}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1">
+                className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
                 <Plus size={12} /> Buy New Number
               </button>
             </div>
@@ -673,7 +673,7 @@ export default function PhoneEmailPage() {
                             )}
                           </td>
                           <td className="p-3">
-                            <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-gold/10 text-gold border border-gold/20 capitalize">
+                            <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] capitalize">
                               {p.type}
                             </span>
                           </td>
@@ -715,7 +715,7 @@ export default function PhoneEmailPage() {
                           <td className="p-3 text-right">
                             <div className="flex items-center justify-end gap-1.5">
                               <a href="/dashboard/voice-receptionist"
-                                className="px-2 py-1 rounded text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition-all flex items-center gap-1">
+                                className="px-2 py-1 rounded text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center gap-1">
                                 <Settings size={10} /> Configure
                               </a>
                               <button onClick={() => releaseNumber(p)}
@@ -746,7 +746,7 @@ export default function PhoneEmailPage() {
               <div className="glass rounded-xl w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Phone size={14} className="text-gold" /> Buy New Phone Number
+                    <Phone size={14} className="text-[#2563EB]" /> Buy New Phone Number
                   </h3>
                   <button onClick={() => setShowBuyModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
                 </div>
@@ -759,7 +759,7 @@ export default function PhoneEmailPage() {
                       <button key={c.code} onClick={() => setBuyCountry(c.code)}
                         className={`p-2 rounded-lg text-[10px] font-medium border transition-all text-center ${
                           buyCountry === c.code
-                            ? "border-gold/30 bg-gold/10 text-gold"
+                            ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                             : "border-border text-muted hover:text-foreground"
                         }`}>
                         <span className="block text-sm mb-0.5">{c.flag}</span>
@@ -776,7 +776,7 @@ export default function PhoneEmailPage() {
                     <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
                     <input value={buyAreaCode} onChange={e => setBuyAreaCode(e.target.value)}
                       placeholder="e.g. 415, 212, 310..."
-                      className="w-full pl-8 pr-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                      className="w-full pl-8 pr-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                   </div>
                 </div>
 
@@ -788,7 +788,7 @@ export default function PhoneEmailPage() {
                       <button key={t.value} onClick={() => setBuyType(t.value)}
                         className={`p-3 rounded-lg border text-center transition-all ${
                           buyType === t.value
-                            ? "border-gold/30 bg-gold/10 text-gold"
+                            ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                             : "border-border text-muted hover:text-foreground"
                         }`}>
                         <span className="block text-[11px] font-medium">{t.label}</span>
@@ -805,10 +805,10 @@ export default function PhoneEmailPage() {
                     <button onClick={() => setPurchaseTarget("pool")}
                       className={`p-3 rounded-lg border text-left transition-all ${
                         purchaseTarget === "pool"
-                          ? "border-gold/30 bg-gold/10"
+                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
                           : "border-border hover:border-border"
                       }`}>
-                      <span className={`block text-[11px] font-medium ${purchaseTarget === "pool" ? "text-gold" : "text-foreground"}`}>
+                      <span className={`block text-[11px] font-medium ${purchaseTarget === "pool" ? "text-[#2563EB]" : "text-foreground"}`}>
                         Add to Pool
                       </span>
                       <span className="block text-[9px] text-muted mt-0.5">Smart rotation across campaigns</span>
@@ -816,10 +816,10 @@ export default function PhoneEmailPage() {
                     <button onClick={() => setPurchaseTarget("client")}
                       className={`p-3 rounded-lg border text-left transition-all ${
                         purchaseTarget === "client"
-                          ? "border-gold/30 bg-gold/10"
+                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
                           : "border-border hover:border-border"
                       }`}>
-                      <span className={`block text-[11px] font-medium ${purchaseTarget === "client" ? "text-gold" : "text-foreground"}`}>
+                      <span className={`block text-[11px] font-medium ${purchaseTarget === "client" ? "text-[#2563EB]" : "text-foreground"}`}>
                         Assign to Client
                       </span>
                       <span className="block text-[9px] text-muted mt-0.5">Dedicated number for one client</span>
@@ -837,7 +837,7 @@ export default function PhoneEmailPage() {
                       </p>
                     ) : (
                       <select value={selectedClientId} onChange={e => setSelectedClientId(e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all">
+                        className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all">
                         <option value="">Select a client...</option>
                         {clientsWithoutPhone.map(c => (
                           <option key={c.id} value={c.id}>{c.business_name}</option>
@@ -849,7 +849,7 @@ export default function PhoneEmailPage() {
 
                 {/* Search Button */}
                 <button onClick={searchNumbers} disabled={searching}
-                  className="w-full py-2.5 rounded-lg bg-gold text-black text-xs font-semibold hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                  className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
                   {searching ? <RefreshCw size={12} className="animate-spin" /> : <Search size={12} />}
                   {searching ? "Searching..." : "Search Available Numbers"}
                 </button>
@@ -872,7 +872,7 @@ export default function PhoneEmailPage() {
                   <div className="space-y-2">
                     <p className="text-[10px] text-muted">{searchResults.length} numbers found</p>
                     {searchResults.map((num, i) => (
-                      <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
+                      <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
                         <div>
                           <p className="text-xs font-mono font-medium">{num.number}</p>
                           <div className="flex items-center gap-2 mt-1">
@@ -905,7 +905,7 @@ export default function PhoneEmailPage() {
               <div className="glass rounded-xl w-full max-w-md p-5 space-y-4 mx-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Phone size={14} className="text-gold" /> Add Existing Number
+                    <Phone size={14} className="text-[#2563EB]" /> Add Existing Number
                   </h3>
                   <button onClick={() => setShowManualPhoneModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
                 </div>
@@ -918,14 +918,14 @@ export default function PhoneEmailPage() {
                   <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Phone Number</label>
                   <input value={manualPhone} onChange={e => setManualPhone(e.target.value)}
                     placeholder="+1 (555) 123-4567"
-                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                 </div>
 
                 <div>
                   <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Label (optional)</label>
                   <input value={manualLabel} onChange={e => setManualLabel(e.target.value)}
                     placeholder="e.g. Outreach Line 1, Sales Pool..."
-                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                 </div>
 
                 <div>
@@ -935,7 +935,7 @@ export default function PhoneEmailPage() {
                       <button key={t.value} onClick={() => setManualType(t.value)}
                         className={`p-2 rounded-lg border text-center transition-all text-[10px] font-medium ${
                           manualType === t.value
-                            ? "border-gold/30 bg-gold/10 text-gold"
+                            ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                             : "border-border text-muted hover:text-foreground"
                         }`}>
                         {t.label}
@@ -945,7 +945,7 @@ export default function PhoneEmailPage() {
                 </div>
 
                 <button onClick={addManualPhone} disabled={!manualPhone.trim() || manualAdding}
-                  className="w-full py-2.5 rounded-lg bg-gold text-black text-xs font-semibold hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                  className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
                   {manualAdding ? <RefreshCw size={12} className="animate-spin" /> : <Plus size={12} />}
                   {manualAdding ? "Adding..." : "Add to Pool"}
                 </button>
@@ -965,7 +965,7 @@ export default function PhoneEmailPage() {
               <p className="text-[10px] text-muted">Configure email addresses for outreach and campaigns</p>
             </div>
             <button onClick={() => setShowEmailModal(true)}
-              className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1">
+              className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
               <Plus size={12} /> Add Email Address
             </button>
           </div>
@@ -1035,7 +1035,7 @@ export default function PhoneEmailPage() {
                           </td>
                           <td className="p-3 text-right">
                             <div className="flex items-center justify-end gap-1.5">
-                              <button className="px-2 py-1 rounded text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-all flex items-center gap-1">
+                              <button className="px-2 py-1 rounded text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center gap-1">
                                 <Send size={10} /> Send Test
                               </button>
                               <button onClick={() => removeEmail(e)}
@@ -1064,10 +1064,10 @@ export default function PhoneEmailPage() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold flex items-center gap-2">
-                <Shield size={14} className="text-gold" /> Domain Verification
+                <Shield size={14} className="text-[#2563EB]" /> Domain Verification
               </h2>
               <button onClick={() => setShowDomainModal(true)}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1">
+                className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
                 <Plus size={12} /> Add Domain
               </button>
             </div>
@@ -1077,7 +1077,7 @@ export default function PhoneEmailPage() {
               <div key={d.id} className="glass rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Globe size={14} className="text-gold" />
+                    <Globe size={14} className="text-[#2563EB]" />
                     <span className="text-xs font-semibold">{d.domain}</span>
                     <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
                       d.verified
@@ -1138,7 +1138,7 @@ export default function PhoneEmailPage() {
               <div className="glass rounded-xl w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Mail size={14} className="text-gold" /> Add Email Address
+                    <Mail size={14} className="text-[#2563EB]" /> Add Email Address
                   </h3>
                   <button onClick={() => setShowEmailModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
                 </div>
@@ -1148,7 +1148,7 @@ export default function PhoneEmailPage() {
                   <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Email Address</label>
                   <input value={newEmail} onChange={e => setNewEmail(e.target.value)}
                     placeholder="outreach@yourdomain.com"
-                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                 </div>
 
                 {/* Display Name */}
@@ -1156,7 +1156,7 @@ export default function PhoneEmailPage() {
                   <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Display Name</label>
                   <input value={newDisplayName} onChange={e => setNewDisplayName(e.target.value)}
                     placeholder="Your Company Name"
-                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                 </div>
 
                 {/* SMTP Option */}
@@ -1166,10 +1166,10 @@ export default function PhoneEmailPage() {
                     <button onClick={() => setSmtpOption("shortstack")}
                       className={`p-3 rounded-lg border text-left transition-all ${
                         smtpOption === "shortstack"
-                          ? "border-gold/30 bg-gold/10"
+                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
                           : "border-border hover:border-border"
                       }`}>
-                      <span className={`block text-[11px] font-medium ${smtpOption === "shortstack" ? "text-gold" : "text-foreground"}`}>
+                      <span className={`block text-[11px] font-medium ${smtpOption === "shortstack" ? "text-[#2563EB]" : "text-foreground"}`}>
                         ShortStack SMTP
                       </span>
                       <span className="block text-[9px] text-muted mt-0.5">Included in plan - 500/day</span>
@@ -1177,10 +1177,10 @@ export default function PhoneEmailPage() {
                     <button onClick={() => setSmtpOption("custom")}
                       className={`p-3 rounded-lg border text-left transition-all ${
                         smtpOption === "custom"
-                          ? "border-gold/30 bg-gold/10"
+                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
                           : "border-border hover:border-border"
                       }`}>
-                      <span className={`block text-[11px] font-medium ${smtpOption === "custom" ? "text-gold" : "text-foreground"}`}>
+                      <span className={`block text-[11px] font-medium ${smtpOption === "custom" ? "text-[#2563EB]" : "text-foreground"}`}>
                         Custom SMTP
                       </span>
                       <span className="block text-[9px] text-muted mt-0.5">Your own server - higher limits</span>
@@ -1196,33 +1196,33 @@ export default function PhoneEmailPage() {
                         <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">SMTP Host</label>
                         <input value={customSmtp.host} onChange={e => setCustomSmtp(p => ({ ...p, host: e.target.value }))}
                           placeholder="smtp.gmail.com"
-                          className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                          className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                       </div>
                       <div>
                         <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Port</label>
                         <input value={customSmtp.port} onChange={e => setCustomSmtp(p => ({ ...p, port: e.target.value }))}
                           placeholder="587"
-                          className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                          className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                       </div>
                     </div>
                     <div>
                       <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Username</label>
                       <input value={customSmtp.user} onChange={e => setCustomSmtp(p => ({ ...p, user: e.target.value }))}
                         placeholder="your-email@gmail.com"
-                        className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                        className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                     </div>
                     <div>
                       <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Password</label>
                       <input type="password" value={customSmtp.pass} onChange={e => setCustomSmtp(p => ({ ...p, pass: e.target.value }))}
                         placeholder="App password or SMTP password"
-                        className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                        className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                     </div>
                   </div>
                 )}
 
                 {/* Add Button */}
                 <button onClick={addEmail} disabled={!newEmail.trim() || emailAdding}
-                  className="w-full py-2.5 rounded-lg bg-gold text-black text-xs font-semibold hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                  className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
                   {emailAdding ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />}
                   {emailAdding ? "Adding..." : "Verify & Add"}
                 </button>
@@ -1236,7 +1236,7 @@ export default function PhoneEmailPage() {
               <div className="glass rounded-xl w-full max-w-md p-5 space-y-4 mx-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Globe size={14} className="text-gold" /> Add Domain
+                    <Globe size={14} className="text-[#2563EB]" /> Add Domain
                   </h3>
                   <button onClick={() => setShowDomainModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
                 </div>
@@ -1244,13 +1244,13 @@ export default function PhoneEmailPage() {
                   <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Domain Name</label>
                   <input value={newDomain} onChange={e => setNewDomain(e.target.value)}
                     placeholder="yourdomain.com"
-                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                 </div>
                 <p className="text-[9px] text-muted">
                   After adding, you will need to configure SPF, DKIM, and DMARC DNS records with your domain registrar.
                 </p>
                 <button onClick={addDomain} disabled={!newDomain.trim()}
-                  className="w-full py-2.5 rounded-lg bg-gold text-black text-xs font-semibold hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                  className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
                   <Plus size={12} /> Add Domain
                 </button>
               </div>

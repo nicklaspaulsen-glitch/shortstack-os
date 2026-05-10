@@ -155,7 +155,7 @@ export default function HubStatusPage() {
               ? "Some sub-tasks need attention — retry below."
               : `${pendingCount} service${pendingCount === 1 ? "" : "s"} still working…`
         }
-        gradient={job.all_green ? "gold" : job.any_failed ? "sunset" : "ocean"}
+        gradient={job.all_green ? "blue" : job.any_failed ? "sunset" : "ocean"}
       />
 
       {/* 5 colored dots — the visual contract from the spec */}
@@ -201,11 +201,11 @@ export default function HubStatusPage() {
       {/* Live-DNS-still-pending callout — relevant once email/portal are done */}
       {job.all_done && (job.services.some(s => s.service === "email" && s.status === "done") ||
         job.services.some(s => s.service === "portal" && s.status === "done")) && (
-        <div className="card border-blue-500/20 bg-blue-500/5 flex items-start gap-2">
-          <Info size={14} className="text-blue-300 mt-0.5 shrink-0" />
-          <div className="text-[11px] text-blue-100">
+        <div className="card border-blue-500/25 bg-blue-500/5 flex items-start gap-2">
+          <Info size={14} className="text-blue-600 mt-0.5 shrink-0" />
+          <div className="text-[11px] text-blue-700">
             <p className="font-semibold mb-1">DNS may still be propagating</p>
-            <p className="text-blue-200/80 leading-relaxed">
+            <p className="text-blue-600 leading-relaxed">
               Even once all dots go green, DNS records can take up to 24 hours to fully propagate
               at public resolvers — typically though, it&apos;s minutes. Email verification in
               particular may show &ldquo;verifying&rdquo; for a few more minutes.
@@ -256,7 +256,7 @@ function ServiceCard({
           <button
             onClick={onRetry}
             disabled={retrying}
-            className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/40 text-red-300 hover:bg-red-500/10 flex items-center gap-1 disabled:opacity-50"
+            className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-700 hover:bg-red-500/10 flex items-center gap-1 disabled:opacity-50"
           >
             <RefreshCw size={10} className={retrying ? "animate-spin" : ""} />
             {retrying ? "Retrying…" : "Retry"}
@@ -292,15 +292,15 @@ function ServiceDoneDetail({
     return (
       <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
         {sandbox && (
-          <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-300 flex items-center gap-2">
+          <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-700 flex items-center gap-2">
             <AlertTriangle size={11} /> Sandbox — DNS not written to GoDaddy OTE. Works on production.
           </div>
         )}
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-mono text-gold">{sendAddress}</span>
+          <span className="text-[11px] font-mono text-[#2563EB]">{sendAddress}</span>
           <button
             onClick={() => copyToClipboard(sendAddress, "Address")}
-            className="text-[10px] p-1.5 rounded border border-border hover:bg-white/5"
+            className="text-[10px] p-1.5 rounded border border-border hover:bg-black/5"
           >
             <Copy size={10} />
           </button>
@@ -313,7 +313,7 @@ function ServiceDoneDetail({
             <div className="mt-2 space-y-1">
               {dns.map((r, i) => (
                 <div key={i} className="font-mono break-all bg-background/40 rounded p-2">
-                  <span className="text-gold">{r.type}</span> {r.name || "@"} → {r.value || r.data}
+                  <span className="text-[#2563EB]">{r.type}</span> {r.name || "@"} → {r.value || r.data}
                 </div>
               ))}
             </div>
@@ -335,7 +335,7 @@ function ServiceDoneDetail({
         </div>
         <button
           onClick={() => copyToClipboard(phone, "Number")}
-          className="text-[10px] p-1.5 rounded border border-border hover:bg-white/5"
+          className="text-[10px] p-1.5 rounded border border-border hover:bg-black/5"
         >
           <Copy size={10} />
         </button>
@@ -354,7 +354,7 @@ function ServiceDoneDetail({
         </div>
         <a
           href={editorUrl}
-          className="text-[10px] px-2.5 py-1 rounded-lg border border-gold/30 bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1"
+          className="text-[10px] px-2.5 py-1 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1"
         >
           Open builder <ExternalLink size={10} />
         </a>
@@ -369,16 +369,16 @@ function ServiceDoneDetail({
     return (
       <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-mono text-gold">https://{subdomain}</span>
+          <span className="text-[11px] font-mono text-[#2563EB]">https://{subdomain}</span>
           <button
             onClick={() => copyToClipboard(`https://${subdomain}`, "Portal URL")}
-            className="text-[10px] p-1.5 rounded border border-border hover:bg-white/5"
+            className="text-[10px] p-1.5 rounded border border-border hover:bg-black/5"
           >
             <Copy size={10} />
           </button>
         </div>
         {manual && (
-          <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-300">
+          <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-700">
             <ShieldCheck size={11} className="inline mr-1" />
             Manual DNS still required — add CNAME <code className="font-mono">portal → {cnameTarget}</code> to the zone.
           </div>
@@ -397,7 +397,7 @@ function ServiceDoneDetail({
         </pre>
         <button
           onClick={() => copyToClipboard(embed, "Embed script")}
-          className="text-[10px] px-2.5 py-1 rounded-lg border border-border hover:bg-white/5 flex items-center gap-1"
+          className="text-[10px] px-2.5 py-1 rounded-lg border border-border hover:bg-black/5 flex items-center gap-1"
         >
           <Copy size={10} /> Copy embed
         </button>

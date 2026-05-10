@@ -212,7 +212,7 @@ export default function WhiteboardPage() {
         icon={<LayoutGrid size={22} />}
         eyebrow="Workspace"
         actions={
-          <div className="flex items-center gap-2 text-xs text-white/70">
+          <div className="flex items-center gap-2 text-xs text-[#374151]">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
@@ -226,7 +226,7 @@ export default function WhiteboardPage() {
       <PresenceStrip users={snapshot?.active_users ?? []} loading={loading} />
 
       {error && !snapshot && (
-        <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-300">
+        <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-700">
           Couldn&apos;t load the whiteboard: {error}
         </div>
       )}
@@ -238,7 +238,7 @@ export default function WhiteboardPage() {
             <LanesSkeleton />
           ) : totalItems === 0 ? (
             <EmptyState
-              icon={<Activity size={28} className="text-gold" />}
+              icon={<Activity size={28} className="text-[#2563EB]" />}
               title="Nothing in flight"
               description="No active renders, scheduled posts, open deals, or in-progress tasks yet. Once your team starts shipping work, it'll show up here in real time."
             />
@@ -269,26 +269,26 @@ interface PresenceStripProps {
 
 function PresenceStrip({ users, loading }: PresenceStripProps) {
   return (
-    <div className=" border border-white/10 bg-white/[0.02] px-4 py-3">
+    <div className=" border border-black/[0.06] bg-white px-4 py-3">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-white/60">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
             Online now
           </span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
             {users.length}
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {loading && users.length === 0 ? (
-            <span className="text-xs text-white/40">Loading viewers…</span>
+            <span className="text-xs text-[#9CA3AF]">Loading viewers…</span>
           ) : users.length === 0 ? (
-            <span className="text-xs text-white/40">No teammates online right now.</span>
+            <span className="text-xs text-[#9CA3AF]">No teammates online right now.</span>
           ) : (
             users.slice(0, 16).map((u) => <PresenceBubble key={u.id} user={u} />)
           )}
           {users.length > 16 && (
-            <span className="text-xs text-white/40">+{users.length - 16} more</span>
+            <span className="text-xs text-[#9CA3AF]">+{users.length - 16} more</span>
           )}
         </div>
       </div>
@@ -311,29 +311,29 @@ function PresenceBubble({ user }: { user: PresenceRow }) {
         />
       ) : (
         <div
-          className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-emerald-400/60 bg-white/10 text-[11px] font-semibold text-white"
+          className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-emerald-400/60 bg-black/[0.04] text-[11px] font-semibold text-[#111827]"
           aria-label={name}
         >
           {initialsFor(user.profile?.full_name, user.profile?.email)}
         </div>
       )}
-      <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-black bg-emerald-400" />
+      <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-400" />
     </div>
   );
 }
 
 function ClientLaneCard({ lane }: { lane: ClientLane }) {
   return (
-    <div className="snap-start shrink-0 w-[320px]  border border-white/10 bg-white/[0.02] p-3 flex flex-col">
+    <div className="snap-start shrink-0 w-[320px]  border border-black/[0.06] bg-white p-3 flex flex-col">
       <div className="flex items-center justify-between gap-2 mb-3 px-1">
-        <h3 className="text-sm font-semibold text-white truncate">{lane.client_name}</h3>
-        <span className="rounded-full border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] font-semibold text-white/70">
+        <h3 className="text-sm font-semibold text-[#111827] truncate">{lane.client_name}</h3>
+        <span className="rounded-full border border-black/[0.06] bg-black/[0.04] px-2 py-0.5 text-[10px] font-semibold text-[#374151]">
           {lane.items.length}
         </span>
       </div>
       <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
         {lane.items.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-white/10 px-3 py-6 text-center text-xs text-white/40">
+          <div className="rounded-lg border border-dashed border-black/[0.06] px-3 py-6 text-center text-xs text-[#9CA3AF]">
             Nothing in flight.
           </div>
         ) : (
@@ -358,15 +358,15 @@ function WhiteboardCard({ item }: { item: WhiteboardItem }) {
           <span>{style.label}</span>
         </div>
         {item.status && (
-          <span className="rounded-full border border-white/10 bg-black/20 px-1.5 py-0.5 text-[10px] text-white/70">
+          <span className="rounded-full border border-black/[0.06] bg-black/[0.04] px-1.5 py-0.5 text-[10px] text-[#374151]">
             {item.status.replace(/_/g, " ")}
           </span>
         )}
       </div>
-      <div className="mt-1.5 text-sm font-medium text-white leading-snug line-clamp-2">
+      <div className="mt-1.5 text-sm font-medium text-[#111827] leading-snug line-clamp-2">
         {item.title}
       </div>
-      <div className="mt-2 flex items-center justify-between gap-2 text-[11px] text-white/50">
+      <div className="mt-2 flex items-center justify-between gap-2 text-[11px] text-[#6B7280]">
         <div className="flex items-center gap-1">
           {item.due_at ? (
             <>
@@ -382,7 +382,7 @@ function WhiteboardCard({ item }: { item: WhiteboardItem }) {
             href={item.url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 text-white/60 hover:text-white"
+            className="inline-flex items-center gap-1 text-[#6B7280] hover:text-[#111827]"
           >
             <ExternalLink size={11} />
             <span>Live</span>
@@ -395,21 +395,21 @@ function WhiteboardCard({ item }: { item: WhiteboardItem }) {
 
 function ActivitySidebar({ events, loading }: { events: ActivityEvent[]; loading: boolean }) {
   return (
-    <aside className=" border border-white/10 bg-white/[0.02] p-4 h-fit xl:sticky xl:top-4">
+    <aside className=" border border-black/[0.06] bg-white p-4 h-fit xl:sticky xl:top-4">
       <div className="flex items-center gap-2 mb-3">
-        <Eye size={14} className="text-white/60" />
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-white/60">
+        <Eye size={14} className="text-[#6B7280]" />
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-[#6B7280]">
           Recent activity
         </h3>
       </div>
       {loading ? (
         <div className="space-y-2">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-12 rounded-lg bg-white/[0.03] animate-pulse" />
+            <div key={i} className="h-12 rounded-lg bg-black/[0.04] animate-pulse" />
           ))}
         </div>
       ) : events.length === 0 ? (
-        <p className="text-xs text-white/40 py-4 text-center">No activity yet.</p>
+        <p className="text-xs text-[#9CA3AF] py-4 text-center">No activity yet.</p>
       ) : (
         <ul className="space-y-1 max-h-[80vh] overflow-y-auto pr-1">
           {events.map((event) => (
@@ -429,7 +429,7 @@ function ActivityRow({ event }: { event: ActivityEvent }) {
     return style.icon;
   })();
   return (
-    <li className="flex items-start gap-2.5 rounded-lg px-2 py-1.5 hover:bg-white/[0.04] transition-colors">
+    <li className="flex items-start gap-2.5 rounded-lg px-2 py-1.5 hover:bg-black/[0.04] transition-colors">
       <div
         className="shrink-0 mt-0.5 flex h-6 w-6 items-center justify-center rounded-md border"
         style={{ background: style.bg, borderColor: style.border, color: style.text }}
@@ -437,14 +437,14 @@ function ActivityRow({ event }: { event: ActivityEvent }) {
         <Icon size={12} />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-xs text-white/80 leading-snug">
-          <span className="font-medium capitalize text-white">{event.verb}</span>{" "}
-          <span className="text-white/70">{event.object_title}</span>
+        <p className="text-xs text-[#374151] leading-snug">
+          <span className="font-medium capitalize text-[#111827]">{event.verb}</span>{" "}
+          <span className="text-[#374151]">{event.object_title}</span>
           {event.client_name && (
-            <span className="text-white/40"> · {event.client_name}</span>
+            <span className="text-[#9CA3AF]"> · {event.client_name}</span>
           )}
         </p>
-        <p className="text-[10px] text-white/40">{timeAgo(event.occurred_at)}</p>
+        <p className="text-[10px] text-[#9CA3AF]">{timeAgo(event.occurred_at)}</p>
       </div>
     </li>
   );
@@ -456,11 +456,11 @@ function LanesSkeleton() {
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className="shrink-0 w-[320px]  border border-white/10 bg-white/[0.02] p-3 space-y-2"
+          className="shrink-0 w-[320px]  border border-black/[0.06] bg-white p-3 space-y-2"
         >
-          <div className="h-5 w-32 bg-white/[0.05] rounded animate-pulse" />
+          <div className="h-5 w-32 bg-black/[0.04] rounded animate-pulse" />
           {Array.from({ length: 3 }).map((__, j) => (
-            <div key={j} className="h-16 rounded-lg bg-white/[0.03] animate-pulse" />
+            <div key={j} className="h-16 rounded-lg bg-black/[0.04] animate-pulse" />
           ))}
         </div>
       ))}

@@ -85,7 +85,7 @@ export default function GoogleBusinessPage() {
         icon={<GlobeIcon size={28} />}
         title="Google Business"
         subtitle="Listings, reviews, posts & local SEO."
-        gradient="gold"
+        gradient="blue"
         actions={
           <button className="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white text-xs hover:bg-white/20 transition-all flex items-center gap-1.5">
             <RefreshCw size={12} /> Refresh
@@ -96,7 +96,7 @@ export default function GoogleBusinessPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {[
-          { value: avgRating, label: <span className="flex items-center justify-center gap-0.5">{renderStars(Math.round(Number(avgRating)))} Avg</span>, color: "text-gold" },
+          { value: avgRating, label: <span className="flex items-center justify-center gap-0.5">{renderStars(Math.round(Number(avgRating)))} Avg</span>, color: "text-[#2563EB]" },
           { value: reviews.length, label: "Total Reviews", color: "" },
           { value: needsReply, label: "Needs Reply", color: "text-yellow-400" },
           { value: "—", label: "Profile Views", color: "text-green-400" },
@@ -139,8 +139,8 @@ export default function GoogleBusinessPage() {
                   <div key={r} className="flex items-center gap-2">
                     <span className="text-xs w-4 text-right">{r}</span>
                     <Star size={8} className="fill-yellow-400 text-yellow-400" />
-                    <div className="flex-1 bg-white/5 rounded-full h-2 overflow-hidden">
-                      <div className="h-full rounded-full bg-yellow-400/40" style={{ width: `${pct}%` }} />
+                    <div className="flex-1 bg-[rgba(0,0,0,0.06)] rounded-full h-2 overflow-hidden">
+                      <div className="h-full rounded-full bg-yellow-400" style={{ width: `${pct}%` }} />
                     </div>
                     <span className="text-[10px] text-muted w-10 text-right">{count} ({pct}%)</span>
                   </div>
@@ -260,7 +260,7 @@ export default function GoogleBusinessPage() {
             </div>
             <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="aspect-square rounded-lg bg-white/[0.02] border border-border flex items-center justify-center">
+                <div key={i} className="aspect-square rounded-lg bg-[rgba(0,0,0,0.04)] border border-border flex items-center justify-center">
                   <Image size={20} className="text-muted/20" />
                 </div>
               ))}

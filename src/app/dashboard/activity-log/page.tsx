@@ -30,14 +30,14 @@ interface LogEntry {
 
 const TYPE_CONFIG: Record<string, { icon: React.ReactNode; color: string; label: string }> = {
   lead_gen: { icon: <Zap size={12} />, color: "text-emerald-400", label: "Lead Gen" },
-  outreach: { icon: <Mail size={12} />, color: "text-blue-400", label: "Outreach" },
-  content: { icon: <Globe size={12} />, color: "text-purple-400", label: "Content" },
-  automation: { icon: <Bot size={12} />, color: "text-gold", label: "Automation" },
+  outreach: { icon: <Mail size={12} />, color: "text-[#2563EB]", label: "Outreach" },
+  content: { icon: <Globe size={12} />, color: "text-[#2563EB]", label: "Content" },
+  automation: { icon: <Bot size={12} />, color: "text-[#2563EB]", label: "Automation" },
   billing: { icon: <CreditCard size={12} />, color: "text-green-400", label: "Billing" },
   user: { icon: <Users size={12} />, color: "text-cyan-400", label: "User" },
   system: { icon: <Settings size={12} />, color: "text-gray-400", label: "System" },
   login: { icon: <Key size={12} />, color: "text-yellow-400", label: "Login" },
-  api: { icon: <Globe size={12} />, color: "text-indigo-400", label: "API" },
+  api: { icon: <Globe size={12} />, color: "text-[#2563EB]", label: "API" },
 };
 
 // Map the action_type enum values coming from /api/audit-log onto the
@@ -207,9 +207,9 @@ export default function ActivityLogPage() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
         {[
           { value: logs.length, label: "Total Events", color: "" },
-          { value: logs.filter(l => l.timestamp.startsWith(new Date().toISOString().slice(0, 10))).length, label: "Today", color: "text-gold" },
-          { value: Object.keys(userActivity).filter(u => u !== "System" && u !== "API").length, label: "Active Users", color: "text-blue-400" },
-          { value: logs.filter(l => l.type === "automation").length, label: "Automations", color: "text-purple-400" },
+          { value: logs.filter(l => l.timestamp.startsWith(new Date().toISOString().slice(0, 10))).length, label: "Today", color: "text-[#2563EB]" },
+          { value: Object.keys(userActivity).filter(u => u !== "System" && u !== "API").length, label: "Active Users", color: "text-[#2563EB]" },
+          { value: logs.filter(l => l.type === "automation").length, label: "Automations", color: "text-[#2563EB]" },
           { value: suspicious.length, label: "Suspicious", color: suspicious.length > 0 ? "text-red-400" : "text-emerald-400" },
         ].map((stat, i) => (
           <PrismPanel key={stat.label} rainbow delay={i * 0.06} padding="p-3" className="text-center">
@@ -224,7 +224,7 @@ export default function ActivityLogPage() {
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-gold/10 text-gold font-medium" : "text-muted hover:text-foreground"
+              tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
             }`}>
             {t.icon} {t.label}
           </button>
@@ -273,7 +273,7 @@ export default function ActivityLogPage() {
                 const config = TYPE_CONFIG[log.type] || { icon: <Activity size={12} />, color: "text-muted", label: log.type };
                 return (
                   <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="group">
-                    <div className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-white/[0.01] transition-colors border-b border-border cursor-pointer"
+                    <div className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)] transition-colors border-b border-border cursor-pointer"
                       onClick={() => setExpandedLog(expandedLog === log.id ? null : log.id)}>
                       <div className={`mt-0.5 shrink-0 ${config.color}`}>{config.icon}</div>
                       <div className="flex-1 min-w-0">
@@ -328,7 +328,7 @@ export default function ActivityLogPage() {
       {/* Heatmap Tab */}
       {tab === "heatmap" && (
         <PrismPanel padding="p-4">
-          <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Activity Heatmap</h2>
+          <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-[#2563EB]" /> Activity Heatmap</h2>
           <div className="overflow-x-auto">
             <div className="grid gap-px" style={{ gridTemplateColumns: `60px repeat(24, 1fr)` }}>
               <div />
@@ -362,7 +362,7 @@ export default function ActivityLogPage() {
       {/* Users Tab */}
       {tab === "users" && (
         <PrismPanel padding="p-4">
-          <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-gold" /> User Activity Breakdown</h2>
+          <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-[#2563EB]" /> User Activity Breakdown</h2>
           {Object.keys(userActivity).length === 0 ? (
             <div className="text-center py-8"><Users size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No user activity yet</p></div>
           ) : (
@@ -374,14 +374,14 @@ export default function ActivityLogPage() {
               return (
                 <motion.div key={user} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold">{user[0]}</div>
+                    <div className="w-8 h-8 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-xs font-bold text-[#2563EB]">{user[0]}</div>
                     <div className="flex-1">
                       <p className="text-xs font-semibold">{user}</p>
                       <p className="text-[10px] text-muted">{count} actions ({pct.toFixed(0)}%)</p>
                     </div>
                   </div>
                   <div className="h-2 rounded-full bg-surface overflow-hidden mb-1.5">
-                    <div className="h-full rounded-full bg-gold" style={{ width: `${pct}%` }} />
+                    <div className="h-full rounded-full bg-[#2563EB]" style={{ width: `${pct}%` }} />
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {Object.entries(types).map(([type, cnt]) => {
@@ -404,7 +404,7 @@ export default function ActivityLogPage() {
       {/* Audit Tab */}
       {tab === "audit" && (
         <PrismPanel padding="p-4">
-          <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-gold" /> Audit Trail (Before/After)</h2>
+          <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-[#2563EB]" /> Audit Trail (Before/After)</h2>
           {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).length === 0 ? (
             <div className="text-center py-8"><Eye size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No audit trail entries yet</p></div>
           ) : (
@@ -455,7 +455,7 @@ export default function ActivityLogPage() {
             )}
           </PrismPanel>
           <PrismPanel padding="p-4">
-            <h2 className="section-header flex items-center gap-2"><Key size={13} className="text-gold" /> Login History</h2>
+            <h2 className="section-header flex items-center gap-2"><Key size={13} className="text-[#2563EB]" /> Login History</h2>
             {logs.filter(l => l.type === "login").length === 0 ? (
               <div className="text-center py-8"><Key size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No login history yet</p></div>
             ) : (

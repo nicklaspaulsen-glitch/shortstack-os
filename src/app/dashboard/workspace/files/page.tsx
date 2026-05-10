@@ -414,7 +414,7 @@ export default function WorkspaceFilesPage() {
 
       {/* New-folder inline prompt */}
       {creatingFolder && (
-        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-slate-950/50 p-3">
+        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-black/[0.06] bg-black/[0.04] p-3">
           <input
             value={newFolderName}
             onChange={(e) => setNewFolderName(e.target.value)}
@@ -423,12 +423,12 @@ export default function WorkspaceFilesPage() {
             }}
             placeholder="Folder name"
             autoFocus
-            className="flex-1 min-w-[180px] rounded-md bg-slate-900 border border-white/10 text-white text-sm px-3 py-1.5 outline-none focus:border-cyan-400/60"
+            className="flex-1 min-w-[180px] rounded-md bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm px-3 py-1.5 outline-none focus:border-[rgba(37,99,235,0.6)]"
           />
           <select
             value={newFolderPermission}
             onChange={(e) => setNewFolderPermission(e.target.value as Folder["permission"])}
-            className="rounded-md bg-slate-900 border border-white/10 text-white text-sm px-2 py-1.5"
+            className="rounded-md bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm px-2 py-1.5"
           >
             <option value="owner_only">Owner only</option>
             <option value="team_read">Team can view</option>
@@ -448,7 +448,7 @@ export default function WorkspaceFilesPage() {
               setCreatingFolder(false);
               setNewFolderName("");
             }}
-            className="rounded-md text-white/60 hover:text-white text-sm px-2 py-1.5"
+            className="rounded-md text-[#6B7280] hover:text-[#111827] text-sm px-2 py-1.5"
           >
             Cancel
           </button>
@@ -458,12 +458,12 @@ export default function WorkspaceFilesPage() {
       {/* 2-column body */}
       <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-6">
         {/* LEFT — folder tree */}
-        <aside className="rounded-xl border border-white/10 bg-slate-950/40 p-2 h-fit">
-          <h3 className="text-[11px] uppercase tracking-wide text-white/40 px-2 pt-2 pb-1.5">
+        <aside className="rounded-xl border border-black/[0.06] bg-white p-2 h-fit">
+          <h3 className="text-[11px] uppercase tracking-wide text-[#9CA3AF] px-2 pt-2 pb-1.5">
             Folders
           </h3>
           {loading && rootFolders.length === 0 ? (
-            <div className="px-2 py-4 text-white/40 text-sm">Loading…</div>
+            <div className="px-2 py-4 text-[#9CA3AF] text-sm">Loading…</div>
           ) : (
             <ul className="space-y-0.5">
               {rootFolders.map((f) => (
@@ -487,15 +487,15 @@ export default function WorkspaceFilesPage() {
           ref={dropRef}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
-          className="rounded-xl border border-white/10 bg-slate-950/40 p-4 min-h-[420px]"
+          className="rounded-xl border border-black/[0.06] bg-white p-4 min-h-[420px]"
         >
           {/* Breadcrumb */}
-          <nav className="flex flex-wrap items-center gap-1.5 text-sm text-white/60 mb-4">
-            <span className="text-white/40">Files</span>
+          <nav className="flex flex-wrap items-center gap-1.5 text-sm text-[#6B7280] mb-4">
+            <span className="text-[#9CA3AF]">Files</span>
             {breadcrumb.map((c, i) => (
               <span key={c.id} className="flex items-center gap-1.5">
-                <ChevronRight size={12} className="text-white/30" />
-                <span className={i === breadcrumb.length - 1 ? "text-white" : ""}>{c.name}</span>
+                <ChevronRight size={12} className="text-[#9CA3AF]" />
+                <span className={i === breadcrumb.length - 1 ? "text-[#111827]" : ""}>{c.name}</span>
               </span>
             ))}
           </nav>
@@ -508,12 +508,12 @@ export default function WorkspaceFilesPage() {
           )}
 
           {!activeFolderId ? (
-            <div className="flex flex-col items-center justify-center py-16 text-white/40">
+            <div className="flex flex-col items-center justify-center py-16 text-[#9CA3AF]">
               <FolderIcon size={32} />
               <p className="mt-3 text-sm">Select a folder to see its files</p>
             </div>
           ) : files.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-white/40">
+            <div className="flex flex-col items-center justify-center py-16 text-[#9CA3AF]">
               <FilePlus size={32} />
               <p className="mt-3 text-sm">No files yet — drop a file here or click Upload</p>
             </div>
@@ -538,7 +538,7 @@ export default function WorkspaceFilesPage() {
       {/* Context menu */}
       {contextMenu && (
         <div
-          className="fixed z-50 rounded-md border border-white/10 bg-slate-900 shadow-2xl py-1 text-sm"
+          className="fixed z-50 rounded-md border border-black/[0.06] bg-white shadow-2xl py-1 text-sm"
           style={{ top: contextMenu.y, left: contextMenu.x }}
         >
           {[
@@ -577,7 +577,7 @@ export default function WorkspaceFilesPage() {
                 closeContext();
               }}
               className={`flex items-center gap-2 px-3 py-1.5 w-full text-left ${
-                row.danger ? "text-red-400 hover:bg-red-500/10" : "text-white hover:bg-white/5"
+                row.danger ? "text-red-700 hover:bg-red-500/10" : "text-[#111827] hover:bg-black/[0.04]"
               }`}
             >
               {row.icon} {row.label}
@@ -613,7 +613,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
     <li>
       <div
         className={`flex items-center gap-1 rounded-md text-sm cursor-pointer ${
-          isActive ? "bg-cyan-400/15 text-cyan-200" : "text-white/80 hover:bg-white/5"
+          isActive ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-[#374151] hover:bg-black/[0.04]"
         }`}
         style={{ paddingLeft: 8 + depth * 12, paddingRight: 8 }}
       >
@@ -621,7 +621,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
           type="button"
           aria-label={isOpen ? "Collapse" : "Expand"}
           onClick={() => void onToggle(folder.id)}
-          className="p-1 text-white/50 hover:text-white"
+          className="p-1 text-[#6B7280] hover:text-[#111827]"
         >
           {isOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
         </button>
@@ -631,9 +631,9 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
           className="flex items-center gap-1.5 py-1.5 flex-1 text-left truncate"
           title={`${folder.name} — ${PERMISSION_LABEL[folder.permission]}`}
         >
-          <FolderIcon size={14} className={isActive ? "text-cyan-300" : "text-white/50"} />
+          <FolderIcon size={14} className={isActive ? "text-[#2563EB]" : "text-[#6B7280]"} />
           <span className="truncate">{folder.name}</span>
-          {folder.is_system && <Lock size={9} className="text-white/30 shrink-0" />}
+          {folder.is_system && <Lock size={9} className="text-[#9CA3AF] shrink-0" />}
         </button>
       </div>
       {isOpen && kids.length > 0 && (
@@ -673,9 +673,9 @@ function FileCard(props: FileCardProps) {
       type="button"
       onContextMenu={(e) => onContextMenu(e, file)}
       onDoubleClick={() => onDoubleClick(file)}
-      className="group flex flex-col text-left rounded-lg border border-white/10 bg-slate-900/60 hover:bg-slate-800/60 hover:border-cyan-400/30 transition overflow-hidden"
+      className="group flex flex-col text-left rounded-lg border border-black/[0.06] bg-white hover:bg-[#F8FAFC] hover:border-[rgba(37,99,235,0.3)] transition overflow-hidden"
     >
-      <div className="aspect-square w-full bg-slate-950 flex items-center justify-center text-white/40 overflow-hidden">
+      <div className="aspect-square w-full bg-[#F8FAFC] flex items-center justify-center text-[#9CA3AF] overflow-hidden">
         {isImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -685,16 +685,16 @@ function FileCard(props: FileCardProps) {
             loading="lazy"
           />
         ) : (
-          <div className="text-cyan-300/60">{fileIconFor(file.mime_type)}</div>
+          <div className="text-[#2563EB]/60">{fileIconFor(file.mime_type)}</div>
         )}
       </div>
       <div className="px-2 py-1.5">
-        <div className="text-xs text-white truncate" title={file.name}>
+        <div className="text-xs text-[#111827] truncate" title={file.name}>
           {file.name}
         </div>
-        <div className="text-[10px] text-white/40 mt-0.5 flex items-center justify-between">
+        <div className="text-[10px] text-[#9CA3AF] mt-0.5 flex items-center justify-between">
           <span>{formatBytes(file.size_bytes)}</span>
-          {file.status !== "ready" && <span className="text-amber-400">{file.status}</span>}
+          {file.status !== "ready" && <span className="text-amber-700">{file.status}</span>}
         </div>
       </div>
     </button>

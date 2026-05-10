@@ -138,7 +138,7 @@ function SignalBreakdownPills({
       {entries.map((e) => (
         <span
           key={e.k}
-          className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 border border-border text-muted"
+          className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] border border-border text-muted"
         >
           <span className="text-foreground font-semibold">{e.v}</span>{" "}
           <span className="opacity-60">{e.k}</span>
@@ -241,7 +241,7 @@ function ScoreDetailModal({
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Target size={14} className="text-gold" />
+              <Target size={14} className="text-[#2563EB]" />
               Score detail · {lead.business_name}
             </h2>
             <p className="text-[10px] text-muted">
@@ -252,7 +252,7 @@ function ScoreDetailModal({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"
+            className="p-1 rounded hover:bg-[rgba(0,0,0,0.04)] text-muted hover:text-foreground"
             aria-label="Close score detail"
           >
             <X size={14} />
@@ -269,7 +269,7 @@ function ScoreDetailModal({
           <button
             onClick={handleRecompute}
             disabled={recomputing}
-            className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/15 text-gold hover:bg-gold/25 transition-all flex items-center gap-1.5 disabled:opacity-50"
+            className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.12)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-50"
           >
             {recomputing ? (
               <Loader size={11} className="animate-spin" />
@@ -304,7 +304,7 @@ function ScoreDetailModal({
           </h3>
           {historyLoading ? (
             <div className="flex justify-center py-8">
-              <Loader size={16} className="animate-spin text-gold" />
+              <Loader size={16} className="animate-spin text-[#2563EB]" />
             </div>
           ) : history.length === 0 ? (
             <p className="text-[10px] text-muted italic">
@@ -566,7 +566,7 @@ export default function LeadScoringPage() {
 
       <CollapsibleStats
         storageKey="lead-scoring"
-        icon={<Target size={14} className="text-gold" />}
+        icon={<Target size={14} className="text-[#2563EB]" />}
         title="Grade Mix"
         summary={
           <>
@@ -585,7 +585,7 @@ export default function LeadScoringPage() {
             </span>
             <span className="opacity-30">·</span>
             <span>
-              <span className="text-blue-400 font-semibold">
+              <span className="text-[#2563EB] font-semibold">
                 {counts.cold}
               </span>{" "}
               cold
@@ -618,7 +618,7 @@ export default function LeadScoringPage() {
               label: "Cold",
               value: counts.cold,
               icon: <Snowflake size={12} />,
-              color: "text-blue-400",
+              color: "text-[#2563EB]",
             },
             {
               label: "Customer",
@@ -629,7 +629,7 @@ export default function LeadScoringPage() {
           ].map((stat, i) => (
             <div key={i} className="card text-center p-3">
               <div
-                className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}
+                className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}
               >
                 {stat.icon}
               </div>
@@ -657,8 +657,8 @@ export default function LeadScoringPage() {
               onClick={() => setGradeFilter(p.key)}
               className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
                 gradeFilter === p.key
-                  ? "bg-gold/20 border-gold/40 text-gold"
-                  : "border-border text-muted hover:border-gold/20 hover:text-foreground"
+                  ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
+                  : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
               }`}
             >
               {p.label}
@@ -668,8 +668,8 @@ export default function LeadScoringPage() {
             onClick={() => setSortByScore((v) => !v)}
             className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
               sortByScore
-                ? "bg-gold/10 border-gold/30 text-gold"
-                : "border-border text-muted hover:border-gold/20 hover:text-foreground"
+                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
             }`}
           >
             <Target size={11} /> Sort by score
@@ -682,7 +682,7 @@ export default function LeadScoringPage() {
           <button
             onClick={handleBulkRecompute}
             disabled={selected.size === 0 || bulkRunning}
-            className="text-xs px-3 py-1.5 rounded-lg bg-gold/15 border border-gold/30 text-gold hover:bg-gold/25 transition-all flex items-center gap-1.5 disabled:opacity-40"
+            className="text-xs px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-40"
           >
             {bulkRunning ? (
               <Loader size={11} className="animate-spin" />
@@ -716,7 +716,7 @@ export default function LeadScoringPage() {
         </div>
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader size={20} className="animate-spin text-gold" />
+            <Loader size={20} className="animate-spin text-[#2563EB]" />
           </div>
         ) : leads.length === 0 ? (
           <EmptyState
@@ -733,7 +733,7 @@ export default function LeadScoringPage() {
               <div
                 key={lead.id}
                 onClick={() => setDetailLead(lead)}
-                className="grid grid-cols-12 items-center py-2 px-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer text-[10px]"
+                className="grid grid-cols-12 items-center py-2 px-3 rounded-lg bg-surface-light border border-border hover:border-[rgba(37,99,235,0.1)] transition-all cursor-pointer text-[10px]"
               >
                 <div
                   className="col-span-1"
@@ -791,7 +791,7 @@ export default function LeadScoringPage() {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="p-1.5 rounded-lg border border-border hover:border-gold/20 disabled:opacity-30 transition-all"
+              className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all"
               aria-label="Previous page"
             >
               <ChevronLeft size={14} />
@@ -804,7 +804,7 @@ export default function LeadScoringPage() {
                 setPage((p) => Math.min(totalPages, p + 1))
               }
               disabled={page >= totalPages}
-              className="p-1.5 rounded-lg border border-border hover:border-gold/20 disabled:opacity-30 transition-all"
+              className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all"
               aria-label="Next page"
             >
               <ChevronRight size={14} />

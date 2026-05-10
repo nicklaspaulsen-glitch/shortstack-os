@@ -183,7 +183,7 @@ export default function CrmLinkPanel({
             {linkedLead ? (
               <div className="flex items-center justify-between p-2 rounded-md bg-white/[0.04]">
                 <div className="flex items-center gap-1.5 text-[11px] truncate">
-                  <User size={10} className="text-gold flex-shrink-0" />
+                  <User size={10} className="text-[#2563EB] flex-shrink-0" />
                   <span className="truncate">
                     {linkedLead.business_name || linkedLead.owner_name || "Unnamed"}
                   </span>
@@ -204,7 +204,7 @@ export default function CrmLinkPanel({
             {linkedDeal ? (
               <div className="flex items-center justify-between p-2 rounded-md bg-white/[0.04]">
                 <div className="flex items-center gap-1.5 text-[11px] truncate">
-                  <Briefcase size={10} className="text-gold flex-shrink-0" />
+                  <Briefcase size={10} className="text-[#2563EB] flex-shrink-0" />
                   <span className="truncate">
                     {linkedDeal.title || linkedDeal.client_name || "Unnamed"}
                   </span>

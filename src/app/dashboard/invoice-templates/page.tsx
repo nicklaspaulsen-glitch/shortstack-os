@@ -40,31 +40,31 @@ function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClos
   const total = subtotal + taxAmt;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.97, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="glass  w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="bg-white rounded-2xl border border-[rgba(0,0,0,0.08)] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
       >
         {/* Invoice header */}
-        <div className="p-8 border-b border-white/5">
+        <div className="p-8 border-b border-[rgba(0,0,0,0.06)]">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-2xl font-bold text-white">INVOICE</p>
-              <p className="text-muted text-sm mt-1">Template: {template.name}</p>
+              <p className="text-2xl font-bold text-[#111827]">INVOICE</p>
+              <p className="text-[#6B7280] text-sm mt-1">Template: {template.name}</p>
             </div>
-            <button onClick={onClose} className="p-2 rounded-lg hover:bg-white/10 text-muted"><X size={18} /></button>
+            <button onClick={onClose} className="p-2 rounded-lg hover:bg-[rgba(0,0,0,0.04)] text-[#6B7280]"><X size={18} /></button>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="text-muted text-xs uppercase tracking-wider mb-1">Bill To</p>
-              <p className="text-white">Client Name</p>
-              <p className="text-muted">client@example.com</p>
+              <p className="text-[#6B7280] text-xs uppercase tracking-wider mb-1">Bill To</p>
+              <p className="text-[#111827]">Client Name</p>
+              <p className="text-[#6B7280]">client@example.com</p>
             </div>
             <div className="text-right">
-              <p className="text-muted text-xs uppercase tracking-wider mb-1">Invoice Details</p>
-              <p className="text-white">#{new Date().getFullYear()}-001</p>
-              <p className="text-muted">Issued: {new Date().toLocaleDateString()}</p>
+              <p className="text-[#6B7280] text-xs uppercase tracking-wider mb-1">Invoice Details</p>
+              <p className="text-[#111827]">#{new Date().getFullYear()}-001</p>
+              <p className="text-[#6B7280]">Issued: {new Date().toLocaleDateString()}</p>
             </div>
           </div>
         </div>
@@ -73,43 +73,43 @@ function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClos
         <div className="p-8">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10 text-muted text-xs">
+              <tr className="border-b border-[rgba(0,0,0,0.08)] text-[#6B7280] text-xs">
                 <th className="text-left pb-2 font-medium">Description</th>
                 <th className="text-center pb-2 font-medium w-16">Qty</th>
                 <th className="text-right pb-2 font-medium w-24">Unit Price</th>
                 <th className="text-right pb-2 font-medium w-24">Amount</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[rgba(0,0,0,0.04)]">
               {template.line_items.map((item, i) => (
                 <tr key={i}>
-                  <td className="py-3 text-white">{item.description}</td>
-                  <td className="py-3 text-center text-muted">{item.qty}</td>
-                  <td className="py-3 text-right text-muted">{fmt(item.unit_price)}</td>
-                  <td className="py-3 text-right text-white font-medium">{fmt(item.qty * item.unit_price)}</td>
+                  <td className="py-3 text-[#111827]">{item.description}</td>
+                  <td className="py-3 text-center text-[#6B7280]">{item.qty}</td>
+                  <td className="py-3 text-right text-[#6B7280]">{fmt(item.unit_price)}</td>
+                  <td className="py-3 text-right text-[#111827] font-medium">{fmt(item.qty * item.unit_price)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
 
           {/* Totals */}
-          <div className="mt-6 border-t border-white/10 pt-4 space-y-2 text-sm">
-            <div className="flex justify-between text-muted">
+          <div className="mt-6 border-t border-[rgba(0,0,0,0.08)] pt-4 space-y-2 text-sm">
+            <div className="flex justify-between text-[#6B7280]">
               <span>Subtotal</span><span>{fmt(subtotal)}</span>
             </div>
             {(template.tax_rate ?? 0) > 0 && (
-              <div className="flex justify-between text-muted">
+              <div className="flex justify-between text-[#6B7280]">
                 <span>Tax ({template.tax_rate}%)</span><span>{fmt(taxAmt)}</span>
               </div>
             )}
-            <div className="flex justify-between text-white font-bold text-base pt-1 border-t border-white/10">
+            <div className="flex justify-between text-[#111827] font-bold text-base pt-1 border-t border-[rgba(0,0,0,0.08)]">
               <span>Total</span><span>{fmt(total)}</span>
             </div>
           </div>
 
           {template.notes && (
-            <div className="mt-6 p-4 glass-md rounded-xl text-sm text-muted">
-              <p className="text-xs uppercase tracking-wider text-muted mb-1">Notes</p>
+            <div className="mt-6 p-4 bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-xl text-sm text-[#6B7280]">
+              <p className="text-xs uppercase tracking-wider text-[#9CA3AF] mb-1">Notes</p>
               <p>{template.notes}</p>
             </div>
           )}
@@ -153,11 +153,11 @@ function LineItemsEditor({
           <input className="input w-24 text-sm h-8" placeholder="$0.00" type="number" min={0}
             value={item.unit_price} onChange={(e) => updateItem(i, { unit_price: parseFloat(e.target.value) || 0 })} />
           <button type="button" onClick={() => removeItem(i)} disabled={items.length === 1}
-            className="p-1.5 text-muted hover:text-red-400 disabled:opacity-30 mt-0.5"><X size={14} /></button>
+            className="p-1.5 text-muted hover:text-rose-700 disabled:opacity-30 mt-0.5"><X size={14} /></button>
         </div>
       ))}
       <button type="button" onClick={addItem}
-        className="text-xs text-muted hover:text-white flex items-center gap-1 pt-1">
+        className="text-xs text-muted hover:text-[#111827] flex items-center gap-1 pt-1">
         <Plus size={13} /> Add line item
       </button>
     </div>
@@ -272,9 +272,9 @@ export default function InvoiceTemplatesPage() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass rounded-xl p-5 space-y-4"
+          className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-5 space-y-4"
         >
-          <p className="font-semibold text-white text-sm">New Template</p>
+          <p className="font-semibold text-[#111827] text-sm">New Template</p>
           <div className="flex flex-wrap gap-3">
             <input className="input flex-1 min-w-[180px] text-sm" placeholder="Template name"
               value={createForm.name} onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })} autoFocus />
@@ -311,10 +311,10 @@ export default function InvoiceTemplatesPage() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center"
+          className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-12 flex flex-col items-center gap-4 text-center"
         >
           <ReceiptText size={40} className="text-muted opacity-30" />
-          <p className="text-white font-semibold">No invoice templates yet</p>
+          <p className="text-[#111827] font-semibold">No invoice templates yet</p>
           <p className="text-muted text-sm max-w-xs">Create reusable templates to spin up invoices in seconds.</p>
           <button onClick={() => setShowCreate(true)}
             className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
@@ -329,9 +329,9 @@ export default function InvoiceTemplatesPage() {
                 key={t.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="glass rounded-xl p-5 space-y-4"
+                className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-5 space-y-4"
               >
-                <p className="font-semibold text-white text-sm">Edit Template</p>
+                <p className="font-semibold text-[#111827] text-sm">Edit Template</p>
                 <div className="flex flex-wrap gap-3">
                   <input className="input flex-1 min-w-[180px] text-sm" placeholder="Template name"
                     value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} autoFocus />
@@ -369,19 +369,19 @@ export default function InvoiceTemplatesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.04 }}
                 whileHover={{ y: -2, scale: 1.005 }}
-                className="glass rounded-xl p-4 flex items-center gap-4 group"
+                className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-4 flex items-center gap-4 group relative overflow-hidden"
               >
                 <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0", position: "absolute", left: 0, right: 0, top: 0 }} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="text-white font-medium truncate">{t.name}</p>
+                    <p className="text-[#111827] font-medium truncate">{t.name}</p>
                     {t.is_default && (
-                      <span className="flex items-center gap-1 text-[10px] bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 px-1.5 py-0.5 rounded-full shrink-0">
+                      <span className="flex items-center gap-1 text-[10px] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] px-1.5 py-0.5 rounded-full shrink-0">
                         <Star size={9} /> Default
                       </span>
                     )}
                   </div>
-                  <p className="text-muted text-xs mt-0.5">
+                  <p className="text-[#6B7280] text-xs mt-0.5">
                     {t.line_items.length} line item{t.line_items.length !== 1 ? "s" : ""} ·{" "}
                     Total: {fmt(calcSubtotal(t.line_items) * (1 + (t.tax_rate ?? 0) / 100))}
                     {t.tax_rate ? ` (incl. ${t.tax_rate}% tax)` : ""}
@@ -389,15 +389,15 @@ export default function InvoiceTemplatesPage() {
                 </div>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                   <button onClick={() => setPreview(t)}
-                    className="p-1.5 rounded hover:bg-white/10 text-muted hover:text-white" title="Preview">
+                    className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#111827]" title="Preview">
                     <Eye size={14} />
                   </button>
                   <button onClick={() => { setEditId(t.id); setEditForm(templateToForm(t)); }}
-                    className="p-1.5 rounded hover:bg-white/10 text-muted hover:text-white" title="Edit">
+                    className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#111827]" title="Edit">
                     <Pencil size={14} />
                   </button>
                   <button onClick={() => handleDelete(t.id)} disabled={deleting === t.id}
-                    className="p-1.5 rounded hover:bg-red-500/20 text-muted hover:text-red-400" title="Delete">
+                    className="p-1.5 rounded hover:bg-rose-50 text-muted hover:text-rose-700" title="Delete">
                     {deleting === t.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                   </button>
                 </div>

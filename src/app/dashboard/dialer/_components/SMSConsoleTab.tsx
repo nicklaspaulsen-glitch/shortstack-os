@@ -263,31 +263,31 @@ export default function SMSConsoleTab() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Compose pane */}
         <section className="lg:col-span-2">
-          <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+          <div className="rounded-xl border border-black/[0.06] bg-white p-5">
             {mode === "single" ? (
               <>
-                <h3 className="text-sm font-semibold text-white">Single SMS</h3>
+                <h3 className="text-sm font-semibold text-[#111827]">Single SMS</h3>
                 <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <input
                     type="tel"
                     value={singleTo}
                     onChange={(e) => setSingleTo(e.target.value)}
                     placeholder="+1 555 123 4567"
-                    className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-orange-400/50 focus:outline-none"
+                    className="rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
                   />
                   <input
                     type="text"
                     value={singleName}
                     onChange={(e) => setSingleName(e.target.value)}
                     placeholder="Recipient name (optional)"
-                    className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-orange-400/50 focus:outline-none"
+                    className="rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
                   />
                 </div>
               </>
             ) : (
               <>
-                <h3 className="text-sm font-semibold text-white">Bulk SMS</h3>
-                <p className="mt-1 text-xs text-white/50">
+                <h3 className="text-sm font-semibold text-[#111827]">Bulk SMS</h3>
+                <p className="mt-1 text-xs text-[#6B7280]">
                   Throttle is enforced server-side (min 100ms). Max {MAX_BULK} recipients per send.
                 </p>
                 <textarea
@@ -295,33 +295,33 @@ export default function SMSConsoleTab() {
                   onChange={(e) => setBulkPaste(e.target.value)}
                   placeholder="One per line: phone, first_name, company"
                   rows={4}
-                  className="mt-3 w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-orange-400/50 focus:outline-none"
+                  className="mt-3 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
                 />
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={parseBulk}
                     disabled={!bulkPaste.trim()}
-                    className="flex items-center gap-2 rounded-lg bg-orange-500/90 px-3 py-1.5 text-xs font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-white/5 disabled:text-white/40"
+                    className="flex items-center gap-2 rounded-lg bg-orange-500/90 px-3 py-1.5 text-xs font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-[#9CA3AF]"
                   >
                     <Plus size={12} /> Add {bulkPaste.split(/\r?\n/).filter(Boolean).length} recipient(s)
                   </button>
                   {bulkRecipients.length > 0 && (
-                    <span className="text-xs text-white/50">
-                      Loaded: <span className="text-white">{bulkRecipients.length}</span>
+                    <span className="text-xs text-[#6B7280]">
+                      Loaded: <span className="text-[#111827]">{bulkRecipients.length}</span>
                     </span>
                   )}
                   {bulkRecipients.length > 0 && (
                     <button
                       type="button"
                       onClick={() => setBulkRecipients([])}
-                      className="ml-auto flex items-center gap-1 text-xs text-white/60 hover:text-white"
+                      className="ml-auto flex items-center gap-1 text-xs text-[#6B7280] hover:text-[#111827]"
                     >
                       <Trash2 size={12} /> Clear
                     </button>
                   )}
                 </div>
-                <label className="mt-3 flex items-center gap-2 text-xs text-white/60">
+                <label className="mt-3 flex items-center gap-2 text-xs text-[#6B7280]">
                   <Zap size={12} /> Throttle (ms between sends):
                   <input
                     type="number"
@@ -329,7 +329,7 @@ export default function SMSConsoleTab() {
                     min={100}
                     step={100}
                     onChange={(e) => setThrottleMs(Math.max(100, Number(e.target.value) || 1000))}
-                    className="w-24 rounded-md border border-white/10 bg-black/20 px-2 py-1 font-mono text-white"
+                    className="w-24 rounded-md border border-black/[0.08] bg-[#F8FAFC] px-2 py-1 font-mono text-[#111827]"
                   />
                 </label>
               </>
@@ -337,7 +337,7 @@ export default function SMSConsoleTab() {
 
             <div className="mt-4">
               <div className="mb-2 flex items-center justify-between">
-                <label className="text-xs uppercase tracking-wider text-white/40">
+                <label className="text-xs uppercase tracking-wider text-[#9CA3AF]">
                   {mode === "single" ? "Message" : "Template"}
                 </label>
                 <div className="flex items-center gap-1">
@@ -367,9 +367,9 @@ export default function SMSConsoleTab() {
                     : "Use {{first_name}} and {{company}} for personalisation."
                 }
                 rows={6}
-                className="w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-orange-400/50 focus:outline-none"
+                className="w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
               />
-              <div className="mt-1 flex items-center justify-between text-xs text-white/40">
+              <div className="mt-1 flex items-center justify-between text-xs text-[#9CA3AF]">
                 <span>{body.length} chars</span>
                 <span>
                   {body.length <= 160 ? "1 segment" : `${Math.ceil(body.length / 153)} segments`}
@@ -384,7 +384,7 @@ export default function SMSConsoleTab() {
                       type="checkbox"
                       checked={voiceMode}
                       onChange={(e) => setVoiceMode(e.target.checked)}
-                      className="h-3 w-3 rounded border border-white/20 bg-black/30 text-amber-500 focus:ring-amber-400"
+                      className="h-3 w-3 rounded border border-black/[0.08] bg-[#F8FAFC] text-amber-500 focus:ring-amber-400"
                     />
                     <Mic size={12} />
                     Send as voice MMS (carrier-dependent)
@@ -413,7 +413,7 @@ export default function SMSConsoleTab() {
                 type="button"
                 onClick={polishBody}
                 disabled={!body.trim() || polishing}
-                className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm font-medium text-white hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg border border-black/[0.06] bg-[rgba(0,0,0,0.06)] px-3 py-2 text-sm font-medium text-[#111827] hover:bg-[rgba(0,0,0,0.10)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {polishing ? (
                   <Loader2 size={14} className="animate-spin" />
@@ -430,7 +430,7 @@ export default function SMSConsoleTab() {
                   !body.trim() ||
                   (mode === "single" ? !singleTo.trim() : bulkRecipients.length === 0)
                 }
-                className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-white/5 disabled:text-white/40"
+                className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-[#9CA3AF]"
               >
                 {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 {mode === "single" ? "Send SMS" : `Send to ${bulkRecipients.length}`}
@@ -454,31 +454,31 @@ export default function SMSConsoleTab() {
 
         {/* Templates pane */}
         <section className="lg:col-span-1">
-          <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+          <div className="rounded-xl border border-black/[0.06] bg-white p-5">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-white">Templates</h3>
+              <h3 className="text-sm font-semibold text-[#111827]">Templates</h3>
               <button
                 type="button"
                 onClick={loadTemplates}
-                className="text-xs text-white/60 hover:text-white"
+                className="text-xs text-[#6B7280] hover:text-[#111827]"
               >
                 Refresh
               </button>
             </div>
             {templateLoading && (
-              <div className="flex items-center gap-2 text-xs text-white/60">
+              <div className="flex items-center gap-2 text-xs text-[#6B7280]">
                 <Loader2 size={12} className="animate-spin" /> Loading...
               </div>
             )}
             {templateError && (
-              <div className="text-xs text-rose-300">{templateError}</div>
+              <div className="text-xs text-rose-600">{templateError}</div>
             )}
             {!templateLoading && templates.length === 0 && !templateError && (
-              <div className="text-xs text-white/50">
+              <div className="text-xs text-[#6B7280]">
                 No templates yet. Create them on{" "}
                 <a
                   href="/dashboard/sms-templates"
-                  className="text-orange-300 hover:underline"
+                  className="text-orange-500 hover:underline"
                 >
                   /dashboard/sms-templates
                 </a>
@@ -491,10 +491,10 @@ export default function SMSConsoleTab() {
                   <button
                     type="button"
                     onClick={() => applyTemplate(tpl)}
-                    className="w-full rounded-lg border border-white/10 bg-black/10 p-2 text-left text-xs hover:border-orange-400/40 hover:bg-orange-500/5"
+                    className="w-full rounded-lg border border-black/[0.06] bg-black/[0.04] p-2 text-left text-xs hover:border-orange-400/40 hover:bg-orange-500/5"
                   >
-                    <div className="text-sm font-medium text-white">{tpl.name}</div>
-                    <div className="mt-1 line-clamp-2 text-white/60">{tpl.body}</div>
+                    <div className="text-sm font-medium text-[#111827]">{tpl.name}</div>
+                    <div className="mt-1 line-clamp-2 text-[#6B7280]">{tpl.body}</div>
                   </button>
                 </li>
               ))}
@@ -514,14 +514,14 @@ function ModeToggle({
   setMode: (m: Mode) => void;
 }) {
   return (
-    <div className="inline-flex rounded-lg border border-white/10 bg-white/5 p-1">
+    <div className="inline-flex rounded-lg border border-black/[0.06] bg-black/[0.04] p-1">
       <button
         type="button"
         onClick={() => setMode("single")}
         className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
           mode === "single"
-            ? "bg-white/15 text-white"
-            : "text-white/60 hover:text-white"
+            ? "bg-white text-[#111827] shadow-sm"
+            : "text-[#6B7280] hover:text-[#111827]"
         }`}
       >
         Single
@@ -531,8 +531,8 @@ function ModeToggle({
         onClick={() => setMode("bulk")}
         className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
           mode === "bulk"
-            ? "bg-white/15 text-white"
-            : "text-white/60 hover:text-white"
+            ? "bg-white text-[#111827] shadow-sm"
+            : "text-[#6B7280] hover:text-[#111827]"
         }`}
       >
         Bulk
@@ -552,7 +552,7 @@ function PersonalizeButton({
     <button
       type="button"
       onClick={onClick}
-      className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[10px] text-white/70 hover:border-orange-400/40 hover:text-white"
+      className="rounded-md border border-black/[0.06] bg-black/[0.04] px-2 py-0.5 font-mono text-[10px] text-[#374151] hover:border-orange-400/40 hover:text-[#111827]"
     >
       {children}
     </button>

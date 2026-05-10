@@ -51,19 +51,19 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 const ACCENT_RING: Record<string, string> = {
-  blue: "from-blue-500/20 via-blue-400/10 to-transparent border-blue-400/30 hover:border-blue-400/60",
-  purple: "from-purple-500/20 via-purple-400/10 to-transparent border-purple-400/30 hover:border-purple-400/60",
+  blue: "from-[rgba(37,99,235,0.12)] via-[rgba(37,99,235,0.06)] to-transparent border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.50)]",
+  purple: "from-[rgba(37,99,235,0.12)] via-[rgba(37,99,235,0.06)] to-transparent border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.50)]",
   sunset: "from-orange-500/20 via-rose-400/10 to-transparent border-orange-400/30 hover:border-orange-400/60",
-  gold: "from-amber-500/20 via-yellow-400/10 to-transparent border-amber-400/30 hover:border-amber-400/60",
+  gold: "from-[rgba(37,99,235,0.12)] via-[rgba(37,99,235,0.06)] to-transparent border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.50)]",
   green: "from-emerald-500/20 via-emerald-400/10 to-transparent border-emerald-400/30 hover:border-emerald-400/60",
   ocean: "from-cyan-500/20 via-cyan-400/10 to-transparent border-cyan-400/30 hover:border-cyan-400/60",
 };
 
 const ACCENT_ICON_BG: Record<string, string> = {
-  blue: "bg-blue-500/15 text-blue-300",
-  purple: "bg-purple-500/15 text-purple-300",
+  blue: "bg-[rgba(37,99,235,0.10)] text-[#2563EB]",
+  purple: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
   sunset: "bg-orange-500/15 text-orange-300",
-  gold: "bg-amber-500/15 text-amber-300",
+  gold: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
   green: "bg-emerald-500/15 text-emerald-300",
   ocean: "bg-cyan-500/15 text-cyan-300",
 };
@@ -141,7 +141,7 @@ export default function VerticalsIndexPage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className=" bg-black/5 h-72 animate-pulse" />
+              <div key={i} className=" bg-[rgba(0,0,0,0.04)] h-72 animate-pulse" />
             ))}
           </div>
         ) : verticals.length === 0 ? (
@@ -171,7 +171,7 @@ export default function VerticalsIndexPage() {
                   } p-6 transition-shadow`}
                 >
                   {isApplied && (
-                    <div className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 px-2.5 py-1 text-xs text-emerald-300">
+                    <div className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 px-2.5 py-1 text-xs text-emerald-600">
                       <Check size={11} />
                       Applied
                     </div>

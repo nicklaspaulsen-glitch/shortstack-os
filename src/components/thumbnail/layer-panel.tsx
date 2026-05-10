@@ -247,7 +247,7 @@ export function LayerPanel({
         className="flex items-center justify-between gap-2 w-full text-left"
       >
         <div className="flex items-center gap-2">
-          <LayersIcon size={14} className="text-gold" />
+          <LayersIcon size={14} className="text-[#2563EB]" />
           <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
             Layers
           </span>
@@ -290,7 +290,7 @@ export function LayerPanel({
                   }}
                   title={sw.name}
                   className={`aspect-video rounded border ${
-                    layers.background?.id === sw.id ? "border-gold ring-1 ring-gold/40" : "border-border hover:border-white/30"
+                    layers.background?.id === sw.id ? "border-[#2563EB] ring-1 ring-[rgba(37,99,235,0.25)]" : "border-border hover:border-white/30"
                   }`}
                   style={{ background: `linear-gradient(135deg, ${sw.colors[0]}, ${sw.colors[1]})` }}
                 >
@@ -354,7 +354,7 @@ export function LayerPanel({
               <button
                 type="button"
                 onClick={addText}
-                className="text-[9px] text-gold hover:text-gold-light flex items-center gap-1"
+                className="text-[9px] text-[#2563EB] hover:text-[#3B82F6] flex items-center gap-1"
               >
                 <Plus size={10} /> Add text
               </button>
@@ -386,7 +386,7 @@ export function LayerPanel({
                       type="text"
                       value={t.text}
                       onChange={(e) => editText(t.id, { text: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-border bg-surface-light px-2 py-1 text-xs text-foreground focus:border-gold/40 focus:outline-none"
+                      className="mt-0.5 w-full rounded border border-border bg-surface-light px-2 py-1 text-xs text-foreground focus:border-[rgba(37,99,235,0.4)] focus:outline-none"
                     />
                   </label>
                   <label className="text-[9px] text-muted">
@@ -395,7 +395,7 @@ export function LayerPanel({
                       type="text"
                       value={t.fontFamily || "Inter"}
                       onChange={(e) => editText(t.id, { fontFamily: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-border bg-surface-light px-2 py-1 text-[11px] text-foreground focus:border-gold/40 focus:outline-none"
+                      className="mt-0.5 w-full rounded border border-border bg-surface-light px-2 py-1 text-[11px] text-foreground focus:border-[rgba(37,99,235,0.4)] focus:outline-none"
                     />
                   </label>
                   <NumberField
@@ -436,7 +436,7 @@ export function LayerPanel({
               const allOn = effects.every((e) => e.enabled);
               patch({ effects: effects.map((e) => ({ ...e, enabled: !allOn })) });
             }}
-            swatch={<span className="text-[9px] text-gold">{effects.filter((e) => e.enabled).length}/{effects.length}</span>}
+            swatch={<span className="text-[9px] text-[#2563EB]">{effects.filter((e) => e.enabled).length}/{effects.length}</span>}
             onEdit={() => setEditingId(editingId === "fx" ? null : "fx")}
             editing={editingId === "fx"}
           >
@@ -447,7 +447,7 @@ export function LayerPanel({
                     type="button"
                     onClick={() => toggleEffect(e.id)}
                     className={`h-4 w-7 rounded-full transition-all ${
-                      e.enabled ? "bg-gold" : "bg-surface-light"
+                      e.enabled ? "bg-[#2563EB]" : "bg-surface-light"
                     } relative`}
                     aria-label={`Toggle ${e.label}`}
                   >
@@ -465,7 +465,7 @@ export function LayerPanel({
                     value={e.intensity ?? 50}
                     disabled={!e.enabled}
                     onChange={(ev) => setEffectIntensity(e.id, Number(ev.target.value))}
-                    className="flex-1 h-1 accent-gold disabled:opacity-30"
+                    className="flex-1 h-1 accent-[#2563EB] disabled:opacity-30"
                   />
                   <span className="text-[9px] text-muted w-7 text-right font-mono">{e.intensity ?? 50}</span>
                 </div>
@@ -504,7 +504,7 @@ export function LayerPanel({
                   const s = styleOptions.find((x) => x.id === e.target.value);
                   if (s) patch({ style: { id: s.id, name: s.name } });
                 }}
-                className="w-full rounded border border-border bg-surface-light px-2 py-1 text-[11px] text-foreground focus:border-gold/40 focus:outline-none"
+                className="w-full rounded border border-border bg-surface-light px-2 py-1 text-[11px] text-foreground focus:border-[rgba(37,99,235,0.4)] focus:outline-none"
               >
                 <option value="">Select a style…</option>
                 {styleOptions.map((s) => (
@@ -541,7 +541,7 @@ export function LayerPanel({
               type="button"
               onClick={handleRegenerate}
               disabled={regenerating}
-              className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg bg-gold text-black text-[11px] font-semibold py-2 hover:bg-gold-light disabled:opacity-50 transition"
+              className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#2563EB] text-white text-[11px] font-semibold py-2 hover:bg-[#3B82F6] disabled:opacity-50 transition"
             >
               <RefreshCw size={12} className={regenerating ? "animate-spin" : ""} />
               {regenerating ? "Regenerating…" : "Regenerate with edits"}
@@ -572,7 +572,7 @@ function LayerRow({
   icon, name, description, visible, onToggleVisible, swatch, onEdit, editing, onDelete, children,
 }: LayerRowProps) {
   return (
-    <div className={`rounded-lg border ${editing ? "border-gold/40 bg-gold/5" : "border-border bg-surface/40"} transition-colors`}>
+    <div className={`rounded-lg border ${editing ? "border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]" : "border-border bg-surface/40"} transition-colors`}>
       <div className="flex items-center gap-2 px-2 py-1.5">
         {onToggleVisible ? (
           <button
@@ -586,7 +586,7 @@ function LayerRow({
         ) : (
           <span className="w-3 h-3" />
         )}
-        <span className="text-gold">{icon}</span>
+        <span className="text-[#2563EB]">{icon}</span>
         <div className="flex-1 min-w-0">
           <div className="text-[11px] font-medium text-foreground truncate">{name}</div>
           {description ? (
@@ -643,7 +643,7 @@ function NumberField({
         max={max}
         step={step}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-0.5 w-full rounded border border-border bg-surface-light px-2 py-1 text-[11px] text-foreground focus:border-gold/40 focus:outline-none"
+        className="mt-0.5 w-full rounded border border-border bg-surface-light px-2 py-1 text-[11px] text-foreground focus:border-[rgba(37,99,235,0.4)] focus:outline-none"
       />
     </label>
   );

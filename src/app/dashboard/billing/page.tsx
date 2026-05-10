@@ -227,7 +227,7 @@ export default function BillingPage() {
         eyebrow="Billing"
         title="Billing & Usage"
         subtitle="Manage your subscription, top up tokens, and download invoices."
-        gradient="gold"
+        gradient="blue"
         actions={
           <Link
             href="/dashboard/upgrade"
@@ -295,7 +295,7 @@ export default function BillingPage() {
             <button
               onClick={handleManageSubscription}
               disabled={portalLoading}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-gold/10 hover:text-gold transition-colors disabled:opacity-60"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-[#2563EB] transition-colors disabled:opacity-60"
             >
               {portalLoading ? <Loader2 size={12} className="animate-spin" /> : <ExternalLink size={12} />}
               Manage subscription
@@ -304,7 +304,7 @@ export default function BillingPage() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link
               href="/dashboard/upgrade"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gold text-white text-xs font-semibold hover:bg-gold/90 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-colors"
             >
               <ArrowUpRight size={12} />
               Upgrade
@@ -411,7 +411,7 @@ export default function BillingPage() {
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
-              <Sparkles size={14} className="text-gold" />
+              <Sparkles size={14} className="text-[#2563EB]" />
               Token top-up
             </h2>
             <p className="text-[11px] text-muted mt-0.5">
@@ -420,7 +420,7 @@ export default function BillingPage() {
           </div>
           <Link
             href="/dashboard/usage"
-            className="text-[11px] text-muted hover:text-gold transition-colors"
+            className="text-[11px] text-muted hover:text-[#2563EB] transition-colors"
           >
             View usage detail ?
           </Link>
@@ -443,7 +443,7 @@ export default function BillingPage() {
               >
                 <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 {pack.popular && (
-                  <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-gold text-white text-[9px] font-bold uppercase tracking-wider">
+                  <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-[#2563EB] text-white text-[9px] font-bold uppercase tracking-wider">
                     Best value
                   </div>
                 )}
@@ -460,8 +460,8 @@ export default function BillingPage() {
                   disabled={isLoading || topUpLoading !== null}
                   className={`w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors disabled:opacity-60 ${
                     pack.popular
-                      ? "bg-gold text-white hover:bg-gold/90 shadow-sm"
-                      : "bg-surface-light text-foreground border border-border hover:bg-gold/10 hover:text-gold"
+                      ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8] shadow-sm"
+                      : "bg-surface-light text-foreground border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-[#2563EB]"
                   }`}
                 >
                   {isLoading ? (
@@ -484,7 +484,7 @@ export default function BillingPage() {
           <button
             onClick={handleManageSubscription}
             disabled={portalLoading}
-            className="text-[11px] text-muted hover:text-gold transition-colors disabled:opacity-60"
+            className="text-[11px] text-muted hover:text-[#2563EB] transition-colors disabled:opacity-60"
           >
             View all in Stripe portal ?
           </button>
@@ -493,7 +493,7 @@ export default function BillingPage() {
         <PrismPanel padding="p-0" className="overflow-hidden">
           {invoicesLoading ? (
             <div className="p-8 text-center">
-              <Loader2 size={16} className="animate-spin text-gold mx-auto" />
+              <Loader2 size={16} className="animate-spin text-[#2563EB] mx-auto" />
               <p className="text-[11px] text-muted mt-2">Loading invoices�</p>
             </div>
           ) : invoices.length === 0 ? (
@@ -551,7 +551,7 @@ export default function BillingPage() {
                               href={inv.hosted_invoice_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-1 rounded text-muted hover:text-gold hover:bg-gold/10 transition-colors"
+                              className="p-1 rounded text-muted hover:text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-colors"
                               title="View invoice"
                             >
                               <ExternalLink size={12} />
@@ -562,7 +562,7 @@ export default function BillingPage() {
                               href={inv.invoice_pdf}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-1 rounded text-muted hover:text-gold hover:bg-gold/10 transition-colors"
+                              className="p-1 rounded text-muted hover:text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-colors"
                               title="Download PDF"
                             >
                               <Download size={12} />

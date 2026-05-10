@@ -44,10 +44,10 @@ function completeness(lead: Lead): number {
 function FieldRow({ label, a, b }: { label: string; a: string | null; b: string | null }) {
   const differs = (a ?? "") !== (b ?? "");
   return (
-    <div className={`grid grid-cols-[100px_1fr_1fr] gap-2 py-1.5 text-xs ${differs ? "text-white" : "text-muted"}`}>
+    <div className={`grid grid-cols-[100px_1fr_1fr] gap-2 py-1.5 text-xs ${differs ? "text-foreground" : "text-muted"}`}>
       <span className="text-muted/70 font-medium">{label}</span>
-      <span className={differs && a ? "text-white" : ""}>{a ?? "—"}</span>
-      <span className={differs && b ? "text-emerald-400" : ""}>{b ?? "—"}</span>
+      <span className={differs && a ? "text-foreground" : ""}>{a ?? "—"}</span>
+      <span className={differs && b ? "text-emerald-700" : ""}>{b ?? "—"}</span>
     </div>
   );
 }
@@ -166,9 +166,9 @@ export default function DedupPage() {
       {/* Summary */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { value: leads.length.toLocaleString(), label: "Leads scanned", color: "text-white" },
-          { value: pendingGroups.length, label: "Duplicate groups", color: pendingGroups.length > 0 ? "text-amber-400" : "text-emerald-400" },
-          { value: merged.size, label: "Merged this session", color: "text-emerald-400" },
+          { value: leads.length.toLocaleString(), label: "Leads scanned", color: "text-foreground" },
+          { value: pendingGroups.length, label: "Duplicate groups", color: pendingGroups.length > 0 ? "text-amber-700" : "text-emerald-700" },
+          { value: merged.size, label: "Merged this session", color: "text-emerald-700" },
         ].map((stat, i) => (
           <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
             <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
@@ -184,15 +184,15 @@ export default function DedupPage() {
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="glass rounded-xl p-5 animate-pulse">
-              <div className="h-4 bg-white/10 rounded w-1/3 mb-4" />
-              <div className="h-24 bg-white/5 rounded" />
+              <div className="h-4 bg-black/6 rounded w-1/3 mb-4" />
+              <div className="h-24 bg-black/4 rounded" />
             </div>
           ))}
         </div>
       ) : pendingGroups.length === 0 ? (
         <div className="glass rounded-xl p-12 text-center text-muted">
-          <CheckCircle className="w-12 h-12 mx-auto mb-4 text-emerald-400 opacity-50" />
-          <p className="font-semibold text-white/70 mb-1">
+          <CheckCircle className="w-12 h-12 mx-auto mb-4 text-emerald-600 opacity-50" />
+          <p className="font-semibold text-foreground/70 mb-1">
             {merged.size > 0 ? "All duplicates resolved!" : "No duplicates found"}
           </p>
           <p className="text-sm">
@@ -217,20 +217,20 @@ export default function DedupPage() {
             return (
               <motion.div key={group.key} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl overflow-hidden">
                 {/* Header */}
-                <div className="px-5 py-3 border-b border-white/5 flex items-center justify-between gap-3">
+                <div className="px-5 py-3 border-b border-black/6 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     {group.matchType === "phone"
                       ? <Phone className="w-4 h-4 text-blue-400" />
                       : <Building2 className="w-4 h-4 text-purple-400" />}
                     <span className="text-xs text-muted">
-                      Match by <span className="text-white">{group.matchType === "phone" ? "phone number" : "business name"}</span>
+                      Match by <span className="text-foreground font-medium">{group.matchType === "phone" ? "phone number" : "business name"}</span>
                     </span>
                     <span className="text-xs text-muted">— {group.leads.length} records</span>
                   </div>
                   <button
                     onClick={() => handleMerge(group)}
                     disabled={isMerging}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 text-xs font-medium border border-emerald-500/25 transition-colors disabled:opacity-50"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 text-xs font-medium border border-emerald-500/25 transition-colors disabled:opacity-50"
                   >
                     {isMerging ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
                     {isMerging ? "Merging…" : "Merge"}
@@ -239,13 +239,13 @@ export default function DedupPage() {
 
                 {/* Side-by-side diff */}
                 <div className="p-5">
-                  <div className="grid grid-cols-[100px_1fr_1fr] gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted/60 mb-2 pb-2 border-b border-white/5">
+                  <div className="grid grid-cols-[100px_1fr_1fr] gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted/60 mb-2 pb-2 border-b border-black/6">
                     <span>Field</span>
-                    <span className="text-white/40">Keep (most complete)</span>
-                    <span className="text-emerald-400/60">Merge from</span>
+                    <span className="text-foreground/40">Keep (most complete)</span>
+                    <span className="text-emerald-700/60">Merge from</span>
                   </div>
 
-                  <div className="divide-y divide-white/5">
+                  <div className="divide-y divide-black/4">
                     <FieldRow label="Business" a={winner.business_name} b={loser?.business_name ?? null} />
                     <FieldRow label="Owner" a={winner.owner_name} b={loser?.owner_name ?? null} />
                     <FieldRow label="Phone" a={winner.phone} b={loser?.phone ?? null} />

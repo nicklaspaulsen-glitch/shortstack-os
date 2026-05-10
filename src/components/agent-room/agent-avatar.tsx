@@ -168,7 +168,7 @@ export default function AgentAvatar({
           className={`relative w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-800/95 border border-white/15 backdrop-blur ring-2 ${
             s.ring
           } ${s.glow} flex items-center justify-center text-[22px] md:text-[26px] transition-all duration-200 group-hover:scale-110 ${
-            selected ? "ring-4 ring-offset-2 ring-offset-slate-950 ring-gold" : ""
+            selected ? "ring-4 ring-offset-2 ring-offset-slate-950 ring-[#2563EB]" : ""
           }`}
         >
           <span aria-hidden>{agent.emoji}</span>

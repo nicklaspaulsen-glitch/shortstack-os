@@ -151,16 +151,16 @@ const TYPE_ICON: Record<string, React.ReactNode> = {
   audio: <Music size={16} className="text-orange-400" />,
   document: <FileText size={16} className="text-green-400" />,
   template: <File size={16} className="text-pink-400" />,
-  brand: <Palette size={16} className="text-gold" />,
+  brand: <Palette size={16} className="text-[#2563EB]" />,
 };
 
 const TYPE_BG: Record<string, string> = {
-  image: "bg-blue-500/10",
-  video: "bg-purple-500/10",
+  image: "bg-[rgba(37,99,235,0.08)]",
+  video: "bg-[rgba(37,99,235,0.08)]",
   audio: "bg-orange-500/10",
   document: "bg-green-500/10",
   template: "bg-pink-500/10",
-  brand: "bg-gold/10",
+  brand: "bg-[rgba(37,99,235,0.08)]",
 };
 
 // -- Component --
@@ -447,7 +447,7 @@ export default function ContentLibraryPage() {
     return (
       <div className="fade-in flex items-center justify-center py-20">
         <div className="text-center">
-          <Loader size={24} className="animate-spin text-gold mx-auto mb-3" />
+          <Loader size={24} className="animate-spin text-[#2563EB] mx-auto mb-3" />
           <p className="text-sm text-muted">Loading content library...</p>
         </div>
       </div>
@@ -494,7 +494,7 @@ export default function ContentLibraryPage() {
           />
         </div>
         <div className="relative text-center px-4">
-          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+          <p className="text-[11px] uppercase tracking-widest text-[rgba(37,99,235,0.8)] font-semibold">
             Content library
           </p>
           <h3 className="text-lg font-bold text-foreground mt-1">
@@ -517,18 +517,18 @@ export default function ContentLibraryPage() {
         tabIndex={0}
         onKeyDown={e => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
         className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
-          dragging ? "border-gold bg-gold/5" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(0,0,0,0.15)]"
+          dragging ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(0,0,0,0.15)]"
         }`}
         style={!dragging ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" } : undefined}
       >
         {uploading ? (
           <div className="flex items-center justify-center gap-2">
-            <Loader size={18} className="animate-spin text-gold" />
+            <Loader size={18} className="animate-spin text-[#2563EB]" />
             <span className="text-sm text-muted">Uploading files...</span>
           </div>
         ) : (
           <>
-            <Upload size={24} className={`mx-auto mb-2 ${dragging ? "text-gold" : "text-muted"}`} />
+            <Upload size={24} className={`mx-auto mb-2 ${dragging ? "text-[#2563EB]" : "text-muted"}`} />
             <p className="text-xs text-muted">Drop files here or click to upload</p>
             <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV � up to 100 MB</p>
           </>
@@ -540,10 +540,10 @@ export default function ContentLibraryPage() {
         <PrismPanel padding="p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Layers size={16} className="text-gold" />
+              <Layers size={16} className="text-[#2563EB]" />
               <span className="text-sm font-semibold">Collections</span>
             </div>
-            <button onClick={() => setShowNewCollection(!showNewCollection)} className="text-xs text-gold hover:underline flex items-center gap-1">
+            <button onClick={() => setShowNewCollection(!showNewCollection)} className="text-xs text-[#2563EB] hover:underline flex items-center gap-1">
               <FolderPlus size={12} /> New
             </button>
           </div>
@@ -567,7 +567,7 @@ export default function ContentLibraryPage() {
                 <div
                   key={c.id}
                   className={`rounded-xl cursor-pointer hover:border-[rgba(0,0,0,0.15)] transition-all p-3 relative group ${
-                    collectionFilter === c.id ? "border border-gold/40 bg-gold/5" : ""
+                    collectionFilter === c.id ? "border border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]" : ""
                   }`}
                   style={collectionFilter !== c.id ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" } : undefined}
                   onClick={() => setCollectionFilter(collectionFilter === c.id ? "all" : c.id)}
@@ -599,7 +599,7 @@ export default function ContentLibraryPage() {
               key={c.key}
               onClick={() => setCategory(c.key)}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
-                category === c.key ? "bg-gold/20 text-gold border border-gold/30" : "bg-black/5 text-muted hover:text-[#0A0A0B] border border-black/10"
+                category === c.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "bg-black/5 text-muted hover:text-[#0A0A0B] border border-black/10"
               }`}
             >
               {c.icon} {c.label}
@@ -637,10 +637,10 @@ export default function ContentLibraryPage() {
 
         {/* View Toggle */}
         <div className="flex bg-black/5 rounded-lg p-0.5">
-          <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded ${viewMode === "grid" ? "bg-gold/20 text-gold" : "text-muted"}`}>
+          <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>
             <Grid size={14} />
           </button>
-          <button onClick={() => setViewMode("list")} className={`p-1.5 rounded ${viewMode === "list" ? "bg-gold/20 text-gold" : "text-muted"}`}>
+          <button onClick={() => setViewMode("list")} className={`p-1.5 rounded ${viewMode === "list" ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>
             <List size={14} />
           </button>
         </div>
@@ -696,7 +696,7 @@ export default function ContentLibraryPage() {
               transition={{ delay: i * 0.04, duration: 0.4 }}
               whileHover={{ y: -4, scale: 1.01 }}
               className={`rounded-xl p-3 group cursor-pointer transition-all hover:border-[rgba(0,0,0,0.15)] relative ${
-                selectedAssets.has(asset.id) ? "border border-gold/40 bg-gold/5" : ""
+                selectedAssets.has(asset.id) ? "border border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]" : ""
               }`}
               style={!selectedAssets.has(asset.id) ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" } : undefined}
             >
@@ -705,7 +705,7 @@ export default function ContentLibraryPage() {
                 onClick={e => { e.stopPropagation(); toggleSelect(asset.id); }}
                 className="absolute top-2 left-2 z-10 opacity-0 group-hover:opacity-100 transition-all"
               >
-                {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-gold" /> : <Square size={14} className="text-muted" />}
+                {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-[#2563EB]" /> : <Square size={14} className="text-muted" />}
               </button>
 
               {/* Star */}
@@ -713,7 +713,7 @@ export default function ContentLibraryPage() {
                 onClick={e => { e.stopPropagation(); toggleStar(asset.id); }}
                 className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-all"
               >
-                <Star size={14} className={asset.starred ? "fill-gold text-gold" : "text-muted"} />
+                <Star size={14} className={asset.starred ? "fill-[#2563EB] text-[#2563EB]" : "text-muted"} />
               </button>
 
               {/* Thumbnail */}
@@ -757,7 +757,7 @@ export default function ContentLibraryPage() {
               <tr className="border-b border-black/10">
                 <th className="text-left p-2 w-8">
                   <button onClick={selectAll}>
-                    {selectedAssets.size === filteredAssets.length ? <CheckSquare size={14} className="text-gold" /> : <Square size={14} className="text-muted" />}
+                    {selectedAssets.size === filteredAssets.length ? <CheckSquare size={14} className="text-[#2563EB]" /> : <Square size={14} className="text-muted" />}
                   </button>
                 </th>
                 <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Name</th>
@@ -775,12 +775,12 @@ export default function ContentLibraryPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.04 }}
                   className={`border-b border-black/5 hover:bg-black/5 transition-colors ${
-                    selectedAssets.has(asset.id) ? "bg-gold/5" : ""
+                    selectedAssets.has(asset.id) ? "bg-[rgba(37,99,235,0.05)]" : ""
                   }`}
                 >
                   <td className="p-2">
                     <button onClick={() => toggleSelect(asset.id)}>
-                      {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-gold" /> : <Square size={14} className="text-muted" />}
+                      {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-[#2563EB]" /> : <Square size={14} className="text-muted" />}
                     </button>
                   </td>
                   <td className="p-2">
@@ -821,8 +821,8 @@ export default function ContentLibraryPage() {
         {[
           { label: "Total Assets", value: assets.length, color: undefined },
           { label: "Images", value: assets.filter(a => a.type === "image").length, color: "text-blue-400" },
-          { label: "Videos", value: assets.filter(a => a.type === "video").length, color: "text-purple-400" },
-          { label: "Collections", value: collections.length, color: "text-gold" },
+          { label: "Videos", value: assets.filter(a => a.type === "video").length, color: "text-[#2563EB]" },
+          { label: "Collections", value: collections.length, color: "text-[#2563EB]" },
         ].map((tile, i) => (
           <motion.div
             key={tile.label}
@@ -898,7 +898,7 @@ export default function ContentLibraryPage() {
                 {editText === null ? (
                   <button
                     onClick={() => setEditText(previewAsset.name)}
-                    className="btn-ghost text-xs flex items-center gap-1 text-gold"
+                    className="btn-ghost text-xs flex items-center gap-1 text-[#2563EB]"
                   >
                     <Edit3 size={12} /> Edit content
                   </button>
@@ -908,7 +908,7 @@ export default function ContentLibraryPage() {
                       value={editText}
                       onChange={e => setEditText(e.target.value)}
                       rows={4}
-                      className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border text-xs text-foreground resize-y focus:outline-none focus:border-gold/50"
+                      className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border text-xs text-foreground resize-y focus:outline-none focus:border-[rgba(37,99,235,0.5)]"
                       autoFocus
                     />
                     <div className="flex gap-2">

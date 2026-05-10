@@ -21,7 +21,7 @@ interface AgentService {
 function StatusChip({ status }: { status: AgentService["status"] }) {
   const map: Record<string, { cls: string; label: string; icon: typeof CheckCircle }> = {
     healthy: { cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", label: "Healthy", icon: CheckCircle },
-    degraded: { cls: "bg-amber-500/15 text-amber-400 border-amber-500/30", label: "Degraded", icon: AlertTriangle },
+    degraded: { cls: "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border-[rgba(37,99,235,0.25)]", label: "Degraded", icon: AlertTriangle },
     down: { cls: "bg-red-500/15 text-red-400 border-red-500/30", label: "Down", icon: XCircle },
     unknown: { cls: "bg-slate-500/15 text-slate-400 border-slate-500/30", label: "Unknown", icon: Clock },
   };
@@ -105,7 +105,7 @@ export default function AgentDesktopPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: "Healthy", count: counts.healthy, cls: "text-emerald-400" },
-          { label: "Degraded", count: counts.degraded, cls: "text-amber-400" },
+          { label: "Degraded", count: counts.degraded, cls: "text-[#2563EB]" },
           { label: "Down", count: counts.down, cls: "text-red-400" },
           { label: "Unknown", count: counts.unknown, cls: "text-slate-400" },
         ].map(({ label, count, cls }, i) => (
@@ -124,8 +124,8 @@ export default function AgentDesktopPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="glass rounded-xl p-5 animate-pulse">
-              <div className="h-4 bg-white/10 rounded w-1/2 mb-3" />
-              <div className="h-3 bg-white/5 rounded w-1/3" />
+              <div className="h-4 bg-[rgba(0,0,0,0.06)] rounded w-1/2 mb-3" />
+              <div className="h-3 bg-[rgba(0,0,0,0.04)] rounded w-1/3" />
             </div>
           ))}
         </div>
@@ -147,7 +147,7 @@ export default function AgentDesktopPage() {
                   <span className="shrink-0 inline-flex">
                     {getPlatformIcon(agent.integration_name, 22)}
                   </span>
-                  <span className="font-semibold text-white text-sm truncate">{agent.integration_name}</span>
+                  <span className="font-semibold text-[#111827] text-sm truncate">{agent.integration_name}</span>
                 </div>
                 <StatusChip status={agent.status} />
               </div>
@@ -155,16 +155,16 @@ export default function AgentDesktopPage() {
               <div className="space-y-1 text-xs text-muted">
                 <div className="flex justify-between">
                   <span>Last heartbeat</span>
-                  <span className="text-white/70">{timeAgo(agent.last_check_at)}</span>
+                  <span className="text-[#6B7280]">{timeAgo(agent.last_check_at)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Last healthy</span>
-                  <span className="text-white/70">{timeAgo(agent.last_healthy_at)}</span>
+                  <span className="text-[#6B7280]">{timeAgo(agent.last_healthy_at)}</span>
                 </div>
                 {agent.response_time_ms != null && (
                   <div className="flex justify-between">
                     <span>Response time</span>
-                    <span className="text-white/70">{agent.response_time_ms}ms</span>
+                    <span className="text-[#6B7280]">{agent.response_time_ms}ms</span>
                   </div>
                 )}
               </div>
@@ -179,14 +179,14 @@ export default function AgentDesktopPage() {
                 <button
                   onClick={() => handleRestart(agent)}
                   disabled={restarting[agent.id]}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 text-xs font-medium border border-blue-500/25 transition-colors disabled:opacity-50"
+                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-xs font-medium border border-[rgba(37,99,235,0.25)] transition-colors disabled:opacity-50"
                 >
                   <RefreshCw className={`w-3 h-3 ${restarting[agent.id] ? "animate-spin" : ""}`} />
                   {restarting[agent.id] ? "Restarting…" : "Restart"}
                 </button>
                 <Link
                   href="/dashboard/monitor"
-                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 text-xs font-medium border border-white/10 transition-colors"
+                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] text-xs font-medium border border-[rgba(0,0,0,0.08)] transition-colors"
                 >
                   <Activity className="w-3 h-3" />
                   Logs

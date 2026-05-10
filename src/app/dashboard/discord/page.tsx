@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -212,7 +212,7 @@ export default function DiscordPage() {
         {[
           { icon: Zap, color: "text-green-400", bg: "bg-green-400/10", value: "Online", label: "Bot Status" },
           { icon: Server, color: "text-[#5865F2]", bg: "bg-[#5865F2]/10", value: "0", label: "Servers" },
-          { icon: Users, color: "text-gold", bg: "bg-gold/10", value: "0", label: "Total Members" },
+          { icon: Users, color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", value: "0", label: "Total Members" },
           { icon: Hash, color: "text-purple-400", bg: "bg-purple-500/10", value: "0", label: "Total Channels" },
         ].map((tile, i) => (
           <PrismPanel key={i} rainbow delay={i * 0.06} padding="p-3">
@@ -228,7 +228,7 @@ export default function DiscordPage() {
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-px">
         {tabs.map(t => (
           <button key={t} onClick={() => setActiveTab(t)}
-            className={`px-3 py-2 text-xs font-medium whitespace-nowrap border-b-2 transition-all ${activeTab === t ? "border-gold text-gold" : "border-transparent text-muted hover:text-foreground"}`}>
+            className={`px-3 py-2 text-xs font-medium whitespace-nowrap border-b-2 transition-all ${activeTab === t ? "border-[#2563EB] text-[#2563EB]" : "border-transparent text-muted hover:text-foreground"}`}>
             {t}
           </button>
         ))}
@@ -238,7 +238,7 @@ export default function DiscordPage() {
       {activeTab === "Install" && (
         <div className="space-y-5">
           {/* Hero / pitch */}
-          <div className="rounded-xl p-6" style={{ background: "linear-gradient(135deg, rgba(88,101,242,0.08), rgba(88,101,242,0.03), transparent)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+          <div className="rounded-xl p-6" style={{ background: "linear-gradient(135deg, rgba(88,101,242,0.08), rgba(88,101,242,0.03), transparent)", border: "1px solid rgba(0,0,0,0.08)" }}>
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#5865F2]/20 flex items-center justify-center shrink-0">
                 <Bot size={24} className="text-[#5865F2]" />
@@ -269,7 +269,7 @@ export default function DiscordPage() {
               {[
                 { icon: Bell, color: "text-[#5865F2]", title: "Real-time agency status in your team's Discord",
                   desc: "Never miss a client signup, booked call, outreach reply, or paid invoice � it pings the channel you pick, the second it happens." },
-                { icon: Terminal, color: "text-gold", title: "Slash commands anywhere",
+                { icon: Terminal, color: "text-[#2563EB]", title: "Slash commands anywhere",
                   desc: "Run /trinity-status, /trinity-check <client>, /trinity-lead add <business> from any channel. No dashboard switch." },
                 { icon: Sparkles, color: "text-purple-400", title: "AI-written weekly digest",
                   desc: "Every Monday at 9am, Trinity posts a plain-English summary of the past week's revenue, leads, and wins." },
@@ -282,7 +282,7 @@ export default function DiscordPage() {
               ].map((f, i) => (
                 <motion.div
                   key={i}
-                  className="rounded-xl p-4 flex items-start gap-3" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
+                  className="rounded-xl p-4 flex items-start gap-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
@@ -320,7 +320,7 @@ export default function DiscordPage() {
                 return (
                   <motion.div
                     key={int.id}
-                    className="rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
+                    className="rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.04 }}
@@ -416,7 +416,7 @@ export default function DiscordPage() {
           {/* Day-to-day usage */}
           <PrismPanel padding="p-5">
             <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-              <Zap size={14} className="text-gold" /> What agencies actually do with it
+              <Zap size={14} className="text-[#2563EB]" /> What agencies actually do with it
             </h3>
             <ol className="space-y-2 text-[11px] text-muted leading-relaxed list-decimal list-inside">
               <li><strong className="text-foreground">Morning standup at 9:30am:</strong> team opens #trinity-ops in Discord, sees the overnight AI digest (leads, replies, revenue), and plans the day.</li>
@@ -444,7 +444,7 @@ export default function DiscordPage() {
                 href="https://discord.com/developers/applications"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 mt-3 text-[11px] text-gold hover:underline"
+                className="inline-flex items-center gap-1 mt-3 text-[11px] text-[#2563EB] hover:underline"
               >
                 <ExternalLink size={11} /> Open Discord Developer Portal
               </a>
@@ -474,7 +474,7 @@ export default function DiscordPage() {
             <div className="flex gap-1">
               {["All", "Info", "Reports", "Tools"].map(f => (
                 <button key={f} onClick={() => setCommandFilter(f)}
-                  className={`text-[10px] px-2.5 py-1 rounded-full border ${commandFilter === f ? "border-gold text-gold bg-gold/5" : "border-border text-muted"}`}>{f}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-full border ${commandFilter === f ? "border-[#2563EB] text-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "border-border text-muted"}`}>{f}</button>
               ))}
             </div>
           </div>
@@ -494,7 +494,7 @@ export default function DiscordPage() {
                 <div className="flex items-center gap-3">
                   <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border">{cmd.category}</span>
                   <div onClick={() => toggleCommand(cmd.name)}
-                    className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${cmd.enabled ? "bg-green-400" : "bg-gray-600"}`}>
+                    className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${cmd.enabled ? "bg-green-500" : "bg-gray-300"}`}>
                     <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${cmd.enabled ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                   </div>
                 </div>
@@ -503,7 +503,7 @@ export default function DiscordPage() {
           </div>
           {/* Custom Command Builder */}
           <div className="card p-4">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Code size={14} className="text-gold" /> Custom Command Builder</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Code size={14} className="text-[#2563EB]" /> Custom Command Builder</h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-[10px] text-muted font-semibold uppercase">Command Name</label>
@@ -523,7 +523,7 @@ export default function DiscordPage() {
               <label className="text-[10px] text-muted font-semibold uppercase">Response Template</label>
               <textarea className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface h-20 resize-none" placeholder="Enter the bot response message..." />
             </div>
-            <button className="mt-3 text-xs bg-gold/10 text-gold px-4 py-2 rounded-lg font-medium hover:bg-gold/20">Register Command</button>
+            <button className="mt-3 text-xs bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-4 py-2 rounded-lg font-medium hover:bg-[rgba(37,99,235,0.12)]">Register Command</button>
           </div>
         </div>
       )}
@@ -547,7 +547,7 @@ export default function DiscordPage() {
                   </div>
                 </div>
                 <div onClick={() => toggleAutoRole(role.id)}
-                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${role.enabled ? "bg-green-400" : "bg-gray-600"}`}>
+                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${role.enabled ? "bg-green-500" : "bg-gray-300"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${role.enabled ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                 </div>
               </div>
@@ -575,7 +575,7 @@ export default function DiscordPage() {
                 <input type="color" defaultValue="#5865F2" className="w-full mt-1 h-9 border border-border rounded-lg bg-surface cursor-pointer" />
               </div>
             </div>
-            <button className="mt-3 text-xs bg-gold/10 text-gold px-4 py-2 rounded-lg font-medium hover:bg-gold/20">Add Rule</button>
+            <button className="mt-3 text-xs bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-4 py-2 rounded-lg font-medium hover:bg-[rgba(37,99,235,0.12)]">Add Rule</button>
           </div>
         </div>
       )}
@@ -585,7 +585,7 @@ export default function DiscordPage() {
         <div className="space-y-4">
           <PreviewBanner />
           <div className="card p-4">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Smile size={14} className="text-gold" /> Welcome Message Editor</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Smile size={14} className="text-[#2563EB]" /> Welcome Message Editor</h3>
             <div className="mb-3">
               <label className="text-[10px] text-muted font-semibold uppercase">Message Template</label>
               <textarea value={welcomeMsg} onChange={e => setWelcomeMsg(e.target.value)}
@@ -596,14 +596,14 @@ export default function DiscordPage() {
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border">
                 <span className="text-xs">Send DM</span>
                 <div onClick={() => setWelcomeDm(!welcomeDm)}
-                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeDm ? "bg-green-400" : "bg-gray-600"}`}>
+                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeDm ? "bg-green-500" : "bg-gray-300"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${welcomeDm ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                 </div>
               </div>
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border">
                 <span className="text-xs">Channel Post</span>
                 <div onClick={() => setWelcomeChannel(!welcomeChannel)}
-                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeChannel ? "bg-green-400" : "bg-gray-600"}`}>
+                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeChannel ? "bg-green-500" : "bg-gray-300"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${welcomeChannel ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                 </div>
               </div>
@@ -654,7 +654,7 @@ export default function DiscordPage() {
                   <div className="flex items-center gap-3">
                     <span className="text-[9px] px-2 py-0.5 rounded-full bg-red-400/10 text-red-400">{rule.action}</span>
                     <div onClick={() => toggleModRule(rule.id)}
-                      className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${rule.enabled ? "bg-green-400" : "bg-gray-600"}`}>
+                      className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${rule.enabled ? "bg-green-500" : "bg-gray-300"}`}>
                       <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${rule.enabled ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                     </div>
                   </div>
@@ -681,7 +681,7 @@ export default function DiscordPage() {
             {[
               { label: "Messages Today", value: "�", icon: MessageSquare, color: "text-[#5865F2]" },
               { label: "Active Members", value: "�", icon: Users, color: "text-green-400" },
-              { label: "New Members (7d)", value: "�", icon: UserCheck, color: "text-gold" },
+              { label: "New Members (7d)", value: "�", icon: UserCheck, color: "text-[#2563EB]" },
               { label: "Voice Hours (7d)", value: "�", icon: Volume2, color: "text-purple-400" },
             ].map((stat, i) => (
               <motion.div
@@ -689,7 +689,7 @@ export default function DiscordPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.06, duration: 0.4 }}
-                className="rounded-xl overflow-hidden" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
+                className="rounded-xl overflow-hidden" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
               >
                 <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 <div className="p-3 text-center">
@@ -702,7 +702,7 @@ export default function DiscordPage() {
           </div>
           {/* Daily Activity Chart */}
           <div className="card p-4">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-gold" /> Daily Activity</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-[#2563EB]" /> Daily Activity</h3>
             <div className="flex items-end gap-2 h-32">
               {dailyActivity.map(d => (
                 <div key={d.day} className="flex-1 flex flex-col items-center gap-1">
@@ -727,7 +727,7 @@ export default function DiscordPage() {
           <PreviewBanner />
           <div className="flex items-center justify-between">
             <p className="text-xs text-muted">Schedule and manage Discord events.</p>
-            <button onClick={() => setShowNewEvent(!showNewEvent)} className="text-xs bg-gold/10 text-gold px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
+            <button onClick={() => setShowNewEvent(!showNewEvent)} className="text-xs bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
               <Plus size={12} /> New Event
             </button>
           </div>
@@ -754,7 +754,7 @@ export default function DiscordPage() {
                   <input type="time" className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" />
                 </div>
               </div>
-              <button className="mt-3 text-xs bg-gold/10 text-gold px-4 py-2 rounded-lg font-medium">Create Event</button>
+              <button className="mt-3 text-xs bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-4 py-2 rounded-lg font-medium">Create Event</button>
             </div>
           )}
           <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -771,7 +771,7 @@ export default function DiscordPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Builder */}
             <div className="card p-4">
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Code size={14} className="text-gold" /> Embed Builder</h3>
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Code size={14} className="text-[#2563EB]" /> Embed Builder</h3>
               <div className="space-y-3">
                 <div>
                   <label className="text-[10px] text-muted font-semibold uppercase">Title</label>
@@ -794,7 +794,7 @@ export default function DiscordPage() {
                       className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" placeholder="Footer text" />
                   </div>
                 </div>
-                <button className="text-xs bg-gold/10 text-gold px-4 py-2 rounded-lg font-medium hover:bg-gold/20 w-full">
+                <button className="text-xs bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-4 py-2 rounded-lg font-medium hover:bg-[rgba(37,99,235,0.12)] w-full">
                   <Send size={12} className="inline mr-1.5" /> Send Embed
                 </button>
               </div>
@@ -871,7 +871,7 @@ export default function DiscordPage() {
                 <option>Error/Alert</option>
               </select>
             </div>
-            <button className="mt-3 text-xs bg-gold/10 text-gold px-4 py-2 rounded-lg font-medium hover:bg-gold/20">Create Webhook</button>
+            <button className="mt-3 text-xs bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-4 py-2 rounded-lg font-medium hover:bg-[rgba(37,99,235,0.12)]">Create Webhook</button>
           </div>
         </div>
       )}
@@ -881,7 +881,7 @@ export default function DiscordPage() {
         <div className="space-y-4">
           <PreviewBanner />
           <div className="card p-4">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Megaphone size={14} className="text-gold" /> Schedule Announcement</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Megaphone size={14} className="text-[#2563EB]" /> Schedule Announcement</h3>
             <div className="space-y-3">
               <div>
                 <label className="text-[10px] text-muted font-semibold uppercase">Title</label>
@@ -914,7 +914,7 @@ export default function DiscordPage() {
                   </select>
                 </div>
               </div>
-              <button className="text-xs bg-gold/10 text-gold px-4 py-2 rounded-lg font-medium hover:bg-gold/20">Schedule</button>
+              <button className="text-xs bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-4 py-2 rounded-lg font-medium hover:bg-[rgba(37,99,235,0.12)]">Schedule</button>
             </div>
           </div>
           <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -935,7 +935,7 @@ export default function DiscordPage() {
           </div>
           {/* Member Insights */}
           <div className="card p-4">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-gold" /> Member Insights</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-[#2563EB]" /> Member Insights</h3>
             <div className="p-6 text-center text-muted text-xs">
               <Users size={24} className="mx-auto mb-2 opacity-40" />
               <p>No member data yet. Connect your Discord server to track activity and contributions.</p>
@@ -956,7 +956,7 @@ export default function DiscordPage() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="text-center p-3 rounded-lg" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
+                  className="text-center p-3 rounded-lg" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
                 >
                   <p className="text-lg font-bold font-mono">{stat.value}</p>
                   <p className="text-[10px] text-muted">{stat.label}</p>

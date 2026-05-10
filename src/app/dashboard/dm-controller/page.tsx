@@ -532,7 +532,7 @@ export default function DMControllerPage() {
         icon={<Send size={28} />}
         title="DM Controller"
         subtitle="Multi-platform cold DM command center · AI-assisted · Compliance-safe."
-        gradient="gold"
+        gradient="blue"
         eyebrow={<><CircleDot size={9} className={cn("inline mr-1.5", running ? "text-green-400 animate-pulse" : "text-muted")} />{running ? "Running" : "Idle"}</>}
         actions={
           <div className="flex items-center gap-2">
@@ -555,7 +555,7 @@ export default function DMControllerPage() {
 
       {/* Stat strip */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-        <StatTile label="Total Sent"           value={totalSent.toLocaleString()}    icon={<Send size={12} />}           tone="gold"   index={0} />
+        <StatTile label="Total Sent"           value={totalSent.toLocaleString()}    icon={<Send size={12} />}           tone="blue"   index={0} />
         <StatTile label="Reply Rate"           value={`${replyRate}%`}               icon={<MessageSquare size={12} />}  tone="green"  index={1} />
         <StatTile label="Positive Replies"     value={`${positiveReplyRate}%`}       icon={<ThumbsUp size={12} />}       tone="blue"   index={2} />
         <StatTile label="Booked Calls"         value={totalBooked.toLocaleString()}  icon={<UserCheck size={12} />}      tone="purple" index={3} />
@@ -583,7 +583,7 @@ export default function DMControllerPage() {
             className={cn(
               "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border",
               activeTab === t.id
-                ? "bg-gold/10 border-gold/30 text-gold font-medium"
+                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
                 : "border-border text-muted hover:text-foreground"
             )}
           >
@@ -620,7 +620,7 @@ export default function DMControllerPage() {
                       onClick={() => togglePlatform(p.id)}
                       className={cn(
                         "flex items-center gap-2.5 p-3 rounded-xl border transition-all",
-                        active ? "border-white/25 bg-white/[0.04]" : "border-border opacity-60 hover:opacity-90"
+                        active ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-border opacity-60 hover:opacity-90"
                       )}
                     >
                       {p.icon(22)}
@@ -638,7 +638,7 @@ export default function DMControllerPage() {
 
             {/* Settings */}
             <div className="card p-4">
-              <h2 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings size={13} className="text-gold" /> Settings</h2>
+              <h2 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings size={13} className="text-[#2563EB]" /> Settings</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">DMs per platform</label>
@@ -660,7 +660,7 @@ export default function DMControllerPage() {
                     <button key={s} onClick={() => setConfig({ ...config, messageStyle: s })}
                       className={cn(
                         "text-[10px] px-3 py-1 rounded-lg border transition-all capitalize",
-                        config.messageStyle === s ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                        config.messageStyle === s ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
                       )}>{s}</button>
                   ))}
                 </div>
@@ -689,7 +689,7 @@ export default function DMControllerPage() {
                 <button onClick={() => setConfig({ ...config, warmup: !config.warmup })}
                   className={cn(
                     "relative w-11 h-6 rounded-full transition-all",
-                    config.warmup ? "bg-orange-400" : "bg-white/10"
+                    config.warmup ? "bg-orange-500" : "bg-[rgba(0,0,0,0.12)]"
                   )}>
                   <span className={cn(
                     "absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all",
@@ -707,7 +707,7 @@ export default function DMControllerPage() {
                   <button key={n} onClick={() => toggleNiche(n)}
                     className={cn(
                       "text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                      config.niches.includes(n) ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                      config.niches.includes(n) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
                     )}>{n}</button>
                 ))}
               </div>
@@ -721,7 +721,7 @@ export default function DMControllerPage() {
                   <button key={s} onClick={() => toggleService(s)}
                     className={cn(
                       "text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                      config.services.includes(s) ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                      config.services.includes(s) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
                     )}>{s}</button>
                 ))}
               </div>
@@ -738,7 +738,7 @@ export default function DMControllerPage() {
                   {showVars && (
                     <div className="absolute right-0 top-full mt-1 z-30 w-48 card p-1 shadow-xl">
                       {VARIABLES.map(v => (
-                        <button key={v} onClick={() => insertVariable(v)} className="w-full text-left text-[10px] font-mono px-2 py-1.5 rounded hover:bg-white/5 text-foreground">
+                        <button key={v} onClick={() => insertVariable(v)} className="w-full text-left text-[10px] font-mono px-2 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-foreground">
                           {v}
                         </button>
                       ))}
@@ -764,17 +764,17 @@ export default function DMControllerPage() {
             {/* DM Preview */}
             <div className="card p-4">
               <h3 className="text-xs font-semibold mb-2 flex items-center gap-2">
-                <Eye size={12} className="text-gold" /> Live Preview
+                <Eye size={12} className="text-[#2563EB]" /> Live Preview
               </h3>
-              <div className="rounded-xl border border-border bg-black/30 overflow-hidden">
-                <div className="px-3 py-2 border-b border-border flex items-center gap-2 bg-white/[0.02]">
+              <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] overflow-hidden">
+                <div className="px-3 py-2 border-b border-[rgba(0,0,0,0.06)] flex items-center gap-2 bg-[rgba(0,0,0,0.04)]">
                   {platformIcon(config.platforms[0] || "instagram", 16)}
                   <span className="text-[10px] font-semibold">{platformName(config.platforms[0] || "instagram")}</span>
                   <span className="text-[9px] text-muted ml-auto">@{(config.niches[0] || "prospect").toLowerCase().replace(/\s+/g, "_")}_co</span>
                 </div>
                 <div className="p-3 space-y-2">
                   <div className="text-[9px] text-muted flex items-center gap-1"><Clock size={8} /> just now</div>
-                  <div className="max-w-[85%] px-3 py-2  rounded-bl-sm bg-white/[0.06] border border-white/10 text-[11px] leading-relaxed">
+                  <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[11px] leading-relaxed text-[#374151]">
                     {previewText || <span className="text-muted italic">Your message will appear here…</span>}
                   </div>
                 </div>
@@ -797,11 +797,11 @@ export default function DMControllerPage() {
                 )}>{safety.score}</span>
                 <span className="text-[10px] text-muted pb-1 uppercase tracking-wider">{safety.rating}</span>
               </div>
-              <div className="w-full bg-white/5 rounded-full h-2 mb-3 overflow-hidden">
+              <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 mb-3 overflow-hidden">
                 <div className={cn(
                   "h-full rounded-full transition-all",
-                  safety.rating === "green" ? "bg-green-400" :
-                  safety.rating === "amber" ? "bg-amber-400" : "bg-red-400"
+                  safety.rating === "green" ? "bg-green-500" :
+                  safety.rating === "amber" ? "bg-amber-500" : "bg-red-500"
                 )} style={{ width: `${safety.score}%` }} />
               </div>
               <div className="space-y-1 text-[9px]">
@@ -812,15 +812,15 @@ export default function DMControllerPage() {
             </div>
 
             {/* Launch */}
-            <div className="card p-4 border-gold/10 relative overflow-hidden">
+            <div className="card p-4 border-[rgba(37,99,235,0.1)] relative overflow-hidden">
               <div className="text-center py-3">
                 <div className={cn(
                   "w-14 h-14  flex items-center justify-center mx-auto mb-3",
-                  running ? "bg-green-400/10 animate-pulse" : "bg-gold/10"
+                  running ? "bg-green-400/10 animate-pulse" : "bg-[rgba(37,99,235,0.08)]"
                 )}>
                   {running
                     ? <Clock size={24} className="text-green-400 animate-spin" />
-                    : <Send size={24} className="text-gold" />}
+                    : <Send size={24} className="text-[#2563EB]" />}
                 </div>
                 <h3 className="text-sm font-bold mb-1">
                   {running ? "Sending DMs…" : totalDMs === 0 ? "No targets" : "Ready to Launch"}
@@ -831,8 +831,8 @@ export default function DMControllerPage() {
                   <p>Est. time: {totalDMs === 0 ? "—" : `~${estimatedTime} min`}</p>
                 </div>
                 {running && (
-                  <div className="w-full bg-white/5 rounded-full h-2 mb-3 overflow-hidden">
-                    <div className="h-full bg-gold rounded-full transition-all" style={{ width: `${(completed / Math.max(totalDMs, 1)) * 100}%` }} />
+                  <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 mb-3 overflow-hidden">
+                    <div className="h-full bg-[#2563EB] rounded-full transition-all" style={{ width: `${(completed / Math.max(totalDMs, 1)) * 100}%` }} />
                   </div>
                 )}
                 <button
@@ -840,7 +840,7 @@ export default function DMControllerPage() {
                   disabled={!running && config.platforms.length === 0}
                   className={cn(
                     "w-full text-xs py-2.5 flex items-center justify-center gap-2 rounded-xl font-semibold transition-all",
-                    running ? "bg-red-500 text-white hover:bg-red-400" : "bg-gold text-black disabled:opacity-50"
+                    running ? "bg-red-500 text-white hover:bg-red-600" : "bg-[#2563EB] text-white disabled:opacity-50"
                   )}
                 >
                   {running ? <><Pause size={14} /> Stop</> : <><Play size={14} /> Start DM Run</>}
@@ -872,7 +872,7 @@ export default function DMControllerPage() {
               <h2 className="text-sm font-semibold">Active Campaigns</h2>
               <p className="text-[10px] text-muted">Run multiple DM campaigns in parallel — each with its own template & volume.</p>
             </div>
-            <button onClick={() => setWizardOpen(true)} className="px-3 py-1.5 rounded-lg bg-gold text-black text-[11px] font-semibold flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
+            <button onClick={() => setWizardOpen(true)} className="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-[11px] font-semibold flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
               <Plus size={12} /> New Campaign
             </button>
           </div>
@@ -881,7 +881,7 @@ export default function DMControllerPage() {
               <EmptyIllustration icon={<Target size={40} />} />
               <h3 className="text-sm font-semibold mt-3">No campaigns yet</h3>
               <p className="text-[11px] text-muted mt-1">Spin up your first campaign in under 60 seconds.</p>
-              <button onClick={() => setWizardOpen(true)} className="mt-4 px-4 py-2 rounded-lg bg-gold text-black text-[11px] font-semibold inline-flex items-center gap-1.5">
+              <button onClick={() => setWizardOpen(true)} className="mt-4 px-4 py-2 rounded-lg bg-[#2563EB] text-white text-[11px] font-semibold inline-flex items-center gap-1.5">
                 <Plus size={12} /> Create campaign
               </button>
             </div>
@@ -892,9 +892,9 @@ export default function DMControllerPage() {
                 const replyRate = c.sent ? ((c.replied / c.sent) * 100).toFixed(1) : "0.0";
                 const progressPct = c.leads ? Math.round((c.sent / c.leads) * 100) : 0;
                 return (
-                  <div key={c.id} className="card p-4 hover:border-gold/20 transition-all">
+                  <div key={c.id} className="card p-4 hover:border-[rgba(37,99,235,0.2)] transition-all">
                     <div className="flex items-start gap-3">
-                      <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-white/[0.04] border border-white/10">
+                      <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                         {platform?.icon(22)}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -906,31 +906,31 @@ export default function DMControllerPage() {
                           <span className="flex items-center gap-1"><Users size={9} /> {c.leads} leads</span>
                           <span className="flex items-center gap-1"><Send size={9} /> {c.sent} sent</span>
                           <span className="flex items-center gap-1 text-green-400"><MessageSquare size={9} /> {c.replied} replies · {replyRate}%</span>
-                          <span className="flex items-center gap-1 text-gold"><UserCheck size={9} /> {c.booked} booked</span>
+                          <span className="flex items-center gap-1 text-[#2563EB]"><UserCheck size={9} /> {c.booked} booked</span>
                           <span className="flex items-center gap-1"><Clock size={9} /> {c.lastActivity}</span>
                         </div>
                         {/* Progress bar */}
-                        <div className="mt-2 w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
-                          <div className="h-full bg-gold rounded-full transition-all" style={{ width: `${progressPct}%` }} />
+                        <div className="mt-2 w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 overflow-hidden">
+                          <div className="h-full bg-[#2563EB] rounded-full transition-all" style={{ width: `${progressPct}%` }} />
                         </div>
                       </div>
                       {/* Mini dashboard */}
                       <div className="hidden md:flex items-center gap-3 pr-1">
                         <MiniStat label="Sent"    value={c.sent}    />
                         <MiniStat label="Replies" value={c.replied} tone="green" />
-                        <MiniStat label="Booked"  value={c.booked}  tone="gold"  />
+                        <MiniStat label="Booked"  value={c.booked}  tone="blue"  />
                       </div>
                       <div className="flex items-center gap-1">
                         <button onClick={() => toggleCampaign(c.id)} title={c.status === "running" ? "Pause" : "Play"}
-                          className="p-2 rounded-lg border border-border hover:border-gold/30 transition-all">
+                          className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
                           {c.status === "running" ? <Pause size={12} /> : <Play size={12} />}
                         </button>
                         <button onClick={() => setActiveTab("analytics")} title="Analytics"
-                          className="p-2 rounded-lg border border-border hover:border-gold/30 transition-all">
+                          className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
                           <BarChart3 size={12} />
                         </button>
                         <button onClick={() => setActiveTab("setup")} title="Edit"
-                          className="p-2 rounded-lg border border-border hover:border-gold/30 transition-all">
+                          className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
                           <Edit3 size={12} />
                         </button>
                         <button onClick={() => deleteCampaign(c.id)} title="Delete"
@@ -955,12 +955,12 @@ export default function DMControllerPage() {
           <div className="flex flex-wrap items-center gap-1.5">
             <button onClick={() => setTemplateFilter("all")}
               className={cn("text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                templateFilter === "all" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                templateFilter === "all" ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
               )}>All ({templates.length})</button>
             {TEMPLATE_GOALS.map(g => (
               <button key={g.id} onClick={() => setTemplateFilter(g.id)}
                 className={cn("text-[10px] px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1",
-                  templateFilter === g.id ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                  templateFilter === g.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
                 )}><g.icon size={9} className={g.color} /> {g.label}</button>
             ))}
             <div className="ml-auto">
@@ -977,7 +977,7 @@ export default function DMControllerPage() {
                   custom: true,
                 };
                 setTemplates(ts => [t, ...ts]);
-              }} className="px-3 py-1.5 rounded-lg border border-gold/30 bg-gold/[0.05] text-gold text-[10px] font-semibold flex items-center gap-1.5">
+              }} className="px-3 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] text-[10px] font-semibold flex items-center gap-1.5">
                 <Plus size={10} /> New Template
               </button>
             </div>
@@ -1002,7 +1002,7 @@ export default function DMControllerPage() {
                         <div className="flex items-center gap-1.5 flex-wrap">
                           {goal && <goal.icon size={11} className={goal.color} />}
                           <p className="text-xs font-semibold truncate">{t.name}</p>
-                          {t.custom && <span className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">Custom</span>}
+                          {t.custom && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">Custom</span>}
                         </div>
                         <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">{goal?.label}</p>
                       </div>
@@ -1058,7 +1058,7 @@ export default function DMControllerPage() {
                           setConfig(prev => ({ ...prev, customMessage: msg }));
                           setActiveTab("setup");
                         }}
-                        className="text-[10px] px-2 py-1.5 rounded-lg border border-gold/30 bg-gold/[0.05] text-gold hover:bg-gold/10 transition-all flex items-center gap-1.5"
+                        className="text-[10px] px-2 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1.5"
                       >
                         <ArrowRight size={10} /> Clone to campaign
                       </button>
@@ -1088,7 +1088,7 @@ export default function DMControllerPage() {
                 onClick={() => { setOpenReplyId(r.id); setAiReplies(null); setAiReplyError(null); }}
                 className={cn(
                   "w-full text-left card p-3 transition-all",
-                  openReplyId === r.id ? "border-gold/40 bg-gold/[0.04]" : "hover:border-white/20"
+                  openReplyId === r.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "hover:border-[rgba(0,0,0,0.14)]"
                 )}
               >
                 <div className="flex items-start gap-2">
@@ -1122,12 +1122,12 @@ export default function DMControllerPage() {
 
                 {/* Conversation thread */}
                 <div className="space-y-2">
-                  <div className="max-w-[85%] px-3 py-2  rounded-bl-sm bg-white/[0.04] border border-white/10 text-[11px]">
+                  <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[11px] text-[#374151]">
                     <p className="text-[9px] text-muted mb-1">You</p>
                     {openReply.original}
                   </div>
-                  <div className="max-w-[85%] ml-auto px-3 py-2  rounded-br-sm bg-gold/10 border border-gold/30 text-[11px]">
-                    <p className="text-[9px] text-gold mb-1">{openReply.from}</p>
+                  <div className="max-w-[85%] ml-auto px-3 py-2 rounded-br-sm bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[11px] text-[#374151]">
+                    <p className="text-[9px] text-[#2563EB] mb-1">{openReply.from}</p>
                     {openReply.full}
                   </div>
                 </div>
@@ -1149,7 +1149,7 @@ export default function DMControllerPage() {
                   {aiReplies && aiReplies.length > 0 ? (
                     <div className="space-y-2">
                       {aiReplies.map((r, i) => (
-                        <div key={i} className="p-3 rounded-lg border border-border bg-black/20 space-y-1.5">
+                        <div key={i} className="p-3 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] space-y-1.5">
                           <div className="flex items-center gap-1.5">
                             <span className="text-[9px] uppercase tracking-wider text-purple-300 font-semibold">{r.tone}</span>
                           </div>
@@ -1157,7 +1157,7 @@ export default function DMControllerPage() {
                           {r.cta && <p className="text-[9px] text-muted italic">CTA: {r.cta}</p>}
                           <div className="flex items-center gap-1.5 pt-1">
                             <button onClick={() => navigator.clipboard?.writeText(r.text)} className="text-[9px] px-2 py-0.5 rounded border border-border text-muted hover:text-foreground">Copy</button>
-                            <button className="text-[9px] px-2 py-0.5 rounded border border-gold/30 bg-gold/[0.05] text-gold">Use this</button>
+                            <button className="text-[9px] px-2 py-0.5 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]">Use this</button>
                           </div>
                         </div>
                       ))}
@@ -1171,7 +1171,7 @@ export default function DMControllerPage() {
                 <div className="flex items-center gap-1.5 pt-2 border-t border-border">
                   <button
                     onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "closed" } : x))}
-                    className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-white/20 text-muted hover:text-foreground flex items-center justify-center gap-1.5">
+                    className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-[rgba(0,0,0,0.14)] text-muted hover:text-foreground flex items-center justify-center gap-1.5">
                     <CheckCircle size={10} /> Close
                   </button>
                   <button
@@ -1209,7 +1209,7 @@ export default function DMControllerPage() {
               { val: totalSent, label: "Sent today", color: "" },
               { val: `${replyRate}%`, label: "Reply Rate", color: "text-green-400" },
               { val: `${positiveReplyRate}%`, label: "Positive Reply Rate", color: "text-blue-400" },
-              { val: totalBooked, label: "Booked Calls", color: "text-gold" },
+              { val: totalBooked, label: "Booked Calls", color: "text-[#2563EB]" },
             ].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
                 <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
@@ -1223,7 +1223,7 @@ export default function DMControllerPage() {
 
           {/* Per-platform breakdown */}
           <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><TrendingUp size={12} className="text-gold" /> By Platform</h3>
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><TrendingUp size={12} className="text-[#2563EB]" /> By Platform</h3>
             <div className="space-y-3">
               {PLATFORMS.map(p => {
                 const rows = campaigns.filter(c => c.platform === p.id);
@@ -1236,8 +1236,8 @@ export default function DMControllerPage() {
                       <span className="text-xs font-medium flex items-center gap-2">{p.icon(14)} {p.name}</span>
                       <span className="text-xs text-muted">{sent} sent · {replied} replies · {rate.toFixed(1)}%</span>
                     </div>
-                    <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
-                      <div className="h-full rounded-full bg-gold/60 transition-all" style={{ width: `${Math.min(100, rate * 5)}%` }} />
+                    <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 overflow-hidden">
+                      <div className="h-full rounded-full bg-[#2563EB] transition-all" style={{ width: `${Math.min(100, rate * 5)}%` }} />
                     </div>
                   </div>
                 );
@@ -1247,7 +1247,7 @@ export default function DMControllerPage() {
 
           {/* Per-campaign leaderboard */}
           <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Star size={12} className="text-gold" /> Campaign Leaderboard</h3>
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Star size={12} className="text-[#2563EB]" /> Campaign Leaderboard</h3>
             {campaigns.length === 0 ? (
               <p className="text-[10px] text-muted">No campaigns yet.</p>
             ) : (
@@ -1256,7 +1256,7 @@ export default function DMControllerPage() {
                   const rate = c.sent ? ((c.replied / c.sent) * 100).toFixed(1) : "0.0";
                   return (
                     <div key={c.id} className="flex items-center gap-3 p-2 rounded-lg border border-border">
-                      <div className="w-6 h-6 rounded-lg bg-gold/10 text-gold text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
+                      <div className="w-6 h-6 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
                       <div className="shrink-0">{platformIcon(c.platform, 14)}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs truncate">{c.name}</p>
@@ -1293,7 +1293,7 @@ export default function DMControllerPage() {
               </div>
             </div>
             <div className="card p-4">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Calendar size={12} className="text-gold" /> Best Time Heatmap</h3>
+              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Calendar size={12} className="text-[#2563EB]" /> Best Time Heatmap</h3>
               <Heatmap />
               <p className="text-[9px] text-muted mt-2">Darker = higher reply rate · based on the last 30 days of campaign data.</p>
             </div>
@@ -1308,7 +1308,7 @@ export default function DMControllerPage() {
         <div className="space-y-4">
           <div className="card p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-semibold flex items-center gap-2"><Zap size={12} className="text-gold" /> Automation Rules</h3>
+              <h3 className="text-xs font-semibold flex items-center gap-2"><Zap size={12} className="text-[#2563EB]" /> Automation Rules</h3>
               <button
                 onClick={() => setRules(rs => [{
                   id: `r${Date.now()}`,
@@ -1317,7 +1317,7 @@ export default function DMControllerPage() {
                   config: "Customize me",
                   enabled: false,
                 }, ...rs])}
-                className="px-2.5 py-1 rounded-lg bg-gold text-black text-[10px] font-semibold flex items-center gap-1">
+                className="px-2.5 py-1 rounded-lg bg-[#2563EB] text-white text-[10px] font-semibold flex items-center gap-1">
                 <Plus size={10} /> Add rule
               </button>
             </div>
@@ -1327,11 +1327,11 @@ export default function DMControllerPage() {
               <div className="space-y-2">
                 {rules.map(r => (
                   <div key={r.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                    <div className="shrink-0 w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center">
-                      {r.type === "auto_reply"    && <MessageSquare size={14} className="text-gold" />}
-                      {r.type === "auto_followup" && <RefreshCw size={14} className="text-gold" />}
-                      {r.type === "auto_tag"      && <Sparkles size={14} className="text-gold" />}
-                      {r.type === "auto_handoff"  && <UserCheck size={14} className="text-gold" />}
+                    <div className="shrink-0 w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                      {r.type === "auto_reply"    && <MessageSquare size={14} className="text-[#2563EB]" />}
+                      {r.type === "auto_followup" && <RefreshCw size={14} className="text-[#2563EB]" />}
+                      {r.type === "auto_tag"      && <Sparkles size={14} className="text-[#2563EB]" />}
+                      {r.type === "auto_handoff"  && <UserCheck size={14} className="text-[#2563EB]" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold">{r.label}</p>
@@ -1341,7 +1341,7 @@ export default function DMControllerPage() {
                       onClick={() => setRules(rs => rs.map(x => x.id === r.id ? { ...x, enabled: !x.enabled } : x))}
                       className={cn(
                         "relative w-10 h-5 rounded-full transition-all",
-                        r.enabled ? "bg-gold" : "bg-white/10"
+                        r.enabled ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.12)]"
                       )}>
                       <span className={cn(
                         "absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all",
@@ -1357,7 +1357,7 @@ export default function DMControllerPage() {
           </div>
 
           <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><GitBranch size={12} className="text-gold" /> Available Automation Types</h3>
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><GitBranch size={12} className="text-[#2563EB]" /> Available Automation Types</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <TypeCard title="Auto-reply to keywords"  desc="Match inbound keywords → fire template response instantly" icon={<MessageSquare size={14} />} />
               <TypeCard title="Auto-follow-up after X days"  desc="Send a scheduled follow-up if no reply within N days" icon={<RefreshCw size={14} />} />
@@ -1375,7 +1375,7 @@ export default function DMControllerPage() {
         <div className="space-y-4">
           {/* Rate-limit status */}
           <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Shield size={12} className="text-gold" /> Rate Limit Status · per platform</h3>
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Shield size={12} className="text-[#2563EB]" /> Rate Limit Status · per platform</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {PLATFORMS.map(p => {
                 const usage = Math.floor(Math.random() * 80);
@@ -1385,10 +1385,10 @@ export default function DMControllerPage() {
                       {p.icon(16)}
                       <span className="text-xs font-semibold">{p.name}</span>
                     </div>
-                    <div className="w-full bg-white/5 rounded-full h-1.5 mb-1 overflow-hidden">
+                    <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 mb-1 overflow-hidden">
                       <div className={cn(
                         "h-full rounded-full",
-                        usage > 70 ? "bg-red-400" : usage > 40 ? "bg-amber-400" : "bg-green-400"
+                        usage > 70 ? "bg-red-500" : usage > 40 ? "bg-amber-500" : "bg-green-500"
                       )} style={{ width: `${usage}%` }} />
                     </div>
                     <p className="text-[9px] text-muted">{usage}% of daily quota</p>
@@ -1411,8 +1411,8 @@ export default function DMControllerPage() {
                       <span className="text-xs font-medium flex items-center gap-2">{p.icon(14)} {p.name}</span>
                       <span className="text-[10px] text-muted">Day {day} / 7</span>
                     </div>
-                    <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
-                      <div className="h-full rounded-full bg-orange-400" style={{ width: `${pct}%` }} />
+                    <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 overflow-hidden">
+                      <div className="h-full rounded-full bg-orange-500" style={{ width: `${pct}%` }} />
                     </div>
                   </div>
                 );
@@ -1446,7 +1446,7 @@ export default function DMControllerPage() {
                     setBlacklistInput("");
                   }
                 }}
-                className="px-3 py-1.5 rounded-lg bg-gold text-black text-[10px] font-semibold flex items-center gap-1">
+                className="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-[10px] font-semibold flex items-center gap-1">
                 <Plus size={10} /> Add
               </button>
             </div>
@@ -1571,12 +1571,12 @@ export default function DMControllerPage() {
                   <p className="text-xs text-muted mt-2">No activity. {running ? "Events will stream in real-time." : "Start a campaign to see live events."}</p>
                 </div>
               ) : liveEvents.map(ev => (
-                <div key={ev.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-border bg-black/10">
+                <div key={ev.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.03)]">
                   <span className="text-[9px] font-mono text-muted shrink-0 w-16">{ev.at}</span>
                   <div className="shrink-0">{platformIcon(ev.platform, 12)}</div>
                   <LiveIcon kind={ev.kind} />
                   <p className="text-[10px] flex-1 truncate">
-                    <LiveLabel kind={ev.kind} /> <span className="text-gold font-mono">{ev.handle}</span>
+                    <LiveLabel kind={ev.kind} /> <span className="text-[#2563EB] font-mono">{ev.handle}</span>
                   </p>
                 </div>
               ))}
@@ -1613,14 +1613,13 @@ export default function DMControllerPage() {
 /*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
-function StatTile({ label, value, icon, tone, index }: { label: string; value: string | number; icon?: React.ReactNode; tone?: "gold" | "green" | "blue" | "purple" | "pink"; index?: number }) {
+function StatTile({ label, value, icon, tone, index }: { label: string; value: string | number; icon?: React.ReactNode; tone?: "blue" | "green" | "purple" | "pink"; index?: number }) {
   const toneClass = {
-    gold:   "text-gold",
+    blue:   "text-[#2563EB]",
     green:  "text-green-400",
-    blue:   "text-blue-400",
     purple: "text-purple-400",
     pink:   "text-pink-400",
-  }[tone || "gold"];
+  }[tone || "blue"];
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -1664,7 +1663,7 @@ function Meter({ label, value }: { label: string; value: number }) {
         <span>{label}</span>
         <span className="font-mono">{Math.round(value)}</span>
       </div>
-      <div className="w-full bg-white/5 rounded-full h-1 overflow-hidden">
+      <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1 overflow-hidden">
         <div className={cn("h-full rounded-full transition-all", bar)} style={{ width: `${Math.min(100, value)}%` }} />
       </div>
     </div>
@@ -1675,14 +1674,14 @@ function StatusBadge({ status }: { status: CampaignStatus }) {
   const cfg = {
     running: { cls: "bg-green-400/10 text-green-400 border-green-400/30", label: "Running" },
     paused:  { cls: "bg-amber-400/10 text-amber-400 border-amber-400/30", label: "Paused" },
-    draft:   { cls: "bg-white/5 text-muted border-white/10",              label: "Draft" },
+    draft:   { cls: "bg-[rgba(0,0,0,0.04)] text-muted border-[rgba(0,0,0,0.08)]", label: "Draft" },
     done:    { cls: "bg-blue-400/10 text-blue-400 border-blue-400/30",    label: "Done" },
   }[status];
   return <span className={cn("text-[9px] px-2 py-0.5 rounded border", cfg.cls)}>{cfg.label}</span>;
 }
 
-function MiniStat({ label, value, tone }: { label: string; value: number; tone?: "gold" | "green" }) {
-  const c = tone === "gold" ? "text-gold" : tone === "green" ? "text-green-400" : "text-foreground";
+function MiniStat({ label, value, tone }: { label: string; value: number; tone?: "blue" | "green" }) {
+  const c = tone === "blue" ? "text-[#2563EB]" : tone === "green" ? "text-green-400" : "text-foreground";
   return (
     <div className="text-right">
       <p className={cn("text-xs font-bold font-mono", c)}>{value}</p>
@@ -1696,7 +1695,7 @@ function SentimentBadge({ sentiment }: { sentiment: InboxReply["sentiment"] }) {
     positive: { cls: "bg-green-400/10 text-green-400 border-green-400/30",  label: "Positive", icon: ThumbsUp    },
     negative: { cls: "bg-red-400/10 text-red-400 border-red-400/30",        label: "Negative", icon: ThumbsDown  },
     question: { cls: "bg-blue-400/10 text-blue-400 border-blue-400/30",     label: "Question", icon: MessageSquare},
-    neutral:  { cls: "bg-white/5 text-muted border-white/10",               label: "Neutral",  icon: MinusCircle },
+    neutral:  { cls: "bg-[rgba(0,0,0,0.04)] text-muted border-[rgba(0,0,0,0.08)]", label: "Neutral", icon: MinusCircle },
   }[sentiment];
   const Icon = cfg.icon;
   return <span className={cn("text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-1", cfg.cls)}><Icon size={8} /> {cfg.label}</span>;
@@ -1704,8 +1703,8 @@ function SentimentBadge({ sentiment }: { sentiment: InboxReply["sentiment"] }) {
 
 function StatusChip({ status }: { status: InboxReply["status"] }) {
   const cfg = {
-    new:          { cls: "bg-gold/10 text-gold border-gold/30",            label: "New" },
-    closed:       { cls: "bg-white/5 text-muted border-white/10",          label: "Closed" },
+    new:          { cls: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",            label: "New" },
+    closed:       { cls: "bg-[rgba(0,0,0,0.04)] text-muted border-[rgba(0,0,0,0.08)]", label: "Closed" },
     handed_off:   { cls: "bg-blue-400/10 text-blue-400 border-blue-400/30",label: "Handed off" },
     needs_human:  { cls: "bg-amber-400/10 text-amber-400 border-amber-400/30", label: "Needs human" },
   }[status];
@@ -1715,8 +1714,8 @@ function StatusChip({ status }: { status: InboxReply["status"] }) {
 function EmptyIllustration({ icon }: { icon: React.ReactNode }) {
   return (
     <div className="relative inline-flex items-center justify-center">
-      <div className="absolute inset-0 rounded-full bg-gold/10 blur-xl scale-150" />
-      <div className="relative w-16 h-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold">
+      <div className="absolute inset-0 rounded-full bg-[rgba(37,99,235,0.08)] blur-xl scale-150" />
+      <div className="relative w-16 h-16 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center text-[#2563EB]">
         {icon}
       </div>
     </div>
@@ -1738,9 +1737,9 @@ function TemplateField({ label, value, onChange }: { label: string; value: strin
 
 function TypeCard({ title, desc, icon }: { title: string; desc: string; icon: React.ReactNode }) {
   return (
-    <div className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
+    <div className="p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
       <div className="flex items-center gap-2 mb-1">
-        <span className="text-gold">{icon}</span>
+        <span className="text-[#2563EB]">{icon}</span>
         <p className="text-xs font-semibold">{title}</p>
       </div>
       <p className="text-[10px] text-muted">{desc}</p>
@@ -1790,7 +1789,7 @@ function Heatmap() {
                 <div
                   key={`${dIdx}-${h}`}
                   className="aspect-square rounded-sm"
-                  style={{ background: `rgba(201,168,76,${0.08 + (v / 100) * 0.7})` }}
+                  style={{ background: `rgba(37,99,235,${0.08 + (v / 100) * 0.55})` }}
                   title={`${d} ${h}:00 — ${v}% reply rate`}
                 />
               );
@@ -1806,7 +1805,7 @@ function LiveIcon({ kind }: { kind: LiveEvent["kind"] }) {
   if (kind === "open")   return <Eye size={11} className="text-blue-400 shrink-0" />;
   if (kind === "typing") return <MoreVertical size={11} className="text-amber-400 shrink-0" />;
   if (kind === "sent")   return <Send size={11} className="text-green-400 shrink-0" />;
-  if (kind === "reply")  return <MessageSquare size={11} className="text-gold shrink-0" />;
+  if (kind === "reply")  return <MessageSquare size={11} className="text-[#2563EB] shrink-0" />;
   return <AlertTriangle size={11} className="text-muted shrink-0" />;
 }
 
@@ -1838,13 +1837,13 @@ function HowItWorksFlow() {
   }
   if (collapsed) {
     return (
-      <button onClick={() => setCollapsed(false)} className="text-[10px] text-muted hover:text-gold flex items-center gap-1">
+      <button onClick={() => setCollapsed(false)} className="text-[10px] text-muted hover:text-[#2563EB] flex items-center gap-1">
         <span>💡</span> How does DM Controller work?
       </button>
     );
   }
   return (
-    <div className="card p-4 bg-gradient-to-br from-gold/[0.04] to-transparent border-gold/20">
+    <div className="card p-4 bg-gradient-to-br from-[rgba(37,99,235,0.04)] to-transparent border-[rgba(37,99,235,0.2)]">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-semibold flex items-center gap-1.5">
           <span className="text-base">💡</span> How DM Controller works
@@ -1859,13 +1858,13 @@ function HowItWorksFlow() {
           { n: 4, title: "Write & launch", desc: "AI-generated or custom message, schedule, monitor replies in Inbox tab", href: null, link: null },
         ].map(step => (
           <div key={step.n} className="bg-surface-light/50 rounded-xl p-3 border border-border relative">
-            <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-gold text-black text-[10px] font-bold flex items-center justify-center">
+            <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-[#2563EB] text-white text-[10px] font-bold flex items-center justify-center">
               {step.n}
             </div>
             <h4 className="text-[11px] font-semibold mt-1">{step.title}</h4>
             <p className="text-[9px] text-muted mt-1 leading-relaxed">{step.desc}</p>
             {step.href && (
-              <Link href={step.href} className="text-[9px] text-gold hover:underline mt-1.5 inline-block">→ {step.link}</Link>
+              <Link href={step.href} className="text-[9px] text-[#2563EB] hover:underline mt-1.5 inline-block">→ {step.link}</Link>
             )}
           </div>
         ))}
@@ -1900,7 +1899,7 @@ function LeadSourcePicker() {
       <div className="flex items-center justify-between mb-3">
         <div>
           <h2 className="text-xs font-semibold flex items-center gap-1.5">
-            <span className="w-5 h-5 rounded-full bg-gold text-black text-[9px] font-bold flex items-center justify-center">1</span>
+            <span className="w-5 h-5 rounded-full bg-[#2563EB] text-white text-[9px] font-bold flex items-center justify-center">1</span>
             Lead Source
           </h2>
           <p className="text-[10px] text-muted mt-0.5">Where do the DMs go? Choose who you&apos;re contacting.</p>
@@ -1920,7 +1919,7 @@ function LeadSourcePicker() {
               onClick={() => setSource(opt.id as "scraped" | "campaign" | "crm" | "manual")}
               className={cn(
                 "text-left p-3 rounded-xl border transition-all",
-                active ? "bg-gold/10 border-gold/30" : "bg-surface-light/30 border-border hover:border-gold/20"
+                active ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]" : "bg-surface-light/30 border-border hover:border-[rgba(37,99,235,0.2)]"
               )}
             >
               <div className="flex items-center gap-1.5">
@@ -1929,7 +1928,7 @@ function LeadSourcePicker() {
               </div>
               <p className="text-[9px] text-muted mt-1">{opt.desc}</p>
               {active && opt.href && (
-                <Link href={opt.href} className="text-[9px] text-gold hover:underline mt-1 block">Open →</Link>
+                <Link href={opt.href} className="text-[9px] text-[#2563EB] hover:underline mt-1 block">Open →</Link>
               )}
             </button>
           );
@@ -1942,7 +1941,7 @@ function LeadSourcePicker() {
           {campaigns.length === 0 ? (
             <div className="flex items-center justify-between">
               <p className="text-[10px] text-muted">No campaigns yet.</p>
-              <Link href="/dashboard/outreach-hub" className="text-[10px] text-gold hover:underline">Create first →</Link>
+              <Link href="/dashboard/outreach-hub" className="text-[10px] text-[#2563EB] hover:underline">Create first →</Link>
             </div>
           ) : (
             <select className="input text-xs w-full">
@@ -2007,7 +2006,7 @@ function SenderAccountPicker() {
       <div className="flex items-center justify-between mb-3">
         <div>
           <h2 className="text-xs font-semibold flex items-center gap-1.5">
-            <span className="w-5 h-5 rounded-full bg-gold text-black text-[9px] font-bold flex items-center justify-center">2</span>
+            <span className="w-5 h-5 rounded-full bg-[#2563EB] text-white text-[9px] font-bold flex items-center justify-center">2</span>
             Sender Accounts
           </h2>
           <p className="text-[10px] text-muted mt-0.5">Which of YOUR accounts will send the DMs? Rotates across selected to avoid spam flags.</p>
@@ -2045,7 +2044,7 @@ function SenderAccountPicker() {
                       className={cn(
                         "text-[10px] px-2.5 py-1.5 rounded-full border flex items-center gap-1.5 transition-all",
                         isSelected
-                          ? "bg-gold/15 border-gold/30 text-gold"
+                          ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
                           : "bg-surface-light border-border text-muted hover:text-foreground"
                       )}
                     >

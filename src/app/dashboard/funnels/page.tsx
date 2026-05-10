@@ -29,17 +29,17 @@ interface Funnel {
 const STATUS_CONFIG: Record<FunnelStatus, { label: string; color: string; icon: React.ReactNode }> = {
   draft: {
     label: "Draft",
-    color: "text-amber-400 bg-amber-400/10 border-amber-400/20",
+    color: "text-amber-700 bg-amber-500/10 border-amber-500/20",
     icon: <Clock size={11} />,
   },
   published: {
     label: "Published",
-    color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
+    color: "text-emerald-700 bg-emerald-500/10 border-emerald-500/20",
     icon: <CheckCircle2 size={11} />,
   },
   archived: {
     label: "Archived",
-    color: "text-zinc-500 bg-zinc-500/10 border-zinc-500/20",
+    color: "text-zinc-600 bg-zinc-500/10 border-zinc-500/20",
     icon: <Archive size={11} />,
   },
 };
@@ -137,15 +137,15 @@ export default function FunnelsPage() {
 
       {/* Tabs + Search */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1 glass rounded-lg p-1">
+        <div className="flex items-center gap-1 bg-black/[0.04] border border-black/[0.08] rounded-lg p-1">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setFilter(tab.id)}
               className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                 filter === tab.id
-                  ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
-                  : "text-zinc-400 hover:text-zinc-200"
+                  ? "bg-[rgba(37,99,235,0.08)] text-blue-700 border border-[rgba(37,99,235,0.25)]"
+                  : "text-[#6B7280] hover:text-[#374151]"
               }`}
             >
               {tab.label}
@@ -154,12 +154,12 @@ export default function FunnelsPage() {
         </div>
 
         <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search funnels…"
-            className="glass rounded-lg pl-9 pr-4 py-2 text-sm text-zinc-200 placeholder-zinc-500 outline-none focus:border-indigo-500/40 w-56"
+            className="bg-white border border-black/[0.08] rounded-lg pl-9 pr-4 py-2 text-sm text-[#374151] placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)] w-56"
           />
         </div>
       </div>
@@ -168,17 +168,17 @@ export default function FunnelsPage() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-48 rounded-xl bg-white/4 animate-pulse" />
+            <div key={i} className="h-48 rounded-xl bg-black/[0.04] animate-pulse" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 gap-4">
           <div className="w-16 h-16  bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-            <Layers size={28} className="text-purple-400" />
+            <Layers size={28} className="text-purple-600" />
           </div>
           <div className="text-center">
-            <p className="text-zinc-200 font-semibold text-lg">No funnels yet</p>
-            <p className="text-zinc-500 text-sm mt-1">Create your first funnel to start converting visitors.</p>
+            <p className="text-[#111827] font-semibold text-lg">No funnels yet</p>
+            <p className="text-[#6B7280] text-sm mt-1">Create your first funnel to start converting visitors.</p>
           </div>
           <button
             onClick={() => router.push("/dashboard/funnels/new")}
@@ -199,15 +199,15 @@ export default function FunnelsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -4, scale: 1.01 }}
-                className="group relative glass rounded-xl p-5 cursor-pointer"
+                className="group relative bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 cursor-pointer"
                 onClick={() => router.push(`/dashboard/funnels/${funnel.id}`)}
               >
                 {/* Header */}
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-white font-semibold text-base truncate">{funnel.name}</h3>
+                    <h3 className="text-[#111827] font-semibold text-base truncate">{funnel.name}</h3>
                     {funnel.description && (
-                      <p className="text-zinc-500 text-xs mt-0.5 line-clamp-1">{funnel.description}</p>
+                      <p className="text-[#6B7280] text-xs mt-0.5 line-clamp-1">{funnel.description}</p>
                     )}
                   </div>
                   <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${sc.color} shrink-0`}>
@@ -218,28 +218,28 @@ export default function FunnelsPage() {
 
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-2 mb-4">
-                  <div className="glass-md rounded-lg p-2 text-center">
-                    <div className="text-white font-bold text-lg leading-none">{funnel.step_count}</div>
-                    <div className="text-zinc-500 text-[10px] mt-0.5">Steps</div>
+                  <div className="bg-black/[0.04] rounded-lg p-2 text-center">
+                    <div className="text-[#111827] font-bold text-lg leading-none">{funnel.step_count}</div>
+                    <div className="text-[#6B7280] text-[10px] mt-0.5">Steps</div>
                   </div>
-                  <div className="glass-md rounded-lg p-2 text-center">
-                    <div className="text-white font-bold text-lg leading-none flex items-center justify-center gap-0.5">
-                      <Eye size={12} className="text-zinc-400" />
+                  <div className="bg-black/[0.04] rounded-lg p-2 text-center">
+                    <div className="text-[#111827] font-bold text-lg leading-none flex items-center justify-center gap-0.5">
+                      <Eye size={12} className="text-[#9CA3AF]" />
                       {funnel.total_views.toLocaleString()}
                     </div>
-                    <div className="text-zinc-500 text-[10px] mt-0.5">Views</div>
+                    <div className="text-[#6B7280] text-[10px] mt-0.5">Views</div>
                   </div>
-                  <div className="glass-md rounded-lg p-2 text-center">
-                    <div className={`font-bold text-lg leading-none ${funnel.conversion_rate >= 20 ? "text-emerald-400" : funnel.conversion_rate >= 10 ? "text-amber-400" : "text-zinc-400"}`}>
+                  <div className="bg-black/[0.04] rounded-lg p-2 text-center">
+                    <div className={`font-bold text-lg leading-none ${funnel.conversion_rate >= 20 ? "text-emerald-700" : funnel.conversion_rate >= 10 ? "text-amber-700" : "text-[#6B7280]"}`}>
                       {funnel.conversion_rate}%
                     </div>
-                    <div className="text-zinc-500 text-[10px] mt-0.5">Conv.</div>
+                    <div className="text-[#6B7280] text-[10px] mt-0.5">Conv.</div>
                   </div>
                 </div>
 
                 {/* Actions */}
                 <div className="flex items-center justify-between">
-                  <span className="text-zinc-600 text-xs">
+                  <span className="text-[#9CA3AF] text-xs">
                     {new Date(funnel.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                   </span>
                   <div
@@ -248,14 +248,14 @@ export default function FunnelsPage() {
                   >
                     <button
                       onClick={() => handleDuplicate(funnel)}
-                      className="p-1.5 rounded-md hover:bg-white/8 text-zinc-400 hover:text-zinc-200 transition-colors"
+                      className="p-1.5 rounded-md hover:bg-black/[0.06] text-[#9CA3AF] hover:text-[#374151] transition-colors"
                       title="Duplicate"
                     >
                       <Copy size={13} />
                     </button>
                     <button
                       onClick={() => router.push(`/dashboard/funnels/${funnel.id}`)}
-                      className="p-1.5 rounded-md hover:bg-white/8 text-zinc-400 hover:text-zinc-200 transition-colors"
+                      className="p-1.5 rounded-md hover:bg-black/[0.06] text-[#9CA3AF] hover:text-[#374151] transition-colors"
                       title="Edit"
                     >
                       <Pencil size={13} />
@@ -263,12 +263,12 @@ export default function FunnelsPage() {
                     <button
                       onClick={() => handleDelete(funnel.id)}
                       disabled={deletingId === funnel.id}
-                      className="p-1.5 rounded-md hover:bg-red-500/10 text-zinc-400 hover:text-red-400 transition-colors"
+                      className="p-1.5 rounded-md hover:bg-red-500/10 text-[#9CA3AF] hover:text-red-600 transition-colors"
                       title="Delete"
                     >
                       <Trash2 size={13} />
                     </button>
-                    <ChevronRight size={13} className="text-zinc-600 ml-1" />
+                    <ChevronRight size={13} className="text-[#9CA3AF] ml-1" />
                   </div>
                 </div>
               </motion.div>
@@ -281,16 +281,16 @@ export default function FunnelsPage() {
       {funnels.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
           {[
-            { label: "Total Funnels", value: funnels.length, icon: <Filter size={16} />, color: "text-indigo-400" },
-            { label: "Published", value: funnels.filter((f) => f.status === "published").length, icon: <CheckCircle2 size={16} />, color: "text-emerald-400" },
-            { label: "Total Views", value: funnels.reduce((a, f) => a + f.total_views, 0).toLocaleString(), icon: <Eye size={16} />, color: "text-blue-400" },
+            { label: "Total Funnels", value: funnels.length, icon: <Filter size={16} />, color: "text-blue-600" },
+            { label: "Published", value: funnels.filter((f) => f.status === "published").length, icon: <CheckCircle2 size={16} />, color: "text-emerald-700" },
+            { label: "Total Views", value: funnels.reduce((a, f) => a + f.total_views, 0).toLocaleString(), icon: <Eye size={16} />, color: "text-blue-700" },
             {
               label: "Avg Conversion",
               value: funnels.length
                 ? `${Math.round(funnels.reduce((a, f) => a + f.conversion_rate, 0) / funnels.length)}%`
                 : "0%",
               icon: <TrendingUp size={16} />,
-              color: "text-amber-400",
+              color: "text-amber-700",
             },
           ].map((stat, index) => (
             <motion.div
@@ -299,12 +299,12 @@ export default function FunnelsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22, delay: index * 0.06 }}
               whileHover={{ y: -2 }}
-              className="glass rounded-xl p-4 relative overflow-hidden"
+              className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-4 relative overflow-hidden"
             >
               <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
               <div className={`${stat.color} mb-2 mt-1`}>{stat.icon}</div>
-              <div className="text-white font-bold text-xl">{stat.value}</div>
-              <div className="text-zinc-500 text-xs mt-0.5">{stat.label}</div>
+              <div className="text-[#111827] font-bold text-xl">{stat.value}</div>
+              <div className="text-[#6B7280] text-xs mt-0.5">{stat.label}</div>
             </motion.div>
           ))}
         </div>

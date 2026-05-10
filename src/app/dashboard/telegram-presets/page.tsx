@@ -373,7 +373,7 @@ export default function TelegramPresetsPage() {
         title="Telegram Presets"
         eyebrow="TELEGRAM PRESETS"
         subtitle="300 ready-to-send messages across 14 categories. Fork, edit, and send to any chat."
-        gradient="gold"
+        gradient="blue"
         actions={
           <>
             <span className="text-xs text-white bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">
@@ -408,7 +408,7 @@ export default function TelegramPresetsPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search name, body, category..."
-            className="w-full glass rounded-lg pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-indigo-500/40"
+            className="w-full glass rounded-lg pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
           />
         </div>
 
@@ -419,7 +419,7 @@ export default function TelegramPresetsPage() {
               onClick={() => setScope(s)}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                 scope === s
-                  ? "bg-gold/10 text-gold border border-gold/20"
+                  ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
                   : "text-muted hover:text-foreground"
               }`}
             >
@@ -430,7 +430,7 @@ export default function TelegramPresetsPage() {
 
         <button
           onClick={openNew}
-          className="px-4 py-2 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 transition-all flex items-center gap-2"
+          className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] transition-all flex items-center gap-2"
         >
           <Plus size={14} /> New Preset
         </button>
@@ -442,7 +442,7 @@ export default function TelegramPresetsPage() {
           onClick={() => setActiveCategory("all")}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
             activeCategory === "all"
-              ? "bg-gold/10 text-gold border border-gold/20"
+              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
               : "text-muted hover:text-foreground hover:bg-surface"
           }`}
         >
@@ -457,7 +457,7 @@ export default function TelegramPresetsPage() {
             onClick={() => setActiveCategory(c)}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
               activeCategory === c
-                ? "bg-gold/10 text-gold border border-gold/20"
+                ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
                 : "text-muted hover:text-foreground hover:bg-surface"
             }`}
           >
@@ -472,7 +472,7 @@ export default function TelegramPresetsPage() {
       {/* List */}
       {loading ? (
         <div className="card flex items-center justify-center py-12">
-          <Loader size={18} className="animate-spin text-gold" />
+          <Loader size={18} className="animate-spin text-[#2563EB]" />
         </div>
       ) : filtered.length === 0 ? (
         <div className="card">
@@ -487,7 +487,7 @@ export default function TelegramPresetsPage() {
             action={
               <button
                 onClick={openNew}
-                className="px-4 py-2 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 flex items-center gap-2"
+                className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] flex items-center gap-2"
               >
                 <Plus size={14} /> New Preset
               </button>
@@ -527,7 +527,7 @@ export default function TelegramPresetsPage() {
                     </span>
                     {isGlobal && (
                       <span
-                        className="text-[10px] uppercase tracking-wider text-gold bg-gold/10 border border-gold/20 rounded px-1.5 py-0.5 inline-flex items-center gap-1"
+                        className="text-[10px] uppercase tracking-wider text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-1.5 py-0.5 inline-flex items-center gap-1"
                         title="Global default — read-only. Duplicate to edit."
                       >
                         <Lock size={9} /> Library
@@ -574,21 +574,21 @@ export default function TelegramPresetsPage() {
                   <button
                     onClick={() => setPreviewing(p)}
                     title="Preview"
-                    className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-gold/20 transition-colors"
+                    className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)] transition-colors"
                   >
                     <Eye size={14} />
                   </button>
                   <button
                     onClick={() => setEditExample(p)}
                     title="Edit example"
-                    className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-gold hover:border-gold/20 transition-colors"
+                    className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] transition-colors"
                   >
                     <ExternalLink size={14} />
                   </button>
                   <button
                     onClick={() => openEdit(p)}
                     title={isGlobal ? "Duplicate" : "Edit"}
-                    className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-gold/20 transition-colors"
+                    className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)] transition-colors"
                   >
                     <Edit3 size={14} />
                   </button>
@@ -642,7 +642,7 @@ export default function TelegramPresetsPage() {
                     onChange={e =>
                       setEditing({ ...editing, category: e.target.value })
                     }
-                    className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-gold/40"
+                    className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
                   >
                     {CATEGORY_ORDER.map(c => (
                       <option key={c} value={c}>
@@ -657,7 +657,7 @@ export default function TelegramPresetsPage() {
                     value={editing.name}
                     onChange={e => setEditing({ ...editing, name: e.target.value })}
                     placeholder="e.g. Welcome kickoff"
-                    className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-gold/40"
+                    className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
                   />
                 </div>
               </div>
@@ -674,14 +674,14 @@ export default function TelegramPresetsPage() {
                   onChange={e => setEditing({ ...editing, body: e.target.value })}
                   rows={6}
                   placeholder="Hi {{first_name}}, your onboarding call is set for {{meeting_time}}."
-                  className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-gold/40 font-mono"
+                  className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)] font-mono"
                 />
                 {extractVars(editing.body).length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {extractVars(editing.body).map(v => (
                       <span
                         key={v}
-                        className="text-[10px] px-1.5 py-0.5 rounded bg-gold/10 text-gold border border-gold/20"
+                        className="text-[10px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
                       >
                         {`{{${v}}}`}
                       </span>
@@ -713,7 +713,7 @@ export default function TelegramPresetsPage() {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="px-4 py-2 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 disabled:opacity-60 flex items-center gap-2"
+                className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] disabled:opacity-60 flex items-center gap-2"
               >
                 {saving ? <Loader size={14} className="animate-spin" /> : <Save size={14} />}
                 {editing.id ? "Save changes" : "Create preset"}
@@ -747,7 +747,7 @@ export default function TelegramPresetsPage() {
                 {CATEGORY_LABELS[previewing.category] ?? previewing.category}
               </span>
               {previewing.user_id === null && (
-                <span className="text-[10px] uppercase tracking-wider text-gold bg-gold/10 border border-gold/20 rounded px-1.5 py-0.5 inline-flex items-center gap-1">
+                <span className="text-[10px] uppercase tracking-wider text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-1.5 py-0.5 inline-flex items-center gap-1">
                   <Lock size={9} /> Library
                 </span>
               )}
@@ -762,7 +762,7 @@ export default function TelegramPresetsPage() {
                   {previewing.variables.map(v => (
                     <span
                       key={v}
-                      className="text-[10px] px-1.5 py-0.5 rounded bg-gold/10 text-gold border border-gold/20"
+                      className="text-[10px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
                     >
                       {`{{${v}}}`}
                     </span>
@@ -797,7 +797,7 @@ export default function TelegramPresetsPage() {
                   setPreviewing(null);
                   openSend(p);
                 }}
-                className="px-4 py-2 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 flex items-center gap-2"
+                className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] flex items-center gap-2"
               >
                 <Send size={14} /> Send
               </button>
@@ -857,7 +857,7 @@ export default function TelegramPresetsPage() {
                   value={sendChatId}
                   onChange={e => setSendChatId(e.target.value)}
                   placeholder="e.g. 123456789 or @username"
-                  className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-gold/40 font-mono"
+                  className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)] font-mono"
                 />
               </div>
 
@@ -867,7 +867,7 @@ export default function TelegramPresetsPage() {
                   <div className="space-y-2">
                     {Object.keys(sendVars).map(v => (
                       <div key={v} className="flex items-center gap-2">
-                        <span className="text-xs text-gold font-mono bg-gold/10 border border-gold/20 rounded px-2 py-1 min-w-[120px] text-center">
+                        <span className="text-xs text-[#2563EB] font-mono bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-2 py-1 min-w-[120px] text-center">
                           {`{{${v}}}`}
                         </span>
                         <input
@@ -876,7 +876,7 @@ export default function TelegramPresetsPage() {
                             setSendVars(prev => ({ ...prev, [v]: e.target.value }))
                           }
                           placeholder={v}
-                          className="flex-1 bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-gold/40"
+                          className="flex-1 bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
                         />
                       </div>
                     ))}

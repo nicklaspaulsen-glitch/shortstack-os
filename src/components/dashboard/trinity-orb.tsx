@@ -218,11 +218,11 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
   const active = messages.length > 0;
 
   return (
-    <div className="card-static overflow-hidden relative" style={{ borderColor: "rgba(200,168,85,0.18)" }}>
+    <div className="card-static overflow-hidden relative" style={{ borderColor: "rgba(37,99,235,0.18)" }}>
       {/* ─── Ambient aurora behind the orb ────────────────────── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-60">
         <div className="absolute top-[-60px] left-1/2 -translate-x-1/2 w-[500px] h-[280px] rounded-full blur-3xl"
-             style={{ background: "radial-gradient(ellipse, rgba(200,168,85,0.20), transparent 60%)" }} />
+             style={{ background: "radial-gradient(ellipse, rgba(37,99,235,0.20), transparent 60%)" }} />
         <div className="absolute top-[120px] left-[20%] w-[160px] h-[160px] rounded-full blur-3xl"
              style={{ background: "radial-gradient(circle, rgba(139,92,246,0.15), transparent 70%)" }} />
         <div className="absolute top-[120px] right-[20%] w-[160px] h-[160px] rounded-full blur-3xl"
@@ -247,7 +247,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
         />
         <div className={`mt-3 transition-all ${active ? "opacity-80" : "opacity-100"}`}>
           <p className="text-[10px] uppercase tracking-[0.22em] text-muted flex items-center gap-1.5 justify-center">
-            <Sparkles size={10} className="text-gold" />
+            <Sparkles size={10} className="text-[#2563EB]" />
             Trinity
           </p>
           <h2 className={`font-bold tracking-tight mt-1 ${active ? "text-sm" : "text-xl sm:text-2xl"}`}>
@@ -280,7 +280,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
           }}
           className="relative flex items-end gap-2 max-w-2xl mx-auto"
         >
-          <div className="flex-1 relative  border border-gold/20 bg-surface focus-within:border-gold/50 focus-within:shadow-[0_0_0_3px_rgba(200,168,85,0.12)] transition-all">
+          <div className="flex-1 relative  border border-[rgba(37,99,235,0.2)] bg-surface focus-within:border-[rgba(37,99,235,0.5)] focus-within:shadow-[0_0_0_3px_rgba(37,99,235,0.12)] transition-all">
             <textarea
               ref={inputRef}
               value={input}
@@ -307,7 +307,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            className="h-[46px] px-4  bg-gold text-black font-semibold text-xs flex items-center gap-1.5 hover:bg-gold-dark disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            className="h-[46px] px-4  bg-[#2563EB] text-white font-semibold text-xs flex items-center gap-1.5 hover:bg-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             {sending ? <Loader size={14} className="animate-spin" /> : <Send size={14} />}
             <span className="hidden sm:inline">Send</span>
@@ -325,7 +325,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
                 setMessages([]);
                 setConversationId(null);
               }}
-              className="hover:text-gold transition-colors"
+              className="hover:text-[#2563EB] transition-colors"
             >
               New conversation
             </button>

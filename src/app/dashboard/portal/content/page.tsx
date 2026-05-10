@@ -113,45 +113,45 @@ export default function ClientContentPage() {
   return (
     <div className="fade-in space-y-5">
       <div>
-        <h1 className="page-header mb-0 flex items-center gap-2"><Film size={18} className="text-gold" /> Your Content</h1>
-        <p className="text-xs text-muted mt-0.5">All content created and scheduled for your brand</p>
+        <h1 className="page-header mb-0 flex items-center gap-2"><Film size={18} className="text-blue-600" /> Your Content</h1>
+        <p className="text-xs text-gray-500 mt-0.5">All content created and scheduled for your brand</p>
       </div>
 
       {/* Content Calendar */}
       <div className="card">
-        <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-gold" /> Content Calendar</h2>
+        <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-blue-600" /> Content Calendar</h2>
         {calendar.length === 0 ? (
           <EmptyState icon={<Calendar size={32} />} title="No Content Scheduled" description="Your content calendar is empty. We&apos;ll start populating it soon." />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {calendar.map((c) => (
-              <div key={c.id} className="bg-surface-light border border-border rounded-lg p-3 hover:border-gold/15 transition-colors">
+              <div key={c.id} className="bg-gray-50 border border-gray-200 rounded-lg p-3 hover:border-blue-200 transition-colors">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] text-muted capitalize font-medium">{c.platform.replace(/_/g, " ")}</span>
+                  <span className="text-[10px] text-gray-500 capitalize font-medium">{c.platform.replace(/_/g, " ")}</span>
                   <StatusBadge status={c.status} />
                 </div>
-                <p className="text-xs font-medium mb-1">{c.title}</p>
-                {c.scheduled_at && <p className="text-[9px] text-muted mb-2">{formatDate(c.scheduled_at)}</p>}
+                <p className="text-xs font-medium mb-1 text-gray-900">{c.title}</p>
+                {c.scheduled_at && <p className="text-[9px] text-gray-400 mb-2">{formatDate(c.scheduled_at)}</p>}
                 {(c.status === "published" || c.status === "approved_for_publish") && (
                   <button
                     onClick={() => openRevisionModal(c.id, c.title, "request")}
-                    className="w-full text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-warning/10 text-warning hover:bg-warning/20 transition-colors mt-1"
+                    className="w-full text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 transition-colors mt-1"
                   >
                     <MessageSquare size={10} /> Request revision
                   </button>
                 )}
                 {c.status === "ready_to_publish" && (
-                  <div className="flex gap-1.5 pt-1 border-t border-border">
+                  <div className="flex gap-1.5 pt-1 border-t border-gray-200">
                     <button onClick={async () => {
                       await supabase.from("content_calendar").update({ status: "published" }).eq("id", c.id);
                       toast.success("Approved!");
                       fetchContent();
-                    }} className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-success/10 text-success hover:bg-success/20 transition-colors">
+                    }} className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-green-50 text-green-700 hover:bg-green-100 transition-colors">
                       <CheckCircle size={10} /> Approve
                     </button>
                     <button
                       onClick={() => openRevisionModal(c.id, c.title, "changes")}
-                      className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-warning/10 text-warning hover:bg-warning/20 transition-colors"
+                      className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 transition-colors"
                     >
                       <MessageSquare size={10} /> Changes
                     </button>
@@ -169,17 +169,17 @@ export default function ClientContentPage() {
           <h2 className="section-header">Content Scripts</h2>
           <div className="space-y-2">
             {scripts.map((s) => (
-              <div key={s.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+              <div key={s.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
                 <div>
-                  <p className="text-xs font-medium">{s.title}</p>
-                  <p className="text-[10px] text-muted capitalize">{s.script_type?.replace(/_/g, " ")} · {s.target_platform?.replace(/_/g, " ")}</p>
+                  <p className="text-xs font-medium text-gray-900">{s.title}</p>
+                  <p className="text-[10px] text-gray-500 capitalize">{s.script_type?.replace(/_/g, " ")} · {s.target_platform?.replace(/_/g, " ")}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <StatusBadge status={s.status} />
                   <button onClick={async () => {
                     const res = await fetch(`/api/content/pdf?id=${s.id}`);
                     if (res.ok) { const blob = await res.blob(); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = `${s.title}.pdf`; a.click(); }
-                  }} className="text-gold hover:text-gold-light"><Download size={13} /></button>
+                  }} className="text-blue-600 hover:text-blue-700"><Download size={13} /></button>
                 </div>
               </div>
             ))}
@@ -196,8 +196,8 @@ export default function ClientContentPage() {
         title={modalTitle}
         size="md"
       >
-        <p className="text-xs text-muted mb-4">{modalDescription}</p>
-        <label className="block text-[11px] font-medium text-muted mb-1.5">
+        <p className="text-xs text-gray-500 mb-4">{modalDescription}</p>
+        <label className="block text-[11px] font-medium text-gray-600 mb-1.5">
           What needs to change?
         </label>
         <textarea
@@ -207,18 +207,18 @@ export default function ClientContentPage() {
           rows={5}
           autoFocus
           disabled={submittingRevision}
-          className="w-full text-xs border border-border/60 bg-surface-light/40 rounded-lg px-3 py-2.5 resize-none focus:outline-none focus:border-gold/60"
+          className="w-full text-xs border border-gray-200 bg-gray-50 rounded-lg px-3 py-2.5 resize-none focus:outline-none focus:border-blue-400 text-gray-700"
         />
-        <label className="mt-4 flex items-center gap-2 text-xs text-foreground cursor-pointer select-none">
+        <label className="mt-4 flex items-center gap-2 text-xs text-gray-700 cursor-pointer select-none">
           <input
             type="checkbox"
             checked={revisionUrgent}
             onChange={(e) => setRevisionUrgent(e.target.checked)}
             disabled={submittingRevision}
-            className="h-3.5 w-3.5 rounded border-border/60 bg-surface-light/40 accent-warning"
+            className="h-3.5 w-3.5 rounded border-gray-300 accent-yellow-500"
           />
           <span className="inline-flex items-center gap-1.5">
-            <AlertTriangle size={12} className="text-warning" />
+            <AlertTriangle size={12} className="text-yellow-600" />
             Mark this as urgent
           </span>
         </label>
@@ -226,14 +226,14 @@ export default function ClientContentPage() {
           <button
             onClick={closeRevisionModal}
             disabled={submittingRevision}
-            className="text-xs px-4 py-2 rounded-lg text-muted hover:text-foreground transition-colors disabled:opacity-50"
+            className="text-xs px-4 py-2 rounded-lg text-gray-500 hover:text-gray-800 transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={submitRevision}
             disabled={submittingRevision || !revisionNote.trim()}
-            className="text-xs px-4 py-2 rounded-lg bg-gold text-black font-semibold hover:bg-gold/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
+            className="text-xs px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
           >
             <MessageSquare size={12} />
             {submittingRevision ? "Sending..." : "Send revision"}

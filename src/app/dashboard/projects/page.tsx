@@ -481,7 +481,7 @@ export default function ProjectsPage() {
         icon={<Kanban size={28} />}
         title="Projects"
         subtitle="Kanban-style boards for every project. Drag tasks across columns, leave comments, ship work."
-        gradient="gold"
+        gradient="blue"
         actions={
           <button
             onClick={() => setShowNewBoard(true)}
@@ -540,8 +540,8 @@ export default function ProjectsPage() {
                 onClick={() => setActiveBoardId(b.id)}
                 className={`px-4 py-2 text-xs rounded-lg border flex items-center gap-2 transition-all whitespace-nowrap ${
                   activeBoardId === b.id
-                    ? "bg-gold/10 text-gold border-gold/30"
-                    : "bg-surface text-muted border-border hover:text-foreground hover:border-gold/20"
+                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]"
+                    : "bg-surface text-muted border-border hover:text-foreground hover:border-[rgba(37,99,235,0.15)]"
                 }`}
               >
                 <span
@@ -620,7 +620,7 @@ export default function ProjectsPage() {
                     {/* Tasks */}
                     <div
                       className={`space-y-2 min-h-[120px] rounded-lg p-1 transition-colors ${
-                        isDragTarget ? "bg-gold/5 ring-1 ring-gold/20" : ""
+                        isDragTarget ? "bg-[rgba(37,99,235,0.05)] ring-1 ring-[rgba(37,99,235,0.18)]" : ""
                       }`}
                     >
                       {columnTasks.map((task, taskIdx) => {
@@ -651,7 +651,7 @@ export default function ProjectsPage() {
                               if (justDraggedRef.current) return;
                               openTaskPanel(task);
                             }}
-                            className="p-3 rounded-lg glass-md hover:border-indigo-400/30 transition-all cursor-grab active:cursor-grabbing"
+                            className="p-3 rounded-lg glass-md hover:border-[rgba(37,99,235,0.25)] transition-all cursor-grab active:cursor-grabbing"
                           >
                             <p className="text-[12px] font-semibold leading-snug mb-2 break-words">
                               {task.title}
@@ -676,7 +676,7 @@ export default function ProjectsPage() {
                               )}
                               {task.assignee_profile_id && (
                                 <span
-                                  className="ml-auto w-5 h-5 rounded-full bg-gold/20 border border-gold/30 text-gold text-[9px] font-bold flex items-center justify-center"
+                                  className="ml-auto w-5 h-5 rounded-full bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] text-[9px] font-bold flex items-center justify-center"
                                   title={assignee.name ? `Assigned to ${assignee.name}` : "Assignee"}
                                 >
                                   {assignee.initial || <User size={10} />}
@@ -718,7 +718,7 @@ export default function ProjectsPage() {
                             setAddingTaskColumn(col.key);
                             setNewTaskTitle("");
                           }}
-                          className="w-full mt-1 py-1.5 rounded-lg text-[10px] text-muted hover:text-gold hover:bg-gold/5 transition-colors flex items-center justify-center gap-1"
+                          className="w-full mt-1 py-1.5 rounded-lg text-[10px] text-muted hover:text-[#2563EB] hover:bg-[rgba(37,99,235,0.05)] transition-colors flex items-center justify-center gap-1"
                         >
                           <Plus size={10} /> New task
                         </button>
@@ -798,7 +798,7 @@ export default function ProjectsPage() {
           >
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold flex items-center gap-2">
-                <Plus size={14} className="text-gold" /> Quick task
+                <Plus size={14} className="text-[#2563EB]" /> Quick task
               </h3>
               <kbd className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light border border-border text-muted">
                 Esc

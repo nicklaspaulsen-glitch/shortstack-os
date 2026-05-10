@@ -57,8 +57,8 @@ export default function SocialStudioPage() {
               whileTap={{ scale: 0.97 }}
               className={`flex-1 min-w-[140px] px-3 py-2 rounded-md text-xs font-medium inline-flex items-center justify-center gap-2 transition-all ${
                 active
-                  ? "bg-indigo-500/15 border border-indigo-500/40 text-indigo-400 shadow-inner"
-                  : "border border-transparent text-muted hover:text-foreground hover:bg-white/5"
+                  ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] shadow-inner"
+                  : "border border-transparent text-muted hover:text-foreground hover:bg-[rgba(0,0,0,0.03)]"
               }`}
               aria-pressed={active}
               title={t.description}

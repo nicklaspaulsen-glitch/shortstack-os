@@ -128,8 +128,8 @@ export default function AbTestDetailPage() {
   if (loading || !test) {
     return (
       <div className="p-6 max-w-6xl mx-auto space-y-6">
-        <div className="h-32  bg-white/4 animate-pulse" />
-        <div className="h-64  bg-white/4 animate-pulse" />
+        <div className="h-32 bg-black/[0.04] animate-pulse rounded-xl" />
+        <div className="h-64 bg-black/[0.04] animate-pulse rounded-xl" />
       </div>
     );
   }
@@ -150,7 +150,7 @@ export default function AbTestDetailPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => router.push("/dashboard/ab-tests")}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm bg-white/5 hover:bg-white/10 text-white/80"
+              className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm bg-black/[0.04] hover:bg-black/[0.08] text-gray-600"
             >
               <ArrowLeft size={14} />
               Back
@@ -184,9 +184,9 @@ export default function AbTestDetailPage() {
         <Tile label="Baseline rate" value={`${baselineRate}%`} />
       </div>
 
-      <div className="bg-zinc-900/60 border border-white/8 rounded-xl overflow-hidden">
+      <div className="bg-white border border-black/[0.06] rounded-xl overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-white/4 text-xs uppercase tracking-wider text-zinc-400">
+          <thead className="bg-black/[0.03] text-xs uppercase tracking-wider text-gray-500">
             <tr>
               <th className="px-4 py-3 text-left">Variant</th>
               <th className="px-4 py-3 text-right">Views</th>
@@ -204,9 +204,9 @@ export default function AbTestDetailPage() {
               return (
                 <tr
                   key={v.id}
-                  className={`border-t border-white/4 ${isWinner ? "bg-amber-400/5" : ""}`}
+                  className={`border-t border-black/[0.04] ${isWinner ? "bg-amber-50" : ""}`}
                 >
-                  <td className="px-4 py-3 font-semibold text-white">
+                  <td className="px-4 py-3 font-semibold text-gray-900">
                     <div className="flex items-center gap-2">
                       {isWinner && <Trophy size={14} className="text-amber-400" />}
                       {v.variant_key}
@@ -246,14 +246,14 @@ export default function AbTestDetailPage() {
       </div>
 
       {test.status !== "completed" && (
-        <div className="bg-zinc-900/60 border border-white/8 rounded-xl p-4 flex items-end gap-3">
+        <div className="bg-white border border-black/[0.06] rounded-xl p-4 flex items-end gap-3">
           <div className="flex-1">
-            <label className="block text-xs text-white/60 mb-1">Add variant</label>
+            <label className="block text-xs text-gray-500 mb-1">Add variant</label>
             <input
               value={newVariantKey}
               onChange={(e) => setNewVariantKey(e.target.value)}
               placeholder="Variant key (e.g. C)"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder-white/30 text-sm focus:outline-none focus:border-purple-500"
+              className="w-full bg-black/[0.04] border border-black/[0.08] rounded-lg px-3 py-2 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-blue-500"
             />
           </div>
           <button
@@ -279,9 +279,9 @@ export default function AbTestDetailPage() {
 
 function Tile({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="bg-zinc-900/40 border border-white/6 rounded-xl p-3">
-      <div className="text-xs text-zinc-500">{label}</div>
-      <div className="text-white font-bold text-lg mt-0.5">{value}</div>
+    <div className="bg-white border border-black/[0.06] rounded-xl p-3">
+      <div className="text-xs text-gray-500">{label}</div>
+      <div className="text-gray-900 font-bold text-lg mt-0.5">{value}</div>
     </div>
   );
 }

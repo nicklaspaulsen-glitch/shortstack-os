@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import {
@@ -620,7 +620,7 @@ export default function ScraperPage() {
         icon={<Search size={22} />}
         title="Lead Finder"
         subtitle="Find leads from any platform, any niche, any location."
-        gradient="gold"
+        gradient="blue"
       />
       <div className="flex items-center justify-end">
         <div className="flex items-center gap-2">
@@ -644,7 +644,7 @@ export default function ScraperPage() {
               <div className="absolute right-0 top-full mt-2 w-72 bg-surface border border-border rounded-xl shadow-2xl p-4 z-50">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-xs font-semibold flex items-center gap-2">
-                    <Clock size={12} className="text-gold" /> Auto-Run Daily
+                    <Clock size={12} className="text-[#2563EB]" /> Auto-Run Daily
                   </h4>
                   <button onClick={() => setShowAutoRunConfig(false)} className="text-muted hover:text-foreground">
                     <X size={14} />
@@ -682,8 +682,8 @@ export default function ScraperPage() {
                           )}
                           className={`w-8 h-8 rounded-lg text-[10px] font-bold transition-all ${
                             autoRunDays.includes(day.id)
-                              ? "bg-gold text-black"
-                              : "bg-surface-light text-muted border border-border hover:border-gold/30"
+                              ? "bg-[#2563EB] text-white"
+                              : "bg-surface-light text-muted border border-border hover:border-[rgba(37,99,235,0.25)]"
                           }`}
                         >
                           {day.label}
@@ -691,16 +691,16 @@ export default function ScraperPage() {
                       ))}
                     </div>
                     <div className="flex gap-2 mt-1.5">
-                      <button onClick={() => setAutoRunDays(["mon","tue","wed","thu","fri"])} className="text-[8px] text-muted hover:text-gold">Weekdays</button>
-                      <button onClick={() => setAutoRunDays(["mon","tue","wed","thu","fri","sat","sun"])} className="text-[8px] text-muted hover:text-gold">Every day</button>
-                      <button onClick={() => setAutoRunDays(["mon","wed","fri"])} className="text-[8px] text-muted hover:text-gold">MWF</button>
+                      <button onClick={() => setAutoRunDays(["mon","tue","wed","thu","fri"])} className="text-[8px] text-muted hover:text-[#2563EB]">Weekdays</button>
+                      <button onClick={() => setAutoRunDays(["mon","tue","wed","thu","fri","sat","sun"])} className="text-[8px] text-muted hover:text-[#2563EB]">Every day</button>
+                      <button onClick={() => setAutoRunDays(["mon","wed","fri"])} className="text-[8px] text-muted hover:text-[#2563EB]">MWF</button>
                     </div>
                   </div>
                   <div className="p-2.5 bg-surface-light rounded-lg border border-border">
                     <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Current Config</p>
                     <div className="flex flex-wrap gap-1">
-                      {selectedPlatforms.map(p => <span key={p} className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{p.replace("_", " ")}</span>)}
-                      {niches.slice(0, 3).map(n => <span key={n} className="text-[8px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded">{n}</span>)}
+                      {selectedPlatforms.map(p => <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">{p.replace("_", " ")}</span>)}
+                      {niches.slice(0, 3).map(n => <span key={n} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">{n}</span>)}
                       {niches.length > 3 && <span className="text-[8px] text-muted">+{niches.length - 3} more</span>}
                       {locations.slice(0, 2).map(l => <span key={l} className="text-[8px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded">{l}</span>)}
                       {locations.length > 2 && <span className="text-[8px] text-muted">+{locations.length - 2} more</span>}
@@ -717,7 +717,7 @@ export default function ScraperPage() {
                     className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                       autoRunEnabled
                         ? "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20"
-                        : "bg-gold text-black hover:bg-gold/90"
+                        : "bg-[#2563EB] text-white hover:bg-[#2563EB]/90"
                     }`}
                   >
                     {autoRunSaving ? (
@@ -746,7 +746,7 @@ export default function ScraperPage() {
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 border-b border-border pb-0">
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-t-lg transition-all ${tab === t.id ? "bg-surface-light border border-b-0 border-border text-gold" : "text-muted hover:text-foreground"}`}>
+            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-t-lg transition-all ${tab === t.id ? "bg-surface-light border border-b-0 border-border text-[#2563EB]" : "text-muted hover:text-foreground"}`}>
             {t.icon} {t.label}
           </button>
         ))}
@@ -755,7 +755,7 @@ export default function ScraperPage() {
       {/* Estimated output */}
       {tab === "search" && (
         <div className="glass-indigo rounded-xl px-4 py-3 flex items-center justify-between">
-          <span className="text-sm">Estimated output: <span className="text-gold font-bold">{estimatedLeads.toLocaleString()} leads</span></span>
+          <span className="text-sm">Estimated output: <span className="text-[#2563EB] font-bold">{estimatedLeads.toLocaleString()} leads</span></span>
           <span className="text-xs text-muted">{selectedPlatforms.length} platform(s) x {niches.length} niche(s) x {locations.length} location(s) x {maxResults} per search</span>
         </div>
       )}
@@ -764,7 +764,7 @@ export default function ScraperPage() {
       {tab === "search" && (
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <Target size={14} className="text-gold" />
+            <Target size={14} className="text-[#2563EB]" />
             <span className="text-xs font-medium">Targeting Mode</span>
             <div className="flex gap-1 ml-2">
               {([
@@ -777,8 +777,8 @@ export default function ScraperPage() {
                   onClick={() => setTargetMode(mode.id)}
                   className={`px-3 py-1 rounded-lg text-xs font-medium border transition-all ${
                     targetMode === mode.id
-                      ? "border-gold bg-gold/10 text-gold"
-                      : "border-border text-muted hover:text-foreground hover:border-gold/30"
+                      ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                      : "border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)]"
                   }`}
                 >
                   {mode.label}
@@ -800,7 +800,7 @@ export default function ScraperPage() {
           {/* Left - Platforms + Filters */}
           <div className="space-y-4">
             <div className="glass rounded-xl p-4">
-              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Globe size={14} className="text-indigo-400" /> Platforms</h3>
+              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Globe size={14} className="text-[#2563EB]" /> Platforms</h3>
               <ChoiceCards
                 columns={2}
                 size="sm"
@@ -819,14 +819,14 @@ export default function ScraperPage() {
               />
             </div>
             <div className="glass rounded-xl p-4">
-              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Hash size={14} className="text-indigo-400" /> Results per search</h3>
-              <input type="range" min="5" max="500" value={maxResults} onChange={e => setMaxResults(parseInt(e.target.value))} className="w-full accent-gold" />
-              <div className="flex justify-between text-xs text-muted mt-1"><span>5</span><span className="text-gold font-bold">{maxResults}</span><span>500</span></div>
+              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Hash size={14} className="text-[#2563EB]" /> Results per search</h3>
+              <input type="range" min="5" max="500" value={maxResults} onChange={e => setMaxResults(parseInt(e.target.value))} className="w-full accent-[#2563EB]" />
+              <div className="flex justify-between text-xs text-muted mt-1"><span>5</span><span className="text-[#2563EB] font-bold">{maxResults}</span><span>500</span></div>
             </div>
             {/* Advanced Filters */}
             <div className="glass rounded-xl p-4">
               <button onClick={() => setShowFilters(!showFilters)} className="w-full flex items-center justify-between">
-                <h3 className="text-xs font-medium flex items-center gap-2"><Filter size={13} className="text-gold" /> Filters</h3>
+                <h3 className="text-xs font-medium flex items-center gap-2"><Filter size={13} className="text-[#2563EB]" /> Filters</h3>
                 <span className="text-[10px] text-muted">{showFilters ? "Hide" : "Show"}</span>
               </button>
               {showFilters && (
@@ -850,7 +850,7 @@ export default function ScraperPage() {
                       { key: "missing_social", label: "Missing social profiles" },
                     ].map(f => (
                       <label key={f.key} className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={(filters as Record<string, unknown>)[f.key] as boolean} onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })} className="accent-gold w-3.5 h-3.5" />
+                        <input type="checkbox" checked={(filters as Record<string, unknown>)[f.key] as boolean} onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })} className="accent-[#2563EB] w-3.5 h-3.5" />
                         <span className="text-[10px]">{f.label}</span>
                       </label>
                     ))}
@@ -869,7 +869,7 @@ export default function ScraperPage() {
                         { key: "no_social_at_all", label: "No social media at all" },
                       ].map(f => (
                         <label key={f.key} className="flex items-center gap-2 cursor-pointer">
-                          <input type="checkbox" checked={(filters as Record<string, unknown>)[f.key] as boolean} onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })} className="accent-gold w-3.5 h-3.5" />
+                          <input type="checkbox" checked={(filters as Record<string, unknown>)[f.key] as boolean} onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })} className="accent-[#2563EB] w-3.5 h-3.5" />
                           <span className="text-[10px]">{f.label}</span>
                         </label>
                       ))}
@@ -877,11 +877,11 @@ export default function ScraperPage() {
                   </div>
                   {/* Annual Revenue */}
                   <div>
-                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1 flex items-center gap-1"><DollarSign size={10} className="text-gold" /> Annual Revenue</p>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1 flex items-center gap-1"><DollarSign size={10} className="text-[#2563EB]" /> Annual Revenue</p>
                     <div className="flex flex-wrap gap-1">
                       {REVENUE_RANGES.map(r => (
                         <button key={r} onClick={() => setFilters({ ...filters, revenue_range: filters.revenue_range === r ? "" : r })}
-                          className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.revenue_range === r ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>{r}</button>
+                          className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.revenue_range === r ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"}`}>{r}</button>
                       ))}
                     </div>
                   </div>
@@ -891,7 +891,7 @@ export default function ScraperPage() {
                     <div className="flex flex-wrap gap-1">
                       {COMPANY_SIZES.map(s => (
                         <button key={s} onClick={() => setFilters({ ...filters, company_size: filters.company_size === s ? "" : s })}
-                          className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.company_size === s ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>{s}</button>
+                          className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.company_size === s ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"}`}>{s}</button>
                       ))}
                     </div>
                   </div>
@@ -931,7 +931,7 @@ export default function ScraperPage() {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <input type="range" min="0" max="5" step="0.5" value={filters.min_rating} onChange={e => setFilters({ ...filters, min_rating: parseFloat(e.target.value) })} className="flex-1 accent-gold" />
+                      <input type="range" min="0" max="5" step="0.5" value={filters.min_rating} onChange={e => setFilters({ ...filters, min_rating: parseFloat(e.target.value) })} className="flex-1 accent-[#2563EB]" />
                       <input type="range" min="0" max="5" step="0.5" value={filters.max_rating} onChange={e => setFilters({ ...filters, max_rating: parseFloat(e.target.value) })} className="flex-1 accent-danger" />
                     </div>
                     <div className="flex items-center justify-between mt-1">
@@ -951,8 +951,8 @@ export default function ScraperPage() {
                       </label>
                     </div>
                     <div className="flex gap-2">
-                      <input type="range" min="0" max="100" step="1" value={filters.min_reviews} onChange={e => setFilters({ ...filters, min_reviews: parseInt(e.target.value) })} className="flex-1 accent-gold" />
-                      <input type="range" min="1" max="1000" step="5" value={filters.max_reviews} onChange={e => setFilters({ ...filters, max_reviews: parseInt(e.target.value) })} className="flex-1 accent-gold" />
+                      <input type="range" min="0" max="100" step="1" value={filters.min_reviews} onChange={e => setFilters({ ...filters, min_reviews: parseInt(e.target.value) })} className="flex-1 accent-[#2563EB]" />
+                      <input type="range" min="1" max="1000" step="5" value={filters.max_reviews} onChange={e => setFilters({ ...filters, max_reviews: parseInt(e.target.value) })} className="flex-1 accent-[#2563EB]" />
                     </div>
                   </div>
                   {/* Enhanced Review Toggles */}
@@ -975,7 +975,7 @@ export default function ScraperPage() {
             {/* Lead Scoring Config */}
             <div className="glass rounded-xl p-4">
               <button onClick={() => setShowScoringConfig(!showScoringConfig)} className="w-full flex items-center justify-between">
-                <h3 className="text-xs font-medium flex items-center gap-2"><Target size={13} className="text-gold" /> Lead Scoring Weights</h3>
+                <h3 className="text-xs font-medium flex items-center gap-2"><Target size={13} className="text-[#2563EB]" /> Lead Scoring Weights</h3>
                 <span className="text-[10px] text-muted">{showScoringConfig ? "Hide" : "Configure"}</span>
               </button>
               {showScoringConfig && (
@@ -983,8 +983,8 @@ export default function ScraperPage() {
                   {Object.entries(scoringWeights).map(([key, val]) => (
                     <div key={key} className="flex items-center gap-2">
                       <span className="text-[10px] text-muted w-24 capitalize">{key.replace(/_/g, " ")}</span>
-                      <input type="range" min="0" max="30" value={val} onChange={e => setScoringWeights({ ...scoringWeights, [key]: parseInt(e.target.value) })} className="flex-1 accent-gold" />
-                      <span className="text-[10px] text-gold font-mono w-6 text-right">{val}</span>
+                      <input type="range" min="0" max="30" value={val} onChange={e => setScoringWeights({ ...scoringWeights, [key]: parseInt(e.target.value) })} className="flex-1 accent-[#2563EB]" />
+                      <span className="text-[10px] text-[#2563EB] font-mono w-6 text-right">{val}</span>
                     </div>
                   ))}
                   <p className="text-[9px] text-muted text-right">Total: {Object.values(scoringWeights).reduce((a, b) => a + b, 0)}/100</p>
@@ -994,14 +994,14 @@ export default function ScraperPage() {
             {/* Decision Maker Targeting */}
             <div className="glass rounded-xl p-4">
               <button onClick={() => setFilters({ ...filters, find_decision_makers: !filters.find_decision_makers })} className="w-full flex items-center justify-between">
-                <h3 className="text-xs font-medium flex items-center gap-2"><UserPlus size={13} className="text-gold" /> Decision Maker Targeting</h3>
+                <h3 className="text-xs font-medium flex items-center gap-2"><UserPlus size={13} className="text-[#2563EB]" /> Decision Maker Targeting</h3>
                 <span className="text-[10px] text-muted">{filters.find_decision_makers ? "On" : "Off"}</span>
               </button>
               {filters.find_decision_makers && (
                 <div className="space-y-3 mt-3 pt-3 border-t border-border">
                   <div>
                     <label className="flex items-center gap-2 cursor-pointer mb-2">
-                      <input type="checkbox" checked={filters.find_decision_makers} onChange={e => setFilters({ ...filters, find_decision_makers: e.target.checked })} className="accent-gold w-3.5 h-3.5" />
+                      <input type="checkbox" checked={filters.find_decision_makers} onChange={e => setFilters({ ...filters, find_decision_makers: e.target.checked })} className="accent-[#2563EB] w-3.5 h-3.5" />
                       <span className="text-[10px]">Find decision makers</span>
                     </label>
                   </div>
@@ -1010,13 +1010,13 @@ export default function ScraperPage() {
                     <div className="flex flex-wrap gap-1">
                       {DECISION_MAKER_TITLES.map(title => (
                         <button key={title} onClick={() => toggleDecisionMakerTitle(title)}
-                          className={`text-[9px] px-2 py-1 rounded border transition-all ${decisionMakerTitles.includes(title) ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>
+                          className={`text-[9px] px-2 py-1 rounded border transition-all ${decisionMakerTitles.includes(title) ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"}`}>
                           <Briefcase size={8} className="inline mr-1" />{title}
                         </button>
                       ))}
                     </div>
                     {decisionMakerTitles.length > 0 && (
-                      <p className="text-[8px] text-gold mt-1.5">{decisionMakerTitles.length} title{decisionMakerTitles.length !== 1 ? "s" : ""} selected</p>
+                      <p className="text-[8px] text-[#2563EB] mt-1.5">{decisionMakerTitles.length} title{decisionMakerTitles.length !== 1 ? "s" : ""} selected</p>
                     )}
                   </div>
                 </div>
@@ -1025,7 +1025,7 @@ export default function ScraperPage() {
             {/* Smart AI Match */}
             <div className="glass-indigo rounded-xl p-4">
               <button onClick={() => setAiMatchEnabled(!aiMatchEnabled)} className="w-full flex items-center justify-between">
-                <h3 className="text-xs font-medium flex items-center gap-2"><FlaskConical size={13} className="text-gold" /> Smart AI Match</h3>
+                <h3 className="text-xs font-medium flex items-center gap-2"><FlaskConical size={13} className="text-[#2563EB]" /> Smart AI Match</h3>
                 <span className="text-[10px] text-muted">{aiMatchEnabled ? "On" : "Off"}</span>
               </button>
               {aiMatchEnabled && (
@@ -1041,12 +1041,12 @@ export default function ScraperPage() {
                     />
                   </div>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={aiMatchEnabled} onChange={e => setAiMatchEnabled(e.target.checked)} className="accent-gold w-3.5 h-3.5" />
+                    <input type="checkbox" checked={aiMatchEnabled} onChange={e => setAiMatchEnabled(e.target.checked)} className="accent-[#2563EB] w-3.5 h-3.5" />
                     <span className="text-[10px]">AI Score leads based on this prompt</span>
                   </label>
                   {aiMatchPrompt && (
-                    <div className="p-2 bg-gold/5 border border-gold/10 rounded-lg">
-                      <p className="text-[8px] text-gold uppercase tracking-wider mb-0.5">AI Prompt Active</p>
+                    <div className="p-2 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg">
+                      <p className="text-[8px] text-[#2563EB] uppercase tracking-wider mb-0.5">AI Prompt Active</p>
                       <p className="text-[9px] text-muted truncate">{aiMatchPrompt}</p>
                     </div>
                   )}
@@ -1059,8 +1059,8 @@ export default function ScraperPage() {
           <div className="space-y-4">
             <div className="glass rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium flex items-center gap-2"><Zap size={14} className="text-gold" /> Niches / Industries <span className="text-[9px] text-muted font-normal">({ALL_NICHES.length} total)</span></h3>
-                <button onClick={() => setBatchMode(!batchMode)} className="text-[9px] text-gold hover:underline">{batchMode ? "Single mode" : "Batch import"}</button>
+                <h3 className="text-sm font-medium flex items-center gap-2"><Zap size={14} className="text-[#2563EB]" /> Niches / Industries <span className="text-[9px] text-muted font-normal">({ALL_NICHES.length} total)</span></h3>
+                <button onClick={() => setBatchMode(!batchMode)} className="text-[9px] text-[#2563EB] hover:underline">{batchMode ? "Single mode" : "Batch import"}</button>
               </div>
               {batchMode ? (
                 <div className="space-y-2">
@@ -1072,7 +1072,7 @@ export default function ScraperPage() {
                   {/* Selected niches */}
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {niches.map(n => (
-                      <span key={n} className="bg-gold/10 border border-gold/20 text-gold text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                      <span key={n} className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] text-[#2563EB] text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
                         {n}<button onClick={() => setNiches(niches.filter(x => x !== n))} className="hover:text-foreground"><X size={10} /></button>
                       </span>
                     ))}
@@ -1107,13 +1107,13 @@ export default function ScraperPage() {
                             className="w-full flex items-center justify-between px-2.5 py-2 bg-surface-light/50 hover:bg-surface-light transition-colors"
                           >
                             <div className="flex items-center gap-2">
-                              {isExpanded ? <ChevronDown size={12} className="text-gold" /> : <ChevronRight size={12} className="text-muted" />}
-                              <Building size={11} className="text-gold" />
+                              {isExpanded ? <ChevronDown size={12} className="text-[#2563EB]" /> : <ChevronRight size={12} className="text-muted" />}
+                              <Building size={11} className="text-[#2563EB]" />
                               <span className="text-[10px] font-medium">{category}</span>
                             </div>
                             <div className="flex items-center gap-1.5">
                               {selectedInCategory > 0 && (
-                                <span className="text-[8px] bg-gold/15 text-gold px-1.5 py-0.5 rounded-full font-medium">{selectedInCategory} selected</span>
+                                <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded-full font-medium">{selectedInCategory} selected</span>
                               )}
                               <span className="text-[8px] text-muted">{items.length}</span>
                             </div>
@@ -1124,7 +1124,7 @@ export default function ScraperPage() {
                                 <button key={n} onClick={() => addNiche(n)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">{n}</button>
                               ))}
                               {items.filter(n => !niches.includes(n)).length === 0 && (
-                                <p className="text-[9px] text-gold/60 italic px-1">All niches in this category are selected</p>
+                                <p className="text-[9px] text-[rgba(37,99,235,0.6)] italic px-1">All niches in this category are selected</p>
                               )}
                             </div>
                           )}
@@ -1139,7 +1139,7 @@ export default function ScraperPage() {
               )}
             </div>
             <div className="glass rounded-xl p-4">
-              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Tag size={14} className="text-indigo-400" /> Tags (optional)</h3>
+              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Tag size={14} className="text-[#2563EB]" /> Tags (optional)</h3>
               <div className="flex flex-wrap gap-1.5 mb-2">
                 {tags.map(t => (
                   <span key={t} className="bg-info/10 text-info text-xs px-2 py-0.5 rounded-full flex items-center gap-1">{t} <button onClick={() => setTags(tags.filter(x => x !== t))}><X size={10} /></button></span>
@@ -1152,7 +1152,7 @@ export default function ScraperPage() {
             </div>
             {/* Save Search */}
             <div className="glass rounded-xl p-4">
-              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Save size={14} className="text-indigo-400" /> Save This Search</h3>
+              <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Save size={14} className="text-[#2563EB]" /> Save This Search</h3>
               <div className="flex gap-2">
                 <input value={saveSearchName} onChange={e => setSaveSearchName(e.target.value)} placeholder="Search name..." className="input flex-1 text-sm py-1.5" />
                 <button onClick={saveCurrentSearch} className="btn-primary text-xs py-1.5 px-3"><Save size={12} /></button>
@@ -1162,7 +1162,7 @@ export default function ScraperPage() {
 
           {/* Right - Locations */}
           <div className="glass rounded-xl p-4">
-            <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><MapPin size={14} className="text-gold" /> Locations</h3>
+            <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><MapPin size={14} className="text-[#2563EB]" /> Locations</h3>
             {/* Selected locations */}
             <div className="flex flex-wrap gap-1.5 mb-3">
               {locations.map(l => (
@@ -1199,8 +1199,8 @@ export default function ScraperPage() {
                     onClick={() => setSelectedCountries(prev => prev.includes(c.code) ? prev.filter(x => x !== c.code) : [...prev, c.code])}
                     className={`text-[10px] px-2 py-1 rounded border transition-all flex items-center gap-1 ${
                       selectedCountries.includes(c.code)
-                        ? "border-gold bg-gold/10 text-gold"
-                        : "border-border text-muted hover:text-foreground hover:border-gold/30"
+                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                        : "border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)]"
                     }`}
                   >
                     <span>{c.flag}</span> {c.name}
@@ -1224,7 +1224,7 @@ export default function ScraperPage() {
                         <button key={city} onClick={() => addLocation(city)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">{city}</button>
                       ))}
                       {cities.length === 0 && !locationSearch.trim() && (
-                        <p className="text-[9px] text-gold/60 italic px-1">All cities selected</p>
+                        <p className="text-[9px] text-[rgba(37,99,235,0.6)] italic px-1">All cities selected</p>
                       )}
                     </div>
                   </div>
@@ -1244,7 +1244,7 @@ export default function ScraperPage() {
           {/* Campaign-first workflow tip */}
           {!pushTipDismissed && (
             <div className="rounded-xl border border-blue-400/20 bg-blue-500/5 px-3.5 py-2.5 flex items-start gap-2.5">
-              <div className="w-6 h-6 rounded-lg bg-blue-500/15 border border-blue-400/25 flex items-center justify-center text-blue-300 flex-shrink-0 mt-0.5">
+              <div className="w-6 h-6 rounded-lg bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center text-[#2563EB] flex-shrink-0 mt-0.5">
                 <Lightbulb size={12} />
               </div>
               <div className="flex-1 min-w-0">
@@ -1252,7 +1252,7 @@ export default function ScraperPage() {
                 <p className="text-[10px] text-muted">
                   Create your campaign first in Outreach, then come back to find leads for it.
                   {" "}
-                  <a href="/dashboard/outreach-hub" className="text-gold hover:underline inline-flex items-center gap-0.5">
+                  <a href="/dashboard/outreach-hub" className="text-[#2563EB] hover:underline inline-flex items-center gap-0.5">
                     Go to Outreach <ChevronsRight size={10} />
                   </a>
                 </p>
@@ -1271,7 +1271,7 @@ export default function ScraperPage() {
               <div className="flex items-center justify-between">
                 <div className="flex gap-4">
                   {[
-                    { value: stats.scraped, label: "Leads Found", color: "text-indigo-400", bar: "from-indigo-500 to-violet-400" },
+                    { value: stats.scraped, label: "Leads Found", color: "text-[#2563EB]", bar: "from-indigo-500 to-violet-400" },
                     { value: stats.skipped, label: "Duplicates", color: "text-muted", bar: "from-slate-600 to-slate-500" },
                     { value: selectedLeads.size, label: "Selected", color: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
                   ].map((s, i) => (
@@ -1323,7 +1323,7 @@ export default function ScraperPage() {
                       transition={{ duration: 0.3, delay: i * 0.05 }}
                       whileHover={{ y: -3 }}
                       onClick={() => toggleLeadSelection(i)}
-                      className={`glass rounded-xl p-4 cursor-pointer transition-all hover:border-indigo-500/20 ${selectedLeads.has(i) ? "border-indigo-500/40 bg-indigo-500/5" : ""}`}
+                      className={`glass rounded-xl p-4 cursor-pointer transition-all hover:border-[rgba(37,99,235,0.14)] ${selectedLeads.has(i) ? "border-[rgba(37,99,235,0.40)] bg-[rgba(37,99,235,0.05)]" : ""}`}
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1 min-w-0">
@@ -1336,19 +1336,19 @@ export default function ScraperPage() {
                         </div>
                       </div>
                       <div className="space-y-1 text-[10px]">
-                        {r.phone && <p className="flex items-center gap-1.5"><Phone size={10} className="text-gold" /> {r.phone}</p>}
-                        {r.email && <p className="flex items-center gap-1.5"><Mail size={10} className="text-gold" /> {r.email}</p>}
-                        {r.website && <p className="flex items-center gap-1.5 text-gold"><Globe size={10} /> <a href={r.website} target="_blank" rel="noopener" className="hover:underline truncate">{r.website}</a></p>}
+                        {r.phone && <p className="flex items-center gap-1.5"><Phone size={10} className="text-[#2563EB]" /> {r.phone}</p>}
+                        {r.email && <p className="flex items-center gap-1.5"><Mail size={10} className="text-[#2563EB]" /> {r.email}</p>}
+                        {r.website && <p className="flex items-center gap-1.5 text-[#2563EB]"><Globe size={10} /> <a href={r.website} target="_blank" rel="noopener" className="hover:underline truncate">{r.website}</a></p>}
                         {r.address && <p className="flex items-center gap-1.5"><MapPin size={10} className="text-muted" /> {r.address}</p>}
                         {r.google_rating && <p className="flex items-center gap-1"><Star size={10} className="text-warning fill-warning" /> {r.google_rating} ({r.review_count} reviews)</p>}
                         {r.tech_stack && <p className="flex items-center gap-1.5"><Wifi size={10} className="text-info" /> {r.tech_stack}</p>}
-                        {r.decision_maker && <p className="flex items-center gap-1.5"><Users size={10} className="text-purple-400" /> {r.decision_maker} - {r.decision_maker_title}</p>}
+                        {r.decision_maker && <p className="flex items-center gap-1.5"><Users size={10} className="text-[#2563EB]" /> {r.decision_maker} - {r.decision_maker_title}</p>}
                       </div>
                       <div className="flex gap-1 mt-2">
                         {r.instagram_url && <span className="text-[8px] bg-pink-500/10 text-pink-400 px-1.5 py-0.5 rounded">IG</span>}
-                        {r.facebook_url && <span className="text-[8px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded">FB</span>}
-                        {r.tiktok_url && <span className="text-[8px] bg-white/10 text-white px-1.5 py-0.5 rounded">TK</span>}
-                        {r.linkedin_url && <span className="text-[8px] bg-blue-400/10 text-blue-400 px-1.5 py-0.5 rounded">LI</span>}
+                        {r.facebook_url && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">FB</span>}
+                        {r.tiktok_url && <span className="text-[8px] bg-[rgba(0,0,0,0.06)] text-[#374151] px-1.5 py-0.5 rounded">TK</span>}
+                        {r.linkedin_url && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">LI</span>}
                       </div>
                     </motion.div>
                   );
@@ -1357,14 +1357,14 @@ export default function ScraperPage() {
               {results.length > 9 && (
                 <DataTable
                   columns={[
-                    { key: "select", label: "", render: (r: ScrapedLead) => { const i = results.indexOf(r); return <input type="checkbox" checked={selectedLeads.has(i)} onChange={() => toggleLeadSelection(i)} className="accent-gold w-3.5 h-3.5" />; } },
+                    { key: "select", label: "", render: (r: ScrapedLead) => { const i = results.indexOf(r); return <input type="checkbox" checked={selectedLeads.has(i)} onChange={() => toggleLeadSelection(i)} className="accent-[#2563EB] w-3.5 h-3.5" />; } },
                     { key: "lead_score", label: "Score", render: (r: ScrapedLead) => {
                       const score = r.lead_score || computeLeadScore(r);
                       return <span className={`text-sm font-bold ${score >= 70 ? "text-success" : score >= 40 ? "text-warning" : "text-muted"}`}>{score}</span>;
                     }},
                     { key: "business_name", label: "Business", render: (r: ScrapedLead) => <div><p className="font-medium text-sm">{r.business_name}</p><p className="text-[10px] text-muted">{r.industry}</p></div> },
-                    { key: "phone", label: "Phone", render: (r: ScrapedLead) => r.phone ? <a href={`tel:${r.phone}`} className="text-gold text-xs">{r.phone}</a> : <span className="text-muted text-xs">-</span> },
-                    { key: "email", label: "Email", render: (r: ScrapedLead) => r.email ? <span className="text-xs text-gold">{r.email}</span> : <span className="text-muted text-xs">-</span> },
+                    { key: "phone", label: "Phone", render: (r: ScrapedLead) => r.phone ? <a href={`tel:${r.phone}`} className="text-[#2563EB] text-xs">{r.phone}</a> : <span className="text-muted text-xs">-</span> },
+                    { key: "email", label: "Email", render: (r: ScrapedLead) => r.email ? <span className="text-xs text-[#2563EB]">{r.email}</span> : <span className="text-muted text-xs">-</span> },
                     { key: "source", label: "Source", render: (r: ScrapedLead) => <StatusBadge status={r.source} /> },
                   ]}
                   data={results.slice(9)}
@@ -1385,16 +1385,16 @@ export default function ScraperPage() {
       {tab === "enrichment" && (
         <div className="space-y-4">
           <div className="glass rounded-xl p-4">
-            <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><UserPlus size={14} className="text-indigo-400" /> Lead Enrichment</h3>
+            <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><UserPlus size={14} className="text-[#2563EB]" /> Lead Enrichment</h3>
             <p className="text-xs text-muted mb-4">Select leads from the Results tab, then choose an enrichment type to find additional data.</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
               {[
-                { id: "contact" as const, label: "Contact Finder", desc: "Find email, phone, social profiles", icon: <Mail size={18} />, color: "text-gold" },
+                { id: "contact" as const, label: "Contact Finder", desc: "Find email, phone, social profiles", icon: <Mail size={18} />, color: "text-[#2563EB]" },
                 { id: "tech" as const, label: "Tech Stack Detector", desc: "Detect CMS, frameworks, tools used", icon: <Wifi size={18} />, color: "text-info" },
-                { id: "decision_maker" as const, label: "Decision Maker Finder", desc: "Find owners, CEOs, key contacts", icon: <Users size={18} />, color: "text-purple-400" },
+                { id: "decision_maker" as const, label: "Decision Maker Finder", desc: "Find owners, CEOs, key contacts", icon: <Users size={18} />, color: "text-[#2563EB]" },
               ].map(e => (
                 <button key={e.id} onClick={() => setEnrichmentType(e.id)}
-                  className={`p-4 rounded-xl border text-left transition-all ${enrichmentType === e.id ? "border-gold bg-gold/10" : "border-border hover:border-gold/30"}`}>
+                  className={`p-4 rounded-xl border text-left transition-all ${enrichmentType === e.id ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}>
                   <div className={e.color}>{e.icon}</div>
                   <p className="font-medium text-sm mt-2">{e.label}</p>
                   <p className="text-[10px] text-muted">{e.desc}</p>
@@ -1412,8 +1412,8 @@ export default function ScraperPage() {
           {/* Enrichment stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { value: results.filter(r => r.email).length, label: "With Email", color: "text-indigo-400", bar: "from-indigo-500 to-violet-400" },
-              { value: results.filter(r => r.tech_stack).length, label: "Tech Detected", color: "text-sky-400", bar: "from-sky-500 to-blue-400" },
+              { value: results.filter(r => r.email).length, label: "With Email", color: "text-[#2563EB]", bar: "from-indigo-500 to-violet-400" },
+              { value: results.filter(r => r.tech_stack).length, label: "Tech Detected", color: "text-[#2563EB]", bar: "from-sky-500 to-blue-400" },
               { value: results.filter(r => r.decision_maker).length, label: "Decision Makers", color: "text-violet-400", bar: "from-violet-500 to-purple-400" },
               { value: results.filter(r => (r.lead_score || 0) >= 70).length, label: "Hot Leads", color: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
             ].map((s, i) => (
@@ -1474,7 +1474,7 @@ export default function ScraperPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: si * 0.06 }}
                   whileHover={{ y: -3 }}
-                  className="glass rounded-xl p-4 hover:border-indigo-500/20 transition-all"
+                  className="glass rounded-xl p-4 hover:border-[rgba(37,99,235,0.14)] transition-all"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div>
@@ -1487,7 +1487,7 @@ export default function ScraperPage() {
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-1 mb-2">
-                    {s.platforms.map(p => <span key={p} className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{p}</span>)}
+                    {s.platforms.map(p => <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">{p}</span>)}
                     {s.niches.map(n => <span key={n} className="text-[8px] bg-info/10 text-info px-1.5 py-0.5 rounded">{n}</span>)}
                     {s.locations.map(l => <span key={l} className="text-[8px] bg-success/10 text-success px-1.5 py-0.5 rounded">{l}</span>)}
                   </div>
@@ -1506,7 +1506,7 @@ export default function ScraperPage() {
       {tab === "history" && (
         <div className="space-y-4">
           <div className="glass rounded-xl p-4">
-            <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Clock size={14} className="text-indigo-400" /> Search History</h3>
+            <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Clock size={14} className="text-[#2563EB]" /> Search History</h3>
             <div className="space-y-2">
               {searchHistory.map((h, hi) => (
                 <motion.div
@@ -1514,18 +1514,18 @@ export default function ScraperPage() {
                   initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.28, delay: hi * 0.05 }}
-                  className="glass-md rounded-lg p-3 hover:border-indigo-500/20 transition-all"
+                  className="glass-md rounded-lg p-3 hover:border-[rgba(37,99,235,0.14)] transition-all"
                 >
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex flex-wrap gap-1">
-                      {h.platforms.map(p => <span key={p} className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{p}</span>)}
+                      {h.platforms.map(p => <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">{p}</span>)}
                       {h.niches.map(n => <span key={n} className="text-[8px] bg-info/10 text-info px-1.5 py-0.5 rounded">{n}</span>)}
                       {h.locations.map(l => <span key={l} className="text-[8px] bg-success/10 text-success px-1.5 py-0.5 rounded">{l}</span>)}
                     </div>
                     <span className="text-[10px] text-muted">{new Date(h.timestamp).toLocaleString()}</span>
                   </div>
                   <div className="flex items-center gap-4 text-xs">
-                    <span className="text-indigo-400 font-medium">{h.results_found} found</span>
+                    <span className="text-[#2563EB] font-medium">{h.results_found} found</span>
                     <span className="text-emerald-400">{h.leads_saved} saved</span>
                     <span className="text-muted">{h.results_found - h.leads_saved} duplicates</span>
                   </div>
@@ -1540,7 +1540,7 @@ export default function ScraperPage() {
       {tab === "schedule" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium flex items-center gap-2"><Calendar size={14} className="text-gold" /> Scheduled Scrapes</h3>
+            <h3 className="text-sm font-medium flex items-center gap-2"><Calendar size={14} className="text-[#2563EB]" /> Scheduled Scrapes</h3>
             <button onClick={() => setShowScheduleForm(!showScheduleForm)} className="btn-primary text-xs flex items-center gap-2"><Plus size={12} /> New Schedule</button>
           </div>
           {showScheduleForm && (
@@ -1565,7 +1565,7 @@ export default function ScraperPage() {
                 </div>
               </div>
               <div className="flex flex-wrap gap-1 mb-3">
-                {selectedPlatforms.map(p => <span key={p} className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{p}</span>)}
+                {selectedPlatforms.map(p => <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">{p}</span>)}
                 {niches.map(n => <span key={n} className="text-[8px] bg-info/10 text-info px-1.5 py-0.5 rounded">{n}</span>)}
                 {locations.map(l => <span key={l} className="text-[8px] bg-success/10 text-success px-1.5 py-0.5 rounded">{l}</span>)}
               </div>
@@ -1593,7 +1593,7 @@ export default function ScraperPage() {
                         <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${s.is_active ? "bg-success/10 text-success" : "bg-muted/10 text-muted"}`}>{s.is_active ? "Active" : "Paused"}</span>
                       </p>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {s.platforms.map(p => <span key={p} className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{p}</span>)}
+                        {s.platforms.map(p => <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">{p}</span>)}
                         {s.niches.map(n => <span key={n} className="text-[8px] bg-info/10 text-info px-1.5 py-0.5 rounded">{n}</span>)}
                       </div>
                     </div>
@@ -1618,9 +1618,9 @@ export default function ScraperPage() {
       {testResults && (
         <div className="space-y-4">
           <div className="glass-indigo rounded-xl p-4">
-            <h3 className="section-header flex items-center gap-2"><FlaskConical size={14} className="text-gold" /> 500-Lead Test Results</h3>
+            <h3 className="section-header flex items-center gap-2"><FlaskConical size={14} className="text-[#2563EB]" /> 500-Lead Test Results</h3>
             <div className="grid grid-cols-4 gap-3 mb-4">
-              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border"><p className="text-lg font-bold font-mono text-gold">{testResults.totalFound}</p><p className="text-[9px] text-muted uppercase tracking-wider">Found</p></div>
+              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border"><p className="text-lg font-bold font-mono text-[#2563EB]">{testResults.totalFound}</p><p className="text-[9px] text-muted uppercase tracking-wider">Found</p></div>
               <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border"><p className="text-lg font-bold font-mono text-success">{testResults.totalSaved}</p><p className="text-[9px] text-muted uppercase tracking-wider">Saved</p></div>
               <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border"><p className="text-lg font-bold font-mono text-warning">{testResults.totalSkipped}</p><p className="text-[9px] text-muted uppercase tracking-wider">Duplicates</p></div>
               <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border"><p className="text-lg font-bold font-mono text-danger">{testResults.errors.length}</p><p className="text-[9px] text-muted uppercase tracking-wider">Errors</p></div>
@@ -1804,7 +1804,7 @@ export default function ScraperPage() {
                   setShowOutreachModal(false);
                   toast.success("Outreach configured! Will start processing leads.");
                 }}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gold hover:bg-gold/90 text-black text-xs font-semibold transition-all"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#2563EB]/90 text-black text-xs font-semibold transition-all"
               >
                 <Send size={13} /> Save &amp; Start Outreach
               </button>
@@ -1839,7 +1839,7 @@ export default function ScraperPage() {
                 <div className="p-3 rounded-lg border border-border bg-surface-light text-[11px] text-muted">
                   You don&apos;t have any campaigns yet.
                   {" "}
-                  <a href="/dashboard/outreach-hub" className="text-gold hover:underline">Create one in Outreach</a>.
+                  <a href="/dashboard/outreach-hub" className="text-[#2563EB] hover:underline">Create one in Outreach</a>.
                 </div>
               ) : (
                 <div className="space-y-1.5 max-h-48 overflow-y-auto">
@@ -1848,8 +1848,8 @@ export default function ScraperPage() {
                       key={c.id}
                       className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-all ${
                         selectedPushCampaign === c.id
-                          ? "border-gold bg-gold/5"
-                          : "border-border hover:border-gold/30"
+                          ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]"
+                          : "border-border hover:border-[rgba(37,99,235,0.25)]"
                       }`}
                     >
                       <input
@@ -1858,7 +1858,7 @@ export default function ScraperPage() {
                         value={c.id}
                         checked={selectedPushCampaign === c.id}
                         onChange={() => setSelectedPushCampaign(c.id)}
-                        className="accent-gold"
+                        className="accent-[#2563EB]"
                       />
                       <div className="flex-1 min-w-0">
                         <p className="text-[11px] font-medium text-foreground truncate">{c.name}</p>
@@ -1892,8 +1892,8 @@ export default function ScraperPage() {
                     onClick={() => setPushSchedule(s.id)}
                     className={`p-2.5 rounded-lg border text-left transition-all ${
                       pushSchedule === s.id
-                        ? "border-gold bg-gold/5"
-                        : "border-border hover:border-gold/30"
+                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]"
+                        : "border-border hover:border-[rgba(37,99,235,0.25)]"
                     }`}
                   >
                     <p className="text-[11px] font-medium text-foreground">{s.label}</p>

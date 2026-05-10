@@ -54,7 +54,7 @@ interface Submission {
 // --- Score badge --------------------------------------------------------------
 
 function ScoreBadge({ score }: { score: number | null }) {
-  if (score === null) return <span className="text-[rgba(0,0,0,0.3)] text-xs">—</span>;
+  if (score === null) return <span className="text-[rgba(0,0,0,0.3)] text-xs">ï¿½</span>;
   const color =
     score >= 80 ? "#22c55e" :
     score >= 50 ? "#f59e0b" :
@@ -341,14 +341,14 @@ export default function IntakePage() {
                         <div className="flex-1 min-w-0">
                           <h3 className="text-sm font-semibold text-[rgba(0,0,0,0.85)] truncate">{form.name}</h3>
                           <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
-                            {form.fields.length} fields · {form.ai_qualification ? "AI scoring on" : "No AI"}
+                            {form.fields.length} fields ï¿½ {form.ai_qualification ? "AI scoring on" : "No AI"}
                           </p>
                         </div>
                         <button
                           onClick={() => toggleActive(form)}
                           className={`text-[10px] font-medium px-2 py-0.5 rounded-full border transition-all ${
                             form.is_active
-                              ? "text-green-400 border-green-400/30 bg-green-400/10"
+                              ? "text-green-700 border-green-700/30 bg-green-700/10"
                               : "text-[rgba(0,0,0,0.35)] border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)]"
                           }`}
                         >
@@ -413,7 +413,7 @@ export default function IntakePage() {
                         </button>
                         <button
                           onClick={() => deleteForm(form.id)}
-                          className="ml-auto flex items-center gap-1 px-2.5 py-1.5 hover:bg-red-500/10 text-[rgba(0,0,0,0.35)] hover:text-red-400 text-xs rounded-lg transition-colors"
+                          className="ml-auto flex items-center gap-1 px-2.5 py-1.5 hover:bg-red-50 text-[rgba(0,0,0,0.35)] hover:text-red-700 text-xs rounded-lg transition-colors"
                         >
                           <Trash2 size={11} />
                         </button>
@@ -463,7 +463,7 @@ export default function IntakePage() {
                         </div>
                         <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
                           {new Date(sub.created_at).toLocaleDateString()}
-                          {sub.ai_summary && ` · ${sub.ai_summary.slice(0, 80)}…`}
+                          {sub.ai_summary && ` ï¿½ ${sub.ai_summary.slice(0, 80)}ï¿½`}
                         </p>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
@@ -542,12 +542,12 @@ export default function IntakePage() {
 
             {bAI && (
               <div className="space-y-1.5">
-                <label className="text-xs text-[rgba(0,0,0,0.5)]">Custom AI prompt (optional — leave blank to use default)</label>
+                <label className="text-xs text-[rgba(0,0,0,0.5)]">Custom AI prompt (optional ï¿½ leave blank to use default)</label>
                 <textarea
                   value={bPrompt}
                   onChange={(e) => setBPrompt(e.target.value)}
                   rows={3}
-                  placeholder="You are an expert lead qualifier for [your business]…"
+                  placeholder="You are an expert lead qualifier for [your business]ï¿½"
                   className="w-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-xs text-[rgba(0,0,0,0.65)] placeholder:text-[rgba(0,0,0,0.25)] outline-none focus:border-[#2563EB]/50 resize-none font-mono"
                 />
               </div>
@@ -714,7 +714,7 @@ function FieldEditor({
         >
           <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
         </button>
-        <button onClick={onRemove} className="text-[rgba(0,0,0,0.25)] hover:text-red-400 transition-colors">
+        <button onClick={onRemove} className="text-[rgba(0,0,0,0.25)] hover:text-red-700 transition-colors">
           <X size={14} />
         </button>
       </div>

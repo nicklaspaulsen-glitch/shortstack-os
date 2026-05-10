@@ -88,7 +88,7 @@ export default function SidebarCustomizer({
           type="button"
           onClick={runAiRecommend}
           disabled={aiLoading}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold/20 to-amber-400/15 border border-gold/30 text-gold text-xs font-semibold hover:from-gold/30 hover:to-amber-400/20 transition-all disabled:opacity-50"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(37,99,235,0.12)] to-amber-400/15 border border-[rgba(37,99,235,0.25)] text-[#2563EB] text-xs font-semibold hover:from-[rgba(37,99,235,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
         >
           {aiLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
           {aiLoading ? "Thinking..." : "AI Recommended"}
@@ -96,26 +96,26 @@ export default function SidebarCustomizer({
         <button
           type="button"
           onClick={selectAll}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs font-medium text-muted hover:text-foreground hover:border-gold/30 transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs font-medium text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] transition-all"
         >
           <CheckSquare size={12} /> Select All
         </button>
         <button
           type="button"
           onClick={selectNone}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs font-medium text-muted hover:text-foreground hover:border-gold/30 transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs font-medium text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] transition-all"
         >
           <Square size={12} /> Select None
         </button>
         <div className="flex-1" />
         <span className="text-[11px] text-muted">
-          <span className="text-gold font-semibold">{enabledItems.length}</span> of {ALL_SIDEBAR_ITEMS.length} enabled
+          <span className="text-[#2563EB] font-semibold">{enabledItems.length}</span> of {ALL_SIDEBAR_ITEMS.length} enabled
         </span>
       </div>
 
       {reasoning && (
-        <div className="px-3 py-2 rounded-lg bg-gold/5 border border-gold/15 text-[11px] text-muted italic">
-          <span className="text-gold font-medium">AI: </span>
+        <div className="px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.08)] text-[11px] text-muted italic">
+          <span className="text-[#2563EB] font-medium">AI: </span>
           {reasoning}
         </div>
       )}
@@ -135,7 +135,7 @@ export default function SidebarCustomizer({
                 className="w-full flex items-center justify-between px-3 py-2 bg-surface-light/50 hover:bg-surface-light transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <Grid size={12} className="text-gold" />
+                  <Grid size={12} className="text-[#2563EB]" />
                   <span className="text-xs font-semibold text-foreground">{cat.category}</span>
                   <span className="text-[10px] text-muted">
                     {catHrefs.filter((h) => enabledSet.has(h)).length}/{catHrefs.length}
@@ -144,9 +144,9 @@ export default function SidebarCustomizer({
                 <span
                   className={`w-4 h-4 rounded-md border flex items-center justify-center text-[9px] font-bold transition-all ${
                     allSelected
-                      ? "bg-gold border-gold text-black"
+                      ? "bg-[#2563EB] border-[#2563EB] text-white"
                       : someSelected
-                      ? "bg-gold/30 border-gold/50 text-gold"
+                      ? "bg-[rgba(37,99,235,0.18)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
                       : "border-border"
                   }`}
                 >
@@ -163,17 +163,17 @@ export default function SidebarCustomizer({
                       onClick={() => toggle(item.href)}
                       className={`flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg text-xs text-left transition-all ${
                         selected
-                          ? "bg-gold/10 border border-gold/30 text-foreground"
+                          ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-foreground"
                           : "bg-transparent border border-transparent text-muted hover:text-foreground hover:bg-surface-light"
                       }`}
                     >
                       <span className="truncate">{item.label}</span>
                       <span
                         className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                          selected ? "bg-gold border-gold" : "border-border"
+                          selected ? "bg-[#2563EB] border-[#2563EB]" : "border-border"
                         }`}
                       >
-                        {selected && <Check size={9} className="text-black" />}
+                        {selected && <Check size={9} className="text-white" />}
                       </span>
                     </button>
                   );

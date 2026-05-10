@@ -237,7 +237,7 @@ export default function AffiliatesPage() {
             onClick={() => setTab(t.k)}
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
               tab === t.k
-                ? "border-gold text-gold"
+                ? "border-[#2563EB] text-[#2563EB]"
                 : "border-transparent text-muted hover:text-foreground"
             }`}
           >
@@ -290,7 +290,7 @@ function ProgramsTab({
         </p>
         <button
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gold text-dark text-sm font-semibold rounded-lg hover:bg-gold/90 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#2563EB] text-white text-sm font-semibold rounded-lg hover:bg-[#1D4ED8] transition-colors"
         >
           <Plus size={16} /> New program
         </button>
@@ -298,14 +298,14 @@ function ProgramsTab({
 
       {programs.length === 0 ? (
         <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
-          <Award size={32} className="mx-auto text-gold/60 mb-3" />
+          <Award size={32} className="mx-auto text-[rgba(37,99,235,0.6)] mb-3" />
           <h3 className="text-lg font-semibold mb-1">No programs yet</h3>
           <p className="text-sm text-muted mb-4">
             Create your first program to start recruiting affiliates.
           </p>
           <button
             onClick={() => setShowCreate(true)}
-            className="px-4 py-2 bg-gold text-dark text-sm font-semibold rounded-lg"
+            className="px-4 py-2 bg-[#2563EB] text-white text-sm font-semibold rounded-lg"
           >
             Create program
           </button>
@@ -366,7 +366,7 @@ function ProgramCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.05 }}
       whileHover={{ y: -4, scale: 1.01 }}
-      className="glass rounded-xl p-5 space-y-3 hover:border-gold/40 transition-colors"
+      className="glass rounded-xl p-5 space-y-3 hover:border-[rgba(37,99,235,0.4)] transition-colors"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="space-y-1 min-w-0">
@@ -391,7 +391,7 @@ function ProgramCard({
       <div className="grid grid-cols-2 gap-3 text-xs">
         <div>
           <div className="text-muted">Commission</div>
-          <div className="font-semibold text-gold">{commissionLabel(program)}</div>
+          <div className="font-semibold text-[#2563EB]">{commissionLabel(program)}</div>
         </div>
         <div>
           <div className="text-muted">Cookie</div>
@@ -591,7 +591,7 @@ function CreateProgramModal({
           <button
             onClick={submit}
             disabled={submitting}
-            className="px-4 py-2 text-sm bg-gold text-dark font-semibold rounded-lg disabled:opacity-60"
+            className="px-4 py-2 text-sm bg-[#2563EB] text-white font-semibold rounded-lg disabled:opacity-60"
           >
             {submitting ? "Creating…" : "Create program"}
           </button>
@@ -632,7 +632,7 @@ function AffiliatesTab({
         </p>
         <button
           onClick={() => setShowInvite(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gold text-dark text-sm font-semibold rounded-lg"
+          className="flex items-center gap-2 px-4 py-2 bg-[#2563EB] text-white text-sm font-semibold rounded-lg"
         >
           <Mail size={16} /> Invite affiliate
         </button>
@@ -640,7 +640,7 @@ function AffiliatesTab({
 
       {affiliates.length === 0 ? (
         <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
-          <Users size={32} className="mx-auto text-gold/60 mb-3" />
+          <Users size={32} className="mx-auto text-[rgba(37,99,235,0.6)] mb-3" />
           <p className="text-sm text-muted">No affiliates yet</p>
         </div>
       ) : (
@@ -726,7 +726,7 @@ function AffiliateRow({
       <td className="px-4 py-3">
         <StatusBadge status={affiliate.status} />
       </td>
-      <td className="px-4 py-3 text-right font-semibold text-gold">
+      <td className="px-4 py-3 text-right font-semibold text-[#2563EB]">
         {fmtCents(affiliate.total_earned_cents)}
       </td>
       <td className="px-4 py-3 text-right">
@@ -789,7 +789,7 @@ function StatusBadge({ status }: { status: AffiliateStatus | ReferralStatus | Pr
     paid: "bg-success/15 text-success",
     pending: "bg-warning/15 text-warning",
     paused: "bg-warning/15 text-warning",
-    signed_up: "bg-blue-500/15 text-blue-400",
+    signed_up: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
     clicked: "bg-muted/15 text-muted",
     suspended: "bg-danger/15 text-danger",
     rejected: "bg-danger/15 text-danger",
@@ -914,7 +914,7 @@ function InviteAffiliateModal({
           <button
             onClick={submit}
             disabled={submitting}
-            className="px-4 py-2 text-sm bg-gold text-dark font-semibold rounded-lg disabled:opacity-60"
+            className="px-4 py-2 text-sm bg-[#2563EB] text-white font-semibold rounded-lg disabled:opacity-60"
           >
             {submitting ? "Adding…" : "Add affiliate"}
           </button>
@@ -1016,12 +1016,12 @@ function KanbanColumn({
 }) {
   const colorMap: Record<string, string> = {
     muted: "border-muted/40",
-    blue: "border-blue-500/40",
+    blue: "border-[rgba(37,99,235,0.40)]",
     success: "border-success/40",
   };
   const titleMap: Record<string, string> = {
     muted: "text-muted",
-    blue: "text-blue-400",
+    blue: "text-[#2563EB]",
     success: "text-success",
   };
   const affiliateById = useMemo(() => {
@@ -1157,7 +1157,7 @@ function PayoutsTab({
             {readyCount} affiliate{readyCount === 1 ? "" : "s"} ready to pay
           </div>
           <div className="text-xs text-muted">
-            Total ready: <span className="text-gold font-semibold">{fmtCents(readyTotal)}</span>
+            Total ready: <span className="text-[#2563EB] font-semibold">{fmtCents(readyTotal)}</span>
             {" · "}Affiliates without Stripe Connect or below threshold are skipped.
           </div>
         </div>
@@ -1172,7 +1172,7 @@ function PayoutsTab({
           <button
             onClick={() => runPayouts(false)}
             disabled={running || readyCount === 0}
-            className="flex items-center gap-2 px-4 py-2 text-sm bg-gold text-dark font-semibold rounded-lg disabled:opacity-60"
+            className="flex items-center gap-2 px-4 py-2 text-sm bg-[#2563EB] text-white font-semibold rounded-lg disabled:opacity-60"
           >
             <DollarSign size={14} />
             {running ? "Paying…" : "Pay all"}
@@ -1203,7 +1203,7 @@ function PayoutsTab({
                     <div className="font-semibold">{e.affiliate.name}</div>
                     <div className="text-xs text-muted">{e.affiliate.email}</div>
                   </td>
-                  <td className="px-4 py-3 text-right font-semibold text-gold">
+                  <td className="px-4 py-3 text-right font-semibold text-[#2563EB]">
                     {fmtCents(e.affiliate.pending_cents)}
                   </td>
                   <td className="px-4 py-3 text-right text-muted">

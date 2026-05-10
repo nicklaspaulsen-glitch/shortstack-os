@@ -398,7 +398,7 @@ export default function AdsPage() {
           ] as const).map(t => (
             <button key={t.id} onClick={() => { setTab(t.id); if (t.id === "copilot") fetchActions(); }}
               className={`flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-lg transition-all ${
-                tab === t.id ? "bg-gold text-black font-medium shadow-sm" : "text-muted hover:text-foreground"
+                tab === t.id ? "bg-[#2563EB] text-white font-medium shadow-sm" : "text-muted hover:text-foreground"
               }`}
             >
               {t.icon} {t.label}
@@ -475,7 +475,7 @@ export default function AdsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.36 }}
               >
-                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-gold" /> Platform Performance</h2>
+                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-[#2563EB]" /> Platform Performance</h2>
                 <div className="space-y-2">
                   {PLATFORMS.map(p => {
                     const platCampaigns = campaigns.filter(c => c.platform === p.id);
@@ -527,7 +527,7 @@ export default function AdsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.42 }}
               >
-                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-gold" /> Client Ad Performance</h2>
+                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-[#2563EB]" /> Client Ad Performance</h2>
                 {clients.length > 0 ? (
                   <div className="space-y-2">
                     {clients.map(cl => {
@@ -573,7 +573,7 @@ export default function AdsPage() {
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <Bot size={16} className="text-gold" />
+                    <Bot size={16} className="text-[#2563EB]" />
                     <h2 className="text-sm font-semibold">AI Autopilot</h2>
                   </div>
                   <button
@@ -609,7 +609,7 @@ export default function AdsPage() {
                     { key: "allow_create_ads", label: "Create new ads", desc: "AI generates copy & creates ads" },
                     { key: "auto_sync", label: "Auto-sync data", desc: "Pull latest data before analysis" },
                   ].map(toggle => (
-                    <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border hover:border-gold/10 transition-all">
+                    <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.1)] transition-all">
                       <div>
                         <p className="text-[10px] font-medium">{toggle.label}</p>
                         <p className="text-[8px] text-muted">{toggle.desc}</p>
@@ -688,13 +688,13 @@ export default function AdsPage() {
                 transition={{ duration: 0.22, delay: 0.48 }}
                 whileHover={{ y: -2 }}
               >
-                <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings2 size={12} className="text-gold" /> How Autopilot Works</h3>
+                <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings2 size={12} className="text-[#2563EB]" /> How Autopilot Works</h3>
                 <ol className="space-y-1 text-[10px] text-muted">
-                  <li className="flex gap-2"><span className="text-gold font-bold">1.</span> Syncs latest campaign data from all platforms</li>
-                  <li className="flex gap-2"><span className="text-gold font-bold">2.</span> AI analyzes performance vs benchmarks</li>
-                  <li className="flex gap-2"><span className="text-gold font-bold">3.</span> Proposes budget/status changes within your limits</li>
-                  <li className="flex gap-2"><span className="text-gold font-bold">4.</span> Auto-executes only actions you&apos;ve allowed above</li>
-                  <li className="flex gap-2"><span className="text-gold font-bold">5.</span> Optionally creates new AI-generated ads</li>
+                  <li className="flex gap-2"><span className="text-[#2563EB] font-bold">1.</span> Syncs latest campaign data from all platforms</li>
+                  <li className="flex gap-2"><span className="text-[#2563EB] font-bold">2.</span> AI analyzes performance vs benchmarks</li>
+                  <li className="flex gap-2"><span className="text-[#2563EB] font-bold">3.</span> Proposes budget/status changes within your limits</li>
+                  <li className="flex gap-2"><span className="text-[#2563EB] font-bold">4.</span> Auto-executes only actions you&apos;ve allowed above</li>
+                  <li className="flex gap-2"><span className="text-[#2563EB] font-bold">5.</span> Optionally creates new AI-generated ads</li>
                 </ol>
               </motion.div>
             </div>
@@ -736,7 +736,7 @@ export default function AdsPage() {
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.18, delay: index * 0.04 }}
-                  whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
+                  whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                 >
                   {/* Campaign Row */}
                   <div
@@ -799,12 +799,12 @@ export default function AdsPage() {
                       <button
                         onClick={() => generateAISuggestions(campaign.id)}
                         disabled={optimizingId === campaign.id}
-                        className="p-2 rounded-lg hover:bg-gold/5 border border-transparent hover:border-gold/20 transition-all disabled:opacity-50"
+                        className="p-2 rounded-lg hover:bg-[rgba(37,99,235,0.05)] border border-transparent hover:border-[rgba(37,99,235,0.2)] transition-all disabled:opacity-50"
                         title="AI Optimize"
                       >
                         {optimizingId === campaign.id
-                          ? <Loader size={13} className="text-gold animate-spin" />
-                          : <Sparkles size={13} className="text-gold" />
+                          ? <Loader size={13} className="text-[#2563EB] animate-spin" />
+                          : <Sparkles size={13} className="text-[#2563EB]" />
                         }
                       </button>
                       <ChevronDown size={14} className={`text-muted transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
@@ -868,9 +868,9 @@ export default function AdsPage() {
 
                       {/* AI Suggestions */}
                       {campaign.ai_suggestions && (
-                        <div className="bg-gold/[0.04] border border-gold/10 rounded-xl p-4">
+                        <div className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-2">
-                            <Sparkles size={14} className="text-gold" />
+                            <Sparkles size={14} className="text-[#2563EB]" />
                             <p className="text-xs font-semibold">AI Optimization Suggestions</p>
                           </div>
                           <p className="text-xs text-muted whitespace-pre-wrap leading-relaxed">{campaign.ai_suggestions}</p>
@@ -939,7 +939,7 @@ export default function AdsPage() {
                         <p className="text-[10px] text-muted line-clamp-2">{cr.body_text}</p>
                       )}
                       {cr.cta_text && (
-                        <div className="inline-block bg-gold/10 text-gold text-[9px] font-semibold px-2 py-0.5 rounded-full">
+                        <div className="inline-block bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-[9px] font-semibold px-2 py-0.5 rounded-full">
                           {cr.cta_text}
                         </div>
                       )}
@@ -963,7 +963,7 @@ export default function AdsPage() {
             transition={{ duration: 0.22, delay: 0.12 }}
           >
             <div className="flex items-center gap-2 mb-1">
-              <Wand2 size={16} className="text-gold" />
+              <Wand2 size={16} className="text-[#2563EB]" />
               <h2 className="text-sm font-semibold">AI Copy Generator</h2>
             </div>
             <p className="text-[10px] text-muted -mt-2">Generate high-converting ad copy variations with AI. Pick your platform, audience, and offer.</p>
@@ -982,7 +982,7 @@ export default function AdsPage() {
                   <button key={p.id} onClick={() => setCopyPlatform(p.id)}
                     className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium border transition-all ${
                       copyPlatform === p.id
-                        ? "border-gold/30 bg-gold/5 text-foreground"
+                        ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-foreground"
                         : "border-border bg-surface-light text-muted hover:text-foreground"
                     }`}>
                     <span className="w-5 h-5 rounded-md flex items-center justify-center text-white text-[8px] font-bold" style={{ backgroundColor: p.color }}>
@@ -1059,7 +1059,7 @@ export default function AdsPage() {
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-gold/10 text-gold text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
+                            <span className="w-5 h-5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
                             <span className="text-[9px] text-muted uppercase tracking-wider">{v.hook_type}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
@@ -1081,7 +1081,7 @@ export default function AdsPage() {
                         <p className="text-xs text-muted leading-relaxed">{v.primary_text}</p>
                         <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
                           <span className="text-[9px] text-muted">{v.description}</span>
-                          <span className="text-[10px] bg-gold/10 text-gold font-semibold px-2 py-0.5 rounded-full">{v.cta}</span>
+                          <span className="text-[10px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold px-2 py-0.5 rounded-full">{v.cta}</span>
                         </div>
                         {v.image_concept && (
                           <div className="mt-2 pt-2 border-t border-border">
@@ -1127,7 +1127,7 @@ export default function AdsPage() {
                     transition={{ duration: 0.22, delay: 0.18 }}
                   >
                     <h3 className="text-xs font-semibold flex items-center gap-2 mb-2">
-                      <Zap size={13} className="text-gold" /> A/B Test Recommendation
+                      <Zap size={13} className="text-[#2563EB]" /> A/B Test Recommendation
                     </h3>
                     <p className="text-xs text-muted leading-relaxed">
                       {typeof (generatedCopy as Record<string, unknown>).a_b_test_plan === "string"
@@ -1174,7 +1174,7 @@ export default function AdsPage() {
               transition={{ duration: 0.22, delay: 0.12 }}
             >
               <div className="flex items-center gap-2">
-                <Bot size={16} className="text-gold" />
+                <Bot size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">AI Ad Copilot</h2>
               </div>
               <p className="text-[10px] text-muted">AI analyzes your campaigns and proposes optimizations. Review and approve actions before they execute.</p>
@@ -1191,15 +1191,15 @@ export default function AdsPage() {
                   {campaigns.map(c => (
                     <button key={c.id} onClick={() => generateAISuggestions(c.id)}
                       disabled={optimizingId === c.id}
-                      className="w-full flex items-center gap-2 p-2 rounded-lg border border-border hover:border-gold/30 hover:bg-gold/[0.03] transition-all text-left">
+                      className="w-full flex items-center gap-2 p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.05)] transition-all text-left">
                       <div className="w-6 h-6 rounded-md flex items-center justify-center text-white text-[8px] font-bold shrink-0"
                         style={{ backgroundColor: getPlatformInfo(c.platform).color }}>
                         {getPlatformInfo(c.platform).icon}
                       </div>
                       <span className="text-[10px] truncate flex-1">{c.name}</span>
                       {optimizingId === c.id
-                        ? <Loader size={10} className="text-gold animate-spin shrink-0" />
-                        : <Sparkles size={10} className="text-gold shrink-0" />}
+                        ? <Loader size={10} className="text-[#2563EB] animate-spin shrink-0" />
+                        : <Sparkles size={10} className="text-[#2563EB] shrink-0" />}
                     </button>
                   ))}
                   {campaigns.length === 0 && <p className="text-[10px] text-muted text-center py-2">No campaigns to optimize</p>}
@@ -1241,7 +1241,7 @@ export default function AdsPage() {
                                     <button
                                       onClick={() => syncPlatform(client.id, p.id)}
                                       disabled={syncing !== null}
-                                      className="text-[9px] px-2 py-1 rounded-md font-medium border border-border hover:border-gold/20 hover:bg-gold/5 transition-all disabled:opacity-50 flex items-center gap-1">
+                                      className="text-[9px] px-2 py-1 rounded-md font-medium border border-border hover:border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.05)] transition-all disabled:opacity-50 flex items-center gap-1">
                                       {syncing === p.id ? <Loader size={8} className="animate-spin" /> : <RefreshCw size={8} />}
                                       Sync
                                     </button>
@@ -1249,7 +1249,7 @@ export default function AdsPage() {
                                 ) : (
                                   <button
                                     onClick={() => connectAdPlatform(client.id, p.id)}
-                                    className="text-[9px] px-2 py-1 rounded-md font-medium bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1">
+                                    className="text-[9px] px-2 py-1 rounded-md font-medium bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
                                     <Plug size={8} /> Connect
                                   </button>
                                 )}
@@ -1273,14 +1273,14 @@ export default function AdsPage() {
               whileHover={{ y: -2 }}
             >
               <div className="flex items-center gap-2 mb-2">
-                <Shield size={14} className="text-gold" />
+                <Shield size={14} className="text-[#2563EB]" />
                 <h3 className="text-xs font-semibold">How Copilot Works</h3>
               </div>
               <ol className="space-y-1.5 text-[10px] text-muted">
-                <li className="flex gap-2"><span className="text-gold font-bold">1.</span> AI analyzes campaign performance data</li>
-                <li className="flex gap-2"><span className="text-gold font-bold">2.</span> Proposes optimizations with reasoning</li>
-                <li className="flex gap-2"><span className="text-gold font-bold">3.</span> You review and approve/reject each action</li>
-                <li className="flex gap-2"><span className="text-gold font-bold">4.</span> Approved actions execute on the ad platform</li>
+                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">1.</span> AI analyzes campaign performance data</li>
+                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">2.</span> Proposes optimizations with reasoning</li>
+                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">3.</span> You review and approve/reject each action</li>
+                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">4.</span> Approved actions execute on the ad platform</li>
               </ol>
             </motion.div>
           </div>
@@ -1297,15 +1297,15 @@ export default function AdsPage() {
                 whileHover={{ y: -2 }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <BarChart3 size={14} className="text-gold" />
+                  <BarChart3 size={14} className="text-[#2563EB]" />
                   <h2 className="text-sm font-semibold">Portfolio Insights</h2>
                 </div>
                 <pre className="whitespace-pre-wrap text-xs text-foreground leading-relaxed font-sans bg-surface-light rounded-xl p-4 border border-border/30 max-h-[300px] overflow-y-auto">
                   {(insights as Record<string, unknown>).summary as string || JSON.stringify(insights, null, 2)}
                 </pre>
                 {String((insights as Record<string, unknown>).budget_recommendations || "") && (
-                  <div className="mt-3 p-3 rounded-lg bg-gold/5 border border-gold/10">
-                    <p className="text-[10px] font-semibold text-gold mb-1">Budget Recommendations</p>
+                  <div className="mt-3 p-3 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)]">
+                    <p className="text-[10px] font-semibold text-[#2563EB] mb-1">Budget Recommendations</p>
                     <p className="text-[10px] text-muted">{String((insights as Record<string, unknown>).budget_recommendations)}</p>
                   </div>
                 )}
@@ -1368,8 +1368,8 @@ export default function AdsPage() {
                           <p className="text-xs font-semibold">{action.title}</p>
                           {action.description && <p className="text-[10px] text-muted mt-0.5">{action.description}</p>}
                           {action.ai_reasoning && (
-                            <div className="mt-2 p-2 rounded-lg bg-gold/[0.04] border border-gold/10">
-                              <p className="text-[9px] text-gold font-medium mb-0.5">AI Reasoning</p>
+                            <div className="mt-2 p-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)]">
+                              <p className="text-[9px] text-[#2563EB] font-medium mb-0.5">AI Reasoning</p>
                               <p className="text-[10px] text-muted leading-relaxed">{action.ai_reasoning}</p>
                             </div>
                           )}
@@ -1457,7 +1457,7 @@ export default function AdsPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
+                      whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                     >
                       <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
                         action.status === "executed" ? "bg-success/10" : action.status === "failed" ? "bg-danger/10" : "bg-surface-light"

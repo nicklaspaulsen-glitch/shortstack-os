@@ -270,7 +270,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
         eyebrow="BRAND VOICE"
         title="Brand Voice Manager"
         subtitle="Define & enforce brand voice for every client."
-        gradient="gold"
+        gradient="blue"
         actions={
           <button onClick={() => setShowNewProfile(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1">
             <Plus size={14} /> New Profile
@@ -315,7 +315,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
           className="rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
         >
           <div className="flex items-center gap-2 mb-3">
-            <Users size={16} className="text-gold" />
+            <Users size={16} className="text-[#2563EB]" />
             <span className="text-sm font-semibold">Create New Voice Profile</span>
           </div>
           <div className="flex gap-2">
@@ -363,7 +363,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                 whileHover={{ y: -2, scale: 1.01 }}
                 onClick={() => setSelectedProfile(p.id)}
                 style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
-                className={`rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "!border-indigo-500/40 bg-indigo-500/8" : "hover:border-[rgba(0,0,0,0.12)]"}`}
+                className={`rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "!border-[rgba(37,99,235,0.35)] bg-[rgba(37,99,235,0.06)]" : "hover:border-[rgba(0,0,0,0.12)]"}`}
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -372,7 +372,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                   </div>
                   <button
                     onClick={e => { e.stopPropagation(); toggleActive(p.id); }}
-                    className="text-muted hover:text-white transition-colors"
+                    className="text-muted hover:text-[#374151] transition-colors"
                   >
                     {p.active
                       ? <ToggleRight size={20} className="text-green-400" />
@@ -381,7 +381,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                   </button>
                 </div>
                 {!p.active && (
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-muted mt-1 inline-block">Inactive</span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted mt-1 inline-block">Inactive</span>
                 )}
               </motion.div>
             ))}
@@ -399,7 +399,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                     key={t.key}
                     onClick={() => setTab(t.key)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-all ${
-                      tab === t.key ? "bg-gold/20 text-gold" : "text-muted hover:text-[#0A0A0B]"
+                      tab === t.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted hover:text-[#0A0A0B]"
                     }`}
                   >
                     {t.icon} {t.label}
@@ -414,13 +414,13 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                   <div className="card">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <Palette size={16} className="text-gold" />
+                        <Palette size={16} className="text-[#2563EB]" />
                         <span className="text-sm font-semibold">Voice Preset</span>
                       </div>
                       <div className="relative">
                         <button
                           onClick={() => setShowPresetMenu(!showPresetMenu)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white/5 border border-white/10 text-xs hover:border-gold/30 transition-colors"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-xs hover:border-[rgba(37,99,235,0.25)] transition-colors"
                         >
                           {VOICE_PRESETS.find(p => p.key === profile.preset)?.icon}
                           <span className="capitalize">{profile.preset}</span>
@@ -433,7 +433,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 key={p.key}
                                 onClick={() => applyPreset(p.key)}
                                 className={`w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-[rgba(0,0,0,0.04)] transition-colors ${
-                                  profile.preset === p.key ? "text-gold" : "text-[#0A0A0B]"
+                                  profile.preset === p.key ? "text-[#2563EB]" : "text-[#0A0A0B]"
                                 }`}
                               >
                                 {p.icon} {p.label}
@@ -451,8 +451,8 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           onClick={() => applyPreset(p.key)}
                           className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
                             profile.preset === p.key
-                              ? "bg-gold/20 text-gold border border-gold/30"
-                              : "bg-white/5 text-muted hover:text-white border border-white/10"
+                              ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
+                              : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
                           }`}
                         >
                           {p.icon} {p.label}
@@ -464,7 +464,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                   {/* Tone Sliders */}
                   <div className="card">
                     <div className="flex items-center gap-2 mb-4">
-                      <Sliders size={16} className="text-gold" />
+                      <Sliders size={16} className="text-[#2563EB]" />
                       <span className="text-sm font-semibold">Tone Sliders</span>
                     </div>
                     <div className="space-y-4">
@@ -480,7 +480,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                             max={100}
                             value={profile.toneSliders[s.key]}
                             onChange={e => updateSlider(s.key, Number(e.target.value))}
-                            className="w-full accent-gold h-1.5"
+                            className="w-full accent-[#2563EB] h-1.5"
                           />
                           <div className="text-center text-[10px] text-muted mt-0.5">{profile.toneSliders[s.key]}%</div>
                         </div>
@@ -492,7 +492,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                   <div className="card">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <Wand2 size={16} className="text-gold" />
+                        <Wand2 size={16} className="text-[#2563EB]" />
                         <span className="text-sm font-semibold">AI-Generated Guidelines</span>
                       </div>
                       <button
@@ -527,13 +527,13 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                   {/* Writing Samples */}
                   <div className="card">
                     <div className="flex items-center gap-2 mb-3">
-                      <BookOpen size={16} className="text-gold" />
+                      <BookOpen size={16} className="text-[#2563EB]" />
                       <span className="text-sm font-semibold">Writing Style Samples</span>
                     </div>
                     <p className="text-[10px] text-muted mb-3">Paste example content that represents this brand&apos;s voice</p>
                     <div className="space-y-2 mb-3">
                       {profile.samples.map((s, i) => (
-                        <div key={i} className="flex items-start gap-2 p-2 rounded bg-white/5 group">
+                        <div key={i} className="flex items-start gap-2 p-2 rounded bg-[rgba(0,0,0,0.04)] group">
                           <Eye size={12} className="text-muted mt-0.5 shrink-0" />
                           <p className="text-xs text-muted flex-1">&quot;{s}&quot;</p>
                           <button onClick={() => removeItem("samples", i)} className="text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
@@ -553,7 +553,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         <button
                           onClick={() => enhanceText(newSample, `Polish this writing sample for the "${profile?.clientName}" brand voice profile. Keep the core message but improve clarity, tone, and impact.`, setNewSample, "sample")}
                           disabled={!newSample.trim() || enhancing === "sample"}
-                          className="flex items-center gap-1 text-[10px] text-gold/70 hover:text-gold transition-colors disabled:opacity-40"
+                          className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-[#2563EB] transition-colors disabled:opacity-40"
                         >
                           {enhancing === "sample" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                           AI Enhance
@@ -666,7 +666,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                       {profile.bannedWords.map((t, i) => (
                         <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 text-[10px] group">
                           {t}
-                          <button onClick={() => removeItem("bannedWords", i)} className="opacity-0 group-hover:opacity-100 transition-all hover:text-white">
+                          <button onClick={() => removeItem("bannedWords", i)} className="opacity-0 group-hover:opacity-100 transition-all hover:text-[#374151]">
                             <X size={10} />
                           </button>
                         </span>
@@ -719,7 +719,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                 <div className="space-y-4">
                   <div className="card">
                     <div className="flex items-center gap-2 mb-3">
-                      <CheckCircle size={16} className="text-gold" />
+                      <CheckCircle size={16} className="text-[#2563EB]" />
                       <span className="text-sm font-semibold">Voice Consistency Checker</span>
                     </div>
                     <p className="text-[10px] text-muted mb-3">
@@ -734,7 +734,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                     <button
                       onClick={() => enhanceText(checkerText, `Rewrite this text to match the "${profile?.clientName}" brand voice. Tone: ${profile?.toneSliders.formalCasual && profile.toneSliders.formalCasual > 50 ? "casual" : "formal"}. ${profile?.dos.length ? `Do: ${profile.dos.join(", ")}` : ""} ${profile?.donts.length ? `Don't: ${profile.donts.join(", ")}` : ""}`, setCheckerText, "checker")}
                       disabled={!checkerText.trim() || enhancing === "checker"}
-                      className="flex items-center gap-1 text-[10px] text-gold/70 hover:text-gold transition-colors disabled:opacity-40 mb-3"
+                      className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-[#2563EB] transition-colors disabled:opacity-40 mb-3"
                     >
                       {enhancing === "checker" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                       AI Rewrite to Match Voice

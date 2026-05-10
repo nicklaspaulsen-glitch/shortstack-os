@@ -154,7 +154,7 @@ export default function SectionHub({
             />
           </div>
           <div className="relative text-center px-4">
-            <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+            <p className="text-[11px] uppercase tracking-widest text-[rgba(37,99,235,0.8)] font-semibold">
               In this section
             </p>
             <h3 className="text-base font-bold text-foreground mt-1">
@@ -173,16 +173,16 @@ export default function SectionHub({
               <Link
                 key={a.label}
                 href={a.href}
-                className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface hover:bg-surface-light hover:border-gold/30 transition-all"
+                className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface hover:bg-surface-light hover:border-[rgba(37,99,235,0.25)] transition-all"
               >
-                <div className="w-9 h-9 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center text-gold shrink-0 group-hover:bg-gold/15 transition-colors">
+                <div className="w-9 h-9 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB] shrink-0 group-hover:bg-[rgba(37,99,235,0.08)] transition-colors">
                   <Icon size={16} />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[12px] font-semibold text-foreground leading-tight truncate">{a.label}</p>
                   <p className="text-[10px] text-muted leading-tight">Quick action</p>
                 </div>
-                <ChevronRight size={14} className="text-muted group-hover:text-gold transition-colors shrink-0" />
+                <ChevronRight size={14} className="text-muted group-hover:text-[#2563EB] transition-colors shrink-0" />
               </Link>
             );
           })}
@@ -197,7 +197,7 @@ export default function SectionHub({
           const display = loading ? "…" : formatStat(raw, s.format);
           return (
             <div key={s.key} className="card !py-3 !px-3.5 flex items-center gap-3">
-              <div className={s.color || "text-gold"}>
+              <div className={s.color || "text-[#2563EB]"}>
                 <Icon size={16} />
               </div>
               <div className="min-w-0">
@@ -242,7 +242,7 @@ export default function SectionHub({
               const content = (
                 <>
                   <div className="flex items-start gap-2.5 min-w-0">
-                    <div className="w-9 h-9 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center text-gold shrink-0">
+                    <div className="w-9 h-9 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB] shrink-0">
                       <Icon size={16} />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -271,7 +271,7 @@ export default function SectionHub({
                 "group flex flex-col gap-2 p-3 rounded-xl border border-border bg-surface transition-all " +
                 (disabled
                   ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-surface-light hover:border-gold/30 cursor-pointer");
+                  : "hover:bg-surface-light hover:border-[rgba(37,99,235,0.25)] cursor-pointer");
               return disabled ? (
                 <div key={tool.slug} className={cls} aria-disabled="true">
                   {content}
@@ -328,7 +328,7 @@ export default function SectionHub({
               <ul className="divide-y divide-border">
                 {data.activity.map((a) => (
                   <li key={a.id} className="flex items-start gap-2.5 px-3 py-2.5">
-                    <Sparkles size={12} className="text-gold/70 mt-0.5 shrink-0" />
+                    <Sparkles size={12} className="text-[rgba(37,99,235,0.7)] mt-0.5 shrink-0" />
                     <div className="min-w-0 flex-1">
                       <p className="text-[11px] text-foreground leading-snug line-clamp-2">
                         {a.description || humanizeAction(a.action_type)}

@@ -52,10 +52,10 @@ export default function AutomateHubPage() {
         { label: "Add Integration", href: "/dashboard/integrations-hub", icon: Link2 },
       ]}
       stats={[
-        { label: "Active Workflows", key: "active_workflows", icon: Zap, color: "text-blue-400" },
-        { label: "Runs (7d)", key: "runs_week", icon: RotateCcw, color: "text-emerald-400" },
-        { label: "Agents", key: "agents", icon: Bot, color: "text-purple-400" },
-        { label: "Integrations", key: "integrations", icon: Link2, color: "text-amber-400" },
+        { label: "Active Workflows", key: "active_workflows", icon: Zap, color: "text-[#2563EB]" },
+        { label: "Runs (7d)", key: "runs_week", icon: RotateCcw, color: "text-emerald-500" },
+        { label: "Agents", key: "agents", icon: Bot, color: "text-[#2563EB]" },
+        { label: "Integrations", key: "integrations", icon: Link2, color: "text-[#2563EB]" },
       ]}
       tools={[
         {

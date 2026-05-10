@@ -87,9 +87,9 @@ function formatNum(n: number | undefined): string {
 }
 
 function formatDate(iso: string | null): string {
-  if (!iso) return "—";
+  if (!iso) return "ï¿½";
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "ï¿½";
   return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
@@ -170,8 +170,8 @@ export default function ContentPlanPage() {
   const [wizardPlatforms, setWizardPlatforms] = useState<string[]>(["instagram", "tiktok", "linkedin"]);
   const [wizardGenerating, setWizardGenerating] = useState(false);
 
-  // Load clients for the Guided-mode picker (best effort — empty list is OK).
-  // Deferred to idle time — the wizard picker is hidden in the default advanced
+  // Load clients for the Guided-mode picker (best effort ï¿½ empty list is OK).
+  // Deferred to idle time ï¿½ the wizard picker is hidden in the default advanced
   // view, so delaying this past first paint is safe.
   useEffect(() => {
     const load = () => {
@@ -203,7 +203,7 @@ export default function ContentPlanPage() {
       if (platformFilter !== "all") params.set("platform", platformFilter);
       const res = await fetch(`/api/content-plan?${params.toString()}`);
       // 403 "Profile not found" and other non-ok responses are legit "empty state"
-      // situations for fresh accounts — treat them as empty, not errors. The
+      // situations for fresh accounts ï¿½ treat them as empty, not errors. The
       // empty-state UI already tells the user how to get started.
       if (!res.ok) {
         console.warn(`[content-plan] loadPosts: HTTP ${res.status}`);
@@ -214,7 +214,7 @@ export default function ContentPlanPage() {
       setPosts(data.posts || []);
     } catch (e) {
       // Only genuine network/parse failures land here. Log for debugging but
-      // don't surface a toast — the empty state is a better UX.
+      // don't surface a toast ï¿½ the empty state is a better UX.
       console.warn("[content-plan] loadPosts failed:", e);
       setPosts([]);
     } finally {
@@ -238,7 +238,7 @@ export default function ContentPlanPage() {
   }, []);
 
   useEffect(() => { loadPosts(); }, [loadPosts]);
-  // Defer insights — they feed the AI sidebar below the fold. Letting the posts
+  // Defer insights ï¿½ they feed the AI sidebar below the fold. Letting the posts
   // grid render first is a much faster perceived paint.
   useEffect(() => {
     const run = () => { loadInsights(); };
@@ -283,7 +283,7 @@ export default function ContentPlanPage() {
       } else {
         // reschedule/regenerate/analyze aren't wired to APIs yet; be honest
         // rather than fake success.
-        toast(`${names[action]} bulk action is coming soon — open individual posts for now`, { id: "bulk", icon: "??" });
+        toast(`${names[action]} bulk action is coming soon ï¿½ open individual posts for now`, { id: "bulk", icon: "??" });
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : `${names[action]} failed`, { id: "bulk" });
@@ -340,8 +340,8 @@ export default function ContentPlanPage() {
             onClick={() => setWizardClientId("")}
             className={`w-full text-left p-3.5 rounded-xl border transition-all ${
               wizardClientId === ""
-                ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
-                : "border-border hover:border-gold/30 bg-surface-light"
+                ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
             }`}
           >
             <p className="text-sm font-semibold">No client (plan for yourself)</p>
@@ -361,8 +361,8 @@ export default function ContentPlanPage() {
                   onClick={() => setWizardClientId(c.id)}
                   className={`w-full text-left p-3.5 rounded-xl border transition-all ${
                     selected
-                      ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
-                      : "border-border hover:border-gold/30 bg-surface-light"
+                      ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                      : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                   }`}
                 >
                   <p className="text-sm font-semibold">{c.business_name}</p>
@@ -376,7 +376,7 @@ export default function ContentPlanPage() {
     {
       id: "goal",
       title: "What's the goal + how long?",
-      description: "Pick the outcome you want — we'll shape the mix of hooks, CTAs, and formats to match.",
+      description: "Pick the outcome you want ï¿½ we'll shape the mix of hooks, CTAs, and formats to match.",
       icon: <Target size={18} />,
       component: (
         <div className="space-y-4">
@@ -397,8 +397,8 @@ export default function ContentPlanPage() {
                     onClick={() => setWizardGoal(g.id)}
                     className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
                       sel
-                        ? "border-gold bg-gold/10 text-gold shadow-lg shadow-gold/10"
-                        : "border-border hover:border-gold/30 bg-surface-light"
+                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                     }`}
                   >
                     {g.label}
@@ -423,8 +423,8 @@ export default function ContentPlanPage() {
                     onClick={() => setWizardDuration(d.id)}
                     className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
                       sel
-                        ? "border-gold bg-gold/10 text-gold shadow-lg shadow-gold/10"
-                        : "border-border hover:border-gold/30 bg-surface-light"
+                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                     }`}
                   >
                     {d.label}
@@ -441,9 +441,9 @@ export default function ContentPlanPage() {
               max={7}
               value={wizardPostsPerWeek}
               onChange={e => setWizardPostsPerWeek(parseInt(e.target.value, 10) || 3)}
-              className="w-full accent-gold"
+              className="w-full accent-blue-600"
             />
-            <p className="text-[11px] text-muted mt-1">{wizardPostsPerWeek}× per week</p>
+            <p className="text-[11px] text-muted mt-1">{wizardPostsPerWeek}ï¿½ per week</p>
           </div>
           <div>
             <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Platforms</p>
@@ -461,7 +461,7 @@ export default function ContentPlanPage() {
                     }
                     className={`p-2 rounded-lg border text-[11px] font-medium capitalize transition-all ${
                       sel
-                        ? "border-gold bg-gold/10 text-gold"
+                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                         : "border-border text-muted hover:text-foreground"
                     }`}
                   >
@@ -481,14 +481,14 @@ export default function ContentPlanPage() {
       description: "We'll draft a full calendar of posts across the selected platforms. You can edit every post in Advanced mode.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+        <div className="card bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.2)] space-y-2">
           <div className="flex items-center gap-2 text-sm">
-            <Target size={14} className="text-gold" />
+            <Target size={14} className="text-[#2563EB]" />
             <span className="font-semibold capitalize">{wizardGoal}</span>
-            <span className="text-muted">·</span>
+            <span className="text-muted">ï¿½</span>
             <span>{wizardDuration === 7 ? "1 week" : wizardDuration === 30 ? "1 month" : "1 quarter"}</span>
-            <span className="text-muted">·</span>
-            <span>{wizardPostsPerWeek}× per week</span>
+            <span className="text-muted">ï¿½</span>
+            <span>{wizardPostsPerWeek}ï¿½ per week</span>
           </div>
           <div className="text-[11px] text-muted">
             Platforms: <span className="text-foreground capitalize">{wizardPlatforms.join(", ") || "(none)"}</span>
@@ -497,7 +497,7 @@ export default function ContentPlanPage() {
             <div className="text-[11px] text-muted">
               Client:{" "}
               <span className="text-foreground">
-                {clients.find(c => c.id === wizardClientId)?.business_name || "—"}
+                {clients.find(c => c.id === wizardClientId)?.business_name || "ï¿½"}
               </span>
             </div>
           )}
@@ -547,13 +547,13 @@ export default function ContentPlanPage() {
         }
       />
 
-      {/* Guided Mode — the 3-step content plan builder */}
+      {/* Guided Mode ï¿½ the 3-step content plan builder */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={wizardGenerating ? "Generating…" : "Generate content plan"}
+          finishLabel={wizardGenerating ? "Generatingï¿½" : "Generate content plan"}
           busy={wizardGenerating}
           onFinish={handleGuidedGenerate}
           onCancel={() => setAdvancedMode(true)}
@@ -572,7 +572,7 @@ export default function ContentPlanPage() {
                 key={s}
                 onClick={() => setStatusFilter(s)}
                 className={`px-3.5 py-2 text-xs rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
-                  statusFilter === s ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+                  statusFilter === s ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
                 }`}
               >
                 {statusFilter === s && statusIcon(s === "needs_review" ? "ready_to_publish" : s === "posted" ? "published" : s)}
@@ -602,8 +602,8 @@ export default function ContentPlanPage() {
                   onClick={() => setPlatformFilter(p.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] border transition-all ${
                     platformFilter === p.id
-                      ? "bg-gold/15 border-gold/40 text-gold"
-                      : "bg-surface-light border-border text-muted hover:text-foreground hover:border-gold/20"
+                      ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
+                      : "bg-surface-light border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)]"
                   }`}
                 >
                   {p.icon} {p.label}
@@ -621,7 +621,7 @@ export default function ContentPlanPage() {
                   key={v.id}
                   onClick={() => setViewMode(v.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[10px] transition-all ${
-                    viewMode === v.id ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+                    viewMode === v.id ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
                   }`}
                 >
                   {v.icon} {v.label}
@@ -632,7 +632,7 @@ export default function ContentPlanPage() {
 
           {/* Bulk actions bar */}
           {selectedIds.size > 0 && (
-            <div className="flex items-center justify-between flex-wrap gap-2 card py-2.5 px-3.5 border-gold/30 bg-gold/5">
+            <div className="flex items-center justify-between flex-wrap gap-2 card py-2.5 px-3.5 border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]">
               <div className="flex items-center gap-3 text-[11px] text-foreground">
                 <span className="font-medium">{selectedIds.size} selected</span>
                 <button onClick={clearSelection} className="text-muted hover:text-foreground text-[10px]">Clear</button>
@@ -722,12 +722,12 @@ export default function ContentPlanPage() {
           <PrismPanel rainbow padding="px-6 py-4">
             <div className="flex items-center justify-between mb-2.5">
               <h3 className="text-xs font-semibold flex items-center gap-1.5">
-                <Sparkles size={12} className="text-gold" /> AI Insights
+                <Sparkles size={12} className="text-[#2563EB]" /> AI Insights
               </h3>
               <button
                 onClick={loadInsights}
                 disabled={insightsLoading}
-                className="text-[10px] text-muted hover:text-gold transition-colors flex items-center gap-1 disabled:opacity-40"
+                className="text-[10px] text-muted hover:text-[#2563EB] transition-colors flex items-center gap-1 disabled:opacity-40"
               >
                 {insightsLoading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
                 Refresh
@@ -775,7 +775,7 @@ export default function ContentPlanPage() {
                   </span>
                 </div>
                 <p className="text-[9px] text-muted leading-relaxed mb-1">{t.why_trending}</p>
-                <p className="text-[9px] text-gold">{t.content_angle}</p>
+                <p className="text-[9px] text-[#2563EB]">{t.content_angle}</p>
               </div>
             ))}
           </InsightSection>
@@ -876,7 +876,7 @@ function PostGrid({
           transition={{ delay: i * 0.06, duration: 0.4 }}
           whileHover={{ y: -4, scale: 1.01 }}
           className={`rounded-xl overflow-hidden cursor-pointer group transition-shadow ${
-            selectedIds.has(p.id) ? "border-gold bg-gold/5" : ""
+            selectedIds.has(p.id) ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : ""
           }`}
           style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
           onClick={() => onOpen(p)}
@@ -901,7 +901,7 @@ function PostGrid({
                 type="checkbox"
                 checked={selectedIds.has(p.id)}
                 onChange={() => onSelect(p.id)}
-                className="accent-gold w-3 h-3"
+                className="accent-blue-600 w-3 h-3"
               />
             </label>
             {/* Platform badge */}
@@ -922,7 +922,7 @@ function PostGrid({
           {/* Date */}
           <p className="text-[10px] text-muted mb-2 flex items-center gap-1.5">
             <Calendar size={9} />
-            {p.posted_at ? `Posted ${formatDate(p.posted_at)}` : p.scheduled_at ? `Scheduled ${formatDate(p.scheduled_at)} · ${formatTime(p.scheduled_at)}` : "No date"}
+            {p.posted_at ? `Posted ${formatDate(p.posted_at)}` : p.scheduled_at ? `Scheduled ${formatDate(p.scheduled_at)} ï¿½ ${formatTime(p.scheduled_at)}` : "No date"}
           </p>
 
           {/* Engagement */}
@@ -967,7 +967,7 @@ function PostList({
                   type="checkbox"
                   onChange={onSelectAll}
                   checked={selectedIds.size > 0 && selectedIds.size === posts.length}
-                  className="accent-gold"
+                  className="accent-blue-600"
                 />
               </th>
               <th className="py-2 px-3">Title</th>
@@ -989,7 +989,7 @@ function PostList({
                 transition={{ delay: idx * 0.04 }}
                 onClick={() => onOpen(p)}
                 className={`border-b border-border/50 cursor-pointer hover:bg-surface-light ${
-                  selectedIds.has(p.id) ? "bg-gold/5" : idx % 2 ? "bg-surface/40" : ""
+                  selectedIds.has(p.id) ? "bg-[rgba(37,99,235,0.05)]" : idx % 2 ? "bg-surface/40" : ""
                 }`}
               >
                 <td className="py-2 px-3" onClick={e => e.stopPropagation()}>
@@ -997,7 +997,7 @@ function PostList({
                     type="checkbox"
                     checked={selectedIds.has(p.id)}
                     onChange={() => onSelect(p.id)}
-                    className="accent-gold"
+                    className="accent-blue-600"
                   />
                 </td>
                 <td className="py-2 px-3">
@@ -1015,16 +1015,16 @@ function PostList({
                   </span>
                 </td>
                 <td className="py-2 px-3 text-muted">
-                  {p.posted_at ? formatDate(p.posted_at) : p.scheduled_at ? formatDate(p.scheduled_at) : "—"}
+                  {p.posted_at ? formatDate(p.posted_at) : p.scheduled_at ? formatDate(p.scheduled_at) : "ï¿½"}
                 </td>
                 <td className="py-2 px-3 text-muted">{formatNum(p.likes)}</td>
                 <td className="py-2 px-3 text-muted">{formatNum(p.comments)}</td>
                 <td className="py-2 px-3 text-muted">{formatNum(p.shares)}</td>
                 <td className="py-2 px-3 text-muted max-w-[220px]">
                   {insightMap[p.id] ? (
-                    <span className="text-[10px] text-gold line-clamp-2">{insightMap[p.id]}</span>
+                    <span className="text-[10px] text-[#2563EB] line-clamp-2">{insightMap[p.id]}</span>
                   ) : (
-                    <span className="text-[10px] text-muted/50">—</span>
+                    <span className="text-[10px] text-muted/50">ï¿½</span>
                   )}
                 </td>
               </motion.tr>
@@ -1075,7 +1075,7 @@ function PostCalendar({
       {/* Calendar header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-          <Calendar size={14} className="text-gold" /> {monthLabel}
+          <Calendar size={14} className="text-[#2563EB]" /> {monthLabel}
         </h3>
         <div className="flex items-center gap-1">
           <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground">
@@ -1107,18 +1107,18 @@ function PostCalendar({
               className={`min-h-[76px] rounded-lg border p-1.5 ${
                 c.date
                   ? isToday
-                    ? "border-gold/40 bg-gold/5"
+                    ? "border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]"
                     : "border-border bg-surface-light/40"
                   : "border-transparent"
               }`}
             >
               {c.date && (
                 <div className="flex items-start justify-between">
-                  <span className={`text-[10px] ${isToday ? "text-gold font-semibold" : "text-muted"}`}>
+                  <span className={`text-[10px] ${isToday ? "text-[#2563EB] font-semibold" : "text-muted"}`}>
                     {c.date.getDate()}
                   </span>
                   {c.posts.length > 0 && (
-                    <span className="text-[8px] bg-gold/15 text-gold px-1 rounded">{c.posts.length}</span>
+                    <span className="text-[8px] bg-[rgba(37,99,235,0.12)] text-[#2563EB] px-1 rounded">{c.posts.length}</span>
                   )}
                 </div>
               )}
@@ -1227,7 +1227,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
                   href={post.live_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] text-gold hover:underline"
+                  className="text-[10px] text-[#2563EB] hover:underline"
                 >
                   View live ?
                 </a>
@@ -1287,10 +1287,10 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
         </div>
 
         {/* AI analysis */}
-        <div className="card border-gold/20 bg-gold/5">
+        <div className="card border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)]">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-[11px] font-semibold flex items-center gap-1.5 text-foreground">
-              <Sparkles size={12} className="text-gold" /> AI analysis
+              <Sparkles size={12} className="text-[#2563EB]" /> AI analysis
             </h4>
             <button
               onClick={analyzeWithAi}
@@ -1315,12 +1315,12 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
           )}
         </div>
 
-        {/* Actions — per-post actions are still being wired to dedicated API
+        {/* Actions ï¿½ per-post actions are still being wired to dedicated API
             routes; for now, surface a friendly "coming soon" instead of
             silently doing nothing on click. */}
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/50">
           <button
-            onClick={() => toast("Edit-in-modal is coming soon — open the post page to edit", { icon: "??" })}
+            onClick={() => toast("Edit-in-modal is coming soon ï¿½ open the post page to edit", { icon: "??" })}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
           >
             <Edit3 size={11} /> Edit
@@ -1351,7 +1351,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
             <Sparkles size={11} /> Improve with AI
           </button>
           <button
-            onClick={() => toast("Delete-from-modal is coming soon — use bulk delete for now", { icon: "??" })}
+            onClick={() => toast("Delete-from-modal is coming soon ï¿½ use bulk delete for now", { icon: "??" })}
             className="ml-auto text-[11px] py-1.5 px-3 rounded-lg bg-red-400/10 text-red-400 border border-red-400/20 hover:bg-red-400/20 flex items-center gap-1.5"
           >
             <Trash2 size={11} /> Delete

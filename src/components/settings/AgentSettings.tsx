@@ -38,7 +38,7 @@ interface Props {
 export default function AgentSettings({ agentConfigs, editingAgent, setEditingAgent, saveAgentConfig }: Props) {
   return (
     <div className="space-y-4">
-      <div className="card bg-gold/5 border-gold/20">
+      <div className="card bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)]">
         <p className="text-sm">Configure AI agents for each client. Control what the AI does automatically — outreach, cold calling, content, publishing.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -46,7 +46,7 @@ export default function AgentSettings({ agentConfigs, editingAgent, setEditingAg
           <div key={config.client_id} className="card-hover">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-medium">{config.client_name}</h3>
-              <button onClick={() => setEditingAgent(config)} className="text-gold text-xs hover:text-gold-light">Configure</button>
+              <button onClick={() => setEditingAgent(config)} className="text-[#2563EB] text-xs hover:text-[#3B82F6]">Configure</button>
             </div>
             <div className="space-y-2 text-xs">
               <div className="flex justify-between">
@@ -67,7 +67,7 @@ export default function AgentSettings({ agentConfigs, editingAgent, setEditingAg
               </div>
               <div className="flex justify-between">
                 <span className="text-muted">AI Model</span>
-                <span className="text-gold">{config.ai_model.split("-").slice(-2).join(" ")}</span>
+                <span className="text-[#2563EB]">{config.ai_model.split("-").slice(-2).join(" ")}</span>
               </div>
             </div>
           </div>
@@ -125,19 +125,19 @@ export default function AgentSettings({ agentConfigs, editingAgent, setEditingAg
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.outreach_enabled} onChange={e => setEditingAgent({ ...editingAgent, outreach_enabled: e.target.checked })} className="accent-gold" />
+                <input type="checkbox" checked={editingAgent.outreach_enabled} onChange={e => setEditingAgent({ ...editingAgent, outreach_enabled: e.target.checked })} className="accent-[#2563EB]" />
                 <span className="text-sm">DM Outreach</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.cold_calling_enabled} onChange={e => setEditingAgent({ ...editingAgent, cold_calling_enabled: e.target.checked })} className="accent-gold" />
+                <input type="checkbox" checked={editingAgent.cold_calling_enabled} onChange={e => setEditingAgent({ ...editingAgent, cold_calling_enabled: e.target.checked })} className="accent-[#2563EB]" />
                 <span className="text-sm">Cold Calling</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.content_generation_enabled} onChange={e => setEditingAgent({ ...editingAgent, content_generation_enabled: e.target.checked })} className="accent-gold" />
+                <input type="checkbox" checked={editingAgent.content_generation_enabled} onChange={e => setEditingAgent({ ...editingAgent, content_generation_enabled: e.target.checked })} className="accent-[#2563EB]" />
                 <span className="text-sm">Content Gen</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.auto_publish_enabled} onChange={e => setEditingAgent({ ...editingAgent, auto_publish_enabled: e.target.checked })} className="accent-gold" />
+                <input type="checkbox" checked={editingAgent.auto_publish_enabled} onChange={e => setEditingAgent({ ...editingAgent, auto_publish_enabled: e.target.checked })} className="accent-[#2563EB]" />
                 <span className="text-sm">Auto Publish</span>
               </label>
             </div>
@@ -163,7 +163,7 @@ export default function AgentSettings({ agentConfigs, editingAgent, setEditingAg
                         ? [...editingAgent.outreach_platforms, p]
                         : editingAgent.outreach_platforms.filter(x => x !== p);
                       setEditingAgent({ ...editingAgent, outreach_platforms: platforms });
-                    }} className="accent-gold" />
+                    }} className="accent-[#2563EB]" />
                     <span className="text-sm capitalize">{p}</span>
                   </label>
                 ))}

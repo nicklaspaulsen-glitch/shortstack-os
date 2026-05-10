@@ -64,14 +64,14 @@ interface UsageSnapshot {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
-  pending_payment: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-  processing: "bg-blue-500/10 text-blue-400 border-blue-500/30",
-  purchased: "bg-blue-500/10 text-blue-400 border-blue-500/30",
-  dns_configured: "bg-purple-500/10 text-purple-400 border-purple-500/30",
-  active: "bg-green-500/10 text-green-400 border-green-500/30",
-  expired: "bg-red-500/10 text-red-400 border-red-500/30",
-  transferred: "bg-slate-500/10 text-slate-400 border-slate-500/30",
+  pending: "bg-yellow-500/10 text-yellow-700 border-yellow-500/30",
+  pending_payment: "bg-amber-500/10 text-amber-700 border-amber-500/30",
+  processing: "bg-blue-500/10 text-blue-700 border-blue-500/30",
+  purchased: "bg-blue-500/10 text-blue-700 border-blue-500/30",
+  dns_configured: "bg-purple-500/10 text-purple-700 border-purple-500/30",
+  active: "bg-green-500/10 text-green-700 border-green-500/30",
+  expired: "bg-red-500/10 text-red-700 border-red-500/30",
+  transferred: "bg-slate-500/10 text-slate-700 border-slate-500/30",
 };
 
 export default function DomainsPage() {
@@ -149,7 +149,7 @@ export default function DomainsPage() {
                       toast.dismiss(t.id);
                       window.location.href = `/dashboard/mail-setup?domain=${encodeURIComponent(domain)}`;
                     }}
-                    className="px-3 py-1 rounded-md bg-gold text-black text-[11px] font-semibold"
+                    className="px-3 py-1 rounded-md bg-[#2563EB] text-white text-[11px] font-semibold"
                   >
                     Set up mail
                   </button>
@@ -401,7 +401,7 @@ export default function DomainsPage() {
         icon={<Globe2 size={28} />}
         title="Domains"
         subtitle="Search, buy & manage domains via GoDaddy. Connect them to your Vercel deployments."
-        gradient="gold"
+        gradient="blue"
         actions={
           <div className="flex items-center gap-2">
             {usage && (
@@ -425,10 +425,10 @@ export default function DomainsPage() {
 
       {/* Who-pays clarity banner — agencies pass domain costs to clients, so
           make it unambiguous on a page where a miscommunication = a chargeback. */}
-      <div className="flex flex-wrap items-start gap-2 rounded-xl border border-blue-500/20 bg-blue-500/5 p-3 text-[11px] text-blue-200">
-        <Info size={13} className="mt-0.5 shrink-0 text-blue-300" />
+      <div className="flex flex-wrap items-start gap-2 rounded-xl border border-blue-500/25 bg-blue-500/5 p-3 text-[11px] text-blue-700">
+        <Info size={13} className="mt-0.5 shrink-0 text-blue-600" />
         <div className="flex-1 min-w-0">
-          <span className="font-semibold text-blue-100">Who pays?</span>{" "}
+          <span className="font-semibold text-blue-800">Who pays?</span>{" "}
           <span>
             Domain purchases charge <span className="font-semibold">your</span> Stripe-linked card.
             Most agencies rebill the client (monthly: our yearly-retail price divided by 12 + $4
@@ -446,24 +446,24 @@ export default function DomainsPage() {
           domain → launch the brand" loop is discoverable. */}
       <a
         href="/dashboard/domains/hub-setup"
-        className="glass rounded-xl block bg-gradient-to-br from-gold/10 to-amber-500/5 border-gold/30 hover:border-gold/50 transition p-4"
+        className="glass rounded-xl block bg-gradient-to-br from-[rgba(37,99,235,0.08)] to-[rgba(37,99,235,0.03)] border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.4)] transition p-4"
       >
         <div className="flex items-center gap-3">
-          <Sparkles size={18} className="text-gold shrink-0" />
+          <Sparkles size={18} className="text-[#2563EB] shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold">One-click brand launch</p>
             <p className="text-[10px] text-muted mt-0.5">
               Provision email, phone, website, portal, and chat widget on your domain in one flow.
             </p>
           </div>
-          <ArrowUpRight size={14} className="text-gold shrink-0" />
+          <ArrowUpRight size={14} className="text-[#2563EB] shrink-0" />
         </div>
       </a>
 
       {/* ── Domain search ────────────────────────────────────────────── */}
       <div className="glass rounded-xl p-4">
         <h2 className="section-header flex items-center gap-2">
-          <Search size={13} className="text-gold" /> Find & buy a domain
+          <Search size={13} className="text-[#2563EB]" /> Find & buy a domain
         </h2>
         <div className="flex gap-2">
           <input
@@ -526,7 +526,7 @@ export default function DomainsPage() {
                         <button
                           onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}
                           disabled={anyRowLoading}
-                          className="text-[10px] px-2 py-2 rounded-lg border border-border text-foreground hover:border-gold/40 hover:bg-white/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="text-[10px] px-2 py-2 rounded-lg border border-border text-foreground hover:border-[rgba(37,99,235,0.4)] hover:bg-black/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {rowMonthlyLoading ? (
                             <Loader size={12} className="animate-spin my-1" />
@@ -566,7 +566,7 @@ export default function DomainsPage() {
       <div className="glass rounded-xl p-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="section-header flex items-center gap-2 mb-0">
-            <Globe size={13} className="text-gold" /> Your domains ({domains.length})
+            <Globe size={13} className="text-[#2563EB]" /> Your domains ({domains.length})
           </h2>
           <button onClick={loadData} className="btn-ghost text-[10px] flex items-center gap-1">
             <RefreshCw size={10} /> Refresh
@@ -595,19 +595,19 @@ export default function DomainsPage() {
                         </span>
                         {/* Resend mail badge — one per status */}
                         {d.resend_status === "verified" ? (
-                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-400 border-green-500/30 flex items-center gap-1">
+                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-700 border-green-500/30 flex items-center gap-1">
                             <MailCheck size={9} /> Mail verified
                           </span>
                         ) : d.resend_status === "verifying" || d.resend_status === "pending" ? (
-                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-400 border-blue-500/30 flex items-center gap-1">
+                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-700 border-blue-500/30 flex items-center gap-1">
                             <Mail size={9} /> Mail verifying
                           </span>
                         ) : d.resend_status === "failed" ? (
-                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-red-500/10 text-red-400 border-red-500/30 flex items-center gap-1">
+                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-red-500/10 text-red-700 border-red-500/30 flex items-center gap-1">
                             <MailWarning size={9} /> Mail failed
                           </span>
                         ) : (
-                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-slate-400 border-slate-500/30 flex items-center gap-1">
+                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-slate-600 border-slate-500/30 flex items-center gap-1">
                             <Mail size={9} /> Mail not set up
                           </span>
                         )}
@@ -622,7 +622,7 @@ export default function DomainsPage() {
                     {(d.status === "processing" || d.status === "purchased" || d.status === "pending_payment") && (
                       <button
                         onClick={() => retryAutoConfigure(d)}
-                        className="text-[10px] px-2.5 py-1 rounded-lg bg-gold/15 border border-gold/30 text-gold hover:bg-gold/25 flex items-center gap-1"
+                        className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1"
                       >
                         <RefreshCw size={10} /> Finish setup
                       </button>
@@ -631,7 +631,7 @@ export default function DomainsPage() {
                     {!d.resend_status && (
                       <button
                         onClick={() => setupMail(d)}
-                        className="text-[10px] px-2.5 py-1 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-300 hover:bg-blue-500/25 flex items-center gap-1"
+                        className="text-[10px] px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/25 text-blue-700 hover:bg-blue-500/20 flex items-center gap-1"
                       >
                         <Mail size={10} /> Set up mail
                       </button>
@@ -639,7 +639,7 @@ export default function DomainsPage() {
                     {(d.resend_status === "verifying" || d.resend_status === "pending") && (
                       <button
                         onClick={() => refreshMailStatus(d)}
-                        className="text-[10px] px-2.5 py-1 rounded-lg border border-blue-500/30 text-blue-300 hover:bg-blue-500/10 flex items-center gap-1"
+                        className="text-[10px] px-2.5 py-1 rounded-lg border border-blue-500/25 text-blue-700 hover:bg-blue-500/10 flex items-center gap-1"
                       >
                         <RefreshCw size={10} /> Check status
                       </button>
@@ -647,7 +647,7 @@ export default function DomainsPage() {
                     {d.resend_status === "failed" && (
                       <button
                         onClick={() => setupMail(d)}
-                        className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-300 hover:bg-red-500/10 flex items-center gap-1"
+                        className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-700 hover:bg-red-500/10 flex items-center gap-1"
                       >
                         <RefreshCw size={10} /> Retry mail
                       </button>
@@ -694,12 +694,12 @@ export default function DomainsPage() {
 
                 {/* Resend mail-status hints */}
                 {d.resend_status === "verified" && (
-                  <div className="mt-2 px-3 py-2 rounded-lg bg-green-500/5 border border-green-500/20 text-[10px] text-green-300 flex items-center gap-2 flex-wrap">
+                  <div className="mt-2 px-3 py-2 rounded-lg bg-green-500/5 border border-green-500/20 text-[10px] text-green-700 flex items-center gap-2 flex-wrap">
                     <MailCheck size={11} />
                     <span>Client can now send from <span className="font-mono">anything@{d.domain}</span></span>
                     <a
                       href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
-                      className="ml-auto inline-flex items-center gap-1 text-green-200 hover:text-green-100"
+                      className="ml-auto inline-flex items-center gap-1 text-green-600 hover:text-green-800"
                     >
                       Open in Mail Setup <ArrowUpRight size={10} />
                     </a>
@@ -709,24 +709,24 @@ export default function DomainsPage() {
                     dedicated /dashboard/mail-setup page so the user can
                     copy-paste DNS records or trigger a re-verify. */}
                 {(d.resend_status === "verifying" || d.resend_status === "pending") && (
-                  <div className="mt-2 px-3 py-2 rounded-lg bg-blue-500/5 border border-blue-500/20 text-[10px] text-blue-200 flex items-center gap-2 flex-wrap">
+                  <div className="mt-2 px-3 py-2 rounded-lg bg-blue-500/5 border border-blue-500/25 text-[10px] text-blue-700 flex items-center gap-2 flex-wrap">
                     <Mail size={11} />
                     <span>DNS records are propagating — this usually takes a few minutes.</span>
                     <a
                       href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
-                      className="ml-auto inline-flex items-center gap-1 text-blue-100 hover:text-white"
+                      className="ml-auto inline-flex items-center gap-1 text-blue-600 hover:text-blue-800"
                     >
                       View records <ArrowUpRight size={10} />
                     </a>
                   </div>
                 )}
                 {d.resend_status === "failed" && d.resend_last_error && (
-                  <div className="mt-2 px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/20 text-[10px] text-red-300 flex items-start gap-2">
+                  <div className="mt-2 px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/20 text-[10px] text-red-700 flex items-start gap-2">
                     <MailWarning size={11} className="mt-0.5 shrink-0" />
                     <span className="break-all flex-1">{d.resend_last_error}</span>
                     <a
                       href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
-                      className="shrink-0 inline-flex items-center gap-1 text-red-200 hover:text-red-100"
+                      className="shrink-0 inline-flex items-center gap-1 text-red-600 hover:text-red-800"
                     >
                       Debug <ArrowUpRight size={10} />
                     </a>
@@ -734,7 +734,7 @@ export default function DomainsPage() {
                 )}
                 {/* No mail yet — gentle nudge since this is the "agency flow" win */}
                 {!d.resend_status && (d.status === "active" || d.status === "dns_configured" || d.status === "purchased") && (
-                  <div className="mt-2 px-3 py-2 rounded-lg bg-gold/5 border border-gold/20 text-[10px] text-gold flex items-center gap-2 flex-wrap">
+                  <div className="mt-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] text-[10px] text-[#2563EB] flex items-center gap-2 flex-wrap">
                     <Sparkles size={11} />
                     <span>
                       Send marketing email from{" "}
@@ -754,10 +754,10 @@ export default function DomainsPage() {
                   <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <h3 className="text-[11px] font-semibold flex items-center gap-1.5">
-                        <ShieldCheck size={12} className="text-gold" /> DNS Records
+                        <ShieldCheck size={12} className="text-[#2563EB]" /> DNS Records
                       </h3>
                       <div className="flex items-center gap-1.5">
-                        <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 flex items-center gap-1">
+                        <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
                           <VercelIcon size={10} /> Point to Vercel
                         </button>
                         <button onClick={addDnsRecord} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
@@ -821,9 +821,9 @@ export default function DomainsPage() {
       </div>
 
       {/* Tip card */}
-      <div className="glass rounded-xl p-4 border-gold/10">
+      <div className="glass rounded-xl p-4 border-[rgba(37,99,235,0.1)]">
         <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
-          <AlertTriangle size={11} className="text-gold" /> How domain ownership works
+          <AlertTriangle size={11} className="text-[#2563EB]" /> How domain ownership works
         </h3>
         <ul className="text-[10px] text-muted space-y-1 list-disc list-inside">
           <li>Domains are registered under your ShortStack GoDaddy customer account.</li>
@@ -833,7 +833,7 @@ export default function DomainsPage() {
           <li>Transfer out any time via the GoDaddy dashboard using the auth code.</li>
           <li>
             After purchase →{" "}
-            <a href="/dashboard/mail-setup" className="text-gold hover:underline">
+            <a href="/dashboard/mail-setup" className="text-[#2563EB] hover:underline">
               Mail Setup
             </a>{" "}
             writes Resend DKIM/SPF so the client can send email from their own domain.

@@ -54,7 +54,10 @@ export default function ClientOutreachFeedPage() {
 
   if (loading) {
     return (
-      <div className=" border border-white/10 bg-[#0b0d12] p-10 text-center text-white/40 text-sm">
+      <div
+        className="rounded-xl border border-[rgba(0,0,0,0.08)] p-10 text-center text-[#6B7280] text-sm"
+        style={{ background: "rgba(255,255,255,0.88)" }}
+      >
         Loading…
       </div>
     );
@@ -62,24 +65,32 @@ export default function ClientOutreachFeedPage() {
 
   return (
     <div className="space-y-4">
-      <div className=" border border-white/10 bg-gradient-to-br from-[#041926] via-[#0b3547] to-[#1f7a87] px-6 py-5 sm:py-6">
+      <div
+        className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 py-5 sm:py-6"
+        style={{
+          background: "rgba(255,255,255,0.88)",
+          backdropFilter: "blur(16px) saturate(1.5)",
+          WebkitBackdropFilter: "blur(16px) saturate(1.5)",
+          boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 16px rgba(0,0,0,0.06)",
+        }}
+      >
         <div className="flex items-start gap-3">
           <div
             className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"
             style={{
-              background: "rgba(37, 99, 235, 0.2)",
-              border: "1px solid rgba(94, 234, 212, 0.35)",
-              color: "#FF8080",
+              background: "rgba(37,99,235,0.10)",
+              border: "1px solid rgba(37,99,235,0.20)",
+              color: "#2563EB",
             }}
           >
             <MessagesSquare size={22} />
           </div>
           <div className="min-w-0">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-teal-200/85">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#2563EB]">
               Your conversations
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight mt-1">Outreach Feed</h1>
-            <p className="text-sm text-white/70 mt-1.5 max-w-2xl">
+            <h1 className="text-2xl font-bold text-[#111827] tracking-tight mt-1">Outreach Feed</h1>
+            <p className="text-sm text-[#374151] mt-1.5 max-w-2xl">
               Every conversation your agency has had with leads on your behalf — calls, emails, SMS,
               and social DMs. AI summarizes each interaction so you can see what&apos;s working at a glance.
             </p>

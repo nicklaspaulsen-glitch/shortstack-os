@@ -176,7 +176,7 @@ export default function AffiliateDetailPage() {
     return (
       <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
         <p className="text-sm text-muted">Affiliate not found.</p>
-        <Link href="/dashboard/affiliates" className="text-gold underline">
+        <Link href="/dashboard/affiliates" className="text-[#2563EB] underline">
           Back to affiliates
         </Link>
       </div>
@@ -272,7 +272,7 @@ export default function AffiliateDetailPage() {
           />
           <button
             onClick={copyRefLink}
-            className="px-3 py-2 bg-gold text-dark rounded-lg text-sm font-semibold flex items-center gap-2"
+            className="px-3 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold flex items-center gap-2"
           >
             <Copy size={14} /> Copy
           </button>

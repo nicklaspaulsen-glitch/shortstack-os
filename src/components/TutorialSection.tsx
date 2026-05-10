@@ -119,15 +119,15 @@ export default function TutorialSection({
             return (
               <div
                 key={step.number}
-                className="relative flex flex-col gap-2 p-3 rounded-xl border border-border bg-surface-light/40 hover:border-gold/30 transition-all"
+                className="relative flex flex-col gap-2 p-3 rounded-xl border border-border bg-surface-light/40 hover:border-[rgba(37,99,235,0.25)] transition-all"
               >
                 <div className="flex items-start gap-2">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gold/15 text-gold text-[11px] font-bold flex items-center justify-center border border-gold/30">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[rgba(37,99,235,0.12)] text-[#2563EB] text-[11px] font-bold flex items-center justify-center border border-[rgba(37,99,235,0.25)]">
                     {step.number}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
-                      {Icon && <Icon size={12} className="text-gold flex-shrink-0" />}
+                      {Icon && <Icon size={12} className="text-[#2563EB] flex-shrink-0" />}
                       <h3 className="text-[11px] font-semibold text-foreground truncate">
                         {step.title}
                       </h3>
@@ -165,8 +165,8 @@ export default function TutorialSection({
                       <div className="w-full aspect-video bg-gradient-to-br from-surface-light to-surface" />
                     )}
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover/video:bg-black/50 transition-colors">
-                      <div className="w-8 h-8 rounded-full bg-gold/90 flex items-center justify-center">
-                        <Play size={14} className="text-black ml-0.5" />
+                      <div className="w-8 h-8 rounded-full bg-[#2563EB] flex items-center justify-center">
+                        <Play size={14} className="text-white ml-0.5" />
                       </div>
                     </div>
                   </button>

@@ -44,10 +44,10 @@ const SUGGESTION_ICONS: Record<SuggestionRow["suggestion_type"], typeof Sparkles
 };
 
 const SUGGESTION_COLORS: Record<SuggestionRow["suggestion_type"], string> = {
-  reallocate: "text-blue-400 border-blue-500/40 bg-blue-500/10",
-  pause: "text-amber-400 border-amber-500/40 bg-amber-500/10",
-  scale: "text-success border-success/40 bg-success/10",
-  optimize_creative: "text-purple-400 border-purple-500/40 bg-purple-500/10",
+  reallocate: "text-blue-700 border-blue-500/40 bg-blue-500/10",
+  pause: "text-amber-700 border-amber-500/40 bg-amber-500/10",
+  scale: "text-emerald-700 border-emerald-500/40 bg-emerald-500/10",
+  optimize_creative: "text-purple-700 border-purple-500/40 bg-purple-500/10",
 };
 
 export default function InsightsPanel() {
@@ -137,10 +137,10 @@ export default function InsightsPanel() {
       {/* ── Account health scorecard (claude-ads 200+ checks) ── */}
       <AuditScoreCard />
 
-      <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
+      <div className="rounded-lg border border-black/[0.06] bg-white p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="text-gold" size={16} />
+            <Sparkles className="text-[#2563EB]" size={16} />
             <h3 className="text-sm font-medium">AI Optimization Suggestions</h3>
             {suggestions.length > 0 && (
               <span className="text-[11px] text-muted">
@@ -151,7 +151,7 @@ export default function InsightsPanel() {
           <button
             onClick={() => void generate()}
             disabled={generating}
-            className="inline-flex items-center gap-1.5 rounded border border-gold/40 bg-gold/10 px-3 py-1.5 text-xs text-gold hover:bg-gold/20 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-3 py-1.5 text-xs text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)] disabled:opacity-50"
           >
             {generating ? (
               <Loader2 className="animate-spin" size={12} />
@@ -163,7 +163,7 @@ export default function InsightsPanel() {
         </div>
 
         {suggestions.length === 0 ? (
-          <div className="text-sm text-muted py-6 text-center">
+          <div className="text-sm text-[#6B7280] py-6 text-center">
             No pending suggestions. Click Generate to analyze the last 30 days
             of campaign data and surface optimisation recs.
           </div>
@@ -208,13 +208,13 @@ export default function InsightsPanel() {
                     <div className="flex flex-col gap-1 flex-shrink-0">
                       <button
                         onClick={() => void decide(s.id, "accept")}
-                        className="inline-flex items-center gap-1 rounded border border-success/40 bg-success/10 px-2 py-1 text-[11px] text-success hover:bg-success/20"
+                        className="inline-flex items-center gap-1 rounded border border-emerald-500/40 bg-emerald-500/10 px-2 py-1 text-[11px] text-emerald-700 hover:bg-emerald-500/20"
                       >
                         <Check size={11} /> Apply
                       </button>
                       <button
                         onClick={() => void decide(s.id, "reject")}
-                        className="inline-flex items-center gap-1 rounded border border-white/10 bg-white/5 px-2 py-1 text-[11px] text-muted hover:bg-white/10"
+                        className="inline-flex items-center gap-1 rounded border border-black/[0.06] bg-black/[0.04] px-2 py-1 text-[11px] text-[#6B7280] hover:bg-black/[0.08]"
                       >
                         <X size={11} /> Dismiss
                       </button>
@@ -259,30 +259,30 @@ function PlatformLineChart({
 }) {
   const empty = data.length === 0 || data.every((d) => !d.meta && !d.google && !d.tiktok);
   return (
-    <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
-      <h4 className="text-xs uppercase tracking-wide text-muted mb-3">{title}</h4>
+    <div className="rounded-lg border border-black/[0.06] bg-white p-4">
+      <h4 className="text-xs uppercase tracking-wide text-[#6B7280] mb-3">{title}</h4>
       {empty ? (
-        <div className="text-xs text-muted py-8 text-center">No data yet.</div>
+        <div className="text-xs text-[#6B7280] py-8 text-center">No data yet.</div>
       ) : (
         <ResponsiveContainer width="100%" height={180}>
           <LineChart data={data} margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }}
+              tick={{ fontSize: 9, fill: "rgba(0,0,0,0.4)" }}
               tickLine={false}
               tickFormatter={(d: string) => d.slice(5)}
             />
             <YAxis
-              tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }}
+              tick={{ fontSize: 9, fill: "rgba(0,0,0,0.4)" }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => formatY(Number(v))}
             />
             <Tooltip
               contentStyle={{
-                background: "rgba(10,10,15,0.95)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                background: "rgba(255,255,255,0.98)",
+                border: "1px solid rgba(0,0,0,0.08)",
                 borderRadius: 6,
                 fontSize: 11,
               }}

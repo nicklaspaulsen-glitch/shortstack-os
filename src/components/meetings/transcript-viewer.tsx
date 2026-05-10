@@ -26,7 +26,7 @@ function formatTs(seconds: number): string {
 function speakerColor(speaker?: string): string {
   if (!speaker) return "text-muted";
   // Stable hue from speaker label — two-speaker case gets gold + blue.
-  if (/1/.test(speaker)) return "text-gold";
+  if (/1/.test(speaker)) return "text-[#2563EB]";
   if (/2/.test(speaker)) return "text-blue-400";
   if (/3/.test(speaker)) return "text-purple-400";
   return "text-muted";
@@ -61,7 +61,7 @@ export default function TranscriptViewer({ segments, fallbackRaw, currentTime = 
             ref={active ? activeRef : null}
             onClick={() => onSeek?.(seg.start)}
             className={`group w-full text-left flex gap-3 px-2 py-1.5 rounded-md transition-all ${
-              active ? "bg-gold/10 ring-1 ring-gold/30" : "hover:bg-white/[0.03]"
+              active ? "bg-[rgba(37,99,235,0.08)] ring-1 ring-[rgba(37,99,235,0.3)]" : "hover:bg-white/[0.03]"
             }`}
           >
             <span className="flex-shrink-0 text-[10px] font-mono text-muted w-12 pt-0.5">

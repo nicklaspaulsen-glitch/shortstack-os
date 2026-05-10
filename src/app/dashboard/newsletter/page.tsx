@@ -499,7 +499,7 @@ export default function NewsletterPage() {
             onChange={e => setGuidedTopic(e.target.value)}
             placeholder={`e.g., "${new Date().toLocaleString("default", { month: "long" })} round-up: new features, 2 client wins, and what's coming next"`}
             rows={3}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.5)] focus:ring-2 focus:ring-[rgba(37,99,235,0.08)] transition-all resize-none"
             autoFocus
           />
         </div>
@@ -528,8 +528,8 @@ export default function NewsletterPage() {
                     onClick={() => setGuidedLength(l.id)}
                     className={`p-3 rounded-xl border text-center transition-all ${
                       sel
-                        ? "border-gold bg-gold/10 text-gold shadow-lg shadow-gold/10"
-                        : "border-border hover:border-gold/30 bg-surface-light"
+                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                     }`}
                   >
                     <p className="text-sm font-semibold">{l.label}</p>
@@ -556,8 +556,8 @@ export default function NewsletterPage() {
                     onClick={() => setGuidedTone(t.id)}
                     className={`p-3 rounded-xl border text-sm font-semibold transition-all ${
                       sel
-                        ? "border-gold bg-gold/10 text-gold shadow-lg shadow-gold/10"
-                        : "border-border hover:border-gold/30 bg-surface-light"
+                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                     }`}
                   >
                     {t.label}
@@ -575,7 +575,7 @@ export default function NewsletterPage() {
       description: "We'll write the subject, headline, and section copy. You'll be able to tweak every block in the builder.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+        <div className="card bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)] space-y-2">
           <p className="text-sm">
             <span className="text-muted">Topic: </span>
             <span className="font-semibold">{guidedTopic || <span className="italic text-muted">(none)</span>}</span>
@@ -642,7 +642,7 @@ export default function NewsletterPage() {
           />
         </div>
         <div className="relative text-center px-4">
-          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+          <p className="text-[11px] uppercase tracking-widest text-[rgba(37,99,235,0.8)] font-semibold">
             Newsletter template library
           </p>
           <h3 className="text-lg font-bold text-foreground mt-1">
@@ -662,7 +662,7 @@ export default function NewsletterPage() {
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+              activeTab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
             }`}>{t.icon} {t.label}</button>
         ))}
       </div>
@@ -686,7 +686,7 @@ export default function NewsletterPage() {
                 />
                 <button
                   onClick={generateSubjectLines}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1"
                 >
                   {aiLoading === "subject" ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
                 </button>
@@ -695,14 +695,14 @@ export default function NewsletterPage() {
 
             {/* AI subject suggestions */}
             {subjectAiOpen && aiSubjects.length > 0 && (
-              <div className="card border-gold/10 p-3 space-y-1.5">
+              <div className="card border-[rgba(37,99,235,0.1)] p-3 space-y-1.5">
                 <div className="flex items-center justify-between mb-1">
-                  <p className="text-[10px] font-semibold text-gold">AI Subject Line Suggestions</p>
+                  <p className="text-[10px] font-semibold text-[#2563EB]">AI Subject Line Suggestions</p>
                   <button onClick={() => setSubjectAiOpen(false)} className="text-muted hover:text-foreground"><X size={12} /></button>
                 </div>
                 {aiSubjects.map((s, i) => (
                   <button key={i} onClick={() => { setSubject(s); setSubjectAiOpen(false); toast.success("Subject line applied"); }}
-                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-gold/5 transition-all text-muted hover:text-foreground">
+                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-[rgba(37,99,235,0.05)] transition-all text-muted hover:text-foreground">
                     {s}
                   </button>
                 ))}
@@ -784,7 +784,7 @@ export default function NewsletterPage() {
                       <button
                         onClick={() => generateAiContent(block.id, block.content.body || "newsletter section content")}
                         disabled={aiLoading === block.id}
-                        className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1"
+                        className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1"
                       >
                         {aiLoading === block.id ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} Write with AI
                       </button>
@@ -880,7 +880,7 @@ export default function NewsletterPage() {
               <span className="text-[9px] text-muted uppercase tracking-wider font-semibold mr-2">Add Block:</span>
               {(["text", "image", "button", "divider"] as const).map(type => (
                 <button key={type} onClick={() => addBlock(type)}
-                  className="text-[10px] px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-gold/20 hover:text-gold transition-all flex items-center gap-1.5">
+                  className="text-[10px] px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-[rgba(37,99,235,0.2)] hover:text-[#2563EB] transition-all flex items-center gap-1.5">
                   {type === "text" && <Type size={10} />}
                   {type === "image" && <ImageIcon size={10} />}
                   {type === "button" && <MousePointerClick size={10} />}
@@ -898,7 +898,7 @@ export default function NewsletterPage() {
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted flex items-center gap-1.5"><Users size={10} /> Recipients</h3>
               <div className="relative">
                 <button onClick={() => setShowRecipientDropdown(!showRecipientDropdown)}
-                  className="w-full text-left p-2.5 rounded-xl bg-surface-light border border-border hover:border-gold/20 transition-all flex items-center justify-between text-xs">
+                  className="w-full text-left p-2.5 rounded-xl bg-surface-light border border-border hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center justify-between text-xs">
                   <span className="flex items-center gap-2">
                     <span className={`w-2 h-2 rounded-full ${selectedList?.color === "text-blue-400" ? "bg-blue-400" : selectedList?.color === "text-green-400" ? "bg-green-400" : selectedList?.color === "text-yellow-400" ? "bg-yellow-400" : "bg-purple-400"}`} />
                     {selectedList?.label}
@@ -910,7 +910,7 @@ export default function NewsletterPage() {
                   <div className="absolute z-10 top-full left-0 right-0 mt-1 rounded-xl bg-surface border border-border shadow-lg overflow-hidden">
                     {RECIPIENT_LISTS.map(l => (
                       <button key={l.id} onClick={() => { setRecipientList(l.id); setShowRecipientDropdown(false); }}
-                        className={`w-full text-left px-3 py-2.5 text-xs hover:bg-surface-light transition-all flex items-center justify-between ${recipientList === l.id ? "bg-gold/5 text-gold" : "text-foreground"}`}>
+                        className={`w-full text-left px-3 py-2.5 text-xs hover:bg-surface-light transition-all flex items-center justify-between ${recipientList === l.id ? "bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "text-foreground"}`}>
                         <span className="flex items-center gap-2">
                           <span className={`w-2 h-2 rounded-full ${l.color === "text-blue-400" ? "bg-blue-400" : l.color === "text-green-400" ? "bg-green-400" : l.color === "text-yellow-400" ? "bg-yellow-400" : "bg-purple-400"}`} />
                           {l.label}
@@ -928,11 +928,11 @@ export default function NewsletterPage() {
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted flex items-center gap-1.5"><Send size={10} /> Send Options</h3>
               <div className="flex gap-1 mb-3">
                 <button onClick={() => setSendMode("now")}
-                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "now" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-border"}`}>
+                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "now" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-border"}`}>
                   <Zap size={10} /> Send Now
                 </button>
                 <button onClick={() => setSendMode("schedule")}
-                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "schedule" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-border"}`}>
+                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "schedule" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-border"}`}>
                   <Clock size={10} /> Schedule
                 </button>
               </div>
@@ -961,7 +961,7 @@ export default function NewsletterPage() {
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Builder Stats</h3>
               <div className="grid grid-cols-2 gap-2">
                 <div className="text-center p-2 rounded bg-surface-light">
-                  <p className="text-sm font-bold text-gold">{blocks.length}</p>
+                  <p className="text-sm font-bold text-[#2563EB]">{blocks.length}</p>
                   <p className="text-[8px] text-muted">Blocks</p>
                 </div>
                 <div className="text-center p-2 rounded bg-surface-light">
@@ -1005,9 +1005,9 @@ export default function NewsletterPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {TEMPLATES.map(tpl => (
               <button key={tpl.id} onClick={() => loadTemplate(tpl.id)}
-                className="text-left p-5  bg-surface border border-border hover:border-gold/20 hover:shadow-lg transition-all group">
+                className="text-left p-5  bg-surface border border-border hover:border-[rgba(37,99,235,0.2)] hover:shadow-lg transition-all group">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-gold/10 text-gold flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] text-[#2563EB] flex items-center justify-center group-hover:bg-[rgba(37,99,235,0.12)] transition-colors">
                     {tpl.icon}
                   </div>
                   <div>
@@ -1032,11 +1032,11 @@ export default function NewsletterPage() {
           <div className="flex items-center justify-center gap-2">
             <button onClick={() => setPreviewMode("desktop")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
-                previewMode === "desktop" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-border"
+                previewMode === "desktop" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-border"
               }`}><Monitor size={12} /> Desktop</button>
             <button onClick={() => setPreviewMode("mobile")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
-                previewMode === "mobile" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-border"
+                previewMode === "mobile" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-border"
               }`}><Smartphone size={12} /> Mobile</button>
           </div>
 
@@ -1148,9 +1148,9 @@ export default function NewsletterPage() {
           {/* Summary cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {[
-              { value: PAST_NEWSLETTERS.length, label: "Newsletters Sent", color: "text-gold" },
+              { value: PAST_NEWSLETTERS.length, label: "Newsletters Sent", color: "text-[#2563EB]" },
               { value: `${(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.openRate), 0) / Math.max(PAST_NEWSLETTERS.length, 1)).toFixed(1)}%`, label: "Avg Open Rate", color: "text-green-400" },
-              { value: `${(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.clickRate), 0) / Math.max(PAST_NEWSLETTERS.length, 1)).toFixed(1)}%`, label: "Avg Click Rate", color: "text-blue-400" },
+              { value: `${(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.clickRate), 0) / Math.max(PAST_NEWSLETTERS.length, 1)).toFixed(1)}%`, label: "Avg Click Rate", color: "text-[#2563EB]" },
               { value: PAST_NEWSLETTERS.reduce((s, n) => s + n.recipients, 0).toLocaleString(), label: "Total Recipients", color: "" },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden">
@@ -1166,7 +1166,7 @@ export default function NewsletterPage() {
           {/* Past newsletters table */}
           <motion.div className="glass rounded-xl" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24, duration: 0.4 }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <BarChart3 size={14} className="text-gold" /> Past Newsletters
+              <BarChart3 size={14} className="text-[#2563EB]" /> Past Newsletters
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
@@ -1189,7 +1189,7 @@ export default function NewsletterPage() {
                       <td className="py-2.5 px-3 text-muted" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.sentAt}</td>
                       <td className="py-2.5 px-3 text-right" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.recipients.toLocaleString()}</td>
                       <td className="py-2.5 px-3 text-right text-green-400 font-medium" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.opens.toLocaleString()}</td>
-                      <td className="py-2.5 px-3 text-right text-blue-400 font-medium" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.clicks.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 text-right text-[#2563EB] font-medium" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.clicks.toLocaleString()}</td>
                       <td className="py-2.5 px-3 text-right text-red-400" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.bounces}</td>
                       <td className="py-2.5 px-3 text-right font-semibold" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>
                         <span className={parseFloat(nl.openRate) >= 40 ? "text-green-400" : parseFloat(nl.openRate) >= 30 ? "text-yellow-400" : "text-red-400"}>{nl.openRate}</span>
@@ -1227,7 +1227,7 @@ export default function NewsletterPage() {
             </motion.div>
             <motion.div className="glass rounded-xl" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
-                <Link2 size={12} className="text-blue-400" /> Best Click Rate
+                <Link2 size={12} className="text-[#2563EB]" /> Best Click Rate
               </h3>
               {(() => {
                 const best = [...PAST_NEWSLETTERS].sort((a, b) => parseFloat(b.clickRate) - parseFloat(a.clickRate))[0];
@@ -1235,7 +1235,7 @@ export default function NewsletterPage() {
                   <div>
                     <p className="text-sm font-medium mb-1">{best.subject}</p>
                     <div className="flex gap-3 text-[10px] text-muted">
-                      <span className="text-blue-400 font-semibold">{best.clickRate} CTR</span>
+                      <span className="text-[#2563EB] font-semibold">{best.clickRate} CTR</span>
                       <span>Sent {best.sentAt}</span>
                       <span>{best.clicks.toLocaleString()} clicks</span>
                     </div>

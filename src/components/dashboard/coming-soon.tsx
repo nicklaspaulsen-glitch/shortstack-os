@@ -113,7 +113,7 @@ export function ComingSoon({
       <div className="flex items-center justify-between">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-gold transition-colors"
+          className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-[#2563EB] transition-colors"
         >
           <ArrowLeft size={12} />
           Back to dashboard
@@ -231,7 +231,7 @@ export function ComingSoon({
         {/* What's coming */}
         <div className="lg:col-span-2 card !p-5">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-7 h-7 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center text-gold">
+            <div className="w-7 h-7 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB]">
               <Hammer size={14} />
             </div>
             <div>
@@ -251,7 +251,7 @@ export function ComingSoon({
               >
                 <CheckCircle2
                   size={15}
-                  className="text-gold shrink-0 mt-0.5"
+                  className="text-[#2563EB] shrink-0 mt-0.5"
                   strokeWidth={2.2}
                 />
                 <span>{feat}</span>
@@ -263,7 +263,7 @@ export function ComingSoon({
         {/* Waitlist panel */}
         <div className="card !p-5 flex flex-col">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-7 h-7 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center text-gold">
+            <div className="w-7 h-7 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB]">
               <Bell size={14} />
             </div>
             <div>
@@ -300,7 +300,7 @@ export function ComingSoon({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
-                className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-[12px] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20"
+                className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-[12px] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-1 focus:ring-[rgba(37,99,235,0.2)]"
               />
               <button
                 type="submit"
@@ -346,14 +346,14 @@ export function ComingSoon({
               <Link
                 key={alt.href}
                 href={alt.href}
-                className="group flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl border border-border bg-surface hover:bg-surface-light hover:border-gold/30 transition-all"
+                className="group flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl border border-border bg-surface hover:bg-surface-light hover:border-[rgba(37,99,235,0.25)] transition-all"
               >
                 <span className="text-[12px] font-semibold text-foreground truncate">
                   {alt.label}
                 </span>
                 <ArrowRight
                   size={14}
-                  className="text-muted group-hover:text-gold group-hover:translate-x-0.5 transition-all shrink-0"
+                  className="text-muted group-hover:text-[#2563EB] group-hover:translate-x-0.5 transition-all shrink-0"
                 />
               </Link>
             ))}

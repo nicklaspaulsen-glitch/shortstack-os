@@ -103,7 +103,7 @@ export default function ClientPortalPage() {
       const replied = (outreachData || []).filter((o: { status: string }) => o.status === "replied").length;
       setOutreachStats({ sent, replied });
     } catch (err) {
-      // Don't toast — empty/onboarding state is a valid UX here (new users
+      // Don't toast ï¿½ empty/onboarding state is a valid UX here (new users
       // hitting this page without a client row). Just log for debugging.
       console.error("[portal] fetchPortalData error:", err);
     } finally {
@@ -191,11 +191,11 @@ export default function ClientPortalPage() {
         <div className="relative flex items-center justify-between">
           <div>
             <h1 className="text-lg font-bold tracking-tight">Welcome back, {client.contact_name?.split(" ")[0] || "there"}</h1>
-            <p className="text-xs text-muted mt-0.5">{client.business_name || "Your Business"} · {client.package_tier || "Standard"} Plan</p>
+            <p className="text-xs text-muted mt-0.5">{client.business_name || "Your Business"} ï¿½ {client.package_tier || "Standard"} Plan</p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-[10px] bg-gold/[0.08] text-gold px-2.5 py-1 rounded-md border border-gold/15">
-              <Star size={10} className="fill-gold" />
+            <div className="flex items-center gap-1.5 text-[10px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2.5 py-1 rounded-md border border-[rgba(37,99,235,0.08)]">
+              <Star size={10} className="fill-[#2563EB]" />
               <span className="font-medium">{client.health_score}% Health</span>
             </div>
           </div>
@@ -219,9 +219,9 @@ export default function ClientPortalPage() {
 
       {/* Quick links */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-        <Link href="/dashboard/portal/leads" className="card-hover p-3 flex items-center gap-2.5 group border-gold/10">
-          <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center shrink-0">
-            <Sparkles size={14} className="text-gold" />
+        <Link href="/dashboard/portal/leads" className="card-hover p-3 flex items-center gap-2.5 group border-[rgba(37,99,235,0.1)]">
+          <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
+            <Sparkles size={14} className="text-[#2563EB]" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-foreground transition-colors">AI Lead Engine</p>
@@ -238,8 +238,8 @@ export default function ClientPortalPage() {
           </div>
         </Link>
         <Link href="/dashboard/portal/socials" className="card-hover p-3 flex items-center gap-2.5 group">
-          <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center shrink-0">
-            <Globe size={14} className="text-gold" />
+          <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
+            <Globe size={14} className="text-[#2563EB]" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-foreground transition-colors">Socials</p>
@@ -265,8 +265,8 @@ export default function ClientPortalPage() {
           </div>
         </Link>
         <Link href="/dashboard/portal/support" className="card-hover p-3 flex items-center gap-2.5 group">
-          <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center shrink-0">
-            <MessageSquare size={14} className="text-gold" />
+          <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
+            <MessageSquare size={14} className="text-[#2563EB]" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-foreground transition-colors">Support</p>
@@ -278,7 +278,7 @@ export default function ClientPortalPage() {
       {/* AI Marketing Plan (shows after onboarding) */}
       {generatingPlan && (
         <PrismPanel padding="py-6" className="text-center">
-          <Loader size={20} className="mx-auto mb-2 text-gold animate-spin" />
+          <Loader size={20} className="mx-auto mb-2 text-[#2563EB] animate-spin" />
           <p className="text-xs text-muted">AI Chief is creating your custom marketing plan...</p>
         </PrismPanel>
       )}
@@ -291,7 +291,7 @@ export default function ClientPortalPage() {
           style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.10)" }}
         >
           <h2 className="section-header flex items-center gap-2">
-            <Sparkles size={13} className="text-gold" /> Your Custom Marketing Plan
+            <Sparkles size={13} className="text-[#2563EB]" /> Your Custom Marketing Plan
           </h2>
           <pre className="text-[10px] text-muted leading-relaxed whitespace-pre-wrap">{aiPlan}</pre>
         </motion.div>
@@ -308,11 +308,11 @@ export default function ClientPortalPage() {
         className=" border"
         style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.10)" }}
       >
-        <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-gold" /> Active Services</h2>
+        <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-[#2563EB]" /> Active Services</h2>
         <div className="flex flex-wrap gap-2">
           {(client.services || []).map((service, i) => (
-            <div key={i} className="bg-gold/[0.06] border border-gold/15 rounded-lg px-3 py-2">
-              <span className="text-xs text-gold font-medium">{service}</span>
+            <div key={i} className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.08)] rounded-lg px-3 py-2">
+              <span className="text-xs text-[#2563EB] font-medium">{service}</span>
             </div>
           ))}
           {(client.services || []).length === 0 && (
@@ -345,10 +345,10 @@ export default function ClientPortalPage() {
             <div className="mb-3">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[10px] text-muted">{completedTasks} of {totalTasks} complete</span>
-                <span className="text-[10px] font-mono text-gold">{totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%</span>
+                <span className="text-[10px] font-mono text-[#2563EB]">{totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%</span>
               </div>
               <div className="w-full bg-surface-light rounded-full h-1.5">
-                <div className="bg-gradient-gold rounded-full h-1.5 transition-all" style={{ width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%` }} />
+                <div className="bg-[#2563EB] rounded-full h-1.5 transition-all" style={{ width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%` }} />
               </div>
             </div>
           )}
@@ -382,7 +382,7 @@ export default function ClientPortalPage() {
           style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.10)" }}
         >
           <h2 className="section-header flex items-center gap-2">
-            <Sparkles size={13} className="text-gold" /> Recent Activity
+            <Sparkles size={13} className="text-[#2563EB]" /> Recent Activity
           </h2>
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {aiActions.length === 0 ? (
@@ -390,7 +390,7 @@ export default function ClientPortalPage() {
             ) : (
               aiActions.map((a, i) => (
                 <div key={(a.id as string) || i} className="flex items-start gap-2 py-1.5 border-b border-border last:border-0">
-                  <Bot size={12} className="text-gold mt-0.5 shrink-0" />
+                  <Bot size={12} className="text-[#2563EB] mt-0.5 shrink-0" />
                   <div className="min-w-0">
                     <p className="text-xs">{a.description as string}</p>
                     <p className="text-[9px] text-muted">{formatRelativeTime(a.created_at as string)}</p>
@@ -414,9 +414,9 @@ export default function ClientPortalPage() {
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header mb-0 flex items-center gap-2">
-              <Calendar size={13} className="text-gold" /> Upcoming Content
+              <Calendar size={13} className="text-[#2563EB]" /> Upcoming Content
             </h2>
-            <Link href="/dashboard/portal/content" className="text-[10px] text-gold hover:text-gold-light flex items-center gap-0.5">
+            <Link href="/dashboard/portal/content" className="text-[10px] text-[#2563EB] hover:text-[rgba(37,99,235,0.8)] flex items-center gap-0.5">
               View all <ArrowRight size={10} />
             </Link>
           </div>
@@ -467,7 +467,7 @@ export default function ClientPortalPage() {
 
 // Read-only phone number card for portal users. Shows assigned Twilio
 // number + monthly SMS/call usage for this client only. Provisioning is
-// agency-side — portal users see "not set up" when empty.
+// agency-side ï¿½ portal users see "not set up" when empty.
 function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
   const [status, setStatus] = useState<{
     phone_number: string | null;
@@ -502,7 +502,7 @@ function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
   return (
     <PrismPanel>
       <h2 className="section-header flex items-center gap-2">
-        <Phone size={13} className="text-gold" /> Your Phone Number
+        <Phone size={13} className="text-[#2563EB]" /> Your Phone Number
       </h2>
       {status.has_number ? (
         <div className="space-y-2">
@@ -512,7 +512,7 @@ function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
               <Phone size={9} /> Active
             </span>
             {status.eleven_agent_id && (
-              <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-400 border-blue-500/30 flex items-center gap-1">
+              <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)] flex items-center gap-1">
                 <Bot size={9} /> AI caller ready
               </span>
             )}
@@ -555,7 +555,7 @@ interface PortalFileRow {
 }
 
 function portalFormatBytes(bytes: number): string {
-  if (!bytes) return "—";
+  if (!bytes) return "ï¿½";
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`;
   if (bytes < 1073741824) return `${(bytes / 1048576).toFixed(1)} MB`;
@@ -565,13 +565,13 @@ function portalFormatBytes(bytes: number): string {
 function portalFileIcon(type: string) {
   const t = (type || "").toLowerCase();
   if (t.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(t))
-    return <ImageIcon size={14} className="text-blue-400" />;
+    return <ImageIcon size={14} className="text-[#2563EB]" />;
   if (t.startsWith("video") || ["mp4", "mov", "avi", "webm", "mkv"].includes(t))
-    return <Film size={14} className="text-purple-400" />;
+    return <Film size={14} className="text-[#2563EB]" />;
   if (t.startsWith("audio") || ["mp3", "wav", "ogg", "m4a", "flac"].includes(t))
     return <Music size={14} className="text-pink-400" />;
   if (["pdf", "doc", "docx", "txt"].includes(t) || t.includes("document"))
-    return <FileText size={14} className="text-gold" />;
+    return <FileText size={14} className="text-[#2563EB]" />;
   return <FileIcon size={14} className="text-muted" />;
 }
 
@@ -590,7 +590,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
           if (!cancelled) setFiles(data.files || []);
         }
       } catch {
-        // ignore — show empty state
+        // ignore ï¿½ show empty state
       }
       if (!cancelled) setLoading(false);
     }
@@ -602,7 +602,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
     <PrismPanel>
       <div className="flex items-center justify-between mb-3">
         <h2 className="section-header flex items-center gap-2 mb-0">
-          <FolderOpen size={13} className="text-gold" /> Your Uploaded Files
+          <FolderOpen size={13} className="text-[#2563EB]" /> Your Uploaded Files
         </h2>
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-muted">
@@ -618,7 +618,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
       ) : files.length === 0 ? (
         <p className="text-xs text-muted">
           You haven&apos;t uploaded any files yet. Drop files in the{" "}
-          <Link href="/dashboard/portal/uploads" className="text-gold hover:underline">
+          <Link href="/dashboard/portal/uploads" className="text-[#2563EB] hover:underline">
             My Uploads
           </Link>{" "}
           page to share them with your agency.
@@ -633,7 +633,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
                 href={f.url || "#"}
                 target={f.url ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className={`flex items-center gap-2 p-2 rounded-lg border border-border bg-surface-light/50 hover:border-gold/30 transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
+                className={`flex items-center gap-2 p-2 rounded-lg border border-border bg-surface-light/50 hover:border-[rgba(37,99,235,0.25)] transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
                 title={f.name}
               >
                 <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center shrink-0 overflow-hidden">
@@ -648,7 +648,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
                   <p className="text-[11px] font-medium truncate">{f.name}</p>
                   <div className="flex items-center gap-1.5 text-[9px] text-muted">
                     <span>{portalFormatBytes(f.size)}</span>
-                    <span className="opacity-40">·</span>
+                    <span className="opacity-40">ï¿½</span>
                     <span className="truncate">{f.source_tool}</span>
                   </div>
                   <p className="text-[9px] text-muted mt-0.5">{formatRelativeTime(f.uploaded_at)}</p>
@@ -661,7 +661,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
       )}
       {files.length > 9 && (
         <div className="mt-3 text-center">
-          <Link href="/dashboard/portal/uploads" className="text-[10px] text-gold hover:underline">
+          <Link href="/dashboard/portal/uploads" className="text-[10px] text-[#2563EB] hover:underline">
             View all {files.length} files ?
           </Link>
         </div>
@@ -758,14 +758,14 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
 
       if (error || !newClient) {
         console.error("[portal] self-onboard insert failed:", error);
-        toast.error(error?.message || "Couldn't create your profile — try again.");
+        toast.error(error?.message || "Couldn't create your profile ï¿½ try again.");
         return;
       }
 
       // Notify admin via trinity_log
       await supabase.from("trinity_log").insert({
         action_type: "custom",
-        description: `New client self-onboarded: ${form.business_name} (${form.industry}) — ${form.biggest_challenge?.substring(0, 100)}`,
+        description: `New client self-onboarded: ${form.business_name} (${form.industry}) ï¿½ ${form.biggest_challenge?.substring(0, 100)}`,
         status: "completed",
         client_id: newClient.id,
       });
@@ -782,24 +782,24 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
     <div className="fade-in max-w-xl mx-auto py-6 space-y-5">
       {/* Header */}
       <div className="text-center">
-        <div className="w-14 h-14 bg-gold/10  flex items-center justify-center mx-auto mb-3 border border-gold/20">
-          <Sparkles size={24} className="text-gold" />
+        <div className="w-14 h-14 bg-[rgba(37,99,235,0.08)]  flex items-center justify-center mx-auto mb-3 border border-[rgba(37,99,235,0.12)]">
+          <Sparkles size={24} className="text-[#2563EB]" />
         </div>
         <h1 className="text-lg font-bold tracking-tight">Welcome to Trinity</h1>
-        <p className="text-xs text-muted mt-1">Let&apos;s set up your account — takes less than 2 minutes</p>
-        <p className="text-[10px] text-gold mt-1">Complete your detailed onboarding after account creation</p>
+        <p className="text-xs text-muted mt-1">Let&apos;s set up your account â€” takes less than 2 minutes</p>
+        <p className="text-[10px] text-[#2563EB] mt-1">Complete your detailed onboarding after account creation</p>
       </div>
 
       {/* Progress */}
       <div className="flex gap-1">
         {steps.map((_, i) => (
-          <div key={i} className={`flex-1 h-1 rounded-full transition-all ${i <= step ? "bg-gold" : "bg-surface-light"}`} />
+          <div key={i} className={`flex-1 h-1 rounded-full transition-all ${i <= step ? "bg-[#2563EB]" : "bg-surface-light"}`} />
         ))}
       </div>
 
       {/* Step content */}
       <PrismPanel>
-        <p className="text-[10px] text-gold font-medium uppercase tracking-wider mb-0.5">Step {step + 1} of {steps.length}</p>
+        <p className="text-[10px] text-[#2563EB] font-medium uppercase tracking-wider mb-0.5">Step {step + 1} of {steps.length}</p>
         <h2 className="text-sm font-semibold mb-0.5">{currentStep.title}</h2>
         <p className="text-[10px] text-muted mb-4">{currentStep.subtitle}</p>
 
@@ -839,7 +839,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
           className="btn-secondary text-xs disabled:opacity-30">Back</button>
 
         <div className="flex items-center gap-2">
-          {/* Skip — advance one step without filling anything in. Hidden on
+          {/* Skip ï¿½ advance one step without filling anything in. Hidden on
               the final step where "Create My Profile" is the action. */}
           {step < steps.length - 1 && (
             <button
@@ -849,14 +849,14 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
               Skip
             </button>
           )}
-          {/* Skip everything — jump straight to submit with whatever
+          {/* Skip everything ï¿½ jump straight to submit with whatever
               partial info the user filled in. Always available from
               step 1 onward. */}
           {step > 0 && step < steps.length - 1 && (
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="text-[11px] text-muted hover:text-gold transition-colors px-3 py-2"
+              className="text-[11px] text-muted hover:text-[#2563EB] transition-colors px-3 py-2"
               title="Skip the rest and create your profile now"
             >
               Skip to finish

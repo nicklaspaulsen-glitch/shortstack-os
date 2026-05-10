@@ -328,7 +328,7 @@ export default function ScreenshotCarousel() {
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-lg flex items-center justify-center"
                     style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                    <Icon size={18} className="text-gold" />
+                    <Icon size={18} className="text-[#2563EB]" />
                   </div>
                   <div>
                     <h3 className="text-white font-semibold">{slide.title}</h3>
