@@ -397,6 +397,7 @@ export default function DomainsPage() {
   return (
     <div className="fade-in space-y-5">
       <PageHero
+        eyebrow="DOMAINS"
         icon={<Globe2 size={28} />}
         title="Domains"
         subtitle="Search, buy & manage domains via GoDaddy. Connect them to your Vercel deployments."

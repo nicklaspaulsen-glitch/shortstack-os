@@ -113,6 +113,7 @@ export default function ReviewsPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <PageHero
+        eyebrow="REVIEWS"
         title="Reviews"
         subtitle="Manage incoming reviews and auto-send review links after appointments."
         icon={<Star size={20} />}

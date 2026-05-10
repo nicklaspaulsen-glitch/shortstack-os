@@ -477,6 +477,7 @@ export default function ProjectsPage() {
   return (
     <div className="fade-in space-y-5">
       <PageHero
+        eyebrow="PROJECTS"
         icon={<Kanban size={28} />}
         title="Projects"
         subtitle="Kanban-style boards for every project. Drag tasks across columns, leave comments, ship work."

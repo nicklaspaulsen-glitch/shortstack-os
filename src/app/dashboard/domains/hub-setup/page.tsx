@@ -137,6 +137,7 @@ function HubSetupInner() {
   return (
     <div className="fade-in space-y-5">
       <PageHero
+        eyebrow="HUB SETUP"
         icon={<Sparkles size={28} />}
         title="Launch your brand"
         subtitle="One click provisions email, phone, website, portal, and chat — all on your new domain."

@@ -161,6 +161,7 @@ export default function ListingsPage() {
   return (
     <div className="fade-in space-y-5">
       <PageHero
+        eyebrow="MY LISTINGS"
         icon={<Store size={28} />}
         title="My Listings"
         subtitle="Sell your services on the ShortStack marketplace."

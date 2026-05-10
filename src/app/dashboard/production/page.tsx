@@ -102,6 +102,7 @@ export default function ProductionPage() {
   return (
     <div className="fade-in space-y-5">
       <PageHero
+        eyebrow="PRODUCTION"
         icon={<Kanban size={28} />}
         title="Content Production"
         subtitle="Pipeline, assignments, reviews & approvals."

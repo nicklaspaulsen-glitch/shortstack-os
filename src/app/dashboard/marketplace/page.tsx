@@ -305,6 +305,7 @@ export default function MarketplacePage() {
   return (
     <div className="fade-in space-y-6 pb-32">
       <PageHero
+        eyebrow="MARKETPLACE"
         icon={<Store size={28} />}
         title="Marketplace"
         subtitle="Plugins to supercharge your workflow."

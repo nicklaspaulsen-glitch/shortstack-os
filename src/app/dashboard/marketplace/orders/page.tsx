@@ -66,6 +66,7 @@ export default function OrdersPage() {
   return (
     <div className="fade-in space-y-5">
       <PageHero
+        eyebrow="MY ORDERS"
         icon={<Receipt size={28} />}
         title="Marketplace Orders"
         subtitle="Track services you've bought and orders you're delivering."

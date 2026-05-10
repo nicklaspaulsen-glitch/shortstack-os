@@ -194,6 +194,7 @@ export default function ServicesPage() {
   return (
     <div className="space-y-6">
       <PageHero
+        eyebrow="SERVICES"
         title="Service Catalog"
         subtitle="Define productized services once — attach them to proposals, invoices, and deals."
         icon={<Package size={22} />}

@@ -228,6 +228,7 @@ export default function TagsPage() {
   return (
     <div className="space-y-6">
       <PageHero
+        eyebrow="TAG MANAGER"
         title="Tag Manager"
         subtitle="Unified tag namespace across leads, clients, deals, and content."
         icon={<Tag size={22} />}

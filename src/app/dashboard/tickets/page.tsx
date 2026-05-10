@@ -81,6 +81,7 @@ export default function ContactSupportPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <PageHero
+        eyebrow="SUPPORT TICKETS"
         title="Contact Support"
         subtitle="Pick the channel that fits the question — every one is monitored by a real human."
         icon={<LifeBuoy size={20} />}

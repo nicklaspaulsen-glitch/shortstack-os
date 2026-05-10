@@ -197,6 +197,7 @@ export default function ReviewsAutoReplyPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <PageHero
+        eyebrow="AUTO-REPLY"
         title="Review Auto-Reply"
         subtitle="AI-drafted replies for incoming reviews. Approve before publishing."
         icon={<Sparkles size={20} />}

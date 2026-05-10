@@ -757,6 +757,7 @@ export default function CommunityPage() {
   return (
     <div className="fade-in space-y-5 max-w-[900px] mx-auto">
       <PageHero
+        eyebrow="COMMUNITY"
         icon={<Users size={28} />}
         title="Community"
         subtitle="Connect with other agency owners — share wins, ask questions, discover resources, and RSVP to live events."

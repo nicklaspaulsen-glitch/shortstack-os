@@ -112,6 +112,7 @@ export default function CoursesPage() {
   return (
     <div className="min-h-screen bg-[#FAFAFB]">
       <PageHero
+        eyebrow="COURSES"
         title="Courses"
         subtitle="Build and sell membership courses. Your students access them at their portal."
         icon={<BookOpen size={28} />}
