@@ -28,6 +28,24 @@ interface Props {
 
 export default function BentoGrid({ data }: Props) {
   return (
+    <div className="relative">
+      {/* Blue ambient glow — renders behind tiles so frosted-glass treatment picks it up */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden>
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[50%] rounded-full"
+          style={{
+            background: "radial-gradient(closest-side, rgba(37,99,235,0.07) 0%, transparent 100%)",
+            filter: "blur(60px)",
+          }}
+        />
+        <div
+          className="absolute top-0 right-1/4 w-[40%] h-[30%] rounded-full"
+          style={{
+            background: "radial-gradient(closest-side, rgba(59,130,246,0.05) 0%, transparent 100%)",
+            filter: "blur(80px)",
+          }}
+        />
+      </div>
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4 auto-rows-[minmax(0,1fr)]">
       {/* Row 1+2 — Hero Moment + KPI strip */}
       <DashboardHeroMoment hero={data.hero} index={0} />
@@ -46,6 +64,7 @@ export default function BentoGrid({ data }: Props) {
       />
       <HotLeadsTile leads={data.hotLeads} index={6} />
       <TodaysScheduleTile schedule={data.schedule} index={7} />
+    </div>
     </div>
   );
 }

@@ -666,41 +666,34 @@ export default function Sidebar() {
     );
   };
 
-  /* ─── Render a collapsed-sidebar nav link (icon + tooltip) ───── */
+  /* ─── Render a collapsed-sidebar nav link — round icon pill ───── */
   const renderCollapsedLink = (item: NavItem) => {
     const isActive = isItemActive(item.href, pathname);
     const customIcon = renderCustomIcon(iconOverrides[item.href], 16);
     const label = renames[item.href] || item.label;
     const unreadCount = unread[item.href] || 0;
     return (
-      <div key={item.href} className="relative">
+      <div key={item.href} className="relative flex justify-center my-0.5">
         <Link
           href={item.href}
           onMouseEnter={() => setHoveredItem(item.href)}
           onMouseLeave={() => setHoveredItem(null)}
-          className={`nav-item-hover flex items-center justify-center px-2.5 py-1.5 my-[1px] rounded-lg text-[12.5px] transition-all duration-220 ease-out-expo-foundation ${
+          className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-220 ease-out-expo-foundation nav-icon-alive ${
             isActive
-              ? "active text-brand-accent bg-[rgba(204,36,36,0.08)]"
-              : "text-text-secondary hover:text-text-primary hover:bg-[rgba(0,0,0,0.04)]"
+              ? "bg-[#2563EB] text-white shadow-[0_2px_10px_rgba(37,99,235,0.32)]"
+              : "text-text-secondary hover:text-[#2563EB] hover:bg-[rgba(37,99,235,0.09)]"
           }`}
           title={unreadCount > 0 ? `${label} (${unreadCount})` : label}
+          aria-label={label}
         >
-          <span className={`relative shrink-0 transition-colors duration-220 ease-out-expo-foundation nav-icon-alive ${isActive ? "text-brand-accent" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
+          <span className="relative shrink-0">
             {customIcon || item.icon}
             {unreadCount > 0 && <UnreadDotMini />}
           </span>
-          {isActive && (
-            <motion.div
-              layoutId="sidebar-active-accent"
-              className="absolute -left-px top-1/2 w-[2px] h-[68%] rounded-r bg-brand-accent"
-              style={{ y: "-50%" }}
-              transition={{ type: "spring", stiffness: 380, damping: 32 }}
-            />
-          )}
         </Link>
         {hoveredItem === item.href && (
-          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">
-            <div className="bg-bg-surface-2 border border-border-subtle rounded-lg px-2.5 py-1.5 shadow-stack-2 text-xs font-medium text-text-primary">
+          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 z-50 whitespace-nowrap pointer-events-none">
+            <div className="bg-white border border-[rgba(0,0,0,0.08)] rounded-lg px-2.5 py-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.10),0_1px_3px_rgba(0,0,0,0.06)] text-xs font-medium text-text-primary">
               {label}
               {unreadCount > 0 && <span className="ml-1.5 text-[10px] text-status-error font-bold">{unreadCount > 9 ? "9+" : unreadCount}</span>}
             </div>
@@ -1027,7 +1020,7 @@ export default function Sidebar() {
                           title={`Open ${group.section} hub →`}
                           className={`group/hub inline-flex items-center gap-0.5 text-[9px] font-semibold px-2 py-[3px] rounded-full border transition-all duration-220 ease-out-expo-foundation ${
                             hubActive
-                              ? "bg-[rgba(204,36,36,0.10)] border-[rgba(204,36,36,0.30)] text-brand-accent"
+                              ? "bg-[rgba(37,99,235,0.10)] border-[rgba(37,99,235,0.30)] text-brand-accent"
                               : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.10)] text-text-muted hover:bg-[rgba(0,0,0,0.07)] hover:border-[rgba(0,0,0,0.18)] hover:text-text-primary"
                           }`}
                         >

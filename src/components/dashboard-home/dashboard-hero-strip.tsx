@@ -56,7 +56,7 @@ export default function DashboardHeroStrip({ firstName, microStats }: Props) {
   return (
     <PageHero
       variant="compact"
-      gradient="gold"
+      gradient="blue"
       showStack3D
       eyebrow={formatToday()}
       title={`${getGreeting()}${firstName ? `, ${firstName}` : ""}`}

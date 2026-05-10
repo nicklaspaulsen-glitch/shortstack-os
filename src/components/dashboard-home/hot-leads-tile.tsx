@@ -22,9 +22,10 @@ function scoreBadge(score: number | null): { color: string; bg: string; label: s
     };
   }
   if (score >= 60) {
+    // plumHover (#E4E4E7) was invisible on white; use readable neutral instead
     return {
-      color: tokens.brand.plumHover,
-      bg: `${tokens.brand.plum}55`,
+      color: tokens.text.secondary,
+      bg: `${tokens.border.subtle}`,
       label: String(score),
     };
   }

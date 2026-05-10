@@ -31,16 +31,18 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
   return (
     <motion.section
       className="lg:col-span-8 lg:row-span-2 relative overflow-hidden flex border border-border-subtle"
-      // Apr 28 v4 fix: was hardcoding themeTokens.bg.surface1 (dark hex) which
-      // broke the card in light theme. Now uses CSS var-backed gradient
-      // so the card flips correctly when [data-theme="light"] is active.
+      // Glassmorphism hero: frosted white over the page's blue ambient glow.
+      // Matches BentoTile glass treatment for cohesive grid aesthetic.
+      // The corona + grain overlays below add brand depth without a hard gradient.
       style={{
-        background: `linear-gradient(135deg, rgb(var(--bg-surface-1-rgb) / 1) 0%, rgb(var(--bg-surface-2-rgb) / 1) 50%, rgb(var(--brand-plum-rgb) / 1) 145%)`,
+        background: "rgba(255, 255, 255, 0.90)",
+        backdropFilter: "blur(16px) saturate(1.5)",
+        WebkitBackdropFilter: "blur(16px) saturate(1.5)",
         boxShadow: [
-          "0 1px 0 rgba(255,255,255,0.04) inset",
-          "0 4px 12px rgba(0,0,0,0.10)",
-          "0 24px 56px -16px rgba(0,0,0,0.18)",
-          `0 0 48px -12px rgb(var(--brand-accent-rgb) / 0.13)`,
+          "0 1px 0 rgba(255,255,255,1) inset",
+          "0 4px 12px rgba(0,0,0,0.06)",
+          "0 24px 56px -16px rgba(0,0,0,0.12)",
+          "0 0 48px -12px rgba(37,99,235,0.14)",
         ].join(", "),
       }}
       initial={reduceMotion ? false : { opacity: 0, y: 20 }}
@@ -51,12 +53,11 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
         ease: [0.32, 0.72, 0, 1],
       }}
     >
-      {/* Lime accent rail */}
+      {/* Top-edge blue accent line — 1px, no left-stripe pattern */}
       <div
-        className="pointer-events-none absolute left-0 top-[12%] bottom-[12%] w-1 rounded-r-sm"
+        className="pointer-events-none absolute top-0 left-0 right-0 h-px"
         style={{
-          background: tokens.brand.lime,
-          boxShadow: `0 0 18px ${tokens.brand.lime}`,
+          background: `linear-gradient(90deg, ${tokens.brand.lime}00 0%, ${tokens.brand.lime}99 25%, ${tokens.brand.limeSoft}66 75%, ${tokens.brand.lime}00 100%)`,
         }}
         aria-hidden
       />

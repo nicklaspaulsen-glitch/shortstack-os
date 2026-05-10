@@ -33,15 +33,20 @@ function kindIcon(kind: ScheduledItem["kind"]) {
 }
 
 function kindColor(kind: ScheduledItem["kind"]): string {
+  // Three visible, distinct hues on the light theme:
+  //   post    → primary blue (brand accent)
+  //   meeting → lighter sky-blue (accent soft)
+  //   calendar → readable steel-gray
+  // plumHover (#E4E4E7) was previously used for calendar — invisible on white.
   switch (kind) {
     case "post":
-      return tokens.brand.lime;
+      return tokens.brand.lime;         // #2563EB
     case "meeting":
-      return tokens.brand.indigo;
+      return tokens.brand.accentSoft;   // #3B82F6 — lighter blue
     case "calendar":
-      return tokens.brand.plumHover;
+      return tokens.text.secondary;     // #52525B — neutral gray
     default:
-      return themeTokens.text.secondary;
+      return tokens.text.secondary;
   }
 }
 

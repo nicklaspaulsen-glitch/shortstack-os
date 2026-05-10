@@ -50,13 +50,17 @@ export function BentoTile({
     <motion.section
       className={`${span} relative overflow-hidden flex flex-col`}
       style={{
-        background: themeTokens.bg.surface1,
+        // Glassmorphism: slightly translucent white over the blue ambient glow
+        // from the BentoGrid container. backdrop-filter adds the frosted depth.
+        background: "rgba(255, 255, 255, 0.88)",
+        backdropFilter: "blur(16px) saturate(1.5)",
+        WebkitBackdropFilter: "blur(16px) saturate(1.5)",
         border: `1px solid ${borderColor}`,
         boxShadow: [
-          "0 1px 0 rgba(255,255,255,0.8) inset",
-          "0 2px 4px rgba(0,0,0,0.06)",
-          "0 12px 28px -12px rgba(0,0,0,0.10)",
-          `0 0 24px -8px ${accentColor}22`,
+          "0 1px 0 rgba(255,255,255,1) inset",
+          "0 2px 4px rgba(0,0,0,0.04)",
+          "0 12px 28px -12px rgba(0,0,0,0.08)",
+          `0 0 24px -8px ${accentColor}18`,
         ].join(", "),
         transition: "border-color 220ms cubic-bezier(0.32,0.72,0,1), box-shadow 220ms cubic-bezier(0.32,0.72,0,1), transform 220ms cubic-bezier(0.32,0.72,0,1)",
       }}
@@ -73,11 +77,11 @@ export function BentoTile({
           : {
               y: -2,
               boxShadow: [
-                "0 1px 0 rgba(255,255,255,0.9) inset",
-                "0 4px 8px rgba(0,0,0,0.08)",
-                "0 18px 40px -12px rgba(0,0,0,0.14)",
-                `0 0 0 1px ${accentColor}33`,
-                `0 0 32px -8px ${accentColor}44`,
+                "0 1px 0 rgba(255,255,255,1) inset",
+                "0 4px 12px rgba(0,0,0,0.06)",
+                "0 18px 40px -12px rgba(0,0,0,0.12)",
+                `0 0 0 1px ${accentColor}28`,
+                `0 0 32px -8px ${accentColor}30`,
               ].join(", "),
             }
       }
