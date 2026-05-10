@@ -143,7 +143,7 @@ export default function DesignStudioPage() {
                   transition={{ delay: i * 0.06, duration: 0.4 }}
                   whileHover={{ y: -4, scale: 1.02 }}
                   className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#2563EB]/40 transition-colors group"
-                  style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
+                  style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
                 >
                   <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", width: "calc(100% + 32px)", marginLeft: -16, marginRight: -16, marginBottom: 8, flexShrink: 0 }} />
                   <div
@@ -233,7 +233,7 @@ function RecentDesigns() {
           transition={{ delay: i * 0.05, duration: 0.35 }}
           whileHover={{ y: -4, scale: 1.01 }}
           className="rounded-xl overflow-hidden hover:border-[#2563EB]/30 transition-colors group"
-          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
+          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
         >
           <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
           <div className="relative aspect-video bg-[#F2F2F4] flex items-center justify-center">

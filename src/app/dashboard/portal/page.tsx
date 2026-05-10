@@ -1,4 +1,4 @@
-ï»¿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -103,7 +103,7 @@ export default function ClientPortalPage() {
       const replied = (outreachData || []).filter((o: { status: string }) => o.status === "replied").length;
       setOutreachStats({ sent, replied });
     } catch (err) {
-      // Don't toast â€” empty/onboarding state is a valid UX here (new users
+      // Don't toast — empty/onboarding state is a valid UX here (new users
       // hitting this page without a client row). Just log for debugging.
       console.error("[portal] fetchPortalData error:", err);
     } finally {
@@ -185,13 +185,13 @@ export default function ClientPortalPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         className=" border relative overflow-hidden"
-        style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", borderColor: "rgba(0,0,0,0.10)" }}
+        style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.10)" }}
       >
         <div className="absolute inset-0 bg-mesh opacity-40" />
         <div className="relative flex items-center justify-between">
           <div>
             <h1 className="text-lg font-bold tracking-tight">Welcome back, {client.contact_name?.split(" ")[0] || "there"}</h1>
-            <p className="text-xs text-muted mt-0.5">{client.business_name || "Your Business"} Â· {client.package_tier || "Standard"} Plan</p>
+            <p className="text-xs text-muted mt-0.5">{client.business_name || "Your Business"} · {client.package_tier || "Standard"} Plan</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 text-[10px] bg-gold/[0.08] text-gold px-2.5 py-1 rounded-md border border-gold/15">
@@ -288,7 +288,7 @@ export default function ClientPortalPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className=" border"
-          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", borderColor: "rgba(0,0,0,0.10)" }}
+          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.10)" }}
         >
           <h2 className="section-header flex items-center gap-2">
             <Sparkles size={13} className="text-gold" /> Your Custom Marketing Plan
@@ -306,7 +306,7 @@ export default function ClientPortalPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.06 }}
         className=" border"
-        style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", borderColor: "rgba(0,0,0,0.10)" }}
+        style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.10)" }}
       >
         <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-gold" /> Active Services</h2>
         <div className="flex flex-wrap gap-2">
@@ -336,7 +336,7 @@ export default function ClientPortalPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
           className=" border"
-          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", borderColor: "rgba(0,0,0,0.10)" }}
+          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.10)" }}
         >
           <h2 className="section-header flex items-center gap-2">
             <CheckCircle size={13} className="text-success" /> Task Progress
@@ -379,7 +379,7 @@ export default function ClientPortalPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.12 }}
           className=" border"
-          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", borderColor: "rgba(0,0,0,0.10)" }}
+          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.10)" }}
         >
           <h2 className="section-header flex items-center gap-2">
             <Sparkles size={13} className="text-gold" /> Recent Activity
@@ -410,7 +410,7 @@ export default function ClientPortalPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.14 }}
           className=" border"
-          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", borderColor: "rgba(0,0,0,0.10)" }}
+          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.10)" }}
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header mb-0 flex items-center gap-2">
@@ -445,7 +445,7 @@ export default function ClientPortalPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className=" border border-warning/15"
-          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}
+          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -467,7 +467,7 @@ export default function ClientPortalPage() {
 
 // Read-only phone number card for portal users. Shows assigned Twilio
 // number + monthly SMS/call usage for this client only. Provisioning is
-// agency-side â€” portal users see "not set up" when empty.
+// agency-side — portal users see "not set up" when empty.
 function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
   const [status, setStatus] = useState<{
     phone_number: string | null;
@@ -555,7 +555,7 @@ interface PortalFileRow {
 }
 
 function portalFormatBytes(bytes: number): string {
-  if (!bytes) return "â€”";
+  if (!bytes) return "—";
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`;
   if (bytes < 1073741824) return `${(bytes / 1048576).toFixed(1)} MB`;
@@ -590,7 +590,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
           if (!cancelled) setFiles(data.files || []);
         }
       } catch {
-        // ignore â€” show empty state
+        // ignore — show empty state
       }
       if (!cancelled) setLoading(false);
     }
@@ -648,7 +648,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
                   <p className="text-[11px] font-medium truncate">{f.name}</p>
                   <div className="flex items-center gap-1.5 text-[9px] text-muted">
                     <span>{portalFormatBytes(f.size)}</span>
-                    <span className="opacity-40">Â·</span>
+                    <span className="opacity-40">·</span>
                     <span className="truncate">{f.source_tool}</span>
                   </div>
                   <p className="text-[9px] text-muted mt-0.5">{formatRelativeTime(f.uploaded_at)}</p>
@@ -662,7 +662,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
       {files.length > 9 && (
         <div className="mt-3 text-center">
           <Link href="/dashboard/portal/uploads" className="text-[10px] text-gold hover:underline">
-            View all {files.length} files â†’
+            View all {files.length} files ?
           </Link>
         </div>
       )}
@@ -758,14 +758,14 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
 
       if (error || !newClient) {
         console.error("[portal] self-onboard insert failed:", error);
-        toast.error(error?.message || "Couldn't create your profile â€” try again.");
+        toast.error(error?.message || "Couldn't create your profile — try again.");
         return;
       }
 
       // Notify admin via trinity_log
       await supabase.from("trinity_log").insert({
         action_type: "custom",
-        description: `New client self-onboarded: ${form.business_name} (${form.industry}) â€” ${form.biggest_challenge?.substring(0, 100)}`,
+        description: `New client self-onboarded: ${form.business_name} (${form.industry}) — ${form.biggest_challenge?.substring(0, 100)}`,
         status: "completed",
         client_id: newClient.id,
       });
@@ -786,7 +786,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
           <Sparkles size={24} className="text-gold" />
         </div>
         <h1 className="text-lg font-bold tracking-tight">Welcome to Trinity</h1>
-        <p className="text-xs text-muted mt-1">Let&apos;s set up your account â€” takes less than 2 minutes</p>
+        <p className="text-xs text-muted mt-1">Let&apos;s set up your account — takes less than 2 minutes</p>
         <p className="text-[10px] text-gold mt-1">Complete your detailed onboarding after account creation</p>
       </div>
 
@@ -839,7 +839,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
           className="btn-secondary text-xs disabled:opacity-30">Back</button>
 
         <div className="flex items-center gap-2">
-          {/* Skip â€” advance one step without filling anything in. Hidden on
+          {/* Skip — advance one step without filling anything in. Hidden on
               the final step where "Create My Profile" is the action. */}
           {step < steps.length - 1 && (
             <button
@@ -849,7 +849,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
               Skip
             </button>
           )}
-          {/* Skip everything â€” jump straight to submit with whatever
+          {/* Skip everything — jump straight to submit with whatever
               partial info the user filled in. Always available from
               step 1 onward. */}
           {step > 0 && step < steps.length - 1 && (

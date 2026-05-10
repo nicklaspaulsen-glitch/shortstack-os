@@ -634,7 +634,7 @@ export default function CalendarPage() {
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
                       className="rounded-xl overflow-hidden relative"
-                      style={{ background: "#FFFFFF", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.08)" }}
+                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
                     >
                       <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }} className="absolute top-0 left-0 right-0" />
                       <div className="flex justify-between text-xs p-2 pt-3">

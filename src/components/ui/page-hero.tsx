@@ -272,9 +272,11 @@ export default function PageHero({
       <div
         className={`relative overflow-hidden -mx-4 sm:-mx-6 mb-4 ${className}`}
         style={{
-          background: "#FFFFFF",
+          background: "rgba(255,255,255,0.92)",
+          backdropFilter: "blur(20px) saturate(1.5)",
+          WebkitBackdropFilter: "blur(20px) saturate(1.5)",
           borderBottom: "1px solid rgba(0,0,0,0.08)",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08)",
+          boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)",
         }}
       >
         {/* Top-edge blue accent line — 1px horizontal gradient, no side-stripe */}
@@ -338,11 +340,15 @@ export default function PageHero({
     <div
       className={`relative overflow-hidden border ${className}`}
       style={{
-        background: "#FFFFFF",
+        background: "rgba(255,255,255,0.92)",
+        backdropFilter: "blur(20px) saturate(1.5)",
+        WebkitBackdropFilter: "blur(20px) saturate(1.5)",
         borderColor: tokens.border.subtle,
         boxShadow: [
+          "0 1px 0 rgba(255,255,255,1) inset",
           "0 1px 3px rgba(0,0,0,0.06)",
           "0 4px 12px -4px rgba(0,0,0,0.08)",
+          "0 0 32px -8px rgba(37,99,235,0.08)",
         ].join(", "),
       }}
     >

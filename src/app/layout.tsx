@@ -177,7 +177,6 @@ export default function RootLayout({
         </AuthProvider>
         </PostHogProvider>
         </Suspense>
-        <GrainOverlay />
       </body>
     </html>
   );

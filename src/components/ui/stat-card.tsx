@@ -224,14 +224,18 @@ export default function StatCard({
       // May 7 v3: Window-glass depth — frosted glass floating above grey
       // base with multi-layer drop shadows + inner top-edge light.
       style={{
-        background: "#FFFFFF",
+        background: "rgba(255,255,255,0.88)",
+        backdropFilter: "blur(16px) saturate(1.5)",
+        WebkitBackdropFilter: "blur(16px) saturate(1.5)",
         border: `1px solid rgba(0,0,0,0.08)`,
         borderTopColor: "rgba(0,0,0,0.12)",
         borderRadius: "12px",
         boxShadow: [
+          "0 1px 0 rgba(255,255,255,1) inset",
           "0 1px 3px rgba(0,0,0,0.06)",
           "0 4px 12px -4px rgba(0,0,0,0.08)",
           "0 12px 32px -8px rgba(0,0,0,0.10)",
+          "0 0 48px -16px rgba(37,99,235,0.10)",
         ].join(", "),
       }}
       initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}

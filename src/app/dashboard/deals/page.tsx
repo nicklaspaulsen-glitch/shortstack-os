@@ -239,7 +239,7 @@ export default function DealsPage() {
       </CollapsibleStats>
 
       {/* Tabs (sticky) */}
-      <div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
+      <div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -317,7 +317,7 @@ export default function DealsPage() {
                         draggable
                         onDragStart={() => onDragStart(deal.id)}
                         onClick={() => setExpandedDeal(expandedDeal === deal.id ? null : deal.id)}
-                        className="rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-[rgba(0,0,0,0.12)] transition-colors border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
+                        className="rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-[rgba(0,0,0,0.12)] transition-colors border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
                         <p className="text-[11px] font-semibold truncate">{deal.title}</p>
                         <p className="text-[9px] text-muted">{deal.client_name}</p>
                         <p className="text-sm font-bold mt-1" style={{ color: stage.color }}>{formatCurrency(Number(deal.value))}</p>
@@ -375,7 +375,7 @@ export default function DealsPage() {
                 { stage: "Proposal to Negotiation", avg: "0 days", trend: "faster" },
                 { stage: "Negotiation to Close", avg: "0 days", trend: "faster" },
               ].map((v, i) => (
-                <motion.div key={i} variants={fadeUp} className="rounded-lg p-3 text-center border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
+                <motion.div key={i} variants={fadeUp} className="rounded-lg p-3 text-center border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
                   <p className="text-[9px] text-muted mb-1">{v.stage}</p>
                   <p className="text-sm font-bold">{v.avg}</p>
                   <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-green-400" : "text-red-400"}`}>
@@ -490,7 +490,7 @@ export default function DealsPage() {
               const scoreColor = score >= 70 ? "text-green-400" : score >= 40 ? "text-yellow-400" : "text-red-400";
               const scoreBg = score >= 70 ? "bg-green-400" : score >= 40 ? "bg-yellow-400" : "bg-red-400";
               return (
-                <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="rounded-xl p-4 flex items-center gap-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
+                <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="rounded-xl p-4 flex items-center gap-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "#FAFAFB", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border border-[rgba(0,0,0,0.08)]" style={{ background: "#F2F2F4" }}>
                     <p className={`text-lg font-bold ${scoreColor}`}>{score}</p>
                   </div>

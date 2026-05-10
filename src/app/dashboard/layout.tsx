@@ -385,8 +385,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="sticky top-0 z-30 border-b border-[rgba(0,0,0,0.08)] electron-drag topbar-shadow"
             style={{
               background: "rgba(255,255,255,0.92)",
-              backdropFilter: "blur(24px) saturate(1.2)",
-              WebkitBackdropFilter: "blur(24px) saturate(1.2)",
+              backdropFilter: "blur(24px) saturate(1.5)",
+              WebkitBackdropFilter: "blur(24px) saturate(1.5)",
               boxShadow: "0 1px 0 rgba(0,0,0,0.08)",
             }}>
             <div className="flex items-center justify-between px-5 lg:px-6 h-12">

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -23,7 +23,7 @@ import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/c
 import { PrismPanel } from "@/components/prism";
 import { createClient } from "@/lib/supabase/client";
 
-/* ──────────────── Types ──────────────── */
+/* ---------------- Types ---------------- */
 
 type StatusFilter = "all" | "scheduled" | "posted" | "draft" | "failed" | "needs_review";
 type PlatformFilter = "all" | "instagram" | "facebook" | "tiktok" | "linkedin" | "x" | "x_twitter" | "youtube";
@@ -58,7 +58,7 @@ interface Insights {
   source?: string;
 }
 
-/* ──────────────── Helpers ──────────────── */
+/* ---------------- Helpers ---------------- */
 
 const PLATFORM_ICON: Record<string, React.ReactNode> = {
   instagram: <InstagramIcon size={14} />,
@@ -87,9 +87,9 @@ function formatNum(n: number | undefined): string {
 }
 
 function formatDate(iso: string | null): string {
-  if (!iso) return "—";
+  if (!iso) return "�";
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "�";
   return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
@@ -139,7 +139,7 @@ function urgencyColor(u: string): string {
   return "bg-blue-400/10 text-blue-400 border-blue-400/20";
 }
 
-/* ──────────────── Page ──────────────── */
+/* ---------------- Page ---------------- */
 
 export default function ContentPlanPage() {
   const [posts, setPosts] = useState<ContentPost[]>([]);
@@ -157,7 +157,7 @@ export default function ContentPlanPage() {
     return new Date(d.getFullYear(), d.getMonth(), 1);
   });
 
-  // Guided Mode ↔ Advanced Mode (advanced = the full dashboard view below)
+  // Guided Mode ? Advanced Mode (advanced = the full dashboard view below)
   const [advancedMode, setAdvancedMode] = useAdvancedMode("content-plan");
   const [guidedStep, setGuidedStep] = useState(0);
 
@@ -170,8 +170,8 @@ export default function ContentPlanPage() {
   const [wizardPlatforms, setWizardPlatforms] = useState<string[]>(["instagram", "tiktok", "linkedin"]);
   const [wizardGenerating, setWizardGenerating] = useState(false);
 
-  // Load clients for the Guided-mode picker (best effort — empty list is OK).
-  // Deferred to idle time — the wizard picker is hidden in the default advanced
+  // Load clients for the Guided-mode picker (best effort � empty list is OK).
+  // Deferred to idle time � the wizard picker is hidden in the default advanced
   // view, so delaying this past first paint is safe.
   useEffect(() => {
     const load = () => {
@@ -203,7 +203,7 @@ export default function ContentPlanPage() {
       if (platformFilter !== "all") params.set("platform", platformFilter);
       const res = await fetch(`/api/content-plan?${params.toString()}`);
       // 403 "Profile not found" and other non-ok responses are legit "empty state"
-      // situations for fresh accounts — treat them as empty, not errors. The
+      // situations for fresh accounts � treat them as empty, not errors. The
       // empty-state UI already tells the user how to get started.
       if (!res.ok) {
         console.warn(`[content-plan] loadPosts: HTTP ${res.status}`);
@@ -214,7 +214,7 @@ export default function ContentPlanPage() {
       setPosts(data.posts || []);
     } catch (e) {
       // Only genuine network/parse failures land here. Log for debugging but
-      // don't surface a toast — the empty state is a better UX.
+      // don't surface a toast � the empty state is a better UX.
       console.warn("[content-plan] loadPosts failed:", e);
       setPosts([]);
     } finally {
@@ -238,7 +238,7 @@ export default function ContentPlanPage() {
   }, []);
 
   useEffect(() => { loadPosts(); }, [loadPosts]);
-  // Defer insights — they feed the AI sidebar below the fold. Letting the posts
+  // Defer insights � they feed the AI sidebar below the fold. Letting the posts
   // grid render first is a much faster perceived paint.
   useEffect(() => {
     const run = () => { loadInsights(); };
@@ -283,7 +283,7 @@ export default function ContentPlanPage() {
       } else {
         // reschedule/regenerate/analyze aren't wired to APIs yet; be honest
         // rather than fake success.
-        toast(`${names[action]} bulk action is coming soon — open individual posts for now`, { id: "bulk", icon: "ℹ️" });
+        toast(`${names[action]} bulk action is coming soon � open individual posts for now`, { id: "bulk", icon: "??" });
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : `${names[action]} failed`, { id: "bulk" });
@@ -376,7 +376,7 @@ export default function ContentPlanPage() {
     {
       id: "goal",
       title: "What's the goal + how long?",
-      description: "Pick the outcome you want — we'll shape the mix of hooks, CTAs, and formats to match.",
+      description: "Pick the outcome you want � we'll shape the mix of hooks, CTAs, and formats to match.",
       icon: <Target size={18} />,
       component: (
         <div className="space-y-4">
@@ -443,7 +443,7 @@ export default function ContentPlanPage() {
               onChange={e => setWizardPostsPerWeek(parseInt(e.target.value, 10) || 3)}
               className="w-full accent-gold"
             />
-            <p className="text-[11px] text-muted mt-1">{wizardPostsPerWeek}× per week</p>
+            <p className="text-[11px] text-muted mt-1">{wizardPostsPerWeek}� per week</p>
           </div>
           <div>
             <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Platforms</p>
@@ -485,10 +485,10 @@ export default function ContentPlanPage() {
           <div className="flex items-center gap-2 text-sm">
             <Target size={14} className="text-gold" />
             <span className="font-semibold capitalize">{wizardGoal}</span>
-            <span className="text-muted">·</span>
+            <span className="text-muted">�</span>
             <span>{wizardDuration === 7 ? "1 week" : wizardDuration === 30 ? "1 month" : "1 quarter"}</span>
-            <span className="text-muted">·</span>
-            <span>{wizardPostsPerWeek}× per week</span>
+            <span className="text-muted">�</span>
+            <span>{wizardPostsPerWeek}� per week</span>
           </div>
           <div className="text-[11px] text-muted">
             Platforms: <span className="text-foreground capitalize">{wizardPlatforms.join(", ") || "(none)"}</span>
@@ -497,7 +497,7 @@ export default function ContentPlanPage() {
             <div className="text-[11px] text-muted">
               Client:{" "}
               <span className="text-foreground">
-                {clients.find(c => c.id === wizardClientId)?.business_name || "—"}
+                {clients.find(c => c.id === wizardClientId)?.business_name || "�"}
               </span>
             </div>
           )}
@@ -522,7 +522,7 @@ export default function ContentPlanPage() {
     return base;
   }, [posts]);
 
-  /* ────────────── Render ────────────── */
+  /* -------------- Render -------------- */
 
   return (
     <div className="fade-in space-y-5">
@@ -547,13 +547,13 @@ export default function ContentPlanPage() {
         }
       />
 
-      {/* Guided Mode — the 3-step content plan builder */}
+      {/* Guided Mode � the 3-step content plan builder */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={wizardGenerating ? "Generating…" : "Generate content plan"}
+          finishLabel={wizardGenerating ? "Generating�" : "Generate content plan"}
           busy={wizardGenerating}
           onFinish={handleGuidedGenerate}
           onCancel={() => setAdvancedMode(true)}
@@ -563,7 +563,7 @@ export default function ContentPlanPage() {
 
       {advancedMode && (
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-5">
-        {/* ── LEFT: Main column ───────────────────────────── */}
+        {/* -- LEFT: Main column ----------------------------- */}
         <div className="space-y-4 min-w-0">
           {/* Status Filter Tabs */}
           <div className="flex flex-wrap gap-1 bg-surface rounded-xl p-1 overflow-x-auto">
@@ -717,7 +717,7 @@ export default function ContentPlanPage() {
           )}
         </div>
 
-        {/* ── RIGHT: AI Insights sidebar ─────────────────── */}
+        {/* -- RIGHT: AI Insights sidebar ------------------- */}
         <aside className="space-y-4 xl:sticky xl:top-4 xl:self-start">
           <PrismPanel rainbow padding="px-6 py-4">
             <div className="flex items-center justify-between mb-2.5">
@@ -827,7 +827,7 @@ export default function ContentPlanPage() {
   );
 }
 
-/* ──────────────── Subcomponents ──────────────── */
+/* ---------------- Subcomponents ---------------- */
 
 function InsightSection({
   title, icon, children, emptyText, loading,
@@ -878,7 +878,7 @@ function PostGrid({
           className={`rounded-xl overflow-hidden cursor-pointer group transition-shadow ${
             selectedIds.has(p.id) ? "border-gold bg-gold/5" : ""
           }`}
-          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
+          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
           onClick={() => onOpen(p)}
         >
           {/* Thumbnail area */}
@@ -922,7 +922,7 @@ function PostGrid({
           {/* Date */}
           <p className="text-[10px] text-muted mb-2 flex items-center gap-1.5">
             <Calendar size={9} />
-            {p.posted_at ? `Posted ${formatDate(p.posted_at)}` : p.scheduled_at ? `Scheduled ${formatDate(p.scheduled_at)} · ${formatTime(p.scheduled_at)}` : "No date"}
+            {p.posted_at ? `Posted ${formatDate(p.posted_at)}` : p.scheduled_at ? `Scheduled ${formatDate(p.scheduled_at)} � ${formatTime(p.scheduled_at)}` : "No date"}
           </p>
 
           {/* Engagement */}
@@ -948,7 +948,7 @@ function PostList({
   onOpen: (post: ContentPost) => void;
   insights: Insights | null;
 }) {
-  // Build a map of post_id → insight reason (top / needs_attention) for the list view AI column.
+  // Build a map of post_id ? insight reason (top / needs_attention) for the list view AI column.
   const insightMap = useMemo(() => {
     const map: Record<string, string> = {};
     for (const t of insights?.top_performing || []) map[t.post_id] = `Top: ${t.why}`;
@@ -957,7 +957,7 @@ function PostList({
   }, [insights]);
 
   return (
-    <div className="rounded-xl p-0 overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
+    <div className="rounded-xl p-0 overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
       <div className="overflow-x-auto">
         <table className="w-full text-[11px]">
           <thead className="bg-surface-light border-b border-border">
@@ -1015,7 +1015,7 @@ function PostList({
                   </span>
                 </td>
                 <td className="py-2 px-3 text-muted">
-                  {p.posted_at ? formatDate(p.posted_at) : p.scheduled_at ? formatDate(p.scheduled_at) : "—"}
+                  {p.posted_at ? formatDate(p.posted_at) : p.scheduled_at ? formatDate(p.scheduled_at) : "�"}
                 </td>
                 <td className="py-2 px-3 text-muted">{formatNum(p.likes)}</td>
                 <td className="py-2 px-3 text-muted">{formatNum(p.comments)}</td>
@@ -1024,7 +1024,7 @@ function PostList({
                   {insightMap[p.id] ? (
                     <span className="text-[10px] text-gold line-clamp-2">{insightMap[p.id]}</span>
                   ) : (
-                    <span className="text-[10px] text-muted/50">—</span>
+                    <span className="text-[10px] text-muted/50">�</span>
                   )}
                 </td>
               </motion.tr>
@@ -1071,7 +1071,7 @@ function PostCalendar({
   const today = new Date();
 
   return (
-    <div className="rounded-xl" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)", padding: "1.25rem 1.5rem" }}>
+    <div className="rounded-xl" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)", padding: "1.25rem 1.5rem" }}>
       {/* Calendar header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -1155,7 +1155,7 @@ function PostCalendar({
   );
 }
 
-/* ──────────────── Post Detail Modal ──────────────── */
+/* ---------------- Post Detail Modal ---------------- */
 
 interface AiAnalysis {
   lift_pct: number | null;
@@ -1229,7 +1229,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
                   rel="noopener noreferrer"
                   className="text-[10px] text-gold hover:underline"
                 >
-                  View live ↗
+                  View live ?
                 </a>
               )}
             </div>
@@ -1315,30 +1315,30 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
           )}
         </div>
 
-        {/* Actions — per-post actions are still being wired to dedicated API
+        {/* Actions � per-post actions are still being wired to dedicated API
             routes; for now, surface a friendly "coming soon" instead of
             silently doing nothing on click. */}
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/50">
           <button
-            onClick={() => toast("Edit-in-modal is coming soon — open the post page to edit", { icon: "ℹ️" })}
+            onClick={() => toast("Edit-in-modal is coming soon � open the post page to edit", { icon: "??" })}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
           >
             <Edit3 size={11} /> Edit
           </button>
           <button
-            onClick={() => toast("Paid boost is coming soon", { icon: "ℹ️" })}
+            onClick={() => toast("Paid boost is coming soon", { icon: "??" })}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
           >
             <Zap size={11} /> Boost
           </button>
           <button
-            onClick={() => toast("Reschedule is coming soon", { icon: "ℹ️" })}
+            onClick={() => toast("Reschedule is coming soon", { icon: "??" })}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
           >
             <Clock size={11} /> Reschedule
           </button>
           <button
-            onClick={() => toast("Thumbnail regen is coming soon", { icon: "ℹ️" })}
+            onClick={() => toast("Thumbnail regen is coming soon", { icon: "??" })}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
           >
             <RotateCw size={11} /> Regenerate thumbnail
@@ -1351,7 +1351,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
             <Sparkles size={11} /> Improve with AI
           </button>
           <button
-            onClick={() => toast("Delete-from-modal is coming soon — use bulk delete for now", { icon: "ℹ️" })}
+            onClick={() => toast("Delete-from-modal is coming soon � use bulk delete for now", { icon: "??" })}
             className="ml-auto text-[11px] py-1.5 px-3 rounded-lg bg-red-400/10 text-red-400 border border-red-400/20 hover:bg-red-400/20 flex items-center gap-1.5"
           >
             <Trash2 size={11} /> Delete
@@ -1364,7 +1364,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
 
 function Stat({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
-    <div className="rounded-lg text-center" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)", padding: "0.5rem" }}>
+    <div className="rounded-lg text-center" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)", padding: "0.5rem" }}>
       <div className="text-[10px] text-muted flex items-center justify-center gap-1 mb-0.5">{icon} {label}</div>
       <div className="text-sm font-semibold text-foreground">{value}</div>
     </div>

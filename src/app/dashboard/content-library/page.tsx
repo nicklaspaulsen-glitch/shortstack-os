@@ -519,7 +519,7 @@ export default function ContentLibraryPage() {
         className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
           dragging ? "border-gold bg-gold/5" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(0,0,0,0.15)]"
         }`}
-        style={!dragging ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" } : undefined}
+        style={!dragging ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" } : undefined}
       >
         {uploading ? (
           <div className="flex items-center justify-center gap-2">
@@ -569,7 +569,7 @@ export default function ContentLibraryPage() {
                   className={`rounded-xl cursor-pointer hover:border-[rgba(0,0,0,0.15)] transition-all p-3 relative group ${
                     collectionFilter === c.id ? "border border-gold/40 bg-gold/5" : ""
                   }`}
-                  style={collectionFilter !== c.id ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" } : undefined}
+                  style={collectionFilter !== c.id ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" } : undefined}
                   onClick={() => setCollectionFilter(collectionFilter === c.id ? "all" : c.id)}
                 >
                   <button
@@ -648,7 +648,7 @@ export default function ContentLibraryPage() {
 
       {/* Bulk Actions */}
       {selectedAssets.size > 0 && (
-        <div className="rounded-xl p-4 flex items-center gap-3 border border-[rgba(0,0,0,0.12)]" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)" }}>
+        <div className="rounded-xl p-4 flex items-center gap-3 border border-[rgba(0,0,0,0.12)]" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
           <button onClick={selectAll} className="text-xs text-muted hover:text-[#0A0A0B] flex items-center gap-1">
             <CheckSquare size={14} /> {selectedAssets.size} selected
           </button>
@@ -698,7 +698,7 @@ export default function ContentLibraryPage() {
               className={`rounded-xl p-3 group cursor-pointer transition-all hover:border-[rgba(0,0,0,0.15)] relative ${
                 selectedAssets.has(asset.id) ? "border border-gold/40 bg-gold/5" : ""
               }`}
-              style={!selectedAssets.has(asset.id) ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" } : undefined}
+              style={!selectedAssets.has(asset.id) ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" } : undefined}
             >
               {/* Select checkbox */}
               <button
@@ -751,7 +751,7 @@ export default function ContentLibraryPage() {
 
       {/* Asset List */}
       {filteredAssets.length > 0 && viewMode === "list" && (
-        <div className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}>
+        <div className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
           <table className="w-full">
             <thead>
               <tr className="border-b border-black/10">
@@ -830,7 +830,7 @@ export default function ContentLibraryPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06, duration: 0.4 }}
             className="rounded-xl overflow-hidden"
-            style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }}
+            style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
           >
             <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-4">
@@ -844,7 +844,7 @@ export default function ContentLibraryPage() {
       {/* Preview Modal */}
       {previewAsset && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => { setPreviewAsset(null); setEditText(null); }}>
-          <div className="rounded-xl p-4 max-w-lg w-full" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", border: "1px solid rgba(0,0,0,0.10)" }} onClick={e => e.stopPropagation()}>
+          <div className="rounded-xl p-4 max-w-lg w-full" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold">{previewAsset.name}</h3>
               <button onClick={() => { setPreviewAsset(null); setEditText(null); }} className="text-muted hover:text-[#0A0A0B]" aria-label="Close asset preview"><X size={16} /></button>

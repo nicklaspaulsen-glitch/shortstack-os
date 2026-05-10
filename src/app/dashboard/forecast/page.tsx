@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, type Variants } from "framer-motion";
@@ -84,7 +84,7 @@ function BarChart({ buckets }: { buckets: MonthBucket[] }) {
   const max = Math.max(...buckets.map((b) => b.weighted), 1);
   return (
     <PrismPanel rainbow padding="p-5">
-      <p className="text-sm font-semibold text-[#0A0A0B] mb-5">Weighted Pipeline — Next 6 Months</p>
+      <p className="text-sm font-semibold text-[#0A0A0B] mb-5">Weighted Pipeline � Next 6 Months</p>
       <div className="flex items-end gap-3 h-40">
         {buckets.map((b, i) => {
           const heightPct = (b.weighted / max) * 100;
@@ -152,7 +152,7 @@ export default function ForecastPage() {
       <PageHero
         title="Revenue Forecast"
         eyebrow="REVENUE FORECAST"
-        subtitle="Weighted pipeline by close date — next 6 months."
+        subtitle="Weighted pipeline by close date � next 6 months."
         icon={<TrendingUp size={22} />}
         gradient="gold"
       />
@@ -190,7 +190,7 @@ export default function ForecastPage() {
               {
                 label: "Likely This Month",
                 value: fmt(likelyClose.reduce((s, d) => s + d.value * (d.probability / 100), 0)),
-                sub: `${likelyClose.length} deal${likelyClose.length !== 1 ? "s" : ""} ≥70% probability`,
+                sub: `${likelyClose.length} deal${likelyClose.length !== 1 ? "s" : ""} =70% probability`,
                 valueClass: "text-yellow-400",
               },
               {
@@ -205,7 +205,7 @@ export default function ForecastPage() {
                 variants={fadeUp}
                 whileHover={{ y: -2 }}
                 className=" border p-5 overflow-hidden relative"
-                style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", borderColor: "rgba(0,0,0,0.08)" }}
+                style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.08)" }}
               >
                 <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
                 <p className="text-xs text-muted uppercase tracking-wider mb-1">{stat.label}</p>
@@ -220,7 +220,7 @@ export default function ForecastPage() {
               <TrendingUp size={36} className="text-muted opacity-30" />
               <p className="text-[#0A0A0B] font-semibold">No open deals to forecast</p>
               <p className="text-muted text-sm max-w-xs">Add deals with expected close dates and probabilities to see your revenue forecast.</p>
-              <a href="/dashboard/deals" className="btn-primary text-sm px-4 py-2 rounded-lg mt-2">Go to Deals →</a>
+              <a href="/dashboard/deals" className="btn-primary text-sm px-4 py-2 rounded-lg mt-2">Go to Deals ?</a>
             </PrismPanel>
           ) : (
             <>
@@ -231,7 +231,7 @@ export default function ForecastPage() {
                 <PrismPanel padding="p-0" className="overflow-hidden">
                   <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
                     <p className="text-sm font-semibold text-[#0A0A0B]">Likely to Close This Month</p>
-                    <p className="text-xs text-muted mt-0.5">Deals with ≥70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
+                    <p className="text-xs text-muted mt-0.5">Deals with =70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
                   </div>
                   <table className="w-full text-sm">
                     <thead>
@@ -314,7 +314,7 @@ export default function ForecastPage() {
                           <td className="px-4 py-3 text-right text-muted hidden md:table-cell">
                             {d.expected_close_date
                               ? new Date(d.expected_close_date).toLocaleDateString()
-                              : "—"}
+                              : "�"}
                           </td>
                           <td className="px-4 py-3 text-right text-yellow-400 hidden md:table-cell">
                             {fmt(d.value * d.probability / 100)}

@@ -2,13 +2,13 @@
 
 /**
  * Agency-owner billing hub. Shows:
- *   1. Current plan hero — tier, price, next renewal, "Manage subscription"
+ *   1. Current plan hero ï¿½ tier, price, next renewal, "Manage subscription"
  *      (opens Stripe Customer Portal via /api/billing/portal)
- *   2. Usage this month — 5 resources (emails, tokens, clients, sms,
+ *   2. Usage this month ï¿½ 5 resources (emails, tokens, clients, sms,
  *      call_minutes) from /api/billing/usage (agency owner view).
- *   3. Token top-up — 3 one-time packs ? /api/billing/buy-tokens ? Stripe
+ *   3. Token top-up ï¿½ 3 one-time packs ? /api/billing/buy-tokens ? Stripe
  *      Checkout.
- *   4. Recent invoices — from /api/billing/invoices.
+ *   4. Recent invoices ï¿½ from /api/billing/invoices.
  */
 
 import { useCallback, useEffect, useState } from "react";
@@ -102,7 +102,7 @@ function formatDate(unixSeconds: number): string {
       day: "numeric",
     });
   } catch {
-    return "—";
+    return "ï¿½";
   }
 }
 
@@ -281,7 +281,7 @@ export default function BillingPage() {
                 <>
                   <span className="text-foreground font-semibold">${monthlyPrice.toLocaleString()}</span>
                   <span>/mo</span>
-                  <span className="mx-1.5 text-muted/40">·</span>
+                  <span className="mx-1.5 text-muted/40">ï¿½</span>
                   <span>Renews {nextRenewal.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                 </>
               ) : (
@@ -344,7 +344,7 @@ export default function BillingPage() {
                 className={` border overflow-hidden relative transition-all ${
                   maxed ? "shadow-[0_0_16px_rgba(239,68,68,0.12)]" : ""
                 }`}
-                style={{ background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)" }}
+                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px -4px rgba(0,0,0,0.06)" }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.06 }}
@@ -415,7 +415,7 @@ export default function BillingPage() {
               Token top-up
             </h2>
             <p className="text-[11px] text-muted mt-0.5">
-              Ran out of tokens this month? One-time purchase — no subscription change.
+              Ran out of tokens this month? One-time purchase ï¿½ no subscription change.
             </p>
           </div>
           <Link
@@ -494,7 +494,7 @@ export default function BillingPage() {
           {invoicesLoading ? (
             <div className="p-8 text-center">
               <Loader2 size={16} className="animate-spin text-gold mx-auto" />
-              <p className="text-[11px] text-muted mt-2">Loading invoices…</p>
+              <p className="text-[11px] text-muted mt-2">Loading invoicesï¿½</p>
             </div>
           ) : invoices.length === 0 ? (
             <div className="p-8 text-center">
