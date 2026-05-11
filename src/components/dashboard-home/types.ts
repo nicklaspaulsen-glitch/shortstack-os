@@ -68,10 +68,19 @@ export interface HeroBlock {
   cta: { label: string; href: string };
 }
 
+export interface OwnerProfile {
+  firstName: string;
+  avatarUrl: string | null;
+  planTier: string | null;
+  clientCount: number;
+  mrr: number;
+}
+
 export interface BentoData {
   ownerId: string;
   hero: HeroBlock;
   kpis: KpiBlock;
+  profile: OwnerProfile;
   recentCalls: VoiceCallRow[];
   recentEmails: OutreachEmailRow[];
   hotLeads: HotLeadRow[];

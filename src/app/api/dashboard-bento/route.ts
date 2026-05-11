@@ -80,6 +80,14 @@ interface KpiBlock {
   mrrSpark: number[];
 }
 
+interface OwnerProfile {
+  firstName: string;
+  avatarUrl: string | null;
+  planTier: string | null;
+  clientCount: number;
+  mrr: number;
+}
+
 interface BentoResponse {
   ownerId: string;
   hero: {
@@ -89,6 +97,7 @@ interface BentoResponse {
     cta: { label: string; href: string };
   };
   kpis: KpiBlock;
+  profile: OwnerProfile;
   recentCalls: VoiceCallRow[];
   recentEmails: OutreachEmailRow[];
   hotLeads: HotLeadRow[];
@@ -166,6 +175,7 @@ export async function GET() {
     callsTodayCount,
     leadsTodayCount,
     hotLeadsTodayCount,
+    ownerProfileResult,
   ] = await Promise.all([
     safeRows<VoiceCallRow>(
       supabase
@@ -266,6 +276,12 @@ export async function GET() {
       .select("*", { count: "exact", head: true })
       .eq("user_id", ownerId)
       .gte("lead_score", 80),
+
+    supabase
+      .from("profiles")
+      .select("full_name, avatar_url, plan_tier")
+      .eq("id", ownerId)
+      .single(),
   ]);
 
   const calls = callsResult;
@@ -332,10 +348,20 @@ export async function GET() {
     dealsWonThisMonth,
   });
 
+  const ownerFullName = ownerProfileResult.data?.full_name ?? "";
+  const ownerProfile: OwnerProfile = {
+    firstName: ownerFullName.split(" ")[0] || "You",
+    avatarUrl: ownerProfileResult.data?.avatar_url ?? null,
+    planTier: ownerProfileResult.data?.plan_tier ?? null,
+    clientCount: activeClients.length,
+    mrr,
+  };
+
   const response: BentoResponse = {
     ownerId,
     hero,
     kpis,
+    profile: ownerProfile,
     recentCalls: calls,
     recentEmails: emails,
     hotLeads,

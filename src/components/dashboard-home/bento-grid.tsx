@@ -2,7 +2,7 @@
 
 import DashboardHeroMoment from "./dashboard-hero-moment";
 import KpiStrip from "./kpi-strip";
-import QuickActionsGrid from "./quick-actions-grid";
+import OwnerProfileTile from "./owner-profile-tile";
 import RecentCallsTile from "./recent-calls-tile";
 import RecentEmailsTile from "./recent-emails-tile";
 import AgentActivityFeedTile from "./agent-activity-feed-tile";
@@ -16,7 +16,7 @@ import type { BentoData } from "./types";
  *   Row 1+2:  [HeroMoment 8x2 ............] [Kpi 4x1] [Kpi 4x1]
  *                                            [Kpi 4x1] [Kpi 4x1]
  *
- *   Row 3:    [QuickActions 4x1] [RecentCalls 4x1] [RecentEmails 4x1]
+ *   Row 3:    [OwnerProfile 4x1] [RecentCalls 4x1] [RecentEmails 4x1]
  *
  *   Row 4+5:  [AgentActivity 4x2] [HotLeads 4x2] [TodaysSchedule 4x2]
  *
@@ -51,8 +51,8 @@ export default function BentoGrid({ data }: Props) {
       <DashboardHeroMoment hero={data.hero} index={0} />
       <KpiStrip kpis={data.kpis} />
 
-      {/* Row 3 — Quick actions + recent calls + recent emails */}
-      <QuickActionsGrid index={2} />
+      {/* Row 3 — Owner profile + quick actions + recent calls + recent emails */}
+      <OwnerProfileTile profile={data.profile} index={2} />
       <RecentCallsTile calls={data.recentCalls} index={3} />
       <RecentEmailsTile emails={data.recentEmails} index={4} />
 
