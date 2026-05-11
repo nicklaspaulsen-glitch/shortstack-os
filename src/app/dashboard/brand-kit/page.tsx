@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -374,7 +374,7 @@ export default function BrandKitPage() {
                 className="space-y-6"
               >
                 {/* URL Input */}
-                <motion.div variants={tileVariants} className="rounded-xl p-8 text-center space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                <motion.div variants={tileVariants} className="rounded-xl p-8 text-center space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                   <div className="w-16 h-16 mx-auto bg-[rgba(37,99,235,0.08)]  flex items-center justify-center mb-4">
                     <Globe size={28} className="text-[#2563EB]" />
                   </div>
@@ -443,7 +443,7 @@ export default function BrandKitPage() {
                     { icon: <Palette size={18} />, title: "3. Brand Kit", desc: "Complete brand profile ready" },
                     { icon: <Sparkles size={18} />, title: "4. Generate", desc: "Create on-brand content" },
                   ].map((step, i) => (
-                    <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="rounded-xl p-4 text-center relative overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                    <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="rounded-xl p-4 text-center relative overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                       <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
                       <div className="w-10 h-10 mx-auto bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center text-[#2563EB] mb-2 mt-1">
                         {step.icon}
@@ -456,7 +456,7 @@ export default function BrandKitPage() {
 
                 {/* Brand overview (after scan) */}
                 {brand && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6 space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <motion.div variants={tileVariants} className="rounded-xl p-6 space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                     <div className="flex items-center gap-4">
                       {brand.favicon && (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -479,7 +479,7 @@ export default function BrandKitPage() {
                           key={label}
                           variants={tileVariants}
                           whileHover={{ y: -2 }}
-                          className="rounded-xl p-3 text-center relative overflow-hidden" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.16)" }}
+                          className="rounded-xl p-3 text-center relative overflow-hidden" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.16)" }}
                         >
                           <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
                           <div className="text-[#2563EB] mx-auto mb-1 mt-1 flex justify-center">{icon}</div>
@@ -508,7 +508,7 @@ export default function BrandKitPage() {
                 className="space-y-6"
               >
                 {/* Color palette */}
-                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-semibold flex items-center gap-2">
                       <Palette size={14} className="text-[#2563EB]" /> Extracted Color Palette
@@ -566,13 +566,13 @@ export default function BrandKitPage() {
 
                 {/* Color harmony suggestions */}
                 {brand.colors.length >= 2 && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Hash size={14} className="text-[#2563EB]" /> Suggested Pairings
                     </h3>
                     <motion.div variants={containerVariants} className="grid grid-cols-3 gap-3">
                       {brand.colors.length >= 2 && (
-                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                           <p className="text-[9px] text-muted uppercase mb-2">Primary + Accent</p>
                           <div className="flex h-12 rounded-lg overflow-hidden">
                             <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
@@ -581,7 +581,7 @@ export default function BrandKitPage() {
                         </motion.div>
                       )}
                       {brand.colors.length >= 3 && (
-                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                           <p className="text-[9px] text-muted uppercase mb-2">Tricolor</p>
                           <div className="flex h-12 rounded-lg overflow-hidden">
                             <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
@@ -591,7 +591,7 @@ export default function BrandKitPage() {
                         </motion.div>
                       )}
                       {brand.colors.length >= 4 && (
-                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                           <p className="text-[9px] text-muted uppercase mb-2">Full Palette</p>
                           <div className="flex h-12 rounded-lg overflow-hidden">
                             {brand.colors.slice(0, 5).map((c, i) => (
@@ -606,7 +606,7 @@ export default function BrandKitPage() {
 
                 {/* Social links found */}
                 {brand.socialLinks.length > 0 && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Share2 size={14} className="text-[#2563EB]" /> Social Profiles Found
                     </h3>
@@ -636,7 +636,7 @@ export default function BrandKitPage() {
                 animate="visible"
                 className="space-y-6"
               >
-                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                   <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
                     <Type size={14} className="text-[#2563EB]" /> Extracted Fonts
                   </h3>
@@ -645,7 +645,7 @@ export default function BrandKitPage() {
                   ) : (
                     <motion.div variants={containerVariants} className="space-y-4">
                       {brand.fonts.map((font, i) => (
-                        <motion.div key={i} variants={tileVariants} whileHover={{ y: -1 }} className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                        <motion.div key={i} variants={tileVariants} whileHover={{ y: -1 }} className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                           <div className="flex items-center justify-between mb-2">
                             <p className="text-xs font-semibold">{font}</p>
                             <motion.button
@@ -670,7 +670,7 @@ export default function BrandKitPage() {
 
                 {/* Headings from site */}
                 {brand.headings.length > 0 && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <FileText size={14} className="text-[#2563EB]" /> Key Headlines Found
                     </h3>
@@ -697,7 +697,7 @@ export default function BrandKitPage() {
 
                 {/* CTAs */}
                 {brand.ctaTexts.length > 0 && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Zap size={14} className="text-[#2563EB]" /> Call-to-Action Texts
                     </h3>
@@ -720,7 +720,7 @@ export default function BrandKitPage() {
               >
                 {/* OG Image */}
                 {brand.ogImage && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Share2 size={14} className="text-[#2563EB]" /> Social Preview Image (OG)
                     </h3>
@@ -732,7 +732,7 @@ export default function BrandKitPage() {
                 )}
 
                 {/* All images */}
-                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                   <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
                     <ImageIcon size={14} className="text-[#2563EB]" /> Extracted Images
                     <span className="text-[10px] text-muted bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded">{brand.images.length}</span>
@@ -781,7 +781,7 @@ export default function BrandKitPage() {
                 className="space-y-6"
               >
                 {/* Brand context summary */}
-                <motion.div variants={tileVariants} className="rounded-xl p-4 flex items-center gap-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                <motion.div variants={tileVariants} className="rounded-xl p-4 flex items-center gap-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                   {brand.favicon && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={brand.favicon} alt="" className="w-8 h-8 rounded-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
@@ -814,7 +814,7 @@ export default function BrandKitPage() {
                         whileTap={{ scale: 0.98 }}
                         onClick={() => generateFromPreset(preset.id)}
                         disabled={generating}
-                        style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                        style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                         className={`text-left rounded-xl p-4 hover:border-[rgba(37,99,235,0.25)] transition-all group ${
                           selectedPreset === preset.id && generating
                             ? "border-[rgba(37,99,235,0.40)] bg-[rgba(37,99,235,0.05)]"
@@ -850,4 +850,5 @@ export default function BrandKitPage() {
             /></MotionPage>
   );
 }
+
 

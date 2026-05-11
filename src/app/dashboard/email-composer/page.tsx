@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -941,7 +941,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl p-5 space-y-2"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               {/* Email Provider Selector */}
               <div>
@@ -1079,7 +1079,7 @@ export default function EmailComposerPage() {
             )}
 
             {/* Rich Text Toolbar */}
-            <div className="flex items-center gap-1 p-1.5 rounded-lg" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="flex items-center gap-1 p-1.5 rounded-lg" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               {[
                 { icon: <Bold size={12} />, label: "Bold" },
                 { icon: <Italic size={12} />, label: "Italic" },
@@ -1223,7 +1223,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-4"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <div className="h-px bg-gradient-to-r from-indigo-500 via-violet-400 to-indigo-500 mb-3 rounded-full" />
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Composer Stats</h3>
@@ -1255,10 +1255,10 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.1 }}
               className="rounded-xl p-4"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Quick Templates</h3>
-              <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.08)" }}>
+              <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(255,255,255,0.70)" }}>
                 {TEMPLATE_GALLERY.length === 0 && (
                   <p className="text-[9px] text-muted text-center py-3">No templates yet.</p>
                 )}
@@ -1376,7 +1376,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl text-center p-6"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <div className={`w-24 h-24 rounded-full border-4 flex items-center justify-center mx-auto mb-3 ${
                 spamScore >= 80 ? "border-green-400" : spamScore >= 50 ? "border-yellow-400" : "border-red-400"
@@ -1396,7 +1396,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-5 col-span-1 lg:col-span-2"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h3 className="text-sm font-semibold mb-3">Deliverability Checklist</h3>
               <div className="space-y-2">
@@ -1426,7 +1426,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Calendar size={14} className="text-indigo-400" /> Schedule Send
@@ -1469,7 +1469,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h3 className="text-sm font-semibold mb-3">Optimal Send Times</h3>
               <p className="text-[10px] text-muted mb-3">Based on your audience engagement data</p>
@@ -1564,7 +1564,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl p-5 space-y-3"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h4 className="text-xs font-semibold">Edit Signature</h4>
               <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Full Name" defaultValue="" />
@@ -1584,7 +1584,7 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
               <h4 className="text-xs font-semibold mb-3">Preview</h4>
               <div className="p-4 rounded-lg bg-[#F5F5F5]">
@@ -1601,4 +1601,5 @@ export default function EmailComposerPage() {
     </div>
   );
 }
+
 

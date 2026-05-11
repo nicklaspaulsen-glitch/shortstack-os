@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -219,7 +219,7 @@ export default function ColdEmailPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22 }}
                 className="rounded-xl p-4 space-y-3"
-                style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.12)" }}
+                style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", borderColor: "rgba(0,0,0,0.12)" }}
               >
                 <div className="flex items-center gap-2">
                   <Sparkles size={13} className="text-[#2563EB]" />
@@ -455,7 +455,7 @@ export default function ColdEmailPage() {
                             Preview samples
                           </p>
                           {jobSamples.map((s) => (
-                            <div key={s.personalization_id} className="rounded-xl p-3 space-y-1.5" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                            <div key={s.personalization_id} className="rounded-xl p-3 space-y-1.5" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                               {s.error ? (
                                 <div className="text-[10px] text-red-400 flex items-center gap-1.5">
                                   <AlertTriangle size={10} />
@@ -501,5 +501,6 @@ export default function ColdEmailPage() {
             </PrismPanel></MotionPage>
   );
 }
+
 
 

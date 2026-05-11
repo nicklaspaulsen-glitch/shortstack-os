@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
@@ -170,8 +170,8 @@ function BentoFallback() {
       className="rounded-xl border border-border-subtle p-12 flex flex-col items-center justify-center text-center gap-4"
       style={{
         background: "rgba(255,255,255,0.88)",
-        backdropFilter: "blur(16px) saturate(1.5)",
-        WebkitBackdropFilter: "blur(16px) saturate(1.5)",
+        backdropFilter: "blur(24px) saturate(1.8)",
+        WebkitBackdropFilter: "blur(24px) saturate(1.8)",
       }}
     >
       <p className="font-editorial text-base text-text-secondary max-w-md">
@@ -248,3 +248,4 @@ function ClientDashboard() {
     </div>
   );
 }
+

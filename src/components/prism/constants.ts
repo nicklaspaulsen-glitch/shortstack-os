@@ -44,15 +44,15 @@ export const PRISM_STAGGER = 0.06;
 /** Inline glass surface styles — frosted white for light theme */
 export const PRISM_GLASS = {
   background: "rgba(255,255,255,0.88)",
-  backdropFilter: "blur(16px) saturate(1.5)",
-  WebkitBackdropFilter: "blur(16px) saturate(1.5)",
+  backdropFilter: "blur(24px) saturate(1.8)",
+  WebkitBackdropFilter: "blur(24px) saturate(1.8)",
 } as const;
 
 /** Stronger glass for hero/prominent panels */
 export const PRISM_GLASS_STRONG = {
   background: "rgba(255,255,255,0.94)",
-  backdropFilter: "blur(24px) saturate(1.5)",
-  WebkitBackdropFilter: "blur(24px) saturate(1.5)",
+  backdropFilter: "blur(32px) saturate(1.8)",
+  WebkitBackdropFilter: "blur(32px) saturate(1.8)",
 } as const;
 
 /** Light-theme borders — dark tints for visibility on white surfaces */

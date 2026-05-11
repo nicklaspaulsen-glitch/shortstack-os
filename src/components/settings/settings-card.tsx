@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -67,13 +67,13 @@ export default function SettingsCard({
           title="Coming soon — this surface ships in a future release"
           style={{
             background: "rgba(255,255,255,0.88)",
-            backdropFilter: "blur(16px) saturate(1.5)",
-            WebkitBackdropFilter: "blur(16px) saturate(1.5)",
+            backdropFilter: "blur(24px) saturate(1.8)",
+            WebkitBackdropFilter: "blur(24px) saturate(1.8)",
             border: `1px solid ${borderColor}`,
             cursor: "not-allowed",
             opacity: 0.65,
             boxShadow: [
-              "0 1px 0 rgba(255,255,255,1) inset",
+              "inset 0 1px 0 rgba(255,255,255,1)",
               "0 2px 8px -2px rgba(0,0,0,0.06)",
               "0 8px 20px -8px rgba(0,0,0,0.06)",
             ].join(", "),
@@ -95,11 +95,11 @@ export default function SettingsCard({
         className="group block rounded-xl p-6 h-full transition-all duration-220"
         style={{
           background: "rgba(255,255,255,0.88)",
-          backdropFilter: "blur(16px) saturate(1.5)",
-          WebkitBackdropFilter: "blur(16px) saturate(1.5)",
+          backdropFilter: "blur(24px) saturate(1.8)",
+          WebkitBackdropFilter: "blur(24px) saturate(1.8)",
           border: `1px solid ${borderColor}`,
           boxShadow: [
-            "0 1px 0 rgba(255,255,255,1) inset",
+            "inset 0 1px 0 rgba(255,255,255,1)",
             "0 2px 8px -2px rgba(0,0,0,0.06)",
             "0 8px 20px -8px rgba(0,0,0,0.06)",
             "0 0 32px -12px rgba(37,99,235,0.06)",
@@ -112,7 +112,7 @@ export default function SettingsCard({
             : "rgba(37,99,235,0.22)";
           e.currentTarget.style.transform = "translateY(-2px)";
           e.currentTarget.style.boxShadow = [
-            "0 1px 0 rgba(255,255,255,1) inset",
+            "inset 0 1px 0 rgba(255,255,255,1)",
             "0 4px 16px -4px rgba(0,0,0,0.10)",
             "0 16px 32px -8px rgba(0,0,0,0.08)",
             `0 0 40px -12px ${accentColor}55`,
@@ -123,7 +123,7 @@ export default function SettingsCard({
           e.currentTarget.style.borderColor = borderColor;
           e.currentTarget.style.transform = "translateY(0)";
           e.currentTarget.style.boxShadow = [
-            "0 1px 0 rgba(255,255,255,1) inset",
+            "inset 0 1px 0 rgba(255,255,255,1)",
             "0 2px 8px -2px rgba(0,0,0,0.06)",
             "0 8px 20px -8px rgba(0,0,0,0.06)",
             "0 0 32px -12px rgba(37,99,235,0.06)",
@@ -211,3 +211,4 @@ function SettingsCardBody({ Icon, accentColor, title, description, queued, previ
     </>
   );
 }
+

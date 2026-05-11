@@ -977,7 +977,7 @@ export default function DesignStudioPage() {
                     <motion.div
                       key={section.key}
                       className="rounded-xl overflow-hidden"
-                      style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
+                      style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.06, duration: 0.4 }}
@@ -1052,7 +1052,7 @@ export default function DesignStudioPage() {
                         <motion.div
                           key={g.id}
                           className="rounded-xl"
-                          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
+                          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.04 }}
@@ -1101,7 +1101,7 @@ export default function DesignStudioPage() {
                       transition={{ delay: i * 0.03, duration: 0.35 }}
                       whileHover={{ y: -3, scale: 1.02 }}
                       className={`rounded-xl overflow-hidden text-left ${selectedTemplate?.label === t.label ? "border-[#2563EB]/40" : ""}`}
-                      style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: selectedTemplate?.label === t.label ? "1px solid rgba(204,36,36,0.5)" : "1px solid rgba(0,0,0,0.08)" }}
+                      style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: selectedTemplate?.label === t.label ? "1px solid rgba(204,36,36,0.5)" : "1px solid rgba(0,0,0,0.08)" }}
                     >
                       <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                       <div className="p-3">
@@ -1133,7 +1133,7 @@ export default function DesignStudioPage() {
                       transition={{ delay: i * 0.04, duration: 0.35 }}
                       whileHover={{ y: -3, scale: 1.02 }}
                       className={`rounded-xl overflow-hidden text-left ${selectedPalette?.name === palette.name ? "border-[#2563EB]/40" : ""}`}
-                      style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: selectedPalette?.name === palette.name ? "1px solid rgba(204,36,36,0.5)" : "1px solid rgba(0,0,0,0.08)" }}
+                      style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: selectedPalette?.name === palette.name ? "1px solid rgba(204,36,36,0.5)" : "1px solid rgba(0,0,0,0.08)" }}
                     >
                       <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                       <div className="p-4">
@@ -1153,7 +1153,7 @@ export default function DesignStudioPage() {
                   ))}
                 </div>
 
-                <div className="rounded-xl p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                <div className="rounded-xl p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}>
                   <h3 className="section-header flex items-center gap-2"><Wand2 size={12} className="text-[#2563EB]" /> Industry Styles</h3>
                   <p className="text-[10px] text-muted mb-3">When you select a client, AI automatically uses an industry-appropriate style</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -1207,7 +1207,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 1. Brand Kit Manager ========== */}
                 {toolsTab === "brand-kit" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Paintbrush size={16} /></div>
                       <div>
@@ -1305,7 +1305,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 2. Smart Resize ========== */}
                 {toolsTab === "smart-resize" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Maximize2 size={16} /></div>
                       <div>
@@ -1360,7 +1360,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 3. Layer Editor ========== */}
                 {toolsTab === "layers" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Layers size={16} /></div>
                       <div>
@@ -1427,7 +1427,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 4. Background Remover ========== */}
                 {toolsTab === "bg-remover" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Scissors size={16} /></div>
                       <div>
@@ -1477,7 +1477,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 5. Mockup Generator ========== */}
                 {toolsTab === "mockups" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Shirt size={16} /></div>
                       <div>
@@ -1531,7 +1531,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 6. QR Code Generator ========== */}
                 {toolsTab === "qr-code" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><QrCode size={16} /></div>
                       <div>
@@ -1599,7 +1599,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 7. Design Version History ========== */}
                 {toolsTab === "version-history" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><History size={16} /></div>
                       <div>
@@ -1672,7 +1672,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 8. Color Palette Extractor ========== */}
                 {toolsTab === "color-extract" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Pipette size={16} /></div>
                       <div>
@@ -1723,7 +1723,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 9. Typography Pairing ========== */}
                 {toolsTab === "typography" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Type size={16} /></div>
                       <div>
@@ -1776,7 +1776,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 10. Pattern Generator ========== */}
                 {toolsTab === "patterns" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Repeat size={16} /></div>
                       <div>
@@ -1837,7 +1837,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 11. Photo Filter Library ========== */}
                 {toolsTab === "filters" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Aperture size={16} /></div>
                       <div>
@@ -1879,7 +1879,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 12. Icon Library Browser ========== */}
                 {toolsTab === "icons" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Search size={16} /></div>
                       <div>
@@ -1918,7 +1918,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 13. Infographic Builder ========== */}
                 {toolsTab === "infographics" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><BarChart3 size={16} /></div>
                       <div>
@@ -1964,7 +1964,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 14. Social Proof Widgets ========== */}
                 {toolsTab === "social-proof" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><ThumbsUp size={16} /></div>
                       <div>
@@ -2038,7 +2038,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 15. Seasonal Template Packs ========== */}
                 {toolsTab === "seasonal" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><CalendarDays size={16} /></div>
                       <div>
@@ -2084,7 +2084,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 16. Animation Preview ========== */}
                 {toolsTab === "animation" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Film size={16} /></div>
                       <div>
@@ -2141,7 +2141,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 17. Design System Tokens ========== */}
                 {toolsTab === "design-tokens" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Database size={16} /></div>
                       <div>
@@ -2219,7 +2219,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 18. Batch Export ========== */}
                 {toolsTab === "batch-export" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Download size={16} /></div>
                       <div>
@@ -2284,7 +2284,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 19. Accessibility Checker ========== */}
                 {toolsTab === "accessibility" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Accessibility size={16} /></div>
                       <div>
@@ -2372,7 +2372,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 20. Mood Board Builder ========== */}
                 {toolsTab === "mood-board" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Heart size={16} /></div>
                       <div>
@@ -2459,7 +2459,7 @@ export default function DesignStudioPage() {
 
                 {/* ========== 21. AI Style Transfer ========== */}
                 {toolsTab === "style-transfer" && (
-                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                  <motion.div className="rounded-xl space-y-4 p-5" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Shuffle size={16} /></div>
                       <div>
@@ -2552,4 +2552,5 @@ export default function DesignStudioPage() {
             </>)}<PageAI pageName="Design Studio" context="AI design prompt generator for thumbnails, social posts, ads, logos, banners, infographics, presentations, and more. Generates Midjourney prompts with industry-specific styling." suggestions={["Generate a thumbnail concept for '5 Marketing Tips'", "Create an Instagram post design for a restaurant", "What colors work best for dental practice ads?", "Design a YouTube banner concept", "Create a full brand kit for a fitness studio"]} /></MotionPage>
   );
 }
+
 

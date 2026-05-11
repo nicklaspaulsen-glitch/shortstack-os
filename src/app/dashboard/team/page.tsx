@@ -281,7 +281,7 @@ export default function TeamPage() {
                   <p className={`text-[10px] ${stat.subColor ?? "text-muted"}`}>{stat.sub}</p>
                 </PrismPanel>
               ))}
-            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
@@ -386,7 +386,7 @@ export default function TeamPage() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="rounded-xl p-4 space-y-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                      className="rounded-xl p-4 space-y-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -438,7 +438,7 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="rounded-xl overflow-x-auto p-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                className="rounded-xl overflow-x-auto p-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-[#2563EB]" /> Role Permissions Matrix</h2>
@@ -493,7 +493,7 @@ export default function TeamPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -3 }}
-                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "0.75rem", padding: "1rem", position: "relative", overflow: "hidden" }}
+                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "0.75rem", padding: "1rem", position: "relative", overflow: "hidden" }}
                     >
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <div className="flex items-center gap-3 mb-3">
@@ -525,7 +525,7 @@ export default function TeamPage() {
                     whileHover={{ y: -3 }}
                     onClick={() => setShowCustomRole(true)}
                     className="hover:border-[rgba(37,99,235,0.2)] transition-all flex flex-col items-center justify-center gap-2 min-h-[160px]"
-                    style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px dashed rgba(0,0,0,0.12)", borderRadius: "0.75rem", padding: "1rem" }}
+                    style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px dashed rgba(0,0,0,0.12)", borderRadius: "0.75rem", padding: "1rem" }}
                   >
                     <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
                       <Settings size={16} className="text-[#2563EB]" />
@@ -540,7 +540,7 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "0.75rem", padding: "1rem" }}
+                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "0.75rem", padding: "1rem" }}
               >
                 <h2 className="section-header flex items-center gap-2 mb-3"><Activity size={13} className="text-[#2563EB]" /> Per-Member Access Log</h2>
                 <div className="space-y-2">
@@ -577,7 +577,7 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "0.75rem", padding: "1rem" }}
+                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "0.75rem", padding: "1rem" }}
               >
                 <h2 className="section-header flex items-center gap-2 mb-1"><BarChart3 size={13} className="text-[#2563EB]" /> Team Capacity Tracker</h2>
                 <p className="text-[10px] text-muted mb-4">See who has bandwidth and who is overloaded.</p>
@@ -631,7 +631,7 @@ export default function TeamPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22 }}
                 className="mt-4"
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "0.75rem", padding: "1rem" }}
+                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "0.75rem", padding: "1rem" }}
               >
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="section-header flex items-center gap-2 mb-0">
@@ -650,7 +650,7 @@ export default function TeamPage() {
                       transition={{ duration: 0.18, delay: index * 0.05 }}
                       whileHover={{ y: -3 }}
                       className="flex items-center gap-3 hover:border-[rgba(37,99,235,0.2)] transition-all"
-                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "0.75rem", padding: "0.75rem", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px -4px rgba(0,0,0,0.06)" }}
+                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "0.75rem", padding: "0.75rem", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.06)" }}
                     >
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[rgba(37,99,235,0.25)] to-[rgba(59,130,246,0.15)] flex items-center justify-center text-[#2563EB] text-xs font-bold shrink-0">
                         {m.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() || m.email[0].toUpperCase()}
@@ -998,4 +998,5 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
     </div>
   );
 }
+
 

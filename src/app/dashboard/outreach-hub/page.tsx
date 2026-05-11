@@ -931,7 +931,7 @@ export default function OutreachHubPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.22 }}
                     className="rounded-xl p-5 space-y-5"
-                    style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                    style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                   >
                     <h3 className="text-sm font-semibold flex items-center gap-2">
                       <Zap size={14} className="text-[#2563EB]" /> New Campaign
@@ -1087,7 +1087,7 @@ export default function OutreachHubPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2, delay: index * 0.05 }}
                     className="rounded-xl overflow-hidden space-y-3 p-4"
-                    style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                    style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                   >
                     {/* Campaign header */}
                     <div className="flex items-center justify-between">
@@ -1726,7 +1726,7 @@ export default function OutreachHubPage() {
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
                       className="rounded-xl overflow-hidden relative"
-                      style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                      style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                     >
                       <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                       <div className="p-4">
@@ -1747,7 +1747,7 @@ export default function OutreachHubPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.3 }}
                   className="rounded-xl overflow-hidden"
-                  style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                  style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                 >
                   <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                   <div className="p-4 space-y-4">
@@ -1837,7 +1837,7 @@ export default function OutreachHubPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.5 }}
                   className="rounded-xl p-6 text-center"
-                  style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                  style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                 >
                   <div className="w-12 h-12 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center mx-auto mb-3">
                     <Star size={20} className="text-[#2563EB]" />
@@ -2056,4 +2056,5 @@ export default function OutreachHubPage() {
             </ErrorBoundary></MotionPage>
   );
 }
+
 

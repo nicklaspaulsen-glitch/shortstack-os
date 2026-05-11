@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -655,7 +655,7 @@ export default function SequencesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22 }}
                 className="rounded-xl overflow-hidden p-4"
-                style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.12)" }}
+                style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.12)" }}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -836,7 +836,7 @@ export default function SequencesPage() {
                               transition={{ duration: 0.18, delay: i * 0.04 }}
                               whileHover={{ y: -2 }}
                               className={`p-4 rounded-xl border ${colors.border}`}
-                              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
                             >
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
@@ -978,7 +978,7 @@ export default function SequencesPage() {
                       key={i}
                       variants={itemVariants}
                       whileHover={{ y: -2 }}
-                      className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                      className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                     >
                       <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
                       <div className="flex items-start justify-between mb-2">
@@ -1021,7 +1021,7 @@ export default function SequencesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: i * 0.06 }}
                       whileHover={{ y: -2 }}
-                      className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                      className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                     >
                       <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
                       <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -1244,4 +1244,5 @@ export default function SequencesPage() {
             )}</MotionPage>
   );
 }
+
 

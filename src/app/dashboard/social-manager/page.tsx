@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -733,7 +733,7 @@ export default function SocialManagerPage() {
                     thread: <FileTextIcon size={12} className="text-cyan-400" />,
                   };
                   return (
-                    <motion.div key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-2.5 hover:border-[rgba(37,99,235,0.1)] transition-all">
+                    <motion.div key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-2.5 hover:border-[rgba(37,99,235,0.1)] transition-all">
                       <div className="flex items-center gap-2 mb-1">
                         {typeIcon[String(meta.type)] || <Sparkles size={12} className="text-[#2563EB]" />}
                         <span className="text-[10px] font-medium text-[#2563EB] uppercase">{String(meta.type || "").replace("_", " ")}</span>
@@ -885,7 +885,7 @@ export default function SocialManagerPage() {
             </div>
 
             {/* Content pillars */}
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <h3 className="section-header flex items-center gap-2 mb-3">
                 <Layers size={13} className="text-[#2563EB]" /> Content Pillars
               </h3>
@@ -913,7 +913,7 @@ export default function SocialManagerPage() {
             </div>
 
             {/* Best posting times */}
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <h3 className="section-header flex items-center gap-2 mb-3">
                 <Clock size={13} className="text-[#2563EB]" /> Best Posting Times
               </h3>
@@ -948,7 +948,7 @@ export default function SocialManagerPage() {
       {/* Hashtag Research Tab */}
       {tab === "hashtags" && (
         <div className="space-y-4">
-          <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl relative overflow-hidden">
+          <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl relative overflow-hidden">
             <div className="absolute inset-0 bg-mesh opacity-30" />
             <div className="relative">
               <div className="flex items-center gap-2 mb-3">
@@ -987,7 +987,7 @@ export default function SocialManagerPage() {
           </div>
 
           {/* Caption templates */}
-          <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+          <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
             <h3 className="section-header flex items-center gap-2 mb-3">
               <FileTextIcon size={13} className="text-[#2563EB]" /> Caption Templates
             </h3>
@@ -1020,7 +1020,7 @@ export default function SocialManagerPage() {
       {tab === "scheduled" && (
         <div className="space-y-2">
           {scheduledPosts.length === 0 ? (
-            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl text-center py-8">
+            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl text-center py-8">
               <Calendar size={24} className="mx-auto mb-2 text-muted/30" />
               <p className="text-xs text-muted mb-2">No content scheduled</p>
               <button onClick={generateWeek} className="btn-primary text-xs">Generate This Week</button>
@@ -1029,7 +1029,7 @@ export default function SocialManagerPage() {
             scheduledPosts.map((post, idx) => {
               const meta = (post.metadata as Record<string, unknown>) || {};
               return (
-                <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-3">
+                <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-3">
                   <div className="flex items-start gap-3">
                     <div className="shrink-0 mt-1">{PLATFORM_ICONS[post.platform] || <Globe size={14} />}</div>
                     <div className="flex-1 min-w-0">
@@ -1064,12 +1064,12 @@ export default function SocialManagerPage() {
       {tab === "published" && (
         <div className="space-y-2">
           {recentPosts.length === 0 ? (
-            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl text-center py-8">
+            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl text-center py-8">
               <p className="text-xs text-muted">Nothing published yet</p>
             </div>
           ) : (
             recentPosts.map((post, idx) => (
-              <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-3 flex items-center gap-3">
+              <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-3 flex items-center gap-3">
                 {PLATFORM_ICONS[post.platform] || <Globe size={14} />}
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{post.title}</p>
@@ -1086,7 +1086,7 @@ export default function SocialManagerPage() {
       {tab === "config" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Content Generation Settings */}
-          <div className="rounded-xl p-5 space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+          <div className="rounded-xl p-5 space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
             <h2 className="text-sm font-semibold flex items-center gap-2"><Settings size={13} className="text-[#2563EB]" /> Content Settings</h2>
 
             <div>
@@ -1132,7 +1132,7 @@ export default function SocialManagerPage() {
 
           {/* Autopilot Controls */}
           <div className="space-y-4">
-            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-5">
+            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Bot size={16} className="text-[#2563EB]" />
@@ -1231,7 +1231,7 @@ export default function SocialManagerPage() {
             </div>
 
             {/* How it works */}
-            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-5">
+            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl p-5">
               <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Activity size={12} className="text-[#2563EB]" /> How Social Autopilot Works</h3>
               <ol className="space-y-1 text-[10px] text-muted">
                 <li className="flex gap-2"><span className="text-[#2563EB] font-bold">1.</span> Checks if content queue is running low (less than 3 days ahead)</li>
@@ -1273,7 +1273,7 @@ export default function SocialManagerPage() {
 
           {/* 1. AI Content Repurposer */}
           {toolsSubTab === "repurpose" && (
-            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl relative overflow-hidden">
+            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-mesh opacity-30" />
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
@@ -1333,7 +1333,7 @@ export default function SocialManagerPage() {
 
           {/* 7. A/B Caption Tester */}
           {toolsSubTab === "ab-test" && (
-            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl relative overflow-hidden">
+            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-mesh opacity-30" />
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
@@ -1395,7 +1395,7 @@ export default function SocialManagerPage() {
 
           {/* 8. Viral Score Predictor */}
           {toolsSubTab === "viral" && (
-            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl relative overflow-hidden">
+            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-mesh opacity-30" />
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
@@ -1477,7 +1477,7 @@ export default function SocialManagerPage() {
 
           {/* 12. Bio Optimizer */}
           {toolsSubTab === "bio" && (
-            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl relative overflow-hidden">
+            <div style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} className="rounded-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-mesh opacity-30" />
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
@@ -1532,7 +1532,7 @@ export default function SocialManagerPage() {
 
           {/* 18. Post Preview */}
           {toolsSubTab === "preview" && (
-            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-blue-400/10 rounded-lg flex items-center justify-center">
                   <Eye size={16} className="text-[#2563EB]" />
@@ -1605,7 +1605,7 @@ export default function SocialManagerPage() {
 
           {/* 19. Bulk Post Scheduler */}
           {toolsSubTab === "bulk" && (
-            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-green-400/10 rounded-lg flex items-center justify-center">
                   <Upload size={16} className="text-green-400" />
@@ -1641,7 +1641,7 @@ export default function SocialManagerPage() {
 
           {/* 11. Carousel Builder */}
           {toolsSubTab === "carousel" && (
-            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-blue-400/10 rounded-lg flex items-center justify-center">
                   <Columns size={16} className="text-[#2563EB]" />
@@ -1703,7 +1703,7 @@ export default function SocialManagerPage() {
 
           {/* 10. Story Planner */}
           {toolsSubTab === "story" && (
-            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-pink-400/10 rounded-lg flex items-center justify-center">
                   <CircleDot size={16} className="text-pink-400" />
@@ -1765,7 +1765,7 @@ export default function SocialManagerPage() {
 
           {/* 13. Link in Bio Manager */}
           {toolsSubTab === "linkinbio" && (
-            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-emerald-400/10 rounded-lg flex items-center justify-center">
                   <Link size={16} className="text-emerald-400" />
@@ -1822,7 +1822,7 @@ export default function SocialManagerPage() {
 
           {/* 26. Caption Templates Library (expanded) */}
           {toolsSubTab === "templates" && (
-            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-yellow-400/10 rounded-lg flex items-center justify-center">
                   <BookOpen size={16} className="text-yellow-400" />
@@ -1879,7 +1879,7 @@ export default function SocialManagerPage() {
 
           {/* 21. Content Recycler */}
           {toolsSubTab === "recycler" && (
-            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4 space-y-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-green-400/10 rounded-lg flex items-center justify-center">
                   <Repeat size={16} className="text-green-400" />
@@ -1945,7 +1945,7 @@ export default function SocialManagerPage() {
           {/* 2. Engagement Rate Calculator */}
           {analyticsSubTab === "engagement" && (
             <div className="space-y-3">
-              <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+              <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                 <div className="flex items-center gap-2 mb-3">
                   <TrendingUp size={16} className="text-[#2563EB]" />
                   <h2 className="text-sm font-semibold">Engagement Rate Calculator</h2>
@@ -1979,7 +1979,7 @@ export default function SocialManagerPage() {
 
           {/* 3. Best Time to Post Heatmap */}
           {analyticsSubTab === "heatmap" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <Grid3X3 size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Best Time to Post Heatmap</h2>
@@ -1994,7 +1994,7 @@ export default function SocialManagerPage() {
 
           {/* 5. Hashtag Performance Analytics */}
           {analyticsSubTab === "hashtags" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <Hash size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Hashtag Performance Analytics</h2>
@@ -2009,7 +2009,7 @@ export default function SocialManagerPage() {
 
           {/* 20. Audience Growth Tracker */}
           {analyticsSubTab === "growth" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <LineChart size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Audience Growth Tracker</h2>
@@ -2024,7 +2024,7 @@ export default function SocialManagerPage() {
 
           {/* 22. Platform Analytics Comparison */}
           {analyticsSubTab === "comparison" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <BarChart3 size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Platform Analytics Comparison</h2>
@@ -2039,7 +2039,7 @@ export default function SocialManagerPage() {
 
           {/* 6. Content Pillar Planner */}
           {analyticsSubTab === "pillars" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <PieChart size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Content Pillar Planner</h2>
@@ -2125,7 +2125,7 @@ export default function SocialManagerPage() {
 
           {/* 9. Social Inbox */}
           {inboxSubTab === "messages" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <Inbox size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Social Inbox</h2>
@@ -2141,7 +2141,7 @@ export default function SocialManagerPage() {
 
           {/* 16. Social Listening */}
           {inboxSubTab === "listening" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <Search size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Social Listening</h2>
@@ -2180,7 +2180,7 @@ export default function SocialManagerPage() {
 
           {/* 14. UGC Tracker */}
           {inboxSubTab === "ugc" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <AtSign size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">UGC Tracker</h2>
@@ -2212,7 +2212,7 @@ export default function SocialManagerPage() {
 
           {/* 23. Auto-Reply Rules */}
           {inboxSubTab === "autoreplies" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <Reply size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Auto-Reply Rules</h2>
@@ -2288,7 +2288,7 @@ export default function SocialManagerPage() {
 
           {/* 4. Competitor Social Tracker */}
           {collabsSubTab === "competitors" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <Target size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Competitor Social Tracker</h2>
@@ -2342,7 +2342,7 @@ export default function SocialManagerPage() {
 
           {/* 15. Influencer Finder */}
           {collabsSubTab === "influencers" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <Users size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Influencer Finder</h2>
@@ -2363,7 +2363,7 @@ export default function SocialManagerPage() {
 
           {/* 24. Collab Manager */}
           {collabsSubTab === "collabs" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <Handshake size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Collab Manager</h2>
@@ -2408,7 +2408,7 @@ export default function SocialManagerPage() {
 
           {/* 25. Trending Audio Finder */}
           {collabsSubTab === "trending" && (
-            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
               <div className="flex items-center gap-2 mb-3">
                 <Music2 size={16} className="text-[#2563EB]" />
                 <h2 className="text-sm font-semibold">Trending Audio Finder</h2>
@@ -2425,7 +2425,7 @@ export default function SocialManagerPage() {
 
       {/* 17. Content Calendar Export ï¿½ add to calendar tab area */}
       {tab === "calendar" && (
-        <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+        <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
           <div className="flex items-center gap-2 mb-3">
             <Download size={16} className="text-[#2563EB]" />
             <h2 className="text-sm font-semibold">Export Calendar</h2>
@@ -2459,4 +2459,5 @@ export default function SocialManagerPage() {
     </div>
   );
 }
+
 

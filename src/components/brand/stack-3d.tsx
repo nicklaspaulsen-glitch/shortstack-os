@@ -52,3 +52,5 @@ export default function Stack3D({
     />
   );
 }
+
+export { default as BrainMark } from "./brain-mark";

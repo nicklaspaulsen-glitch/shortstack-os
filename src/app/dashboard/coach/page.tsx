@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * AI Sales Coach � overview page.
@@ -253,7 +253,7 @@ export default function CoachPage() {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
                 {data.analyses.length === 0 ? (
                   <div className="px-6 py-12 text-center text-black/60">
@@ -327,7 +327,7 @@ export default function CoachPage() {
                       key={bucket.repId}
                       variants={cardVariants}
                       whileHover={{ y: -1 }}
-                      className="rounded-xl p-4" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                      className="rounded-xl p-4" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                     >
                       <div className="flex items-center justify-between">
                         <div>
@@ -391,12 +391,12 @@ export default function CoachPage() {
                 </motion.div>
 
                 {!leaderboard || leaderboard.leaderboard.length === 0 ? (
-                  <motion.div variants={cardVariants} className="rounded-xl px-6 py-8 text-center text-black/60" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <motion.div variants={cardVariants} className="rounded-xl px-6 py-8 text-center text-black/60" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                     Leaderboard requires at least 3 analyses per rep. Once your team accumulates more
                     calls, rankings will appear here.
                   </motion.div>
                 ) : (
-                  <motion.div variants={cardVariants} className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <motion.div variants={cardVariants} className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
                     <table className="w-full text-sm">
                       <thead className="bg-black/[0.03] text-xs uppercase tracking-wider text-black/50">
                         <tr>
@@ -441,6 +441,7 @@ export default function CoachPage() {
             )}</MotionPage>
   );
 }
+
 
 
 

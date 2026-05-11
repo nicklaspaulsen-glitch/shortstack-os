@@ -195,7 +195,7 @@ export default function VoiceStudioPage() {
           </div>
           <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
               {/* -- Tab bar -- */}
-              <div className="rounded-xl p-1" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}>
+              <div className="rounded-xl p-1" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 12px -2px rgba(0,0,0,0.06)" }}>
                 <nav className="flex gap-1 overflow-x-auto" aria-label="Voice Studio tabs">
                   {TAB_ORDER.map((t) => {
                     const isActive = tab === t;
@@ -371,7 +371,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
   }, [files, label, description, consentKind, signedBy, onCreated]);
 
   return (
-    <div className="relative rounded-xl overflow-hidden p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 16px -4px rgba(0,0,0,0.08), 0 0 48px -12px rgba(37,99,235,0.10)" }}>
+    <div className="relative rounded-xl overflow-hidden p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 16px -4px rgba(0,0,0,0.08), 0 0 48px -12px rgba(37,99,235,0.10)" }}>
       {/* Blue gradient top accent bar */}
       <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #2563EB, #3B82F6, #8B5CF6, #3B82F6, #2563EB)" }} />
       <div className="flex items-start gap-4">
@@ -562,7 +562,7 @@ function CloneRow({
   }, [clone.id, clone.label, onChange]);
 
   return (
-    <div className="rounded-xl p-5 cursor-pointer tilt-3d" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}>
+    <div className="rounded-xl p-5 cursor-pointer tilt-3d" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}>
       <div className="flex flex-wrap items-start gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#1D4ED8]">
           <Mic size={20} />
@@ -781,7 +781,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   return (
     <div className="space-y-4">
       {/* Filter bar */}
-      <div className="space-y-2.5 rounded-xl p-3" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.08)" }}>
+      <div className="space-y-2.5 rounded-xl p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 12px -2px rgba(0,0,0,0.06)" }}>
         {/* Search row */}
         <div className="relative">
           <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#71717A]" />
@@ -791,7 +791,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search presets�"
             className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-[#0A0A0B] placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50"
-            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
+            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(20px) saturate(1.8)", WebkitBackdropFilter: "blur(20px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
           />
         </div>
         {/* Gender row */}
@@ -970,7 +970,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   return (
     <div
       className="group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-all duration-200 min-h-[220px] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-      style={{ background: featured ? "rgba(37,99,235,0.06)" : "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: featured ? "1px solid rgba(37,99,235,0.25)" : "1px solid rgba(0,0,0,0.08)", boxShadow: "0 1px 0 rgba(255,255,255,0.9) inset, 0 4px 12px -4px rgba(0,0,0,0.06)" }}
+      style={{ background: featured ? "rgba(37,99,235,0.06)" : "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: featured ? "1px solid rgba(37,99,235,0.30)" : "1px solid rgba(255,255,255,0.70)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9), 0 4px 16px -4px rgba(0,0,0,0.07)" }}
       onMouseEnter={() => {
         setIsHovering(true);
         if (testUrl || testing) return;
@@ -1151,7 +1151,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
     );
   }
   return (
-    <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}>
+    <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}>
       <div className="divide-y divide-[rgba(0,0,0,0.06)]">
         {renders.map((r, index) => {
           const audioUrl = r.r2_key ? `${R2_BASE}/${r.r2_key}` : null;
@@ -1216,3 +1216,4 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
     </div>
   );
 }
+

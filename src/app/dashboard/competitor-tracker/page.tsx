@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -208,7 +208,7 @@ export default function CompetitorTrackerPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="rounded-xl border border-[rgba(0,0,0,0.08)] p-12 text-center"
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
               >
                 <Crosshair size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
                 <p className="text-[#6B7280] mb-4">No competitors tracked yet.</p>
@@ -229,7 +229,7 @@ export default function CompetitorTrackerPage() {
                     <motion.div
                       key={c.id}
                       className="rounded-xl border border-[rgba(0,0,0,0.08)] p-4"
-                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05 }}
@@ -348,3 +348,4 @@ export default function CompetitorTrackerPage() {
             </Modal></MotionPage>
   );
 }
+
