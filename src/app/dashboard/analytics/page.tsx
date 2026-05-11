@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -17,7 +17,6 @@ import { MotionPage } from "@/components/motion/motion-page";
 import { StatSkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import Link from "next/link";
-import PageHero from "@/components/ui/page-hero";
 
 const CHART_COLORS = ["#2563EB", "#3B82F6", "#1D4ED8", "#F26063", "#FF8585", "#8B1A1A"];
 
@@ -417,48 +416,53 @@ export default function AnalyticsPage() {
   return (
     <MotionPage className="space-y-4">
 
-      <PageHero
-        variant="editorial"
-        title="Analytics"
-        subtitle="Leads � Revenue � Content ROI"
-        eyebrow="Performance Overview"
-        icon={<BarChart3 size={16} />}
-        actions={
-          <div className="flex items-center gap-2">
-            {/* Quick date-range pills — always visible so filter is discoverable */}
-            <div className="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.80)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
-              {(["7d", "30d", "90d"] as const).map(r => (
-                <button
-                  key={r}
-                  onClick={() => setDateRange(r)}
-                  className={`px-2.5 py-1 text-[10px] rounded-md transition-colors duration-150 ${
-                    dateRange === r
-                      ? "bg-[#1D4ED8] text-white font-semibold"
-                      : "text-[#6F6D7A] hover:text-[#0A0A0B]"
-                  }`}
-                >
-                  {r}
-                </button>
-              ))}
-            </div>
-            {/* Export icon button */}
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-1 text-[10px] text-[#71717A] hover:text-[#0A0A0B] transition-colors border border-[rgba(0,0,0,0.08)] px-2.5 py-1.5 rounded-md"
-              title="Export report as JSON"
-            >
-              <Download size={11} />
-            </button>
-            {/* Live MRR badge */}
-            {stats.totalMRR > 0 && (
-              <span className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.18)] text-[#1D4ED8]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
-                {formatCurrency(stats.totalMRR)} MRR
-              </span>
-            )}
+      {/* -- Analytics command strip (slim editorial header, no PageHero) -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+            Performance Overview
+          </p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+            Analytics
+          </h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Date-range pills */}
+          <div
+            className="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 border border-[rgba(0,0,0,0.08)]"
+            style={{ background: "rgba(255,255,255,0.80)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
+          >
+            {(["7d", "30d", "90d"] as const).map(r => (
+              <button
+                key={r}
+                onClick={() => setDateRange(r)}
+                className={`px-2.5 py-1 text-[10px] rounded-md transition-colors duration-150 ${
+                  dateRange === r
+                    ? "bg-[#1D4ED8] text-white font-semibold"
+                    : "text-[#6F6D7A] hover:text-[#0A0A0B]"
+                }`}
+              >
+                {r}
+              </button>
+            ))}
           </div>
-        }
-      />
+          {/* Export */}
+          <button
+            onClick={handleExport}
+            className="flex items-center gap-1 text-[10px] text-[#71717A] hover:text-[#0A0A0B] transition-colors border border-[rgba(0,0,0,0.08)] px-2.5 py-1.5 rounded-md"
+            title="Export report as JSON"
+          >
+            <Download size={11} />
+          </button>
+          {/* Live MRR badge */}
+          {stats.totalMRR > 0 && (
+            <span className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.18)] text-[#1D4ED8]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
+              {formatCurrency(stats.totalMRR)} MRR
+            </span>
+          )}
+        </div>
+      </div>
 
       {/* -- Loading -------------------------------------------------------- */}
       {isLoading && (
