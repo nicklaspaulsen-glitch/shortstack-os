@@ -745,10 +745,11 @@ export default function Sidebar() {
         collapsed ? "w-[56px]" : "w-60"
       } ${hoverExpanded && !pinned ? "shadow-[8px_0_36px_-10px_rgba(0,0,0,0.55)]" : ""}`}
       style={{
-        background: "rgba(255,255,255,0.92)",
-        backdropFilter: "blur(32px) saturate(1.5)",
-        WebkitBackdropFilter: "blur(32px) saturate(1.5)",
-        borderRight: "1px solid rgba(0,0,0,0.08)",
+        background: "rgba(255,255,255,0.88)",
+        backdropFilter: "blur(36px) saturate(1.8)",
+        WebkitBackdropFilter: "blur(36px) saturate(1.8)",
+        borderRight: "1px solid rgba(255,255,255,0.60)",
+        boxShadow: "inset -1px 0 0 rgba(0,0,0,0.06), 2px 0 24px rgba(0,0,0,0.06)",
       }}
     >
       {/* LED light strip — lives on the sidebar's right edge, theme-colored */}

@@ -221,21 +221,21 @@ export default function StatCard({
       ref={ref}
       onMouseMove={handleMouseMove}
       className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden flex flex-col gap-1.5 tilt-3d`}
-      // May 7 v3: Window-glass depth — frosted glass floating above grey
-      // base with multi-layer drop shadows + inner top-edge light.
       style={{
-        background: "rgba(255,255,255,0.88)",
-        backdropFilter: "blur(16px) saturate(1.5)",
-        WebkitBackdropFilter: "blur(16px) saturate(1.5)",
-        border: `1px solid rgba(0,0,0,0.08)`,
-        borderTopColor: "rgba(0,0,0,0.12)",
-        borderRadius: "12px",
+        background: "rgba(255,255,255,0.86)",
+        backdropFilter: "blur(24px) saturate(1.8)",
+        WebkitBackdropFilter: "blur(24px) saturate(1.8)",
+        border: "1px solid rgba(255,255,255,0.8)",
+        borderTopColor: "rgba(255,255,255,0.96)",
+        borderRadius: "20px",
+        minHeight: size === "bento-1x1" ? "110px" : undefined,
         boxShadow: [
-          "0 1px 0 rgba(255,255,255,1) inset",
+          "inset 0 1.5px 0 rgba(255,255,255,0.98)",
+          "inset 0 0 0 1px rgba(0,0,0,0.06)",
           "0 1px 3px rgba(0,0,0,0.06)",
-          "0 4px 12px -4px rgba(0,0,0,0.08)",
-          "0 12px 32px -8px rgba(0,0,0,0.10)",
-          "0 0 48px -16px rgba(37,99,235,0.10)",
+          "0 4px 16px -4px rgba(0,0,0,0.10)",
+          "0 16px 40px -8px rgba(0,0,0,0.12)",
+          "0 0 64px -16px rgba(37,99,235,0.12)",
         ].join(", "),
       }}
       initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
@@ -247,21 +247,26 @@ export default function StatCard({
       transition={{ duration: 0.44, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
       data-premium={premium ? "true" : undefined}
       whileHover={{
-        y: -3,
-        borderColor: "rgba(0,0,0,0.14)",
-        boxShadow: [
-          "0 2px 8px rgba(0,0,0,0.10)",
-          "0 8px 24px rgba(0,0,0,0.12)",
-          "0 20px 48px -12px rgba(0,0,0,0.14)",
-        ].join(", "),
+        y: -4,
         transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
       }}
     >
+      {/* Glassy shine gradient — top-left highlight */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 50%)",
+          borderRadius: "20px",
+        }}
+        aria-hidden
+      />
+
       {/* Bottom accent bar — prism color per tile */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-[2px] opacity-70"
+        className="absolute bottom-0 left-4 right-4 h-[2px] opacity-60"
         style={{
-          background: `linear-gradient(to right, ${accent}, transparent)`,
+          background: `linear-gradient(to right, transparent, ${accent}, transparent)`,
+          borderRadius: "0 0 2px 2px",
         }}
         aria-hidden
       />
@@ -270,7 +275,7 @@ export default function StatCard({
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         style={{
-          background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${accent}0C 0%, transparent 60%)`,
+          background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${accent}10 0%, transparent 65%)`,
         }}
         aria-hidden
       />

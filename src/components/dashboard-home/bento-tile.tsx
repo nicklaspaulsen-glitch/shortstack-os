@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { tokens, themeTokens } from "@/lib/brand/tokens";
-import Stack3D from "@/components/brand/stack-3d";
+import BrainMark from "@/components/brand/brain-mark";
 
 /**
  * BentoTile — shared shell for every tile on the dashboard home.
@@ -50,19 +50,22 @@ export function BentoTile({
     <motion.section
       className={`${span} relative overflow-hidden flex flex-col`}
       style={{
-        // Glassmorphism: slightly translucent white over the blue ambient glow
-        // from the BentoGrid container. backdrop-filter adds the frosted depth.
-        background: "rgba(255, 255, 255, 0.88)",
-        backdropFilter: "blur(16px) saturate(1.5)",
-        WebkitBackdropFilter: "blur(16px) saturate(1.5)",
+        background: "rgba(255,255,255,0.85)",
+        backdropFilter: "blur(28px) saturate(1.8)",
+        WebkitBackdropFilter: "blur(28px) saturate(1.8)",
         border: `1px solid ${borderColor}`,
+        borderTopColor: "rgba(255,255,255,0.96)",
+        borderRadius: "20px",
+        minHeight: "140px",
         boxShadow: [
-          "0 1px 0 rgba(255,255,255,1) inset",
+          "inset 0 1.5px 0 rgba(255,255,255,0.98)",
+          "inset 0 0 0 1px rgba(0,0,0,0.05)",
           "0 2px 4px rgba(0,0,0,0.04)",
-          "0 12px 28px -12px rgba(0,0,0,0.08)",
-          `0 0 24px -8px ${accentColor}18`,
+          "0 8px 24px -8px rgba(0,0,0,0.10)",
+          "0 24px 56px -16px rgba(0,0,0,0.12)",
+          `0 0 48px -12px ${accentColor}20`,
         ].join(", "),
-        transition: "border-color 220ms cubic-bezier(0.32,0.72,0,1), box-shadow 220ms cubic-bezier(0.32,0.72,0,1), transform 220ms cubic-bezier(0.32,0.72,0,1)",
+        transition: "box-shadow 220ms cubic-bezier(0.32,0.72,0,1), transform 220ms cubic-bezier(0.32,0.72,0,1)",
       }}
       initial={reduceMotion ? false : { opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
@@ -75,18 +78,26 @@ export function BentoTile({
         reduceMotion
           ? undefined
           : {
-              y: -2,
+              y: -4,
               boxShadow: [
-                "0 1px 0 rgba(255,255,255,1) inset",
-                "0 4px 12px rgba(0,0,0,0.06)",
-                "0 18px 40px -12px rgba(0,0,0,0.12)",
-                `0 0 0 1px ${accentColor}28`,
-                `0 0 32px -8px ${accentColor}30`,
+                "inset 0 1.5px 0 rgba(255,255,255,0.98)",
+                "0 4px 16px rgba(0,0,0,0.08)",
+                "0 20px 48px -12px rgba(0,0,0,0.14)",
+                `0 0 64px -12px ${accentColor}28`,
               ].join(", "),
             }
       }
     >
-      <header className="flex items-center justify-between gap-3 px-5 pt-4 pb-3">
+      {/* Shine gradient overlay — top-left highlight */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(140deg, rgba(255,255,255,0.50) 0%, rgba(255,255,255,0) 45%)",
+          borderRadius: "20px",
+        }}
+        aria-hidden
+      />
+      <header className="flex items-center justify-between gap-3 px-5 pt-5 pb-3">
         <div className="flex items-center gap-2 min-w-0">
           {icon && (
             <span style={{ color: accentColor }} className="shrink-0">
@@ -132,7 +143,7 @@ export function BentoEmpty({ copy, cta, mark = true }: BentoEmptyProps) {
     <div className="flex flex-col items-center justify-center text-center py-6 gap-3">
       {mark && (
         <div className="opacity-70">
-          <Stack3D size="sm" rotating={false} />
+          <BrainMark size="sm" />
         </div>
       )}
       <p

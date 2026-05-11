@@ -338,17 +338,20 @@ export default function PageHero({
 
   return (
     <div
-      className={`relative overflow-hidden border ${className}`}
+      className={`relative overflow-hidden ${className}`}
       style={{
-        background: "rgba(255,255,255,0.92)",
-        backdropFilter: "blur(20px) saturate(1.5)",
-        WebkitBackdropFilter: "blur(20px) saturate(1.5)",
-        borderColor: tokens.border.subtle,
+        background: "rgba(255,255,255,0.83)",
+        backdropFilter: "blur(32px) saturate(1.9)",
+        WebkitBackdropFilter: "blur(32px) saturate(1.9)",
+        border: "1px solid rgba(255,255,255,0.78)",
+        borderTopColor: "rgba(255,255,255,0.96)",
+        borderRadius: "24px",
         boxShadow: [
-          "0 1px 0 rgba(255,255,255,1) inset",
-          "0 1px 3px rgba(0,0,0,0.06)",
-          "0 4px 12px -4px rgba(0,0,0,0.08)",
-          "0 0 32px -8px rgba(37,99,235,0.08)",
+          "inset 0 1.5px 0 rgba(255,255,255,0.98)",
+          "inset 0 0 0 1px rgba(0,0,0,0.05)",
+          "0 2px 8px rgba(0,0,0,0.05)",
+          "0 8px 32px -8px rgba(0,0,0,0.10)",
+          "0 0 64px -16px rgba(37,99,235,0.12)",
         ].join(", "),
       }}
     >
