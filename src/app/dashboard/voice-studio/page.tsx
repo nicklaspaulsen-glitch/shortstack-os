@@ -162,14 +162,13 @@ export default function VoiceStudioPage() {
   }, [mine, presets, renders]);
 
   return (
-    <MotionPage className="min-h-screen pb-12">{/* Higgsfield-style slim header */}<div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(0,0,0,0.08)] bg-white">
-              <div className="w-7 h-7 rounded-xl bg-[rgba(0,0,0,0.07)] flex items-center justify-center shrink-0">
-                <Mic size={13} className="text-[#2563EB]" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h1 className="text-sm font-semibold text-[#0A0A0B] leading-tight">Voice Studio</h1>
-                <p className="text-[9px] text-[#71717A]">Clone � Presets � Renders</p>
-              </div>
+    <MotionPage className="min-h-screen pb-12">{/* Voice Studio command strip (slim editorial header, no PageHero) */}
+          <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+            <div className="min-w-0">
+              <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">Audio Identity</p>
+              <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">Voice Studio</h1>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
               {stats.mineCount > 0 && (
                 <motion.span
                   initial={{ opacity: 0, scale: 0.92 }}
@@ -192,7 +191,9 @@ export default function VoiceStudioPage() {
               >
                 <RefreshCw size={11} /> Refresh
               </button>
-            </div><div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
+            </div>
+          </div>
+          <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
               {/* -- Tab bar -- */}
               <div className="rounded-xl p-1" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}>
                 <nav className="flex gap-1 overflow-x-auto" aria-label="Voice Studio tabs">

@@ -112,14 +112,11 @@ export default function DemoManagementPage() {
 
   return (
     <div className="fade-in space-y-4 p-4 max-w-3xl mx-auto">
-      {/* Header */}
-      <div className="page-header flex items-center justify-between">
-        <div>
-          <h1 className="text-xs font-bold text-[#111827] flex items-center gap-2">
-            <Database className="w-4 h-4 text-[#2563EB]" />
-            Demo Management
-          </h1>
-          <p className="text-[10px] text-[#6B7280] mt-0.5">Seed, reset, and share demo data</p>
+      {/* Demo Management command strip */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">Developer Tools</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">Demo Management</h1>
         </div>
       </div>
 

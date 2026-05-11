@@ -145,7 +145,8 @@ export default function LogoPickerPage() {
     <MotionPage className="min-h-screen bg-background text-foreground"><div className="mx-auto max-w-[1500px] px-6 py-10">
               <div className="mb-8 flex items-start justify-between gap-6">
                 <div>
-                  <h1 className="mb-2 text-3xl font-bold">Logo Picker</h1>
+                  <p className="font-editorial text-[11px] italic text-text-muted mb-1">Brand Identity</p>
+                  <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none mb-2">Logo Picker</h1>
                   <p className="max-w-2xl text-sm text-muted">
                     20 SVG concepts — all riffs on the stacked-rectangles ShortStack mark.
                     <span className="text-[#2563EB]"> Preview in app</span> flips the live mark temporarily.

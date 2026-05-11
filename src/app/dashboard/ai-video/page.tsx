@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -495,16 +495,11 @@ export default function AIVideoPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Minimal top bar � no marketing chrome. Just mode toggle + subtle title. */}
-      <div className="flex items-center justify-between gap-4 px-1 pt-1">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[rgba(37,99,235,0.2)] to-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB] shrink-0">
-            <Film size={16} />
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-base font-semibold tracking-tight truncate">AI Video</h1>
-            <p className="text-[10px] text-muted truncate">Text ? rendered clip � {planTier}</p>
-          </div>
+            {/* AI Video command strip (slim editorial header, no PageHero) */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">Visual Production</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">AI Video</h1>
         </div>
         <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
       </div>
