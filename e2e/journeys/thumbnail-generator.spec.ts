@@ -12,24 +12,22 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds } from "../helpers/auth";
+import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 test.describe("Thumbnail Editor Pro", () => {
   test.beforeEach(async ({ page }) => {
     test.skip(!hasTestCreds(), "E2E credentials not set — skipping authenticated tests");
+    // Pre-seed sessionStorage before page JS runs so the AI-first starter
+    // overlay (thumbnail-ai-starter-skipped key) doesn't auto-open and block
+    // the canvas. addInitScript registers before every subsequent navigation.
+    await page.addInitScript(() => {
+      try { sessionStorage.setItem("thumbnail-ai-starter-skipped", "1"); } catch {}
+    });
     await loginAs(page);
     await page.goto("/dashboard/thumbnail-generator");
+    await page.waitForLoadState("domcontentloaded");
+    await waitForDashboardReady(page);
     await dismissTourIfPresent(page);
-    await page.waitForLoadState("networkidle");
-
-    // Dismiss the AI-first starter overlay if shown (sessionStorage key not yet set)
-    const skipBtn = page
-      .getByRole("button", { name: /start from scratch|blank canvas|skip/i })
-      .first();
-    if (await skipBtn.isVisible({ timeout: 1500 }).catch(() => false)) {
-      await skipBtn.click();
-      await page.waitForTimeout(300);
-    }
   });
 
   // ── Page loads ────────────────────────────────────────────────
@@ -185,7 +183,7 @@ test.describe("Thumbnail Editor Pro", () => {
     page.on("pageerror", (e) => errors.push(e.message));
 
     await page.goto("/dashboard/thumbnail-generator");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     await page.waitForTimeout(800);
 
     expect(errors).toHaveLength(0);

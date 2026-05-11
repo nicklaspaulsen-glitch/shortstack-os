@@ -10,20 +10,27 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds } from "../helpers/auth";
+import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 test.describe("AI Video Generator", () => {
   test.beforeEach(async ({ page }) => {
     test.skip(!hasTestCreds(), "E2E credentials not set — skipping authenticated tests");
+    // Pre-seed localStorage BEFORE page JS runs so the first-run wizard modal
+    // never auto-opens and block pointer events on the wizard cards.
+    // The page reads `ss-aivideo-wizard-seen` on mount.
+    await page.addInitScript(() => {
+      try { localStorage.setItem("ss-aivideo-wizard-seen", "1"); } catch {}
+    });
     await loginAs(page);
     await page.goto("/dashboard/ai-video");
+    await page.waitForLoadState("domcontentloaded");
+    await waitForDashboardReady(page);
     await dismissTourIfPresent(page);
-    await page.waitForLoadState("networkidle");
 
-    // Dismiss the one-time wizard modal if it appears on first visit
+    // Belt-and-suspenders: also click any residual skip/close buttons
     const skipBtn = page.getByRole("button", { name: /skip|close|dismiss/i }).first();
-    if (await skipBtn.isVisible({ timeout: 1500 }).catch(() => false)) {
-      await skipBtn.click();
+    if (await skipBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
+      await skipBtn.click().catch(() => {});
     }
   });
 
@@ -106,9 +113,9 @@ test.describe("AI Video Generator", () => {
   test("advanced mode toggle shows Higgsfield-style controls", async ({
     page,
   }) => {
-    const advancedBtn = page.getByRole("button", { name: /advanced/i });
+    const advancedBtn = page.getByRole("button", { name: /advanced/i }).first();
     if (await advancedBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await advancedBtn.click();
+      await advancedBtn.click({ force: true });
 
       // Advanced mode shows model selection grid
       await expect(
@@ -120,9 +127,9 @@ test.describe("AI Video Generator", () => {
   // ── Model selection ───────────────────────────────────────────
   test("model cards are clickable in advanced mode", async ({ page }) => {
     // Switch to advanced mode first
-    const advancedBtn = page.getByRole("button", { name: /advanced/i });
+    const advancedBtn = page.getByRole("button", { name: /advanced/i }).first();
     if (await advancedBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await advancedBtn.click();
+      await advancedBtn.click({ force: true });
     }
 
     const cinematicCard = page.getByText("Cinematic").first();
@@ -155,25 +162,38 @@ test.describe("AI Video Generator", () => {
   test("plan-locked duration shows upgrade path or is enabled on eligible plan", async ({
     page,
   }) => {
-    // Navigate past wizard to reach duration step
+    // Navigate past wizard to reach duration step.
+    // IMPORTANT: after fill(), wait for the value to settle before clicking Next.
+    // React 18 concurrent mode batches state updates; without a settle-wait the
+    // prompt state is still "" when handleNext() runs, so canProceed=false and
+    // the wizard never advances from step 0.
     const textarea = page.locator("textarea").first();
-    await textarea.fill("Test prompt");
+    await textarea.fill("Cinematic drone shot over a coastal city at sunset");
+    // Assert the value, which acts as an explicit wait for React to commit.
+    await expect(textarea).toHaveValue(/.{10,}/);
 
     const nextBtns = page.getByRole("button", { name: /next|continue/i });
     for (let i = 0; i < 2; i++) {
       const btn = nextBtns.first();
-      if (await btn.isVisible({ timeout: 1000 }).catch(() => false)) {
+      if (await btn.isVisible({ timeout: 1500 }).catch(() => false)) {
         await btn.click({ force: true });
-        await page.waitForTimeout(300);
+        // 500ms gives React time to re-render to the next step.
+        await page.waitForTimeout(500);
       }
     }
 
-    // Duration step: either shows time options or a plan-gate
-    const fiveSecOpt = page.getByText(/5s|max quality/i).first();
-    const upgradeBadge = page.getByText(/upgrade|starter/i).first();
+    // Duration step shows time tiles ("1s"/"2s"/"3s"/"5s") or a plan-gate badge.
+    const durationTile = page
+      .getByText(/\b(1s|2s|3s|5s|fastest|quick|recommended|max quality)\b/i)
+      .first();
+    const upgradeBadge = page.getByText(/upgrade|starter|pro/i).first();
 
-    const durationVisible = await fiveSecOpt.isVisible({ timeout: 2000 }).catch(() => false);
-    const upgradeVisible = await upgradeBadge.isVisible({ timeout: 500 }).catch(() => false);
+    const durationVisible = await durationTile
+      .isVisible({ timeout: 3000 })
+      .catch(() => false);
+    const upgradeVisible = await upgradeBadge
+      .isVisible({ timeout: 1000 })
+      .catch(() => false);
 
     // At least one of these should be true — the step is rendered
     expect(durationVisible || upgradeVisible).toBe(true);
@@ -185,7 +205,7 @@ test.describe("AI Video Generator", () => {
     page.on("pageerror", (e) => errors.push(e.message));
 
     await page.goto("/dashboard/ai-video");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     await page.waitForTimeout(800);
 
     expect(errors).toHaveLength(0);

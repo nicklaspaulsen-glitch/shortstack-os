@@ -15,7 +15,7 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds } from "../helpers/auth";
+import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 // Tool counts per category (from TOOL_CATEGORIES in page.tsx)
 // visual: image-gen, upscale, remove-bg, img-to-video  → 4
@@ -35,20 +35,25 @@ test.describe("AI Studio", () => {
       !hasTestCreds(),
       "E2E credentials not set — skipping authenticated tests",
     );
+    // Pre-seed localStorage before page JS runs so the first-run ImageWizard
+    // doesn't auto-open (its close button is icon-only and can't be dismissed
+    // via text-based locators). Also pre-enable advanced mode so tests that
+    // call ensureAdvancedMode() don't have to click the toggle.
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem("ss-image-wizard-seen", "1");
+        localStorage.setItem("ss-wizard-advanced-ai-studio", "1"); // start in advanced mode
+      } catch {}
+    });
     await loginAs(page);
     await page.goto("/dashboard/ai-studio");
+    await page.waitForLoadState("domcontentloaded");
+    // Wait for the sidebar Sign Out button — the definitive signal that
+    // DashboardLayout resolved auth and the full layout is rendered.
+    // Replaces the fragile 600ms fixed timeout that failed under 4-worker
+    // fullyParallel concurrency when Supabase auth was still loading.
+    await waitForDashboardReady(page);
     await dismissTourIfPresent(page);
-    await page.waitForLoadState("networkidle");
-
-    // Dismiss the legacy image-wizard modal that fires on first advanced-mode
-    // visit (checks localStorage for ss-image-wizard-seen).
-    const closeBtn = page
-      .getByRole("button", { name: /skip|close|dismiss|got it/i })
-      .first();
-    if (await closeBtn.isVisible({ timeout: 1500 }).catch(() => false)) {
-      await closeBtn.click().catch(() => {});
-      await page.waitForTimeout(200);
-    }
   });
 
   // ── 1. Page loads without JS errors ───────────────────────────────
@@ -57,7 +62,7 @@ test.describe("AI Studio", () => {
     page.on("pageerror", (e) => errors.push(e.message));
 
     await page.goto("/dashboard/ai-studio");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     await page.waitForTimeout(600);
 
     expect(errors).toHaveLength(0);
@@ -115,7 +120,7 @@ test.describe("AI Studio", () => {
     });
 
     // The category filter pills should render
-    await expect(page.getByRole("button", { name: /All 9/i }).first()).toBeVisible({
+    await expect(page.getByRole("button", { name: /^all$/i }).first()).toBeVisible({
       timeout: 3000,
     });
   });
@@ -128,7 +133,7 @@ test.describe("AI Studio", () => {
     await ensureAdvancedMode(page);
 
     // Click "All 9" pill
-    const allPill = page.getByRole("button", { name: /All 9/i }).first();
+    const allPill = page.getByRole("button", { name: /^all$/i }).first();
     await allPill.click();
     await page.waitForTimeout(300);
 
@@ -310,9 +315,11 @@ test.describe("AI Studio", () => {
     await forceGuidedMode(page);
 
     // Step 0 — "What do you want to make?" (intent picker)
+    // 8s timeout: after forceGuidedMode toggles the view, React re-render
+    // + AnimatePresence fade-in can be slow under test load.
     await expect(
       page.getByText(/What do you want to make/i).first(),
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible({ timeout: 8000 });
 
     // All 9 tool tiles should be visible in the intent grid
     for (const toolName of ["Transcribe", "Image Gen", "Music Gen"]) {
@@ -390,10 +397,11 @@ test.describe("AI Studio", () => {
       .catch(() => false);
     expect(hasError).toBe(false);
 
-    // The actual heading should be visible instead
+    // The actual heading should be visible instead.
+    // Use a generous 10s timeout — the page may be hydrating when this check runs.
     await expect(
       page.getByRole("heading", { name: /AI Studio/i }).first(),
-    ).toBeVisible({ timeout: 6000 });
+    ).toBeVisible({ timeout: 10000 });
   });
 
   // ── 9. Job history or empty state visible ─────────────────────────
@@ -493,7 +501,15 @@ async function forceGuidedMode(page: import("@playwright/test").Page) {
   const toggle = page.locator("button").filter({ hasText: /advanced/i }).first();
   if (await toggle.isVisible({ timeout: 1500 }).catch(() => false)) {
     await toggle.click();
-    await page.waitForTimeout(400);
+    // Wait for the wizard heading to actually appear rather than using a fixed
+    // timeout. AnimatePresence mode="wait" requires the exit animation to
+    // complete before the enter animation fires — a fixed 700ms was flaky
+    // under 4-worker parallelism.
+    await page
+      .getByText(/What do you want to make/i)
+      .first()
+      .waitFor({ state: "visible", timeout: 5000 })
+      .catch(() => {});
   }
 }
 
@@ -509,24 +525,41 @@ async function clickToolInRail(
   await ensureAdvancedMode(page);
 
   // Reset to "All" category so every tool is visible in the rail
-  const allPill = page.getByRole("button", { name: /All 9/i }).first();
+  const allPill = page.getByRole("button", { name: /^all$/i }).first();
   if (await allPill.isVisible({ timeout: 1500 }).catch(() => false)) {
     await allPill.click();
     await page.waitForTimeout(200);
   }
 
-  // The tool rail renders each tool as a button with the tool name text
+  // Primary: find a button whose child <p> has the exact tool name.
+  // More reliable than class-based selectors because CSS class names vary
+  // (the buttons may use rounded-xl or other classes depending on the render).
+  // Never use getByRole("button") as a fallback: it finds disabled buttons
+  // elsewhere on the page and hangs indefinitely waiting for them to become enabled.
   const toolBtn = page
-    .locator('[class*="rounded-2xl"] button, [class*="rounded-xl"] button')
-    .filter({ hasText: new RegExp(`^${toolName}$`, "i") })
+    .locator("button")
+    .filter({ has: page.locator("p", { hasText: new RegExp(`^${toolName}$`, "i") }) })
     .first();
 
-  if (await toolBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+  if (await toolBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
     await toolBtn.click();
   } else {
-    // Fallback: find by text anywhere on the left pane
-    const fallback = page.getByText(toolName).first();
-    await fallback.click({ timeout: 3000 });
+    // Secondary: rounded-xl class heuristic (original approach kept as fallback)
+    const roundedBtn = page
+      .locator('button[class*="rounded-xl"]')
+      .filter({ hasText: new RegExp(toolName, "i") })
+      .first();
+
+    if (await roundedBtn.isVisible({ timeout: 1500 }).catch(() => false)) {
+      await roundedBtn.click();
+    } else {
+      // Last-resort: click the text element directly with force.
+      // noWaitAfter prevents hanging on "waiting for scheduled navigations to finish"
+      // which Next.js can schedule after any click event, regardless of whether a
+      // navigation actually occurs.
+      const fallback = page.getByText(new RegExp(`^${toolName}$`, "i")).first();
+      await fallback.click({ timeout: 6000, force: true, noWaitAfter: true });
+    }
   }
 
   await page.waitForTimeout(350); // allow AnimatePresence fade-in

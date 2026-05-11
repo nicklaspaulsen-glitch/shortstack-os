@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { signIn, hasTestCreds } from "../helpers/auth";
+import { signIn, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 /**
  * Integration health audit.
@@ -57,6 +57,11 @@ test.describe("Integration health audit", () => {
   test("every integration reports its real status", async ({ page, request }) => {
     // Sign in via the UI so the request below carries Supabase auth cookies.
     await signIn(page);
+    // Wait for the dashboard to be fully mounted — ensures the session cookie
+    // is propagated to the page context before the API call fires. Without
+    // this, page.request.get() can fire before the Supabase auth response
+    // cookie is written, producing a flaky 401.
+    await waitForDashboardReady(page);
 
     // Hit the audit endpoint. Cookies set by signIn are automatically attached
     // to `page.request` (same context).

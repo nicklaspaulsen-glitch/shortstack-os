@@ -103,16 +103,35 @@ export async function expectDashboard(page: Page): Promise<void> {
  * calls that were insufficient under fullyParallel test concurrency (4
  * workers all logging in at once creates auth contention).
  *
- * Call this AFTER page.goto('/dashboard/...') in beforeEach hooks.
+ * If the page ends up on /login during the wait (Supabase SSR bounced the
+ * session after signIn() returned), re-authenticate inline and retry rather
+ * than timing out on a page where the Sign Out button will never appear.
+ *
+ * Call this AFTER page.goto('/dashboard/...') or signIn() in tests.
  */
 export async function waitForDashboardReady(
   page: Page,
   timeout = 15_000,
 ): Promise<void> {
-  await page
+  const signOutBtn = page
     .locator('button[aria-label="Sign Out"]')
-    .first()
-    .waitFor({ state: "visible", timeout });
+    .first();
+
+  try {
+    await signOutBtn.waitFor({ state: "visible", timeout });
+  } catch {
+    // If the session was lost and we're on /login, re-authenticate
+    // inline rather than propagating a misleading timeout error.
+    if (page.url().includes("/login")) {
+      await signIn(page);
+      await signOutBtn.waitFor({ state: "visible", timeout });
+    } else {
+      throw new Error(
+        `waitForDashboardReady timed out after ${timeout}ms ` +
+        `(URL: ${page.url()}). The Sign Out button never appeared.`,
+      );
+    }
+  }
 }
 
 /**

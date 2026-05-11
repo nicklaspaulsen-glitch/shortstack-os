@@ -11,7 +11,7 @@
  */
 
 import { test, expect, type Page } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds } from "../helpers/auth";
+import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 test.describe("Agent Office", () => {
   test.beforeEach(async ({ page }) => {
@@ -21,7 +21,10 @@ test.describe("Agent Office", () => {
     );
     await loginAs(page);
     await page.goto("/dashboard/agent-office");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
+    // Auth gate: wait for sidebar to confirm DashboardLayout has fully mounted.
+    // PixiJS canvas init is handled per-test since it needs more time (~2s).
+    await waitForDashboardReady(page);
     await dismissTourIfPresent(page);
   });
 
@@ -31,7 +34,7 @@ test.describe("Agent Office", () => {
     page.on("pageerror", (e) => errors.push(e.message));
 
     await page.goto("/dashboard/agent-office");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     // Give PixiJS time to initialise
     await page.waitForTimeout(2000);
 
@@ -149,7 +152,7 @@ test.describe("Agent Office", () => {
     });
 
     await page.goto("/dashboard/agent-office");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     await page.waitForTimeout(1000);
 
     expect(serverErrors).toHaveLength(0);

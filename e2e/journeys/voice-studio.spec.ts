@@ -16,7 +16,7 @@
  */
 
 import { test, expect, type Page } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds } from "../helpers/auth";
+import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 test.describe("Voice Studio", () => {
   test.beforeEach(async ({ page }) => {
@@ -26,7 +26,8 @@ test.describe("Voice Studio", () => {
     );
     await loginAs(page);
     await page.goto("/dashboard/voice-studio");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
+    await waitForDashboardReady(page);
     await dismissTourIfPresent(page);
   });
 
@@ -36,7 +37,7 @@ test.describe("Voice Studio", () => {
     page.on("pageerror", (e) => errors.push(e.message));
 
     await page.goto("/dashboard/voice-studio");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     await page.waitForTimeout(600);
 
     expect(errors).toHaveLength(0);
@@ -141,7 +142,9 @@ test.describe("Voice Studio", () => {
     page,
   }) => {
     const refreshBtn = page.getByRole("button", { name: /Refresh/i }).first();
-    await expect(refreshBtn).toBeVisible({ timeout: 4000 });
+    // 8s: the Refresh button lives in the slim header which may render after
+    // React hydration completes — cold first load can take 4-6s.
+    await expect(refreshBtn).toBeVisible({ timeout: 8000 });
 
     // Clicking should not throw or navigate away
     await refreshBtn.click();
@@ -253,28 +256,34 @@ test.describe("Voice Studio", () => {
       .catch(() => false);
     expect(hasError).toBe(false);
 
-    // The actual heading should be visible instead
+    // The actual heading should be visible instead.
+    // 10s: heading may take longer on cold first load (React hydration + JS
+    // bundle download). 6000ms was the previous value and caused first-attempt
+    // failures under test load.
     const heading = page
       .getByRole("heading", { name: /Voice Studio/i })
       .first();
-    await expect(heading).toBeVisible({ timeout: 6000 });
+    await expect(heading).toBeVisible({ timeout: 10000 });
   });
 
   // ── Bonus: API calls to /api/voice/clones are made on load ───────────
   test("makes API call to /api/voice/clones on page load", async ({ page }) => {
-    const clonesRequests: string[] = [];
-
-    page.on("request", (req) => {
-      if (req.url().includes("/api/voice/clones")) {
-        clonesRequests.push(req.url());
-      }
-    });
+    // Use waitForRequest so we don't race against a fixed timeout.
+    // Register the handler BEFORE page.goto so the request is captured
+    // regardless of how fast the React effect fires.
+    const clonesRequestPromise = page
+      .waitForRequest((req) => req.url().includes("/api/voice/clones"), {
+        timeout: 10000,
+      })
+      .catch(() => null); // returns null if nothing fires within 10 s
 
     await page.goto("/dashboard/voice-studio");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
 
+    const caught = await clonesRequestPromise;
     // The page calls /api/voice/clones on mount via the refresh() callback
-    expect(clonesRequests.length).toBeGreaterThanOrEqual(1);
+    expect(caught).not.toBeNull();
+    expect(caught!.url()).toContain("/api/voice/clones");
   });
 
   // ── Bonus: Renders tab triggers /api/voice/clones/[id] requests ───────
@@ -282,8 +291,8 @@ test.describe("Voice Studio", () => {
     page,
   }) => {
     // Wait for initial load to complete so mine[] is populated
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(600);
+    await page.waitForLoadState("domcontentloaded");
+    await page.waitForTimeout(1500);
 
     const renderRequests: string[] = [];
     page.on("request", (req) => {

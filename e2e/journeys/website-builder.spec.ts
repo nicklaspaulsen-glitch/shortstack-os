@@ -12,15 +12,17 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds } from "../helpers/auth";
+import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 test.describe("Website Builder", () => {
   test.beforeEach(async ({ page }) => {
     test.skip(!hasTestCreds(), "E2E credentials not set — skipping authenticated tests");
     await loginAs(page);
     await page.goto("/dashboard/websites");
+    await page.waitForLoadState("domcontentloaded");
+    // Wait for sidebar auth gate to clear before asserting on page content.
+    await waitForDashboardReady(page);
     await dismissTourIfPresent(page);
-    await page.waitForLoadState("networkidle");
   });
 
   // ── Page loads ────────────────────────────────────────────────
@@ -44,7 +46,15 @@ test.describe("Website Builder", () => {
       "E-com",
       "Local Service",
     ];
-    for (const niche of niches) {
+    // Allow extra time for the first niche — the template gallery is a large
+    // client-side React component that can take several seconds to hydrate on a
+    // cold first load (JS bundle download + React reconciliation). Subsequent
+    // niches get a shorter timeout since they're rendered by the same component.
+    const [firstNiche, ...restNiches] = niches;
+    await expect(page.getByText(firstNiche, { exact: false }).first()).toBeVisible({
+      timeout: 10000,
+    });
+    for (const niche of restNiches) {
       const card = page.getByText(niche, { exact: false }).first();
       await expect(card).toBeVisible({ timeout: 5000 });
     }
@@ -197,7 +207,7 @@ test.describe("Website Builder", () => {
     page.on("pageerror", (e) => errors.push(e.message));
 
     await page.goto("/dashboard/websites");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     await page.waitForTimeout(800);
 
     expect(errors).toHaveLength(0);
