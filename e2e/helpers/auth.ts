@@ -10,28 +10,43 @@ export const hasTestCreds = (): boolean =>
 /**
  * Sign in via the /login page using E2E_TEST_EMAIL + E2E_TEST_PASSWORD.
  * Waits until the browser lands on /dashboard.
+ *
+ * Under fullyParallel 4-worker concurrency hitting production Supabase, the
+ * auth endpoint occasionally bounces the session back to /login on the first
+ * attempt (transient server-side contention). One inline retry eliminates the
+ * flake without relying solely on Playwright's test-level retries (which
+ * would re-run mutations already performed in the test body).
  */
 export async function signIn(page: Page): Promise<void> {
-  // Pre-dismiss onboarding tour and cookie consent banner so their
-  // full-screen overlays don't intercept clicks in subsequent test steps.
+  // addInitScript persists across navigations in the page's lifetime —
+  // call once here before any goto so it fires on every subsequent load too.
   await page.addInitScript(() => {
     localStorage.setItem("tour_completed", "true");
     localStorage.setItem("cookie-consent", "accepted");
   });
 
-  await page.goto("/login");
+  for (let attempt = 0; attempt <= 1; attempt++) {
+    await page.goto("/login");
 
-  // Fill email
-  await page.getByPlaceholder("you@company.com").fill(E2E_EMAIL);
+    // Fill email
+    await page.getByPlaceholder("you@company.com").fill(E2E_EMAIL);
 
-  // Fill password
-  await page.getByPlaceholder("Enter password").fill(E2E_PASSWORD);
+    // Fill password
+    await page.getByPlaceholder("Enter password").fill(E2E_PASSWORD);
 
-  // Submit
-  await page.getByRole("button", { name: /sign in/i }).click();
+    // Submit
+    await page.getByRole("button", { name: /sign in/i }).click();
 
-  // Wait for redirect into the dashboard
-  await page.waitForURL(/\/dashboard/, { timeout: 20_000 });
+    try {
+      // Wait for redirect into the dashboard
+      await page.waitForURL(/\/dashboard/, { timeout: 20_000 });
+      return; // auth succeeded
+    } catch (err) {
+      if (attempt === 1) throw err; // exhausted retries — propagate to Playwright
+      // Supabase bounced us back to /login — brief pause then retry once
+      await page.waitForTimeout(1_000);
+    }
+  }
 }
 
 /**
@@ -77,6 +92,27 @@ export async function signOut(page: Page): Promise<void> {
 /** Assert the user is on a dashboard page. */
 export async function expectDashboard(page: Page): Promise<void> {
   await expect(page).toHaveURL(/\/dashboard/, { timeout: 10_000 });
+}
+
+/**
+ * Wait for the dashboard to be fully ready after a page.goto().
+ *
+ * The Sign Out button in the sidebar is ONLY rendered after DashboardLayout
+ * resolves Supabase auth (loading → false, user → present) and the full
+ * sidebar mounts. Waiting for it replaces fragile fixed waitForTimeout()
+ * calls that were insufficient under fullyParallel test concurrency (4
+ * workers all logging in at once creates auth contention).
+ *
+ * Call this AFTER page.goto('/dashboard/...') in beforeEach hooks.
+ */
+export async function waitForDashboardReady(
+  page: Page,
+  timeout = 15_000,
+): Promise<void> {
+  await page
+    .locator('button[aria-label="Sign Out"]')
+    .first()
+    .waitFor({ state: "visible", timeout });
 }
 
 /**

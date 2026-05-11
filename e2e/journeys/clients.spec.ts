@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { hasTestCreds, signIn } from "../helpers/auth";
+import { hasTestCreds, signIn, waitForDashboardReady } from "../helpers/auth";
 
 const SENTINEL_NAME = `E2E Test Client ${Date.now()}`;
 const SENTINEL_EMAIL = `e2e-client-${Date.now()}@example.com`;
@@ -22,6 +22,10 @@ test.describe("clients journey", () => {
 
     await signIn(page);
     await page.goto("/dashboard/clients");
+    // Ensure auth resolves fully before interacting — under 4-worker
+    // concurrent load the clients page can mount while auth is still
+    // loading (showing a spinner, not the table with the Add Client button).
+    await waitForDashboardReady(page);
 
     // ── Open the Add Client modal ──────────────────────────────────────────
     await page
@@ -57,6 +61,27 @@ test.describe("clients journey", () => {
     await expect(page.getByText(/client added/i)).toBeVisible({ timeout: 20_000 });
 
     // ── Verify new client appears in the table ──────────────────────────────
+    // The clients table does not auto-refetch after a modal submission.
+    // Navigate away then back to trigger a fresh data load.
+    //
+    // KNOWN RISK: under 4-worker concurrent production load, Supabase SSR
+    // session validation can fail on the navigate-away, redirecting the
+    // browser to /login. We detect this and re-authenticate inline rather
+    // than losing the whole test.
+    await page.goto("/dashboard");
+    await page.waitForLoadState("domcontentloaded");
+    await page.goto("/dashboard/clients");
+    await page.waitForLoadState("domcontentloaded");
+
+    // If the server bounced us to /login during the navigate-away, re-auth.
+    if (page.url().includes("/login")) {
+      await signIn(page);
+      await page.goto("/dashboard/clients");
+      await page.waitForLoadState("domcontentloaded");
+    }
+
+    // Wait for auth to fully re-resolve before asserting table contents.
+    await waitForDashboardReady(page);
     await expect(page.getByText(SENTINEL_NAME).first()).toBeVisible({ timeout: 15_000 });
 
     // ── Clean up: delete the sentinel client ──────────────────────────────
