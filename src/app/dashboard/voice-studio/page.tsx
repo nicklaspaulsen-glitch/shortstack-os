@@ -1016,10 +1016,23 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         )}
         {!hasStoredPreview && !testUrl && !editMode && (
           <div className="mt-3 flex flex-col items-center gap-1.5 py-2 rounded-lg border border-dashed border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.015)] group-hover:border-[rgba(37,99,235,0.30)] group-hover:bg-[rgba(37,99,235,0.04)] transition-colors duration-300">
-            {/* waveform bars */}
+            {/* waveform bars — animate when hovering or testing */}
             <div className="flex items-end justify-center gap-[2px] h-6 group-hover:opacity-80 opacity-25 transition-opacity duration-300" aria-hidden="true">
               {[5, 9, 6, 13, 7, 11, 4, 14, 8, 10, 5, 12, 7, 9, 4].map((h, i) => (
-                <div key={i} style={{ width: 2.5, height: h, background: "#2563EB", borderRadius: 2 }} />
+                <div
+                  key={i}
+                  style={{
+                    width: 2.5,
+                    height: h,
+                    background: "#2563EB",
+                    borderRadius: 2,
+                    transformOrigin: "bottom",
+                    ...(isHovering || testing ? {
+                      animation: `waveBar ${0.55 + (i % 5) * 0.07}s ease-in-out infinite`,
+                      animationDelay: `${(i * 0.045).toFixed(3)}s`,
+                    } : {}),
+                  }}
+                />
               ))}
             </div>
             <span className="text-[10px] text-[#71717A] group-hover:text-[#1D4ED8] transition-colors duration-200">
