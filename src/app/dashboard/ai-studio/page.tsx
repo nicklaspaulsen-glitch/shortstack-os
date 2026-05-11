@@ -149,7 +149,7 @@ export default function AIStudioPage() {
               AI Studio
             </h1>
           </div>
-          <span className="hidden sm:flex items-center gap-1 text-[10px] font-medium px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#52525B]">
+          <span className="hidden sm:flex items-center gap-1 text-[10px] font-medium px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-border-subtle text-text-muted">
             {TOOLS.length} tools
           </span>
           {history.length > 0 && (
@@ -160,7 +160,7 @@ export default function AIStudioPage() {
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="hidden md:flex items-center gap-1 text-[10px] text-[#71717A] px-2.5 py-1 rounded-md bg-[rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.06)]">
+          <span className="hidden md:flex items-center gap-1 text-[10px] text-text-muted px-2.5 py-1 rounded-md bg-[rgba(0,0,0,0.02)] border border-border-subtle">
             {TOOLS.find(t => t.id === activeTool)?.name ?? "Select tool"}
           </span>
           <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
@@ -278,7 +278,7 @@ export default function AIStudioPage() {
                   autoFocus
                 />
               ) : (
-                <div className="card bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.08)] text-center py-8">
+                <div className="card bg-[rgba(0,0,0,0.02)] border-border-subtle text-center py-8">
                   <Upload size={28} className="mx-auto mb-2 text-[#2563EB]" />
                   <p className="text-sm font-semibold">
                     {TOOLS.find(t => t.id === guidedIntent)?.name} uses files � hit Finish to open the tool.
@@ -292,7 +292,7 @@ export default function AIStudioPage() {
               description: "We'll take you to the tool with everything pre-filled.",
               icon: <Wand2 size={18} />,
               component: (
-                <div className="card bg-[rgba(0,0,0,0.02)] border-[rgba(0,0,0,0.08)] space-y-2">
+                <div className="card bg-[rgba(0,0,0,0.02)] border-border-subtle space-y-2">
                   <div className="flex items-center gap-2">
                     {(() => {
                       const t = TOOLS.find(x => x.id === guidedIntent);
@@ -356,10 +356,10 @@ export default function AIStudioPage() {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Sparkles size={13} className="text-[#3B82F6]" />
-                <span className="text-sm font-semibold text-[#0A0A0B]">Latest generation</span>
-                <span className="text-[10px] text-[#52525B]">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
+                <span className="text-sm font-semibold text-text-primary">Latest generation</span>
+                <span className="text-[10px] text-text-muted">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
               </div>
-              <button onClick={() => setWizardImages([])} className="text-[9px] text-[#71717A] hover:text-[#0A0A0B] transition-colors">
+              <button onClick={() => setWizardImages([])} className="text-[9px] text-text-muted hover:text-text-primary transition-colors">
                 Clear
               </button>
             </div>
@@ -395,16 +395,16 @@ export default function AIStudioPage() {
             ].map((stat, i) => (
               <motion.div
                 key={stat.label}
-                className="relative rounded-xl border border-[rgba(0,0,0,0.08)] px-4 py-3 overflow-hidden"
+                className="relative rounded-xl border border-border-subtle px-4 py-3 overflow-hidden"
                 style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.24, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
               >
                 {i === 0 && <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2563EB] to-transparent" />}
-                <p className="text-[8px] uppercase tracking-[0.18em] text-[#71717A] mb-1">{stat.label}</p>
+                <p className="text-[8px] uppercase tracking-[0.18em] text-text-muted mb-1">{stat.label}</p>
                 <p className="font-display text-lg font-bold text-[#1D4ED8] tracking-tight tabular-nums truncate">{stat.value}</p>
-                <p className="text-[9px] text-[#5A5A68] truncate">{stat.sub}</p>
+                <p className="text-[9px] text-text-muted truncate">{stat.sub}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -420,7 +420,7 @@ export default function AIStudioPage() {
                 className={`relative text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all capitalize ${
                   toolCategory === cat
                     ? "text-white"
-                    : "text-[#71717A] hover:text-[#52525B]"
+                    : "text-text-muted hover:text-text-muted"
                 }`}
                 style={toolCategory === cat ? {
                   background: "linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)",
@@ -431,7 +431,7 @@ export default function AIStudioPage() {
               </button>
             ))}
           </div>
-          <span className="text-[10px] font-mono text-[#5A5A68]">
+          <span className="text-[10px] font-mono text-text-muted">
             {TOOLS.filter(t => toolCategory === "all" || TOOL_CATEGORIES[t.id] === toolCategory).length} tools
           </span>
         </div>
@@ -442,7 +442,7 @@ export default function AIStudioPage() {
           {/* Left: vertical tool list */}
           <div className="overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "12px", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}>
             <div className="px-3 pt-3 pb-1">
-              <p className="text-[8px] uppercase tracking-[0.2em] text-[#71717A] font-semibold px-1 mb-2">Tools</p>
+              <p className="text-[8px] uppercase tracking-[0.2em] text-text-muted font-semibold px-1 mb-2">Tools</p>
             </div>
             <div className="px-2 pb-3 space-y-0.5">
               {TOOLS.filter(t => toolCategory === "all" || TOOL_CATEGORIES[t.id] === toolCategory).map((tool, i) => {
@@ -485,10 +485,10 @@ export default function AIStudioPage() {
                       <Icon size={12} style={{ color: active ? "#2563EB" : tool.color }} />
                     </div>
                     <div className="relative z-10 min-w-0 flex-1">
-                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#1D4ED8]" : "text-[#0A0A0B]"}`}>
+                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#1D4ED8]" : "text-text-primary"}`}>
                         {tool.name}
                       </p>
-                      <p className="text-[8px] font-mono text-[#71717A] truncate">{tool.tag}</p>
+                      <p className="text-[8px] font-mono text-text-muted truncate">{tool.tag}</p>
                     </div>
                     {"newBadge" in tool && tool.newBadge && (
                       <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.1)] text-[#1D4ED8] shrink-0 uppercase tracking-wide">
@@ -515,7 +515,7 @@ export default function AIStudioPage() {
             {/* Prism accent top bar */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#1D4ED8]" />
             {/* Tool header */}
-            <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[rgba(0,0,0,0.06)]">
+            <div className="flex items-center gap-3 px-5 py-3.5 border-b border-border-subtle">
               {(() => {
                 const t = TOOLS.find(x => x.id === activeTool);
                 if (!t) return null;
@@ -526,8 +526,8 @@ export default function AIStudioPage() {
                       <Icon size={14} style={{ color: t.color }} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-bold text-[#0A0A0B] leading-tight">{t.name}</p>
-                      <p className="text-[9px] font-mono text-[#71717A]">{t.tag}</p>
+                      <p className="text-sm font-bold text-text-primary leading-tight">{t.name}</p>
+                      <p className="text-[9px] font-mono text-text-muted">{t.tag}</p>
                     </div>
                     {"badge" in t && t.badge && (
                       <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.05)] text-[#1D4ED8] border border-[rgba(0,0,0,0.10)]">
@@ -573,10 +573,10 @@ export default function AIStudioPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="px-3 pt-3 pb-1 border-b border-[rgba(0,0,0,0.06)]">
+              <div className="px-3 pt-3 pb-1 border-b border-border-subtle">
                 <div className="flex items-center justify-between">
-                  <p className="text-[8px] uppercase tracking-[0.2em] text-[#71717A] font-bold">History</p>
-                  <span className="text-[8px] font-mono text-[#71717A]">{history.length}</span>
+                  <p className="text-[8px] uppercase tracking-[0.2em] text-text-muted font-bold">History</p>
+                  <span className="text-[8px] font-mono text-text-muted">{history.length}</span>
                 </div>
               </div>
               <div className="px-2 pb-3 space-y-1.5 overflow-y-auto max-h-[640px]">
@@ -586,7 +586,7 @@ export default function AIStudioPage() {
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.18, delay: i * 0.04 }}
-                    className="relative rounded-xl overflow-hidden border border-[rgba(0,0,0,0.06)] cursor-pointer hover:border-[rgba(0,0,0,0.12)] transition-all"
+                    className="relative rounded-xl overflow-hidden border border-border-subtle cursor-pointer hover:border-[rgba(0,0,0,0.12)] transition-all"
                     style={{ background: "rgba(0,0,0,0.02)" }}
                   >
                     {job.result && (job.type === "image-gen" || job.type === "upscale" || job.type === "remove-bg" || job.type === "img-to-video") ? (
@@ -601,15 +601,15 @@ export default function AIStudioPage() {
                       <div className="flex flex-col gap-1 p-2.5">
                         <div className="flex items-center gap-1.5">
                           <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${job.status === "completed" ? "bg-emerald-500" : job.status === "failed" ? "bg-red-500" : "bg-[#1D4ED8] animate-pulse"}`} />
-                          <span className="text-[9px] font-semibold text-[#52525B] truncate">{job.type}</span>
+                          <span className="text-[9px] font-semibold text-text-muted truncate">{job.type}</span>
                         </div>
-                        <p className="text-[8px] text-[#71717A] font-mono truncate">{job.status}</p>
+                        <p className="text-[8px] text-text-muted font-mono truncate">{job.status}</p>
                       </div>
                     )}
                     {/* Status overlay on visual jobs */}
                     {job.result && (
                       <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1" style={{ background: "linear-gradient(transparent, rgba(255,255,255,0.85))" }}>
-                        <p className="text-[7px] font-mono text-[#52525B] truncate">{job.type}</p>
+                        <p className="text-[7px] font-mono text-text-muted truncate">{job.type}</p>
                       </div>
                     )}
                   </motion.div>

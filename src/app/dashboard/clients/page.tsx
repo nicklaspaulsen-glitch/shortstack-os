@@ -650,7 +650,7 @@ export default function ClientsPage() {
 
   if (loading) return (
     <div className="space-y-4">
-      <div className="animate-pulse h-28 rounded-xl bg-[#F2F2F4] border border-[rgba(0,0,0,0.06)]" />
+      <div className="animate-pulse h-28 rounded-xl bg-[#F2F2F4] border border-border-subtle" />
       <TableSkeleton rows={8} />
     </div>
   );
@@ -676,7 +676,7 @@ export default function ClientsPage() {
                 {clients.length}
               </span>
               {totalMRR > 0 && (
-                <span className="px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[10px] font-medium text-[#52525B]">
+                <span className="px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-border-subtle text-[10px] font-medium text-text-muted">
                   {formatCurrency(totalMRR)}
                 </span>
               )}
@@ -686,17 +686,17 @@ export default function ClientsPage() {
         <div className="flex items-center gap-2 shrink-0">
           {/* Scope toggle — admin/founder only */}
           {(callerRole === "admin" || callerRole === "founder") && (
-            <div className="flex items-center bg-[#F2F2F4] border border-[rgba(0,0,0,0.08)] rounded-lg p-0.5">
+            <div className="flex items-center bg-[#F2F2F4] border border-border-subtle rounded-lg p-0.5">
               <button
                 onClick={() => setScope("all")}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                  scope === "all" ? "bg-[#1D4ED8] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
+                  scope === "all" ? "bg-[#1D4ED8] text-white" : "text-text-muted hover:text-text-primary"
                 }`}
               >All</button>
               <button
                 onClick={() => setScope("mine")}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                  scope === "mine" ? "bg-[#1D4ED8] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
+                  scope === "mine" ? "bg-[#1D4ED8] text-white" : "text-text-muted hover:text-text-primary"
                 }`}
               >Mine</button>
             </div>
@@ -731,12 +731,12 @@ export default function ClientsPage() {
           >
             <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent, #1D4ED8 40%, #3B82F6 50%, #1D4ED8 60%, transparent)" }} />
             <div className="pointer-events-none absolute -right-20 -top-20 w-72 h-72 rounded-full bg-[#1D4ED8] opacity-[0.04] blur-[64px]" />
-            <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#52525B] mb-2">Monthly Recurring Revenue</p>
+            <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-text-muted mb-2">Monthly Recurring Revenue</p>
             <p className="font-display font-black leading-[0.88] text-[#1D4ED8]" style={{ fontSize: "clamp(48px,6vw,80px)", letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums" }}>
               {formatCurrency(totalMRR)}
             </p>
-            <p className="mt-3 text-[10px] text-[#52525B]">
-              <span className="text-[#71717A] font-medium">{activeClients.length}</span> active � <span className="text-[#71717A] font-medium">{Math.round((activeClients.length / (clients.length || 1)) * 100)}%</span> retention
+            <p className="mt-3 text-[10px] text-text-muted">
+              <span className="text-text-muted font-medium">{activeClients.length}</span> active � <span className="text-text-muted font-medium">{Math.round((activeClients.length / (clients.length || 1)) * 100)}%</span> retention
             </p>
           </div>
 
@@ -761,9 +761,9 @@ export default function ClientsPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.34, delay: 0.1 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
               >
-                <span className="text-[8px] font-semibold uppercase tracking-[0.18em] text-[#71717A]">{cell.label}</span>
+                <span className="text-[8px] font-semibold uppercase tracking-[0.18em] text-text-muted">{cell.label}</span>
                 <span className="block font-display text-2xl font-bold tracking-[-0.03em] mt-0.5" style={{ color: cell.danger ? "#1D4ED8" : "#0A0A0B", fontVariantNumeric: "tabular-nums" }}>{cell.value}</span>
-                <span className="text-[10px] text-[#71717A]">{cell.sub}</span>
+                <span className="text-[10px] text-text-muted">{cell.sub}</span>
               </motion.div>
             ))}
           </div>
@@ -1063,7 +1063,7 @@ export default function ClientsPage() {
                     )}
                     {/* Revenue badge � compact cards only (featured has dedicated MRR callout) */}
                     {!isFeatured && c.mrr > 0 && (
-                      <span className="inline-block mt-0.5 text-[9px] font-semibold bg-[rgba(0,0,0,0.04)] text-[#52525B] px-2 py-0.5 rounded-full border border-[rgba(0,0,0,0.08)]">
+                      <span className="inline-block mt-0.5 text-[9px] font-semibold bg-[rgba(0,0,0,0.04)] text-text-muted px-2 py-0.5 rounded-full border border-border-subtle">
                         {formatCurrency(c.mrr)}/mo
                       </span>
                     )}
@@ -1071,7 +1071,7 @@ export default function ClientsPage() {
                   {/* Featured: big MRR callout */}
                   {isFeatured && (
                     <div className="hidden md:flex flex-col items-end shrink-0 ml-auto">
-                      <span className="text-[9px] uppercase tracking-[0.15em] text-[#71717A]">MRR</span>
+                      <span className="text-[9px] uppercase tracking-[0.15em] text-text-muted">MRR</span>
                       <span className="font-display text-2xl font-bold text-[#1D4ED8] tracking-tight tabular-nums">{formatCurrency(c.mrr)}</span>
                     </div>
                   )}
@@ -1088,14 +1088,14 @@ export default function ClientsPage() {
                 )}
 
                 {/* Stats grid � bordered editorial layout */}
-                <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-[rgba(0,0,0,0.08)] overflow-hidden">
+                <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-border-subtle overflow-hidden">
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">MRR</p>
                     <p className="text-xs font-bold text-[#1D4ED8]">{formatCurrency(c.mrr)}</p>
                   </div>
-                  <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-[rgba(0,0,0,0.08)]">
+                  <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-border-subtle">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Paid</p>
-                    <p className="text-xs font-bold text-[#0A0A0B]">{formatCurrency(revenue.totalPaid)}</p>
+                    <p className="text-xs font-bold text-text-primary">{formatCurrency(revenue.totalPaid)}</p>
                   </div>
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Owed</p>
@@ -1133,7 +1133,7 @@ export default function ClientsPage() {
                       const diffDays = Math.floor((Date.now() - ms) / 86400000);
                       const label = diffDays === 0 ? "today" : diffDays === 1 ? "yesterday" : diffDays < 7 ? `${diffDays}d ago` : diffDays < 30 ? `${Math.floor(diffDays / 7)}w ago` : `${Math.floor(diffDays / 30)}mo ago`;
                       return (
-                        <span className="text-[10px] text-[#A1A1AA] flex items-center gap-0.5">
+                        <span className="text-[10px] text-text-muted flex items-center gap-0.5">
                           <Clock size={9} /> {label}
                         </span>
                       );
@@ -1382,7 +1382,7 @@ export default function ClientsPage() {
             const revenue = getClientRevenue(expandedRow);
             const note = clientNotes[expandedRow];
             return (
-              <div className="border border-t-0 border-[rgba(0,0,0,0.08)] rounded-b-xl px-4 pb-4" style={{ background: "rgba(248,250,252,0.80)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
+              <div className="border border-t-0 border-border-subtle rounded-b-xl px-4 pb-4" style={{ background: "rgba(248,250,252,0.80)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
                     { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#1D4ED8" },
@@ -1392,9 +1392,9 @@ export default function ClientsPage() {
                   ].map((tile, ti) => {
                     const bars = ["from-[#1D4ED8]","from-[#3B82F6]","from-[#1D4ED8]","from-[#6F6D7A]"];
                     return (
-                      <div key={tile.label} className="relative rounded-xl border border-[rgba(0,0,0,0.08)] p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+                      <div key={tile.label} className="relative rounded-xl border border-border-subtle p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
                         <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${bars[ti]} to-transparent opacity-60`} />
-                        <div className="text-[10px] uppercase tracking-wider text-[#71717A]">{tile.label}</div>
+                        <div className="text-[10px] uppercase tracking-wider text-text-muted">{tile.label}</div>
                         <div className="mt-1 text-lg font-bold font-mono" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</div>
                       </div>
                     );
@@ -1516,7 +1516,7 @@ export default function ClientsPage() {
             ].map((tile, i) => (
               <motion.div
                 key={tile.label}
-                className="relative rounded-xl border border-[rgba(0,0,0,0.08)] px-4 py-3 overflow-hidden"
+                className="relative rounded-xl border border-border-subtle px-4 py-3 overflow-hidden"
                 style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px -4px rgba(0,0,0,0.06)" }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1524,7 +1524,7 @@ export default function ClientsPage() {
                 whileHover={{ y: -2, transition: { duration: 0.2 } }}
               >
                 <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${tile.bar} opacity-70`} />
-                <p className="text-[10px] text-[#71717A] uppercase tracking-wider">{tile.label}</p>
+                <p className="text-[10px] text-text-muted uppercase tracking-wider">{tile.label}</p>
                 <p className="text-xl font-bold font-mono mt-1" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</p>
               </motion.div>
             ))}
