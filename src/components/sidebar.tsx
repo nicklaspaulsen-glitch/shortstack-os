@@ -392,6 +392,9 @@ export default function Sidebar() {
   // ── Unread counts per nav path (Discord-style red dots) ───────────
   const [unread, setUnread] = useState<Record<string, number>>({});
 
+  // ── Recent pages — tracks last 5 visited nav entries ─────────────
+  const [recentPages, setRecentPages] = useState<Array<{ label: string; href: string }>>([]);
+
   useEffect(() => {
     if (authLoading || !userRole) return;
     let cancelled = false;
@@ -451,6 +454,30 @@ export default function Sidebar() {
     // We only want this firing on pathname change, not whenever unread updates,
     // otherwise typing into a different page could re-fire spuriously.
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  // Hydrate recent pages from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("ss_recent_pages");
+      if (stored) {
+        const parsed = JSON.parse(stored) as Array<{ label: string; href: string }>;
+        if (Array.isArray(parsed)) setRecentPages(parsed);
+      }
+    } catch {}
+  }, []);
+
+  // Track current pathname — prepend to recent pages, dedup, cap at 5
+  useEffect(() => {
+    if (!pathname) return;
+    const match = navItems.find(item => item.href === pathname);
+    if (!match) return;
+    setRecentPages(prev => {
+      const filtered = prev.filter(p => p.href !== pathname);
+      const next = [{ label: match.label, href: match.href }, ...filtered].slice(0, 5);
+      try { localStorage.setItem("ss_recent_pages", JSON.stringify(next)); } catch {}
+      return next;
+    });
   }, [pathname]);
 
   useEffect(() => {
@@ -1147,6 +1174,29 @@ export default function Sidebar() {
           >
             <Pin size={14} />
           </button>
+        </div>
+      )}
+
+      {/* Recently visited — shown only when expanded and user has 2+ pages */}
+      {!collapsed && recentPages.length >= 2 && (
+        <div className="mx-2 mb-1 border-t border-border-subtle pt-2">
+          <p className="text-[9px] text-text-muted uppercase tracking-[0.15em] font-bold px-1 mb-1 opacity-50">Recent</p>
+          <div className="space-y-px">
+            {recentPages.slice(0, 3).map(page => (
+              <Link
+                key={page.href}
+                href={page.href}
+                className={`flex items-center gap-2 px-2 py-1 rounded-md text-[11px] transition-colors duration-220 ease-out-expo-foundation truncate ${
+                  pathname === page.href
+                    ? "text-brand-accent bg-brand-accent/[0.08]"
+                    : "text-text-muted hover:text-text-secondary hover:bg-white/[0.03]"
+                }`}
+              >
+                <span className="w-1 h-1 rounded-full bg-current opacity-40 shrink-0 inline-block" />
+                {page.label}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
 
