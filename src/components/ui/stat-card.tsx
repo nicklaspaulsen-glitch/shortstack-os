@@ -303,9 +303,7 @@ export default function StatCard({
           className={`${SIZE_VALUE_CLASS[size]} tracking-[-0.5px] tabular-nums`}
           style={{ color: "#0A0A0B", fontFamily: "'JetBrains Mono', monospace", fontVariantNumeric: "tabular-nums" }}
         >
-          {typeof value === "string" && value.startsWith("$")
-            ? `$${animatedNum.toLocaleString()}`
-            : displayValue}
+          {displayValue}
         </span>
         {change && (
           <span className="text-[11px] font-medium mt-1 block" style={{ color: changeColor }}>

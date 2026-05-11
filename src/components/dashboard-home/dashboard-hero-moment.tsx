@@ -3,26 +3,99 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { tokens, themeTokens } from "@/lib/brand/tokens";
+import { tokens } from "@/lib/brand/tokens";
 import BrainMark from "@/components/brand/brain-mark";
 import type { HeroBlock } from "./types";
 
 /**
- * DashboardHeroMoment — the editorial 8x2 tile at the top of the bento grid.
+ * DashboardHeroMoment — the editorial 8×2 tile at the top of the bento grid.
  *
- * Picks the most narratively interesting derived stat (computed server-side
- * in /api/dashboard-bento) and renders it as a magazine-style spread:
+ * Renders the day's most narratively interesting derived stat as a
+ * magazine-style spread:
  *
- *   - Big Satoshi headline (clamp 2rem..3.5rem)
- *   - Bodoni-Moda subhead in lime
- *   - Progress bar against the implied goal
- *   - Floating Stack3D mark in the right gutter
- *   - Subtle lime-to-plum gradient backdrop with grain overlay
- *   - Lime CTA pill anchored to the bottom-left
+ *   - Big Satoshi headline (clamp 2rem..3.75rem)
+ *   - Bodoni-Moda eyebrow in blue
+ *   - Full-width SVG area chart (performance trend) replacing the thin bar
+ *   - Floating BrainMark in the right gutter
+ *   - Blue-tinted glass surface with grain overlay
+ *   - Blue CTA pill anchored to the bottom-left
  */
 interface Props {
   hero: HeroBlock;
   index?: number;
+}
+
+/**
+ * AreaChart — deterministic 14-point SVG sparkline derived from the progress
+ * percentage. Uses fixed sine-offset noise so it looks natural but renders
+ * identically on server and client (no Math.random()).
+ */
+function AreaChart({ pct }: { pct: number }) {
+  const W = 400;
+  const H = 72;
+  // Fixed noise offsets — deterministic, no hydration mismatch
+  const NOISE = [0, 4, -3, 6, 2, -4, 5, 1, -2, 4, 2, -1, 5, 2];
+  const points = NOISE.map((n, i) => {
+    const trend = (pct * 0.85) * (i / (NOISE.length - 1));
+    return Math.max(2, Math.min(96, trend + n));
+  });
+  const min = Math.min(...points);
+  const max = Math.max(...points);
+  const range = max - min || 1;
+  const coords = points.map((v, i) => ({
+    x: (i / (points.length - 1)) * W,
+    y: H - ((v - min) / range) * (H * 0.82) - H * 0.08,
+  }));
+  const linePath = coords
+    .map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`)
+    .join(" ");
+  const areaPath = `${linePath} L${W},${H} L0,${H} Z`;
+  const last = coords[coords.length - 1];
+
+  return (
+    <div className="relative w-full" aria-hidden>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        preserveAspectRatio="none"
+        className="w-full"
+        style={{ height: H, display: "block" }}
+      >
+        <defs>
+          <linearGradient id="heroAreaFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#2563EB" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#2563EB" stopOpacity="0.01" />
+          </linearGradient>
+        </defs>
+        {/* Filled area */}
+        <path d={areaPath} fill="url(#heroAreaFill)" />
+        {/* Line */}
+        <path
+          d={linePath}
+          fill="none"
+          stroke="#2563EB"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity="0.65"
+        />
+        {/* Terminal dot + pulse ring */}
+        <circle cx={last.x} cy={last.y} r="5" fill="rgba(37,99,235,0.15)" />
+        <circle cx={last.x} cy={last.y} r="3" fill="#2563EB" opacity="0.9" />
+      </svg>
+      {/* Percent label pinned to the terminal dot */}
+      <span
+        className="absolute right-0 text-[10px] font-mono font-semibold tabular-nums px-1.5 py-0.5 rounded-md"
+        style={{
+          top: 0,
+          background: "rgba(37,99,235,0.08)",
+          color: "#2563EB",
+          border: "1px solid rgba(37,99,235,0.18)",
+        }}
+      >
+        {pct}%
+      </span>
+    </div>
+  );
 }
 
 export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
@@ -53,11 +126,11 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
         ease: [0.32, 0.72, 0, 1],
       }}
     >
-      {/* Top-edge blue accent line — 1px, no left-stripe pattern */}
+      {/* Top-edge blue accent line */}
       <div
         className="pointer-events-none absolute top-0 left-0 right-0 h-px"
         style={{
-          background: `linear-gradient(90deg, ${tokens.brand.lime}00 0%, ${tokens.brand.lime}99 25%, ${tokens.brand.limeSoft}66 75%, ${tokens.brand.lime}00 100%)`,
+          background: `linear-gradient(90deg, ${tokens.brand.accent}00 0%, ${tokens.brand.accent}88 30%, ${tokens.brand.accentSoft}55 70%, ${tokens.brand.accent}00 100%)`,
         }}
         aria-hidden
       />
@@ -73,59 +146,52 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
         aria-hidden
       />
 
-      {/* Lime corona — top-right radial glow */}
+      {/* Blue corona — top-right radial glow */}
       <div
         className="pointer-events-none absolute -top-1/3 -right-1/4 w-[56%] h-[140%] rounded-full"
         style={{
-          background: `radial-gradient(closest-side, ${tokens.brand.lime}1a 0%, transparent 70%)`,
+          background: `radial-gradient(closest-side, ${tokens.brand.accentGlow} 0%, transparent 70%)`,
         }}
         aria-hidden
       />
 
       <div className="relative flex-1 flex flex-col justify-between px-7 py-7 sm:px-10 sm:py-9 z-10">
+        {/* Top section: headline + subhead */}
         <div>
           <p className="font-editorial text-sm mb-3 italic text-brand-accent opacity-95">
             Moment of the day
           </p>
-          <h2 className="font-display tracking-[-0.025em] leading-[1.02] text-[clamp(2rem,1.4rem+2.4vw,3.75rem)] text-text-primary [text-shadow:0_1px_2px_rgba(0,0,0,0.10)]">
+          <h2 className="font-display tracking-[-0.025em] leading-[1.02] text-[clamp(2rem,1.4rem+2.4vw,3.75rem)] text-text-primary [text-shadow:0_1px_2px_rgba(0,0,0,0.08)]">
             {hero.headline}
           </h2>
           <p className="text-sm mt-3 max-w-2xl leading-relaxed text-text-secondary">
             {hero.subhead}
           </p>
-
-          {/* Progress bar — only when the hero has meaningful progress */}
-          {hero.progressPct > 0 && (
-            <div className="mt-6 max-w-md">
-              <div className="h-1.5 rounded-full overflow-hidden bg-bg-surface-3">
-                <motion.div
-                  className="h-full rounded-full"
-                  style={{
-                    background: `linear-gradient(90deg, ${tokens.brand.lime} 0%, ${tokens.brand.limeSoft} 100%)`,
-                    boxShadow: `0 0 10px ${tokens.brand.lime}66`,
-                  }}
-                  initial={reduceMotion ? false : { width: 0 }}
-                  animate={{ width: `${Math.min(100, hero.progressPct)}%` }}
-                  transition={{
-                    delay: reduceMotion ? 0 : 0.3,
-                    duration: reduceMotion ? 0.1 : 0.9,
-                    ease: [0.32, 0.72, 0, 1],
-                  }}
-                />
-              </div>
-              <p className="mt-2 text-[11px] font-mono text-text-muted">
-                {hero.progressPct}% of today&apos;s target
-              </p>
-            </div>
-          )}
         </div>
 
-        <div className="mt-6">
+        {/* Bottom section: area chart + CTA */}
+        <div className="mt-auto pt-5">
+          {/* Performance trend chart — replaces the old thin progress bar */}
+          {hero.progressPct > 0 && (
+            <div className="mb-5">
+              <p className="text-[10px] font-mono text-text-muted mb-2 uppercase tracking-[0.8px]">
+                Performance trend · today&apos;s target
+              </p>
+              <motion.div
+                initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: reduceMotion ? 0 : 0.35, duration: 0.55, ease: [0.32, 0.72, 0, 1] }}
+              >
+                <AreaChart pct={Math.min(100, hero.progressPct)} />
+              </motion.div>
+            </div>
+          )}
+
           <Link
             href={hero.cta.href}
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold transition-all duration-220 bg-brand-accent text-white hover:-translate-y-px"
             style={{
-              boxShadow: `0 4px 18px -4px rgb(var(--brand-accent-rgb) / 0.55), 0 1px 0 rgba(255,255,255,0.25) inset`,
+              boxShadow: `0 4px 18px -4px rgba(37,99,235,0.50), 0 1px 0 rgba(255,255,255,0.25) inset`,
             }}
           >
             {hero.cta.label}
